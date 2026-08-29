@@ -1,0 +1,120 @@
+# Dongxi LLMs Book Architecture
+
+This document is the narrative map for the `v0.1` book. `ROADMAP.md` defines the
+28-day learning and production schedule; this file defines how that work becomes a
+coherent reader-facing book. A learning day may contribute to several book
+locations, and a chapter may synthesize several learning days.
+
+## Reader journey
+
+The book moves through one continuous argument:
+
+1. establish what counts as trustworthy evidence;
+2. understand how text becomes next-token predictions;
+3. build and pretrain a modern decoder;
+4. evaluate behavior before changing it;
+5. teach desired behavior with demonstrations and preferences;
+6. optimize language generation as a policy;
+7. diagnose failures and defend a complete model-development process.
+
+## Planned contents
+
+### Front matter
+
+- Preface — From API User to Model Developer
+- How to Use the Book and Companion Repository
+- Notation and Experimental Conventions
+
+### Part I — From Text to a Modern Decoder
+
+1. **Evidence Before Optimization**
+   Experiment identity, hypotheses, controls, reproducibility, observations versus
+   interpretations, smoke tests, and the first Qwen3 case study. Primarily Day 1.
+2. **Text, Tokens, and Embeddings**
+   Tokenization, vocabularies, multilingual efficiency, and learned vector lookup.
+   Primarily Day 2.
+3. **Learning the Next Token**
+   Logits, softmax, likelihood, cross-entropy, perplexity, causal shifting, and a
+   tiny next-token model. Primarily Day 3.
+4. **Attention and the Causal Information Boundary**
+   Queries, keys, values, scaling, masks, attention distributions, gradients, and
+   deliberately broken variants. Primarily Day 4.
+5. **Building a Modern Decoder**
+   Transformer blocks, residual streams, normalization, feed-forward layers,
+   RMSNorm, RoPE, SwiGLU, GQA, QK normalization, KV caching, and `DongxiGPT`.
+   Synthesizes Days 5–7.
+
+### Part II — From Base Model to Assistant
+
+6. **Pretraining as a Controlled System**
+   Data and token budgets, batching, AdamW, schedules, clipping, precision,
+   checkpoint recovery, scaling, and diagnosis. Synthesizes Days 8–9.
+7. **Evaluation Is a Contract**
+   Capability definitions, frozen splits, metrics, uncertainty, contamination,
+   sampling variance, and error analysis. Primarily Day 10.
+8. **Instruction Data as an Interface**
+   Messages, roles, chat templates, loss masks, packing, mixtures, provenance, and
+   data cards. Primarily Day 11.
+9. **Supervised Fine-Tuning**
+   Objective, implementation, base-to-assistant experiment, ablations, capability
+   gains, and regressions. Synthesizes Days 12–14.
+
+### Part III — Learning from Preferences and Rewards
+
+10. **Preferences and Reward Models**
+    Bradley–Terry modeling, preference data, disagreement, calibration, bias, and
+    adversarial cases. Synthesizes Days 15–16.
+11. **Direct Preference Optimization**
+    KL-regularized optimization, reference policies, sequence log-probabilities,
+    the DPO derivation, implementation, and controlled experiment. Days 17–18.
+12. **Language Generation as a Policy**
+    Trajectories, REINFORCE, baselines, RLOO, PPO, importance ratios, clipping,
+    KL estimation, and bias–variance trade-offs. Synthesizes Days 19–21.
+
+### Part IV — Verifiable Rewards and Complete Systems
+
+13. **Group-Relative Policy Optimization**
+    Grouped rollouts, relative advantages, zero-variance groups, verifiers,
+    token-level losses, derivation, and Qwen3 RLVR experiment. Days 22–23.
+14. **When Optimization Goes Wrong**
+    Reward hacking, KL growth, entropy collapse, length bias, exploration,
+    rollout architecture, memory, synchronization, and monitoring. Days 24–25.
+15. **Distill, Evaluate, and Defend**
+    Rejection sampling, self-consistency, best-of-N, distillation, checkpoint
+    genealogy, capstone evaluation, technical defense, and release. Days 26–28.
+
+### Appendices
+
+- Appendix A — Laboratory Setup and Reproducible Runs
+- Appendix B — Mathematical and Tensor Notation
+- Appendix C — Evaluation and Experiment Templates
+- Appendix D — Reproduction Commands and Environment Locks
+
+## Chapter design contract
+
+Each chapter should form an argument rather than a pile of artifacts. Use the
+following elements when they serve the material:
+
+1. motivating question;
+2. explicit learning outcomes and prerequisites;
+3. intuition followed by precise definitions;
+4. derivations with symbols and shapes defined;
+5. a transparent implementation;
+6. predictions made before experiments;
+7. measurements, representative outputs, and limitations;
+8. exercises that require explanation, calculation, or modification;
+9. a summary that connects to the next chapter.
+
+Detailed logs, manifests, and exhaustive telemetry remain in the companion
+repository. The main prose includes only enough evidence to support its claims and
+links to the complete record.
+
+## Day 1 placement
+
+Day 1 contributes to:
+
+- the course charter and mastery rubric in `docs/`;
+- Chapter 1, `book/chapters/01-evidence-before-optimization.md`;
+- Appendix A, `book/appendices/a-laboratory-setup.md`;
+- exercises and solutions in `book/solutions/`;
+- the specification, report, and manifests in the companion experiment tree.

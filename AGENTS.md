@@ -7,13 +7,15 @@ These instructions apply to humans and coding agents contributing to `Dongxi_LLM
 Before starting work:
 
 1. Read `README.md`.
-2. Read the relevant section of `ROADMAP.md`.
-3. Read `PROGRESS.md`, especially the current position, durable decisions, latest daily log, and open questions.
-4. Inspect existing work before creating a competing artifact.
+2. Read `BOOK.md` for the reader-facing narrative architecture.
+3. Read the relevant section of `ROADMAP.md`.
+4. Read `PROGRESS.md`, especially the current position, durable decisions, latest daily log, and open questions.
+5. Inspect existing work before creating a competing artifact.
 
 ## Source of truth
 
 - `ROADMAP.md` defines the release plan and day-level outcomes.
+- `BOOK.md` defines the book structure and the narrative placement of course material.
 - `PROGRESS.md` defines the current state and exact next action.
 - Experiment specifications define intended runs.
 - Experiment reports and stored outputs define empirical evidence.
@@ -31,9 +33,43 @@ For each learning day:
 4. Run a smoke experiment before a longer run.
 5. Preserve configurations, environment identity, metrics, and representative outputs.
 6. Distinguish observations from interpretations.
-7. Update `PROGRESS.md` with evidence and an exact next action.
+7. Create or update the book-facing material to which the day's learning belongs.
+8. Update `PROGRESS.md` with evidence and an exact next action.
 
 Do not mark a day complete merely because prose or code exists. The stated evidence of completion must be present.
+
+## Book-first course development
+
+`Dongxi_LLMs` is a coherent technical book with executable companion material,
+not a chronological collection of daily notes. The 28-day roadmap governs the
+learning and production schedule; it does not dictate the final chapter boundaries.
+
+For every learning day:
+
+1. Identify where the material belongs in the book before drafting: front matter,
+   conceptual chapter, worked example, lab, appendix, or companion repository.
+2. Create or update learner-facing book material as understanding develops. Daily
+   logs, experiment specifications, reports, and chat transcripts are source
+   evidence; they are not substitutes for a chapter or section.
+3. Integrate new material with the existing narrative, notation, prerequisites,
+   examples, and forward references. Do not create an isolated “Day NN” note when
+   the idea belongs inside an existing chapter.
+4. Give conceptual chapters a deliberate learning arc: motivation and questions,
+   intuition, precise definitions and derivations, transparent implementation,
+   experiment, evidence and limitations, exercises, summary, and connection to
+   what follows. Use only the elements that genuinely help that chapter.
+5. Keep durable concepts in the main narrative. Put machine-specific setup,
+   time-sensitive commands, and operational troubleshooting in appendices or the
+   platform repository, and link them from the relevant chapter.
+6. Preserve failed experiments and detailed telemetry in reports while bringing
+   only the evidence needed for the argument into the book prose.
+7. Before marking a day complete, either link its book-facing contribution or
+   explicitly record why its evidence will be integrated during a named later
+   synthesis day. “No course content” is not the default.
+
+Continuously check book-level coherence: chapter order, prerequisite flow,
+terminology, notation, repeated explanations, pacing, and whether each experiment
+advances the book's central argument.
 
 ## Empirical integrity
 
@@ -47,6 +83,7 @@ Do not mark a day complete merely because prose or code exists. The stated evide
 ## Code and content design
 
 - Canonical prose, notation, source code, and comments are English-first.
+- Write course prose for a reader following a book, not for the author recalling a work session.
 - Reusable logic belongs in importable Python modules; notebooks narrate and visualize experiments.
 - Keep mathematical notation consistent across lessons.
 - Define symbols, tensor shapes, gradient boundaries, and optimization direction.

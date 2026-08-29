@@ -8,15 +8,16 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
-- Current position: Day 0 — planning complete, ready to begin Day 1
+- Current position: Day 1 complete — Chapter 1 and laboratory evidence are ready
 - Primary machine: NVIDIA DGX Spark
 - Primary model family: Qwen3
 
 ## Start here
 
-1. Read [`ROADMAP.md`](ROADMAP.md) for the authoritative four-week plan.
-2. Read [`PROGRESS.md`](PROGRESS.md) for the current position and next action.
-3. Contributors and coding agents must read [`AGENTS.md`](AGENTS.md) before changing the project.
+1. Read [`BOOK.md`](BOOK.md) for the reader-facing book architecture.
+2. Read [`ROADMAP.md`](ROADMAP.md) for the authoritative four-week production plan.
+3. Read [`PROGRESS.md`](PROGRESS.md) for the current position and next action.
+4. Contributors and coding agents must read [`AGENTS.md`](AGENTS.md) before changing the project.
 
 ## Learning promise
 
