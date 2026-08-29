@@ -1,0 +1,114 @@
+id: 2026-08-29-qwen3-0.6b-sft-smoke
+title: Qwen3-0.6B three-step full-SFT smoke test
+mode: smoke
+status: complete
+
+question: >
+  Can the pinned DGX Spark open-instruct stack complete the existing
+  Qwen3-0.6B full-SFT smoke path while preserving system memory headroom?
+hypothesis: >
+  Qwen3-0.6B will complete three BF16 full-SFT optimizer steps with SDPA,
+  microbatch size 1, and sequence length 1024. Reported loss values will remain
+  finite, expected model outputs will be saved, and whole-system MemAvailable
+  will remain above 24 GiB.
+rationale: >
+  The same platform profile passed previously, and both the native and pinned
+  open-instruct kernel verifiers passed on the current host before this run.
+
+identity:
+  course_code:
+    commit: 5763dde98a3b28514bae5d9d327f07c1f034173e
+    dirty_at_planning: true
+  platform_code:
+    path: /home/dongxi/dgx-spark-dongxi
+    commit: 0c0c7a9efc208b8a9f69b2d97e003019420bcd82
+  trainer:
+    name: allenai/open-instruct
+    version: v0.3.0
+    commit: 26de99604002d6a7b25a2c5f2ee880e388a21dca
+    local_patch_sha256: 50b3946143e215d98dbe95277745c7cfd087a4465f1f91ad87da3705e0e61ec9
+  machine_manifest: manifests/2026-08-29-dgx-spark-open-instruct.json
+  model:
+    name: Qwen/Qwen3-0.6B
+    revision_resolved_at_planning: c1899de289a04d12100db370d81485cdf75e47ca
+  dataset:
+    name: allenai/tulu-3-sft-personas-algebra
+    revision_resolved_at_planning: e76e37b6d35407f18bab2b500d88cff68637a558
+    split: train
+    examples_requested: 32
+  environment_lock:
+    path: /home/dongxi/dgx-spark-dongxi/.external/open-instruct/uv.lock
+    sha256: 625b0028627ff8e6441cd634d0c02cc8a0b7a1932931361f1df75606c29f01b6
+
+configuration:
+  seed: 42
+  dtype: bfloat16
+  attention_backend: sdpa
+  microbatch_size: 1
+  gradient_accumulation_steps: 1
+  sequence_length: 1024
+  training_steps: 3
+  optimizer: fused AdamW
+  learning_rate: 2.0e-5
+  lr_scheduler: constant
+  warmup_ratio: 0.0
+  weight_decay: 0.0
+  gradient_checkpointing: true
+  add_bos: true
+
+controlled_variables:
+  - model and tokenizer
+  - dataset and requested example count
+  - seed and batch geometry
+  - optimizer and learning-rate schedule
+  - dtype and attention backend
+  - trainer, environment lock, and platform revision
+independent_variable: null
+dependent_variables:
+  - process exit status and completed optimizer steps
+  - reported training loss
+  - starting and minimum whole-system MemAvailable
+  - cgroup memory peak
+  - CUDA-visible process allocation peak
+  - output-model presence
+
+success_criteria:
+  - The process exits with status 0.
+  - All three optimizer steps complete.
+  - Every reported training loss is finite.
+  - Expected output-model files are saved.
+  - Minimum whole-system MemAvailable is at least 24 GiB.
+failure_criteria:
+  - Model, tokenizer, dataset, or trainer fails to load.
+  - Loss becomes NaN or infinite.
+  - Forward, backward, or optimizer execution fails.
+  - The job is killed or crosses the system-memory reserve.
+  - Expected output-model files are absent.
+claims_not_tested:
+  - general capability improvement
+  - convergence or stability of a long training run
+  - exact numerical reproducibility on another host
+  - safety of larger batches or sequence lengths
+  - optimality of the training recipe or attention backend
+
+execution:
+  working_directory: /home/dongxi/dgx-spark-dongxi
+  command: ./scripts/memory_profile_sft.sh 1 1 1024 Qwen/Qwen3-0.6B
+  environment_overrides:
+    MAX_TRAIN_STEPS: 3
+    PROFILE_SAMPLES: 32
+  memory_cgroup_max_gib: 100
+  memory_swap_max_gib: 0
+  memory_reserve_gib: 24
+  expected_outputs:
+    - outputs/memory-profiles/sft/RUN_ID/training.log
+    - outputs/memory-profiles/sft/RUN_ID/system-memory.tsv
+    - outputs/memory-profiles/sft/RUN_ID/gpu-memory.tsv
+    - outputs/memory-profiles/sft/RUN_ID/summary.txt
+    - outputs/memory-profiles/sft/RUN_ID/model/
+
+notes: >
+  The existing wrapper accepts Hub repository names rather than explicit Hub
+  revisions. The report must confirm the resolved cache revisions used by the
+  run; the hashes above were resolved immediately before execution. The three
+  memory views overlap and must not be added together.

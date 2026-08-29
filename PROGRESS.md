@@ -5,10 +5,10 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 0
-- Status: planning complete; ready to begin Day 1
-- Current focus: establish the laboratory and repository artifact structure
-- Next action: execute Day 1 from `ROADMAP.md`
+- Active day: Day 1
+- Status: complete
+- Current focus: Day 1 laboratory and reproducibility artifacts are complete
+- Next action: begin Day 2 by predicting token-count differences for fixed English, Chinese, and Swedish strings
 - Last updated: 2026-08-29
 
 ## Four-week tracker
@@ -17,7 +17,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 
 | Day | Topic | Status | Primary evidence |
 |---:|---|---|---|
-| 1 | Laboratory and reproducibility | pending | — |
+| 1 | Laboratory and reproducibility | complete | `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
 | 2 | Tokenization and embeddings | pending | — |
 | 3 | Probabilities and next-token loss | pending | — |
 | 4 | Attention from first principles | pending | — |
@@ -83,7 +83,19 @@ Copy this block below the daily log heading after each session:
 
 ## Daily log
 
-No learning days have been executed yet.
+### Day 01 — 2026-08-29
+
+- Status: complete
+- Questions investigated: What identifies an experiment? What do smoke tests prove? How should unified memory be monitored? How do observations differ from interpretations?
+- Derivations completed: decomposed training memory into fixed and shape-dependent contributors; distinguished overlapping system, cgroup, and CUDA accounting domains.
+- Code or content produced: course charter, mastery rubric, repository structure, experiment specification/report templates, environment-manifest collector, two environment manifests, a completed smoke-test specification, and its report.
+- Experiments executed: native PyTorch GPU-stack verification; pinned open-instruct GPU-stack verification; three-step Qwen3-0.6B BF16 full-SFT smoke profile.
+- Evidence and results: smoke test passed with status 0; three finite losses (`0.360384`, `0.264207`, `0.357005`); 118.84 GiB starting and 109.74 GiB minimum `MemAvailable`; 4.03 GiB cgroup peak; 6.42 GiB CUDA-visible peak; zero cgroup memory events; model saved. See `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md`.
+- Failures or surprises: loss was non-monotonic, which did not violate the specification; PyTorch emitted an `sm_121` capability-range warning despite the validated operations passing; the compatibility SFT trainer is deprecated upstream.
+- Claims not yet validated: capability improvement, long-run convergence and stability, exact cross-host reproduction, larger batch/sequence safety, and recipe optimality.
+- Decisions made: use immutable revision identities and lock hashes; retain all three non-additive DGX Spark memory views; require precommitted success and failure criteria; keep raw platform outputs separate from durable course reports.
+- Public artifacts produced: none.
+- Exact next action: begin Day 2 by predicting token-count differences for fixed English, Chinese, and Swedish strings before inspecting Qwen3 tokenization.
 
 ## Open questions
 
