@@ -111,6 +111,9 @@ through moment estimates and weight decay before updating the parameter.
   3. The refined result is that ordinary dense softmax supplies an output-path
   contribution to every vocabulary row: `(p_i - 1[i=y])h`. This correction still
   requires an explanation-back and executable verification.
+- Correctly inferred that when `p(dog)=0.2`, the target-row gradient
+  `(0.2-1)h=-0.8h` makes an SGD update move `E[dog]` toward `h`, increasing their
+  dot product when `h` is held fixed for the local calculation.
 
 ## Evidence and limitations
 
