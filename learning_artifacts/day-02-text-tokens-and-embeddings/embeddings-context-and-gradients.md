@@ -14,6 +14,10 @@
 - What happens when the same token appears twice?
 - Which embedding rows receive gradients?
 - Why can repeated tokens end with different hidden states?
+- Is the embedding layer trained separately, or through the complete language
+  model objective?
+- How does tying the input embedding and output projection change which rows
+  receive gradients?
 
 ## Learner's initial model
 
@@ -36,6 +40,18 @@ Repeated IDs return identical initial vectors. Transformer position handling and
 contextual attention then produce generally different hidden states. For Qwen3,
 position is applied through RoPE inside attention rather than a learned absolute
 position vector simply added at lookup.
+
+The embedding layer is normally trained end to end, not with a separate
+"embedding objective." Token lookup supplies vectors to the transformer; the
+transformer produces contextual states; the output projection produces logits;
+the next-token loss sends gradients backward through the complete computation
+graph into the embedding rows.
+
+When input and output weights are untied, the lookup path sends direct embedding
+gradients only to rows used by the input IDs. When weights are tied, the same
+matrix also acts as the output classifier. The softmax loss then supplies an
+output-side gradient to every vocabulary row in the exact classifier calculation,
+while input rows additionally receive the lookup-path gradient.
 
 ## Concrete examples and derivations
 
@@ -60,6 +76,27 @@ dL/dE[5] = dL/dX[1]
 
 Unused rows receive zero direct embedding gradient from this example.
 
+For one output state `h`, tied output logits have the form:
+
+```text
+logit_i = h · E[i]
+```
+
+With target token `y`, the output-side contribution is:
+
+```text
+dL/dE[i] |_output = (p_i - 1[i = y]) h
+```
+
+Thus every output row generally receives a contribution, while the target row's
+coefficient is negative when `p_y < 1`. An input row receives the sum of this
+output contribution and any gradients arriving through positions where it was
+looked up.
+
+The visual shorthand `E ← E - η∇E` represents an SGD update. Production LLM
+training commonly uses AdamW, which transforms the same accumulated gradient
+through moment estimates and weight decay before updating the parameter.
+
 ## Demonstrated understanding
 
 - Correctly calculated `[2, 5] → [2, 5, 8]` for `B=2`, `T=5`, `d=8`.
@@ -67,6 +104,9 @@ Unused rows receive zero direct embedding gradient from this example.
   receive direct gradients.
 - Correctly explained that repeated token embeddings are identical before the
   transformer and generally different afterward because context matters.
+- `introduced` — The two gradient paths created by tied input/output weights are
+  now illustrated but still need a learner explanation-back and executable
+  verification.
 
 ## Evidence and limitations
 
@@ -81,9 +121,12 @@ model parameters can receive gradients through the complete computation graph.
 - Inspect Qwen3's actual embedding matrix shape and padded vocabulary rows.
 - Verify whether input embeddings and the output projection are tied.
 - Bridge the final hidden state to logits in Day 3.
+- Explain back which embedding rows receive gradients in tied versus untied
+  configurations.
 
 ## Reuse opportunities
 
 - Chapter 2 tensor-shape walkthrough.
 - Small exercise deriving repeated-row gradient accumulation.
-- Possible later animation from IDs to shared rows to contextual hidden states.
+- Animation task `ANIM-EMB-001`: IDs → lookup → transformer → tied output loss →
+  two backward paths → optimizer update.

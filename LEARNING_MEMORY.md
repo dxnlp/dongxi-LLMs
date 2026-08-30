@@ -71,6 +71,7 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 |---|---|---|---|---|---|
 | `X-BPE-001` | X article | Why an English byte tokenizer can still encode `数` | queued | Mac | Stable Chapter 2 draft |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | baseline rendered; Manim refinement queued | Mac | Day 2 explanation complete |
+| `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | interactive explanation drafted; reusable animation queued | Mac | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | Correct-token probability → negative-log loss | preview rendered; canonical version deferred | Mac | Day 3 derivation |
 
 ### Task packet: `X-BPE-001`
@@ -152,6 +153,44 @@ content and legibility review.
 **Acceptance checks:** Chinese glyphs render correctly; every merge direction is
 unambiguous; the final frame is readable on a phone; no frame implies that a
 single occurrence creates a new token online.
+
+### Task packet: `ANIM-EMB-001`
+
+**Learning objective:** Show that an embedding table is normally trained end to
+end by the next-token loss, and distinguish the lookup gradient path from the
+additional classifier path created by tied input/output weights.
+
+**Source material:**
+`learning_artifacts/day-02-text-tokens-and-embeddings/embeddings-context-and-gradients.md`;
+the planned Day 2 embedding lab; the Day 3 cross-entropy derivation when
+available.
+
+**Storyboard:**
+
+1. Start with token IDs `[cat=1, sat=2]` selecting rows `E[1]` and `E[2]` from
+   `E ∈ R^(V×d)`.
+2. Move the selected vectors through a transformer into a contextual state `h`.
+3. Reuse the tied matrix to produce `logits = hE^T`, identify target `dog`, and
+   create the next-token loss.
+4. Run the backward pass along two visually distinct paths: lookup-path gradients
+   to selected input rows, and output-classifier gradients to all vocabulary rows.
+5. Accumulate both contributions on input rows, then show an optimizer update.
+6. Contrast briefly with untied weights, where the all-row classifier gradient
+   updates a separate output matrix instead of the input embedding table.
+
+**Required precision:** Do not say that only selected rows receive total gradient
+when weights are tied; call selected-row contributions through lookup "direct
+input-path gradients"; identify `E ← E - η∇E` as an SGD sketch rather than the
+exact AdamW rule; do not derive cross-entropy before Day 3's canonical treatment.
+
+**Expected outputs:** Editable animation source, 16:9 H.264 MP4, lightweight GIF,
+render command, dependency revisions, and a still diagram for Chapter 2. The Mac
+is preferred for final media rendering.
+
+**Acceptance checks:** The input IDs and matrix shapes remain visible; tied versus
+untied behavior is unambiguous; input rows visibly accumulate two contributions
+under tying; the target and loss direction agree with the later numerical lab;
+the final frame remains readable on a phone.
 
 ### Task packet: `ANIM-CE-001`
 
