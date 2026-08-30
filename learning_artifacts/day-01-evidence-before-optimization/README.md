@@ -14,4 +14,3 @@
 The learner can distinguish observations from interpretations, identify the
 environment and revision information required to reproduce a run, and explain
 why process exit success cannot override a failed safety criterion.
-

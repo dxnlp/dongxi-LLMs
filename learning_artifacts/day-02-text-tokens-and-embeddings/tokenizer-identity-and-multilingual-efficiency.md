@@ -86,4 +86,3 @@ gated tokenizer repository, so no exact GPT-SW3 segmentation claim was made.
 - Chapter 2 worked multilingual comparison.
 - Exercise asking readers to predict segmentation before execution.
 - X article `X-BPE-001`, using multilingual variation as supporting context.
-

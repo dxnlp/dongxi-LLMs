@@ -43,4 +43,3 @@ until they have reproducible evidence.
 
 Identify the book section, exercise, article, animation, or experiment that could
 reuse this discussion. Add portable production tasks to `LEARNING_MEMORY.md`.
-

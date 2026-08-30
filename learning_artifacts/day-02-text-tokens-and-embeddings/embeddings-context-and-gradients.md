@@ -87,4 +87,3 @@ model parameters can receive gradients through the complete computation graph.
 - Chapter 2 tensor-shape walkthrough.
 - Small exercise deriving repeated-row gradient accumulation.
 - Possible later animation from IDs to shared rows to contextual hidden states.
-

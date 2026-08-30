@@ -24,4 +24,3 @@ complete tokenizer lab, and Chapter 2 remain open.
 
 See `LEARNING_MEMORY.md` for task packets `X-BPE-001`, `ANIM-BPE-001`, and
 `ANIM-CE-001`.
-

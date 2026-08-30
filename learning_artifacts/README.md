@@ -59,4 +59,3 @@ executable evidence.
 
 Start from [`template.md`](template.md). Keep each file focused enough that a
 future author or agent can reuse it without reconstructing the original chat.
-

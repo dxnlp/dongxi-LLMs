@@ -109,4 +109,3 @@ unsupported characters.
 - BPE animation `ANIM-BPE-001` and its planned Mac/Manim refinement.
 - Exercise predicting token counts under byte-, character-, and phrase-level
   merge inventories.
-

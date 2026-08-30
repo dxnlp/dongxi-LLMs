@@ -94,4 +94,3 @@ its loss.
 - Chapter 2 bridge from individual sequences to batches.
 - Day 3 cross-entropy animation and manual calculation.
 - Later Chapter 8 discussion of prompt, response, and padding loss masks.
-
