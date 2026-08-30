@@ -105,6 +105,25 @@ relative logit differences—not their absolute offset—control the distributio
 With untied weights, the same role is played by a separate output matrix rather
 than `E^T`.
 
+The learner requested a slower explanation of the logit-to-probability step. For
+the three-token example `[cat, dog, eos]`, use logits `[1, 2, 0]`:
+
+```text
+raw logits:             [1,    2,    0]
+positive exp weights:   [2.72, 7.39, 1.00]
+weight total:           11.11
+softmax probabilities:  [2.72/11.11, 7.39/11.11, 1.00/11.11]
+                       ≈ [24.5%,      66.5%,      9.0%]
+```
+
+Exponentiation makes every weight positive and turns a logit difference into a
+ratio: a one-point advantage gives `exp(1) ≈ 2.72` times the unnormalized weight.
+Division by the shared total makes the values sum to one. Because every candidate
+shares the denominator, increasing one logit generally lowers the probabilities
+of the others even when their own logits remain unchanged. Adding the same
+constant to all logits multiplies every weight by the same factor and therefore
+leaves all normalized probabilities unchanged.
+
 With target token `y`, the output-side contribution is:
 
 ```text
@@ -137,6 +156,9 @@ through moment estimates and weight decay before updating the parameter.
 - Correctly inferred that when `p(dog)=0.2`, the target-row gradient
   `(0.2-1)h=-0.8h` makes an SGD update move `E[dog]` toward `h`, increasing their
   dot product when `h` is held fixed for the local calculation.
+- `introduced` — Logit-to-softmax conversion is now represented through the
+  concrete `[1,2,0]` example and an interactive comparison, but still needs a
+  learner explanation-back before it is marked demonstrated.
 
 ## Evidence and limitations
 
