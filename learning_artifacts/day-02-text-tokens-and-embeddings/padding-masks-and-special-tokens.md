@@ -36,6 +36,22 @@ automatically guarantee loss masking.
 `<eos>` has a different role: it is a meaningful target that teaches the model
 when a sequence ends, so it is normally included in the loss.
 
+More generally, masks define distinct boundaries in the learning system rather
+than merely cleaning up tensor shapes:
+
+- an attention or visibility mask controls which positions may influence a
+  representation;
+- a loss or supervision mask controls which prediction errors contribute to the
+  optimization objective;
+- a semantic boundary token such as `<eos>` remains visible and supervised
+  because learning when to stop is part of the language task.
+
+A position can therefore be visible to the model while being excluded from the
+loss. This distinction later enables supervised fine-tuning to expose prompt
+tokens as context while applying direct supervision only to assistant response
+tokens. Visibility and supervision answer different questions and should never
+be treated as one interchangeable mask.
+
 ## Concrete examples and derivations
 
 ```text
