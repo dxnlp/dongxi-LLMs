@@ -104,9 +104,13 @@ through moment estimates and weight decay before updating the parameter.
   receive direct gradients.
 - Correctly explained that repeated token embeddings are identical before the
   transformer and generally different afterward because context matters.
-- `introduced` — The two gradient paths created by tied input/output weights are
-  now illustrated but still need a learner explanation-back and executable
-  verification.
+- Correctly identified rows 1 (`cat`) and 2 (`sat`) as receiving lookup-path
+  gradients, and correctly identified those same rows as receiving both paths
+  when weights are tied.
+- Initially predicted that the tied output path updates rows 1, 2, and target row
+  3. The refined result is that ordinary dense softmax supplies an output-path
+  contribution to every vocabulary row: `(p_i - 1[i=y])h`. This correction still
+  requires an explanation-back and executable verification.
 
 ## Evidence and limitations
 
