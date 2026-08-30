@@ -19,6 +19,7 @@
 - How does tying the input embedding and output projection change which rows
   receive gradients?
 - What exactly does `h` represent in the output-logit equations?
+- What is a logit, and how does it differ from a probability?
 
 ## Learner's initial model
 
@@ -89,6 +90,20 @@ For one output state `h`, tied output logits have the form:
 ```text
 logit_i = h · E[i]
 ```
+
+A logit is one raw, unnormalized compatibility score for a candidate next token.
+It may be positive, zero, or negative, and logits do not need to sum to one. For
+vocabulary size `V`, one state `h ∈ R^d` produces `V` logits. Softmax converts
+their relative differences into probabilities:
+
+```text
+p_i = exp(logit_i) / sum_j exp(logit_j)
+```
+
+Adding the same constant to every logit leaves the probabilities unchanged, so
+relative logit differences—not their absolute offset—control the distribution.
+With untied weights, the same role is played by a separate output matrix rather
+than `E^T`.
 
 With target token `y`, the output-side contribution is:
 
