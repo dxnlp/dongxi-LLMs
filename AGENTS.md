@@ -10,13 +10,15 @@ Before starting work:
 2. Read `BOOK.md` for the reader-facing narrative architecture.
 3. Read the relevant section of `ROADMAP.md`.
 4. Read `PROGRESS.md`, especially the current position, durable decisions, latest daily log, and open questions.
-5. Inspect existing work before creating a competing artifact.
+5. Read `LEARNING_MEMORY.md` for demonstrated understanding, unresolved conceptual edges, public-content ideas, and cross-machine task packets.
+6. Inspect existing work before creating a competing artifact.
 
 ## Source of truth
 
 - `ROADMAP.md` defines the release plan and day-level outcomes.
 - `BOOK.md` defines the book structure and the narrative placement of course material.
 - `PROGRESS.md` defines the current state and exact next action.
+- `LEARNING_MEMORY.md` defines the durable learner model, public-content queue, and portable cross-machine task packets.
 - Experiment specifications define intended runs.
 - Experiment reports and stored outputs define empirical evidence.
 - Chat transcripts and agent summaries are not durable project state.
@@ -35,6 +37,7 @@ For each learning day:
 6. Distinguish observations from interpretations.
 7. Create or update the book-facing material to which the day's learning belongs.
 8. Update `PROGRESS.md` with evidence and an exact next action.
+9. Update `LEARNING_MEMORY.md` when the session produces a corrected mental model, demonstrated understanding, reusable public-content idea, unresolved conceptual edge, or portable task.
 
 Do not mark a day complete merely because prose or code exists. The stated evidence of completion must be present.
 
@@ -70,6 +73,23 @@ For every learning day:
 Continuously check book-level coherence: chapter order, prerequisite flow,
 terminology, notation, repeated explanations, pacing, and whether each experiment
 advances the book's central argument.
+
+## Cross-session and cross-machine memory
+
+Do not rely on chat history as the only record of a valuable discussion or task.
+Preserve durable learning in `LEARNING_MEMORY.md` as a concise mental model with
+its evidence level, important distinctions, and remaining gaps.
+
+Before work is handed to another session or machine, create or update a portable
+task packet containing a stable task ID, base commit, branch, learning objective,
+inputs, allowed files, expected outputs, precision requirements, acceptance
+checks, and return evidence. Git is the synchronization boundary: never assume
+that uncommitted files on one machine are visible on another.
+
+Public articles and animations are derived from the canonical book argument.
+Record promising ideas immediately, but delay final wording when their underlying
+chapter or derivation is not yet stable. On completion, update the packet rather
+than leaving status only in a chat transcript.
 
 ## Empirical integrity
 

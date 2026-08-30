@@ -8,7 +8,7 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
-- Current position: Day 1 complete — Chapter 1 and laboratory evidence are ready
+- Current position: Day 2 in progress — tokenization and embeddings
 - Primary machine: NVIDIA DGX Spark
 - Primary model family: Qwen3
 
@@ -17,7 +17,8 @@
 1. Read [`BOOK.md`](BOOK.md) for the reader-facing book architecture.
 2. Read [`ROADMAP.md`](ROADMAP.md) for the authoritative four-week production plan.
 3. Read [`PROGRESS.md`](PROGRESS.md) for the current position and next action.
-4. Contributors and coding agents must read [`AGENTS.md`](AGENTS.md) before changing the project.
+4. Read [`LEARNING_MEMORY.md`](LEARNING_MEMORY.md) for durable understanding, content ideas, and cross-machine task packets.
+5. Contributors and coding agents must read [`AGENTS.md`](AGENTS.md) before changing the project.
 
 ## Learning promise
 

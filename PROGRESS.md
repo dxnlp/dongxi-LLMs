@@ -5,11 +5,11 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 1
-- Status: complete
-- Current focus: Chapter 1 and its reproducible laboratory evidence are complete
-- Next action: begin Day 2 by predicting token-count differences for fixed English, Chinese, and Swedish strings
-- Last updated: 2026-08-29
+- Active day: Day 2
+- Status: in progress
+- Current focus: embedding lookup, batching and masks, and converting the completed multilingual tokenizer exploration into a reproducible lab and book chapter
+- Next action: complete the embedding-and-batching lesson, then implement and record the Day 2 tokenizer exploration lab
+- Last updated: 2026-08-30
 
 ## Four-week tracker
 
@@ -18,7 +18,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | Day | Topic | Status | Primary evidence |
 |---:|---|---|---|
 | 1 | Laboratory and reproducibility | complete | Chapter: `book/chapters/01-evidence-before-optimization.md`; evidence: `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
-| 2 | Tokenization and embeddings | pending | — |
+| 2 | Tokenization and embeddings | in progress | — |
 | 3 | Probabilities and next-token loss | pending | — |
 | 4 | Attention from first principles | pending | — |
 | 5 | Decoder-only Transformer | pending | — |
@@ -61,6 +61,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | D009 | The 28-day deliverable is a public beta, not a claim of completed lifelong mastery. | Four weeks provides urgency while preserving technical honesty. |
 | D010 | `dgx-spark-dongxi` remains the independent platform layer. | Hardware compatibility and course content should evolve independently. |
 | D011 | Course material is developed book-first rather than as chronological daily notes. | Each learning day must strengthen a coherent reader-facing narrative; logs and reports provide evidence but do not replace structured chapters. |
+| D012 | Maintain `LEARNING_MEMORY.md` as the cross-session and cross-machine learning and production ledger. | Deep discussions, corrected mental models, public-content ideas, and portable task packets must survive beyond a chat transcript without turning the book into daily notes. |
 
 ## End-of-day update template
 
@@ -99,6 +100,11 @@ Copy this block below the daily log heading after each session:
 - Book-facing contribution: `book/chapters/01-evidence-before-optimization.md`, supported by `book/appendices/a-laboratory-setup.md` and `book/solutions/01-evidence-before-optimization.md`.
 - Public artifacts produced: Chapter 1 draft, Appendix A draft, and Chapter 1 exercises with solutions; not yet released externally.
 - Exact next action: begin Day 2 by predicting token-count differences for fixed English, Chinese, and Swedish strings before inspecting Qwen3 tokenization.
+
+## Learning memory and production queue
+
+Detailed learner understanding, the X article backlog, animation storyboards, and
+cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
 
 ## Open questions
 
