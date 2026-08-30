@@ -18,6 +18,7 @@
   model objective?
 - How does tying the input embedding and output projection change which rows
   receive gradients?
+- What exactly does `h` represent in the output-logit equations?
 
 ## Learner's initial model
 
@@ -46,6 +47,13 @@ The embedding layer is normally trained end to end, not with a separate
 transformer produces contextual states; the output projection produces logits;
 the next-token loss sends gradients backward through the complete computation
 graph into the embedding rows.
+
+For a decoder hidden tensor `H ∈ R^(B×T×d)`, lowercase `h = H[b,t,:] ∈ R^d`
+denotes the contextual hidden state at one batch item and one sequence position.
+It is the vector used to predict the next token at that position. For input
+`[cat, sat]`, the final-position state can be written conceptually as
+`h_sat = Transformer(E[cat], E[sat])`; unlike the initial row `E[sat]`, it
+contains information about the available causal context.
 
 When input and output weights are untied, the lookup path sends direct embedding
 gradients only to rows used by the input IDs. When weights are tied, the same
