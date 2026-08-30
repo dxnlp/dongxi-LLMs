@@ -10,12 +10,14 @@ It is not a transcript and it does not replace the book:
 - `BOOK.md` defines the reader-facing narrative.
 - `ROADMAP.md` defines planned learning outcomes.
 - `PROGRESS.md` records the active day and exact next action.
-- This file records demonstrated understanding, unresolved edges, public-content
-  ideas, and cross-machine task packets.
+- `learning_artifacts/` preserves deep discussions by day and topic.
+- This file indexes that understanding and records public-content ideas and
+  cross-machine task packets.
 
 ## Maintenance contract
 
-Update this file when a discussion produces at least one of the following:
+Create or update the relevant topic in `learning_artifacts/` when a discussion
+produces at least one of the following:
 
 1. a durable explanation or corrected misconception;
 2. evidence that the learner can explain or calculate a mechanism;
@@ -24,9 +26,10 @@ Update this file when a discussion produces at least one of the following:
 5. work that may be executed in another session or on another machine.
 
 Record the learner's current model and the important distinction, not every turn
-of dialogue. Never silently upgrade "understood in conversation" to "verified by
-experiment" or "mastered." Link empirical claims to specifications, reports, or
-stored outputs when those exist.
+of dialogue. Update this file's index or production queue when the discussion
+opens a new topic or reusable task. Never silently upgrade "understood in
+conversation" to "verified by experiment" or "mastered." Link empirical claims
+to specifications, reports, or stored outputs when those exist.
 
 Every portable production task must identify its learning objective, source
 material, claims that must remain precise, expected outputs, acceptance checks,
@@ -47,108 +50,20 @@ dependencies, preferred machine, and current status.
 - Uses the DGX Spark for model- and GPU-dependent work and may use a local Mac for
   animation, design, editing, and publishing tasks.
 
-## Knowledge map
+## Learning-artifact index
 
-Status vocabulary:
+Detailed knowledge state lives in `learning_artifacts/` so future sessions can
+load only the active day and relevant topic rather than rereading one growing
+ledger.
 
-- `introduced`: discussed but not yet explained back or calculated;
-- `demonstrated`: explained or calculated correctly in the interactive lesson;
-- `observed`: measured during an interactive session but not yet preserved as a
-  reproducible report;
-- `verified`: supported by preserved executable evidence;
-- `open`: a named gap remains.
+| Day | Topic | Status | Artifact index |
+|---:|---|---|---|
+| 1 | Evidence before optimization | complete | `learning_artifacts/day-01-evidence-before-optimization/README.md` |
+| 2 | Text, tokens, and embeddings | in progress | `learning_artifacts/day-02-text-tokens-and-embeddings/README.md` |
 
-### Day 1 — Evidence before optimization
-
-- `demonstrated` — Distinguishes observations, unsupported claims, and supported
-  interpretations.
-- `demonstrated` — Understands that a successful process exit is necessary but
-  not sufficient when a precommitted safety criterion fails.
-- `demonstrated` — Separates report evidence (exit code, measured minimum
-  `MemAvailable`, observations and interpretations) from environment and run
-  specifications (GPU/driver, package versions, Git commit, starting memory).
-- `verified` — The Qwen3-0.6B smoke run and its limits are preserved in
-  `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md`.
-
-### Day 2 — Text, tokens, and embeddings
-
-#### Tokenizer identity and multilingual behavior
-
-- `demonstrated` — Token IDs are meaningful only under the tokenizer that created
-  them. Sending IDs from another tokenizer can map the same integers to unrelated
-  strings and therefore unrelated embedding rows.
-- `demonstrated` — Tokenization depends on corpus composition and weighting,
-  normalization and pre-tokenization, subword algorithm and merge priority,
-  vocabulary budget, and special-token policy. Model size alone does not determine
-  the tokenizer.
-- `observed` — On the fixed examples in
-  `experiments/specs/2026-08-30-qwen3-multilingual-tokenization.yaml`, observed
-  Qwen3 counts were Chinese 9, English 11, and Swedish 20. The learner's original
-  prediction, Swedish < Chinese < English, was falsified rather than rewritten.
-  Re-run these measurements in the planned lab before promoting the claim to
-  `verified`.
-- `observed` — Qwen3 tokenized `数据库` as one token in the inspected revision,
-  while its substrings `数据` and `库` also had tokens. This is an observation
-  about that tokenizer revision, not a universal Chinese rule; it still requires
-  preservation in the Day 2 report.
-
-#### BPE training versus encoding
-
-- `demonstrated` — BPE has an offline training phase: prepare a representative
-  corpus, count eligible adjacent pairs, add the selected merged symbol, rewrite
-  the representation, and repeat under a merge/vocabulary budget.
-- `demonstrated` — Encoding is a frozen online phase. It replays learned merge
-  priorities and maps the final pieces to IDs; it does not learn a new token when
-  an unfamiliar word arrives.
-- `demonstrated` — Vocabulary membership alone is not a complete description of
-  segmentation. Pre-tokenization boundaries and ordered merge ranks also matter.
-- `demonstrated` — Chinese BPE is statistical rather than inherently
-  morphological. Learned pieces may be part of a UTF-8 character, one character,
-  a multi-character word such as `数据`, or a frequent expression such as
-  `数据库`.
-
-#### Byte-level coverage
-
-- `demonstrated` — In UTF-8, `数` is the three-byte sequence `E6 95 B0`. A true
-  byte-level tokenizer trained only on English can still encode it using base byte
-  tokens, likely three tokens if no relevant merges were learned.
-- `demonstrated` — Sufficient Chinese exposure may learn byte merges that form
-  `数`, followed by character merges that form `数据` or `数据库`.
-- `demonstrated` — Perfect byte-level representability does not imply linguistic
-  understanding. An English-only model can mechanically preserve the bytes while
-  having learned little about their Chinese meaning.
-- `demonstrated` — A tokenizer without complete byte coverage or byte fallback may
-  instead emit `<unk>` for an unsupported character.
-
-#### Embeddings and contextual states
-
-- `demonstrated` — IDs have shape `[B, T]`; embedding lookup through
-  `E ∈ R^(V×d)` returns `[B, T, d]`.
-- `demonstrated` — For IDs `[2, 5, 2]`, three vectors are returned but only rows 2
-  and 5 receive direct embedding gradients; the two contributions to row 2 add.
-- `demonstrated` — Repeated occurrences of the same ID retrieve identical input
-  embeddings. Their later hidden states generally differ because position and
-  context affect transformer computation.
-- `introduced` — Qwen3 applies positional information through RoPE inside
-  attention rather than by adding a learned absolute-position embedding here.
-
-#### Padding, masks, and loss
-
-- `demonstrated` — An attention mask value of 1 marks a real token position and 0
-  marks padding to exclude from attention use.
-- `demonstrated` — Attention masking and loss masking have different jobs. Padding
-  labels commonly use `-100` so cross-entropy ignores those positions; otherwise
-  training rewards prediction of the artificial padding ID.
-- `demonstrated` — `<eos>` is a meaningful target that teaches stopping, whereas
-  padding is batch formatting and is normally excluded from the loss.
-
-#### Remaining Day 2 gaps
-
-- `open` — Verify embedding lookup, gradient accumulation, padding masks, and
-  input/output weight tying in executable code.
-- `open` — Build and report the complete tokenizer exploration lab.
-- `open` — Integrate the discussion and evidence into Chapter 2 with exercises
-  and solutions.
+At the start of each new day, create its directory and index. During the lesson,
+update the relevant focused topic whenever the learner states a prediction,
+demonstrates understanding, encounters a correction, or identifies an open edge.
 
 ## Public-content production queue
 
@@ -188,8 +103,10 @@ why encodability is different from understanding.
 - Preserve the difference between an observed Qwen3 segmentation and a universal
   rule.
 
-**Source material:** This ledger's Day 2 BPE sections; the fixed multilingual
-specification; the Chapter 2 draft when available; `ANIM-BPE-001`.
+**Source material:**
+`learning_artifacts/day-02-text-tokens-and-embeddings/bpe-training-and-byte-coverage.md`;
+the fixed multilingual specification; the Chapter 2 draft when available;
+`ANIM-BPE-001`.
 
 **Expected output:** An English X Article or thread draft, plus a short Chinese
 adaptation only after the English claims are reviewed. Decide article versus

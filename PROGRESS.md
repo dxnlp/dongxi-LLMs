@@ -61,7 +61,8 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | D009 | The 28-day deliverable is a public beta, not a claim of completed lifelong mastery. | Four weeks provides urgency while preserving technical honesty. |
 | D010 | `dgx-spark-dongxi` remains the independent platform layer. | Hardware compatibility and course content should evolve independently. |
 | D011 | Course material is developed book-first rather than as chronological daily notes. | Each learning day must strengthen a coherent reader-facing narrative; logs and reports provide evidence but do not replace structured chapters. |
-| D012 | Maintain `LEARNING_MEMORY.md` as the cross-session and cross-machine learning and production ledger. | Deep discussions, corrected mental models, public-content ideas, and portable task packets must survive beyond a chat transcript without turning the book into daily notes. |
+| D012 | Maintain `LEARNING_MEMORY.md` as the cross-session and cross-machine artifact index and production ledger. | Topic artifacts, public-content ideas, and portable task packets must remain discoverable beyond a chat transcript without turning the book into daily notes. |
+| D013 | Create and actively update `learning_artifacts/day-NN-topic/` during each lesson. | Deep discussions should be durable and reusable by topic and day, while `LEARNING_MEMORY.md` remains a compact index and production queue. |
 
 ## End-of-day update template
 
@@ -103,8 +104,9 @@ Copy this block below the daily log heading after each session:
 
 ## Learning memory and production queue
 
-Detailed learner understanding, the X article backlog, animation storyboards, and
-cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
+Detailed learner understanding is maintained by day and topic under
+`learning_artifacts/`. Its index, the X article backlog, animation storyboards,
+and cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
 
 ## Open questions
 

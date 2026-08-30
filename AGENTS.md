@@ -10,15 +10,17 @@ Before starting work:
 2. Read `BOOK.md` for the reader-facing narrative architecture.
 3. Read the relevant section of `ROADMAP.md`.
 4. Read `PROGRESS.md`, especially the current position, durable decisions, latest daily log, and open questions.
-5. Read `LEARNING_MEMORY.md` for demonstrated understanding, unresolved conceptual edges, public-content ideas, and cross-machine task packets.
-6. Inspect existing work before creating a competing artifact.
+5. Read `LEARNING_MEMORY.md` for the learning-artifact index, public-content ideas, and cross-machine task packets.
+6. Read the active day's index and relevant topics under `learning_artifacts/` for demonstrated understanding and unresolved conceptual edges.
+7. Inspect existing work before creating a competing artifact.
 
 ## Source of truth
 
 - `ROADMAP.md` defines the release plan and day-level outcomes.
 - `BOOK.md` defines the book structure and the narrative placement of course material.
 - `PROGRESS.md` defines the current state and exact next action.
-- `LEARNING_MEMORY.md` defines the durable learner model, public-content queue, and portable cross-machine task packets.
+- `learning_artifacts/` defines the durable conceptual record organized by day and topic.
+- `LEARNING_MEMORY.md` defines the artifact index, public-content queue, and portable cross-machine task packets.
 - Experiment specifications define intended runs.
 - Experiment reports and stored outputs define empirical evidence.
 - Chat transcripts and agent summaries are not durable project state.
@@ -29,15 +31,17 @@ If two artifacts conflict, stop and record the conflict rather than silently cho
 
 For each learning day:
 
-1. Restate the questions and expected outcome.
-2. Write predictions before running material experiments.
-3. Implement the smallest transparent mechanism first.
-4. Run a smoke experiment before a longer run.
-5. Preserve configurations, environment identity, metrics, and representative outputs.
-6. Distinguish observations from interpretations.
-7. Create or update the book-facing material to which the day's learning belongs.
-8. Update `PROGRESS.md` with evidence and an exact next action.
-9. Update `LEARNING_MEMORY.md` when the session produces a corrected mental model, demonstrated understanding, reusable public-content idea, unresolved conceptual edge, or portable task.
+1. Create or read the day's directory and index under `learning_artifacts/`.
+2. Restate the questions and expected outcome.
+3. Write predictions before running material experiments.
+4. Implement the smallest transparent mechanism first.
+5. Run a smoke experiment before a longer run.
+6. Preserve configurations, environment identity, metrics, and representative outputs.
+7. Distinguish observations from interpretations.
+8. During the lesson, create or update the focused topic artifact after each substantive prediction, correction, demonstrated explanation, surprising observation, or unresolved edge. Do not postpone this until the end of the day.
+9. Create or update the book-facing material to which the day's learning belongs.
+10. Update `PROGRESS.md` with evidence and an exact next action.
+11. Update `LEARNING_MEMORY.md` when a new topic must be indexed or the session produces a reusable public-content idea or portable task.
 
 Do not mark a day complete merely because prose or code exists. The stated evidence of completion must be present.
 
@@ -77,8 +81,11 @@ advances the book's central argument.
 ## Cross-session and cross-machine memory
 
 Do not rely on chat history as the only record of a valuable discussion or task.
-Preserve durable learning in `LEARNING_MEMORY.md` as a concise mental model with
-its evidence level, important distinctions, and remaining gaps.
+Preserve deep conceptual learning in the active topic under `learning_artifacts/`
+with the learner's initial model, refined mechanism, concrete examples,
+demonstrated understanding, evidence level, important limitations, reuse
+opportunities, and remaining gaps. Keep `LEARNING_MEMORY.md` as the compact index
+and production queue rather than duplicating every topic there.
 
 Before work is handed to another session or machine, create or update a portable
 task packet containing a stable task ID, base commit, branch, learning objective,

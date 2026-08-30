@@ -17,8 +17,9 @@
 1. Read [`BOOK.md`](BOOK.md) for the reader-facing book architecture.
 2. Read [`ROADMAP.md`](ROADMAP.md) for the authoritative four-week production plan.
 3. Read [`PROGRESS.md`](PROGRESS.md) for the current position and next action.
-4. Read [`LEARNING_MEMORY.md`](LEARNING_MEMORY.md) for durable understanding, content ideas, and cross-machine task packets.
-5. Contributors and coding agents must read [`AGENTS.md`](AGENTS.md) before changing the project.
+4. Read [`LEARNING_MEMORY.md`](LEARNING_MEMORY.md) for the artifact index, content ideas, and cross-machine task packets.
+5. Read [`learning_artifacts/`](learning_artifacts/) for deep discussions organized by day and topic.
+6. Contributors and coding agents must read [`AGENTS.md`](AGENTS.md) before changing the project.
 
 ## Learning promise
 
