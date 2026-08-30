@@ -39,6 +39,10 @@ dependencies, preferred machine, and current status.
 
 - Learns best through prediction, a concrete example, a short explanation, and
   an immediate check for understanding.
+- Prefers profound, mechanism-level discussion over calculation quizzes. Use
+  arithmetic as supporting evidence or executable verification, not as the main
+  conversational teaching format; favor conceptual tensions, implications, and
+  connections to real model behavior for understanding checks.
 - Wants mechanisms explained beneath convenient APIs: bytes and BPE merges before
   token IDs, embedding rows before contextual states, and masks before trainer
   abstractions.
