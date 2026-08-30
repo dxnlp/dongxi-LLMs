@@ -43,6 +43,15 @@ contextual attention then produce generally different hidden states. For Qwen3,
 position is applied through RoPE inside attention rather than a learned absolute
 position vector simply added at lookup.
 
+The contextual distinction is constrained by the architecture's information
+boundary. In a causal decoder, a token-position hidden state can incorporate only
+that token and earlier tokens, not words that occur later. Thus the state at
+`bank` in `The bank approved the loan` may still be ambiguous because `approved`
+and `loan` are in its future; later positions can integrate those words and form
+a financial-bank interpretation. In `river bank`, the state at `bank` can already
+use `river` because it is in the available left context. A bidirectional encoder
+has a different boundary and can use context on both sides.
+
 The embedding layer is normally trained end to end, not with a separate
 "embedding objective." Token lookup supplies vectors to the transformer; the
 transformer produces contextual states; the output projection produces logits;
@@ -162,6 +171,10 @@ through moment estimates and weight decay before updating the parameter.
 - The unequal-logit case and the role of relative logit differences still need
   a learner explanation-back before the complete softmax bridge is marked
   demonstrated.
+- Correctly located contextual disambiguation in the transformer rather than in
+  separate lookup rows for each occurrence. The causal restriction—meaning at a
+  position can use only available left context—was then introduced as a deeper
+  refinement.
 
 ## Evidence and limitations
 
