@@ -156,9 +156,12 @@ through moment estimates and weight decay before updating the parameter.
 - Correctly inferred that when `p(dog)=0.2`, the target-row gradient
   `(0.2-1)h=-0.8h` makes an SGD update move `E[dog]` toward `h`, increasing their
   dot product when `h` is held fixed for the local calculation.
-- `introduced` — Logit-to-softmax conversion is now represented through the
-  concrete `[1,2,0]` example and an interactive comparison, but still needs a
-  learner explanation-back before it is marked demonstrated.
+- Correctly explained the equal-logit case: equal logits produce equal
+  exponential weights; normalization by their shared total therefore produces
+  equal probabilities. This demonstrates the basic logit-to-softmax mechanism.
+- The unequal-logit case and the role of relative logit differences still need
+  a learner explanation-back before the complete softmax bridge is marked
+  demonstrated.
 
 ## Evidence and limitations
 
