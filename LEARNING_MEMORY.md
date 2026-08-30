@@ -71,7 +71,7 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 |---|---|---|---|---|---|
 | `X-BPE-001` | X article | Why an English byte tokenizer can still encode `数` | queued | Mac | Stable Chapter 2 draft |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | baseline rendered; Manim refinement queued | Mac | Day 2 explanation complete |
-| `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | interactive explanation drafted; reusable animation queued | Mac | Day 2 embedding lab and Day 3 loss derivation |
+| `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | Correct-token probability → negative-log loss | preview rendered; canonical version deferred | Mac | Day 3 derivation |
 
 ### Task packet: `X-BPE-001`
@@ -160,37 +160,69 @@ single occurrence creates a new token online.
 end by the next-token loss, and distinguish the lookup gradient path from the
 additional classifier path created by tied input/output weights.
 
+**Animation form:** A continuous animation rather than a sequence of disconnected
+slides or a manually stepped interface. Preserve the identity of the shared
+matrix `E` throughout the forward and backward motion so weight tying is visible,
+not merely stated.
+
 **Source material:**
 `learning_artifacts/day-02-text-tokens-and-embeddings/embeddings-context-and-gradients.md`;
 the planned Day 2 embedding lab; the Day 3 cross-entropy derivation when
 available.
 
-**Storyboard:**
+**Continuous-motion storyboard:**
 
-1. Start with token IDs `[cat=1, sat=2]` selecting rows `E[1]` and `E[2]` from
-   `E ∈ R^(V×d)`.
-2. Move the selected vectors through a transformer into a contextual state `h`.
-3. Reuse the tied matrix to produce `logits = hE^T`, identify target `dog`, and
-   create the next-token loss.
-4. Run the backward pass along two visually distinct paths: lookup-path gradients
-   to selected input rows, and output-classifier gradients to all vocabulary rows.
-5. Accumulate both contributions on input rows, then show an optimizer update.
-6. Contrast briefly with untied weights, where the all-row classifier gradient
-   updates a separate output matrix instead of the input embedding table.
+1. Let IDs `[cat=1, sat=2]` move to rows `E[1]` and `E[2]` in
+   `E ∈ R^(V×d)`. Copies of those vectors lift out of the table while the original
+   rows remain visibly part of `E`.
+2. Move the selected vectors continuously through a transformer block and
+   compress the last-position computation into contextual state `h`.
+3. Keep the same `E` on screen and visually reuse or transpose it as the tied
+   output projection. Animate `hE^T` into one logit per vocabulary row.
+4. Transform logits into probabilities, highlight target `dog`, and collapse the
+   target probability into scalar loss `L = -log p(dog)`.
+5. Reverse the direction of motion for backpropagation. Let the loss signal split
+   into two clearly labeled streams: the output-classifier path reaches all rows
+   of `E`, while the input lookup path travels back through the transformer and
+   reaches only rows `cat` and `sat`.
+6. Recombine the two streams on the selected input rows so their accumulated
+   gradients are visually distinct from output-only gradients on unused input
+   rows.
+7. Apply an optimizer update. Move the affected row vectors from their old
+   coordinates or values to their new ones, then leave the updated `E` ready for
+   the next batch.
+8. End with a brief untied contrast only if it remains legible: the classifier
+   gradient updates a separate `W_out`, while lookup gradients update selected
+   rows of `E_in`.
+
+**Motion language:** Forward computation moves consistently toward the loss;
+backpropagation travels in the opposite direction. Use one stable visual identity
+for `E`, one for input-path gradients, and another for output-path gradients.
+Avoid jump cuts that make the output projection look like an unrelated matrix.
 
 **Required precision:** Do not say that only selected rows receive total gradient
 when weights are tied; call selected-row contributions through lookup "direct
 input-path gradients"; identify `E ← E - η∇E` as an SGD sketch rather than the
 exact AdamW rule; do not derive cross-entropy before Day 3's canonical treatment.
+Do not animate `p(dog)` improving after the update unless that change is computed
+and verified in the same toy model.
 
 **Expected outputs:** Editable animation source, 16:9 H.264 MP4, lightweight GIF,
 render command, dependency revisions, and a still diagram for Chapter 2. The Mac
 is preferred for final media rendering.
 
+**Mac handoff:** Use branch `visuals/manim-embedding-training`. Start from the
+latest `origin/main` containing this packet and record its exact commit before
+work begins. Limit changes to the embedding-animation source, rendered previews,
+and their render instructions under `visuals/animations/`; do not edit the
+canonical Chapter 2 prose in the rendering branch.
+
 **Acceptance checks:** The input IDs and matrix shapes remain visible; tied versus
 untied behavior is unambiguous; input rows visibly accumulate two contributions
 under tying; the target and loss direction agree with the later numerical lab;
-the final frame remains readable on a phone.
+the animation reads as one continuous computation; the final frame remains
+readable on a phone. Return the commit hash, changed files, exact render command,
+dependency revisions, outputs, and known limitations.
 
 ### Task packet: `ANIM-CE-001`
 
