@@ -70,6 +70,7 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 | ID | Type | Topic | Status | Preferred machine | Dependency |
 |---|---|---|---|---|---|
 | `X-BPE-001` | X article | Why an English byte tokenizer can still encode `数` | queued | Mac | Stable Chapter 2 draft |
+| `X-EMB-001` | X article | How transformer embedding tables are actually trained | queued | Mac | Day 2 embedding lab and stable Chapter 2 treatment |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | baseline rendered; Manim refinement queued | Mac | Day 2 explanation complete |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | Correct-token probability → negative-log loss | preview rendered; canonical version deferred | Mac | Day 3 derivation |
@@ -116,6 +117,73 @@ thread at production time rather than maintaining two premature versions.
 **Acceptance checks:** A reader can answer both of these after reading: (1) why
 can the tokenizer encode `数` without a Chinese vocabulary entry? (2) why might
 the resulting language model still not understand Chinese?
+
+### Task packet: `X-EMB-001`
+
+**Working title:** How Are Embeddings Actually Trained Inside a Transformer?
+
+**Hook:** An embedding table looks like a dictionary of vectors, but no teacher
+normally supplies the "correct vector" for `cat`, `sat`, or `dog`. The vectors
+become useful because next-token prediction sends gradients all the way back to
+the table.
+
+**Learning promise:** A reader should be able to trace one next-token training
+example from token IDs to embedding lookup, transformer state, logits, loss,
+backpropagation, and an optimizer update. They should also understand why the
+answer to "which embedding rows are updated?" changes under weight tying.
+
+**Narrative spine:**
+
+1. Begin with the apparent missing label: if training data contains text rather
+   than target vectors, where does an embedding's meaning come from?
+2. Define `E ∈ R^(V×d)` and show IDs selecting rows: `[B,T] → [B,T,d]`.
+3. Follow selected vectors through the transformer to contextual state `h` and
+   next-token loss.
+4. Reverse the computation: the loss gradient flows through the output head and
+   transformer into the selected lookup rows.
+5. Use repeated ID sequence `[2,5,2]` to show that two position-level gradient
+   contributions add into shared row `E[2]`.
+6. Reveal the weight-tying subtlety. With untied weights, only selected input rows
+   receive lookup-path embedding gradients. With `logits = hE^T`, the shared `E`
+   also receives output-classifier gradients across the vocabulary.
+7. End with the conceptual distinction: identical input embeddings can become
+   different contextual hidden states, and "meaning" is distributed across the
+   complete trained network rather than stored only in one row.
+
+**Required equations and shapes:**
+
+```text
+E.shape = [V, d]
+input_ids.shape = [B, T]
+X = E[input_ids], X.shape = [B, T, d]
+logit_i = h · E[i]                         # tied output weights
+dL/dE[i] |_output = (p_i - 1[i = y]) h
+E[2] lookup gradient = contribution_at_1 + contribution_at_3
+```
+
+**Required precision:** Say "direct lookup-path gradient" rather than claiming
+that unused rows always receive zero total gradient; distinguish tied and untied
+output weights; do not imply that the embedding layer is trained with a separate
+semantic objective; distinguish input embeddings from contextual hidden states;
+label `E ← E - η∇E` as an SGD sketch when the actual optimizer is AdamW.
+
+**Source material:**
+`learning_artifacts/day-02-text-tokens-and-embeddings/embeddings-context-and-gradients.md`;
+the planned Day 2 embedding lab; `ANIM-EMB-001`; the Chapter 2 draft when stable.
+
+**Expected output:** An English X Article or thread draft with the continuous
+embedding-training animation as its primary visual. Consider a compact Chinese
+adaptation only after the canonical English claims and equations pass review.
+
+**Mac handoff:** Use branch `content/x-transformer-embeddings`. Start from the
+latest `origin/main` containing this packet, record its exact commit, and keep the
+article draft separate from canonical Chapter 2 until review.
+
+**Acceptance checks:** A reader can explain where embedding supervision comes
+from, calculate the lookup output shape, explain repeated-row gradient addition,
+and distinguish the rows updated through lookup from those updated through a tied
+classifier. Every empirical statement links to the later Day 2 lab; unverified
+claims remain labeled.
 
 ### Task packet: `ANIM-BPE-001`
 

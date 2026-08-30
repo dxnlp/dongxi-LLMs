@@ -128,6 +128,8 @@ model parameters can receive gradients through the complete computation graph.
 
 - Chapter 2 tensor-shape walkthrough.
 - Small exercise deriving repeated-row gradient accumulation.
+- X article task `X-EMB-001`: explain how next-token loss trains embedding rows,
+  including repeated IDs and the tied-versus-untied gradient distinction.
 - Animation task `ANIM-EMB-001`: IDs → lookup → transformer → tied output loss →
   two backward paths → optimizer update. The planned Mac/Manim version should be
   one continuous forward-and-backward motion, with the shared identity of `E`
