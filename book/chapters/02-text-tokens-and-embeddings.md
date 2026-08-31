@@ -31,8 +31,8 @@ preprocessing step; it will be an inspectable part of the model.
 
 After completing this chapter, you should be able to:
 
-- distinguish Unicode code points, UTF-8 bytes, tokenizer pieces, token IDs, and
-  written words;
+- distinguish written words, grapheme clusters, Unicode code points, UTF-8 bytes,
+  tokenizer pieces, and token IDs;
 - explain offline BPE training separately from frozen runtime encoding;
 - explain how byte-level BPE can encode unseen Chinese text without claiming that
   the model understands it;
@@ -51,7 +51,7 @@ Chapter 1's evidence discipline remains active: predictions precede measurements
 observations remain separate from interpretations, and a worked example does not
 silently become a language-wide claim.
 
-## 2.2 Five units that are easy to confuse
+## 2.2 Six units that are easy to confuse
 
 Consider the Chinese character `数`. It is one visible character and one Unicode
 code point, but UTF-8 stores it as three bytes:
@@ -71,6 +71,7 @@ We therefore need separate names for separate units:
 | Unit | Meaning |
 |---|---|
 | Written word | A language-dependent orthographic unit |
+| Grapheme cluster | A user-perceived character, possibly built from several code points |
 | Unicode code point | An integer assigned by Unicode to an abstract character |
 | UTF-8 byte | One byte in a variable-length encoding of Unicode text |
 | Tokenizer piece | A string or byte pattern selected by the tokenizer rules |
@@ -81,6 +82,11 @@ words can split into stems or fragments. Chinese characters can split into byte
 pieces or merge into phrases. Spaces may be represented as part of the following
 piece. Special tokens can represent control events that do not correspond to
 ordinary source text.
+
+Even “character” is ambiguous. The family emoji `👨‍👩‍👧‍👦` is one extended
+grapheme cluster, but it contains seven Unicode code points—four people joined by
+three zero-width joiners—and occupies 25 UTF-8 bytes. Python's `len()` reports
+seven because it counts code points, not reader-perceived graphemes.
 
 This is why “How many tokens does this sentence contain?” is incomplete without a
 tokenizer identity and configuration.
@@ -102,10 +108,74 @@ revision, normalization and pre-tokenization behavior, special-token policy, and
 whether encoding adds those special tokens. “The IDs have the right shape” is not
 evidence that the interface is correct.
 
+### Normalization and pre-tokenization change the input
+
+Tokenization begins before BPE merges. Normalization may rewrite one valid Unicode
+sequence into another, while pre-tokenization determines which regions are
+eligible to interact. These steps belong to the tokenizer's identity.
+
+The local tokenizer-mechanics experiment compared two canonically equivalent
+spellings of `café`:
+
+| Source | Code points | UTF-8 bytes | Graphemes | Qwen3 token IDs | Exact source round trip |
+|---|---:|---:|---:|---|---|
+| NFC `café` | 4 | 5 | 4 | `[924, 58858]` | yes |
+| NFD `café` | 5 | 6 | 4 | `[924, 58858]` | no |
+
+The pinned tokenizer normalized both forms to the same IDs and decoded both as
+NFC `café`. The strings are canonically equivalent, but the NFD source and decoded
+text are not identical code-point sequences. Its returned offsets also stopped
+before the original combining mark. A round trip can therefore preserve normalized
+text without preserving the exact source representation, and offset-derived spans
+need scrutiny whenever normalization changes the input.
+
+Pre-tokenization and byte representation can also make whitespace part of token
+identity. Under the same pinned tokenizer:
+
+```text
+token  → ID 5839, internal piece token
+ token → ID 3950, internal piece Ġtoken
+```
+
+Both examples used one token, but they did not use the same token. Token count
+alone hides this interface difference. The exact protocol and negative
+round-trip result are preserved in the
+[tokenizer-mechanics report](../../experiments/reports/2026-08-31-tokenizer-mechanics.md).
+
+### Special tokens and chat templates package the text
+
+A model-facing prompt may contain more than the visible user content. The pinned
+Qwen3 tokenizer encoded raw `Hello` as one ID, `9707`. Rendering the same content
+as one user message with a generation prompt produced:
+
+```text
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+```
+
+That sequence occupied nine token positions. The added positions came from the
+frozen chat template and control tokens, not from BPE learning vocabulary at
+runtime. In this snapshot, `<|im_end|>` is the EOS token and `<|endoftext|>` is
+used as PAD. Section 2.9 returns to their different learning roles; later
+instruction-data chapters will examine chat-template and loss-mask policy in
+depth.
+
 ## 2.3 BPE learns compression offline
 
 Byte-pair encoding, or BPE, is easier to understand when we separate two phases
 that are often described as though they were one operation.
+
+This chapter focuses on **byte-level BPE**, not every tokenizer family:
+
+| Family | Bounded mechanism summary |
+|---|---|
+| BPE | Grow larger pieces through learned merges, then replay merge priorities during encoding |
+| WordPiece | Learn a subword inventory with a different scoring procedure; common encoders select valid pieces greedily |
+| Unigram | Begin with many candidate pieces, prune the inventory, and score alternative segmentations probabilistically |
+
+Byte fallback is a separate implementation choice; the name of a subword family
+alone does not guarantee complete byte coverage.
 
 ### Phase 1: train the tokenizer
 
@@ -118,17 +188,35 @@ In a simplified BPE training loop:
 5. rewrite occurrences using that merge;
 6. repeat until the merge or vocabulary budget is exhausted.
 
-For a byte-level tokenizer, the base inventory includes all 256 byte values. A
-small teaching corpus might first contain:
+For a byte-level tokenizer, the base inventory includes all 256 byte values. To
+make the training mechanism readable, our tiny executable example instead starts
+from characters in a pre-tokenized weighted corpus:
 
 ```text
-[l] [i] [k] [e] [d]
+hug     × 5
+hugs    × 3
+hugging × 2
 ```
 
-If `[l][i]`, then `[li][k]`, then `[lik][e]` repeatedly win the pair-count
-competition, the vocabulary can acquire `like`. A later merge may produce
-`liked`. The old constituent entries do not disappear merely because a larger
-piece is added.
+Three measured rounds produced:
+
+| Round | Selected pair | Weighted count |
+|---:|---|---:|
+| 1 | `h + u → hu` | 10 |
+| 2 | `hu + g → hug` | 10 |
+| 3 | `hug + s → hugs` | 3 |
+
+At round 1, `h+u` and `u+g` were tied at 10. A declared lexicographic tie break
+selected `h+u`; “choose the most frequent pair” was not sufficient to determine
+a unique result. After training, frozen replay encoded `hugging` as
+`[hug] [g] [i] [n] [g]` and `hugs` as `[hugs]`. The old constituent entries did
+not disappear merely because larger pieces were added.
+
+The implementation and complete pair-count trace live in
+[`tiny_bpe.py`](../../src/dongxi_llms/tiny_bpe.py) and the
+[tokenizer-mechanics report](../../experiments/reports/2026-08-31-tokenizer-mechanics.md).
+The example establishes the algorithmic mechanism; it does not reconstruct
+Qwen3's historical merge sequence.
 
 Frequency matters, but “frequent text becomes one token” is too strong. A pair
 must compete against every other eligible pair for a finite budget. Normalization,
@@ -635,11 +723,12 @@ made it possible.
 
 ## 2.10 Transparent companion experiments
 
-The chapter's empirical claims come from three small, inspectable artifacts:
+The chapter's empirical claims come from four small, inspectable artifacts:
 
 | Experiment | What it establishes | What it does not establish |
 |---|---|---|
 | [Pinned multilingual tokenizer](../../experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md) | Exact pieces, IDs, ratios, and round trips for three strings | General language efficiency or comprehension |
+| [Transparent tokenizer mechanics](../../experiments/reports/2026-08-31-tokenizer-mechanics.md) | BPE pair-count trace, Unicode units, normalization, leading-space identity, and chat packaging | Qwen training history or other tokenizer families |
 | [Embedding gradient paths](../../experiments/reports/2026-08-31-embedding-gradient-paths.md) | Repeated accumulation, tied/untied routing, response-only masking | Semantic quality, convergence, or Qwen-specific gradient magnitudes |
 | [Qwen3 embedding interface](../../experiments/reports/2026-08-31-qwen3-embedding-inspection.md) | Actual shapes, tokenizer boundary, logits width, and runtime tying | Design rationale or hardware benefit |
 
@@ -648,6 +737,11 @@ Run them with the recorded platform environment:
 ```bash
 PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python \
   -m dongxi_llms.tokenization_lab --local-files-only
+
+PYTHONPATH=src uv run \
+  --with 'transformers==5.16.1' --with 'tokenizers==0.23.1' \
+  --with 'regex==2026.1.15' --with 'pyyaml==6.0.1' \
+  python -m dongxi_llms.tokenizer_mechanics_lab --local-files-only
 
 PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python \
   -m dongxi_llms.embedding_gradient_lab
@@ -677,6 +771,18 @@ internal patterns. `språkmodellen` was one word and five Qwen3 tokens here.
 ### “No unknown token means the model understands the language”
 
 Byte coverage guarantees representation, not useful learned behavior.
+
+### “A decode round trip always preserves the original Unicode sequence”
+
+Normalization can map canonically equivalent source strings to the same IDs. The
+pinned tokenizer decoded NFD `café` as NFC `café`: the text remained canonically
+equivalent, but exact code-point equality failed.
+
+### “The visible user message is the complete model input”
+
+A chat template can add roles, separators, and generation prompts. Raw `Hello`
+was one token in the pinned example; its one-message chat representation occupied
+nine positions.
 
 ### “An embedding row contains the word's complete meaning”
 
@@ -749,6 +855,12 @@ identity verified the actual loaded behavior in the inspected stack.
     denominators, controls, uncertainty or variation summaries, and claims that
     would still remain outside scope.
 
+11. **Unicode and prompt packaging.** NFC `café` contains four code points, while
+    its NFD spelling contains five; both contain four grapheme clusters. Explain
+    why a tokenizer may map them to the same IDs without preserving exact source
+    equality. Then explain why raw `Hello` can occupy one token while a chat
+    template containing the same visible content occupies nine.
+
 Worked solutions are provided in
 [the Chapter 2 solutions](../solutions/02-text-tokens-and-embeddings.md).
 
@@ -757,8 +869,9 @@ Worked solutions are provided in
 Text reaches a transformer through a learned discrete interface. Byte-level BPE
 separates universal byte coverage from corpus-dependent compression. Runtime
 encoding replays frozen rules; it does not learn vocabulary from the current
-sentence. Token IDs are meaningful only under the tokenizer that defined the
-model's embedding rows.
+sentence. Normalization, pre-tokenization, whitespace, and chat templates can all
+change the resulting IDs before model computation begins. Token IDs are meaningful
+only under the tokenizer that defined the model's embedding rows.
 
 Embedding lookup maps `[B,T]` IDs to `[B,T,d]` starting vectors. The transformer
 then constructs position- and context-dependent hidden states under a causal

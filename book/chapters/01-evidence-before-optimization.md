@@ -457,4 +457,7 @@ Attempt the exercises before reading the
 The next chapter begins at the model's input boundary. Before a language model can
 predict a token, text must be divided into tokens and mapped to vectors. We will
 compare that boundary across English, Chinese, and Swedish—and predict the outcome
-before inspecting it.
+before inspecting it. A multilingual ranking prediction and a later exact Unicode
+round-trip criterion will fail. We will keep both failures, because a valid
+experiment can improve the model of the system by contradicting the model in our
+head.

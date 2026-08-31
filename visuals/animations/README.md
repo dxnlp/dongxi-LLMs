@@ -5,6 +5,9 @@ previews use Matplotlib and Pillow so they can render on the DGX Spark without a
 browser, LaTeX, or FFmpeg. Signature animations may also use Manim Community
 Edition when continuity of motion is part of the explanation.
 
+New Manim work should follow the approved
+[`STYLE_GUIDE.md`](STYLE_GUIDE.md) visual system.
+
 ## Render
 
 From the repository root:
@@ -22,9 +25,10 @@ to select another destination.
 
 ### Manim BPE refinement
 
-The Manim scene keeps the encoder rulebook visible while token objects move
-through byte, character, and phrase representations. On macOS, install Manim's
-system prerequisites once:
+The Manim scene uses a minimal, motion-first layout: token objects split and
+fuse while a three-stage scale anchors byte, character, and phrase
+representations. Text is limited to structural labels and the final conceptual
+distinction. On macOS, install Manim's system prerequisites once:
 
 ```bash
 brew install cairo pkg-config
@@ -49,7 +53,7 @@ ffmpeg -y -loglevel error \
   -vf "fps=15,scale=960:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=128[p];[s1][p]paletteuse=dither=bayer" \
   visuals/animations/rendered/bpe-byte-merges-manim.gif
 
-ffmpeg -y -loglevel error -ss 18.0 \
+ffmpeg -y -loglevel error -ss 16.8 \
   -i visuals/animations/rendered/bpe-byte-merges-manim.mp4 -frames:v 1 \
   visuals/animations/rendered/bpe-byte-merges-manim-still.png
 ```
@@ -67,7 +71,7 @@ ffmpeg -version | head -n 1
 - `bpe_byte_merges.py`: distinguish universal byte coverage from learned BPE
   compression, using `数` and `数据库` as the running example.
 - `manim_bpe_byte_merges.py`: show the same mechanism as one continuous frozen
-  encoding pass, with the offline merge ranks visible throughout.
+  encoding pass, using spatial motion rather than a dense merge-rank table.
 - `cross_entropy_curve.py`: connect the probability assigned to the correct
   token with its negative-log-likelihood penalty. This is a preview for Day 3
   and should be integrated only after the derivation is complete.

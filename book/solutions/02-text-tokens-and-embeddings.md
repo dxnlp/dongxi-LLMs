@@ -260,3 +260,30 @@ The study could support bounded claims about compression and context-window
 occupancy on the sampled distribution. It still would not establish model
 understanding, language quality, fairness, capability, or the causal effect of
 the unknown tokenizer-training mixture.
+
+## Exercise 11 — Unicode and prompt packaging
+
+NFC `café` represents `é` with one code point, `U+00E9`. Its NFD form represents
+the same reader-perceived grapheme with `e` followed by combining acute accent
+`U+0301`. The full words therefore contain four and five code points respectively,
+while both contain four extended grapheme clusters.
+
+The pinned Qwen3 tokenizer normalized both forms to token IDs `[924, 58858]` and
+decoded both as NFC `café`. The NFD source and decoded output are canonically
+equivalent under Unicode normalization, but they are not identical code-point
+sequences. Exact round-trip equality, normalized equivalence, and visual
+similarity are three different checks.
+
+Raw `Hello` encoded as ID `[9707]`. The chat template added role text, separators,
+and a generation prompt:
+
+```text
+<|im_start|>user
+Hello<|im_end|>
+<|im_start|>assistant
+```
+
+That representation occupied nine tokens. The tokenizer did not learn new BPE
+merges at runtime; it encoded a longer, policy-defined model input. Reproducible
+token counts must therefore state whether chat templating and special-token
+packaging were applied.

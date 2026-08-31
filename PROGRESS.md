@@ -18,7 +18,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | Day | Topic | Status | Primary evidence |
 |---:|---|---|---|
 | 1 | Laboratory and reproducibility | complete | Chapter: `book/chapters/01-evidence-before-optimization.md`; evidence: `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
-| 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
+| 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-tokenizer-mechanics.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
 | 3 | Probabilities and next-token loss | pending | — |
 | 4 | Attention from first principles | pending | — |
 | 5 | Decoder-only Transformer | pending | — |
@@ -116,6 +116,41 @@ Copy this block below the daily log heading after each session:
 - Book-facing contribution: `book/chapters/02-text-tokens-and-embeddings.md` and `book/solutions/02-text-tokens-and-embeddings.md`, supported by three experiment reports and reusable source modules.
 - Public artifacts produced: BPE and cross-entropy preview animations; `X-BPE-001` and `X-EMB-001` are ready for Mac drafting; final embedding and cross-entropy animations retain their Day 3 dependency.
 - Exact next action: begin Day 3 with a mechanism-level discussion of softmax as normalized competition, then derive cross-entropy, perplexity, causal shifting, and a tiny next-token model.
+
+### Day 02 enrichment — 2026-08-31, local Mac
+
+- Status: complete with one retained failed criterion.
+- Questions investigated: How can BPE pair counts and tie handling be made
+  executable? How do grapheme clusters differ from code points and bytes? What
+  do normalization, leading spaces, and chat-template packaging change before
+  model computation?
+- Predictions recorded before execution: three BPE merges and counts; NFC/NFD
+  unit counts; one family-emoji grapheme; leading-space token-identity change;
+  chat packaging larger than raw text; exact decode of both normalization forms.
+- Code or content produced: `src/dongxi_llms/tiny_bpe.py`,
+  `src/dongxi_llms/tokenizer_mechanics_lab.py`, six focused new unit tests, a
+  specification, raw JSON output, report, new learning artifact, expanded Chapter
+  2 treatment, and an eleventh exercise with solution.
+- Experiment executed: CPU-only pinned Qwen3-0.6B tokenizer mechanics on the Mac;
+  no model weights or DGX Spark resources used.
+- Evidence and results: BPE selected `h+u`, `hu+g`, `hug+s` with counts 10, 10,
+  3; NFC/NFD `café` used 4/5 code points but four graphemes each; the family emoji
+  used seven code points, 25 bytes, and one grapheme; `token` and ` token` mapped
+  to different IDs; raw `Hello` used one token and the chat form nine.
+- Failure or surprise: NFD exact source round trip failed because decode returned
+  NFC; normalized offsets also omitted the original combining mark. The first BPE
+  maximum was tied and required the predeclared tie policy.
+- Interpretation boundary: the trace establishes generic BPE mechanics, not
+  Qwen's training history; the tokenizer examples do not generalize to other
+  revisions, languages, or chat templates.
+- Book-facing contribution: Chapter 2 now includes graphemes, concrete
+  preprocessing, tested BPE training, tokenizer-family scope, and chat packaging.
+  Chapter 1 receives only a short evidence-discipline bridge; tokenizer mechanics
+  remain in Chapter 2.
+- Public-content contribution: the evidence gaps for expanded `X-BPE-001` are
+  closed; the canonical English X Article can now be drafted for review.
+- Exact next action: retain the course transition to Day 3; the independent Mac
+  content lane may draft `X-BPE-001` from the approved outline and evidence.
 
 ## Learning memory and production queue
 

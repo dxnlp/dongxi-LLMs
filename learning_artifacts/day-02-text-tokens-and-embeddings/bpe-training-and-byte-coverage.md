@@ -4,7 +4,7 @@
 - Date opened: 2026-08-30
 - Status: demonstrated
 - Book destination: Chapter 2 sections on BPE and unknown text
-- Related evidence: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`; `visuals/animations/rendered/bpe-byte-merges.gif`
+- Related evidence: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`; `experiments/reports/2026-08-31-tokenizer-mechanics.md`; `visuals/animations/rendered/bpe-byte-merges-manim.mp4`
 - Related production tasks: `X-BPE-001`, `ANIM-BPE-001`
 
 ## Questions that drove the discussion
@@ -97,11 +97,25 @@ and `下一个`; it does not reconstruct the tokenizer's historical merge sequen
 Tokenizers without complete byte coverage or byte fallback may emit `<unk>` for
 unsupported characters.
 
+A later executable teaching corpus now verifies three complete pair-count rounds:
+
+```text
+h + u   → hu    count 10
+hu + g  → hug   count 10
+hug + s → hugs  count 3
+```
+
+The first maximum was tied, so the run also demonstrates that a declared tie
+policy is needed for deterministic training. Its frozen encoder replays those
+rules in rank order. This character-level example establishes generic BPE
+mechanics; it remains separate from the illustrative Chinese byte merges and does
+not reconstruct Qwen's tokenizer history.
+
 ## Open edges
 
-- Implement a tiny BPE trainer so pair counts and merge order can be inspected.
-- Compare longest-match intuition with actual ranked BPE encoding.
-- Show how normalization and pre-tokenization limit eligible merges.
+- Compare production implementations only when a claim requires details beyond
+  the transparent trainer.
+- Run a representative corpus before making language-level efficiency claims.
 
 ## Reuse opportunities
 

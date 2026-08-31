@@ -1,0 +1,728 @@
+{
+  "environment": {
+    "machine": "arm64",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.10.8",
+    "pyyaml": "6.0.1",
+    "regex": "2026.1.15",
+    "tokenizers": "0.23.1",
+    "transformers": "5.16.1"
+  },
+  "experiment_id": "2026-08-31-tokenizer-mechanics",
+  "tiny_bpe": {
+    "corpus": {
+      "hug": 5,
+      "hugging": 2,
+      "hugs": 3
+    },
+    "encoded_examples": {
+      "hug": [
+        "hug"
+      ],
+      "hugging": [
+        "hug",
+        "g",
+        "i",
+        "n",
+        "g"
+      ],
+      "hugs": [
+        "hugs"
+      ]
+    },
+    "final_corpus": [
+      {
+        "frequency": 5,
+        "symbols": [
+          "hug"
+        ]
+      },
+      {
+        "frequency": 2,
+        "symbols": [
+          "hug",
+          "g",
+          "i",
+          "n",
+          "g"
+        ]
+      },
+      {
+        "frequency": 3,
+        "symbols": [
+          "hugs"
+        ]
+      }
+    ],
+    "frozen_merges": [
+      [
+        "h",
+        "u"
+      ],
+      [
+        "hu",
+        "g"
+      ],
+      [
+        "hug",
+        "s"
+      ]
+    ],
+    "rounds": [
+      {
+        "corpus_after": [
+          {
+            "frequency": 5,
+            "symbols": [
+              "hu",
+              "g"
+            ]
+          },
+          {
+            "frequency": 2,
+            "symbols": [
+              "hu",
+              "g",
+              "g",
+              "i",
+              "n",
+              "g"
+            ]
+          },
+          {
+            "frequency": 3,
+            "symbols": [
+              "hu",
+              "g",
+              "s"
+            ]
+          }
+        ],
+        "pair_counts": [
+          {
+            "count": 10,
+            "pair": [
+              "h",
+              "u"
+            ]
+          },
+          {
+            "count": 10,
+            "pair": [
+              "u",
+              "g"
+            ]
+          },
+          {
+            "count": 3,
+            "pair": [
+              "g",
+              "s"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "g",
+              "g"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "g",
+              "i"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "i",
+              "n"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "n",
+              "g"
+            ]
+          }
+        ],
+        "rank": 1,
+        "selected_count": 10,
+        "selected_pair": [
+          "h",
+          "u"
+        ]
+      },
+      {
+        "corpus_after": [
+          {
+            "frequency": 5,
+            "symbols": [
+              "hug"
+            ]
+          },
+          {
+            "frequency": 2,
+            "symbols": [
+              "hug",
+              "g",
+              "i",
+              "n",
+              "g"
+            ]
+          },
+          {
+            "frequency": 3,
+            "symbols": [
+              "hug",
+              "s"
+            ]
+          }
+        ],
+        "pair_counts": [
+          {
+            "count": 10,
+            "pair": [
+              "hu",
+              "g"
+            ]
+          },
+          {
+            "count": 3,
+            "pair": [
+              "g",
+              "s"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "g",
+              "g"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "g",
+              "i"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "i",
+              "n"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "n",
+              "g"
+            ]
+          }
+        ],
+        "rank": 2,
+        "selected_count": 10,
+        "selected_pair": [
+          "hu",
+          "g"
+        ]
+      },
+      {
+        "corpus_after": [
+          {
+            "frequency": 5,
+            "symbols": [
+              "hug"
+            ]
+          },
+          {
+            "frequency": 2,
+            "symbols": [
+              "hug",
+              "g",
+              "i",
+              "n",
+              "g"
+            ]
+          },
+          {
+            "frequency": 3,
+            "symbols": [
+              "hugs"
+            ]
+          }
+        ],
+        "pair_counts": [
+          {
+            "count": 3,
+            "pair": [
+              "hug",
+              "s"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "g",
+              "i"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "hug",
+              "g"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "i",
+              "n"
+            ]
+          },
+          {
+            "count": 2,
+            "pair": [
+              "n",
+              "g"
+            ]
+          }
+        ],
+        "rank": 3,
+        "selected_count": 3,
+        "selected_pair": [
+          "hug",
+          "s"
+        ]
+      }
+    ],
+    "selection_rule": "highest weighted adjacent-pair count; lexicographic tie break"
+  },
+  "tokenizer": {
+    "base_vocabulary_size": 151643,
+    "chat_template": {
+      "encoded": {
+        "code_points_per_token": 6.111111,
+        "decoded": "<|im_start|>user\nHello<|im_end|>\n<|im_start|>assistant\n",
+        "exact_round_trip": true,
+        "offsets": [
+          [
+            0,
+            12
+          ],
+          [
+            12,
+            16
+          ],
+          [
+            16,
+            17
+          ],
+          [
+            17,
+            22
+          ],
+          [
+            22,
+            32
+          ],
+          [
+            32,
+            33
+          ],
+          [
+            33,
+            45
+          ],
+          [
+            45,
+            54
+          ],
+          [
+            54,
+            55
+          ]
+        ],
+        "text": "<|im_start|>user\nHello<|im_end|>\n<|im_start|>assistant\n",
+        "text_spans": [
+          "<|im_start|>",
+          "user",
+          "\n",
+          "Hello",
+          "<|im_end|>",
+          "\n",
+          "<|im_start|>",
+          "assistant",
+          "\n"
+        ],
+        "token_count": 9,
+        "token_ids": [
+          151644,
+          872,
+          198,
+          9707,
+          151645,
+          198,
+          151644,
+          77091,
+          198
+        ],
+        "unicode_code_points": 55,
+        "utf8_bytes": 55,
+        "utf8_bytes_per_token": 6.111111,
+        "vocabulary_pieces": [
+          "<|im_start|>",
+          "user",
+          "Ċ",
+          "Hello",
+          "<|im_end|>",
+          "Ċ",
+          "<|im_start|>",
+          "assistant",
+          "Ċ"
+        ]
+      },
+      "messages": [
+        {
+          "content": "Hello",
+          "role": "user"
+        }
+      ],
+      "rendered_text": "<|im_start|>user\nHello<|im_end|>\n<|im_start|>assistant\n"
+    },
+    "class": "Qwen2Tokenizer",
+    "is_fast": true,
+    "leading_space_examples": {
+      "with_space": {
+        "code_points_per_token": 6.0,
+        "decoded": " token",
+        "exact_round_trip": true,
+        "offsets": [
+          [
+            0,
+            6
+          ]
+        ],
+        "text": " token",
+        "text_spans": [
+          " token"
+        ],
+        "token_count": 1,
+        "token_ids": [
+          3950
+        ],
+        "unicode_code_points": 6,
+        "utf8_bytes": 6,
+        "utf8_bytes_per_token": 6.0,
+        "vocabulary_pieces": [
+          "Ġtoken"
+        ]
+      },
+      "without_space": {
+        "code_points_per_token": 5.0,
+        "decoded": "token",
+        "exact_round_trip": true,
+        "offsets": [
+          [
+            0,
+            5
+          ]
+        ],
+        "text": "token",
+        "text_spans": [
+          "token"
+        ],
+        "token_count": 1,
+        "token_ids": [
+          5839
+        ],
+        "unicode_code_points": 5,
+        "utf8_bytes": 5,
+        "utf8_bytes_per_token": 5.0,
+        "vocabulary_pieces": [
+          "token"
+        ]
+      }
+    },
+    "name": "Qwen/Qwen3-0.6B",
+    "normalization_examples": {
+      "nfc": {
+        "code_points_per_token": 2.0,
+        "decoded": "café",
+        "exact_round_trip": true,
+        "offsets": [
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "text": "café",
+        "text_spans": [
+          "ca",
+          "fé"
+        ],
+        "token_count": 2,
+        "token_ids": [
+          924,
+          58858
+        ],
+        "unicode_code_points": 4,
+        "utf8_bytes": 5,
+        "utf8_bytes_per_token": 2.5,
+        "vocabulary_pieces": [
+          "ca",
+          "fÃ©"
+        ]
+      },
+      "nfd": {
+        "code_points_per_token": 2.5,
+        "decoded": "café",
+        "exact_round_trip": false,
+        "offsets": [
+          [
+            0,
+            2
+          ],
+          [
+            2,
+            4
+          ]
+        ],
+        "text": "café",
+        "text_spans": [
+          "ca",
+          "fe"
+        ],
+        "token_count": 2,
+        "token_ids": [
+          924,
+          58858
+        ],
+        "unicode_code_points": 5,
+        "utf8_bytes": 6,
+        "utf8_bytes_per_token": 3.0,
+        "vocabulary_pieces": [
+          "ca",
+          "fÃ©"
+        ]
+      }
+    },
+    "raw_text": {
+      "code_points_per_token": 5.0,
+      "decoded": "Hello",
+      "exact_round_trip": true,
+      "offsets": [
+        [
+          0,
+          5
+        ]
+      ],
+      "text": "Hello",
+      "text_spans": [
+        "Hello"
+      ],
+      "token_count": 1,
+      "token_ids": [
+        9707
+      ],
+      "unicode_code_points": 5,
+      "utf8_bytes": 5,
+      "utf8_bytes_per_token": 5.0,
+      "vocabulary_pieces": [
+        "Hello"
+      ]
+    },
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "special_token_ids": {
+      "bos": null,
+      "eos": 151645,
+      "pad": 151643,
+      "unk": null
+    },
+    "special_tokens_map": {
+      "eos_token": "<|im_end|>",
+      "pad_token": "<|endoftext|>"
+    },
+    "total_vocabulary_size": 151669
+  },
+  "unicode": {
+    "grapheme_example": {
+      "code_point_count": 7,
+      "code_points": [
+        {
+          "character": "👨",
+          "code_point": "U+1F468",
+          "name": "MAN"
+        },
+        {
+          "character": "‍",
+          "code_point": "U+200D",
+          "name": "ZERO WIDTH JOINER"
+        },
+        {
+          "character": "👩",
+          "code_point": "U+1F469",
+          "name": "WOMAN"
+        },
+        {
+          "character": "‍",
+          "code_point": "U+200D",
+          "name": "ZERO WIDTH JOINER"
+        },
+        {
+          "character": "👧",
+          "code_point": "U+1F467",
+          "name": "GIRL"
+        },
+        {
+          "character": "‍",
+          "code_point": "U+200D",
+          "name": "ZERO WIDTH JOINER"
+        },
+        {
+          "character": "👦",
+          "code_point": "U+1F466",
+          "name": "BOY"
+        }
+      ],
+      "grapheme_cluster_count": 1,
+      "grapheme_clusters": [
+        "👨‍👩‍👧‍👦"
+      ],
+      "nfc": "👨‍👩‍👧‍👦",
+      "nfd": "👨‍👩‍👧‍👦",
+      "text": "👨‍👩‍👧‍👦",
+      "utf8_byte_count": 25,
+      "utf8_hex": [
+        "F0",
+        "9F",
+        "91",
+        "A8",
+        "E2",
+        "80",
+        "8D",
+        "F0",
+        "9F",
+        "91",
+        "A9",
+        "E2",
+        "80",
+        "8D",
+        "F0",
+        "9F",
+        "91",
+        "A7",
+        "E2",
+        "80",
+        "8D",
+        "F0",
+        "9F",
+        "91",
+        "A6"
+      ]
+    },
+    "nfc_word": {
+      "code_point_count": 4,
+      "code_points": [
+        {
+          "character": "c",
+          "code_point": "U+0063",
+          "name": "LATIN SMALL LETTER C"
+        },
+        {
+          "character": "a",
+          "code_point": "U+0061",
+          "name": "LATIN SMALL LETTER A"
+        },
+        {
+          "character": "f",
+          "code_point": "U+0066",
+          "name": "LATIN SMALL LETTER F"
+        },
+        {
+          "character": "é",
+          "code_point": "U+00E9",
+          "name": "LATIN SMALL LETTER E WITH ACUTE"
+        }
+      ],
+      "grapheme_cluster_count": 4,
+      "grapheme_clusters": [
+        "c",
+        "a",
+        "f",
+        "é"
+      ],
+      "nfc": "café",
+      "nfd": "café",
+      "text": "café",
+      "utf8_byte_count": 5,
+      "utf8_hex": [
+        "63",
+        "61",
+        "66",
+        "C3",
+        "A9"
+      ]
+    },
+    "nfd_word": {
+      "code_point_count": 5,
+      "code_points": [
+        {
+          "character": "c",
+          "code_point": "U+0063",
+          "name": "LATIN SMALL LETTER C"
+        },
+        {
+          "character": "a",
+          "code_point": "U+0061",
+          "name": "LATIN SMALL LETTER A"
+        },
+        {
+          "character": "f",
+          "code_point": "U+0066",
+          "name": "LATIN SMALL LETTER F"
+        },
+        {
+          "character": "e",
+          "code_point": "U+0065",
+          "name": "LATIN SMALL LETTER E"
+        },
+        {
+          "character": "́",
+          "code_point": "U+0301",
+          "name": "COMBINING ACUTE ACCENT"
+        }
+      ],
+      "grapheme_cluster_count": 4,
+      "grapheme_clusters": [
+        "c",
+        "a",
+        "f",
+        "é"
+      ],
+      "nfc": "café",
+      "nfd": "café",
+      "text": "café",
+      "utf8_byte_count": 6,
+      "utf8_hex": [
+        "63",
+        "61",
+        "66",
+        "65",
+        "CC",
+        "81"
+      ]
+    }
+  }
+}

@@ -4,7 +4,7 @@
 - Date opened: 2026-08-30
 - Status: demonstrated; Qwen3 worked example verified
 - Book destination: Chapter 2 sections on tokenizer identity and multilingual efficiency
-- Related evidence: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`
+- Related evidence: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`; `experiments/reports/2026-08-31-tokenizer-mechanics.md`
 - Related production tasks: `X-BPE-001`
 
 ## Questions that drove the discussion
@@ -33,6 +33,12 @@ an underrepresented compound may split into many subwords.
 The tokenizer is part of the model interface contract. A numeric token ID has no
 portable meaning outside its tokenizer. Feeding IDs from another tokenizer can
 select unrelated embedding rows even when both ID tensors have valid shapes.
+
+That identity also includes normalization, pre-tokenization, leading-space
+behavior, special tokens, and chat templates. The pinned enrichment mapped NFC
+and NFD `café` to the same IDs while failing exact NFD source round-trip equality;
+it also mapped `token` and ` token` to different one-token IDs. Raw visible text
+is therefore insufficient to reproduce the model-facing sequence.
 
 ## Concrete examples and derivations
 

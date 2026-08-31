@@ -11,6 +11,7 @@
 2. [`bpe-training-and-byte-coverage.md`](bpe-training-and-byte-coverage.md)
 3. [`embeddings-context-and-gradients.md`](embeddings-context-and-gradients.md)
 4. [`padding-masks-and-special-tokens.md`](padding-masks-and-special-tokens.md)
+5. [`unicode-normalization-pretokenization-and-chat-packaging.md`](unicode-normalization-pretokenization-and-chat-packaging.md)
 
 ## Current outcome
 
@@ -20,8 +21,11 @@ trips in a reproducible report. Embedding shapes, repeated-row accumulation, tie
 and untied gradient paths, and response-only masking have also been demonstrated
 and verified in a fixed PyTorch lab. The pinned Qwen3 embedding shape, tokenizer
 boundary, and runtime weight tying are verified. These mechanisms are synthesized
-into Chapter 2 with ten exercises and worked solutions. Open edges are explicitly
-routed to later chapters or optional enrichment rather than required Day 2 work.
+into Chapter 2 with eleven exercises and worked solutions. A later Mac enrichment
+also verifies a deterministic BPE trace, grapheme counts, normalization behavior,
+leading-space token identity, and raw-versus-chat packaging. Open edges are
+explicitly routed to later chapters or optional enrichment rather than required
+Day 2 work.
 
 ## Public-production links
 

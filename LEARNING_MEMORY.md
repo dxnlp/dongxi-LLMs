@@ -53,6 +53,10 @@ dependencies, preferred machine, and current status.
   animations after the canonical book treatment is stable.
 - Uses the DGX Spark for model- and GPU-dependent work and may use a local Mac for
   animation, design, editing, and publishing tasks.
+- Prefers course animations with a white canvas, Arial normal-weight English,
+  Songti SC Chinese, minimal text, stable geometric alignment, and continuous
+  mechanism-first motion. The reusable specification is
+  `visuals/animations/STYLE_GUIDE.md`.
 
 ## Learning-artifact index
 
@@ -73,32 +77,44 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 
 | ID | Type | Topic | Status | Preferred machine | Dependency |
 |---|---|---|---|---|---|
-| `X-BPE-001` | X article | Why an English byte tokenizer can still encode `数` | ready for Mac drafting | Mac | Chapter 2 and pinned tokenizer report complete |
+| `X-BPE-001` | X article | What is a token? Unicode → BPE → model IDs | evidence complete; expanded outline approved | Mac | Chapter 2 tokenizer-mechanics enrichment complete |
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
-| `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | Manim draft rendered; review pending | Mac | Day 2 explanation complete |
+| `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved; commit pending | Mac | Day 2 explanation complete |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | Correct-token probability → negative-log loss | preview rendered; canonical version deferred | Mac | Day 3 derivation |
 
 ### Task packet: `X-BPE-001`
 
-**Working title:** How an English-Trained Tokenizer Can Still Read the Bytes of
-`数`
+**Working title:** What Is a Token, Really? From Unicode Bytes to BPE and Token
+IDs
 
-**Learning promise:** A reader should be able to predict what happens when an
-English-only byte-level BPE tokenizer receives a Chinese character, and explain
-why encodability is different from understanding.
+**Learning promise:** A reader should be able to distinguish words, grapheme
+clusters, code points, UTF-8 bytes, tokenizer pieces, and token IDs; explain BPE
+training separately from frozen encoding; trace byte fallback for `数`; and
+explain how normalization, spaces, special tokens, and chat templates alter the
+model-facing sequence without implying understanding.
 
 **Narrative spine:**
 
-1. Open with the apparent paradox: the tokenizer never learned Chinese, yet it
-   does not need `<unk>`.
-2. Show the concrete reversible mapping `数` → `E6 95 B0`.
-3. Distinguish the 256-byte base alphabet from merges learned offline.
-4. Show the compression ladder: three byte tokens → one character token →
-   multi-character tokens such as `数据` and `数据库`.
-5. Explain that corpus mixture and vocabulary budget decide which compression is
-   worth learning.
-6. End with the distinction `can encode ≠ can understand`.
+1. Open with the verified surprise: Qwen3 represented `下一个` as one token while
+   splitting the Swedish word `språkmodellen` into five.
+2. Separate written words, grapheme clusters, code points, UTF-8 bytes,
+   tokenizer pieces, and token IDs.
+3. Show the complete interface pipeline: source text → normalization →
+   pre-tokenization → subword encoding → IDs → optional chat packaging.
+4. Establish that IDs are meaningful only under the tokenizer and model revision
+   that define them.
+5. Use the tested `hug/hugs/hugging` corpus to show pair counts, a tied maximum,
+   three deterministic BPE rounds, and frozen replay.
+6. State the scope explicitly: byte-level BPE is the main mechanism; WordPiece
+   and Unigram receive only a compact comparison.
+7. Show `数 → E6 95 B0` and the coverage-to-compression ladder through `数据库`.
+8. Use the pinned NFC/NFD, grapheme, and leading-space results to make
+   preprocessing visible, including the failed exact NFD source round trip.
+9. Compare raw `Hello` at one token with the pinned one-message chat template at
+   nine positions; keep deep masking mechanics for later chapters.
+10. Close with the measured multilingual example and the distinction among
+    coverage, compression, context occupancy, and model understanding.
 
 **Required precision:**
 
@@ -108,10 +124,16 @@ why encodability is different from understanding.
   patterns.
 - Preserve the difference between an observed Qwen3 segmentation and a universal
   rule.
+- Distinguish exact code-point equality from Unicode canonical equivalence.
+- Do not treat chat-template overhead as subword learning.
+- Do not generalize the BPE mechanism to WordPiece, Unigram, or tokenizers without
+  complete byte fallback.
 
 **Source material:**
 `learning_artifacts/day-02-text-tokens-and-embeddings/bpe-training-and-byte-coverage.md`;
+`learning_artifacts/day-02-text-tokens-and-embeddings/unicode-normalization-pretokenization-and-chat-packaging.md`;
 the fixed multilingual specification and report;
+`experiments/reports/2026-08-31-tokenizer-mechanics.md`;
 `book/chapters/02-text-tokens-and-embeddings.md`;
 `ANIM-BPE-001`.
 
@@ -119,9 +141,11 @@ the fixed multilingual specification and report;
 adaptation only after the English claims are reviewed. Decide article versus
 thread at production time rather than maintaining two premature versions.
 
-**Acceptance checks:** A reader can answer both of these after reading: (1) why
-can the tokenizer encode `数` without a Chinese vocabulary entry? (2) why might
-the resulting language model still not understand Chinese?
+**Acceptance checks:** A reader can explain (1) why a word, grapheme, code point,
+byte, piece, and ID are different; (2) how BPE training differs from frozen
+encoding; (3) why `数` can be encoded without a learned Chinese merge; (4) why
+normalization and chat packaging change reproducible token counts; and (5) why
+coverage and compression do not establish understanding.
 
 ### Task packet: `X-EMB-001`
 
@@ -211,8 +235,15 @@ learned compression visible in one sequence.
 - Outputs: 1920×1080 H.264 MP4, 960×540 GIF preview, and PNG still under
   `visuals/animations/rendered/`
 - Renderer: Manim Community `0.21.0`, Python `3.12.11`, Cairo renderer
-- Status: content and legibility review pending; the Matplotlib baseline remains
-  unchanged
+- Status: minimal motion-first visual style approved on 2026-08-31; commit and
+  final content integration remain pending; the Matplotlib baseline is unchanged
+
+**Approved reusable style:** Follow `visuals/animations/STYLE_GUIDE.md`. Use a
+white canvas, Arial normal-weight English, Songti SC Chinese, semantic colors,
+stable geometric anchors, and the least text that preserves accuracy. The
+mechanism should be carried by continuous object motion; avoid prose blocks,
+merge tables, space-padded alignment, and decorative transitions. Apply this
+system by default to `ANIM-EMB-001` and later course animations.
 
 **Storyboard for a Mac/Manim refinement:**
 
