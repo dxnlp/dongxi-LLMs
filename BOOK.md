@@ -118,3 +118,17 @@ Day 1 contributes to:
 - Appendix A, `book/appendices/a-laboratory-setup.md`;
 - exercises and solutions in `book/solutions/`;
 - the specification, report, and manifests in the companion experiment tree.
+
+## Day 2 placement
+
+Day 2 contributes to:
+
+- Chapter 2, `book/chapters/02-text-tokens-and-embeddings.md`;
+- exercises and worked solutions in
+  `book/solutions/02-text-tokens-and-embeddings.md`;
+- transparent tokenizer, embedding-gradient, and Qwen3 interface implementations
+  under `src/dongxi_llms/`;
+- three specifications and reports covering multilingual tokenization, gradient
+  routing and masking, and the pinned Qwen3 tokenizer/embedding boundary;
+- reusable BPE and embedding article and animation packets in
+  `LEARNING_MEMORY.md`.

@@ -6,9 +6,9 @@ This file is the operational source of truth for resuming work. Update it at the
 
 - Active release: `v0.1`
 - Active day: Day 2
-- Status: in progress
-- Current focus: integrating completed and verified Day 2 mechanisms into Chapter 2
-- Next action: draft Chapter 2 and exercises from the canonical Day 2 artifacts and three experiment reports
+- Status: complete
+- Current focus: Day 2 chapter, exercises, implementations, and reports complete; ready to transition
+- Next action: begin Day 3 with the conceptual bridge from relative logits to softmax probabilities, then derive next-token cross-entropy and causal label shifting
 - Last updated: 2026-08-31
 
 ## Four-week tracker
@@ -18,7 +18,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | Day | Topic | Status | Primary evidence |
 |---:|---|---|---|
 | 1 | Laboratory and reproducibility | complete | Chapter: `book/chapters/01-evidence-before-optimization.md`; evidence: `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
-| 2 | Tokenization and embeddings | in progress | Reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md`; Chapter 2 pending |
+| 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
 | 3 | Probabilities and next-token loss | pending | — |
 | 4 | Attention from first principles | pending | — |
 | 5 | Decoder-only Transformer | pending | — |
@@ -101,6 +101,21 @@ Copy this block below the daily log heading after each session:
 - Book-facing contribution: `book/chapters/01-evidence-before-optimization.md`, supported by `book/appendices/a-laboratory-setup.md` and `book/solutions/01-evidence-before-optimization.md`.
 - Public artifacts produced: Chapter 1 draft, Appendix A draft, and Chapter 1 exercises with solutions; not yet released externally.
 - Exact next action: begin Day 2 by predicting token-count differences for fixed English, Chinese, and Swedish strings before inspecting Qwen3 tokenization.
+
+### Day 02 — 2026-08-30 to 2026-08-31
+
+- Status: complete
+- Questions investigated: How do bytes, characters, BPE pieces, IDs, and embeddings differ? How are BPE vocabularies trained and frozen? Why does multilingual token efficiency differ? Where does contextual meaning emerge? How does next-token loss train repeated and tied embedding rows? How do visibility and supervision masks differ?
+- Derivations completed: byte-level fallback and merge progression; `[B,T] → [B,T,d]` lookup shapes; repeated-row gradient accumulation; tied output gradient `(p_i-1[i=y])h`; causal contextualization boundary; prompt-gradient flow under response-only loss; distinction between tokenizer entry count and model row count.
+- Code or content produced: multilingual tokenizer lab, transparent embedding-gradient lab, pinned Qwen3 embedding-interface inspector, four unit tests, Chapter 2, ten exercises with worked solutions, topic-organized learning artifacts, and portable article/animation packets.
+- Experiments executed: pinned Qwen3 English/Chinese/Swedish tokenizer comparison; repeated lookup and tied/untied gradient-path verification; response-only masking verification; pinned Qwen3 tokenizer/embedding boundary and runtime tying inspection.
+- Evidence and results: exact tokenizer round trips with 9 Chinese, 11 English, and 20 Swedish tokens in the fixed example; repeated row gradient doubled exactly; untied nonzero input rows `[1,3]` versus all six tied rows; masked prompt rows received nonzero gradients; Qwen3 input/output matrices verified as the same `[151936,1024]` parameter, with 267 model rows beyond the tokenizer's 151,669 entries.
+- Failures or surprises: the predicted token-efficiency order was reversed; GPT-SW3 remained gated despite authentication; byte-level vocabulary pieces required source-offset spans for readable reporting; serialized input/output tensor names did not imply untied runtime parameters; the model/tokenizer row mismatch was larger than expected and its rationale remains unverified.
+- Claims not yet validated: general language-level tokenizer efficiency, causal attribution to the tokenizer-training corpus, semantic quality from token count, exact Qwen3 training gradient magnitudes, the design reason or performance effect of 267 extra rows, and masking behavior of every trainer API.
+- Decisions made: distinguish tokenizer size `V_t` from model vocabulary dimension `V_m`; say “direct lookup-path gradient” when output tying may add other paths; treat loss masking, detaching, and freezing as separate mechanisms; keep the full logits/softmax/loss derivation in Chapter 3.
+- Book-facing contribution: `book/chapters/02-text-tokens-and-embeddings.md` and `book/solutions/02-text-tokens-and-embeddings.md`, supported by three experiment reports and reusable source modules.
+- Public artifacts produced: BPE and cross-entropy preview animations; `X-BPE-001` and `X-EMB-001` are ready for Mac drafting; final embedding and cross-entropy animations retain their Day 3 dependency.
+- Exact next action: begin Day 3 with a mechanism-level discussion of softmax as normalized competition, then derive cross-entropy, perplexity, causal shifting, and a tiny next-token model.
 
 ## Learning memory and production queue
 

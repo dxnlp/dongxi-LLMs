@@ -63,7 +63,7 @@ ledger.
 | Day | Topic | Status | Artifact index |
 |---:|---|---|---|
 | 1 | Evidence before optimization | complete | `learning_artifacts/day-01-evidence-before-optimization/README.md` |
-| 2 | Text, tokens, and embeddings | in progress | `learning_artifacts/day-02-text-tokens-and-embeddings/README.md` |
+| 2 | Text, tokens, and embeddings | complete | `learning_artifacts/day-02-text-tokens-and-embeddings/README.md` |
 
 At the start of each new day, create its directory and index. During the lesson,
 update the relevant focused topic whenever the learner states a prediction,
@@ -73,8 +73,8 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 
 | ID | Type | Topic | Status | Preferred machine | Dependency |
 |---|---|---|---|---|---|
-| `X-BPE-001` | X article | Why an English byte tokenizer can still encode `数` | queued | Mac | Stable Chapter 2 draft |
-| `X-EMB-001` | X article | How transformer embedding tables are actually trained | queued | Mac | Day 2 embedding lab and stable Chapter 2 treatment |
+| `X-BPE-001` | X article | Why an English byte tokenizer can still encode `数` | ready for Mac drafting | Mac | Chapter 2 and pinned tokenizer report complete |
+| `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | baseline rendered; Manim refinement queued | Mac | Day 2 explanation complete |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | Correct-token probability → negative-log loss | preview rendered; canonical version deferred | Mac | Day 3 derivation |
@@ -111,7 +111,8 @@ why encodability is different from understanding.
 
 **Source material:**
 `learning_artifacts/day-02-text-tokens-and-embeddings/bpe-training-and-byte-coverage.md`;
-the fixed multilingual specification; the Chapter 2 draft when available;
+the fixed multilingual specification and report;
+`book/chapters/02-text-tokens-and-embeddings.md`;
 `ANIM-BPE-001`.
 
 **Expected output:** An English X Article or thread draft, plus a short Chinese
@@ -173,7 +174,9 @@ label `E ← E - η∇E` as an SGD sketch when the actual optimizer is AdamW.
 
 **Source material:**
 `learning_artifacts/day-02-text-tokens-and-embeddings/embeddings-context-and-gradients.md`;
-the planned Day 2 embedding lab; `ANIM-EMB-001`; the Chapter 2 draft when stable.
+`experiments/reports/2026-08-31-embedding-gradient-paths.md`;
+`experiments/reports/2026-08-31-qwen3-embedding-inspection.md`;
+`book/chapters/02-text-tokens-and-embeddings.md`; `ANIM-EMB-001`.
 
 **Expected output:** An English X Article or thread draft with the continuous
 embedding-training animation as its primary visual. Consider a compact Chinese
@@ -239,8 +242,10 @@ not merely stated.
 
 **Source material:**
 `learning_artifacts/day-02-text-tokens-and-embeddings/embeddings-context-and-gradients.md`;
-the planned Day 2 embedding lab; the Day 3 cross-entropy derivation when
-available.
+`experiments/reports/2026-08-31-embedding-gradient-paths.md`;
+`experiments/reports/2026-08-31-qwen3-embedding-inspection.md`;
+`book/chapters/02-text-tokens-and-embeddings.md`; the Day 3 cross-entropy
+derivation when available.
 
 **Continuous-motion storyboard:**
 

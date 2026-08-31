@@ -5,7 +5,7 @@
 - Status: demonstrated and executable verification present
 - Book destination: Chapter 2 embedding sections
 - Related evidence: `experiments/reports/2026-08-31-embedding-gradient-paths.md`; `experiments/reports/2026-08-31-qwen3-embedding-inspection.md`
-- Related production tasks: none currently queued
+- Related production tasks: `X-EMB-001`, `ANIM-EMB-001`
 
 ## Questions that drove the discussion
 
