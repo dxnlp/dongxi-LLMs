@@ -52,6 +52,14 @@ tokens as context while applying direct supervision only to assistant response
 tokens. Visibility and supervision answer different questions and should never
 be treated as one interchangeable mask.
 
+A loss mask determines where scalar loss terms originate; it does not by itself
+detach earlier visible positions from the computation graph. If a supervised
+response state attends to prompt states, the response loss can backpropagate
+through that dependency into attention parameters and prompt-token embedding
+rows even though no local loss was assigned at the prompt positions. Stopping
+that gradient would require a separate operation such as detaching or freezing
+parameters. Thus `not a target` is different from `cannot influence learning`.
+
 ## Concrete examples and derivations
 
 ```text
