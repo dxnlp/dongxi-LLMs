@@ -4,7 +4,7 @@
 - Date opened: 2026-08-30
 - Status: demonstrated
 - Book destination: Chapter 2 sections on BPE and unknown text
-- Related evidence: `visuals/animations/rendered/bpe-byte-merges.gif`
+- Related evidence: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`; `visuals/animations/rendered/bpe-byte-merges.gif`
 - Related production tasks: `X-BPE-001`, `ANIM-BPE-001`
 
 ## Questions that drove the discussion
@@ -90,8 +90,9 @@ it exploits recurring adjacent patterns.
 
 The byte mapping for `数` is a deterministic UTF-8 fact. The merge progression is
 a transparent teaching example, not a claim that every production tokenizer
-learned those exact intermediate rules. Actual Qwen3 segmentation must be linked
-to the pinned tokenizer report.
+learned those exact intermediate rules. The pinned Qwen3 report now verifies
+multi-character Chinese spans in one worked example, including `小型`, `语言`,
+and `下一个`; it does not reconstruct the tokenizer's historical merge sequence.
 
 Tokenizers without complete byte coverage or byte fallback may emit `<unk>` for
 unsupported characters.

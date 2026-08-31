@@ -14,12 +14,12 @@
 
 ## Current outcome
 
-The tokenizer and BPE mental model has been demonstrated through explanation and
-worked examples. Multilingual measurements have been observed but still require
-a reproducible lab report. Embedding shapes, repeated-row accumulation, tied and
-untied gradient paths, and response-only masking have now been demonstrated
-interactively and verified in a fixed PyTorch lab. The complete tokenizer lab,
-Qwen3 embedding-configuration inspection, and Chapter 2 remain open.
+The tokenizer and BPE mental model has been demonstrated, and the pinned Qwen3
+multilingual worked example now preserves exact pieces, IDs, ratios, and round
+trips in a reproducible report. Embedding shapes, repeated-row accumulation, tied
+and untied gradient paths, and response-only masking have also been demonstrated
+and verified in a fixed PyTorch lab. Qwen3 embedding-configuration inspection and
+Chapter 2 remain open.
 
 ## Public-production links
 

@@ -2,9 +2,9 @@
 
 - Day: 02
 - Date opened: 2026-08-30
-- Status: demonstrated; multilingual counts observed
+- Status: demonstrated; Qwen3 worked example verified
 - Book destination: Chapter 2 sections on tokenizer identity and multilingual efficiency
-- Related evidence: `experiments/specs/2026-08-30-qwen3-multilingual-tokenization.yaml`
+- Related evidence: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`
 - Related production tasks: `X-BPE-001`
 
 ## Questions that drove the discussion
@@ -36,11 +36,12 @@ select unrelated embedding rows even when both ID tensors have valid shapes.
 
 ## Concrete examples and derivations
 
-For the fixed sentences in the specification, interactive inspection observed:
+For the fixed sentences in the specification, the pinned Qwen3 lab verified and
+the earlier interactive gpt-oss inspection observed:
 
 ```text
-Qwen3: Chinese 9, English 11, Swedish 20
-gpt-oss: Chinese 11, English 11, Swedish 15
+Qwen3 verified: Chinese 9, English 11, Swedish 20
+gpt-oss observed: Chinese 11, English 11, Swedish 15
 ```
 
 The Swedish fragment `språkmodellen` was observed as five Qwen3 pieces but four
@@ -67,18 +68,20 @@ Neither single-sentence measure establishes general efficiency for a language.
 
 ## Evidence and limitations
 
-The fixed inputs, prediction, tokenizer identity, and intended measurements are
-preserved in the specification. The counts above remain `observed`, not
-`verified`, until the executable lab stores token pieces, IDs, ratios, and exact
-round trips in a report.
+The fixed inputs, prediction, tokenizer identity, token pieces, IDs, ratios, and
+exact round trips are preserved in the Qwen3 specification and report. All three
+Qwen3 strings round-tripped exactly. The measured fewest-to-most ranking was
+Chinese, English, Swedish, reversing the initial prediction. This verifies one
+worked example, not general efficiency for any language.
+
+The gpt-oss counts remain observational context because they are not yet backed
+by a repository experiment specification and report.
 
 GPT-SW3 access was authenticated but the account lacked authorization for the
 gated tokenizer repository, so no exact GPT-SW3 segmentation claim was made.
 
 ## Open edges
 
-- Re-run the fixed examples through the pinned Qwen3 tokenizer.
-- Preserve exact pieces, IDs, round trips, counts, and efficiency ratios.
 - Compare enough samples before making any language-level efficiency claim.
 
 ## Reuse opportunities
