@@ -2,9 +2,9 @@
 
 - Day: 02
 - Date opened: 2026-08-30
-- Status: demonstrated; executable verification open
+- Status: demonstrated and executable verification present
 - Book destination: Chapter 2 batching bridge and later Chapter 8 loss masking
-- Related evidence: planned Day 2 embedding and batching lab
+- Related evidence: `experiments/reports/2026-08-31-embedding-gradient-paths.md`
 - Related production tasks: `ANIM-CE-001` depends on correct loss masking
 
 ## Questions that drove the discussion
@@ -101,15 +101,18 @@ target.
 
 ## Evidence and limitations
 
-The conceptual distinction is demonstrated, but exact masking behavior can vary
-by model and trainer API. The executable lab must inspect actual shifted labels
-and reduction masks rather than assume a library's attention mask also modifies
-its loss.
+The conceptual distinction is demonstrated. In the fixed executable lab, the
+loss mask `[0,0,1]` supervised only the response position, while that response
+assigned positive attention weights to both prompt positions. Prompt embedding
+rows 1 and 2 consequently received gradient norms `0.303322` and `0.668485`.
+
+Exact masking behavior can still vary by model and trainer API. Later integration
+labs must inspect actual shifted labels and reduction masks rather than assume a
+library's attention mask also modifies its loss.
 
 ## Open edges
 
 - Build batches with left and right padding and inspect masks.
-- Verify zero loss contribution at ignored label positions.
 - Connect causal shifting and label alignment in Day 3.
 - Revisit assistant-only loss masks during instruction-data engineering.
 

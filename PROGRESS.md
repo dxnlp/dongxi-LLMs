@@ -7,9 +7,9 @@ This file is the operational source of truth for resuming work. Update it at the
 - Active release: `v0.1`
 - Active day: Day 2
 - Status: in progress
-- Current focus: embedding lookup, batching and masks, and converting the completed multilingual tokenizer exploration into a reproducible lab and book chapter
-- Next action: complete the embedding-and-batching lesson, then implement and record the Day 2 tokenizer exploration lab
-- Last updated: 2026-08-30
+- Current focus: converting the completed multilingual tokenizer exploration into a reproducible lab and integrating verified Day 2 mechanisms into Chapter 2
+- Next action: implement and report the pinned Qwen3 multilingual tokenizer exploration, including exact round trips and efficiency ratios
+- Last updated: 2026-08-31
 
 ## Four-week tracker
 
@@ -18,7 +18,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | Day | Topic | Status | Primary evidence |
 |---:|---|---|---|
 | 1 | Laboratory and reproducibility | complete | Chapter: `book/chapters/01-evidence-before-optimization.md`; evidence: `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
-| 2 | Tokenization and embeddings | in progress | — |
+| 2 | Tokenization and embeddings | in progress | Embedding evidence: `experiments/reports/2026-08-31-embedding-gradient-paths.md`; tokenizer and Chapter 2 evidence pending |
 | 3 | Probabilities and next-token loss | pending | — |
 | 4 | Attention from first principles | pending | — |
 | 5 | Decoder-only Transformer | pending | — |

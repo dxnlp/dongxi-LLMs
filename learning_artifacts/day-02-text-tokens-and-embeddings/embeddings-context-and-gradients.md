@@ -2,9 +2,9 @@
 
 - Day: 02
 - Date opened: 2026-08-30
-- Status: demonstrated; executable verification open
+- Status: demonstrated and executable verification present
 - Book destination: Chapter 2 embedding sections
-- Related evidence: planned Day 2 embedding lab
+- Related evidence: `experiments/reports/2026-08-31-embedding-gradient-paths.md`
 - Related production tasks: none currently queued
 
 ## Questions that drove the discussion
@@ -178,14 +178,19 @@ through moment estimates and weight decay before updating the parameter.
 
 ## Evidence and limitations
 
-These results have been demonstrated analytically in the interactive lesson but
-have not yet been verified in the Day 2 executable lab. "Direct embedding
-gradient" does not mean that only embedding parameters train; all used upstream
-model parameters can receive gradients through the complete computation graph.
+These results have been demonstrated analytically and verified in the fixed Day
+2 PyTorch lab. IDs `[2,5,2]` produced row gradients `[2,2,2,2]` for row 2 and
+`[1,1,1,1]` for row 5 under the controlled sum loss. With input rows `[1,3]`,
+the untied input table had nonzero rows `[1,3]`, while the tied table had nonzero
+rows `[0,1,2,3,4,5]`. See the linked report for the protocol and limitations.
+
+"Direct embedding gradient" does not mean that only embedding parameters train;
+all used upstream model parameters can receive gradients through the complete
+computation graph. The transparent lab verifies graph mechanics, not semantic
+quality or Qwen3-specific gradient magnitudes.
 
 ## Open edges
 
-- Verify lookup output and repeated-row gradient sums in PyTorch.
 - Inspect Qwen3's actual embedding matrix shape and padded vocabulary rows.
 - Verify whether input embeddings and the output projection are tied.
 - Bridge the final hidden state to logits in Day 3.
