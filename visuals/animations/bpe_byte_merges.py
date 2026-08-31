@@ -76,13 +76,15 @@ def parse_args() -> argparse.Namespace:
 
 def cjk_font() -> FontProperties:
     candidates = [
+        Path("/System/Library/Fonts/STHeiti Medium.ttc"),
+        Path("/System/Library/Fonts/Supplemental/Arial Unicode.ttf"),
         Path("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"),
         Path("/usr/share/fonts/truetype/droid/DroidSansFallbackFull.ttf"),
     ]
     for candidate in candidates:
         if candidate.exists():
             return FontProperties(fname=candidate)
-    return FontProperties(family="sans-serif")
+    return FontProperties(family=["sans-serif"])
 
 
 def draw_tokens(ax: plt.Axes, tokens: list[tuple[str, str]], alpha: float, font: FontProperties) -> None:

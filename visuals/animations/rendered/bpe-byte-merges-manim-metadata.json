@@ -1,0 +1,52 @@
+{
+  "task_id": "ANIM-BPE-001",
+  "status": "review",
+  "rendered_at": "2026-08-31T21:20:45+02:00",
+  "base_commit": "26d631c69e740bf0bf1a4324e25528f092b9d4fd",
+  "branch": "codex/visuals/manim-bpe",
+  "source": {
+    "path": "visuals/animations/manim_bpe_byte_merges.py",
+    "sha256": "4797c994470cd56769648bccf7decba021947668047e6d3e381b249c90fe3916"
+  },
+  "environment": {
+    "python": "3.12.11",
+    "manim_community": "0.21.0",
+    "renderer": "cairo",
+    "cairo": "1.18.4",
+    "ffmpeg": "8.0.1",
+    "latin_font": "Avenir Next",
+    "cjk_font": "PingFang SC",
+    "uv_lock_sha256": "c481639a558a546e45fa22bb251c318b8e439eccde30b96fb66dcb40ba448ef8"
+  },
+  "render_command": "uv run --project visuals/animations manim render -r 1920,1080 --fps 30 --renderer cairo --progress_bar none --media_dir $MANIM_MEDIA -o bpe-byte-merges-manim visuals/animations/manim_bpe_byte_merges.py BPEByteMerges",
+  "outputs": [
+    {
+      "path": "visuals/animations/rendered/bpe-byte-merges-manim.mp4",
+      "sha256": "e1610ec4b4dcff446594764b9307a54b09e49b3d933decfdfd17c52c7fe26f99",
+      "codec": "h264",
+      "pixel_format": "yuv420p",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "duration_seconds": 19.066016
+    },
+    {
+      "path": "visuals/animations/rendered/bpe-byte-merges-manim.gif",
+      "sha256": "dcbe2920468792eb7329f4a0a6c653fa86bac147e5e7aeeec127d5d34be6b145",
+      "width": 960,
+      "height": 540,
+      "fps": 15
+    },
+    {
+      "path": "visuals/animations/rendered/bpe-byte-merges-manim-still.png",
+      "sha256": "4abd19390030377c40bf67fefcd5408ed259d00c2bc5ee0bd9a14bdfcb02773a",
+      "width": 1920,
+      "height": 1080
+    }
+  ],
+  "known_limitations": [
+    "The merge sequence is a transparent teaching example, not a reconstruction of Qwen3 tokenizer training history.",
+    "The fonts are macOS system fonts; cross-platform rerenders should verify metric-compatible fallbacks.",
+    "The Matplotlib baseline remains the lower-dependency Spark-compatible render."
+  ]
+}

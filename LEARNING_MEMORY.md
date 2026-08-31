@@ -75,7 +75,7 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 |---|---|---|---|---|---|
 | `X-BPE-001` | X article | Why an English byte tokenizer can still encode `数` | ready for Mac drafting | Mac | Chapter 2 and pinned tokenizer report complete |
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
-| `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | baseline rendered; Manim refinement queued | Mac | Day 2 explanation complete |
+| `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | Manim draft rendered; review pending | Mac | Day 2 explanation complete |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | Correct-token probability → negative-log loss | preview rendered; canonical version deferred | Mac | Day 3 derivation |
 
@@ -202,6 +202,17 @@ learned compression visible in one sequence.
 - Source: `visuals/animations/bpe_byte_merges.py`
 - Render: `visuals/animations/rendered/bpe-byte-merges.gif`
 - Reproducible environment: `visuals/animations/pyproject.toml` and `uv.lock`
+
+**Current Mac review candidate:**
+
+- Base commit: `26d631c69e740bf0bf1a4324e25528f092b9d4fd`
+- Branch: `codex/visuals/manim-bpe`
+- Source: `visuals/animations/manim_bpe_byte_merges.py`
+- Outputs: 1920×1080 H.264 MP4, 960×540 GIF preview, and PNG still under
+  `visuals/animations/rendered/`
+- Renderer: Manim Community `0.21.0`, Python `3.12.11`, Cairo renderer
+- Status: content and legibility review pending; the Matplotlib baseline remains
+  unchanged
 
 **Storyboard for a Mac/Manim refinement:**
 
