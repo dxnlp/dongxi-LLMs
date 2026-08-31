@@ -18,8 +18,8 @@ The tokenizer and BPE mental model has been demonstrated, and the pinned Qwen3
 multilingual worked example now preserves exact pieces, IDs, ratios, and round
 trips in a reproducible report. Embedding shapes, repeated-row accumulation, tied
 and untied gradient paths, and response-only masking have also been demonstrated
-and verified in a fixed PyTorch lab. Qwen3 embedding-configuration inspection and
-Chapter 2 remain open.
+and verified in a fixed PyTorch lab. The pinned Qwen3 embedding shape, tokenizer
+boundary, and runtime weight tying are verified. Chapter 2 remains open.
 
 ## Public-production links
 

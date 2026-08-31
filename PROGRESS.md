@@ -7,8 +7,8 @@ This file is the operational source of truth for resuming work. Update it at the
 - Active release: `v0.1`
 - Active day: Day 2
 - Status: in progress
-- Current focus: verifying Qwen3 embedding configuration and integrating completed Day 2 mechanisms into Chapter 2
-- Next action: inspect the pinned Qwen3 embedding shape, padded vocabulary behavior, and input/output weight tying; then draft Chapter 2 and exercises
+- Current focus: integrating completed and verified Day 2 mechanisms into Chapter 2
+- Next action: draft Chapter 2 and exercises from the canonical Day 2 artifacts and three experiment reports
 - Last updated: 2026-08-31
 
 ## Four-week tracker
@@ -18,7 +18,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | Day | Topic | Status | Primary evidence |
 |---:|---|---|---|
 | 1 | Laboratory and reproducibility | complete | Chapter: `book/chapters/01-evidence-before-optimization.md`; evidence: `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
-| 2 | Tokenization and embeddings | in progress | Reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`; Chapter 2 pending |
+| 2 | Tokenization and embeddings | in progress | Reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md`; Chapter 2 pending |
 | 3 | Probabilities and next-token loss | pending | — |
 | 4 | Attention from first principles | pending | — |
 | 5 | Decoder-only Transformer | pending | — |

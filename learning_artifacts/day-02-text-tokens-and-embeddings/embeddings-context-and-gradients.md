@@ -4,7 +4,7 @@
 - Date opened: 2026-08-30
 - Status: demonstrated and executable verification present
 - Book destination: Chapter 2 embedding sections
-- Related evidence: `experiments/reports/2026-08-31-embedding-gradient-paths.md`
+- Related evidence: `experiments/reports/2026-08-31-embedding-gradient-paths.md`; `experiments/reports/2026-08-31-qwen3-embedding-inspection.md`
 - Related production tasks: none currently queued
 
 ## Questions that drove the discussion
@@ -189,10 +189,14 @@ all used upstream model parameters can receive gradients through the complete
 computation graph. The transparent lab verifies graph mechanics, not semantic
 quality or Qwen3-specific gradient magnitudes.
 
+The pinned Qwen3 inspection separately verified an input/output matrix shape of
+`[151936,1024]` and true runtime tying: both model accessors returned the same
+parameter object and storage. The paired tokenizer exposes 151,669 entries, so
+267 model rows have no tokenizer piece but still appear in the 151,936-wide
+output logits. The row-count mismatch is verified; its design rationale is not.
+
 ## Open edges
 
-- Inspect Qwen3's actual embedding matrix shape and padded vocabulary rows.
-- Verify whether input embeddings and the output projection are tied.
 - Bridge the final hidden state to logits in Day 3.
 - Explain back which embedding rows receive gradients in tied versus untied
   configurations.
