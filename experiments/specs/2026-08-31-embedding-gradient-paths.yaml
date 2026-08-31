@@ -1,0 +1,64 @@
+id: 2026-08-31-embedding-gradient-paths
+title: Transparent embedding and masking gradient paths
+mode: learning
+status: planned
+
+question: >
+  Which embedding rows receive gradients from lookup, tied output
+  classification, and a response-only loss that depends on visible prompt
+  tokens?
+
+hypotheses:
+  repeated_lookup: >
+    For IDs [2, 5, 2] and a sum loss over lookup outputs, row 2 will receive two
+    identical contributions, row 5 will receive one, and unused rows will
+    receive zero direct lookup gradient.
+  untied_output: >
+    With a separate output matrix, the input embedding table will receive
+    gradients only in rows selected by the input IDs.
+  tied_output: >
+    With the embedding table reused as the dense output classifier, every
+    vocabulary row will receive an output-path contribution, while selected
+    input rows also receive lookup-path contributions.
+  masked_prompt: >
+    When loss is applied only at a response position, visible prompt-token
+    embedding rows will still receive gradients if the response state attends
+    to them.
+
+identity:
+  environment_manifest: manifests/2026-08-29-dgx-spark-native.json
+  python_executable: /home/dongxi/dgx-spark-dongxi/.venv/bin/python
+
+configuration:
+  seed: 7
+  device: cpu
+  dtype: float32
+  vocabulary_size: 6
+  embedding_width: 4
+  gradient_nonzero_tolerance: 1.0e-9
+
+measurements:
+  - lookup input and output shapes
+  - per-row lookup gradients
+  - nonzero embedding-gradient rows with untied output weights
+  - nonzero embedding-gradient rows with tied output weights
+  - response attention weights over prompt and response positions
+  - per-position loss mask
+  - prompt-row gradient norms under response-only supervision
+
+success_criteria:
+  - Lookup output has shape [1, 3, 4].
+  - Repeated row 2 has gradient [2, 2, 2, 2].
+  - Single-use row 5 has gradient [1, 1, 1, 1].
+  - Untied input embedding gradients are nonzero only for rows 1 and 3.
+  - Tied embedding gradients are nonzero for all six vocabulary rows.
+  - The loss mask is [0, 0, 1].
+  - Both prompt rows 1 and 2 have nonzero gradients from the response-only loss.
+
+claims_not_tested:
+  - semantic quality of learned embeddings
+  - optimizer behavior across multiple training steps
+  - exact gradient magnitudes in Qwen3
+  - behavior of every trainer or masking API
+  - model quality improvements from weight tying
+
