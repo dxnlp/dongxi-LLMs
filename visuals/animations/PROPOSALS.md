@@ -14,6 +14,37 @@ same proposal is not repeatedly rediscovered.
 | Candidate ID | Source | Book placement | Mechanism | State | Dependency or next decision |
 |---|---|---|---|---|---|
 | `CAND-ANIM-001` | Roadmap + agent | Chapter 3 | Input tokens → causal logits → probabilities, while each next-token target aligns with the preceding position → per-position loss | discuss | Decide during Day 3 whether this should expand `ANIM-CE-001` or become a separate animation |
+| `CAND-ANIM-002` | User | Chapter 3 | Place negative log-likelihood and cross-entropy in the LLM training context: target probability → per-token NLL → masked aggregation across next-token positions → cross-entropy | approved; promoted into `ANIM-CE-001` | Complete the Day 3 derivation and produce only on the Mac Studio |
+
+### CAND-ANIM-002 — NLL to cross-entropy in an LLM
+
+- Source: user
+- Proposed during: Day 3
+- State: approved; promoted into `ANIM-CE-001`
+- Learning objective: Show that, for a one-hot next-token target, token-level
+  cross-entropy equals the negative log-likelihood of the observed token, and
+  that the training loss aggregates those terms only across valid target
+  positions.
+- Why motion is better than a static figure: The same target token must retain
+  its identity while its probability is selected, transformed by `-ln`, repeated
+  across causal positions, filtered by the loss mask, and reduced into one scalar.
+- Moving objects and stable anchors: Keep the token sequence and target alignment
+  stable; move from probability bars to highlighted `p_y`, per-position NLL
+  tiles, masked/ignored positions, and the final mean cross-entropy.
+- Canonical source material:
+  `learning_artifacts/day-03-probabilities-and-next-token-loss/`; planned Chapter
+  3 derivation and manual/PyTorch verification.
+- Evidence status: concept introduced; executable evidence pending.
+- Precision risks and required caveats: Do not present NLL and one-hot
+  cross-entropy as different numerical objectives; distinguish sequence NLL sum
+  from the common mean over valid tokens; exclude padding or ignored labels;
+  retain natural logarithms; do not imply that low loss proves truthfulness.
+- Dependencies: Day 3 derivation, causal label alignment, loss-mask denominator,
+  and PyTorch agreement.
+- Suggested destination: Chapter 3, course site, and the embedding-training
+  animation handoff.
+- Next decision: Mac Studio production begins only after the canonical Day 3
+  derivation and evidence are committed.
 
 ## Two-way proposal mechanism
 

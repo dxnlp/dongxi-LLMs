@@ -55,8 +55,10 @@ dependencies, preferred machine, and current status.
   development. Either the user or an agent may suggest an idea; record it in
   `visuals/animations/PROPOSALS.md` and wait for explicit approval before
   production.
-- Uses the DGX Spark for model- and GPU-dependent work and may use a local Mac for
-  animation, design, editing, and publishing tasks.
+- Uses the DGX Spark for model- and GPU-dependent work. All animation production
+  and rendering belongs on the Mac Studio; Spark sessions only identify, record,
+  specify, and review animation concepts unless the learner explicitly changes
+  that assignment. The Mac Studio may also handle design, editing, and publishing.
 - Works across multiple machines and may push course changes from either one.
   Before every new or resumed learning session, inspect the branch and working
   tree, fast-forward pull the remote branch when clean, and reread the durable
@@ -93,9 +95,9 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 |---|---|---|---|---|---|
 | `X-BPE-001` | X article | What is a token? Unicode → BPE → model IDs | bilingual local packages prepared; editorial review pending | Mac | Chapter 2 tokenizer-mechanics enrichment complete |
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
-| `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac | Day 2 explanation complete |
-| `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac | Day 2 embedding lab and Day 3 loss derivation |
-| `ANIM-CE-001` | Animation | Correct-token probability → negative-log loss | preview rendered; canonical version deferred | Mac | Day 3 derivation |
+| `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac Studio | Day 2 explanation complete |
+| `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac Studio | Day 2 embedding lab and Day 3 loss derivation |
+| `ANIM-CE-001` | Animation | LLM target probability → per-token NLL → masked mean cross-entropy | expanded concept approved; Mac Studio production waits for Day 3 evidence | Mac Studio | Day 3 derivation, target alignment, and PyTorch verification |
 
 ## Production-system tasks
 
@@ -388,36 +390,57 @@ dependency revisions, outputs, and known limitations.
 
 ### Task packet: `ANIM-CE-001`
 
-**Learning objective:** Connect the probability assigned to the correct next
-token with its one-hot cross-entropy contribution, `L = -ln p_correct`.
+**Learning objective:** Place negative log-likelihood and cross-entropy inside the
+LLM training computation. Show that one-hot token cross-entropy equals
+`-ln p_target`, then aggregate per-position NLL terms across valid causal targets
+into the reported mean loss.
+
+**Approval and ownership:** Dongxi approved this expanded concept during Day 3.
+All production and rendering belongs on the Mac Studio. DGX Spark work is limited
+to the canonical derivation, executable evidence, task specification, and review.
 
 **Existing preview:**
 
 - Source: `visuals/animations/cross_entropy_curve.py`
 - Render: `visuals/animations/rendered/cross-entropy-curve.gif`
 
-**Storyboard for the canonical Day 3 version:** Keep a next-token probability
-distribution and the negative-log curve synchronized. Move probability toward
-and away from the correct token while a marker traces the loss. Later add only
-the minimum transition needed to connect logits → softmax probabilities → the
-correct-token loss.
+**Storyboard for the canonical Day 3 version:**
+
+1. Begin with one causal position, its next-token target, and a softmax
+   distribution. Preserve the identity of the target while selecting `p_target`.
+2. Synchronize that probability with the natural negative-log curve and transform
+   it into one per-token NLL tile, `-ln p_target`.
+3. Briefly reveal the full one-hot cross-entropy sum and collapse its zero-weighted
+   terms to the same `-ln p_target`, making equality rather than conversion the
+   central point.
+4. Repeat the mechanism across several causally aligned next-token positions.
+5. Mark padding or ignored labels visually and remove their NLL tiles from both
+   numerator and denominator.
+6. Aggregate the remaining tiles into the mean token cross-entropy reported by
+   the training loop. Distinguish this mean from the summed sequence NLL.
+7. End with perplexity only if the Day 3 derivation shows that the extra transition
+   remains legible; otherwise reserve it for a separate visual.
 
 **Dependency:** Do not finalize the narrative before Day 3 derives softmax,
 negative log-likelihood, cross-entropy, causal shifting, and label alignment. The
 current animation is an intentionally limited preview.
 
-**Required precision:** Use the natural logarithm; identify the correct target
-explicitly; do not imply that cross-entropy uses only the largest predicted
-probability; show that the one-hot target reduces the token loss to
-`-ln p_correct`; do not include padded positions as targets.
+**Required precision:** Use the natural logarithm; identify the observed target
+explicitly; do not imply that cross-entropy selects the model's largest
+probability; show that one-hot token cross-entropy and token NLL are numerically
+the same objective; distinguish summed sequence NLL from the mean over valid
+tokens; do not include padding or ignored positions in either the numerator or
+denominator; do not imply that low cross-entropy proves truthfulness or general
+capability.
 
 **Expected outputs:** Editable source, MP4, GIF preview, render command, revision
 manifest, and a still frame suitable for Chapter 3.
 
 **Acceptance checks:** Displayed probabilities sum to one within rounding; the
-marker agrees numerically with `-ln(p)`; behavior near zero is described as a
-limit rather than evaluating `ln(0)`; the animation agrees with the later manual
-and PyTorch calculations.
+marker agrees numerically with `-ln(p)`; the one-hot cross-entropy collapses to
+that same value; masked positions contribute neither loss nor count; the final
+mean agrees with the later manual and PyTorch calculations; behavior near zero is
+described as a limit rather than evaluating `ln(0)`.
 
 ## Cross-machine execution protocol
 
@@ -425,8 +448,9 @@ and PyTorch calculations.
 
 - **DGX Spark:** CUDA/model experiments, checkpoint-dependent inspection,
   empirical reports, and canonical course integration.
-- **Local Mac:** Manim and media rendering, typography and layout review, X article
-  editing, and other tasks that do not require DGX-local models or data.
+- **Mac Studio:** all Manim and media production/rendering, typography and layout
+  review, X article editing, and other tasks that do not require DGX-local models
+  or data.
 
 These are preferred lanes, not claims that either machine is incapable of the
 other work.

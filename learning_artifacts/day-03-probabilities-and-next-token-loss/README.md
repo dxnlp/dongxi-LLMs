@@ -46,5 +46,10 @@ not become a stream of calculation quizzes.
 
 `visuals/animations/PROPOSALS.md` already contains `CAND-ANIM-001`: input tokens
 to causal logits and probabilities while next-token targets align with preceding
-positions. Its state is `discuss`; production requires explicit learner approval.
+positions. Its state remains `discuss`.
 
+The learner approved `CAND-ANIM-002`, an LLM-context animation showing target
+probability → per-token NLL → one-hot cross-entropy identity → masked aggregation
+across valid positions. It has been promoted into the expanded `ANIM-CE-001`
+packet. Production and rendering belong exclusively on the Mac Studio after the
+Day 3 derivation and PyTorch verification are committed.
