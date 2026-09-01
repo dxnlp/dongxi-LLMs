@@ -6,9 +6,10 @@
 - Book destination: Chapter 3 sections on logits, softmax, and negative
   log-likelihood
 - Related evidence: planned manual derivation and PyTorch verification
-- Related production tasks: `ANIM-CE-001`, `ANIM-NTP-001`; candidate
+- Related production tasks: `ANIM-CE-001`, `ANIM-NTP-001`,
+  `ANIM-LOGLOSS-001`; candidate
   `CAND-ANIM-001` and user-approved candidates `CAND-ANIM-002` and
-  `CAND-ANIM-003`
+  `CAND-ANIM-003`, and `CAND-ANIM-004`
 
 ## Questions that drive the discussion
 
@@ -57,6 +58,19 @@ conditional sequence probabilities into sums of token-level surprise, severely
 penalizes confident errors, and connects language modeling to information and
 compression. These claims still require a careful derivation and executable
 verification.
+
+Three independent reasons are now introduced and approved for animation:
+
+1. the chain-rule product of conditional token probabilities becomes an additive
+   sequence NLL under `-log`;
+2. through softmax, log loss retains a strong target-logit correction when the
+   model is confidently wrong, unlike the intuitive `1-p_target` alternative;
+3. expected log loss is a proper scoring rule, so its optimum matches the target
+   conditional distribution rather than collapsing onto only the modal outcome.
+
+The learner judged all three mechanisms animation-worthy. They remain
+`introduced`, not `verified`, until the Day 3 analytical and executable evidence
+is present.
 
 ## Evidence state
 

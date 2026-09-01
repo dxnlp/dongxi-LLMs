@@ -59,3 +59,9 @@ from `p` and one-hot `q` through `p-q`, the corresponding gradient-descent logit
 directions, and the emergence of a distribution across repeated diverse
 examples. It is promoted into `ANIM-NTP-001`; Mac Studio production waits for the
 verified Day 3 gradient and target-frequency experiment.
+
+The learner approved all three conceptual reasons for negative log loss as an
+animation package: sequence products become additive token surprise; confident
+softmax errors retain a strong correction; and expected log loss rewards matching
+the full data distribution. `CAND-ANIM-004` is promoted into
+`ANIM-LOGLOSS-001`; all production remains on the Mac Studio after verification.

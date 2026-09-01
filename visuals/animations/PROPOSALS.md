@@ -16,6 +16,7 @@ same proposal is not repeatedly rediscovered.
 | `CAND-ANIM-001` | Roadmap + agent | Chapter 3 | Input tokens → causal logits → probabilities, while each next-token target aligns with the preceding position → per-position loss | discuss | Decide during Day 3 whether this should expand `ANIM-CE-001` or become a separate animation |
 | `CAND-ANIM-002` | User | Chapter 3 | Place negative log-likelihood and cross-entropy in the LLM training context: target probability → per-token NLL → masked aggregation across next-token positions → cross-entropy | approved; promoted into `ANIM-CE-001` | Complete the Day 3 derivation and produce only on the Mac Studio |
 | `CAND-ANIM-003` | User | Chapter 3 | Standard next-token update: predicted distribution `p` versus one-hot target `q` → logit gradient `p-q` → target score rises and non-target scores fall → repeated diverse examples shape a distribution | approved; promoted into `ANIM-NTP-001` | Complete gradient verification and tiny-model evidence; produce only on the Mac Studio |
+| `CAND-ANIM-004` | User | Chapter 3 | Why negative log loss: sequence probability products become additive token surprise; confident errors retain strong gradients; expected log loss rewards matching the full data distribution | approved; promoted into `ANIM-LOGLOSS-001` | Verify all three mechanisms manually and in code; produce only on the Mac Studio |
 
 ### CAND-ANIM-002 — NLL to cross-entropy in an LLM
 
@@ -82,6 +83,41 @@ same proposal is not repeatedly rediscovered.
 - Next decision: Produce and render only on the Mac Studio after Day 3 evidence is
   committed; decide there whether it is a standalone short animation or a
   companion segment to `ANIM-CE-001`.
+
+### CAND-ANIM-004 — Why negative log loss has three jobs
+
+- Source: user
+- Proposed during: Day 3
+- State: approved; promoted into `ANIM-LOGLOSS-001`
+- Learning objective: Explain why `-log p_target` is structurally suited to
+  language modeling rather than merely displaying its curve.
+- Why motion is better than a static figure: Three transformations occur over
+  time: conditional probability factors combine into a sequence product and
+  unfold into additive surprise; competing loss choices produce different
+  gradient strength near confident errors; repeated outcomes reveal whether a
+  scoring rule recovers a distribution or collapses onto its mode.
+- Moving objects and stable anchors: Preserve the same target probabilities and
+  candidate colors across three acts. Act 1 moves probability factors from a
+  product into additive NLL tiles. Act 2 synchronizes loss and gradient curves
+  for log loss versus `1-p_target`. Act 3 fixes an empirical target distribution
+  `q` and moves a model distribution `p` toward the expected-loss minimum.
+- Canonical source material:
+  `learning_artifacts/day-03-probabilities-and-next-token-loss/probability-as-competition-and-surprise.md`;
+  planned Chapter 3 derivation and verification report.
+- Evidence status: all three mechanisms introduced; numerical, gradient, and
+  proper-scoring verification pending.
+- Precision risks and required caveats: Distinguish loss magnitude from gradient
+  through softmax; do not claim `1-p_target` itself has a small value for a
+  confident error—its softmax gradient becomes small; distinguish one-hot sample
+  targets from the population conditional distribution; show expected loss when
+  discussing proper scoring; do not use KL nonnegativity before defining it.
+- Dependencies: sequence chain rule, log-product identity, analytical and
+  autograd gradients for both losses, and a controlled expected-loss comparison
+  under a fixed categorical `q`.
+- Suggested destination: Chapter 3 and course site.
+- Next decision: Mac Studio chooses one three-act animation or three coordinated
+  shorts after the verified Day 3 evidence is committed; every act must remain in
+  the approved scope.
 
 ## Two-way proposal mechanism
 

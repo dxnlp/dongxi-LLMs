@@ -99,6 +99,7 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac Studio | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | LLM target probability → per-token NLL → masked mean cross-entropy | expanded concept approved; Mac Studio production waits for Day 3 evidence | Mac Studio | Day 3 derivation, target alignment, and PyTorch verification |
 | `ANIM-NTP-001` | Animation | One-hot next-token supervision → `p-q` gradient → distribution learning across examples | concept approved; Mac Studio production waits for Day 3 evidence | Mac Studio | Gradient verification and controlled target-frequency experiment |
+| `ANIM-LOGLOSS-001` | Animation | Why `-log p_target`: additive sequence surprise, confident-error gradients, and proper probability reporting | three-act concept approved; Mac Studio production waits for Day 3 evidence | Mac Studio | Chain-rule, gradient, and expected-scoring verification |
 
 ## Production-system tasks
 
@@ -490,6 +491,57 @@ companion segment to `ANIM-CE-001`, without changing the canonical equations.
 update directions are correct; repeated-example frequencies and final
 probabilities agree with the committed Day 3 numerical evidence; no frame claims
 that low training loss establishes truthfulness.
+
+### Task packet: `ANIM-LOGLOSS-001`
+
+**Learning objective:** Explain three independent reasons negative log-likelihood
+fits next-token language modeling: it converts sequence probability products into
+additive token surprise, preserves strong corrective gradients for confident
+softmax errors, and acts as a proper scoring rule whose expected value is
+minimized by matching the full target distribution.
+
+**Approval and ownership:** Dongxi approved all three acts during Day 3. All
+animation design, production, and rendering belongs on the Mac Studio. DGX Spark
+work is limited to derivation, numerical/autograd verification, experiment
+evidence, task specification, and later review.
+
+**Three-act structure:**
+
+1. **Products become sums.** Build a causal sequence probability from conditional
+   factors, then apply `-log` so the product unfolds into additive per-token
+   surprise. Preserve the difference between summed sequence NLL and mean token
+   loss.
+2. **Confident errors keep a correction.** Compare log loss with the intuitive
+   alternative `1-p_target`. Synchronize probability, loss, and derivative with
+   respect to the target logit. As `p_target` approaches zero, show the log-loss
+   gradient approaching `-1` while the alternative's softmax gradient approaches
+   zero.
+3. **Honest distributions win in expectation.** Fix a small categorical data
+   distribution `q`; vary model distribution `p`; show expected log loss reaching
+   its minimum at `p=q`. Contrast the linear alternative, whose expected optimum
+   concentrates probability on the modal outcome.
+
+**Packaging decision:** The Mac Studio may produce one coherent three-act film or
+three visually coordinated shorts. All three remain one approved learning package
+and must share notation, candidate colors, typography, and evidence.
+
+**Required precision:** Use conditional sequence probabilities; use natural logs
+and call their units nats; distinguish derivative with respect to probability
+from derivative with respect to logits; do not confuse large `1-p_target` loss
+with its vanishing softmax gradient near zero; compare scoring rules in
+expectation over `q`, not from one sample; distinguish empirical distribution
+matching from factual truth, calibration under shift, and general capability.
+
+**Expected outputs:** Editable Manim source or coordinated sources, 16:9 H.264
+MP4 output, lightweight GIF previews, stills for Chapter 3, exact render commands,
+dependency revisions, metadata, and a mapping from each displayed number to the
+committed verification evidence.
+
+**Acceptance checks:** Product and sum sequence values agree within displayed
+precision; all derivative arrows agree with analytical and PyTorch results; the
+proper-scoring minimum occurs at the fixed verified `p=q`; the linear comparison
+uses the same `q`; no act implies that low training loss proves truthfulness;
+phone-scale text remains readable under the animation style guide.
 
 ## Cross-machine execution protocol
 
