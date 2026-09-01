@@ -5,11 +5,11 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 2
-- Status: complete
-- Current focus: Day 2 chapter, exercises, implementations, and reports complete; ready to transition
-- Next action: begin Day 3 with the conceptual bridge from relative logits to softmax probabilities, then derive next-token cross-entropy and causal label shifting
-- Last updated: 2026-08-31
+- Active day: Day 3
+- Status: in progress
+- Current focus: probability as normalized competition and negative-log surprise
+- Next action: develop the mechanism-level bridge from relative logits to target surprise before the manual and PyTorch derivation
+- Last updated: 2026-09-01
 
 ## Four-week tracker
 
@@ -19,7 +19,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 |---:|---|---|---|
 | 1 | Laboratory and reproducibility | complete | Chapter: `book/chapters/01-evidence-before-optimization.md`; evidence: `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
 | 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-tokenizer-mechanics.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
-| 3 | Probabilities and next-token loss | pending | — |
+| 3 | Probabilities and next-token loss | in progress | Learning artifact: `learning_artifacts/day-03-probabilities-and-next-token-loss/README.md`; executable evidence and Chapter 3 pending |
 | 4 | Attention from first principles | pending | — |
 | 5 | Decoder-only Transformer | pending | — |
 | 6 | Modern architecture design | pending | — |

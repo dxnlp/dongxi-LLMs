@@ -8,7 +8,7 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
-- Current position: Day 2 complete — ready for Day 3 probabilities and next-token loss
+- Current position: Day 3 in progress — probabilities and next-token loss
 - Primary machine: NVIDIA DGX Spark
 - Primary model family: Qwen3
 

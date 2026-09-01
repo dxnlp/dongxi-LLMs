@@ -81,6 +81,7 @@ ledger.
 |---:|---|---|---|
 | 1 | Evidence before optimization | complete | `learning_artifacts/day-01-evidence-before-optimization/README.md` |
 | 2 | Text, tokens, and embeddings | complete | `learning_artifacts/day-02-text-tokens-and-embeddings/README.md` |
+| 3 | Probabilities and next-token loss | in progress | `learning_artifacts/day-03-probabilities-and-next-token-loss/README.md` |
 
 At the start of each new day, create its directory and index. During the lesson,
 update the relevant focused topic whenever the learner states a prediction,
