@@ -54,7 +54,20 @@ For each learning day:
 6. Preserve configurations, environment identity, metrics, and representative outputs.
 7. Distinguish observations from interpretations.
 8. During the lesson, create or update the focused topic artifact after each substantive prediction, correction, demonstrated explanation, surprising observation, or unresolved edge. Do not postpone this until the end of the day.
-9. Perform an animation-opportunity check after each substantive mechanism. If motion would materially clarify a transition, identity, flow, competition, or time-dependent failure, record a concise candidate in `visuals/animations/PROPOSALS.md` with its source (`user`, `agent`, or `roadmap`). Actively suggest strong candidates to the learner, but do not begin production until the learner explicitly approves the concept. Promote approved candidates to complete `ANIM-*` task packets in `LEARNING_MEMORY.md`.
+9. Perform an animation-opportunity check after each substantive mechanism. Any
+   explicit mathematics central to an LLM mechanism—especially an objective,
+   probability transformation, gradient, tensor operation, masking rule,
+   optimization update, or multi-step derivation—automatically triggers candidate
+   capture in `visuals/animations/PROPOSALS.md` without waiting for the learner to
+   ask. Also capture non-mathematical candidates when motion would materially
+   clarify a transition, identity, flow, competition, or time-dependent failure.
+   Reuse or expand an existing candidate rather than creating duplicates. Record
+   the source (`user`, `agent`, or `roadmap`), canonical equation or mechanism,
+   evidence state, and production dependency. Candidate capture does not
+   authorize production: actively surface strong candidates to the learner, wait
+   for explicit approval, then promote approved concepts to complete `ANIM-*`
+   task packets in `LEARNING_MEMORY.md`. All animation production remains on the
+   Mac Studio unless the learner explicitly changes that assignment.
 10. Create or update the book-facing material to which the day's learning belongs.
 11. Update `PROGRESS.md` with evidence and an exact next action.
 12. Update `LEARNING_MEMORY.md` when a new topic must be indexed or the session produces a reusable public-content idea or portable task.

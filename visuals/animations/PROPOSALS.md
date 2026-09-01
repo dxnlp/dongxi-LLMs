@@ -137,6 +137,30 @@ The suggestion should be short and concrete: name the learning objective, the
 objects that move, the decisive transition, and the current evidence boundary.
 Do not propose animation merely to decorate a section.
 
+### Automatic mathematics trigger
+
+Do not wait for Dongxi to request an animation when explicit mathematics is
+central to an LLM mechanism. Automatically record a candidate for:
+
+- objectives and losses;
+- probability transformations and sampling distributions;
+- analytical gradients and credit assignment;
+- tensor operations whose shapes or axes change;
+- causal, attention, padding, or loss-mask mathematics;
+- optimization updates and training dynamics;
+- multi-step derivations whose intermediate identities must remain visible.
+
+The trigger applies to important mechanisms, not every decorative equation.
+Consolidate equations that form one argument into one animation concept, and
+check the queue before adding a new ID. Each automatically captured candidate
+must state the canonical equation, why motion helps, current evidence state,
+precision risks, and the derivation or experiment required before production.
+Use source `agent` unless the learner or roadmap originated the idea.
+
+Automatic candidate capture is not production approval. The candidate remains
+`suggested` or `discuss` until Dongxi explicitly approves it, and all production
+and rendering remains on the Mac Studio.
+
 ### User-suggested
 
 Dongxi can propose an idea at any time with ordinary language, for example:

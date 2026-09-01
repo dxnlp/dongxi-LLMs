@@ -38,7 +38,12 @@ Each normal day follows:
 5. Record open questions and the next hypothesis — 10 minutes.
 
 As part of the durable-artifact step, perform a brief animation-opportunity
-check. Record a candidate only when motion would make the mechanism materially
+check. Explicit mathematics important to an LLM mechanism automatically becomes
+an animation candidate, even when the learner does not request one. This includes
+objectives, probability transformations, gradients, tensor operations, masking
+rules, optimization updates, and multi-step derivations. Consolidate overlapping
+ideas rather than creating one candidate per equation. For non-mathematical
+material, record a candidate only when motion would make the mechanism materially
 clearer than prose or a static figure. Candidates enter
 `visuals/animations/PROPOSALS.md`; animation production remains a separate,
 user-approved task and does not silently expand the active learning day.

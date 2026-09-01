@@ -55,6 +55,12 @@ dependencies, preferred machine, and current status.
   development. Either the user or an agent may suggest an idea; record it in
   `visuals/animations/PROPOSALS.md` and wait for explicit approval before
   production.
+- Wants explicit mathematics that is important to LLM mechanisms automatically
+  marked as a potential animation without needing to ask. Central objectives,
+  probability transformations, gradients, tensor operations, masking rules,
+  optimization updates, and multi-step derivations trigger candidate capture;
+  related equations should be consolidated into coherent concepts rather than
+  generating duplicate proposals. Automatic marking never authorizes production.
 - Uses the DGX Spark for model- and GPU-dependent work. All animation production
   and rendering belongs on the Mac Studio; Spark sessions only identify, record,
   specify, and review animation concepts unless the learner explicitly changes
@@ -106,6 +112,7 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 | ID | Type | Objective | Status | Durable output |
 |---|---|---|---|---|
 | `ANIM-SYSTEM-001` | Workflow | Create a two-way, approval-gated mechanism for user- and agent-suggested animations | complete | `visuals/animations/PROPOSALS.md`; animation-opportunity check in `AGENTS.md` and `ROADMAP.md` |
+| `ANIM-SYSTEM-002` | Workflow | Automatically capture animation candidates for explicit LLM mathematics while retaining approval-gated Mac Studio production | complete | Math trigger in `AGENTS.md`, `ROADMAP.md`, and `visuals/animations/PROPOSALS.md` |
 
 Animation suggestions begin in `visuals/animations/PROPOSALS.md`. Approved
 concepts are promoted into the public-content production queue and receive a
