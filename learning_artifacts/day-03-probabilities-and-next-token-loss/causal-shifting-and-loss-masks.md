@@ -96,6 +96,58 @@ winner. Labels are required for training-time evaluation of the prediction but
 are absent during ordinary generation, when the model emits logits and a decoding
 rule selects the next token.
 
+## Loss masks: which aligned predictions count
+
+Correct target alignment is necessary but does not imply that every tensor
+position should contribute to optimization. Let $m_{b,t}\in\{0,1\}$ indicate
+whether one aligned next-token target is valid. The mean loss is
+
+\[
+L=
+\frac{
+\sum_{b,t}m_{b,t}\left[-\log p_{b,t}(y_{b,t})\right]
+}{
+\sum_{b,t}m_{b,t}
+}.
+\]
+
+The denominator is the number of valid target tokens, not necessarily $B(T-1)$.
+This matters when sequences have different lengths or when prompt, padding, or
+otherwise unsupervised regions are present.
+
+For example, after shifting two padded sequences may have:
+
+```text
+targets A:    The    cat    slept  EOS
+loss mask A:   1      1       1     1
+
+targets B:    Hello  EOS    PAD    PAD
+loss mask B:   1      1       0      0
+```
+
+There are six supervised targets, so the mean divides by six rather than eight.
+EOS is normally meaningful because predicting the end of a sequence is part of
+language modeling. Padding is storage structure rather than language evidence and
+normally contributes no loss. Frameworks often encode an ignored label with a
+sentinel such as `-100` rather than store a separate loss-mask tensor.
+
+Three masks answer different questions:
+
+| Mechanism | Question it answers |
+|---|---|
+| causal attention mask | May this hidden state read a future token? |
+| padding/document attention mask | May this hidden state read this padded or unrelated position? |
+| loss mask / ignored label | Should this prediction be graded and update parameters? |
+
+A position may be readable as context while still being excluded from the loss.
+For example, supervised fine-tuning can let answer tokens attend to a user prompt
+while assigning loss only to the answer. Conversely, excluding a position from
+loss does not by itself prevent other positions from attending to it.
+
+This explicit masked-mean mathematics is already within approved task
+`ANIM-CE-001`; it strengthens that animation's aggregation act and does not create
+a duplicate proposal. Production remains on the Mac Studio.
+
 ## Evidence state
 
 - `introduced`: position $t$ predicts token $t+1$.
@@ -105,8 +157,12 @@ rule selects the next token.
   unshifted target alignment asks position $t$ to recover the already-visible
   token $x_t$, while a broken causal attention mask lets position $t$ inspect
   future tokens $x_{>t}$.
+- `introduced`: loss masks select which correctly aligned targets contribute,
+  and the mean-loss denominator counts valid targets rather than padded tensor
+  capacity.
 - `not yet demonstrated`: learner explanation-back of the corrected distinction,
-  exact BOS/EOS trace, padding-mask alignment, and manual/PyTorch agreement.
+  exact BOS/EOS trace, separation of attention and loss masks, and
+  manual/PyTorch agreement.
 
 ## Animation opportunity check
 
