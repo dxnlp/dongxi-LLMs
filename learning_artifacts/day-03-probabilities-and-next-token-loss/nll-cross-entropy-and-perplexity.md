@@ -73,8 +73,31 @@ fixed tokenizer, target policy, and evaluation distribution.
 - `introduced`: one-hot cross-entropy equals observed-token NLL.
 - `introduced`: valid token NLLs can be summed or averaged with an explicit mask
   denominator.
+- `demonstrated`: the learner correctly reasoned that when human-language
+  continuations are genuinely uncertain, a perfect model with $p=q$ still has
+  cross-entropy $H(q)>0$; matching removes model mismatch, not intrinsic data
+  entropy.
 - `not yet demonstrated`: the proper-scoring decomposition, perplexity
   interpretation, causal target alignment, and manual/PyTorch agreement.
+
+## Learner explanation and boundary refinement
+
+The learner connected token-level one-hot cross-entropy to observed-token NLL and
+concluded that a perfect model need not have zero loss because human language is
+uncertain. The precise population statement is:
+
+\[
+p=q \quad\Longrightarrow\quad H(q,p)=H(q),
+\]
+
+which is positive whenever the true conditional distribution has multiple
+outcomes with nonzero probability.
+
+Zero cross-entropy remains mathematically possible when the true conditional
+distribution is deterministic and the model assigns probability one to its sole
+outcome. A sufficiently flexible model can also drive empirical loss on a finite
+memorized training sample near zero without eliminating population uncertainty.
+This separates population cross-entropy from NLL measured on one finite dataset.
 
 ## Animation opportunity check
 
