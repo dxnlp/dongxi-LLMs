@@ -21,6 +21,18 @@ the course's mechanism-first discussion style.
 6. Finish the evidence-boundary cell in your own words.
 
 Session 1 uses only Python's standard library. Later sessions may use PyTorch for
-autograd verification and must run inside an already validated platform
-environment; do not install an arbitrary replacement PyTorch build on the DGX
-Spark merely to launch a notebook.
+autograd verification and run with the registered `Python (DGX Spark Native)`
+kernel. Its interpreter is
+`/home/dongxi/dgx-spark-dongxi/.venv/bin/python`; the reproducible installer is
+`/home/dongxi/dgx-spark-dongxi/scripts/setup_jupyter.sh`. The kernel was verified
+through an actual notebook execution with PyTorch `2.13.0+cu130`, CUDA 13.0, and
+the NVIDIA GB10. Do not install an arbitrary replacement PyTorch build merely to
+launch a notebook.
+
+Launch JupyterLab with the course repository as its root:
+
+```bash
+cd /home/dongxi/dongxi_ai/Dongxi_LLMs
+/home/dongxi/dgx-spark-dongxi/.venv/bin/jupyter lab \
+  --no-browser --ip=127.0.0.1 --port=8888
+```
