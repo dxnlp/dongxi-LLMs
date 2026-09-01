@@ -39,9 +39,10 @@ For each learning day:
 6. Preserve configurations, environment identity, metrics, and representative outputs.
 7. Distinguish observations from interpretations.
 8. During the lesson, create or update the focused topic artifact after each substantive prediction, correction, demonstrated explanation, surprising observation, or unresolved edge. Do not postpone this until the end of the day.
-9. Create or update the book-facing material to which the day's learning belongs.
-10. Update `PROGRESS.md` with evidence and an exact next action.
-11. Update `LEARNING_MEMORY.md` when a new topic must be indexed or the session produces a reusable public-content idea or portable task.
+9. Perform an animation-opportunity check after each substantive mechanism. If motion would materially clarify a transition, identity, flow, competition, or time-dependent failure, record a concise candidate in `visuals/animations/PROPOSALS.md` with its source (`user`, `agent`, or `roadmap`). Actively suggest strong candidates to the learner, but do not begin production until the learner explicitly approves the concept. Promote approved candidates to complete `ANIM-*` task packets in `LEARNING_MEMORY.md`.
+10. Create or update the book-facing material to which the day's learning belongs.
+11. Update `PROGRESS.md` with evidence and an exact next action.
+12. Update `LEARNING_MEMORY.md` when a new topic must be indexed or the session produces a reusable public-content idea or portable task.
 
 Do not mark a day complete merely because prose or code exists. The stated evidence of completion must be present.
 

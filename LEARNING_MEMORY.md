@@ -51,12 +51,20 @@ dependencies, preferred machine, and current status.
   notes.
 - Wants strong discussions reused as public X articles and mathematical
   animations after the canonical book treatment is stable.
+- Wants animation opportunities surfaced proactively during learning and course
+  development. Either the user or an agent may suggest an idea; record it in
+  `visuals/animations/PROPOSALS.md` and wait for explicit approval before
+  production.
 - Uses the DGX Spark for model- and GPU-dependent work and may use a local Mac for
   animation, design, editing, and publishing tasks.
 - Prefers course animations with a white canvas, Arial normal-weight English,
   Songti SC Chinese, minimal text, stable geometric alignment, and continuous
   mechanism-first motion. The reusable specification is
   `visuals/animations/STYLE_GUIDE.md`.
+- Uses a 5:2 aspect ratio for X Article cover images by default; prefer 2000×800
+  px with generous safe margins. Inline article figures may retain the aspect
+  ratio required by their mechanism. The reusable publication rule is
+  `publications/x-articles/README.md`.
 
 ## Learning-artifact index
 
@@ -77,35 +85,48 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 
 | ID | Type | Topic | Status | Preferred machine | Dependency |
 |---|---|---|---|---|---|
-| `X-BPE-001` | X article | What is a token? Unicode → BPE → model IDs | evidence complete; expanded outline approved | Mac | Chapter 2 tokenizer-mechanics enrichment complete |
+| `X-BPE-001` | X article | What is a token? Unicode → BPE → model IDs | bilingual local packages prepared; editorial review pending | Mac | Chapter 2 tokenizer-mechanics enrichment complete |
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
-| `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved; commit pending | Mac | Day 2 explanation complete |
+| `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac | Day 2 explanation complete |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | Correct-token probability → negative-log loss | preview rendered; canonical version deferred | Mac | Day 3 derivation |
+
+## Production-system tasks
+
+| ID | Type | Objective | Status | Durable output |
+|---|---|---|---|---|
+| `ANIM-SYSTEM-001` | Workflow | Create a two-way, approval-gated mechanism for user- and agent-suggested animations | complete | `visuals/animations/PROPOSALS.md`; animation-opportunity check in `AGENTS.md` and `ROADMAP.md` |
+
+Animation suggestions begin in `visuals/animations/PROPOSALS.md`. Approved
+concepts are promoted into the public-content production queue and receive a
+complete `ANIM-*` task packet below. Candidate capture does not expand the active
+day or authorize media production.
 
 ### Task packet: `X-BPE-001`
 
 **Working title:** What Is a Token, Really? From Unicode Bytes to BPE and Token
 IDs
 
-**Learning promise:** A reader should be able to distinguish words, grapheme
-clusters, code points, UTF-8 bytes, tokenizer pieces, and token IDs; explain BPE
-training separately from frozen encoding; trace byte fallback for `数`; and
+**Learning promise:** A reader should be able to distinguish orthographic words,
+grapheme clusters, code points, UTF-8 bytes, subword or byte tokens, and token
+IDs; explain BPE training separately from runtime encoding with trained merge
+ranks; trace byte fallback for `数`; and
 explain how normalization, spaces, special tokens, and chat templates alter the
-model-facing sequence without implying understanding.
+model's input representation without implying understanding.
 
 **Narrative spine:**
 
 1. Open with the verified surprise: Qwen3 represented `下一个` as one token while
    splitting the Swedish word `språkmodellen` into five.
-2. Separate written words, grapheme clusters, code points, UTF-8 bytes,
-   tokenizer pieces, and token IDs.
-3. Show the complete interface pipeline: source text → normalization →
-   pre-tokenization → subword encoding → IDs → optional chat packaging.
-4. Establish that IDs are meaningful only under the tokenizer and model revision
-   that define them.
+2. Separate orthographic words, grapheme clusters, code points, UTF-8 bytes,
+   subword or byte tokens, and token IDs.
+3. Show the standard Tokenization pipeline: raw text → normalization →
+   pre-tokenization → tokenization model → post-processing → token IDs. Show
+   Chat Template serialization as an earlier step for message-based input.
+4. Establish that IDs are meaningful only under the tokenizer name, revision,
+   configuration, vocabulary, and matching model input embedding matrix.
 5. Use the tested `hug/hugs/hugging` corpus to show pair counts, a tied maximum,
-   three deterministic BPE rounds, and frozen replay.
+   three deterministic BPE rounds, and runtime use of the trained Merge Rank.
 6. State the scope explicitly: byte-level BPE is the main mechanism; WordPiece
    and Unigram receive only a compact comparison.
 7. Show `数 → E6 95 B0` and the coverage-to-compression ladder through `数据库`.
@@ -141,11 +162,27 @@ the fixed multilingual specification and report;
 adaptation only after the English claims are reviewed. Decide article versus
 thread at production time rather than maintaining two premature versions.
 
-**Acceptance checks:** A reader can explain (1) why a word, grapheme, code point,
-byte, piece, and ID are different; (2) how BPE training differs from frozen
+**Acceptance checks:** A reader can explain (1) why an orthographic word,
+grapheme, code point, byte, token, and Token ID are different; (2) how BPE
+training differs from runtime
 encoding; (3) why `数` can be encoded without a learned Chinese merge; (4) why
-normalization and chat packaging change reproducible token counts; and (5) why
-coverage and compression do not establish understanding.
+normalization and Chat Template serialization affect the final model input; and
+(5) why coverage and compression do not establish understanding.
+
+**Current output:** The reviewable English package is under
+`publications/x-articles/x-bpe-001/`. It contains the approximately 1,500-word canonical draft,
+claim-to-evidence map, separate cover, five inline figures, editable figure
+source, a responsive `review.html` with all media in reading order, body-only
+HTML/Markdown transfer files, and a validated reverse image insertion plan. No
+content has been transferred to X or published. A complete natural-Chinese
+adaptation now lives under `publications/x-articles/x-bpe-001/zh/`, with a
+localized 5:2 cover, five localized figures, evidence map, browser review, and
+transfer package. `publications/x-articles/x-bpe-001/terminology.md` is the
+canonical bilingual terminology map; reader-facing explanations use standard
+NLP stages and avoid software-architecture metaphors. The Chinese text was
+scanned for the prohibited
+`不是……而是……` construction and variants. Review both language versions before
+any X editor transfer.
 
 ### Task packet: `X-EMB-001`
 

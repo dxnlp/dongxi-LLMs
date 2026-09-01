@@ -1,0 +1,138 @@
+<!doctype html>
+<meta charset="utf-8">
+<p><em>A token is one discrete unit produced by a tokenizer. Tokenization converts raw text into token IDs through normalization, pre-tokenization, a tokenization model such as BPE, and post-processing.</em></p>
+<p>The same tokenizer represented the Chinese span <code>下一个</code> as one token, but split the single Swedish word <code>språkmodellen</code> into five.</p>
+<p>That result came from a pinned Qwen3 tokenizer, not a linguistic rule. It exposes the most important fact about tokens: their boundaries and IDs depend on a particular vocabulary, tokenization model, and configuration.</p>
+<p>To understand why, we need to follow text all the way from what a reader sees to the integers a model receives.</p>
+<h2>Six units hiding inside “text”</h2>
+<p>Consider the family emoji <code>👨‍👩‍👧‍👦</code>. It looks like one symbol. Mechanically, it is one extended grapheme cluster, seven Unicode code points, and 25 UTF-8 bytes.</p>
+<p>Now consider <code>数</code>. It is one visible Chinese character and one code point, but UTF-8 stores it as three bytes: <code>E6 95 B0</code>.</p>
+<p>And consider <code>språkmodellen</code>. It is one orthographic word, yet our pinned tokenizer represented it with five subword tokens.</p>
+<p>[IMAGE 01] An orthographic word, grapheme cluster, code point, UTF-8 byte sequence, subword or byte token, and token ID are different units.</p>
+<p>The six units are:</p>
+<ul>
+<li>An <strong>orthographic word</strong> is a language-dependent written unit.</li>
+<li>A <strong>grapheme cluster</strong> is a reader-perceived character, possibly built from several code points.</li>
+<li>A <strong>Unicode code point</strong> is an integer assigned to an abstract character.</li>
+<li>A <strong>UTF-8 byte</strong> is part of one variable-length encoding of Unicode text.</li>
+<li>A <strong>subword or byte token</strong> is a discrete unit emitted by the tokenization model.</li>
+<li>A <strong>token ID</strong> is the integer vocabulary index assigned to that token.</li>
+</ul>
+<p>None has a universal one-to-one relationship with another. That is why “How many tokens are in this sentence?” is incomplete unless we name the tokenizer, revision, and configuration.</p>
+<h2>The tokenizer defines the model's input representation</h2>
+<p>The model does not receive readable tokens such as <code>token</code>, <code>下一个</code>, or <code>spr</code>. It receives IDs such as <code>3950</code> or <code>108725</code>. Embedding lookup uses each ID to select a row from the input embedding matrix.</p>
+<p>Suppose tokenizer A maps ID 42 to <code>cat</code>, while tokenizer B maps ID 42 to a Chinese token. IDs from A can still have the right shape for model B. Nothing has to crash. The model simply selects embedding rows under the wrong token-to-ID mapping.</p>
+<p>The required correspondence is:</p>
+<blockquote>
+<p><strong>vocabulary token ↔ token ID ↔ row of the model's input embedding matrix</strong></p>
+</blockquote>
+<p>For ordinary text, the tokenization pipeline is:</p>
+<blockquote>
+<p><strong>raw text → normalization → pre-tokenization → BPE / WordPiece / Unigram → post-processing → token IDs</strong></p>
+</blockquote>
+<p>Chat models add an earlier serialization step:</p>
+<blockquote>
+<p><strong>messages → chat template serialization → formatted text and control tokens → tokenization → token IDs</strong></p>
+</blockquote>
+<p>Every stage can change the final token ID sequence.</p>
+<h2>BPE learns merges offline</h2>
+<p>Byte-pair encoding becomes clearer when training and use are separated.</p>
+<p>During <strong>tokenizer training</strong>, BPE begins with base symbols, counts eligible adjacent pairs, selects a pair, adds the merged form, rewrites the corpus, and repeats under a finite vocabulary budget.</p>
+<p>During <strong>runtime encoding</strong>, the tokenizer does not learn from your prompt. It applies its configured normalization and pre-tokenization, then uses the trained BPE merge ranks to produce tokens and map them to vocabulary IDs. Post-processing may add special tokens.</p>
+<p>We made the training phase executable with a deliberately small weighted corpus:</p>
+<pre><code class="language-text">hug     × 5
+hugs    × 3
+hugging × 2
+</code></pre>
+<p>The measured rounds were:</p>
+<pre><code class="language-text">h + u   → hu    count 10
+hu + g  → hug   count 10
+hug + s → hugs  count 3
+</code></pre>
+<p>[IMAGE 02] Three measured BPE rounds on a tiny corpus. The first maximum is tied, so a declared tie rule is required.</p>
+<p>The first round contains a subtlety: <code>h+u</code> and <code>u+g</code> both occur ten times. “Choose the most frequent pair” does not determine a unique merge. Our trainer declares a lexicographic tie rule and therefore chooses <code>h+u</code>.</p>
+<p>After training, encoding with those merge ranks represents <code>hugs</code> as <code>[hugs]</code>, but <code>hugging</code> as <code>[hug] [g] [i] [n] [g]</code>. The larger token appears only where its learned merge path applies. Encoding is not simply “choose the longest string present in a vocabulary.”</p>
+<p>This trace demonstrates BPE mechanics. It does not reconstruct Qwen's historical tokenizer training.</p>
+<h2>Byte coverage is different from compression</h2>
+<p>Byte-level BPE starts with all 256 byte values. That gives it a powerful fallback: any valid UTF-8 text can be represented as byte tokens even when no larger token was learned for it.</p>
+<p>For <code>数</code>:</p>
+<pre><code class="language-text">数 → E6 95 B0 → [E6] [95] [B0]
+</code></pre>
+<p>Repeated exposure can make the same input more compact. Ordered merges may combine bytes into a multi-byte token, then combine characters into multi-character tokens:</p>
+<pre><code class="language-text">[E6] + [95]       → [E6 95]
+[E6 95] + [B0]    → [数]
+[数] + [据]        → [数据]
+[数据] + [库]      → [数据库]
+</code></pre>
+<p>[IMAGE 03] The byte vocabulary provides coverage; learned BPE merges compress repeated patterns into larger tokens.</p>
+<p>BPE does not know that <code>数据库</code> means “database.” It has learned that certain adjacent patterns were useful enough to receive vocabulary capacity.</p>
+<p>Three claims must stay separate:</p>
+<blockquote>
+<p><strong>Base bytes provide coverage. Learned merges improve compression. Model training creates language capability.</strong></p>
+</blockquote>
+<p>An English-only byte tokenizer can preserve Chinese bytes without <code>&lt;unk&gt;</code> and still represent Chinese inefficiently. A model can receive those valid IDs and still understand very little Chinese.</p>
+<p>Not every tokenizer has byte fallback. Byte-level BPE is also only one tokenization model. WordPiece learns a subword vocabulary with a different scoring procedure and commonly applies greedy token selection. Unigram begins with many candidate tokens, prunes the vocabulary, and scores alternative segmentations probabilistically. The tokenization model alone does not guarantee complete byte coverage.</p>
+<h2>Preprocessing can change “the same” text</h2>
+<p>Unicode allows visually equivalent text to have different underlying sequences.</p>
+<p>NFC <code>café</code> uses one precomposed <code>é</code>: four code points and five UTF-8 bytes. NFD <code>café</code> uses <code>e</code> plus a combining accent: five code points and six bytes. Both have four grapheme clusters.</p>
+<p>Under the pinned Qwen3 tokenizer, both forms mapped to the same two IDs: <code>[924, 58858]</code>.</p>
+<p>But only the NFC source decoded to exactly the same code-point sequence. The NFD source decoded as NFC. The strings remained canonically equivalent, but exact source equality failed. The returned offsets also stopped before the original combining mark.</p>
+<p>[IMAGE 04] Normalization can change the exact source sequence; chat template serialization can add control tokens around unchanged user content.</p>
+<p>This is not a tokenizer failure. It is a warning about what “round trip” means. Visual similarity, canonical equivalence, identical code points, identical token IDs, and identical decoded source are different properties.</p>
+<p>Whitespace also affects pre-tokenization and vocabulary lookup. Under the same tokenizer:</p>
+<pre><code class="language-text">token  → ID 5839
+ token → ID 3950
+</code></pre>
+<p>Both inputs use one token. The leading space changes the selected vocabulary token and its token ID without changing token count.</p>
+<h2>Chat templates serialize messages into model input</h2>
+<p>Raw <code>Hello</code> was one token: ID <code>9707</code>.</p>
+<p>The same content rendered as one user message with a generation prompt became:</p>
+<pre><code class="language-text">&lt;|im_start|&gt;user
+Hello&lt;|im_end|&gt;
+&lt;|im_start|&gt;assistant
+</code></pre>
+<p>That sequence occupied nine token positions.</p>
+<p>The added positions came from template literals, role markers, line breaks, and control tokens. BPE did not learn new vocabulary from the message. In this tokenizer snapshot, <code>&lt;|im_end|&gt;</code> is the end-of-sequence token and <code>&lt;|endoftext|&gt;</code> is used for padding. Those special tokens have different functions even if both can appear near sequence boundaries.</p>
+<p>This matters for context limits and cost estimates: the visible message is not the complete token ID sequence passed to the model.</p>
+<h2>A measured multilingual surprise</h2>
+<p>We encoded approximately equivalent Chinese, English, and Swedish sentences under the exact pinned <code>Qwen/Qwen3-0.6B</code> tokenizer revision, with added special tokens disabled.</p>
+<p>Our prediction was Swedish first, then Chinese, then English. The measurement reversed it:</p>
+<pre><code class="language-text">Chinese   9 tokens
+English  11 tokens
+Swedish  20 tokens
+</code></pre>
+<p>[IMAGE 05] One pinned Qwen3 worked example: Chinese used 9 tokens, English 11, and Swedish 20; this is not a language-wide ranking.</p>
+<p>The Chinese segmentation contained multi-character tokens:</p>
+<pre><code class="language-text">[小型] [语言] [模型] [学习] [预测] [下一个] [词] [元] [。]
+</code></pre>
+<p>The Swedish compound split internally:</p>
+<pre><code class="language-text">[ spr] [å] [k] [mod] [ellen]
+</code></pre>
+<p>Orthographic word structure did not determine token efficiency. The learned vocabulary and merge ranks did.</p>
+<p>The result does <strong>not</strong> prove that Chinese is generally more token-efficient than English or Swedish. It describes three fixed strings under one tokenizer revision. Language-level claims would require a fixed representative corpus, matched content, explicit sampling, domain coverage, and distributions rather than one sentence per language.</p>
+<p>Even then, fewer tokens would measure compression or context occupancy—not comprehension, generation quality, or fairness.</p>
+<h2>What to record when token counts matter</h2>
+<p>For a reproducible tokenization result, record:</p>
+<ul>
+<li>the tokenizer repository and immutable revision;</li>
+<li>normalization and pre-tokenization behavior;</li>
+<li>whether special tokens were added;</li>
+<li>the exact chat template and generation-prompt policy;</li>
+<li>the input strings and denominator used for comparison;</li>
+<li>IDs, readable spans, and an exact encode/decode check.</li>
+</ul>
+<p>The practical mental model is simple:</p>
+<blockquote>
+<p>A token is a discrete unit produced by a specific tokenizer configuration. Its token ID is a vocabulary index used for embedding lookup—not a word, not a character, and not meaning itself.</p>
+</blockquote>
+<p>Once those addresses enter the embedding table, a different question begins: how do shared vectors become context-dependent representations? That is the next layer of the model.</p>
+<h2>Reproducible sources</h2>
+<ul>
+<li><a href="https://github.com/dxnlp/dongxi-LLMs/blob/main/book/chapters/02-text-tokens-and-embeddings.md">Chapter 2: Text, Tokens, and Embeddings</a></li>
+<li><a href="https://github.com/dxnlp/dongxi-LLMs/blob/main/experiments/reports/2026-08-31-tokenizer-mechanics.md">Transparent tokenizer-mechanics report</a></li>
+<li><a href="https://github.com/dxnlp/dongxi-LLMs/blob/main/experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md">Pinned Qwen3 multilingual tokenization report</a></li>
+<li><a href="https://github.com/dxnlp/dongxi-LLMs/blob/main/src/dongxi_llms/tiny_bpe.py">Tiny executable BPE trainer</a></li>
+<li><a href="https://huggingface.co/docs/tokenizers/main/pipeline">Hugging Face Tokenizers: The tokenization pipeline</a></li>
+<li><a href="https://huggingface.co/docs/transformers/main/chat_templating_writing">Hugging Face Transformers: Writing a chat template</a></li>
+<li><a href="https://www.unicode.org/reports/tr29/">Unicode Standard Annex #29: Unicode Text Segmentation</a></li>
+</ul>

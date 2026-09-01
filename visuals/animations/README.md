@@ -8,6 +8,26 @@ Edition when continuity of motion is part of the explanation.
 New Manim work should follow the approved
 [`STYLE_GUIDE.md`](STYLE_GUIDE.md) visual system.
 
+## Folder and workflow
+
+`visuals/animations/` is the dedicated home for course animations:
+
+- `PROPOSALS.md` is the two-way inbox for user- and agent-suggested ideas.
+- `STYLE_GUIDE.md` defines the reusable visual and motion system.
+- editable `.py` files are the source of existing animations;
+- `rendered/` contains review and approved media plus metadata;
+- `pyproject.toml` and `uv.lock` preserve the rendering environment.
+
+New ideas begin in [`PROPOSALS.md`](PROPOSALS.md). Once Dongxi approves a
+proposal, promote it to an `ANIM-*` task packet in `LEARNING_MEMORY.md` before
+production. The packet must link the canonical chapter or learning artifact,
+state the evidence boundary, define precision risks, and identify acceptance
+checks. Approval of an animation concept never implies approval to publish it.
+
+The current flat source layout remains valid. If the directory becomes crowded,
+new signature animations may use `projects/<task-id>/`, while shared style code
+stays at the top level.
+
 ## Render
 
 From the repository root:

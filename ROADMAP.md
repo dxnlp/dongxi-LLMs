@@ -37,6 +37,12 @@ Each normal day follows:
 4. Write the durable learning artifact — 30–60 minutes.
 5. Record open questions and the next hypothesis — 10 minutes.
 
+As part of the durable-artifact step, perform a brief animation-opportunity
+check. Record a candidate only when motion would make the mechanism materially
+clearer than prose or a static figure. Candidates enter
+`visuals/animations/PROPOSALS.md`; animation production remains a separate,
+user-approved task and does not silently expand the active learning day.
+
 Long reference runs should start near the end of a day and be analyzed the following day. Days 7, 14, 21, and 28 are lighter consolidation days, but they remain learning days.
 
 ## Experiment modes

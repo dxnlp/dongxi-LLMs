@@ -63,6 +63,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | D011 | Course material is developed book-first rather than as chronological daily notes. | Each learning day must strengthen a coherent reader-facing narrative; logs and reports provide evidence but do not replace structured chapters. |
 | D012 | Maintain `LEARNING_MEMORY.md` as the cross-session and cross-machine artifact index and production ledger. | Topic artifacts, public-content ideas, and portable task packets must remain discoverable beyond a chat transcript without turning the book into daily notes. |
 | D013 | Create and actively update `learning_artifacts/day-NN-topic/` during each lesson. | Deep discussions should be durable and reusable by topic and day, while `LEARNING_MEMORY.md` remains a compact index and production queue. |
+| D014 | Use a two-way, approval-gated animation proposal loop during learning and course development. | Strong mechanism animations should be surfaced when motion adds explanatory value, while explicit learner approval and the four-animation `v0.1` target prevent silent scope growth. |
 
 ## End-of-day update template
 
@@ -151,6 +152,63 @@ Copy this block below the daily log heading after each session:
   closed; the canonical English X Article can now be drafted for review.
 - Exact next action: retain the course transition to Day 3; the independent Mac
   content lane may draft `X-BPE-001` from the approved outline and evidence.
+
+### Content production — `X-BPE-001` — 2026-08-31, local Mac
+
+- Status: bilingual local packages prepared; editorial review pending.
+- Content produced: an approximately 1,500-word English X Article draft,
+  claim-to-evidence map, canonical bilingual NLP terminology map, separate
+  cover, five inline figures, editable visual builder, body-only HTML and
+  Markdown transfer files, a responsive browser-review HTML with all six media
+  assets in reading order, and a generated bottom-to-top image insertion plan
+  under `publications/x-articles/x-bpe-001/`.
+- Chinese adaptation: `publications/x-articles/x-bpe-001/zh/` contains a natural
+  Chinese rewrite with the same evidence boundaries, a localized 2000×800 cover,
+  five localized inline figures, source map, responsive review HTML, body-only
+  transfer files, and a validated image insertion plan. The final language scan
+  found no `不是……而是……` construction or variant.
+- Evidence boundary: the article preserves the pinned Qwen3 observations, the
+  failed NFD exact-source round trip, the measured BPE tie, and the distinction
+  among byte coverage, compression, context occupancy, and understanding.
+- Visual system: white canvas, Arial normal-weight English, Songti SC Chinese,
+  semantic course palette, minimal text, and geometric alignment. The approved
+  Manim BPE still is reused as the coverage/compression figure.
+- Terminology revision: both versions now use the standard Tokenization stages—
+  normalization, pre-tokenization, tokenization model, post-processing, and Token
+  ID output. Chat Template serialization is shown before tokenization. The prose
+  and figure labels use NLP terms such as subword Token, byte Token, vocabulary,
+  Merge Rank, input representation, and Embedding lookup instead of
+  software-architecture metaphors.
+- Validation: both Python builders compile; all five placeholders map to existing
+  image files; the clean HTML and Markdown bodies omit the title and image
+  placeholders; the generated insertion plan reports zero missing images.
+- Publication boundary: nothing was transferred to X and nothing was published.
+- Exact next action: review both local browser versions, with particular attention
+  to title, opening, section balance, and the five localized figures; revise
+  locally before any X editor transfer.
+
+### Course production system — `ANIM-SYSTEM-001` — 2026-09-01
+
+- Status: complete.
+- Mechanism added: `visuals/animations/PROPOSALS.md` now accepts both user- and
+  agent-suggested animation candidates, records their evidence and dependencies,
+  and defines states from suggestion through approval, production, review, and
+  completion.
+- Approval boundary: agents should proactively surface strong animation
+  opportunities, but no candidate becomes a production task without explicit
+  learner approval. Publication remains a separate decision.
+- Workflow integration: the daily workflow and roadmap now include a bounded
+  animation-opportunity check; approved concepts receive complete `ANIM-*` task
+  packets in `LEARNING_MEMORY.md`.
+- Scope boundary: the `v0.1` target remains four signature animations. Extra
+  ideas may be recorded without silently expanding the active learning day.
+- First candidate: `CAND-ANIM-001` proposes a continuous Day 3 sequence in which
+  input tokens produce causal logits and probabilities while each next-token
+  target aligns with the preceding position to produce per-position loss. Joint
+  review will decide whether it expands `ANIM-CE-001` or becomes a separate
+  animation.
+- Exact next action: begin Day 3 normally and use the new opportunity check after
+  the causal-shifting and cross-entropy mechanisms are derived.
 
 ## Learning memory and production queue
 
