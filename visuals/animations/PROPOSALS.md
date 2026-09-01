@@ -17,6 +17,7 @@ same proposal is not repeatedly rediscovered.
 | `CAND-ANIM-002` | User | Chapter 3 | Place negative log-likelihood and cross-entropy in the LLM training context: target probability → per-token NLL → masked aggregation across next-token positions → cross-entropy | approved; promoted into `ANIM-CE-001` | Complete the Day 3 derivation and produce only on the Mac Studio |
 | `CAND-ANIM-003` | User | Chapter 3 | Standard next-token update: predicted distribution `p` versus one-hot target `q` → logit gradient `p-q` → target score rises and non-target scores fall → repeated diverse examples shape a distribution | approved; promoted into `ANIM-NTP-001` | Complete gradient verification and tiny-model evidence; produce only on the Mac Studio |
 | `CAND-ANIM-004` | User | Chapter 3 | Why negative log loss: sequence probability products become additive token surprise; confident errors retain strong gradients; expected log loss rewards matching the full data distribution | approved; promoted into `ANIM-LOGLOSS-001` | Verify all three mechanisms manually and in code; produce only on the Mac Studio |
+| `CAND-ANIM-005` | Agent, automatic math trigger | Chapter 3 | Mean token cross-entropy → exponentiation → perplexity as an effective equal-choice branching factor, while preserving tokenizer and evaluation-distribution dependence | discuss | After derivation, decide whether to extend `ANIM-CE-001` or create a separate short; production only on Mac Studio after approval |
 
 ### CAND-ANIM-002 — NLL to cross-entropy in an LLM
 
@@ -118,6 +119,39 @@ same proposal is not repeatedly rediscovered.
 - Next decision: Mac Studio chooses one three-act animation or three coordinated
   shorts after the verified Day 3 evidence is committed; every act must remain in
   the approved scope.
+
+### CAND-ANIM-005 — Cross-entropy to perplexity
+
+- Source: agent, automatic mathematics trigger
+- Proposed during: Day 3
+- State: discuss
+- Learning objective: Show why exponentiating mean natural-log token loss returns
+  to probability scale and yields an effective branching factor, not a literal
+  count of equally likely next tokens.
+- Why motion is better than a static figure: A mean surprise value in nats is
+  abstract. Motion can transform equal-choice distributions with $k$ candidates
+  through `ln(k)` loss and back through `exp` to $k$, then morph to unequal
+  distributions with the same perplexity while keeping their different shapes
+  visible.
+- Moving objects and stable anchors: Keep the tokenizer, valid-position mask, and
+  evaluation corpus fixed; move per-token NLL tiles into their mean, exponentiate
+  the mean, and compare equal and unequal distributions sharing an effective
+  branching factor.
+- Canonical source material:
+  `learning_artifacts/day-03-probabilities-and-next-token-loss/nll-cross-entropy-and-perplexity.md`;
+  planned Chapter 3 derivation and verification.
+- Evidence status: formula introduced; interpretation and executable verification
+  pending.
+- Precision risks and required caveats: Use natural logs so `PPL=exp(mean NLL)`;
+  do not call perplexity the literal number of available tokens except in the
+  equal-probability teaching case; compare only under the same tokenizer, target
+  mask, and evaluation distribution; distinguish population entropy from finite
+  test loss; do not imply that lower perplexity alone proves better capability.
+- Dependencies: verified mean-loss calculation, equal-choice example, unequal
+  distribution counterexample, and tokenizer-comparison limitation.
+- Suggested destination: Chapter 3 and course site.
+- Next decision: Discuss after the perplexity lesson; if approved, Mac Studio
+  decides whether it is the final act of `ANIM-CE-001` or a separate short.
 
 ## Two-way proposal mechanism
 

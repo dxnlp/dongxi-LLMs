@@ -6,7 +6,8 @@
 - Book destination: Chapter 3 sections on token loss, sequence likelihood,
   cross-entropy, and perplexity
 - Related evidence: planned manual derivation and PyTorch verification
-- Related production tasks: `ANIM-CE-001`, `ANIM-LOGLOSS-001`
+- Related production tasks: `ANIM-CE-001`, `ANIM-LOGLOSS-001`; automatic
+  candidate `CAND-ANIM-005`
 
 ## Questions that drive the discussion
 
@@ -106,6 +107,10 @@ candidate is needed: user-approved `CAND-ANIM-002` and task `ANIM-CE-001` alread
 cover target probability → NLL → one-hot cross-entropy identity → masked mean.
 `ANIM-LOGLOSS-001` covers the proper-scoring decomposition conceptually. All
 production remains on the Mac Studio after verification.
+
+The introduction of `PPL=exp(mean NLL)` triggered `CAND-ANIM-005`. It remains in
+`discuss`: after the derivation, the learner can decide whether it should extend
+`ANIM-CE-001` or become a separate Mac Studio short.
 
 ## Open edges
 
