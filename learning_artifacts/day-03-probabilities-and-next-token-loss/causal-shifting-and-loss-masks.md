@@ -55,6 +55,47 @@ Some causal language-model APIs accept `labels=input_ids` and perform the shift
 inside the model loss. The exact implementation must be inspected rather than
 assuming every framework has the same contract.
 
+## Logits, labels, and their dimensions
+
+Let:
+
+- $B$ be the number of sequences in a batch;
+- $T$ be the number of token positions in each sequence;
+- $D$ be the hidden or embedding dimension;
+- $V$ be the tokenizer vocabulary size.
+
+The main tensor path is:
+
+| Object | Shape | Meaning at one position |
+|---|---|---|
+| `input_ids` | `[B,T]` | one integer vocabulary ID |
+| embeddings | `[B,T,D]` | one $D$-dimensional token vector |
+| contextual hidden states | `[B,T,D]` | one $D$-dimensional context-dependent vector |
+| logits | `[B,T,V]` | one raw score for every vocabulary candidate |
+| labels | `[B,T]` before alignment | one integer ID naming the observed target |
+
+At a single batch item and position, the model emits a logit vector
+$z\in\mathbb{R}^V$, while the stored label $y$ is a scalar integer in
+$\{0,\ldots,V-1\}$. Softmax turns the $V$ logits into $V$ probabilities, and
+cross-entropy uses $y$ to select the observed token's probability. Conceptually,
+$y$ corresponds to a one-hot target distribution $q\in\mathbb{R}^V$, but
+implementations normally store only the integer ID rather than materializing
+the large one-hot vector.
+
+For next-token alignment, the tensors used by the loss become:
+
+```python
+shift_logits = logits[:, :-1, :]   # [B, T-1, V]
+shift_labels = labels[:, 1:]       # [B, T-1]
+```
+
+Thus the two tensors agree on batch and supervised-position axes. The logits
+retain one extra vocabulary axis because each prediction is a competition among
+all $V$ candidates; each label needs only one integer to identify the observed
+winner. Labels are required for training-time evaluation of the prediction but
+are absent during ordinary generation, when the model emits logits and a decoding
+rule selects the next token.
+
 ## Evidence state
 
 - `introduced`: position $t$ predicts token $t+1$.
