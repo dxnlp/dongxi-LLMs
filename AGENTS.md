@@ -72,6 +72,15 @@ For each learning day:
 11. Update `PROGRESS.md` with evidence and an exact next action.
 12. Update `LEARNING_MEMORY.md` when a new topic must be indexed or the session produces a reusable public-content idea or portable task.
 
+When mathematics is central to the mechanism, pair the discussion with an
+interactive mechanism notebook when doing so materially improves understanding.
+Use the learning cycle `deep question → prediction → small implementation →
+perturbation or broken variant → interpretation → evidence boundary`. Guide the
+learner through the notebook interactively rather than treating it as a passive
+demonstration or a stream of arithmetic quizzes. Keep reusable computations in
+`src/dongxi_llms/`; notebooks should narrate, expose intermediate tensors, and
+invite controlled modification.
+
 Do not mark a day complete merely because prose or code exists. The stated evidence of completion must be present.
 
 ## Book-first course development

@@ -31,6 +31,18 @@ present. Conversational understanding alone is not sufficient.
 Create an additional focused topic when the lesson reaches the tiny-model
 experiment. Do not turn this index into a transcript.
 
+## Interactive mathematics sessions
+
+Day 3 uses three mechanism notebooks under [`notebooks/day-03/`](../../notebooks/day-03/):
+
+1. relative logits → stable softmax → target NLL;
+2. causal target shifting → labels → valid-token loss masks;
+3. gradient $p-q$ → repeated target frequencies → a tiny next-token model.
+
+These are guided coding discussions. Predictions and interpretations matter as
+much as successful execution, and reusable evidence must later move into source,
+tests, and reports.
+
 ## Starting knowledge from Day 2
 
 The learner already distinguishes logits from probabilities, explained why equal

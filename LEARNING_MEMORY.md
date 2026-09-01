@@ -43,6 +43,11 @@ dependencies, preferred machine, and current status.
   arithmetic as supporting evidence or executable verification, not as the main
   conversational teaching format; favor conceptual tensions, implications, and
   connections to real model behavior for understanding checks.
+- Wants interactive mechanism notebooks that make mathematical ideas executable.
+  Structure them around a deep question, prediction before execution, a small
+  learner-written implementation, deliberate perturbation or broken variant,
+  interpretation, and an explicit evidence boundary. Guide these notebooks
+  collaboratively cell by cell rather than presenting them as passive demos.
 - Wants mechanisms explained beneath convenient APIs: bytes and BPE merges before
   token IDs, embedding rows before contextual states, and masks before trainer
   abstractions.

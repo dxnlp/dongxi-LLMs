@@ -7,8 +7,10 @@ This file is the operational source of truth for resuming work. Update it at the
 - Active release: `v0.1`
 - Active day: Day 3
 - Status: in progress
-- Current focus: probability as normalized competition and negative-log surprise
-- Next action: develop the mechanism-level bridge from relative logits to target surprise before the manual and PyTorch derivation
+- Current focus: turn the Day 3 probability, alignment, and masking discussion
+  into executable mathematical understanding
+- Next action: run the first interactive mechanism notebook cell by cell,
+  beginning with stable softmax and its constant-shift invariance
 - Last updated: 2026-09-01
 
 ## Four-week tracker
@@ -64,6 +66,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | D012 | Maintain `LEARNING_MEMORY.md` as the cross-session and cross-machine artifact index and production ledger. | Topic artifacts, public-content ideas, and portable task packets must remain discoverable beyond a chat transcript without turning the book into daily notes. |
 | D013 | Create and actively update `learning_artifacts/day-NN-topic/` during each lesson. | Deep discussions should be durable and reusable by topic and day, while `LEARNING_MEMORY.md` remains a compact index and production queue. |
 | D014 | Use a two-way, approval-gated animation proposal loop during learning and course development. | Strong mechanism animations should be surfaced when motion adds explanatory value, while explicit learner approval and the four-animation `v0.1` target prevent silent scope growth. |
+| D015 | Use interactive mechanism notebooks for important mathematical ideas. | The learner understands mathematics best by predicting, implementing, perturbing, and interpreting mechanisms in code while retaining deep conceptual discussion. |
 
 ## End-of-day update template
 
