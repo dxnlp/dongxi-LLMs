@@ -65,6 +65,23 @@ verification.
 - `not yet demonstrated`: unequal logit ratios, temperature, negative-log
   surprise, sequence likelihood, cross-entropy, and perplexity.
 
+## Learner prediction and refinement
+
+When asked what happens to valid but unobserved continuations, the learner
+predicted that training assigns probabilities to those alternatives. The forward
+distribution does assign probability to every candidate, so alternatives can
+retain nonzero mass.
+
+The important refinement is that one ordinary one-hot cross-entropy example does
+not label the other candidates as valid. Its local gradient rewards the observed
+target and generally pushes every non-target logit down relative to it, including
+semantically valid alternatives. Such alternatives gain support only through
+other observations, shared contextual generalization, or a different target
+construction such as soft or multi-target supervision. In expectation over a
+representative data distribution, maximum likelihood can recover probability
+mass across alternative continuations even though each individual sample names
+only one next token.
+
 ## Open edges
 
 - Explain why adding one constant to every logit leaves softmax unchanged.
