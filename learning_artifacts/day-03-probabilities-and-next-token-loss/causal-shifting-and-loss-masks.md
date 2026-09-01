@@ -59,8 +59,13 @@ assuming every framework has the same contract.
 
 - `introduced`: position $t$ predicts token $t+1$.
 - `introduced`: explicit shifted shapes `[B,T-1,V]` and `[B,T-1]`.
-- `not yet demonstrated`: learner explanation-back, exact BOS/EOS trace,
-  padding-mask alignment, and manual/PyTorch agreement.
+- `developing`: the learner initially connected an unshifted loss with seeing
+  future tokens. The discussion separated two independent failure modes:
+  unshifted target alignment asks position $t$ to recover the already-visible
+  token $x_t$, while a broken causal attention mask lets position $t$ inspect
+  future tokens $x_{>t}$.
+- `not yet demonstrated`: learner explanation-back of the corrected distinction,
+  exact BOS/EOS trace, padding-mask alignment, and manual/PyTorch agreement.
 
 ## Animation opportunity check
 
