@@ -15,6 +15,7 @@ same proposal is not repeatedly rediscovered.
 |---|---|---|---|---|---|
 | `CAND-ANIM-001` | Roadmap + agent | Chapter 3 | Input tokens → causal logits → probabilities, while each next-token target aligns with the preceding position → per-position loss | discuss | Decide during Day 3 whether this should expand `ANIM-CE-001` or become a separate animation |
 | `CAND-ANIM-002` | User | Chapter 3 | Place negative log-likelihood and cross-entropy in the LLM training context: target probability → per-token NLL → masked aggregation across next-token positions → cross-entropy | approved; promoted into `ANIM-CE-001` | Complete the Day 3 derivation and produce only on the Mac Studio |
+| `CAND-ANIM-003` | User | Chapter 3 | Standard next-token update: predicted distribution `p` versus one-hot target `q` → logit gradient `p-q` → target score rises and non-target scores fall → repeated diverse examples shape a distribution | approved; promoted into `ANIM-NTP-001` | Complete gradient verification and tiny-model evidence; produce only on the Mac Studio |
 
 ### CAND-ANIM-002 — NLL to cross-entropy in an LLM
 
@@ -45,6 +46,42 @@ same proposal is not repeatedly rediscovered.
   animation handoff.
 - Next decision: Mac Studio production begins only after the canonical Day 3
   derivation and evidence are committed.
+
+### CAND-ANIM-003 — Standard next-token training update
+
+- Source: user
+- Proposed during: Day 3
+- State: approved; promoted into `ANIM-NTP-001`
+- Learning objective: Make one-hot next-token supervision and its softmax
+  cross-entropy gradient visible: `dL/dz = p-q`. Show why one example rewards
+  the observed token and locally suppresses every non-target, including
+  alternatives that could be valid in another sample.
+- Why motion is better than a static figure: The learner needs to preserve token
+  identity while probability bars become gradient bars, logits move in opposite
+  directions, and repeated examples with different observed targets accumulate
+  into a learned conditional distribution.
+- Moving objects and stable anchors: Keep candidate tokens and their colors fixed;
+  place `p` beside one-hot `q`; transform them into `p-q`; move the target logit
+  upward and non-target logits downward; then replay a small controlled stream
+  whose target frequencies are visibly known.
+- Canonical source material:
+  `learning_artifacts/day-03-probabilities-and-next-token-loss/probability-as-competition-and-surprise.md`;
+  planned Chapter 3 gradient derivation and tiny-model report.
+- Evidence status: gradient mechanism introduced; manual/PyTorch verification and
+  learned-frequency experiment pending.
+- Precision risks and required caveats: Show gradient descent direction rather
+  than confusing gradient sign with parameter motion; state that one-hot
+  supervision does not mark unobserved alternatives as valid; do not imply that
+  one update sets the target probability to one; distinguish a single local
+  update from the expectation over a representative data distribution; use fixed
+  verified numbers in the final render.
+- Dependencies: analytical gradient, PyTorch agreement, optimizer-step check, and
+  a tiny controlled target-frequency experiment.
+- Suggested destination: Chapter 3, course site, and the later embedding-gradient
+  animation sequence.
+- Next decision: Produce and render only on the Mac Studio after Day 3 evidence is
+  committed; decide there whether it is a standalone short animation or a
+  companion segment to `ANIM-CE-001`.
 
 ## Two-way proposal mechanism
 

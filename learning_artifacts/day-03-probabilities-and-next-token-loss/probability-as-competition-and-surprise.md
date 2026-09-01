@@ -6,8 +6,9 @@
 - Book destination: Chapter 3 sections on logits, softmax, and negative
   log-likelihood
 - Related evidence: planned manual derivation and PyTorch verification
-- Related production tasks: `ANIM-CE-001`; candidates `CAND-ANIM-001` and
-  user-approved `CAND-ANIM-002`
+- Related production tasks: `ANIM-CE-001`, `ANIM-NTP-001`; candidate
+  `CAND-ANIM-001` and user-approved candidates `CAND-ANIM-002` and
+  `CAND-ANIM-003`
 
 ## Questions that drive the discussion
 

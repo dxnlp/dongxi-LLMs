@@ -53,3 +53,9 @@ probability → per-token NLL → one-hot cross-entropy identity → masked aggr
 across valid positions. It has been promoted into the expanded `ANIM-CE-001`
 packet. Production and rendering belong exclusively on the Mac Studio after the
 Day 3 derivation and PyTorch verification are committed.
+
+The learner also approved `CAND-ANIM-003`, showing standard next-token training
+from `p` and one-hot `q` through `p-q`, the corresponding gradient-descent logit
+directions, and the emergence of a distribution across repeated diverse
+examples. It is promoted into `ANIM-NTP-001`; Mac Studio production waits for the
+verified Day 3 gradient and target-frequency experiment.

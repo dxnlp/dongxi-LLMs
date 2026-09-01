@@ -98,6 +98,7 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac Studio | Day 2 explanation complete |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac Studio | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | LLM target probability → per-token NLL → masked mean cross-entropy | expanded concept approved; Mac Studio production waits for Day 3 evidence | Mac Studio | Day 3 derivation, target alignment, and PyTorch verification |
+| `ANIM-NTP-001` | Animation | One-hot next-token supervision → `p-q` gradient → distribution learning across examples | concept approved; Mac Studio production waits for Day 3 evidence | Mac Studio | Gradient verification and controlled target-frequency experiment |
 
 ## Production-system tasks
 
@@ -441,6 +442,54 @@ marker agrees numerically with `-ln(p)`; the one-hot cross-entropy collapses to
 that same value; masked positions contribute neither loss nor count; the final
 mean agrees with the later manual and PyTorch calculations; behavior near zero is
 described as a limit rather than evaluating `ln(0)`.
+
+### Task packet: `ANIM-NTP-001`
+
+**Learning objective:** Show how standard one-hot next-token training converts a
+predicted distribution `p` and observed target distribution `q` into the logit
+gradient `dL/dz = p-q`, and how repeated samples—not one isolated target—shape the
+learned conditional distribution.
+
+**Approval and ownership:** Dongxi approved this concept during Day 3. All
+production and rendering belongs on the Mac Studio. The DGX Spark supplies only
+the derivation, verified numerical examples, tiny-model evidence, task packet,
+and later content review.
+
+**Narrative spine:**
+
+1. Hold a small candidate vocabulary fixed and display the model distribution
+   `p` as probability bars.
+2. Reveal the one-hot observed target `q` without describing other candidates as
+   linguistically invalid.
+3. Transform the aligned bars into `p-q`. Keep signs and token identities visible.
+4. Reverse from gradient to gradient-descent motion: the target logit rises while
+   non-target logits fall, with the update size controlled by the optimizer.
+5. Emphasize that one example provides no special protection for valid but
+   unobserved alternatives.
+6. Replay a verified sequence of examples whose targets vary among several valid
+   continuations. Accumulate their pressures and show the model distribution
+   approaching the empirical conditional frequencies rather than collapsing to
+   the last target.
+7. Close with the evidence boundary: matching the training distribution is not
+   the same as truth, calibration on a shifted domain, or general capability.
+
+**Required precision:** Use `dL/dz_i = p_i-q_i`; distinguish gradient sign from
+the direction of a gradient-descent parameter update; do not imply that all
+logits change by the same magnitude; do not imply one update produces a one-hot
+prediction; state that alternatives recover support through other observations,
+shared generalization, or different supervision; use an explicitly verified
+optimizer and target-frequency example.
+
+**Expected outputs:** Editable Manim source, 16:9 H.264 MP4, lightweight GIF,
+render command, dependency revisions, metadata, and one still suitable for
+Chapter 3. The Mac Studio decides whether the final form is standalone or a
+companion segment to `ANIM-CE-001`, without changing the canonical equations.
+
+**Acceptance checks:** Every candidate retains a stable visual identity; `p` and
+`q` each sum to one; displayed gradient values equal `p-q`; target/non-target
+update directions are correct; repeated-example frequencies and final
+probabilities agree with the committed Day 3 numerical evidence; no frame claims
+that low training loss establishes truthfulness.
 
 ## Cross-machine execution protocol
 
