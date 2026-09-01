@@ -78,6 +78,9 @@ fixed tokenizer, target policy, and evaluation distribution.
   continuations are genuinely uncertain, a perfect model with $p=q$ still has
   cross-entropy $H(q)>0$; matching removes model mismatch, not intrinsic data
   entropy.
+- `demonstrated`: the learner correctly bounded a lower-perplexity result to
+  similarity with or prediction of the tested corpus and rejected the stronger
+  conclusion that the lower-perplexity model is generally better.
 - `not yet demonstrated`: the proper-scoring decomposition, perplexity
   interpretation, causal target alignment, and manual/PyTorch agreement.
 
@@ -99,6 +102,15 @@ distribution is deterministic and the model assigns probability one to its sole
 outcome. A sufficiently flexible model can also drive empirical loss on a finite
 memorized training sample near zero without eliminating population uncertainty.
 This separates population cross-entropy from NLL measured on one finite dataset.
+
+When comparing two models, the direct supported statement is narrower than
+“shares similar patterns”: under the same tokenizer, preprocessing, causal target
+alignment, loss mask, reduction, and test corpus, the lower-perplexity model
+assigned higher geometric-mean probability to the observed next tokens. Pattern
+similarity, training-data overlap, better generalization, or contamination are
+possible explanations that require additional evidence. The result alone does
+not establish broader capability, reasoning, factuality, calibration, preferred
+generation behavior, safety, or performance on another distribution.
 
 ## Animation opportunity check
 
