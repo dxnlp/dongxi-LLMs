@@ -57,6 +57,11 @@ dependencies, preferred machine, and current status.
   production.
 - Uses the DGX Spark for model- and GPU-dependent work and may use a local Mac for
   animation, design, editing, and publishing tasks.
+- Works across multiple machines and may push course changes from either one.
+  Before every new or resumed learning session, inspect the branch and working
+  tree, fast-forward pull the remote branch when clean, and reread the durable
+  project state before starting work. Never discard dirty local work merely to
+  synchronize.
 - Prefers course animations with a white canvas, Arial normal-weight English,
   Songti SC Chinese, minimal text, stable geometric alignment, and continuous
   mechanism-first motion. The reusable specification is

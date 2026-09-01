@@ -2,6 +2,21 @@
 
 These instructions apply to humans and coding agents contributing to `Dongxi_LLMs`.
 
+## Session synchronization
+
+At the start of every new learning session, and whenever the learner returns to
+resume work, synchronize before relying on local project state:
+
+1. Confirm the intended repository and branch with `git status --short --branch`.
+2. If the working tree is clean, run `git pull --ff-only` before reading trackers
+   or making changes; work may have been pushed from another machine.
+3. If the tree is dirty, history has diverged, or a fast-forward pull fails, do
+   not reset, stash, overwrite, or merge blindly. Preserve the local work, report
+   the state, and reconcile it safely before continuing.
+4. After a successful pull, reread the required project files because remote
+   changes may have updated instructions, progress, learning memory, or task
+   packets.
+
 ## Required read order
 
 Before starting work:
