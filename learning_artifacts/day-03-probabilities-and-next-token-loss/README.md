@@ -26,9 +26,10 @@ present. Conversational understanding alone is not sufficient.
 
 1. [`probability-as-competition-and-surprise.md`](probability-as-competition-and-surprise.md)
 2. [`nll-cross-entropy-and-perplexity.md`](nll-cross-entropy-and-perplexity.md)
+3. [`causal-shifting-and-loss-masks.md`](causal-shifting-and-loss-masks.md)
 
-Create additional focused topics as the lesson reaches causal shifting and the
-tiny-model experiment. Do not turn this index into a transcript.
+Create an additional focused topic when the lesson reaches the tiny-model
+experiment. Do not turn this index into a transcript.
 
 ## Starting knowledge from Day 2
 
