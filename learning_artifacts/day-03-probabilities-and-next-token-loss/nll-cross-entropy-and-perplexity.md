@@ -6,8 +6,8 @@
 - Book destination: Chapter 3 sections on token loss, sequence likelihood,
   cross-entropy, and perplexity
 - Related evidence: planned manual derivation and PyTorch verification
-- Related production tasks: `ANIM-CE-001`, `ANIM-LOGLOSS-001`; automatic
-  candidate `CAND-ANIM-005`
+- Related production tasks: `ANIM-CE-001`, `ANIM-NTP-001`,
+  `ANIM-LOGLOSS-001`; automatic candidate `CAND-ANIM-005`
 
 ## Questions that drive the discussion
 
@@ -69,11 +69,117 @@ Perplexity will later be defined as the exponential of mean natural-log loss:
 Its interpretation as an effective branching factor is useful only under a
 fixed tokenizer, target policy, and evaluation distribution.
 
+## Exact logit-gradient derivation
+
+For one position, let $z\in\mathbb{R}^V$ be the logits, let
+
+\[
+S=\sum_j e^{z_j},
+\qquad
+p_k=\frac{e^{z_k}}{S},
+\]
+
+and let the target distribution $q$ satisfy $\sum_k q_k=1$. Cross-entropy is
+
+\[
+L=-\sum_k q_k\log p_k.
+\]
+
+Since
+
+\[
+\log p_k=z_k-\log S,
+\]
+
+the loss can be rewritten as
+
+\[
+\begin{aligned}
+L
+&=-\sum_k q_k(z_k-\log S)\\
+&=-\sum_k q_kz_k+\left(\sum_kq_k\right)\log S\\
+&=-\sum_k q_kz_k+\log S.
+\end{aligned}
+\]
+
+Differentiate with respect to one logit $z_i$:
+
+\[
+\begin{aligned}
+\frac{\partial L}{\partial z_i}
+&=-q_i+\frac{1}{S}\frac{\partial S}{\partial z_i}\\
+&=-q_i+\frac{e^{z_i}}{S}\\
+&=p_i-q_i.
+\end{aligned}
+\]
+
+The same result follows through the full softmax Jacobian,
+
+\[
+\frac{\partial p_k}{\partial z_i}
+=p_k(\delta_{ki}-p_i),
+\]
+
+and the chain rule:
+
+\[
+\begin{aligned}
+\frac{\partial L}{\partial z_i}
+&=\sum_k
+\frac{\partial L}{\partial p_k}
+\frac{\partial p_k}{\partial z_i}\\
+&=\sum_k\left(-\frac{q_k}{p_k}\right)
+p_k(\delta_{ki}-p_i)\\
+&=-q_i+p_i\sum_kq_k\\
+&=p_i-q_i.
+\end{aligned}
+\]
+
+For a one-hot target $y$:
+
+\[
+\frac{\partial L}{\partial z_y}=p_y-1<0
+\quad\text{when }p_y<1,
+\]
+
+while every non-target $i\ne y$ has
+
+\[
+\frac{\partial L}{\partial z_i}=p_i>0.
+\]
+
+A direct illustrative gradient-descent step on logits would be
+
+\[
+z_y\leftarrow z_y+\eta(1-p_y),
+\qquad
+z_i\leftarrow z_i-\eta p_i\quad(i\ne y).
+\]
+
+Thus the target score moves up and every non-target score moves down; a
+high-probability wrong candidate receives the largest downward correction. The
+gradient components sum to zero,
+
+\[
+\sum_i(p_i-q_i)=1-1=0,
+\]
+
+which is the differential expression of softmax's shared-logit-shift invariance.
+
+In a real model, logits are intermediate activations rather than independent
+optimizer parameters. Backpropagation routes this logit gradient through the
+output head, transformer, and embeddings; an optimizer updates those parameters.
+Therefore the direct logit update above explains local direction, not the exact
+post-update logits of the complete network.
+
 ## Evidence state
 
 - `introduced`: one-hot cross-entropy equals observed-token NLL.
 - `introduced`: valid token NLLs can be summed or averaged with an explicit mask
   denominator.
+- `analytically demonstrated`: substituting softmax into cross-entropy and
+  differentiating yields `dL/dz_i = p_i-q_i`; its signs and zero-sum property
+  explain target/non-target correction and shared-shift invariance.
 - `demonstrated`: the learner correctly reasoned that when human-language
   continuations are genuinely uncertain, a perfect model with $p=q$ still has
   cross-entropy $H(q)>0$; matching removes model mismatch, not intrinsic data
@@ -81,8 +187,9 @@ fixed tokenizer, target policy, and evaluation distribution.
 - `demonstrated`: the learner correctly bounded a lower-perplexity result to
   similarity with or prediction of the tested corpus and rejected the stronger
   conclusion that the lower-perplexity model is generally better.
-- `not yet demonstrated`: the proper-scoring decomposition, perplexity
-  interpretation, causal target alignment, and manual/PyTorch agreement.
+- `not yet demonstrated`: the proper-scoring decomposition, executable gradient
+  agreement, perplexity interpretation, causal target alignment, and full
+  manual/PyTorch agreement.
 
 ## Learner explanation and boundary refinement
 
@@ -117,8 +224,10 @@ generation behavior, safety, or performance on another distribution.
 The explicit mathematics automatically triggers animation review. No new
 candidate is needed: user-approved `CAND-ANIM-002` and task `ANIM-CE-001` already
 cover target probability → NLL → one-hot cross-entropy identity → masked mean.
-`ANIM-LOGLOSS-001` covers the proper-scoring decomposition conceptually. All
-production remains on the Mac Studio after verification.
+`ANIM-NTP-001` already covers the now-complete analytical `p-q` derivation and
+its gradient-descent directions. `ANIM-LOGLOSS-001` covers the proper-scoring
+decomposition conceptually. All production remains on the Mac Studio after
+verification.
 
 The introduction of `PPL=exp(mean NLL)` triggered `CAND-ANIM-005`. It remains in
 `discuss`: after the derivation, the learner can decide whether it should extend
