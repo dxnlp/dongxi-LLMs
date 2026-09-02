@@ -203,6 +203,30 @@ This is credit assignment, not direct storage of a correction for one logit:
 the training example changes reusable parameters, so it can alter predictions
 in many other contexts as well.
 
+## How one-hot examples learn a distribution
+
+Suppose indistinguishable instances of the same context have an empirical
+next-token distribution $r$: for example, `dog` occurs with frequency $0.7$ and
+`cat` with frequency $0.3$. Every individual training row still supplies a
+one-hot target $q$, but its expected value is the frequency distribution:
+
+\[
+\mathbb{E}[q]=r.
+\]
+
+Because the per-example logit gradient is $p-q$, the expected gradient for that
+context is
+
+\[
+\mathbb{E}[p-q]=p-\mathbb{E}[q]=p-r.
+\]
+
+The competing one-hot updates therefore balance when $p=r$. A `dog` example
+temporarily pushes probability toward `dog`, and a `cat` example pushes it toward
+`cat`; across representative repetitions, their frequencies determine the
+equilibrium. This is how one-hot supervision can learn a non-one-hot conditional
+distribution without any single row explicitly listing all valid alternatives.
+
 ## Evidence state
 
 - `introduced`: one-hot cross-entropy equals observed-token NLL.
@@ -213,6 +237,8 @@ in many other contexts as well.
   explain target/non-target correction and shared-shift invariance.
 - `introduced`: the chain-rule path from the logit gradient through the output
   head into its parameters and the contextual hidden state.
+- `introduced`: repeated one-hot outcomes have expected gradient $p-r$, so their
+  equilibrium prediction matches the empirical conditional frequencies $r$.
 - `demonstrated`: the learner correctly reasoned that when human-language
   continuations are genuinely uncertain, a perfect model with $p=q$ still has
   cross-entropy $H(q)>0$; matching removes model mismatch, not intrinsic data
@@ -221,8 +247,8 @@ in many other contexts as well.
   similarity with or prediction of the tested corpus and rejected the stronger
   conclusion that the lower-perplexity model is generally better.
 - `not yet demonstrated`: the proper-scoring decomposition, executable gradient
-  agreement, perplexity interpretation, causal target alignment, and full
-  manual/PyTorch agreement.
+  agreement, empirical-frequency convergence, perplexity interpretation, causal
+  target alignment, and full manual/PyTorch agreement.
 
 ## Learner explanation and boundary refinement
 
