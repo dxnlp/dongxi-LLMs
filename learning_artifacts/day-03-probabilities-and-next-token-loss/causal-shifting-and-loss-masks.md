@@ -62,7 +62,8 @@ Let:
 - $B$ be the number of sequences in a batch;
 - $T$ be the number of token positions in each sequence;
 - $D$ be the hidden or embedding dimension;
-- $V$ be the tokenizer vocabulary size.
+- $V$ be the model's output-vocabulary dimension (which can include rows not
+  exposed as ordinary tokenizer entries).
 
 The main tensor path is:
 
@@ -73,6 +74,29 @@ The main tensor path is:
 | contextual hidden states | `[B,T,D]` | one $D$-dimensional context-dependent vector |
 | logits | `[B,T,V]` | one raw score for every vocabulary candidate |
 | labels | `[B,T]` before alignment | one integer ID naming the observed target |
+
+The transformer does not apply softmax directly to a hidden state. Its output
+head first maps the $D$-dimensional representation into $V$ token scores:
+
+\[
+z_{b,t}=W_{\mathrm{out}}h_{b,t}+b,
+\qquad
+W_{\mathrm{out}}\in\mathbb{R}^{V\times D},
+\qquad
+z_{b,t}\in\mathbb{R}^{V}.
+\]
+
+For candidate token $i$, the individual score is
+
+\[
+z_{b,t,i}=W_{\mathrm{out},i}\cdot h_{b,t}+b_i.
+\]
+
+Softmax is then applied to $z_{b,t}$, producing one conditional next-token
+distribution over the model vocabulary. The output head is essential because
+the $D$ hidden coordinates are internal learned features, not vocabulary-token
+coordinates. With weight tying, `W_out` reuses the input embedding matrix; the
+mapping still occurs.
 
 At a single batch item and position, the model emits a logit vector
 $z\in\mathbb{R}^V$, while the stored label $y$ is a scalar integer in
@@ -152,6 +176,10 @@ a duplicate proposal. Production remains on the Mac Studio.
 
 - `introduced`: position $t$ predicts token $t+1$.
 - `introduced`: explicit shifted shapes `[B,T-1,V]` and `[B,T-1]`.
+- `developing`: the learner correctly traced token IDs through the transformer's
+  final contextual state into logits, then initially placed softmax directly on
+  that hidden state. The refined path is hidden state `[D]` → output head →
+  logits `[V]` → softmax → probabilities `[V]`.
 - `developing`: the learner initially connected an unshifted loss with seeing
   future tokens. The discussion separated two independent failure modes:
   unshifted target alignment asks position $t$ to recover the already-visible
@@ -168,7 +196,8 @@ a duplicate proposal. Production remains on the Mac Studio.
 
 This important tensor alignment automatically triggers animation review. Existing
 `CAND-ANIM-001` already preserves token identity while logits, next-token targets,
-and per-position losses align, so no duplicate candidate is created. It remains
+and per-position losses align. It also covers the output-head bridge from hidden
+dimension $D$ to vocabulary dimension $V$, so no duplicate candidate is created. It remains
 `discuss` and all production remains on the Mac Studio after approval and
 verification.
 
