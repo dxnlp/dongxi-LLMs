@@ -149,6 +149,41 @@ Qwen model and `[1,1,201088]` for either gpt-oss model. The extra model rows are
 observed interface fact; these files alone do not establish the designers'
 rationale for them.
 
+### The computational cost of a large output vocabulary
+
+For dense output projection,
+
+\[
+Z_{[B,T,V]}=H_{[B,T,D]}W_{\mathrm{out},[V,D]}^\top,
+\]
+
+so its arithmetic scales as $\Theta(BTDV)$ and the output matrix contains $VD$
+weights, plus an optional bias. Softmax adds work proportional to $BTV$, but the
+projection performs a length-$D$ dot product for every vocabulary candidate and
+is usually the larger arithmetic term.
+
+For the pinned Qwen3-0.6B interface, $D=1024$ and $V=151{,}936$. Its tied
+embedding/output matrix therefore contains 155,582,464 weights, and one position
+requires roughly 155.6 million multiply-accumulate operations for the vocabulary
+projection alone. For gpt-oss, $D=2880$ and $V=201{,}088$, so its configured
+output matrix contains 579,133,440 weights; its configuration reports untied
+input and output embeddings. These operation counts describe the dense
+mathematical projection and omit bias, memory traffic, kernel implementation,
+and hardware utilization, so they are not measured latency.
+
+GPUs make this feasible by evaluating the matrix multiplication in parallel.
+Training applies it across many positions at once; cached autoregressive
+generation normally applies it only to the newly produced final position on each
+step. Full `[B,T,V]` logits can also consume substantial memory, motivating fused
+or chunked linear-cross-entropy implementations that avoid retaining unnecessary
+intermediate probability tensors.
+
+A larger vocabulary is not pure overhead. Better compression can reduce sequence
+length $T$, decreasing the number of transformer positions and sometimes the
+quadratic attention work, while increasing the $V$-dependent embedding and output
+cost. Whether that trade is favorable depends on the tokenizer's actual
+compression on the target data, model width, sequence geometry, and hardware.
+
 At a single batch item and position, the model emits a logit vector
 $z\in\mathbb{R}^V$, while the stored label $y$ is a scalar integer in
 $\{0,\ldots,V-1\}$. Softmax turns the $V$ logits into $V$ probabilities, and
@@ -234,6 +269,10 @@ a duplicate proposal. Production remains on the Mac Studio.
 - `developing`: the learner is refining the cardinality distinction: one input
   position yields one contextual state but a complete vector of scores over all
   $V$ possible output tokens; a sequence yields one such vector per position.
+- `introduced`: the learner inferred that a large vocabulary projection demands
+  substantial computation. The refined systems view is a trade-off between
+  $V$-dependent output cost and possible $T$ reductions from better token
+  compression, with GPUs evaluating the dense projection in parallel.
 - `developing`: the learner initially connected an unshifted loss with seeing
   future tokens. The discussion separated two independent failure modes:
   unshifted target alignment asks position $t$ to recover the already-visible
