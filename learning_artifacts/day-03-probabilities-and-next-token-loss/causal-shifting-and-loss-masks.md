@@ -260,6 +260,63 @@ Vocabulary design therefore balances compression, parameter and output cost,
 training frequency, multilingual allocation, context coverage, and hardware—not
 only tokenizer file size.
 
+### A token position is not a semantic atom
+
+The learner proposed a useful tokenizer–model distinction using Chinese:
+humans recognize relationships among `数`, `据`, `库`, `数据`, and `数据库`, while
+a tokenizer may assign each available form a separate ID. The refined statement
+is that a token is an atomic unit of representation, computation, and prediction
+for this model interface, not necessarily an atomic unit of meaning or
+understanding.
+
+A BPE tokenizer may contain entries resembling:
+
+```text
+ID a -> 数
+ID b -> 据
+ID c -> 库
+ID d -> 数据
+ID e -> 数据库
+```
+
+The IDs are arbitrary addresses. Nothing about their numerical values requires
+`d` to be related to `a` and `b`, and the model has no built-in constraint such
+as
+
+\[
+E[e]=E[a]+E[b]+E[c]
+\quad\text{or}\quad
+E[d]=E[a]+E[b].
+\]
+
+BPE training can still record a *procedural* relationship: a longer token may
+have been created by repeatedly merging adjacent shorter symbols. At runtime,
+however, if the trained encoding selects `数据库` as one token, the language
+model ordinarily receives its final ID, not the merge tree and not the three
+character IDs simultaneously. The tokenizer's shared spelling or merge history
+therefore does not itself provide semantic composition to the transformer.
+
+Next-token training can connect these symbols later through shared usage:
+
+- their tokens occur in similar surrounding contexts;
+- shorter forms occur within related sequences and documents;
+- predictions made from one form overlap with predictions made from another;
+- shared transformer parameters propagate statistical structure;
+- tied input/output weights, when present, add another gradient path.
+
+Those learned relationships need not appear as simple cosine similarity among
+the static input embedding rows. They can be distributed across attention,
+feed-forward layers, and context-dependent hidden states. Vector similarity is
+one diagnostic probe, not a complete definition of linguistic knowledge.
+
+The human comparison must also remain qualified. Human readers learn characters,
+morphemes, words, and recurring multi-character constructions at several levels;
+they do not always construct meaning strictly bottom-up from isolated characters.
+The central contrast is therefore not "humans compose while tokenizers do the
+opposite." It is that human units are organized through meaning and experience,
+whereas tokenizer units are selected primarily by an encoding/compression
+procedure; semantic relationships are learned mainly by the model afterward.
+
 At a single batch item and position, the model emits a logit vector
 $z\in\mathbb{R}^V$, while the stored label $y$ is a scalar integer in
 $\{0,\ldots,V-1\}$. Softmax turns the $V$ logits into $V$ probabilities, and
@@ -349,6 +406,11 @@ a duplicate proposal. Production remains on the Mac Studio.
   substantial computation. The refined systems view is a trade-off between
   $V$-dependent output cost and possible $T$ reductions from better token
   compression, with GPUs evaluating the dense projection in parallel.
+- `developing`: the learner correctly separated tokenizer-level atomic IDs from
+  model-learned linguistic relationships. The refinement replaces "unit of
+  understanding" with "unit of representation/computation/prediction," retains
+  BPE merge history as procedural rather than semantic structure, and avoids
+  reducing model knowledge to static embedding similarity.
 - `developing`: the learner initially connected an unshifted loss with seeing
   future tokens. The discussion separated two independent failure modes:
   unshifted target alignment asks position $t$ to recover the already-visible
