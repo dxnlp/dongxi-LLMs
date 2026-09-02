@@ -371,6 +371,47 @@ independent containers of knowledge. Knowledge is distributed across embeddings,
 attention and feed-forward parameters, hidden-state computations, and the output
 mapping.
 
+### From a probability vector back to one token ID
+
+The vocabulary axis is indexed by token ID. After softmax,
+
+\[
+p_t=[p_t(0),p_t(1),\ldots,p_t(V-1)],
+\]
+
+so array position $i$ is the probability of token ID $i$. No separate semantic
+search is needed to recover an ID. A decoding rule chooses an index from this
+vector.
+
+Greedy decoding selects:
+
+\[
+i_{t+1}=\operatorname*{arg\,max}_i p_t(i)
+=\operatorname*{arg\,max}_i z_t(i).
+\]
+
+The second equality holds because softmax preserves ordering, so an implementation
+does not need to materialize probabilities merely to take the maximum. Sampling
+instead draws $i_{t+1}$ from the categorical distribution, often after modifying
+the logits with temperature, top-$k$, or top-$p$ filtering. Therefore generation
+does not always select the largest probability.
+
+For a batch, the last-position path is:
+
+```python
+last_logits = logits[:, -1, :]                         # [B, V]
+probabilities = softmax(last_logits, dim=-1)            # [B, V]
+next_id = probabilities.argmax(dim=-1, keepdim=True)    # [B, 1], greedy only
+input_ids = torch.cat([input_ids, next_id], dim=1)      # [B, T+1]
+```
+
+The new ID is appended to the prefix, the model runs the next autoregressive
+step, and the loop stops at EOS or another stopping condition. Finally, the
+tokenizer decoder maps the generated ID sequence back to text. During
+teacher-forced training this selection loop is normally absent: the known target
+label is used to calculate loss, allowing all shifted positions to train in
+parallel.
+
 At a single batch item and position, the model emits a logit vector
 $z\in\mathbb{R}^V$, while the stored label $y$ is a scalar integer in
 $\{0,\ldots,V-1\}$. Softmax turns the $V$ logits into $V$ probabilities, and
@@ -470,6 +511,10 @@ a duplicate proposal. Production remains on the Mac Studio.
   answer treats IDs as permutation-invariant categorical addresses, distinguishes
   hidden representations from logit readouts, and describes language modeling as
   direct token-sequence learning that induces text-level linguistic structure.
+- `introduced`: the learner traced logits through softmax to a probability
+  vector and asked how one ID emerges. The vocabulary coordinate already equals
+  the token ID; greedy decoding uses `argmax`, sampling draws a categorical
+  index, and the chosen ID is appended for the next autoregressive step.
 - `developing`: the learner initially connected an unshifted loss with seeing
   future tokens. The discussion separated two independent failure modes:
   unshifted target alignment asks position $t$ to recover the already-visible
