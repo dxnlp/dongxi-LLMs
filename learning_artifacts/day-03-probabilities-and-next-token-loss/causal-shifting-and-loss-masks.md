@@ -184,6 +184,82 @@ quadratic attention work, while increasing the $V$-dependent embedding and outpu
 cost. Whether that trade is favorable depends on the tokenizer's actual
 compression on the target data, model width, sequence geometry, and hardware.
 
+#### Why fewer vocabulary entries tend to create more positions
+
+In byte-level BPE, the initial inventory can represent every input using byte
+tokens. Each learned merge spends one additional vocabulary entry to replace a
+frequent adjacent pair with a single reusable token. A tokenizer with a smaller
+merge budget leaves more strings decomposed into bytes or short subwords; a larger
+budget can store longer recurring fragments.
+
+For example, the same conceptual text might be segmented as:
+
+```text
+smaller learned vocabulary:  data | base | govern | ance     T = 4
+larger learned vocabulary:   database | governance           T = 2
+```
+
+For Chinese text, a byte-fallback tokenizer with few learned Chinese merges might
+represent each character through several byte tokens, while a tokenizer with
+relevant learned entries might use `数据库 | 治理`. The improvement comes from
+which patterns received vocabulary capacity, not from the number $V$ alone. A
+smaller language-specific vocabulary can therefore compress its target language
+better than a larger vocabulary whose capacity was allocated elsewhere.
+
+Every resulting token occupies a transformer position. At every layer, each
+position receives attention and feed-forward projections, residual updates, and
+normalization. A simplified full-sequence cost separates three important terms:
+
+\[
+\text{cost}
+\approx
+c_1LTD^2
++
+c_2LT^2D
++
+c_3TDV,
+\]
+
+where $L$ is layer count. The first term represents per-position projections and
+feed-forward work, the second represents full self-attention interactions, and
+the third represents the dense vocabulary projection. Constants and fused-kernel
+behavior are omitted; this equation explains scaling rather than predicting
+wall-clock time.
+
+If tokenization doubles $T$, per-position transformer work roughly doubles and
+the number of full-attention position pairs grows approximately fourfold. Under
+causal attention the exact count is triangular, $T(T+1)/2$, rather than $T^2$,
+but the quadratic scaling remains. Flash-style attention can avoid storing the
+complete score matrix, yet it does not make all full-attention arithmetic linear.
+
+During cached autoregressive generation, the new token attends to all cached past
+positions. Longer tokenization increases KV-cache storage, the attention span of
+each later step, and the number of sequential generation steps needed to express
+the same text. These effects can matter even when only the newest position passes
+through the output head.
+
+The opposite pressure comes from $V$. Consider a deliberately simplified
+comparison for one string:
+
+| Design | $T$ | $V$ | Causal attention pairs $T(T+1)/2$ | Vocabulary comparisons $TV$ |
+|---|---:|---:|---:|---:|
+| smaller vocabulary | 12 | 10,000 | 78 | 120,000 |
+| larger vocabulary | 4 | 100,000 | 10 | 400,000 |
+
+The larger vocabulary sharply reduces positions and attention pairs but performs
+more total output comparisons for this example. Real transformer-body and output
+costs also depend on $D$, $L$, batching, kernels, and whether logits are required
+at every position. The table demonstrates a trade-off, not an optimal vocabulary.
+
+The statistical trade-off is equally important. Smaller pieces occur more often
+and share evidence across many words, but require the transformer to compose more
+steps. Longer vocabulary entries shorten sequences but may be rare, leaving their
+embeddings and classifier rows with less training evidence. A fixed token context
+window also covers different amounts of human text under different tokenizers.
+Vocabulary design therefore balances compression, parameter and output cost,
+training frequency, multilingual allocation, context coverage, and hardware—not
+only tokenizer file size.
+
 At a single batch item and position, the model emits a logit vector
 $z\in\mathbb{R}^V$, while the stored label $y$ is a scalar integer in
 $\{0,\ldots,V-1\}$. Softmax turns the $V$ logits into $V$ probabilities, and
