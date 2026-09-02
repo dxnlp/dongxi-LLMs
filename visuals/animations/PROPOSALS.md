@@ -66,8 +66,9 @@ same proposal is not repeatedly rediscovered.
   into a learned conditional distribution.
 - Moving objects and stable anchors: Keep candidate tokens and their colors fixed;
   place `p` beside one-hot `q`; transform them into `p-q`; move the target logit
-  upward and non-target logits downward; then replay a small controlled stream
-  whose target frequencies are visibly known.
+  upward and non-target logits downward; continue the signal through
+  `z = Wh+b`, splitting it into `dW = (p-q)h^T` and `dh = W^T(p-q)`; then replay
+  a small controlled stream whose target frequencies are visibly known.
 - Canonical source material:
   `learning_artifacts/day-03-probabilities-and-next-token-loss/probability-as-competition-and-surprise.md`;
   planned Chapter 3 gradient derivation and tiny-model report.
@@ -80,7 +81,8 @@ same proposal is not repeatedly rediscovered.
   update from the expectation over a representative data distribution; use fixed
   verified numbers in the final render.
 - Dependencies: analytical gradient, PyTorch agreement, optimizer-step check, and
-  a tiny controlled target-frequency experiment.
+  output-head chain-rule agreement, plus a tiny controlled target-frequency
+  experiment.
 - Suggested destination: Chapter 3, course site, and the later embedding-gradient
   animation sequence.
 - Next decision: Produce and render only on the Mac Studio after Day 3 evidence is

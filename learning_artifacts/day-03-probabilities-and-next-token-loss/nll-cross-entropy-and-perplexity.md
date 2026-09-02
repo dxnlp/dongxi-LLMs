@@ -172,6 +172,37 @@ output head, transformer, and embeddings; an optimizer updates those parameters.
 Therefore the direct logit update above explains local direction, not the exact
 post-update logits of the complete network.
 
+## From logit correction to model learning
+
+Let the final hidden state be $h\in\mathbb{R}^D$ and the output head be
+$W\in\mathbb{R}^{V\times D}$ with bias $b\in\mathbb{R}^V$:
+
+\[
+z=Wh+b.
+\]
+
+Writing $g=p-q=\partial L/\partial z$, the chain rule gives
+
+\[
+\frac{\partial L}{\partial b}=g,
+\qquad
+\frac{\partial L}{\partial W}=g h^\top,
+\qquad
+\frac{\partial L}{\partial h}=W^\top g.
+\]
+
+Each vocabulary row $W_i$ acts as a learned detector for candidate token $i$.
+The outer product $g h^\top$ strengthens the target row in the direction of the
+current contextual state and weakens competing rows in proportion to their
+predicted probabilities. Meanwhile, $W^\top g$ sends a single blended error
+signal back into the transformer, asking it to produce a more discriminating
+context representation next time. Backpropagation then distributes that signal
+through all operations that created $h$.
+
+This is credit assignment, not direct storage of a correction for one logit:
+the training example changes reusable parameters, so it can alter predictions
+in many other contexts as well.
+
 ## Evidence state
 
 - `introduced`: one-hot cross-entropy equals observed-token NLL.
@@ -180,6 +211,8 @@ post-update logits of the complete network.
 - `analytically demonstrated`: substituting softmax into cross-entropy and
   differentiating yields `dL/dz_i = p_i-q_i`; its signs and zero-sum property
   explain target/non-target correction and shared-shift invariance.
+- `introduced`: the chain-rule path from the logit gradient through the output
+  head into its parameters and the contextual hidden state.
 - `demonstrated`: the learner correctly reasoned that when human-language
   continuations are genuinely uncertain, a perfect model with $p=q$ still has
   cross-entropy $H(q)>0$; matching removes model mismatch, not intrinsic data
