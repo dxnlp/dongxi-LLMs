@@ -132,6 +132,23 @@ During generation, only the last position's `[V]` row is normally used to choose
 the next token. During teacher-forced training, shifted rows across the sequence
 can all be supervised in parallel.
 
+Concrete model interfaces make the scale visible:
+
+| Model snapshot | Tokenizer-exposed IDs | Model output rows / logits per position | Rows beyond tokenizer entries |
+|---|---:|---:|---:|
+| pinned Qwen3-0.6B | 151,669 | 151,936 | 267 |
+| `openai/gpt-oss-20b` | 200,019 | 201,088 | 1,069 |
+| `openai/gpt-oss-120b` | 200,019 | 201,088 | 1,069 |
+
+The Qwen values were already measured in the pinned local interface report. The
+gpt-oss values were checked on 2026-09-02 from each model's configuration and the
+shared tokenizer artifact: the tokenizer has 199,998 base BPE entries plus 21
+added tokens, while both model configurations declare `vocab_size=201088`.
+Therefore a one-position forward pass has logit shape `[1,1,151936]` for this
+Qwen model and `[1,1,201088]` for either gpt-oss model. The extra model rows are an
+observed interface fact; these files alone do not establish the designers'
+rationale for them.
+
 At a single batch item and position, the model emits a logit vector
 $z\in\mathbb{R}^V$, while the stored label $y$ is a scalar integer in
 $\{0,\ldots,V-1\}$. Softmax turns the $V$ logits into $V$ probabilities, and
