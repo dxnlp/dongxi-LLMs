@@ -121,6 +121,50 @@ renormalized and sampled. Temperature can change which candidates qualify under
 top-$p$ because it changes cumulative probabilities, while positive temperature
 does not change the ranking used by top-$k$.
 
+## Stable softmax and stable target NLL
+
+The mathematical softmax is invariant to a shared logit shift. For any constant
+$c$,
+
+\[
+\frac{e^{z_i+c}}{\sum_j e^{z_j+c}}
+=
+\frac{e^c e^{z_i}}{e^c\sum_j e^{z_j}}
+=
+\frac{e^{z_i}}{\sum_j e^{z_j}}.
+\]
+
+Numerically stable softmax chooses $c=-m$, where $m=\max_j z_j$:
+
+\[
+p_i=
+\frac{e^{z_i-m}}{\sum_j e^{z_j-m}}.
+\]
+
+The largest shifted logit is zero, so its exponential is one and every other
+exponential is at most one. For `[1002, 1001, 999]`, a naive implementation tries
+to form $e^{1002}$ and can overflow; the stable form uses `[0,-1,-3]`, preserving
+the same distribution as logits `[2,1,-1]`.
+
+Very unlikely candidates can still underflow toward zero in finite precision.
+When the goal is target NLL, robust implementations therefore use stable
+log-softmax or log-sum-exp rather than computing a rounded probability and then
+taking its logarithm:
+
+\[
+L
+=
+-z_y
++m
++\log\sum_j e^{z_j-m}.
+\]
+
+This is algebraically equal to $-\log p_y$ but avoids materializing an exact zero
+for an extremely small target probability. "Stable" therefore means preserving
+the intended mathematics under finite-range arithmetic; it does not alter the
+model's probability rule. This mechanism is already within `CAND-ANIM-001` and
+`ANIM-CE-001`, so the automatic mathematics check creates no duplicate proposal.
+
 ## Evidence state
 
 - `demonstrated`: equal logits produce equal probabilities.
@@ -128,6 +172,9 @@ does not change the ranking used by top-$k$.
   vocabulary.
 - `introduced`: exact greedy ties require an implementation policy, and
   temperature rescales logit gaps without changing their ordering.
+- `introduced`: stable softmax subtracts the maximum without changing the
+  distribution, while stable target NLL uses log-sum-exp to avoid an underflowed
+  `log(0)` path.
 - `not yet demonstrated`: executable unequal-logit ratios and temperature
   limits, negative-log surprise, sequence likelihood, cross-entropy, and
   perplexity.
