@@ -9,7 +9,8 @@
 - Related production tasks: `ANIM-CE-001`, `ANIM-NTP-001`,
   `ANIM-LOGLOSS-001`; candidate
   `CAND-ANIM-001` and user-approved candidates `CAND-ANIM-002` and
-  `CAND-ANIM-003`, and `CAND-ANIM-004`
+  `CAND-ANIM-003`, and `CAND-ANIM-004`; temperature candidate
+  `CAND-ANIM-007`
 
 ## Questions that drive the discussion
 
@@ -72,13 +73,64 @@ The learner judged all three mechanisms animation-worthy. They remain
 `introduced`, not `verified`, until the Day 3 analytical and executable evidence
 is present.
 
+## Decoding ties and temperature
+
+After softmax, vocabulary coordinate $i$ is the probability of token ID $i$.
+Greedy decoding selects an `argmax`. If several coordinates have exactly the
+same maximum, the mathematical argmax is a set rather than one unique ID. A
+concrete implementation must use a tie policy: common tensor `argmax`
+implementations return the first maximal index, while a decoder can deliberately
+sample uniformly among the tied maxima. Exact ties are uncommon with trained
+floating-point logits, but they can arise through symmetry, initialization,
+quantization, or constructed examples. Near-ties are not exact ties; numerical
+precision and kernel details may then determine the ordering.
+
+Temperature rescales the logit gaps before softmax:
+
+\[
+p_i(\tau)=
+\frac{\exp(z_i/\tau)}{\sum_j\exp(z_j/\tau)},
+\qquad \tau>0.
+\]
+
+Its clearest interpretation comes from a probability ratio:
+
+\[
+\frac{p_i(\tau)}{p_j(\tau)}
+=
+\exp\left(\frac{z_i-z_j}{\tau}\right).
+\]
+
+- $\tau=1$ leaves the ordinary softmax unchanged.
+- $0<\tau<1$ magnifies logit gaps and sharpens the distribution.
+- $\tau>1$ shrinks gaps and flattens the distribution.
+- As $\tau\to0^+$, mass concentrates on the maximal logits; exact tied maxima
+  remain equally weighted under pure softmax.
+- As $\tau\to\infty$, a finite logit vector approaches the uniform distribution.
+
+Dividing by a positive temperature preserves logit ordering, so it cannot change
+the greedy argmax. A literal $\tau=0$ is undefined in the formula; interfaces
+that offer "temperature zero" normally implement greedy decoding as a special
+case or reject the value.
+
+Temperature and top filtering have different roles. Temperature continuously
+changes relative probability ratios among candidates. Top-$k$ removes all but
+the $k$ highest-ranked candidates; top-$p$ retains a smallest high-probability
+prefix whose cumulative mass reaches a threshold. The survivors are
+renormalized and sampled. Temperature can change which candidates qualify under
+top-$p$ because it changes cumulative probabilities, while positive temperature
+does not change the ranking used by top-$k$.
+
 ## Evidence state
 
 - `demonstrated`: equal logits produce equal probabilities.
 - `introduced`: probabilities are normalized competition over the current model
   vocabulary.
-- `not yet demonstrated`: unequal logit ratios, temperature, negative-log
-  surprise, sequence likelihood, cross-entropy, and perplexity.
+- `introduced`: exact greedy ties require an implementation policy, and
+  temperature rescales logit gaps without changing their ordering.
+- `not yet demonstrated`: executable unequal-logit ratios and temperature
+  limits, negative-log surprise, sequence likelihood, cross-entropy, and
+  perplexity.
 
 ## Learner prediction and refinement
 
