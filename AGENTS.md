@@ -79,7 +79,10 @@ perturbation or broken variant → interpretation → evidence boundary`. Guide 
 learner through the notebook interactively rather than treating it as a passive
 demonstration or a stream of arithmetic quizzes. Keep reusable computations in
 `src/dongxi_llms/`; notebooks should narrate, expose intermediate tensors, and
-invite controlled modification.
+invite controlled modification. Put a clearly labeled runnable reference
+solution and mechanism explanation immediately after each learner exercise or
+checkpoint. Preserve prediction-before-reveal, but do not force the learner to
+search outside the notebook for routine syntax or the canonical reasoning.
 
 Do not mark a day complete merely because prose or code exists. The stated evidence of completion must be present.
 

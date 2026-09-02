@@ -48,6 +48,10 @@ dependencies, preferred machine, and current status.
   learner-written implementation, deliberate perturbation or broken variant,
   interpretation, and an explicit evidence boundary. Guide these notebooks
   collaboratively cell by cell rather than presenting them as passive demos.
+- Wants the correct runnable solution and a concise mechanism explanation
+  attached directly after each notebook exercise. Keep the attempt first, but
+  make the notebook self-contained so routine syntax lookup does not interrupt
+  the conceptual learning flow.
 - The DGX Spark notebook kernel is `Python (DGX Spark Native)`, backed by
   `/home/dongxi/dgx-spark-dongxi/.venv/bin/python`. Recreate it with the platform
   repository's `scripts/setup_jupyter.sh`; it adds locked Jupyter components to

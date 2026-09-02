@@ -16,9 +16,12 @@ the course's mechanism-first discussion style.
 1. Open the notebook in the repository's validated learning environment.
 2. Stop at each **Prediction checkpoint** and write a qualitative prediction.
 3. Replace only the marked `...` expressions; do not paste a complete solution.
-4. Run the accompanying checks and inspect intermediate values.
-5. Discuss surprising behavior before moving to the next section.
-6. Finish the evidence-boundary cell in your own words.
+4. Then compare with the adjacent **Reference solution** and run it if needed.
+5. Read the attached mechanism explanation and reconcile any disagreement.
+6. Run the accompanying checks and inspect intermediate values.
+7. Discuss surprising behavior before moving to the next section.
+8. Finish the evidence-boundary cell in your own words before reading its model
+   answer.
 
 Session 1 uses only Python's standard library. Later sessions may use PyTorch for
 autograd verification and run with the registered `Python (DGX Spark Native)`

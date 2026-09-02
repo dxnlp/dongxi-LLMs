@@ -19,6 +19,12 @@ not passive demonstrations, answer dumps, or collections of decontextualized
 calculation questions. Notebook outputs are exploratory until their important
 claims are reproduced by reusable source code, tests, and an experiment report.
 
+Each exercise or conceptual checkpoint is followed by a clearly labeled
+reference solution and explanation. Attempt the prompt before revealing or
+running the reference cell. The reference is deliberately adjacent: the learner
+should spend time reasoning about the mechanism, not searching elsewhere for
+routine syntax or an unstated canonical answer.
+
 ## Sessions
 
 - [`day-03/`](day-03/) — logits, probability, next-token loss, causal alignment,
