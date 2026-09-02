@@ -317,6 +317,60 @@ opposite." It is that human units are organized through meaning and experience,
 whereas tokenizer units are selected primarily by an encoding/compression
 procedure; semantic relationships are learned mainly by the model afterward.
 
+### Token IDs are categorical addresses, not numerical quantities
+
+The learner then sharpened the question: because the transformer receives IDs
+such as `1, 2, 3, 4`, does it directly learn relationships among numbers and only
+indirectly learn language? The implementation-level intuition is useful, but
+"numbers" is misleading. An ID is used for indexing, not arithmetic. ID `4` is
+not inherently closer to ID `3` than to ID `9000`, and the model is not normally
+given the scalar value `4` as a continuous feature.
+
+The lookup operation is:
+
+\[
+e_t=E[i_t],
+\]
+
+so the ID selects an entire learned row. A consistent vocabulary permutation
+makes the arbitrariness precise. Let $\pi$ rename every token ID, and define:
+
+\[
+E'[\pi(i)]=E[i],
+\qquad
+W'_{\mathrm{out}}[\pi(i)]=W_{\mathrm{out}}[i].
+\]
+
+If the encoded dataset and decoded outputs are renamed by the same $\pi$, the
+model implements the same text-level behavior. This invariance shows that the
+integer values are labels; the learned content resides in parameter rows,
+sequence structure, and transformations of those rows.
+
+The most precise hierarchy is:
+
+1. the tokenizer maps text fragments to categorical symbols represented by IDs;
+2. the embedding table maps those symbols to learned vectors;
+3. the transformer learns functions over ordered sequences of those vectors;
+4. the output head scores categorical next-token alternatives;
+5. the tokenizer decoder maps the selected symbols back to text.
+
+A text-only language model is directly optimized to model token-sequence
+probabilities. Because a largely reversible tokenizer preserves the linguistic
+sequence, this induces a model of text and justifies saying that it learns
+linguistic structure. Syntax, semantic associations, discourse patterns, and
+some world regularities can be statistically recoverable because they constrain
+human-written token sequences. Still, its access to the world is mediated by its
+training data; next-token prediction alone does not establish human-like
+understanding or direct grounding.
+
+The roles of hidden states and logits must also stay separate. A contextual
+hidden state of width $D$ is the learned representation used to compute the next
+prediction; it can encode many distributed features of the prefix. The $V$
+logits are a readout—one compatibility score per output symbol—not $V$
+independent containers of knowledge. Knowledge is distributed across embeddings,
+attention and feed-forward parameters, hidden-state computations, and the output
+mapping.
+
 At a single batch item and position, the model emits a logit vector
 $z\in\mathbb{R}^V$, while the stored label $y$ is a scalar integer in
 $\{0,\ldots,V-1\}$. Softmax turns the $V$ logits into $V$ probabilities, and
@@ -411,6 +465,11 @@ a duplicate proposal. Production remains on the Mac Studio.
   understanding" with "unit of representation/computation/prediction," retains
   BPE merge history as procedural rather than semantic structure, and avoids
   reducing model knowledge to static embedding similarity.
+- `developing`: the learner recognized that the model operates on atomic IDs and
+  asked whether it therefore learns numbers rather than language. The refined
+  answer treats IDs as permutation-invariant categorical addresses, distinguishes
+  hidden representations from logit readouts, and describes language modeling as
+  direct token-sequence learning that induces text-level linguistic structure.
 - `developing`: the learner initially connected an unshifted loss with seeing
   future tokens. The discussion separated two independent failure modes:
   unshifted target alignment asks position $t$ to recover the already-visible
