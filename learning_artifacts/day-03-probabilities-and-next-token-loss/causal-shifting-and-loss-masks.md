@@ -98,6 +98,40 @@ the $D$ hidden coordinates are internal learned features, not vocabulary-token
 coordinates. With weight tying, `W_out` reuses the input embedding matrix; the
 mapping still occurs.
 
+### One input position produces scores for all possible outputs
+
+For a single position, one token ID selects one input embedding row. After the
+transformer has contextualized that position, its hidden state has shape `[D]`.
+The output head compares that one state with all $V$ output rows at once, giving
+one logit vector of shape `[V]`:
+
+```text
+one contextual state h_t
+        |
+        +-- score for token 0
+        +-- score for token 1
+        +-- score for token 2
+        |   ...
+        +-- score for token V-1
+```
+
+For a toy vocabulary `[cat, dog, slept, EOS]`, the state at one position might
+emit `[2.0, 1.0, -1.0, 0.3]`. These are four competing scores, not four emitted
+tokens. Softmax turns the complete row into four probabilities; decoding later
+selects or samples one candidate.
+
+A real input normally contains $T$ token IDs rather than one. The model produces
+one such $V$-wide score row for every input position:
+
+```text
+input IDs:  [B, T]
+logits:     [B, T, V]
+```
+
+During generation, only the last position's `[V]` row is normally used to choose
+the next token. During teacher-forced training, shifted rows across the sequence
+can all be supervised in parallel.
+
 At a single batch item and position, the model emits a logit vector
 $z\in\mathbb{R}^V$, while the stored label $y$ is a scalar integer in
 $\{0,\ldots,V-1\}$. Softmax turns the $V$ logits into $V$ probabilities, and
@@ -180,6 +214,9 @@ a duplicate proposal. Production remains on the Mac Studio.
   final contextual state into logits, then initially placed softmax directly on
   that hidden state. The refined path is hidden state `[D]` → output head →
   logits `[V]` → softmax → probabilities `[V]`.
+- `developing`: the learner is refining the cardinality distinction: one input
+  position yields one contextual state but a complete vector of scores over all
+  $V$ possible output tokens; a sequence yields one such vector per position.
 - `developing`: the learner initially connected an unshifted loss with seeing
   future tokens. The discussion separated two independent failure modes:
   unshifted target alignment asks position $t$ to recover the already-visible
