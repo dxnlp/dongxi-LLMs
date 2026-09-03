@@ -119,6 +119,7 @@ Opened topics:
 2. [`why-cache-keys-and-values.md`](why-cache-keys-and-values.md)
 3. [`dot-products-as-learned-compatibility.md`](dot-products-as-learned-compatibility.md)
 4. [`why-scale-dot-products.md`](why-scale-dot-products.md)
+5. [`causal-mask-before-softmax.md`](causal-mask-before-softmax.md)
 
 ## Animation opportunity
 
