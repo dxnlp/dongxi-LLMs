@@ -4,7 +4,9 @@
 - Date opened: 2026-09-01
 - Status: introduced
 - Book destination: Chapter 3 sections on causal label alignment and masked loss
-- Related evidence: planned manual tensor trace and PyTorch verification
+- Related evidence: executable
+  `notebooks/day-03/02_causal_shift_and_masks.ipynb`, validated end to end with
+  the `Python (DGX Spark Native)` kernel on 2026-09-03
 - Related production tasks: candidate `CAND-ANIM-001`; `ANIM-CE-001`
 
 ## Questions that drive the discussion
@@ -585,6 +587,10 @@ a duplicate proposal. Production remains on the Mac Studio.
   but does not cut answer-loss gradients through attention into prompt
   embeddings, earlier prompt states, and shared transformer parameters; the
   exact activation path is layer-sensitive.
+- `executable evidence`: the Day 3 Session 02 notebook verifies shifted shapes
+  and targets, contrasts near-zero copying loss with high next-token loss,
+  matches library and manual valid-token means, and observes nonzero prompt
+  input-state gradients from a single answer-token loss.
 - `not yet demonstrated`: learner explanation-back of the corrected distinction,
   exact BOS/EOS trace, separation of attention and loss masks, and
   manual/PyTorch agreement.
@@ -603,5 +609,6 @@ verification.
 - Trace one concrete sequence from input IDs to every supervised target.
 - Show the failure produced by unshifted labels.
 - Contrast gold-prefix teacher forcing with compounding free-generation errors.
-- Verify framework shifting and ignore-index behavior in PyTorch.
+- Have the learner run and explain the verified PyTorch shifting,
+  `ignore_index`, and indirect-gradient cells.
 - Distinguish sequence boundaries from padding and packed-document boundaries.

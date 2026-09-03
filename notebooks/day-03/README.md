@@ -8,7 +8,7 @@ the course's mechanism-first discussion style.
 | Session | Deep question | Primary mechanism | Evidence state |
 |---|---|---|---|
 | `01_logits_softmax_nll.ipynb` | Why do relative scores, rather than absolute logits, determine belief and surprise? | stable softmax, labels, NLL, $p-q$, perplexity | ready for guided use |
-| `02_causal_shift_and_masks.ipynb` | How can a low loss certify the wrong task? | target alignment, causal visibility, ignored targets, valid-token mean | planned |
+| `02_causal_shift_and_masks.ipynb` | How can a low loss certify the wrong task? | target alignment, causal visibility, ignored targets, valid-token mean, indirect prompt gradients | ready for guided use |
 | `03_distribution_learning.ipynb` | How does one-hot supervision across examples become a learned distribution? | gradient accumulation, empirical frequencies, tiny next-token model | planned |
 
 ## How to use a session
