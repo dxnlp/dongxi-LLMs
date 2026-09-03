@@ -8,8 +8,8 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
-- Current position: Day 3 complete — Chapter 3, companion notebooks, and the
-  controlled next-token experiment are ready; Day 4 is next
+- Current position: Day 4 in progress — attention and the causal information
+  boundary from first principles
 - Primary machine: NVIDIA DGX Spark
 - Primary model family: Qwen3
 

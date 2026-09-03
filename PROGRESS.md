@@ -5,11 +5,12 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 3
-- Status: complete
-- Current focus: Chapter 3 and its companion evidence are complete
-- Next action: begin Day 4 by deriving queries, keys, values, scaled dot-product
-  attention, and the causal information boundary from first principles
+- Active day: Day 4
+- Status: in progress
+- Current focus: attention and the causal information boundary from first
+  principles
+- Next action: develop an exact mental model of queries, keys, and values before
+  deriving scaled dot-product attention
 - Last updated: 2026-09-03
 
 ## Four-week tracker
@@ -21,7 +22,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 1 | Laboratory and reproducibility | complete | Chapter: `book/chapters/01-evidence-before-optimization.md`; evidence: `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
 | 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-tokenizer-mechanics.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
 | 3 | Probabilities and next-token loss | complete | Chapter: `book/chapters/03-learning-the-next-token.md`; three interactive notebooks; report: `experiments/reports/2026-09-03-next-token-distribution.md` |
-| 4 | Attention from first principles | pending | — |
+| 4 | Attention from first principles | in progress | Learning index: `learning_artifacts/day-04-attention-and-causal-information-boundary/README.md` |
 | 5 | Decoder-only Transformer | pending | — |
 | 6 | Modern architecture design | pending | — |
 | 7 | Architecture synthesis | pending | — |
