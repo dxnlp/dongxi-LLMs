@@ -117,6 +117,7 @@ Opened topics:
 
 1. [`queries-keys-values-and-retrieval.md`](queries-keys-values-and-retrieval.md)
 2. [`why-cache-keys-and-values.md`](why-cache-keys-and-values.md)
+3. [`dot-products-as-learned-compatibility.md`](dot-products-as-learned-compatibility.md)
 
 ## Animation opportunity
 
