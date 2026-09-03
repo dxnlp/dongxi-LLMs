@@ -120,6 +120,7 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 |---|---|---|---|---|---|
 | `X-BPE-001` | X article | What is a token? Unicode → BPE → model IDs | bilingual local packages prepared; editorial review pending | Mac | Chapter 2 tokenizer-mechanics enrichment complete |
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
+| `X-ATTN-KV-001` | X article | Why LLMs cache K and V—but not Q | concept approved; portable outline ready, drafting waits for canonical Chapter 4 | Mac | Day 4 attention derivation and cached/uncached verification |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac Studio | Day 2 explanation complete |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac Studio | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | LLM target probability → per-token NLL → masked mean cross-entropy | approved; canonical Day 3 evidence ready for Mac production review | Mac Studio | Chapter 3, target alignment, and PyTorch verification complete |
@@ -288,6 +289,77 @@ from, calculate the lookup output shape, explain repeated-row gradient addition,
 and distinguish the rows updated through lookup from those updated through a tied
 classifier. Every empirical statement links to the later Day 2 lab; unverified
 claims remain labeled.
+
+### Task packet: `X-ATTN-KV-001`
+
+**Working title:** Why Do LLMs Cache K and V—but Not Q?
+
+**Hook:** The name “KV cache” looks like arbitrary engineering jargon until the
+roles of queries, keys, and values are understood. Then it becomes a compact
+description of which attention states future tokens still need.
+
+**Learning promise:** A reader should be able to connect the attention equation
+to real autoregressive inference: explain what Q, K, and V do; why the same token
+can produce different projected states in different contexts; why causal
+attention makes an exact prefix's past states immutable; why past keys and values
+remain useful while past queries do not; and why cache retention belongs to the
+runtime rather than the mathematical definition of a Transformer.
+
+**Narrative spine:**
+
+1. Open with the learner's inference: if Q finds sources and K/V describe those
+   sources, perhaps this explains the term “KV cache.”
+2. Derive routing versus payload from
+   $q_i=x_iW_Q$, $k_j=x_jW_K$, $v_j=x_jW_V$, and
+   $o_i=\sum_j a_{ij}v_j$.
+3. Prevent the central misconception by contrasting the same token in financial
+   and river contexts: a cache stores context-specific per-position states, not
+   one universal pair per vocabulary token.
+4. Use the causal boundary to prove that appending a future token cannot change
+   earlier per-layer keys and values.
+5. Animate or diagram prefill followed by token-by-token decoding: each new query
+   reads the stored prefix, its new key/value pair is appended, and the query is
+   then no longer needed.
+6. Separate architecture from systems implementation: attention always computes
+   K/V, while a library or serving engine chooses whether and how to retain them.
+7. Explain the compute-memory trade: caching avoids redundant prefix computation
+   but consumes memory that grows with retained positions, layers, KV heads, and
+   head width.
+8. Close with exact-prefix reuse, request completion and release, and forward
+   links to GQA, cache quantization, offloading, paged allocation, and eviction.
+
+**Required precision:** Do not describe the cache as a token dictionary or claim
+that identical tokens share K/V across arbitrary sequences. Say that caches are
+per layer and per exact sequence state. Distinguish ordinary request-local reuse
+from serving-level exact-prefix caching. State that retaining K/V is optional and
+should preserve model outputs; it improves inference efficiency, not model
+knowledge. Distinguish logical cache release from a GPU allocator returning
+reserved pages to the operating system. Avoid saying queries are “never” cached
+in every specialized implementation; explain why standard autoregressive
+attention does not need past queries.
+
+**Source material:**
+`learning_artifacts/day-04-attention-and-causal-information-boundary/queries-keys-values-and-retrieval.md`;
+`learning_artifacts/day-04-attention-and-causal-information-boundary/why-cache-keys-and-values.md`;
+the future canonical Chapter 4 and attention notebook; official Hugging Face,
+vLLM, TensorRT-LLM, and `llama.cpp` cache documentation; `CAND-ANIM-009`.
+
+**Expected output:** An English X Article draft with a 2000×800 cover and one
+continuous mechanism visual or a small sequence of diagrams. Produce on the Mac
+after the canonical Chapter 4 claims and executable evidence stabilize. Consider
+a Chinese adaptation only after the English version passes technical review.
+
+**Mac handoff:** Pull the latest `origin/main`, create a dedicated content branch,
+record its base commit, and use the task packet plus Chapter 4 as canonical
+sources. Do not render animation assets on the DGX Spark.
+
+**Acceptance checks:** A reader can explain (1) Q/K routing versus V payload; (2)
+why an unchanged causal prefix yields reusable per-layer K/V; (3) why different
+contexts normally require different caches; (4) why past Q is unnecessary for a
+future query; (5) when a request cache is released; and (6) which claims concern
+Transformer mathematics versus runtime policy. Cached and uncached outputs must
+be verified equivalent within the declared numerical tolerance before the
+article calls that behavior demonstrated.
 
 ### Task packet: `ANIM-BPE-001`
 

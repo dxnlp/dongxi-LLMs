@@ -101,6 +101,12 @@ Derive queries, keys, values, scaled dot products, causal masking, and attention
 
 Build attention without `nn.MultiheadAttention`; inspect its weights and gradients; intentionally break scaling or masking.
 
+Use the completed mechanism to derive why past per-layer keys and values remain
+reusable during causal decoding, why queries are transient, and where the
+Transformer architecture ends and optional inference-time KV caching begins.
+Reserve detailed cache sizing, GQA, and serving benchmarks for the modern decoder
+and inference-systems material.
+
 ### Day 5 — The decoder-only Transformer
 
 Learn multi-head attention, residual streams, normalization, feed-forward networks, Transformer blocks, initialization, and output projection.

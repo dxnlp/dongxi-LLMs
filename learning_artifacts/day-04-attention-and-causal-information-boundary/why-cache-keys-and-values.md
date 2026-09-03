@@ -186,5 +186,7 @@ inference.
 
 - A Chapter 4 consequence box immediately after Q/K/V roles.
 - A forward reference to the modern architecture chapter's KV-cache accounting.
+- `X-ATTN-KV-001`: a reader-facing article connecting attention roles, causal
+  immutability, cache lifecycle, and concrete inference frameworks.
 - `CAND-ANIM-009`: show each transient query reading a persistent, growing pair
   of key/value tracks during autoregressive generation.

@@ -38,7 +38,9 @@ The book moves through one continuous argument:
    tiny next-token model. Primarily Day 3.
 4. **Attention and the Causal Information Boundary**
    Queries, keys, values, scaling, masks, attention distributions, gradients, and
-   deliberately broken variants. Primarily Day 4.
+   deliberately broken variants. Connect causal immutability to request-local KV
+   caching and inference optimization, while reserving detailed cache accounting
+   and modern attention variants for the decoder-design chapters. Primarily Day 4.
 5. **Building a Modern Decoder**
    Transformer blocks, residual streams, normalization, feed-forward layers,
    RMSNorm, RoPE, SwiGLU, GQA, QK normalization, KV caching, and `DongxiGPT`.

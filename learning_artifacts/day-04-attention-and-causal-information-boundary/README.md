@@ -33,6 +33,9 @@ vague synonym for human focus and not as an explanation by itself.
    preserving the limits of interpreting attention weights.
 7. Build the mechanism directly, compare it with a trusted reference, then
    remove scaling or masking and explain the observed failures.
+8. Derive the systems consequence: causal immutability makes past per-layer keys
+   and values reusable, while each new query is transient; connect this to
+   request-local KV caching, prefill, decoding, and cache release.
 
 The central equation is
 
@@ -50,6 +53,11 @@ Day 4 covers one attention head and the mechanism beneath convenient APIs. It
 does not yet attempt to assemble an entire decoder block. Multi-head attention,
 residual streams, normalization, feed-forward layers, and the complete
 decoder-only Transformer belong to Day 5.
+
+Day 4 does establish why KV caching is mathematically valid and how it follows
+from Q/K/V roles plus causality. Detailed cache memory equations, grouped-query
+attention, quantization, offloading, eviction, and serving benchmarks remain
+forward links to the modern architecture and inference-systems material.
 
 The important distinctions are:
 
@@ -89,7 +97,10 @@ Day 4 is complete only when the learner can:
 6. trace a gradient path through the attention computation;
 7. implement the mechanism without `nn.MultiheadAttention` and diagnose broken
    scaling and broken masking;
-8. preserve the derivation, executable evidence, worked solutions, and coherent
+8. explain why KV retention is an optional inference optimization, why past
+   keys and values can be reused within an unchanged prefix, and when a cache is
+   released;
+9. preserve the derivation, executable evidence, worked solutions, and coherent
    Chapter 4 contribution.
 
 ## Topic artifacts
