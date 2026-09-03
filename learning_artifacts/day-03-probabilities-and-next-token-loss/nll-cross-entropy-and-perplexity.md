@@ -94,6 +94,31 @@ outcome. A finite-sample estimate, restricted model family, or shifted test
 distribution can keep an actual training run from reaching this population
 optimum.
 
+### The model observes samples, not the population distribution
+
+The true conditional distribution $q(\cdot\mid c)$ is never handed to the
+optimizer. For a context $c$ observed $n$ times, the dataset exposes counts
+$n_i$, defining an empirical distribution
+
+\[
+\hat q_i(\cdot\mid c)=\frac{n_i}{n}.
+\]
+
+Empirical training loss directly rewards fitting $\hat q$, which is only a noisy
+estimate of $q$. With long natural-language contexts, exact repetitions can be
+rare or absent. A model learns useful uncertainty by sharing parameters and
+representations across related contexts, allowing evidence from many examples
+to influence similar hidden states. This generalization is an inductive effect
+of the architecture, optimization, and data—not information contained in a
+single one-hot label.
+
+A sufficiently flexible model can instead memorize unique training contexts and
+drive empirical loss near zero even when the population remains uncertain. A
+held-out validation distribution tests whether reduced training loss reflects a
+smaller population mismatch rather than memorization. Dataset shift adds another
+boundary: low validation loss on one distribution does not establish low KL on
+all deployment distributions.
+
 Perplexity will later be defined as the exponential of mean natural-log loss:
 
 \[
@@ -280,6 +305,10 @@ distribution without any single row explicitly listing all valid alternatives.
 - `analytically demonstrated`: adding and subtracting the target entropy yields
   $H(q,p)=H(q)+D_{KL}(q\|p)$, separating irreducible uncertainty from reducible
   model mismatch and proving the population optimum $p=q$.
+- `introduced`: training observes a finite empirical distribution $\hat q$, not
+  population $q$; parameter sharing across related contexts enables
+  generalization, while memorization can reduce empirical loss without reducing
+  population mismatch.
 - `demonstrated`: the learner correctly reasoned that when human-language
   continuations are genuinely uncertain, a perfect model with $p=q$ still has
   cross-entropy $H(q)>0$; matching removes model mismatch, not intrinsic data

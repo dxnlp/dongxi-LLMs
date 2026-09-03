@@ -106,8 +106,10 @@ same proposal is not repeatedly rediscovered.
   product into additive NLL tiles, then contrasts two equal-sum sequences whose
   surprise is either diffuse or concentrated in one catastrophic token. Act 2
   synchronizes loss and gradient curves for log loss versus `1-p_target`. Act 3
-  fixes an empirical target distribution `q` and moves a model distribution `p`
-  toward the expected-loss minimum.
+  reveals a hidden population distribution `q` through a finite stream of
+  one-hot samples and their evolving empirical frequencies `q_hat`, then moves a
+  model distribution `p` toward the expected-loss minimum while distinguishing
+  generalization from memorization.
 - Canonical source material:
   `learning_artifacts/day-03-probabilities-and-next-token-loss/probability-as-competition-and-surprise.md`;
   planned Chapter 3 derivation and verification report.
