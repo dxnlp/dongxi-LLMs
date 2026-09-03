@@ -506,6 +506,34 @@ For example, supervised fine-tuning can let answer tokens attend to a user promp
 while assigning loss only to the answer. Conversely, excluding a position from
 loss does not by itself prevent other positions from attending to it.
 
+### Zero direct loss does not mean zero gradient influence
+
+When an answer position attends to prompt positions, its loss retains a
+computational path through their keys and values:
+
+```text
+answer loss
+    -> answer hidden state
+    -> attention over prompt keys and values
+    -> earlier-layer prompt states
+    -> prompt input embeddings and shared transformer parameters
+```
+
+Consequently, prompt embedding rows and the intermediate prompt-position states
+used to construct later keys and values can receive gradients from supervised
+answer tokens even though no local prompt-target loss was included. A loss mask
+removes selected loss terms; it does not detach the corresponding contextual
+computation.
+
+The precise activation-level statement is layer-sensitive. In a standard
+layered causal transformer, an answer state at layer $\ell$ reads prompt states
+from layer $\ell-1$. Therefore earlier prompt activations can lie on the answer
+loss path, while the final-layer output at a masked prompt position need not
+receive a gradient merely because a later final-layer answer output exists.
+Gradients also disappear if attention explicitly blocks the prompt, the path is
+detached, or the relevant parameters are frozen. With tied input/output
+embeddings, the shared table can additionally receive output-head gradients.
+
 This explicit masked-mean mathematics is already within approved task
 `ANIM-CE-001`; it strengthens that animation's aggregation act and does not create
 a duplicate proposal. Production remains on the Mac Studio.
@@ -553,6 +581,10 @@ a duplicate proposal. Production remains on the Mac Studio.
 - `introduced`: loss masks select which correctly aligned targets contribute,
   and the mean-loss denominator counts valid targets rather than padded tensor
   capacity.
+- `introduced`: a zero prompt loss mask removes direct prompt-target supervision
+  but does not cut answer-loss gradients through attention into prompt
+  embeddings, earlier prompt states, and shared transformer parameters; the
+  exact activation path is layer-sensitive.
 - `not yet demonstrated`: learner explanation-back of the corrected distinction,
   exact BOS/EOS trace, separation of attention and loss masks, and
   manual/PyTorch agreement.
