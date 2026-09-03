@@ -129,5 +129,8 @@ Opened topics:
 `CAND-ANIM-008` records the full stable mechanism: input states become $Q$, $K$,
 and $V$; query-key dot products form a score matrix; scaling controls its spread;
 the causal mask removes forbidden edges before row-wise softmax; normalized
-weights transport value vectors into new contextual states. It is a discussion
-candidate only. Production remains approval-gated and belongs on the Mac Studio.
+weights transport value vectors into new contextual states; and backward credit
+splits into value/content and query-key/routing branches. The learner approved
+the concept and it is promoted into `ANIM-ATTN-001` with a complete task packet
+in `LEARNING_MEMORY.md`. Production waits for Day 4 executable evidence and
+belongs exclusively on the Mac Studio.

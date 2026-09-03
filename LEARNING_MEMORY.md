@@ -126,6 +126,7 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 | `ANIM-CE-001` | Animation | LLM target probability → per-token NLL → masked mean cross-entropy | approved; canonical Day 3 evidence ready for Mac production review | Mac Studio | Chapter 3, target alignment, and PyTorch verification complete |
 | `ANIM-NTP-001` | Animation | One-hot next-token supervision → `p-q` gradient → distribution learning across examples | approved; verified 70/30 trajectory ready for Mac production review | Mac Studio | Gradient verification and controlled target-frequency experiment complete |
 | `ANIM-LOGLOSS-001` | Animation | Why `-log p_target`: additive sequence surprise, confident-error gradients, and proper probability reporting | approved; canonical derivations and controlled evidence ready for Mac review | Mac Studio | Chapter 3 chain rule, gradient, and expected-scoring treatment complete |
+| `ANIM-ATTN-001` | Animation | How loss trains attention routing and value content | approved; complete Mac task packet ready, production waits for Day 4 verification | Mac Studio | Chapter 4 synthesis plus forward, gradient, mask, and autograd evidence |
 
 ## Production-system tasks
 
@@ -360,6 +361,114 @@ future query; (5) when a request cache is released; and (6) which claims concern
 Transformer mathematics versus runtime policy. Cached and uncached outputs must
 be verified equivalent within the declared numerical tolerance before the
 article calls that behavior demonstrated.
+
+### Task packet: `ANIM-ATTN-001`
+
+**Working title:** How Next-Token Loss Teaches Attention Where to Read and What
+to Carry
+
+**Learning objective:** Make scaled causal attention and its credit assignment
+visible as one continuous computation. A viewer should distinguish the
+query/key routing path from the value/content path and understand that both are
+trained end to end by downstream next-token loss without a separate target
+attention map.
+
+**Approval and ownership:** Dongxi approved this animation during Day 4 after the
+two backward branches were derived. All design, production, and rendering belong
+on the Mac Studio. The DGX Spark supplies the canonical derivation, executable
+verification, experiment evidence, task packet, and later content review.
+
+**Animation form:** One continuous mechanism-first animation. Preserve the
+identity and color of every token position, projection, matrix, and gradient
+branch. Forward computation moves consistently toward the loss; backward credit
+moves in the reverse direction. Avoid a slide sequence that redraws Q, K, V, or
+the attention matrix as unrelated objects.
+
+**Canonical forward spine:**
+
+1. Begin with a short sequence represented as rows of $X$; retain position
+   identity throughout.
+2. Split each row through learned projections into $Q=XW_Q$, $K=XW_K$, and
+   $V=XW_V$. Visually separate “routing request,” “routing address,” and
+   “message content” without assigning literal linguistic features.
+3. Let query rows meet key columns to form $QK^\top$. Maintain row-as-receiver
+   and column-as-source orientation.
+4. Divide scores by $\sqrt{d_k}$ while stabilizing their spread. Add the causal
+   mask before normalization so forbidden future cells contribute neither
+   numerator nor denominator.
+5. Transform each allowed score row through softmax into $A$. Confirm
+   nonnegative weights, allowed-row sum one, and exactly or numerically zero
+   forbidden weights.
+6. Use the weights as visible transport amounts carrying value-vector components
+   into $O=AV$. The result must appear as a newly constructed representation,
+   not a selected token or copied embedding.
+7. Compress later model computation into a clearly labeled downstream
+   next-token loss $L$ without implying a separate attention-supervision label.
+
+**Canonical backward spine:**
+
+8. Reverse motion from $G_O=\partial L/\partial O$ and split visibly at $O=AV$.
+9. Send the value/content branch through
+   $G_V=A^\top G_O$ and $G_{W_V}=X^\top G_V$. Its visual question is: “What
+   should each retrieved source transmit?”
+10. Send the routing branch through $G_A=G_OV^\top$, row-wise softmax, and the
+    masked scaled scores. Then split it into
+    $G_Q=G_RK/\sqrt{d_k}$ and
+    $G_K=G_R^\top Q/\sqrt{d_k}$ before reaching $W_Q$ and $W_K$. Its visual
+    question is: “Which sources should this receiver favor?”
+11. Recombine the three contributions where they reach $X$ and the earlier
+    network. Keep forbidden future edges at zero routing weight and zero routing
+    gradient for the isolated query.
+12. Optionally end with two brief controlled contrasts, only if legible: detach
+    $A$ to freeze routing while value content still learns; detach $V$ to block
+    the value branch while routing may still receive a signal through the fixed
+    values.
+
+**Required precision:** Distinguish gradient sign from optimizer update
+direction. Do not imply that a high attention weight is a causal explanation or
+that one head has a uniquely readable linguistic role. State that the isolated
+single-head derivation omits multi-head output projection, residual pathways,
+and later layers. Mask before softmax; do not let a forbidden score enter the
+denominator. Identify $R=QK^\top/\sqrt{d_k}+M$ consistently so the scale appears
+exactly once in the query/key derivatives. Do not claim that attention receives
+its own correct-map labels.
+
+**Source material:**
+`learning_artifacts/day-04-attention-and-causal-information-boundary/queries-keys-values-and-retrieval.md`;
+`learning_artifacts/day-04-attention-and-causal-information-boundary/dot-products-as-learned-compatibility.md`;
+`learning_artifacts/day-04-attention-and-causal-information-boundary/why-scale-dot-products.md`;
+`learning_artifacts/day-04-attention-and-causal-information-boundary/causal-mask-before-softmax.md`;
+`learning_artifacts/day-04-attention-and-causal-information-boundary/attention-output-as-value-mixture.md`;
+`learning_artifacts/day-04-attention-and-causal-information-boundary/attention-weights-are-not-explanations.md`;
+`learning_artifacts/day-04-attention-and-causal-information-boundary/how-loss-trains-qkv.md`;
+the future canonical Chapter 4, worked solutions, Day 4 notebook, reusable
+source, tests, and experiment report.
+
+**Evidence dependency:** Do not freeze displayed numerical values or begin final
+rendering until the manual forward pass agrees with a trusted PyTorch reference,
+analytical gradients agree with autograd and finite differences under declared
+tolerances, forbidden future edges are verified zero, and detach experiments
+confirm the two branches. Chapter 4 must be synthesized before final editorial
+review.
+
+**Expected outputs:** Editable Manim source, 16:9 H.264 MP4, lightweight GIF
+preview, one Chapter 4 still, exact render command, Python/Manim revision
+manifest, and a mapping from displayed numbers to committed verification
+evidence. Follow `visuals/animations/STYLE_GUIDE.md`.
+
+**Mac handoff:** Use branch `visuals/manim-attention-gradients`. Pull the latest
+`origin/main` containing this packet, record the exact base commit, and limit the
+production branch to animation source, rendered previews, metadata, and render
+instructions. Do not rewrite canonical Chapter 4 prose from the rendering
+branch.
+
+**Acceptance checks:** Tensor orientations and shapes remain unambiguous; each
+attention row sums to one over allowed sources; forbidden cells never influence
+normalization; value mixing remains distinct from routing; every displayed
+gradient matches committed evidence; detaching one path produces the claimed
+gradient boundary; the final loss is the downstream next-token objective; the
+animation never presents attention weights as a complete explanation; all text
+and matrix labels remain readable at phone scale.
 
 ### Task packet: `ANIM-BPE-001`
 

@@ -5,7 +5,7 @@
 - Status: introduced
 - Book destination: Chapter 4, attention gradients and credit assignment
 - Related evidence: planned Day 4 autograd notebook and finite-difference checks
-- Related production tasks: `CAND-ANIM-008`
+- Related production tasks: `CAND-ANIM-008`; approved `ANIM-ATTN-001`
 
 ## Questions that drove the discussion
 
@@ -129,5 +129,6 @@ in this isolated-head derivation.
 
 - Chapter 4 derivation and worked tensor-shape exercise.
 - Interactive notebook controls that detach routing or value paths.
-- Extend `CAND-ANIM-008` with a backward pass that visibly splits at $O=AV$ and
-  reaches $W_V$ versus $W_Q,W_K$.
+- `ANIM-ATTN-001`: use a continuous backward pass that visibly splits at $O=AV$
+  and reaches $W_V$ versus $W_Q,W_K$; production belongs on the Mac Studio after
+  Day 4 verification.
