@@ -96,8 +96,12 @@ The learner independently connected the Q/K/V role separation to the established
 term “KV caching” and correctly noticed why query caching is absent from the
 standard name.
 
-The remaining checkpoint is to explain back that the reuse unit is an exact past
-position within an unchanged prefix, not a token type across arbitrary contexts.
+The learner then explained back that KV caching happens while extending the same
+input prefix: calculating a later hidden state does not require recalculating
+unchanged earlier states, and those states are not reused merely because another
+input sentence contains the same tokens. This satisfies the central conceptual
+checkpoint. Exact-prefix reuse across requests remains an explicitly named
+systems-level exception rather than token-level reuse.
 
 ## Evidence and limitations
 
