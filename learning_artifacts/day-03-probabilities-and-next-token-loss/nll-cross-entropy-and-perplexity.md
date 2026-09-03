@@ -50,6 +50,22 @@ where $m_t$ is 1 for an included target and 0 for padding or another ignored
 position. The summed sequence NLL and mean token cross-entropy answer different
 reporting questions and should not be conflated.
 
+Equal sequence NLL also does not imply equal token-level behavior. For four
+targets, model A can assign probability $0.5$ at every step, giving product
+$0.5^4=0.0625$. Model B can assign probabilities approximately
+$[0.99,0.99,0.99,0.0644]$, whose product is also $0.0625$. Their total NLLs are
+therefore equal, but A spreads moderate uncertainty across the sequence while B
+concentrates nearly all surprise in one catastrophic, overconfident miss.
+
+The scalar sequence score deliberately forgets this distribution over
+positions. Generation trajectories, calibration, tail risk, and optimization
+can differ: B's gradient is concentrated at the catastrophic position, and one
+bad choice there can redirect every later generated context. Token-level loss
+traces, quantiles, maximum loss, calibration checks, and free-running evaluation
+answer questions that the mean alone cannot. Under the narrow claim "likelihood
+of this exact sequence," however, equal products really are equal; the stronger
+behavioral distinction requires these additional criteria.
+
 The deeper proper-scoring identity is:
 
 \[
@@ -239,6 +255,10 @@ distribution without any single row explicitly listing all valid alternatives.
   head into its parameters and the contextual hidden state.
 - `introduced`: repeated one-hot outcomes have expected gradient $p-r$, so their
   equilibrium prediction matches the empirical conditional frequencies $r$.
+- `introduced`: equal sequence NLL can hide radically different distributions
+  of token-level surprise, confidence, gradient concentration, and generation
+  risk; the scalar is equal under its narrow contract but not a full behavioral
+  equivalence test.
 - `demonstrated`: the learner correctly reasoned that when human-language
   continuations are genuinely uncertain, a perfect model with $p=q$ still has
   cross-entropy $H(q)>0$; matching removes model mismatch, not intrinsic data

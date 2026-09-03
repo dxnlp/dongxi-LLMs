@@ -103,9 +103,11 @@ same proposal is not repeatedly rediscovered.
   scoring rule recovers a distribution or collapses onto its mode.
 - Moving objects and stable anchors: Preserve the same target probabilities and
   candidate colors across three acts. Act 1 moves probability factors from a
-  product into additive NLL tiles. Act 2 synchronizes loss and gradient curves
-  for log loss versus `1-p_target`. Act 3 fixes an empirical target distribution
-  `q` and moves a model distribution `p` toward the expected-loss minimum.
+  product into additive NLL tiles, then contrasts two equal-sum sequences whose
+  surprise is either diffuse or concentrated in one catastrophic token. Act 2
+  synchronizes loss and gradient curves for log loss versus `1-p_target`. Act 3
+  fixes an empirical target distribution `q` and moves a model distribution `p`
+  toward the expected-loss minimum.
 - Canonical source material:
   `learning_artifacts/day-03-probabilities-and-next-token-loss/probability-as-competition-and-surprise.md`;
   planned Chapter 3 derivation and verification report.
