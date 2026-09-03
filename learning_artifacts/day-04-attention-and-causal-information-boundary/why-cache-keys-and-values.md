@@ -152,6 +152,26 @@ Whether a specific library enables caching by default, returns it to the caller,
 retains it between conversation turns, or immediately frees it is an
 implementation contract rather than a universal Transformer guarantee.
 
+### Concrete implementations checked on 2026-09-03
+
+- Hugging Face Transformers exposes cache objects to ordinary model code. Its
+  documented default is a growing `DynamicCache`; it also provides static,
+  offloaded, and quantized strategies, and permits disabling generation caching
+  with `use_cache=False`: <https://huggingface.co/docs/transformers/kv_cache>.
+- vLLM is a serving engine with block-oriented KV-cache management and optional
+  hash-based automatic prefix caching across requests that share an exact
+  prefix: <https://docs.vllm.ai/en/latest/design/prefix_caching/>.
+- NVIDIA TensorRT-LLM manages KV state as runtime block pools and supports
+  request reuse, offloading, eviction policies, variable attention windows,
+  MQA, and GQA: <https://nvidia.github.io/TensorRT-LLM/features/kvcache.html>.
+- `llama.cpp` is a local inference runtime whose command-line interface exposes
+  KV offloading and independent key/value cache storage types:
+  <https://github.com/ggml-org/llama.cpp/blob/master/tools/completion/README.md>.
+
+These systems do not introduce the mathematical $K$ and $V$ operations; they
+decide how the already-required projected states are stored and reused during
+inference.
+
 ## Open edges
 
 - Measure cached versus uncached decoding work and memory growth.
