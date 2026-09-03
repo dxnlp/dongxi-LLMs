@@ -4,7 +4,7 @@
 - Day status: in progress
 - Book destination: planned Chapter 3, `Learning the Next Token`
 - Required build: manual numerical derivation, PyTorch verification, and a tiny
-  next-token model
+  next-token model; all are present, with Chapter 3 synthesis remaining
 
 ## Questions and expected outcome
 
@@ -43,6 +43,12 @@ Day 3 uses three mechanism notebooks under [`notebooks/day-03/`](../../notebooks
 These are guided coding discussions. Predictions and interpretations matter as
 much as successful execution, and reusable evidence must later move into source,
 tests, and reports.
+
+The three notebooks are first-class companion course material, not temporary
+session state. They are indexed with the chapter, validated with the registered
+kernel, and paired with reusable source and experiment evidence where empirical
+claims are made. Session 03 was validated end to end on 2026-09-03 and connects
+directly to `experiments/reports/2026-09-03-next-token-distribution.md`.
 
 ## Starting knowledge from Day 2
 

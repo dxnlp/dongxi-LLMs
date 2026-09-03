@@ -52,6 +52,9 @@ dependencies, preferred machine, and current status.
   attached directly after each notebook exercise. Keep the attempt first, but
   make the notebook self-contained so routine syntax lookup does not interrupt
   the conceptual learning flow.
+- Treats guided notebooks as first-class course material rather than temporary
+  session scratchpads. Preserve, validate, index, and link them from the
+  corresponding chapter or solutions while keeping reusable logic in `src/`.
 - The DGX Spark notebook kernel is `Python (DGX Spark Native)`, backed by
   `/home/dongxi/dgx-spark-dongxi/.venv/bin/python`. Recreate it with the platform
   repository's `scripts/setup_jupyter.sh`; it adds locked Jupyter components to

@@ -19,7 +19,8 @@
 3. Read [`PROGRESS.md`](PROGRESS.md) for the current position and next action.
 4. Read [`LEARNING_MEMORY.md`](LEARNING_MEMORY.md) for the artifact index, content ideas, and cross-machine task packets.
 5. Read [`learning_artifacts/`](learning_artifacts/) for deep discussions organized by day and topic.
-6. Contributors and coding agents must read [`AGENTS.md`](AGENTS.md) before changing the project.
+6. Use [`notebooks/`](notebooks/) for the book's interactive mechanism lessons.
+7. Contributors and coding agents must read [`AGENTS.md`](AGENTS.md) before changing the project.
 
 ## Learning promise
 

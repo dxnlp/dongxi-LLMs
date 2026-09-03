@@ -11,6 +11,8 @@ The narrative architecture is defined in [`../BOOK.md`](../BOOK.md).
    [`Chapter 1`](solutions/01-evidence-before-optimization.md) and
    [`Chapter 2`](solutions/02-text-tokens-and-embeddings.md)
 
-The book is written for sequential reading. Experiment specifications, reports,
-manifests, reusable code, and notebooks are companion evidence rather than
-substitutes for the narrative.
+The book is written for sequential reading. Interactive notebooks are
+first-class companion lessons and part of the course material: they turn the
+chapter's mathematics into prediction, implementation, perturbation, and
+interpretation. Experiment specifications, reports, manifests, reusable code,
+and notebooks support rather than substitute for the canonical narrative.

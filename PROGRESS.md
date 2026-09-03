@@ -7,11 +7,11 @@ This file is the operational source of truth for resuming work. Update it at the
 - Active release: `v0.1`
 - Active day: Day 3
 - Status: in progress
-- Current focus: turn the Day 3 probability, alignment, and masking discussion
-  into executable mathematical understanding
-- Next action: run the first interactive mechanism notebook cell by cell,
-  beginning with stable softmax and its constant-shift invariance
-- Last updated: 2026-09-01
+- Current focus: synthesize the verified Day 3 derivations, three interactive
+  notebooks, and controlled next-token experiment into Chapter 3
+- Next action: draft `book/chapters/03-learning-the-next-token.md` and its worked
+  solutions, linking all three first-class companion notebooks
+- Last updated: 2026-09-03
 
 ## Four-week tracker
 
@@ -21,7 +21,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 |---:|---|---|---|
 | 1 | Laboratory and reproducibility | complete | Chapter: `book/chapters/01-evidence-before-optimization.md`; evidence: `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
 | 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-tokenizer-mechanics.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
-| 3 | Probabilities and next-token loss | in progress | Learning artifact: `learning_artifacts/day-03-probabilities-and-next-token-loss/README.md`; executable evidence and Chapter 3 pending |
+| 3 | Probabilities and next-token loss | in progress | Three interactive notebooks; report: `experiments/reports/2026-09-03-next-token-distribution.md`; Chapter 3 synthesis pending |
 | 4 | Attention from first principles | pending | — |
 | 5 | Decoder-only Transformer | pending | — |
 | 6 | Modern architecture design | pending | — |
