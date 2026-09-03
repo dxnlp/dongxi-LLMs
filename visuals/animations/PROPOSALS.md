@@ -111,8 +111,9 @@ same proposal is not repeatedly rediscovered.
 - Canonical source material:
   `learning_artifacts/day-03-probabilities-and-next-token-loss/probability-as-competition-and-surprise.md`;
   planned Chapter 3 derivation and verification report.
-- Evidence status: all three mechanisms introduced; numerical, gradient, and
-  proper-scoring verification pending.
+- Evidence status: all three mechanisms introduced; the logit gradient and
+  proper-scoring decomposition are analytically derived, while numerical
+  autograd and controlled expected-loss verification remain pending.
 - Precision risks and required caveats: Distinguish loss magnitude from gradient
   through softmax; do not claim `1-p_target` itself has a small value for a
   confident error—its softmax gradient becomes small; distinguish one-hot sample

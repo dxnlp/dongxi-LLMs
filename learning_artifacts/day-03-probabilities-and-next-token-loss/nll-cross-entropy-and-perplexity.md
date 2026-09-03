@@ -72,9 +72,27 @@ The deeper proper-scoring identity is:
 H(q,p)=H(q)+D_{KL}(q\|p).
 \]
 
-Because $H(q)$ is fixed and KL divergence is nonnegative, expected
-cross-entropy is minimized at $p=q$. This result is introduced but still needs
-derivation and a controlled verification.
+It follows by adding and subtracting the target distribution's own log term:
+
+\[
+\begin{aligned}
+H(q,p)
+&=-\sum_i q_i\log p_i \\
+&=-\sum_i q_i\log q_i
+  +\sum_i q_i\log q_i-\sum_i q_i\log p_i \\
+&=H(q)+\sum_i q_i\log\frac{q_i}{p_i} \\
+&=H(q)+D_{KL}(q\|p).
+\end{aligned}
+\]
+
+For a fixed data distribution $q$, $H(q)$ is irreducible conditional
+uncertainty rather than model error. The KL term is mismatch between the model
+and the data; it is nonnegative and reaches zero exactly when $p=q$ on the
+relevant support. Expected cross-entropy is therefore minimized by reporting the
+full target distribution, not by assigning probability one only to its modal
+outcome. A finite-sample estimate, restricted model family, or shifted test
+distribution can keep an actual training run from reaching this population
+optimum.
 
 Perplexity will later be defined as the exponential of mean natural-log loss:
 
@@ -259,6 +277,9 @@ distribution without any single row explicitly listing all valid alternatives.
   of token-level surprise, confidence, gradient concentration, and generation
   risk; the scalar is equal under its narrow contract but not a full behavioral
   equivalence test.
+- `analytically demonstrated`: adding and subtracting the target entropy yields
+  $H(q,p)=H(q)+D_{KL}(q\|p)$, separating irreducible uncertainty from reducible
+  model mismatch and proving the population optimum $p=q$.
 - `demonstrated`: the learner correctly reasoned that when human-language
   continuations are genuinely uncertain, a perfect model with $p=q$ still has
   cross-entropy $H(q)>0$; matching removes model mismatch, not intrinsic data
@@ -266,9 +287,9 @@ distribution without any single row explicitly listing all valid alternatives.
 - `demonstrated`: the learner correctly bounded a lower-perplexity result to
   similarity with or prediction of the tested corpus and rejected the stronger
   conclusion that the lower-perplexity model is generally better.
-- `not yet demonstrated`: the proper-scoring decomposition, executable gradient
-  agreement, empirical-frequency convergence, perplexity interpretation, causal
-  target alignment, and full manual/PyTorch agreement.
+- `not yet demonstrated`: executable gradient agreement,
+  empirical-frequency convergence, perplexity interpretation, causal target
+  alignment, and full manual/PyTorch agreement.
 
 ## Learner explanation and boundary refinement
 
