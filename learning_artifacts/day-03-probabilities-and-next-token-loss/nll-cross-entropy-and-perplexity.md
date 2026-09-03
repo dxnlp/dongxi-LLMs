@@ -125,8 +125,31 @@ Perplexity will later be defined as the exponential of mean natural-log loss:
 \operatorname{PPL}=e^{L_{mean}}.
 \]
 
-Its interpretation as an effective branching factor is useful only under a
-fixed tokenizer, target policy, and evaluation distribution.
+Because
+
+\[
+e^{-L_{mean}}
+=
+\left(\prod_{t=1}^{N}p_t(y_t)\right)^{1/N},
+\]
+
+perplexity is the reciprocal geometric-mean probability assigned to observed
+targets. Its interpretation as an effective branching factor is useful only
+under a fixed tokenizer, target policy, and evaluation distribution.
+
+The tokenizer restriction is mathematical, not ceremonial. Suppose tokenizer A
+represents a text fragment as one token with probability $0.25$. Its total NLL
+is $-\log 0.25\approx1.386$, its mean token NLL is also $1.386$, and its
+perplexity is $4$. Tokenizer B represents the same fragment as two successive
+tokens, each conditionally assigned probability $0.5$. The text probability and
+total NLL remain $0.5\times0.5=0.25$ and $1.386$, but the mean per-token NLL is
+$0.693$ and perplexity is $2$.
+
+Nothing became twice as predictable; the unit in the denominator changed.
+Per-token perplexities from different tokenizers therefore cannot be ranked as
+if they measured the same unit. Bits or nats per byte/character can provide a
+more comparable normalization when text encoding and evaluation preprocessing
+are also held fixed.
 
 ## Exact logit-gradient derivation
 
@@ -309,6 +332,13 @@ distribution without any single row explicitly listing all valid alternatives.
   population $q$; parameter sharing across related contexts enables
   generalization, while memorization can reduce empirical loss without reducing
   population mismatch.
+- `demonstrated`: the learner identified falling training loss together with
+  rising validation loss as overfitting; the evidence boundary remains that a
+  controlled fixed validation contract is needed to separate memorization from
+  pipeline or distribution changes.
+- `analytically demonstrated`: perplexity is reciprocal geometric-mean target
+  probability, and an equal-text-probability construction shows why changing
+  token count alone changes per-token perplexity.
 - `demonstrated`: the learner correctly reasoned that when human-language
   continuations are genuinely uncertain, a perfect model with $p=q$ still has
   cross-entropy $H(q)>0$; matching removes model mismatch, not intrinsic data
@@ -317,8 +347,8 @@ distribution without any single row explicitly listing all valid alternatives.
   similarity with or prediction of the tested corpus and rejected the stronger
   conclusion that the lower-perplexity model is generally better.
 - `not yet demonstrated`: executable gradient agreement,
-  empirical-frequency convergence, perplexity interpretation, causal target
-  alignment, and full manual/PyTorch agreement.
+  empirical-frequency convergence, executable perplexity examples, causal
+  target alignment, and full manual/PyTorch agreement.
 
 ## Learner explanation and boundary refinement
 

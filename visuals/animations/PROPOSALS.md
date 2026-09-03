@@ -145,11 +145,14 @@ same proposal is not repeatedly rediscovered.
 - Moving objects and stable anchors: Keep the tokenizer, valid-position mask, and
   evaluation corpus fixed; move per-token NLL tiles into their mean, exponentiate
   the mean, and compare equal and unequal distributions sharing an effective
-  branching factor.
+  branching factor. Then hold one text probability fixed while splitting one
+  token into two, showing total NLL remains fixed as mean token NLL and perplexity
+  change solely because the counting unit changed.
 - Canonical source material:
   `learning_artifacts/day-03-probabilities-and-next-token-loss/nll-cross-entropy-and-perplexity.md`;
   planned Chapter 3 derivation and verification.
-- Evidence status: formula introduced; interpretation and executable verification
+- Evidence status: formula, geometric-mean interpretation, and tokenizer-unit
+  counterexample are analytically demonstrated; executable verification remains
   pending.
 - Precision risks and required caveats: Use natural logs so `PPL=exp(mean NLL)`;
   do not call perplexity the literal number of available tokens except in the
