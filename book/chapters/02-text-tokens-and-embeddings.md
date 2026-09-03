@@ -38,6 +38,8 @@ After completing this chapter, you should be able to:
   the model understands it;
 - treat a tokenizer as part of a model's interface identity rather than a
   replaceable text utility;
+- explain why BPE pieces and token IDs have no built-in semantic hierarchy and
+  why a coordinated ID permutation preserves model behavior;
 - measure token efficiency with an explicit denominator and defend the limits of
   a small multilingual comparison;
 - derive the shape change from token IDs to embedding vectors;
@@ -277,6 +279,25 @@ compression, and understanding are three different claims.
 Not every tokenizer has complete byte coverage or byte fallback. Other designs
 can still emit an unknown token for unsupported input.
 
+### BPE pieces are procedural atoms, not a semantic family tree
+
+A trained BPE vocabulary can simultaneously contain pieces corresponding to
+`数`, `据`, `数据`, and `数据库`. That does not tell the model that one entry is the
+semantic parent, child, or sum of another. The merge history determined which
+adjacent patterns became reusable pieces during tokenizer training. At runtime,
+the tokenizer emits the final selected IDs; the transformer does not normally
+receive the merge tree that produced them.
+
+The old constituents remain vocabulary entries because they are still needed in
+other contexts. A long piece such as `数据库` is therefore an additional atomic
+symbol at the model interface, not a compositional instruction saying “combine
+the learned meanings of `数据` and `库`.”
+
+The language model can later learn relationships among these entries through
+shared contexts, embedding geometry, attention, and next-token gradients. Those
+relationships are induced by model training. They are not guaranteed by string
+overlap, merge ancestry, or neighboring token IDs.
+
 ## 2.4 Multilingual efficiency must be measured
 
 Before inspecting Qwen3, we predicted token counts for approximately equivalent
@@ -368,6 +389,27 @@ Language-wide claims would require a representative, frozen multilingual corpus,
 matched content, clear sampling rules, distributional summaries, and uncertainty
 or variation across domains—not one sentence per language.
 
+### Vocabulary size trades rows against sequence positions
+
+A tokenizer with fewer learned pieces tends to leave more text decomposed into
+bytes or short fragments. That increases token sequence length $T$. More
+positions mean more transformer work, more autoregressive generation steps, more
+KV-cache entries, and—under full attention—more position pairs.
+
+A larger vocabulary can compress frequent patterns into fewer positions, but it
+increases the embedding and output dimensions $V_m$. Dense next-token projection
+must compare each contextual state with every output row. The broad trade-off is:
+
+```text
+smaller vocabulary → often longer sequences and more transformer positions
+larger vocabulary  → wider embedding/output tables and more candidate scores
+```
+
+“Often” matters. A large vocabulary allocated mainly to other languages or
+domains can compress the target text worse than a smaller specialized one.
+Chapter 3 makes the $T$-versus-$V_m$ computation explicit when it constructs the
+vocabulary-wide logit tensor.
+
 ## 2.5 Embeddings turn addresses into vectors
 
 A token ID is an address, not a learned semantic vector. Let:
@@ -402,6 +444,22 @@ e_i^\top E = E[i].
 
 Implementations use indexed lookup because materializing a mostly zero vector of
 length $V_m$ is wasteful.
+
+### Token IDs are categorical addresses
+
+It is tempting to say that the model learns relationships among numbers such as
+1, 2, and 3. The important correction is that those integers are only row
+addresses. ID 3 is not numerically closer in meaning to ID 4 than to ID 40,000.
+
+Imagine applying one consistent permutation to the tokenizer mappings, every
+dataset ID and label, the input embedding rows, the output rows and biases, and
+any special-token references. The resulting system can compute exactly the same
+function and decode exactly the same text. Only the printed addresses changed.
+
+The model therefore learns token-sequence structure directly and linguistic
+structure indirectly through the tokenizer's reversible association between IDs
+and text. It does not learn arithmetic on token ID magnitudes. Similarities live
+in learned parameters and contextual behavior, not in the integers themselves.
 
 ### Repetition means parameter reuse
 
@@ -526,7 +584,7 @@ embedding table and the transformations that consume it.
 ### Weight tying couples reading and predicting
 
 An untied language model has a separate output matrix $W_{out}$. A tied model
-reuses (E):
+reuses $E$:
 
 \[
 z = hE^\top, \qquad z_i = h \cdot E[i].
@@ -536,7 +594,7 @@ Here $z_i$ is the logit for candidate token $i$: a raw compatibility score,
 not yet a probability. Softmax converts all logits into a shared probability
 distribution. Chapter 3 derives that conversion and the next-token loss in full.
 
-For target token (y), the output-side gradient of cross-entropy with respect to
+For target token $y$, the output-side gradient of cross-entropy with respect to
 one tied row is:
 
 \[
@@ -861,6 +919,12 @@ identity verified the actual loaded behavior in the inspected stack.
     equality. Then explain why raw `Hello` can occupy one token while a chat
     template containing the same visible content occupies nine.
 
+12. **Atomic IDs and learned relationships.** A BPE vocabulary contains `数`,
+    `据`, `数据`, and `数据库` as separate entries. Explain what the tokenizer does
+    and does not communicate about their relationship to the transformer. Then
+    use a consistent ID-permutation thought experiment to show where their
+    linguistic relationships can—and cannot—reside.
+
 Worked solutions are provided in
 [the Chapter 2 solutions](../solutions/02-text-tokens-and-embeddings.md).
 
@@ -871,7 +935,9 @@ separates universal byte coverage from corpus-dependent compression. Runtime
 encoding replays frozen rules; it does not learn vocabulary from the current
 sentence. Normalization, pre-tokenization, whitespace, and chat templates can all
 change the resulting IDs before model computation begins. Token IDs are meaningful
-only under the tokenizer that defined the model's embedding rows.
+only under the tokenizer that defined the model's embedding rows. Their numeric
+magnitudes and distances have no linguistic meaning; a consistent permutation
+of IDs and matching parameter rows preserves the model's function.
 
 Embedding lookup maps `[B,T]` IDs to `[B,T,d]` starting vectors. The transformer
 then constructs position- and context-dependent hidden states under a causal

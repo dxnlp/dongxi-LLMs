@@ -6,11 +6,10 @@ This file is the operational source of truth for resuming work. Update it at the
 
 - Active release: `v0.1`
 - Active day: Day 3
-- Status: in progress
-- Current focus: synthesize the verified Day 3 derivations, three interactive
-  notebooks, and controlled next-token experiment into Chapter 3
-- Next action: draft `book/chapters/03-learning-the-next-token.md` and its worked
-  solutions, linking all three first-class companion notebooks
+- Status: complete
+- Current focus: Chapter 3 and its companion evidence are complete
+- Next action: begin Day 4 by deriving queries, keys, values, scaled dot-product
+  attention, and the causal information boundary from first principles
 - Last updated: 2026-09-03
 
 ## Four-week tracker
@@ -21,7 +20,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 |---:|---|---|---|
 | 1 | Laboratory and reproducibility | complete | Chapter: `book/chapters/01-evidence-before-optimization.md`; evidence: `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
 | 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-tokenizer-mechanics.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
-| 3 | Probabilities and next-token loss | in progress | Three interactive notebooks; report: `experiments/reports/2026-09-03-next-token-distribution.md`; Chapter 3 synthesis pending |
+| 3 | Probabilities and next-token loss | complete | Chapter: `book/chapters/03-learning-the-next-token.md`; three interactive notebooks; report: `experiments/reports/2026-09-03-next-token-distribution.md` |
 | 4 | Attention from first principles | pending | — |
 | 5 | Decoder-only Transformer | pending | — |
 | 6 | Modern architecture design | pending | — |
@@ -212,6 +211,53 @@ Copy this block below the daily log heading after each session:
   animation.
 - Exact next action: begin Day 3 normally and use the new opportunity check after
   the causal-shifting and cross-entropy mechanisms are derived.
+
+### Day 03 — 2026-09-01 to 2026-09-03
+
+- Status: complete.
+- Questions investigated: How does one contextual hidden state become a
+  vocabulary-wide logit vector? Why are logits relative? How do stable softmax,
+  NLL, one-hot cross-entropy, and perplexity connect? How does $p-q$ route credit
+  through the output head and transformer? How do repeated one-hot outcomes
+  teach uncertainty? How do causal shifting, teacher forcing, attention masks,
+  and loss masks define different boundaries?
+- Derivations completed: stable softmax and log-sum-exp; sequence likelihood to
+  additive NLL; one-hot cross-entropy identity; exact
+  $\partial L/\partial z=p-q$; output-head gradients; expected gradient $p-r$;
+  $H(q,p)=H(q)+D_{KL}(q\|p)$; geometric-mean perplexity; tokenizer-dependent
+  perplexity; causal target shift and valid-token masked mean.
+- Code or content produced: reusable two-logit PyTorch lab, three unit tests,
+  three first-class Day 3 notebooks with adjacent solutions, four focused
+  learning artifacts, Chapter 3 with twelve exercises, complete worked
+  solutions, and Chapter 2 enrichment on BPE atoms, categorical IDs, and the
+  vocabulary/sequence trade-off.
+- Experiments executed: precommitted full-batch two-logit SGD experiment with 70
+  class-0 and 30 class-1 targets; all three notebook reference paths were
+  validated with the registered DGX Spark kernel.
+- Evidence and results: 7 of 7 experiment criteria passed; probabilities moved
+  from `[0.5,0.5]` to `[0.69999999,0.30000004]`; final cross-entropy
+  `0.61086428` matched empirical entropy `0.61086434`; maximum recorded autograd
+  versus $p-r$ error was `5.96e-08`; all 13 repository tests passed.
+- Failures or surprises: no experiment criterion failed. A stale Codex browser
+  proxy briefly hid a still-running Jupyter server; all persistent notebook
+  servers and kernels were later terminated at the learner's request.
+- Claims not yet validated: recovery of the true human-language distribution;
+  generalization from the toy context; calibration under dataset or decoding
+  shift; capability, truthfulness, or generation improvement from lower loss;
+  cross-tokenizer perplexity ranking; hardware performance of large vocabulary
+  heads.
+- Decisions made: treat notebook lessons as first-class course material while
+  keeping reusable logic in importable modules; preserve token IDs as categorical
+  addresses; distinguish intrinsic entropy from model mismatch; require an exact
+  tokenizer and evaluation contract for perplexity comparisons.
+- Book-facing contribution: `book/chapters/03-learning-the-next-token.md` and
+  `book/solutions/03-learning-the-next-token.md`, plus targeted Chapter 2 and
+  Chapter 2 solution enrichment.
+- Public artifacts produced: the approved `ANIM-CE-001`, `ANIM-NTP-001`, and
+  `ANIM-LOGLOSS-001` packets now have canonical Chapter 3 source material and
+  verified numerical evidence; production remains on the Mac Studio.
+- Exact next action: begin Day 4 with attention from first principles, preserving
+  the distinction between forward causal visibility and backward credit flow.
 
 ## Learning memory and production queue
 

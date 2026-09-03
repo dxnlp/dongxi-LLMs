@@ -1,10 +1,11 @@
 # Day 3 — Probabilities and Next-Token Loss
 
 - Date opened: 2026-09-01
-- Day status: in progress
-- Book destination: planned Chapter 3, `Learning the Next Token`
+- Day status: complete
+- Book destination: `book/chapters/03-learning-the-next-token.md`
 - Required build: manual numerical derivation, PyTorch verification, and a tiny
-  next-token model; all are present, with Chapter 3 synthesis remaining
+  next-token model; all are present with a precommitted report and coherent
+  chapter synthesis
 
 ## Questions and expected outcome
 
@@ -20,7 +21,9 @@ Day 3 asks how a contextual vector becomes a trainable prediction:
 
 The day is complete only when the derivation, transparent implementation,
 precommitted experiment, evidence report, and coherent Chapter 3 contribution are
-present. Conversational understanding alone is not sufficient.
+present. Conversational understanding alone is not sufficient. That completion
+contract is now satisfied by the chapter and solutions, three validated
+notebooks, reusable source and tests, and the controlled 70/30 experiment report.
 
 ## Topic artifacts
 
@@ -72,16 +75,19 @@ The learner approved `CAND-ANIM-002`, an LLM-context animation showing target
 probability → per-token NLL → one-hot cross-entropy identity → masked aggregation
 across valid positions. It has been promoted into the expanded `ANIM-CE-001`
 packet. Production and rendering belong exclusively on the Mac Studio after the
-Day 3 derivation and PyTorch verification are committed.
+Day 3 derivation and PyTorch verification are committed. Those dependencies are
+now satisfied; production remains on the Mac Studio.
 
 The learner also approved `CAND-ANIM-003`, showing standard next-token training
 from `p` and one-hot `q` through `p-q`, the corresponding gradient-descent logit
 directions, and the emergence of a distribution across repeated diverse
 examples. It is promoted into `ANIM-NTP-001`; Mac Studio production waits for the
-verified Day 3 gradient and target-frequency experiment.
+verified Day 3 gradient and target-frequency experiment, which are now committed
+for production review.
 
 The learner approved all three conceptual reasons for negative log loss as an
 animation package: sequence products become additive token surprise; confident
 softmax errors retain a strong correction; and expected log loss rewards matching
 the full data distribution. `CAND-ANIM-004` is promoted into
-`ANIM-LOGLOSS-001`; all production remains on the Mac Studio after verification.
+`ANIM-LOGLOSS-001`; its canonical Day 3 treatment is now synthesized, while all
+production remains on the Mac Studio.

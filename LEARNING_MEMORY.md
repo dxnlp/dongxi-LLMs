@@ -107,7 +107,7 @@ ledger.
 |---:|---|---|---|
 | 1 | Evidence before optimization | complete | `learning_artifacts/day-01-evidence-before-optimization/README.md` |
 | 2 | Text, tokens, and embeddings | complete | `learning_artifacts/day-02-text-tokens-and-embeddings/README.md` |
-| 3 | Probabilities and next-token loss | in progress | `learning_artifacts/day-03-probabilities-and-next-token-loss/README.md` |
+| 3 | Probabilities and next-token loss | complete | `learning_artifacts/day-03-probabilities-and-next-token-loss/README.md` |
 
 At the start of each new day, create its directory and index. During the lesson,
 update the relevant focused topic whenever the learner states a prediction,
@@ -121,9 +121,9 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac Studio | Day 2 explanation complete |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac Studio | Day 2 embedding lab and Day 3 loss derivation |
-| `ANIM-CE-001` | Animation | LLM target probability → per-token NLL → masked mean cross-entropy | expanded concept approved; Mac Studio production waits for Day 3 evidence | Mac Studio | Day 3 derivation, target alignment, and PyTorch verification |
-| `ANIM-NTP-001` | Animation | One-hot next-token supervision → `p-q` gradient → distribution learning across examples | concept approved; Mac Studio production waits for Day 3 evidence | Mac Studio | Gradient verification and controlled target-frequency experiment |
-| `ANIM-LOGLOSS-001` | Animation | Why `-log p_target`: additive sequence surprise, confident-error gradients, and proper probability reporting | three-act concept approved; Mac Studio production waits for Day 3 evidence | Mac Studio | Chain-rule, gradient, and expected-scoring verification |
+| `ANIM-CE-001` | Animation | LLM target probability → per-token NLL → masked mean cross-entropy | approved; canonical Day 3 evidence ready for Mac production review | Mac Studio | Chapter 3, target alignment, and PyTorch verification complete |
+| `ANIM-NTP-001` | Animation | One-hot next-token supervision → `p-q` gradient → distribution learning across examples | approved; verified 70/30 trajectory ready for Mac production review | Mac Studio | Gradient verification and controlled target-frequency experiment complete |
+| `ANIM-LOGLOSS-001` | Animation | Why `-log p_target`: additive sequence surprise, confident-error gradients, and proper probability reporting | approved; canonical derivations and controlled evidence ready for Mac review | Mac Studio | Chapter 3 chain rule, gradient, and expected-scoring treatment complete |
 
 ## Production-system tasks
 
@@ -448,9 +448,10 @@ to the canonical derivation, executable evidence, task specification, and review
 7. End with perplexity only if the Day 3 derivation shows that the extra transition
    remains legible; otherwise reserve it for a separate visual.
 
-**Dependency:** Do not finalize the narrative before Day 3 derives softmax,
-negative log-likelihood, cross-entropy, causal shifting, and label alignment. The
-current animation is an intentionally limited preview.
+**Dependency status:** Satisfied on 2026-09-03. Chapter 3 now derives softmax,
+negative log-likelihood, cross-entropy, causal shifting, label alignment, and the
+masked mean; the current animation remains an intentionally limited preview until
+the Mac Studio produces the canonical version.
 
 **Required precision:** Use the natural logarithm; identify the observed target
 explicitly; do not imply that cross-entropy selects the model's largest
@@ -517,6 +518,10 @@ update directions are correct; repeated-example frequencies and final
 probabilities agree with the committed Day 3 numerical evidence; no frame claims
 that low training loss establishes truthfulness.
 
+**Dependency status:** Satisfied on 2026-09-03 by Chapter 3 and
+`experiments/reports/2026-09-03-next-token-distribution.md`. Production remains
+an explicit Mac Studio task.
+
 ### Task packet: `ANIM-LOGLOSS-001`
 
 **Learning objective:** Explain three independent reasons negative log-likelihood
@@ -567,6 +572,11 @@ precision; all derivative arrows agree with analytical and PyTorch results; the
 proper-scoring minimum occurs at the fixed verified `p=q`; the linear comparison
 uses the same `q`; no act implies that low training loss proves truthfulness;
 phone-scale text remains readable under the animation style guide.
+
+**Dependency status:** The canonical Day 3 derivations and controlled
+distribution-learning evidence are complete as of 2026-09-03. The Mac Studio
+must still map every displayed comparison, including the `1-p_target` alternative,
+to verified numbers during production.
 
 ## Cross-machine execution protocol
 

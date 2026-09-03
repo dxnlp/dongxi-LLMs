@@ -287,3 +287,41 @@ That representation occupied nine tokens. The tokenizer did not learn new BPE
 merges at runtime; it encoded a longer, policy-defined model input. Reproducible
 token counts must therefore state whether chat templating and special-token
 packaging were applied.
+
+## Exercise 12 — Atomic IDs and learned relationships
+
+The BPE vocabulary records that each listed byte or string pattern can be emitted
+as one tokenizer piece under the frozen runtime rules. It may also preserve merge
+ranks that explain when a longer piece wins over shorter constituents. The older
+pieces remain available because other inputs still need them.
+
+This does not give the transformer a semantic composition graph:
+
+```text
+数据 + 库 = meaning(数据库)
+```
+
+The model normally receives only the final token IDs, not the merge history. It
+initially treats `数`, `据`, `数据`, and `数据库` as separate categorical addresses
+that select separate rows. String overlap and merge ancestry do not force those
+rows to be similar.
+
+Relationships can emerge later because the pieces occur in related contexts and
+share the same transformer and next-token objective. Embedding geometry,
+contextual hidden states, attention behavior, and output probabilities can then
+reflect useful linguistic relationships. Those are learned model properties,
+not tokenizer guarantees.
+
+For the permutation argument, consistently relabel all IDs while permuting:
+
+- tokenizer piece-to-ID and ID-to-piece mappings;
+- input embedding rows;
+- output rows and biases;
+- dataset inputs and labels;
+- special-token references and any row-specific optimizer state.
+
+The transformed system can produce the same vectors, logits, probabilities, and
+decoded text for every input. Therefore numeric relationships such as “ID 100 is
+close to ID 101” cannot carry the language knowledge. The knowledge resides in
+the parameters and computation associated with those categorical addresses and
+in the text interface that maps the addresses back to symbols.

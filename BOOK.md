@@ -138,3 +138,18 @@ Day 2 contributes to:
   routing and masking, and the pinned Qwen3 tokenizer/embedding boundary;
 - reusable BPE and embedding article and animation packets in
   `LEARNING_MEMORY.md`.
+
+## Day 3 placement
+
+Day 3 contributes to:
+
+- Chapter 3, `book/chapters/03-learning-the-next-token.md`;
+- worked solutions in `book/solutions/03-learning-the-next-token.md`;
+- three first-class interactive lessons under `notebooks/day-03/`;
+- the reusable two-logit distribution lab and tests under `src/` and `tests/`;
+- a precommitted specification and report demonstrating $p-q$ gradient agreement
+  and empirical 70/30 distribution learning;
+- refinements in Chapter 2 on categorical token IDs, BPE atoms, and the
+  vocabulary-versus-sequence-length trade-off;
+- approved probability, cross-entropy, and next-token animation packets in
+  `LEARNING_MEMORY.md`, with production retained for the Mac Studio.

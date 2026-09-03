@@ -13,10 +13,10 @@ same proposal is not repeatedly rediscovered.
 
 | Candidate ID | Source | Book placement | Mechanism | State | Dependency or next decision |
 |---|---|---|---|---|---|
-| `CAND-ANIM-001` | Roadmap + agent, automatic math trigger confirmed | Chapter 3 | Input tokens → contextual state `[D]` → dense projection against all `[V,D]` output rows → `[V]` logits → probabilities → selected vocabulary index/token ID → append and repeat, while next-token targets align with preceding positions; optionally reveal the `T`-versus-`V` compute trade-off | discuss | Concept, large-vocabulary cost, and autoregressive selection loop now introduced; after manual/PyTorch verification decide whether this should expand `ANIM-CE-001` or become a separate Mac Studio animation |
-| `CAND-ANIM-002` | User | Chapter 3 | Place negative log-likelihood and cross-entropy in the LLM training context: target probability → per-token NLL → masked aggregation across next-token positions → cross-entropy | approved; promoted into `ANIM-CE-001` | Complete the Day 3 derivation and produce only on the Mac Studio |
-| `CAND-ANIM-003` | User | Chapter 3 | Standard next-token update: predicted distribution `p` versus one-hot target `q` → logit gradient `p-q` → target score rises and non-target scores fall → repeated diverse examples shape a distribution | approved; promoted into `ANIM-NTP-001` | Complete gradient verification and tiny-model evidence; produce only on the Mac Studio |
-| `CAND-ANIM-004` | User | Chapter 3 | Why negative log loss: sequence probability products become additive token surprise; confident errors retain strong gradients; expected log loss rewards matching the full data distribution | approved; promoted into `ANIM-LOGLOSS-001` | Verify all three mechanisms manually and in code; produce only on the Mac Studio |
+| `CAND-ANIM-001` | Roadmap + agent, automatic math trigger confirmed | Chapter 3 | Input tokens → contextual state `[D]` → dense projection against all `[V,D]` output rows → `[V]` logits → probabilities → selected vocabulary index/token ID → append and repeat, while next-token targets align with preceding positions; optionally reveal the `T`-versus-`V` compute trade-off | discuss | Canonical Chapter 3 treatment is complete; decide on the Mac Studio whether to expand `ANIM-CE-001` or defer this separate animation |
+| `CAND-ANIM-002` | User | Chapter 3 | Place negative log-likelihood and cross-entropy in the LLM training context: target probability → per-token NLL → masked aggregation across next-token positions → cross-entropy | approved; promoted into `ANIM-CE-001` | Day 3 derivation and verification complete; produce only on the Mac Studio |
+| `CAND-ANIM-003` | User | Chapter 3 | Standard next-token update: predicted distribution `p` versus one-hot target `q` → logit gradient `p-q` → target score rises and non-target scores fall → repeated diverse examples shape a distribution | approved; promoted into `ANIM-NTP-001` | Gradient and tiny-model evidence complete; produce only on the Mac Studio |
+| `CAND-ANIM-004` | User | Chapter 3 | Why negative log loss: sequence probability products become additive token surprise; confident errors retain strong gradients; expected log loss rewards matching the full data distribution | approved; promoted into `ANIM-LOGLOSS-001` | Canonical derivations and controlled evidence complete; verify the `1-p_target` comparator during Mac production |
 | `CAND-ANIM-005` | Agent, automatic math trigger | Chapter 3 | Mean token cross-entropy → exponentiation → perplexity as an effective equal-choice branching factor, while preserving tokenizer and evaluation-distribution dependence | discuss | After derivation, decide whether to extend `ANIM-CE-001` or create a separate short; production only on Mac Studio after approval |
 | `CAND-ANIM-006` | Agent, automatic math trigger from learner question | Chapter 2–3 bridge | Consistently permute token IDs, dataset symbols, embedding rows, and output rows while decoded text behavior remains unchanged; reveal that IDs are categorical addresses rather than numerical linguistic features | discuss | Prefer extending `ANIM-EMB-001` if the permutation can remain concise; otherwise defer beyond v0.1. Production only on Mac Studio after explicit approval |
 | `CAND-ANIM-007` | Agent, automatic math trigger from learner question | Chapter 3 decoding bridge | Hold logits fixed while temperature continuously rescales their gaps: low temperature sharpens, high temperature flattens, ranking stays fixed, and exact tied maxima reveal the difference between greedy tie-breaking and sampling | discuss | Verify ratios and limiting behavior in the Day 3 notebook; likely defer or use as a compact decoding short. Production only on Mac Studio after explicit approval |
@@ -37,20 +37,21 @@ same proposal is not repeatedly rediscovered.
   stable; move from probability bars to highlighted `p_y`, per-position NLL
   tiles, masked/ignored positions, and the final mean cross-entropy.
 - Canonical source material:
-  `learning_artifacts/day-03-probabilities-and-next-token-loss/`; planned Chapter
-  3 derivation and manual/PyTorch verification.
-- Evidence status: concept introduced; executable evidence pending.
+  `book/chapters/03-learning-the-next-token.md` and
+  `learning_artifacts/day-03-probabilities-and-next-token-loss/`.
+- Evidence status: derivation, target alignment, masked mean, and PyTorch
+  reference computations are complete.
 - Precision risks and required caveats: Do not present NLL and one-hot
   cross-entropy as different numerical objectives; distinguish sequence NLL sum
   from the common mean over valid tokens; make visible that target label index
   `k` pairs with logit index `k-1`; exclude padding or ignored labels; retain
   natural logarithms; do not imply that low loss proves truthfulness.
 - Dependencies: Day 3 derivation, causal label alignment, loss-mask denominator,
-  and PyTorch agreement.
+  and PyTorch agreement are complete.
 - Suggested destination: Chapter 3, course site, and the embedding-training
   animation handoff.
-- Next decision: Mac Studio production begins only after the canonical Day 3
-  derivation and evidence are committed.
+- Next decision: Mac Studio production may begin from the committed Chapter 3
+  material when the learner starts the animation task.
 
 ### CAND-ANIM-003 — Standard next-token training update
 
@@ -72,7 +73,8 @@ same proposal is not repeatedly rediscovered.
   a small controlled stream whose target frequencies are visibly known.
 - Canonical source material:
   `learning_artifacts/day-03-probabilities-and-next-token-loss/probability-as-competition-and-surprise.md`;
-  planned Chapter 3 gradient derivation and tiny-model report.
+  `book/chapters/03-learning-the-next-token.md`; and the committed tiny-model
+  report.
 - Evidence status: analytical gradient, PyTorch agreement, optimizer trajectory,
   and controlled 70/30 learned-frequency convergence are verified and reported.
 - Precision risks and required caveats: Show gradient descent direction rather
@@ -86,8 +88,8 @@ same proposal is not repeatedly rediscovered.
   output-head chain-rule verification remains for the expanded version.
 - Suggested destination: Chapter 3, course site, and the later embedding-gradient
   animation sequence.
-- Next decision: Produce and render only on the Mac Studio after Day 3 evidence is
-  committed; decide there whether it is a standalone short animation or a
+- Next decision: Produce and render only on the Mac Studio; decide there whether
+  it is a standalone short animation or a
   companion segment to `ANIM-CE-001`.
 
 ### CAND-ANIM-004 — Why negative log loss has three jobs
@@ -113,10 +115,11 @@ same proposal is not repeatedly rediscovered.
   generalization from memorization.
 - Canonical source material:
   `learning_artifacts/day-03-probabilities-and-next-token-loss/probability-as-competition-and-surprise.md`;
-  planned Chapter 3 derivation and verification report.
-- Evidence status: all three mechanisms introduced; the logit gradient and
-  proper-scoring decomposition are analytically derived, while numerical
-  autograd and controlled expected-loss verification remain pending.
+  `book/chapters/03-learning-the-next-token.md`; and the controlled Day 3 report.
+- Evidence status: sequence, logit-gradient, and proper-scoring mechanisms are
+  derived; $p-q$ autograd and controlled expected-loss behavior are verified.
+  The alternative `1-p_target` softmax-gradient comparison remains a Mac
+  production check.
 - Precision risks and required caveats: Distinguish loss magnitude from gradient
   through softmax; do not claim `1-p_target` itself has a small value for a
   confident error—its softmax gradient becomes small; distinguish one-hot sample
@@ -151,7 +154,7 @@ same proposal is not repeatedly rediscovered.
   change solely because the counting unit changed.
 - Canonical source material:
   `learning_artifacts/day-03-probabilities-and-next-token-loss/nll-cross-entropy-and-perplexity.md`;
-  planned Chapter 3 derivation and verification.
+  `book/chapters/03-learning-the-next-token.md`.
 - Evidence status: formula, geometric-mean interpretation, and tokenizer-unit
   counterexample are analytically demonstrated; executable verification remains
   pending.
