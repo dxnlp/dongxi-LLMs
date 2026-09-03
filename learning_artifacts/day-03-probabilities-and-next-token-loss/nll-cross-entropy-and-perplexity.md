@@ -151,6 +151,19 @@ if they measured the same unit. Bits or nats per byte/character can provide a
 more comparable normalization when text encoding and evaluation preprocessing
 are also held fixed.
 
+For a multilingual comparison such as Chinese versus English, a higher
+per-token perplexity is not sufficient evidence of worse language modeling. The
+evaluation should also report tokenizer compression on the exact corpora—for
+example tokens per UTF-8 byte and, with a declared normalization policy, tokens
+per Unicode code point or linguistic word. The loss can then be normalized to a
+shared unit such as bits per byte. The comparison must keep domain, genre,
+quality, context policy, special-token handling, loss masks, and sample size
+comparable. Because a fixed token window covers different amounts of raw text
+under different segmentations, effective context measured in bytes or
+characters must also be considered. Inspecting byte fallback and vocabulary
+allocation helps explain the measured efficiency but does not replace the
+common-unit evaluation.
+
 ## Exact logit-gradient derivation
 
 For one position, let $z\in\mathbb{R}^V$ be the logits, let
