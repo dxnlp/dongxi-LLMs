@@ -120,6 +120,7 @@ Opened topics:
 3. [`dot-products-as-learned-compatibility.md`](dot-products-as-learned-compatibility.md)
 4. [`why-scale-dot-products.md`](why-scale-dot-products.md)
 5. [`causal-mask-before-softmax.md`](causal-mask-before-softmax.md)
+6. [`attention-output-as-value-mixture.md`](attention-output-as-value-mixture.md)
 
 ## Animation opportunity
 
