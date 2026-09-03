@@ -121,6 +121,7 @@ Opened topics:
 4. [`why-scale-dot-products.md`](why-scale-dot-products.md)
 5. [`causal-mask-before-softmax.md`](causal-mask-before-softmax.md)
 6. [`attention-output-as-value-mixture.md`](attention-output-as-value-mixture.md)
+7. [`attention-weights-are-not-explanations.md`](attention-weights-are-not-explanations.md)
 
 ## Animation opportunity
 
