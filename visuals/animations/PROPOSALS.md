@@ -73,17 +73,17 @@ same proposal is not repeatedly rediscovered.
 - Canonical source material:
   `learning_artifacts/day-03-probabilities-and-next-token-loss/probability-as-competition-and-surprise.md`;
   planned Chapter 3 gradient derivation and tiny-model report.
-- Evidence status: gradient mechanism introduced; manual/PyTorch verification and
-  learned-frequency experiment pending.
+- Evidence status: analytical gradient, PyTorch agreement, optimizer trajectory,
+  and controlled 70/30 learned-frequency convergence are verified and reported.
 - Precision risks and required caveats: Show gradient descent direction rather
   than confusing gradient sign with parameter motion; state that one-hot
   supervision does not mark unobserved alternatives as valid; do not imply that
   one update sets the target probability to one; distinguish a single local
   update from the expectation over a representative data distribution; use fixed
   verified numbers in the final render.
-- Dependencies: analytical gradient, PyTorch agreement, optimizer-step check, and
-  output-head chain-rule agreement, plus a tiny controlled target-frequency
-  experiment.
+- Dependencies: core analytical gradient, PyTorch agreement, optimizer-step
+  trajectory, and controlled target-frequency experiment are complete;
+  output-head chain-rule verification remains for the expanded version.
 - Suggested destination: Chapter 3, course site, and the later embedding-gradient
   animation sequence.
 - Next decision: Produce and render only on the Mac Studio after Day 3 evidence is

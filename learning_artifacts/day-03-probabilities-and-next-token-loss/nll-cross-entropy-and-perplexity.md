@@ -334,6 +334,9 @@ distribution without any single row explicitly listing all valid alternatives.
   head into its parameters and the contextual hidden state.
 - `introduced`: repeated one-hot outcomes have expected gradient $p-r$, so their
   equilibrium prediction matches the empirical conditional frequencies $r$.
+- `experimentally demonstrated`: the precommitted two-logit PyTorch experiment
+  converged from `[0.5,0.5]` to `[0.7,0.3]`; autograd matched `p-r` within
+  `5.96e-08`, and final cross-entropy matched empirical entropy within `1e-4`.
 - `introduced`: equal sequence NLL can hide radically different distributions
   of token-level surprise, confidence, gradient concentration, and generation
   risk; the scalar is equal under its narrow contract but not a full behavioral
@@ -359,9 +362,9 @@ distribution without any single row explicitly listing all valid alternatives.
 - `demonstrated`: the learner correctly bounded a lower-perplexity result to
   similarity with or prediction of the tested corpus and rejected the stronger
   conclusion that the lower-perplexity model is generally better.
-- `not yet demonstrated`: executable gradient agreement,
-  empirical-frequency convergence, executable perplexity examples, causal
-  target alignment, and full manual/PyTorch agreement.
+- `not yet demonstrated`: executable perplexity examples, learner
+  explanation-back of causal target alignment, and full manual/PyTorch
+  agreement across the remaining mechanisms.
 
 ## Learner explanation and boundary refinement
 

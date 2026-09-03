@@ -27,6 +27,7 @@ present. Conversational understanding alone is not sufficient.
 1. [`probability-as-competition-and-surprise.md`](probability-as-competition-and-surprise.md)
 2. [`nll-cross-entropy-and-perplexity.md`](nll-cross-entropy-and-perplexity.md)
 3. [`causal-shifting-and-loss-masks.md`](causal-shifting-and-loss-masks.md)
+4. [`learning-a-distribution-from-one-hot-targets.md`](learning-a-distribution-from-one-hot-targets.md)
 
 Create an additional focused topic when the lesson reaches the tiny-model
 experiment. Do not turn this index into a transcript.

@@ -1,7 +1,7 @@
 id: 2026-09-03-next-token-distribution
 title: "Repeated one-hot targets learn an empirical next-token distribution"
 mode: learning
-status: planned
+status: completed
 
 question: >-
   Can a two-logit PyTorch model trained on repeated one-hot next-token labels
@@ -15,11 +15,12 @@ rationale: >-
   gradient is p-r, whose stationary point is p=r.
 
 identity:
-  code_commit: "82de8e6cd9ae84a7f57ec01b25bc619e310eff1a"
+  code_commit: "c27bb398261eb958993edfda774345bc071457d7"
+  pre_execution_spec_commit: "c9c8bbfde796e5e359d350579d5e8029594d42ba"
   machine_manifest: "manifests/2026-08-29-dgx-spark-native.json"
   model:
     name: "two trainable logits"
-    revision: "to be committed before execution"
+    revision: "c27bb398261eb958993edfda774345bc071457d7"
   dataset:
     name: "synthetic repeated next-token targets"
     revision: "v1: 70 class-0 targets and 30 class-1 targets"
