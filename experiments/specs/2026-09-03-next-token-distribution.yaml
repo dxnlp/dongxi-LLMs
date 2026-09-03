@@ -74,7 +74,7 @@ claims_not_tested:
 execution:
   working_directory: "/home/dongxi/dongxi_ai/Dongxi_LLMs"
   command: >-
-    /home/dongxi/dgx-spark-dongxi/.venv/bin/python -m
+    env PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python -m
     dongxi_llms.next_token_distribution_lab --steps 500 --learning-rate 0.5
     --output experiments/outputs/2026-09-03-next-token-distribution.json
   expected_outputs:
