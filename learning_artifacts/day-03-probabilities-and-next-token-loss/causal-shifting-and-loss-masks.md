@@ -475,6 +475,31 @@ L=
 }.
 \]
 
+### Mask target tokens, then respect the shift
+
+When a causal-LM API accepts `labels` with the same shape as `input_ids`, an
+ignored entry refers to that token as a **target**, not necessarily to the logits
+stored at the same array index. With the usual internal alignment,
+
+```python
+shift_logits = logits[:, :-1, :]
+shift_labels = labels[:, 1:]
+```
+
+label position $k$ is predicted by the logits at position $k-1$. For
+
+```text
+index:    0       1       2        3          4             5      6
+token:   BOS    User   capital   France   ASSISTANT       Paris   EOS
+label:  -100    -100    -100      -100       -100            5     6
+```
+
+the first supervised pair is `logits[:, 4, :] -> Paris`, and the next is
+`logits[:, 5, :] -> EOS`. Masking logit positions by the visible region instead
+of masking target-token labels can move the supervision boundary by one token.
+The safest audit is to print explicit `(prefix, target, included?)` triples after
+the exact framework alignment.
+
 The denominator is the number of valid target tokens, not necessarily $B(T-1)$.
 This matters when sequences have different lengths or when prompt, padding, or
 otherwise unsupervised regions are present.
@@ -583,6 +608,9 @@ a duplicate proposal. Production remains on the Mac Studio.
 - `introduced`: loss masks select which correctly aligned targets contribute,
   and the mean-loss denominator counts valid targets rather than padded tensor
   capacity.
+- `introduced`: same-shape causal-LM labels name target tokens; after the
+  internal shift, label index $k$ is graded against logits index $k-1$, so an
+  answer-only mask must be audited at the shifted supervision boundary.
 - `introduced`: a zero prompt loss mask removes direct prompt-target supervision
   but does not cut answer-loss gradients through attention into prompt
   embeddings, earlier prompt states, and shared transformer parameters; the

@@ -42,8 +42,9 @@ same proposal is not repeatedly rediscovered.
 - Evidence status: concept introduced; executable evidence pending.
 - Precision risks and required caveats: Do not present NLL and one-hot
   cross-entropy as different numerical objectives; distinguish sequence NLL sum
-  from the common mean over valid tokens; exclude padding or ignored labels;
-  retain natural logarithms; do not imply that low loss proves truthfulness.
+  from the common mean over valid tokens; make visible that target label index
+  `k` pairs with logit index `k-1`; exclude padding or ignored labels; retain
+  natural logarithms; do not imply that low loss proves truthfulness.
 - Dependencies: Day 3 derivation, causal label alignment, loss-mask denominator,
   and PyTorch agreement.
 - Suggested destination: Chapter 3, course site, and the embedding-training
