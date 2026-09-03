@@ -122,6 +122,7 @@ Opened topics:
 5. [`causal-mask-before-softmax.md`](causal-mask-before-softmax.md)
 6. [`attention-output-as-value-mixture.md`](attention-output-as-value-mixture.md)
 7. [`attention-weights-are-not-explanations.md`](attention-weights-are-not-explanations.md)
+8. [`how-loss-trains-qkv.md`](how-loss-trains-qkv.md)
 
 ## Animation opportunity
 
