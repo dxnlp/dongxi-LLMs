@@ -121,6 +121,22 @@ renormalized and sampled. Temperature can change which candidates qualify under
 top-$p$ because it changes cumulative probabilities, while positive temperature
 does not change the ranking used by top-$k$.
 
+### Temperature does not eliminate generation drift
+
+A lower temperature can reduce the chance of sampling low-probability tokens,
+so it may keep a generated trajectory in more typical regions for longer. It
+cannot guarantee this: the highest-probability token can still be wrong or lead
+to a poor continuation, and positive temperature does not change the greedy
+choice at all. Sharpening can also amplify a systematic model error or lock a
+decoder into repetitive high-probability loops.
+
+If the model is already calibrated so that its distribution $p$ matches the data
+distribution, sampling with $\tau=1$ preserves those learned frequencies. Using
+$\tau<1$ instead creates a sharper distribution than the data: modal outcomes
+become overrepresented and valid alternatives become underrepresented. Lower
+temperature is therefore better described as more mode-seeking or conservative,
+not automatically more aligned with the complete training distribution.
+
 ## Stable softmax and stable target NLL
 
 The mathematical softmax is invariant to a shared logit shift. For any constant
@@ -172,6 +188,11 @@ model's probability rule. This mechanism is already within `CAND-ANIM-001` and
   vocabulary.
 - `introduced`: exact greedy ties require an implementation policy, and
   temperature rescales logit gaps without changing their ordering.
+- `developing`: the learner proposed that low temperature prevents generation
+  shift by aligning output with training data. The refinement is that sharpening
+  can reduce low-probability sampling but cannot correct a wrong mode, changes a
+  calibrated distribution away from its learned frequencies, and has no effect
+  on positive-temperature greedy ranking.
 - `introduced`: stable softmax subtracts the maximum without changing the
   distribution, while stable target NLL uses log-sum-exp to avoid an underflowed
   `log(0)` path.
