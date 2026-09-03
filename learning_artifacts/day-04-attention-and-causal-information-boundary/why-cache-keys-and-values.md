@@ -12,6 +12,9 @@
 
 - Why is the mechanism called a KV cache rather than a QKV cache?
 - Which projected states remain useful after one autoregressive decoding step?
+- Is caching part of the Transformer definition or an additional runtime
+  mechanism?
+- When does a request's cache cease to be useful, and when is it released?
 
 ## Learner's initial model
 
@@ -85,6 +88,34 @@ therefore different keys and values. That fact does not undermine caching; it
 explains why caches cannot normally be shared merely because two requests
 contain the same token.
 
+### Architecture computation versus runtime caching
+
+Computing keys and values is intrinsic to ordinary self-attention. Retaining
+them for a later decoding call is not: KV caching is an optional inference-time
+optimization implemented by the model runtime or serving system. A conventional
+full-sequence forward pass can calculate $Q$, $K$, $V$, use them, and release
+them without ever exposing a persistent cache. Autoregressive inference engines
+normally enable caching because recomputing the unchanged prefix would be
+wasteful. Full-sequence training normally does not use an inference-style cache;
+it processes all positions in parallel and retains whatever activations backward
+requires.
+
+### Request-local lifecycle
+
+For a prompt that will generate a continuation, processing the prompt is the
+prefill phase rather than the end of the useful sequence. The cache grows while
+new tokens are decoded. When generation reaches an end token, length limit,
+cancellation, or other terminal condition, no future query in that request needs
+the stored keys and values, so the logical request cache can be released.
+
+A memory allocator may keep the released device pages in a reusable pool rather
+than returning them immediately to the operating system; this does not mean the
+old request's semantic cache remains active. Serving systems may deliberately
+retain selected exact-prefix caches for later requests and evict them under a
+cache policy. If a conversation continues after its cache was discarded, the
+system must reconstruct the state from the retained token history or another
+saved representation.
+
 Without a KV cache, generating token $t$ would recompute keys and values for the
 entire prefix even though causal attention guarantees that future tokens cannot
 change those past representations at the same layer. Caching exchanges growing
@@ -117,6 +148,10 @@ Some serving systems can reuse a cache across requests when the requests share
 an exact token prefix under compatible model and execution settings. This is
 prefix caching, not reuse based on token identity alone.
 
+Whether a specific library enables caching by default, returns it to the caller,
+retains it between conversation turns, or immediately frees it is an
+implementation contract rather than a universal Transformer guarantee.
+
 ## Open edges
 
 - Measure cached versus uncached decoding work and memory growth.
@@ -124,6 +159,8 @@ prefix caching, not reuse based on token identity alone.
   sequence dimensions.
 - Connect grouped-query attention to sharing fewer key/value heads.
 - Distinguish self-attention KV caching from encoder-side cross-attention caches.
+- Inspect a concrete inference API's cache-enable and cache-return contract.
+- Measure logical cache release separately from allocator-reserved GPU memory.
 
 ## Reuse opportunities
 
