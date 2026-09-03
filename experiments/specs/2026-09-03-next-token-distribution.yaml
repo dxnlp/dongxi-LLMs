@@ -1,0 +1,87 @@
+id: 2026-09-03-next-token-distribution
+title: "Repeated one-hot targets learn an empirical next-token distribution"
+mode: learning
+status: planned
+
+question: >-
+  Can a two-logit PyTorch model trained on repeated one-hot next-token labels
+  recover the labels' 70/30 empirical distribution, while autograd agrees with
+  the analytical p-q gradient?
+hypothesis: >-
+  Full-batch cross-entropy training will move an initially uniform prediction
+  toward [0.70, 0.30], and the autograd logit gradient will match p-q.
+rationale: >-
+  For empirical target distribution r, the expected cross-entropy logit
+  gradient is p-r, whose stationary point is p=r.
+
+identity:
+  code_commit: "82de8e6cd9ae84a7f57ec01b25bc619e310eff1a"
+  machine_manifest: "manifests/2026-08-29-dgx-spark-native.json"
+  model:
+    name: "two trainable logits"
+    revision: "to be committed before execution"
+  dataset:
+    name: "synthetic repeated next-token targets"
+    revision: "v1: 70 class-0 targets and 30 class-1 targets"
+    split: "single controlled full batch"
+  environment_lock: "/home/dongxi/dgx-spark-dongxi/uv.lock"
+
+configuration:
+  seed: 42
+  dtype: "float32"
+  attention_backend: "not applicable"
+  microbatch_size: 100
+  gradient_accumulation_steps: 1
+  sequence_length: 1
+  training_steps: 500
+  optimizer: "SGD"
+  learning_rate: 0.5
+  gradient_checkpointing: false
+
+controlled_variables:
+  - "The same single abstract context is used for every target."
+  - "The empirical target counts remain 70 and 30."
+  - "Both logits start at zero."
+  - "Every optimizer step uses the complete 100-target batch."
+independent_variable: "optimizer step"
+dependent_variables:
+  - "softmax probabilities"
+  - "mean cross-entropy"
+  - "autograd versus analytical gradient error"
+  - "gradient norm"
+
+success_criteria:
+  - "The process exits with code 0."
+  - "All recorded logits, probabilities, losses, and gradients are finite."
+  - "Initial probabilities equal [0.5, 0.5] within absolute tolerance 1e-6."
+  - "At initial and final checkpoints, max_abs(autograd_gradient - (p-r)) <= 1e-6."
+  - "Final probabilities are within absolute tolerance 0.01 of [0.70, 0.30]."
+  - "Final mean cross-entropy is no greater than initial mean cross-entropy."
+  - "Final mean cross-entropy is within 1e-4 of entropy([0.70, 0.30])."
+failure_criteria:
+  - "Any required numeric value is NaN or infinite."
+  - "Any analytical-gradient agreement checkpoint exceeds absolute error 1e-6."
+  - "Final probabilities miss the precommitted 0.01 target tolerance."
+  - "Final loss increases or misses the empirical-entropy tolerance."
+  - "The process exits nonzero or omits the required JSON output."
+claims_not_tested:
+  - "Generalization to unseen contexts or natural-language corpora."
+  - "Training dynamics of a transformer or embedding layer."
+  - "Language understanding, factuality, or generation quality."
+  - "Calibration under dataset shift or decoding-time sampling."
+  - "GPU performance, memory safety, or production scalability."
+
+execution:
+  working_directory: "/home/dongxi/dongxi_ai/Dongxi_LLMs"
+  command: >-
+    /home/dongxi/dgx-spark-dongxi/.venv/bin/python -m
+    dongxi_llms.next_token_distribution_lab --steps 500 --learning-rate 0.5
+    --output experiments/outputs/2026-09-03-next-token-distribution.json
+  expected_outputs:
+    - "experiments/outputs/2026-09-03-next-token-distribution.json"
+  memory_reserve_gib: 24
+
+notes: >-
+  This is a controlled mechanism demonstration. The specification must be
+  committed before implementation is executed, and the run report must preserve
+  the exact execution commit and observed exit code.
