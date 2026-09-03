@@ -434,6 +434,30 @@ winner. Labels are required for training-time evaluation of the prediction but
 are absent during ordinary generation, when the model emits logits and a decoding
 rule selects the next token.
 
+## Teacher forcing and generation drift
+
+Correct shifting is necessary, but it does not make training and generation
+identical. Under teacher forcing, every prediction is conditioned on the real
+prefix from the dataset. During free generation, the model must condition on its
+own sampled or selected tokens. One imperfect choice changes the next prefix;
+that altered prefix may be rarer in training, making another error more likely.
+Small local errors can therefore compound over autoregressive steps.
+
+This is often called exposure bias or train--generation distribution mismatch:
+
+\[
+\text{training prefixes}\sim p_{\text{data}},
+\qquad
+\text{generated prefixes}\sim p_{\text{model}}.
+\]
+
+It is distinct from incorrect label alignment. An unshifted objective teaches
+the wrong task—recovering the current visible token. Exposure bias can remain
+even when labels are shifted correctly and the causal mask is flawless. It also
+does not imply that teacher forcing is defective: next-token maximum likelihood
+is still the standard local probabilistic objective, while free-running quality
+depends on how errors and decoding decisions change later contexts.
+
 ## Loss masks: which aligned predictions count
 
 Correct target alignment is necessary but does not imply that every tensor
@@ -520,6 +544,12 @@ a duplicate proposal. Production remains on the Mac Studio.
   unshifted target alignment asks position $t$ to recover the already-visible
   token $x_t$, while a broken causal attention mask lets position $t$ inspect
   future tokens $x_{>t}$.
+- `developing`: when asked why teacher-forced performance can exceed free-running
+  performance, the learner correctly proposed incorrect label shifting as one
+  possible failure mode. The remaining refinement distinguishes that objective
+  bug from exposure bias: even a correctly trained model sees gold prefixes in
+  teacher forcing but must consume its own potentially drifting prefixes during
+  generation.
 - `introduced`: loss masks select which correctly aligned targets contribute,
   and the mean-loss denominator counts valid targets rather than padded tensor
   capacity.
@@ -540,5 +570,6 @@ verification.
 
 - Trace one concrete sequence from input IDs to every supervised target.
 - Show the failure produced by unshifted labels.
+- Contrast gold-prefix teacher forcing with compounding free-generation errors.
 - Verify framework shifting and ignore-index behavior in PyTorch.
 - Distinguish sequence boundaries from padding and packed-document boundaries.
