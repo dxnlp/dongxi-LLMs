@@ -102,6 +102,10 @@ advance. Expected topics are:
 3. causal masking and information boundaries;
 4. gradient flow, failure modes, and interpretability limits.
 
+Opened topics:
+
+1. [`queries-keys-values-and-retrieval.md`](queries-keys-values-and-retrieval.md)
+
 ## Animation opportunity
 
 `CAND-ANIM-008` records the full stable mechanism: input states become $Q$, $K$,
