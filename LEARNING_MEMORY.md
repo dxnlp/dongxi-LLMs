@@ -55,6 +55,11 @@ dependencies, preferred machine, and current status.
 - Treats guided notebooks as first-class course material rather than temporary
   session scratchpads. Preserve, validate, index, and link them from the
   corresponding chapter or solutions while keeping reusable logic in `src/`.
+- Wants every book chapter to contain several focused notebook sessions for its
+  important LLM mathematics, architecture, optimization, data, or evaluation
+  mechanisms. Use the course-wide mechanism → perturbation/failure →
+  integration/evidence pathway in `docs/NOTEBOOK_CURRICULUM.md`; refine and build
+  the sessions as each chapter becomes active.
 - The DGX Spark notebook kernel is `Python (DGX Spark Native)`, backed by
   `/home/dongxi/dgx-spark-dongxi/.venv/bin/python`. Recreate it with the platform
   repository's `scripts/setup_jupyter.sh`; it adds locked Jupyter components to

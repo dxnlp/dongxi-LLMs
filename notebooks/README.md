@@ -25,7 +25,15 @@ running the reference cell. The reference is deliberately adjacent: the learner
 should spend time reasoning about the mechanism, not searching elsewhere for
 routine syntax or an unstated canonical answer.
 
+Every book chapter has a planned notebook pathway, normally divided into a
+mechanism microscope, a deliberate perturbation or failure, and an integration
+or evidence session. The course-wide map and activation rules are in
+[`../docs/NOTEBOOK_CURRICULUM.md`](../docs/NOTEBOOK_CURRICULUM.md). Create these
+sessions as their chapters become active rather than adding empty placeholders.
+
 ## Sessions
 
 - [`day-03/`](day-03/) — logits, probability, next-token loss, causal alignment,
   gradients, and a tiny learned distribution
+- [`day-04/`](day-04/) — scaled causal attention, gradient and failure diagnosis,
+  and KV-cache equivalence

@@ -69,6 +69,11 @@ The important distinctions are:
 
 ## Planned interactive evidence
 
+The detailed three-session plan is
+[`../../notebooks/day-04/README.md`](../../notebooks/day-04/README.md): causal
+attention forward mechanics, gradient and broken-variant diagnosis, and KV-cache
+equivalence. The first session begins with the current mask-ordering question.
+
 The first-class Day 4 notebook should let the learner:
 
 - predict which keys a hand-designed query should retrieve;

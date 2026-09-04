@@ -84,6 +84,16 @@ solution and mechanism explanation immediately after each learner exercise or
 checkpoint. Preserve prediction-before-reveal, but do not force the learner to
 search outside the notebook for routine syntax or the canonical reasoning.
 
+Every book chapter must have a planned interactive notebook pathway, normally
+two to three focused sessions: a transparent mechanism microscope, a deliberate
+perturbation or failure, and an integration/evidence session. At the start of a
+chapter, refine its entries in `docs/NOTEBOOK_CURRICULUM.md`, create the active
+notebook directory and session index, and link completed notebooks from the
+chapter and solutions. Create future notebooks only when their chapter becomes
+active; avoid empty placeholders. Evidence-oriented chapters may use executable
+audits, simulations, or metric explorations instead of forcing an artificial
+neural-network mechanism.
+
 Do not mark a day complete merely because prose or code exists. The stated evidence of completion must be present.
 
 ## Book-first course development

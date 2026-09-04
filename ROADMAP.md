@@ -32,7 +32,8 @@ Important conclusions are selectively validated on Qwen3-1.7B. The release must 
 Each normal day follows:
 
 1. Learn and derive — 60–90 minutes.
-2. Implement — 60–90 minutes.
+2. Work through the active chapter's focused interactive notebook session and
+   implement its reusable mechanism — 60–90 minutes.
 3. Run or analyze an experiment — approximately 60 minutes.
 4. Write the durable learning artifact — 30–60 minutes.
 5. Record open questions and the next hypothesis — 10 minutes.
@@ -49,6 +50,12 @@ clearer than prose or a static figure. Candidates enter
 user-approved task and does not silently expand the active learning day.
 
 Long reference runs should start near the end of a day and be analyzed the following day. Days 7, 14, 21, and 28 are lighter consolidation days, but they remain learning days.
+
+Every chapter receives a notebook pathway, normally a mechanism microscope, a
+deliberately broken or perturbed variant, and an integration/evidence session.
+The complete map is `docs/NOTEBOOK_CURRICULUM.md`. Refine and create each set as
+its chapter becomes active; do not fill the repository with empty future
+notebooks.
 
 ## Experiment modes
 

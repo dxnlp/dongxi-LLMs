@@ -111,11 +111,15 @@ following elements when they serve the material:
 8. exercises that require explanation, calculation, or modification;
 9. a summary that connects to the next chapter.
 
-Interactive mechanism notebooks are first-class companion course material for
-mathematical chapters. They should be linked from the relevant chapter and
-solutions, remain self-contained with adjacent runnable reference answers, and
-reuse importable logic rather than becoming disposable scratch work. They
-support the narrative argument; they do not replace it.
+Every chapter has a first-class interactive notebook pathway, normally two to
+three focused sessions rather than one monolithic notebook. Mechanism-heavy
+chapters should progress from a transparent mechanism microscope to a deliberate
+perturbation or failure and then to integration and evidence. Notebooks should
+be linked from the relevant chapter and solutions, remain self-contained with
+adjacent runnable reference answers, and reuse importable logic rather than
+becoming disposable scratch work. The course-wide plan is
+`docs/NOTEBOOK_CURRICULUM.md`. Notebooks support the narrative argument; they do
+not replace it.
 
 Detailed logs, manifests, and exhaustive telemetry remain in the companion
 repository. The main prose includes only enough evidence to support its claims and
