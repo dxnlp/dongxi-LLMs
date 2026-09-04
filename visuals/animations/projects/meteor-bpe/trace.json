@@ -1,0 +1,757 @@
+{
+  "task_id": "ANIM-BPE-002",
+  "mode": "transparent CPU teaching example",
+  "base_unit": "Unicode character; not byte-level BPE",
+  "normalization": "none",
+  "pretokenization": "each supplied string is one segment; no cross-string merges",
+  "selection_rule": "maximum weighted pair count; declared preference on ties; then lexicographic",
+  "tie_preference": [
+    [
+      "流星",
+      "雨"
+    ]
+  ],
+  "initial_corpus": [
+    {
+      "text": "流星蝴蝶剑",
+      "frequency": 1,
+      "tokens": [
+        "流",
+        "星",
+        "蝴",
+        "蝶",
+        "剑"
+      ]
+    },
+    {
+      "text": "带你去看流星雨",
+      "frequency": 1,
+      "tokens": [
+        "带",
+        "你",
+        "去",
+        "看",
+        "流",
+        "星",
+        "雨"
+      ]
+    },
+    {
+      "text": "流水",
+      "frequency": 1,
+      "tokens": [
+        "流",
+        "水"
+      ]
+    },
+    {
+      "text": "星辰大海",
+      "frequency": 1,
+      "tokens": [
+        "星",
+        "辰",
+        "大",
+        "海"
+      ]
+    },
+    {
+      "text": "雨一直下",
+      "frequency": 1,
+      "tokens": [
+        "雨",
+        "一",
+        "直",
+        "下"
+      ]
+    }
+  ],
+  "initial_corpus_token_count": 22,
+  "base_alphabet_size": 17,
+  "rounds": [
+    {
+      "rank": 1,
+      "selected_pair": [
+        "流",
+        "星"
+      ],
+      "selected_count": 2,
+      "selection_reason": "unique maximum",
+      "tied_maxima": [
+        [
+          "流",
+          "星"
+        ]
+      ],
+      "pair_counts": [
+        {
+          "pair": [
+            "流",
+            "星"
+          ],
+          "count": 2
+        },
+        {
+          "pair": [
+            "一",
+            "直"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "你",
+            "去"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "去",
+            "看"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "大",
+            "海"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "带",
+            "你"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "星",
+            "蝴"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "星",
+            "辰"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "星",
+            "雨"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "流",
+            "水"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "直",
+            "下"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "看",
+            "流"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "蝴",
+            "蝶"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "蝶",
+            "剑"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "辰",
+            "大"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "雨",
+            "一"
+          ],
+          "count": 1
+        }
+      ],
+      "corpus_before": [
+        {
+          "text": "流星蝴蝶剑",
+          "frequency": 1,
+          "tokens": [
+            "流",
+            "星",
+            "蝴",
+            "蝶",
+            "剑"
+          ]
+        },
+        {
+          "text": "带你去看流星雨",
+          "frequency": 1,
+          "tokens": [
+            "带",
+            "你",
+            "去",
+            "看",
+            "流",
+            "星",
+            "雨"
+          ]
+        },
+        {
+          "text": "流水",
+          "frequency": 1,
+          "tokens": [
+            "流",
+            "水"
+          ]
+        },
+        {
+          "text": "星辰大海",
+          "frequency": 1,
+          "tokens": [
+            "星",
+            "辰",
+            "大",
+            "海"
+          ]
+        },
+        {
+          "text": "雨一直下",
+          "frequency": 1,
+          "tokens": [
+            "雨",
+            "一",
+            "直",
+            "下"
+          ]
+        }
+      ],
+      "corpus_after": [
+        {
+          "text": "流星蝴蝶剑",
+          "frequency": 1,
+          "tokens": [
+            "流星",
+            "蝴",
+            "蝶",
+            "剑"
+          ]
+        },
+        {
+          "text": "带你去看流星雨",
+          "frequency": 1,
+          "tokens": [
+            "带",
+            "你",
+            "去",
+            "看",
+            "流星",
+            "雨"
+          ]
+        },
+        {
+          "text": "流水",
+          "frequency": 1,
+          "tokens": [
+            "流",
+            "水"
+          ]
+        },
+        {
+          "text": "星辰大海",
+          "frequency": 1,
+          "tokens": [
+            "星",
+            "辰",
+            "大",
+            "海"
+          ]
+        },
+        {
+          "text": "雨一直下",
+          "frequency": 1,
+          "tokens": [
+            "雨",
+            "一",
+            "直",
+            "下"
+          ]
+        }
+      ],
+      "corpus_token_count_after": 20
+    },
+    {
+      "rank": 2,
+      "selected_pair": [
+        "流星",
+        "雨"
+      ],
+      "selected_count": 1,
+      "selection_reason": "predeclared teaching preference among tied maxima",
+      "tied_maxima": [
+        [
+          "一",
+          "直"
+        ],
+        [
+          "你",
+          "去"
+        ],
+        [
+          "去",
+          "看"
+        ],
+        [
+          "大",
+          "海"
+        ],
+        [
+          "带",
+          "你"
+        ],
+        [
+          "星",
+          "辰"
+        ],
+        [
+          "流",
+          "水"
+        ],
+        [
+          "流星",
+          "蝴"
+        ],
+        [
+          "流星",
+          "雨"
+        ],
+        [
+          "直",
+          "下"
+        ],
+        [
+          "看",
+          "流星"
+        ],
+        [
+          "蝴",
+          "蝶"
+        ],
+        [
+          "蝶",
+          "剑"
+        ],
+        [
+          "辰",
+          "大"
+        ],
+        [
+          "雨",
+          "一"
+        ]
+      ],
+      "pair_counts": [
+        {
+          "pair": [
+            "一",
+            "直"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "你",
+            "去"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "去",
+            "看"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "大",
+            "海"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "带",
+            "你"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "星",
+            "辰"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "流",
+            "水"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "流星",
+            "蝴"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "流星",
+            "雨"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "直",
+            "下"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "看",
+            "流星"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "蝴",
+            "蝶"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "蝶",
+            "剑"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "辰",
+            "大"
+          ],
+          "count": 1
+        },
+        {
+          "pair": [
+            "雨",
+            "一"
+          ],
+          "count": 1
+        }
+      ],
+      "corpus_before": [
+        {
+          "text": "流星蝴蝶剑",
+          "frequency": 1,
+          "tokens": [
+            "流星",
+            "蝴",
+            "蝶",
+            "剑"
+          ]
+        },
+        {
+          "text": "带你去看流星雨",
+          "frequency": 1,
+          "tokens": [
+            "带",
+            "你",
+            "去",
+            "看",
+            "流星",
+            "雨"
+          ]
+        },
+        {
+          "text": "流水",
+          "frequency": 1,
+          "tokens": [
+            "流",
+            "水"
+          ]
+        },
+        {
+          "text": "星辰大海",
+          "frequency": 1,
+          "tokens": [
+            "星",
+            "辰",
+            "大",
+            "海"
+          ]
+        },
+        {
+          "text": "雨一直下",
+          "frequency": 1,
+          "tokens": [
+            "雨",
+            "一",
+            "直",
+            "下"
+          ]
+        }
+      ],
+      "corpus_after": [
+        {
+          "text": "流星蝴蝶剑",
+          "frequency": 1,
+          "tokens": [
+            "流星",
+            "蝴",
+            "蝶",
+            "剑"
+          ]
+        },
+        {
+          "text": "带你去看流星雨",
+          "frequency": 1,
+          "tokens": [
+            "带",
+            "你",
+            "去",
+            "看",
+            "流星雨"
+          ]
+        },
+        {
+          "text": "流水",
+          "frequency": 1,
+          "tokens": [
+            "流",
+            "水"
+          ]
+        },
+        {
+          "text": "星辰大海",
+          "frequency": 1,
+          "tokens": [
+            "星",
+            "辰",
+            "大",
+            "海"
+          ]
+        },
+        {
+          "text": "雨一直下",
+          "frequency": 1,
+          "tokens": [
+            "雨",
+            "一",
+            "直",
+            "下"
+          ]
+        }
+      ],
+      "corpus_token_count_after": 19
+    }
+  ],
+  "learned_merges": [
+    [
+      "流",
+      "星"
+    ],
+    [
+      "流星",
+      "雨"
+    ]
+  ],
+  "vocabulary_size": 19,
+  "token_to_id": {
+    "流": 1,
+    "星": 2,
+    "雨": 3,
+    "流星": 4,
+    "流星雨": 5,
+    "蝴": 6,
+    "蝶": 7,
+    "剑": 8,
+    "带": 9,
+    "你": 10,
+    "去": 11,
+    "看": 12,
+    "水": 13,
+    "辰": 14,
+    "大": 15,
+    "海": 16,
+    "一": 17,
+    "直": 18,
+    "下": 19
+  },
+  "displayed_subset": [
+    "流",
+    "星",
+    "雨",
+    "流星",
+    "流星雨"
+  ],
+  "id_policy": "illustrative 1-based post-training mapping; other characters occupy IDs 6-19",
+  "encoding_examples": [
+    {
+      "text": "流星蝴蝶剑",
+      "tokens": [
+        "流星",
+        "蝴",
+        "蝶",
+        "剑"
+      ],
+      "ids": [
+        4,
+        6,
+        7,
+        8
+      ],
+      "decoded": "流星蝴蝶剑",
+      "exact_round_trip": true
+    },
+    {
+      "text": "带你去看流星雨",
+      "tokens": [
+        "带",
+        "你",
+        "去",
+        "看",
+        "流星雨"
+      ],
+      "ids": [
+        9,
+        10,
+        11,
+        12,
+        5
+      ],
+      "decoded": "带你去看流星雨",
+      "exact_round_trip": true
+    },
+    {
+      "text": "流水",
+      "tokens": [
+        "流",
+        "水"
+      ],
+      "ids": [
+        1,
+        13
+      ],
+      "decoded": "流水",
+      "exact_round_trip": true
+    },
+    {
+      "text": "星辰大海",
+      "tokens": [
+        "星",
+        "辰",
+        "大",
+        "海"
+      ],
+      "ids": [
+        2,
+        14,
+        15,
+        16
+      ],
+      "decoded": "星辰大海",
+      "exact_round_trip": true
+    },
+    {
+      "text": "雨一直下",
+      "tokens": [
+        "雨",
+        "一",
+        "直",
+        "下"
+      ],
+      "ids": [
+        3,
+        17,
+        18,
+        19
+      ],
+      "decoded": "雨一直下",
+      "exact_round_trip": true
+    },
+    {
+      "text": "流星雨",
+      "tokens": [
+        "流星雨"
+      ],
+      "ids": [
+        5
+      ],
+      "decoded": "流星雨",
+      "exact_round_trip": true
+    },
+    {
+      "text": "流星",
+      "tokens": [
+        "流星"
+      ],
+      "ids": [
+        4
+      ],
+      "decoded": "流星",
+      "exact_round_trip": true
+    },
+    {
+      "text": "星雨",
+      "tokens": [
+        "星",
+        "雨"
+      ],
+      "ids": [
+        2,
+        3
+      ],
+      "decoded": "星雨",
+      "exact_round_trip": true
+    }
+  ],
+  "limitations": [
+    "The second selected pair is one of 15 tied maxima, not a unique frequency winner.",
+    "All five input strings appear once; the corpus has not been reweighted.",
+    "This character-level vocabulary has no complete byte coverage or special tokens.",
+    "The 1-5 display is a subset of a complete 19-entry toy vocabulary, not Qwen IDs.",
+    "Tokenizer training is distinct from neural language-model training and semantic understanding."
+  ]
+}

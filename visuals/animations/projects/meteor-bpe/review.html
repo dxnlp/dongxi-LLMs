@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>流星雨 · BPE 动画审阅</title>
+<style>
+html { background:#fff; color:#111827; }
+body { margin:0 auto; width:min(1160px,94%); padding:40px 0 70px;
+  font:20px/1.7 Arial,"Songti SC",serif; }
+h1 { font-size:36px; font-weight:400; margin:0 0 8px; }
+p { color:#64748b; margin:10px 0 20px; }
+video { display:block; width:100%; aspect-ratio:16/9; background:white;
+  border:1px solid #e2e8f0; border-radius:12px; }
+.note { font-size:16px; }
+a { color:#2563eb; text-underline-offset:4px; }
+details { margin-top:28px; font-size:17px; }
+li { margin:10px 0; }
+code { font-family:Arial,"Songti SC",serif; color:#047857; }
+</style>
+<h1>流星雨：从语料到 Token</h1>
+<p>字符级 BPE · 两轮实际计数 · 1–5 为教学编号</p>
+<video controls playsinline preload="metadata" poster="rendered/meteor-bpe-still.png">
+  <source src="rendered/meteor-bpe.mp4" type="video/mp4">
+</video>
+<p class="note">本地审阅版，尚未发布。<a href="rendered/meteor-bpe.mp4">打开 MP4</a> ·
+<a href="rendered/meteor-bpe.gif">GIF 预览</a> · <a href="trace.json">完整计数与词表</a></p>
+<details><summary>实验边界与原语料</summary>
+<p>流星蝴蝶剑，带你去看流星雨，流水，星辰大海，雨一直下。五条语料各出现一次。</p>
+<ul>
+<li><code>流 + 星</code> 出现两次，是第一轮唯一最高频相邻对。</li>
+<li>第二轮 15 个候选都只出现一次。本例预先声明并列时优先选择
+<code>流星 + 雨</code>；这条合并无法由频次单独确定。</li>
+<li>完整教学词表有 19 项。动画展示其中五项：流 1、星 2、雨 3、流星 4、流星雨 5。
+其他字符占用 6–19，基础字符始终保留。</li>
+<li>这是字符级 BPE 的可执行教学示例；生产 Tokenizer 的基础单位、边界和编号可能不同。</li>
+<li>本片展示分词与编号，不模拟神经网络训练。原文关于人的体验与 AI 的“苍白感”是文学判断，
+无法仅凭 Tokenization 得到验证。</li>
+</ul></details>
+</html>
