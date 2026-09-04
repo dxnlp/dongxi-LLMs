@@ -132,6 +132,7 @@ they are corroborated.
 | `X-BPE-001` | X article | What is a token? Unicode → BPE → model IDs | bilingual local packages prepared; editorial review pending | Mac | Chapter 2 tokenizer-mechanics enrichment complete |
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
 | `X-ATTN-KV-001` | X article | Why LLMs cache K and V—but not Q | concept approved; portable outline ready, drafting waits for canonical Chapter 4 | Mac | Day 4 attention derivation and cached/uncached verification |
+| `X-LOOP-001` | X article | Looped Transformers: more effective depth without more stored weights—but not free compute | future creation reminder; drafting waits for Days 6–7 | Mac | Chapter 5 frontier treatment, refreshed primary-source check, and controlled recurrence comparison |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac Studio | Day 2 explanation complete |
 | `ANIM-BPE-002` | Animation | Meteor corpus → counted character BPE → vocabulary subset 1–5 → encoding | local 1080p review candidate ready; user visual approval pending | Mac Studio | Verified corpus trace and explicit second-round tie preference |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac Studio | Day 2 embedding lab and Day 3 loss derivation |
@@ -373,6 +374,53 @@ future query; (5) when a request cache is released; and (6) which claims concern
 Transformer mathematics versus runtime policy. Cached and uncached outputs must
 be verified equivalent within the declared numerical tolerance before the
 article calls that behavior demonstrated.
+
+### Task packet: `X-LOOP-001`
+
+**Working title:** Looped Transformers: More Depth Without More Weights—but Not
+Free Compute
+
+**Hook:** Parameter count is often treated as if it were the whole size of a
+model. Reusing one Transformer stack reveals three separate quantities: stored
+weights, effective block applications, and computation per token.
+
+**Learning promise:** A reader should be able to explain fixed stack reuse,
+variable recurrent depth, and adaptive token-level recursion; distinguish each
+from visible chain-of-thought; and evaluate parameter-efficiency claims without
+mistaking them for compute, latency, memory, or quality claims.
+
+**Narrative spine:** Start with an ordinary untied decoder, replace repeated
+physical stacks with one shared recurrent stack, and track parameters and block
+applications separately. Introduce the recurrent state equation and effective
+depth accounting. Then compare fixed loops, test-time-variable recurrence, and
+router-controlled per-token depth. Close with the Day 7 controlled comparison
+and a claim ledger separating published evidence from interpretation and
+unverified vendor reporting.
+
+**Required precision:** Do not call a two-pass shared stack a model with twice
+the stored size; do not describe the extra depth as free; do not equate shared
+and independently parameterized layers; do not generalize one paper's optimal
+recurrence count; and do not claim that latent recurrence necessarily hides or
+suppresses textual chain-of-thought. The reported Astra architecture remains
+unverified until primary architecture evidence appears.
+
+**Source material:** `ARCH-LOOP-001`,
+`learning_artifacts/day-04-attention-and-causal-information-boundary/future-recurrent-depth-and-looped-transformers.md`,
+the future Chapter 5 section, the Day 7 comparison, and `CAND-ANIM-011`.
+
+**Expected output:** An English X Article draft, 2000×800 cover, and a compact
+mechanism diagram or approved animation excerpt. A Chinese adaptation may follow
+technical review. Drafting and media production belong on the Mac Studio.
+
+**Activation reminder:** Revisit at the end of Day 7, after refreshing primary
+sources and recording the controlled experiment. Article creation is scheduled;
+publication still requires the usual technical and editorial review.
+
+**Acceptance checks:** Every statement is tagged mentally or explicitly as an
+accounting identity, local measurement, primary-paper result, interpretation, or
+unverified report. Parameter, FLOP, latency, memory, and quality comparisons use
+clearly named contracts. A reader can explain why recurrence adds computation
+without adding a new copy of the recurrent weights.
 
 ### Task packet: `ANIM-ATTN-001`
 

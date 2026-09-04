@@ -151,6 +151,20 @@ depth, and compute move independently. A second act can contrast fixed recurrenc
 with token-level adaptive exit. This is captured now but remains unapproved and
 all production remains on the Mac Studio.
 
+## Public-content reminders
+
+- `X-LOOP-001`: create an X article after the Chapter 5 treatment and Day 7
+  comparison are complete. Its central argument is that parameter reuse can add
+  effective depth without duplicating stored weights, but cannot make the added
+  computation free.
+- `CAND-ANIM-011`: revisit for explicit production approval during Days 6–7.
+  The animation should keep one shared stack visually fixed while recurrent
+  states move through it and parameter, effective-depth, and compute counters
+  change independently.
+
+Both artifacts are reminders, not authorization to publish or render now. Their
+canonical claims must be refreshed against primary sources when work begins.
+
 ## Return point
 
 Resume this topic after Day 5 has established an ordinary decoder block. Until
