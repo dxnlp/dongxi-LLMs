@@ -133,6 +133,7 @@ they are corroborated.
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
 | `X-ATTN-KV-001` | X article | Why LLMs cache K and V—but not Q | concept approved; portable outline ready, drafting waits for canonical Chapter 4 | Mac | Day 4 attention derivation and cached/uncached verification |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac Studio | Day 2 explanation complete |
+| `ANIM-BPE-002` | Animation | Meteor corpus → counted character BPE → vocabulary subset 1–5 → encoding | local 1080p review candidate ready; user visual approval pending | Mac Studio | Verified corpus trace and explicit second-round tie preference |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac Studio | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | LLM target probability → per-token NLL → masked mean cross-entropy | approved; canonical Day 3 evidence ready for Mac production review | Mac Studio | Chapter 3, target alignment, and PyTorch verification complete |
 | `ANIM-NTP-001` | Animation | One-hot next-token supervision → `p-q` gradient → distribution learning across examples | approved; verified 70/30 trajectory ready for Mac production review | Mac Studio | Gradient verification and controlled target-frequency experiment complete |
@@ -535,6 +536,43 @@ content and legibility review.
 **Acceptance checks:** Chinese glyphs render correctly; every merge direction is
 unambiguous; the final frame is readable on a phone; no frame implies that a
 single occurrence creates a new token online.
+
+### Task packet: `ANIM-BPE-002`
+
+- User approval: direct request to create this animation on 2026-09-03.
+- Base commit: `d91f5eb466990db724437733031bed5c67cf96b1`.
+- Branch: `codex/visuals/meteor-bpe`; owner: local Mac Studio.
+- Objective: make BPE pair counting, vocabulary growth with retained
+  constituents, arbitrary Token IDs, and subsequent encoding visible.
+- Inputs: the five user-supplied strings, each once; Chapter 2; `tiny_bpe.py`;
+  the approved `STYLE_GUIDE.md` and `manim_style.py` primitives.
+- Allowed files: the meteor animation project, its reusable trace module and
+  tests, focused Day 2 artifact, and production indexes. Preserve the active
+  Day 3 learning state and the earlier BPE render.
+- Project: `visuals/animations/projects/meteor-bpe/` (brief, full trace, scene,
+  render script, review HTML, media, and metadata).
+- Evidence: unique round-1 maximum `(流, 星)` at 2; all 15 round-2 candidates
+  at 1; the declared teaching tie preference selects `(流星, 雨)`. Corpus token
+  counts 22 → 20 → 19, 17 original characters plus two merges, eight exact
+  encoding round trips, and nine passing focused BPE tests.
+- Precision: character-level BPE; fixed input frequencies; preference applies
+  only to tied maxima; displayed 1–5 are a subset of 19 illustrative IDs;
+  original vocabulary entries survive; encoding does not add merges; no claim
+  about semantic understanding follows from this tokenizer demonstration.
+- Expected outputs: 1080p H.264 MP4, 960×540 GIF, full/half PNG stills, contact
+  sheet, source/asset hashes, dependency identity, and a local review page.
+- Acceptance: values and rewrites match the trace, ties disclosed on screen,
+  normal kerning and Songti glyphs, continuous object identity, no clipped
+  frames, and legibility at 50% scale. User visual approval precedes final
+  reader-facing integration; source integration was approved on 2026-09-04.
+- Return state: local review candidate ready, 40.23 seconds at 1920×1080/30 fps;
+  nine focused tests pass. Twelve storyboard checkpoints, merge transitions,
+  full/half stills, and source/media hashes checked. Review via the project's
+  `review.html`; await user visual approval. No media published or existing
+  asset replaced. Source integration approved on 2026-09-04, excluding MP4s.
+  MP4s remain local and ignored; the GIF, stills, trace, and render command are
+  portable. Candidate ID is `CAND-ANIM-010`: the unpublished local `008` was
+  renumbered to preserve Spark's already committed attention candidate.
 
 ### Task packet: `ANIM-EMB-001`
 
