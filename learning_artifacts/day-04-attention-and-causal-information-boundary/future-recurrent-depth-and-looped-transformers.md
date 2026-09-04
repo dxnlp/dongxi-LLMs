@@ -145,7 +145,7 @@ recurrent depth is generally superior.
 
 ## Animation candidate
 
-`CAND-ANIM-010` should preserve one block's visual identity while the hidden
+`CAND-ANIM-011` should preserve one block's visual identity while the hidden
 state loops through it repeatedly. Counters for stored parameters, effective
 depth, and compute move independently. A second act can contrast fixed recurrence
 with token-level adaptive exit. This is captured now but remains unapproved and

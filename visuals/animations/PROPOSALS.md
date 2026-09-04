@@ -23,7 +23,7 @@ same proposal is not repeatedly rediscovered.
 | `CAND-ANIM-007` | Agent, automatic math trigger from learner question | Chapter 3 decoding bridge | Hold logits fixed while temperature continuously rescales their gaps: low temperature sharpens, high temperature flattens, ranking stays fixed, and exact tied maxima reveal the difference between greedy tie-breaking and sampling | discuss | Verify ratios and limiting behavior in the Day 3 notebook; likely defer or use as a compact decoding short. Production only on Mac Studio after explicit approval |
 | `CAND-ANIM-008` | Agent, automatic math trigger; approved by user | Chapter 4 | Input states → learned `Q`, `K`, and `V` projections → scaled query-key score matrix → causal mask → row-wise attention distributions → weighted value retrieval; reverse the loss gradient through a value/content path and a query-key/routing path; contrast broken scaling and masking | approved; promoted into `ANIM-ATTN-001` | Complete Mac task packet is ready; production waits for Day 4 forward, gradient, mask, detach, and chapter evidence |
 | `CAND-ANIM-009` | Agent, automatic math trigger from learner inference | Chapter 4–modern decoder bridge | Contrast the same token in two contexts to establish distinct request-local K/V states; show optional runtime retention across prefill and decoding, each transient new query reading the unchanged-prefix cache, and logical cache release at sequence completion | discuss | Verify cache shapes, cached/uncached equivalence, and lifecycle; prevent any suggestion that caching is mandatory architecture or a global per-token cache; production only on the Mac Studio after explicit approval |
-| `CAND-ANIM-010` | User topic + agent automatic math trigger | Chapter 5 frontier section | Reuse one visually identical Transformer stack for recurrent state updates; let stored-parameter, effective-depth, and compute counters diverge; then contrast fixed loops with adaptive token-level exit and visible token-space reasoning | discuss | Teach the ordinary decoder first; verify all accounting in the Day 7 controlled comparison; production only on the Mac Studio after explicit approval |
+| `CAND-ANIM-011` | User topic + agent automatic math trigger | Chapter 5 frontier section | Reuse one visually identical Transformer stack for recurrent state updates; let stored-parameter, effective-depth, and compute counters diverge; then contrast fixed loops with adaptive token-level exit and visible token-space reasoning | discuss | Teach the ordinary decoder first; verify all accounting in the Day 7 controlled comparison; production only on the Mac Studio after explicit approval |
 
 ### CAND-ANIM-002 — NLL to cross-entropy in an LLM
 
@@ -173,7 +173,7 @@ same proposal is not repeatedly rediscovered.
 - Next decision: Discuss after the perplexity lesson; if approved, Mac Studio
   decides whether it is the final act of `ANIM-CE-001` or a separate short.
 
-### CAND-ANIM-010 — Reusing depth without pretending compute is free
+### CAND-ANIM-011 — Reusing depth without pretending compute is free
 
 - Source: user topic plus agent automatic mathematics trigger
 - Proposed during: Day 4 as a future Chapter 5 module
