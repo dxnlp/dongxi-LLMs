@@ -406,7 +406,12 @@ unverified until primary architecture evidence appears.
 
 **Source material:** `ARCH-LOOP-001`,
 `learning_artifacts/day-04-attention-and-causal-information-boundary/future-recurrent-depth-and-looped-transformers.md`,
-the future Chapter 5 section, the Day 7 comparison, and `CAND-ANIM-011`.
+Geiping et al.'s [recurrent-depth paper](https://arxiv.org/abs/2502.05171),
+Bae et al.'s [*Mixture-of-Recursions*](https://arxiv.org/abs/2507.10524),
+the [Nanbeige4.2 technical report](https://arxiv.org/abs/2607.22083), the future
+Chapter 5 section, the Day 7 comparison, and `CAND-ANIM-011`. Treat
+*Mixture-of-Recursions* as the primary source for learned token-level routing,
+not as a synonym for every fixed looped Transformer.
 
 **Expected output:** An English X Article draft, 2000×800 cover, and a compact
 mechanism diagram or approved animation excerpt. A Chinese adaptation may follow

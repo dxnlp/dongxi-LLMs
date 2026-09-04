@@ -195,7 +195,9 @@ same proposal is not repeatedly rediscovered.
   separately emitted reasoning tokens.
 - Canonical source material:
   `learning_artifacts/day-04-attention-and-causal-information-boundary/future-recurrent-depth-and-looped-transformers.md`;
-  the future Chapter 5 treatment; and the planned Day 7 comparison.
+  [*Mixture-of-Recursions*](https://arxiv.org/abs/2507.10524) for adaptive
+  token-level routing; the future Chapter 5 treatment; and the planned Day 7
+  comparison.
 - Evidence status: primary papers and the architectural accounting identity are
   captured; no local implementation or controlled experiment exists yet.
 - Precision risks and required caveats: Do not say that effective depth is model
