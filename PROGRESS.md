@@ -260,6 +260,49 @@ Copy this block below the daily log heading after each session:
 - Exact next action: begin Day 4 with attention from first principles, preserving
   the distinction between forward causal visibility and backward credit flow.
 
+### Content production — `ANIM-BPE-002` — 2026-09-03, local Mac
+
+- Status: local review candidate ready; user visual approval pending. This
+  independent content lane does not alter the learning position on Spark.
+- Request: animate the user's five Chinese strings into `流`, `星`, `雨`,
+  `流星`, and `流星雨`, then show the illustrative IDs 1–5 and encoding.
+- Produced: `visuals/animations/projects/meteor-bpe/` contains the pre-execution
+  specification, full corpus trace, Manim source, renderer, review HTML, 40.23s
+  1080p/30fps MP4, GIF, full/half PNG stills, contact sheet, and hashed metadata.
+  Reusable computation lives in `src/dongxi_llms/meteor_bpe.py` with five new
+  regression tests and a focused Day 2 learning artifact.
+- Evidence: unchanged corpus frequencies; unique first pair `(流, 星)` at 2;
+  second pair `(流星, 雨)` selected by a declared preference among 15 tied
+  maxima at 1; corpus counts 22 → 20 → 19; 19 vocabulary entries retained;
+  eight exact encoding round trips. All nine focused BPE tests pass.
+- Visual checks: twelve checkpoints, merge transitions, and full/half final
+  stills reviewed; glyphs translate intact while token frames fuse. White
+  canvas, Songti SC Chinese, Arial English/numerals, minimal labels, and
+  geometry-based alignment follow the approved style.
+- Scope: character-level BPE and teaching IDs; this animation demonstrates
+  tokenizer mechanics, not neural-network learning or a limit on semantic
+  understanding. No Spark computation, publication, or replacement of an
+  existing animation. Produced on `codex/visuals/meteor-bpe`; source integration
+  approved on 2026-09-04, with MP4s kept local and ignored.
+- Book placement: Chapter 2 supporting example; trace and conceptual boundaries
+  indexed under Day 2. Integrate into the reader-facing chapter only after
+  visual approval; no change to the four signature-animation release target.
+- Exact content-lane next action: review `projects/meteor-bpe/review.html` under
+  `visuals/animations/`, focusing on pacing, pair counting, and the switch from
+  tokenizer training to encoding.
+
+### Cross-machine synchronization — 2026-09-04, local Mac
+
+- User approved committing the meteor-animation work and syncing directly with
+  `main`, excluding MP4 uploads. New MP4s are ignored; existing tracked media
+  are not removed. GIF, stills, source, tests, trace, and reproduction metadata
+  remain portable; render locally to restore the review page's video playback.
+- Reconciled the local proposal-ID collision: the unpublished meteor candidate
+  moves from `CAND-ANIM-008` to `CAND-ANIM-010`; Spark's committed attention
+  candidate retains `008`. `ANIM-BPE-002` is unchanged.
+- Preserve the remote Day 4 learning state and newer task packets. This sync
+  does not finalize visual approval or authorize public publication.
+
 ## Learning memory and production queue
 
 Detailed learner understanding is maintained by day and topic under

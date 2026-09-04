@@ -12,6 +12,7 @@
 3. [`embeddings-context-and-gradients.md`](embeddings-context-and-gradients.md)
 4. [`padding-masks-and-special-tokens.md`](padding-masks-and-special-tokens.md)
 5. [`unicode-normalization-pretokenization-and-chat-packaging.md`](unicode-normalization-pretokenization-and-chat-packaging.md)
+6. [`meteor-corpus-bpe-and-id-assignment.md`](meteor-corpus-bpe-and-id-assignment.md) — counted Chinese BPE animation follow-up; explicit ties and illustrative ID assignment.
 
 ## Current outcome
 
@@ -30,4 +31,4 @@ Day 2 work.
 ## Public-production links
 
 See `LEARNING_MEMORY.md` for task packets `X-BPE-001`, `X-EMB-001`,
-`ANIM-BPE-001`, `ANIM-EMB-001`, and `ANIM-CE-001`.
+`ANIM-BPE-001`, `ANIM-BPE-002`, `ANIM-EMB-001`, and `ANIM-CE-001`.

@@ -95,6 +95,10 @@ ffmpeg -version | head -n 1
 - `cross_entropy_curve.py`: connect the probability assigned to the correct
   token with its negative-log-likelihood penalty. This is a preview for Day 3
   and should be integrated only after the derivation is complete.
+- [`projects/meteor-bpe/`](projects/meteor-bpe/README.md): count BPE pairs in the
+  user's five Chinese corpus entries, disclose the tie leading to `流星雨`,
+  retain constituent tokens, assign the illustrative 1–5 subset, and replay
+  learned merges during encoding. Includes a local video-review page.
 
 The first Manim attempt failed on an earlier ARM host because required Cairo/X11
 development components were absent. The current Mac workflow uses the Cairo
