@@ -22,6 +22,7 @@ same proposal is not repeatedly rediscovered.
 | `CAND-ANIM-007` | Agent, automatic math trigger from learner question | Chapter 3 decoding bridge | Hold logits fixed while temperature continuously rescales their gaps: low temperature sharpens, high temperature flattens, ranking stays fixed, and exact tied maxima reveal the difference between greedy tie-breaking and sampling | discuss | Verify ratios and limiting behavior in the Day 3 notebook; likely defer or use as a compact decoding short. Production only on Mac Studio after explicit approval |
 | `CAND-ANIM-008` | Agent, automatic math trigger; approved by user | Chapter 4 | Input states → learned `Q`, `K`, and `V` projections → scaled query-key score matrix → causal mask → row-wise attention distributions → weighted value retrieval; reverse the loss gradient through a value/content path and a query-key/routing path; contrast broken scaling and masking | approved; promoted into `ANIM-ATTN-001` | Complete Mac task packet is ready; production waits for Day 4 forward, gradient, mask, detach, and chapter evidence |
 | `CAND-ANIM-009` | Agent, automatic math trigger from learner inference | Chapter 4–modern decoder bridge | Contrast the same token in two contexts to establish distinct request-local K/V states; show optional runtime retention across prefill and decoding, each transient new query reading the unchanged-prefix cache, and logical cache release at sequence completion | discuss | Verify cache shapes, cached/uncached equivalence, and lifecycle; prevent any suggestion that caching is mandatory architecture or a global per-token cache; production only on the Mac Studio after explicit approval |
+| `CAND-ANIM-010` | User topic + agent automatic math trigger | Chapter 5 frontier section | Reuse one visually identical Transformer stack for recurrent state updates; let stored-parameter, effective-depth, and compute counters diverge; then contrast fixed loops with adaptive token-level exit and visible token-space reasoning | discuss | Teach the ordinary decoder first; verify all accounting in the Day 7 controlled comparison; production only on the Mac Studio after explicit approval |
 
 ### CAND-ANIM-002 — NLL to cross-entropy in an LLM
 
@@ -170,6 +171,43 @@ same proposal is not repeatedly rediscovered.
 - Suggested destination: Chapter 3 and course site.
 - Next decision: Discuss after the perplexity lesson; if approved, Mac Studio
   decides whether it is the final act of `ANIM-CE-001` or a separate short.
+
+### CAND-ANIM-010 — Reusing depth without pretending compute is free
+
+- Source: user topic plus agent automatic mathematics trigger
+- Proposed during: Day 4 as a future Chapter 5 module
+- State: discuss
+- Learning objective: Show how one parameterized block or stack can be applied
+  repeatedly, increasing effective depth and compute without duplicating its
+  stored weights; distinguish fixed recurrence from adaptive token-level depth
+  and from visible chain-of-thought tokens.
+- Why motion is better than a static figure: The same weights must retain their
+  identity while successive hidden states revisit them. Independent counters
+  must make clear that parameter storage can stay fixed while layer applications,
+  latency, and transformation depth grow.
+- Moving objects and stable anchors: Keep the recurrent block and its parameter
+  label fixed. Move $s_0,s_1,\ldots,s_r$ through it under
+  $s_j=R(e,s_{j-1};\theta_R)$; update
+  $L_{\mathrm{effective}}=L_P+rL_R+L_C$ as $r$ changes while the recurrent
+  parameter counter remains fixed. In a second act, let token positions exit at
+  different depths under a router, then contrast hidden-state loops with
+  separately emitted reasoning tokens.
+- Canonical source material:
+  `learning_artifacts/day-04-attention-and-causal-information-boundary/future-recurrent-depth-and-looped-transformers.md`;
+  the future Chapter 5 treatment; and the planned Day 7 comparison.
+- Evidence status: primary papers and the architectural accounting identity are
+  captured; no local implementation or controlled experiment exists yet.
+- Precision risks and required caveats: Do not say that effective depth is model
+  parameter size; do not promise linear quality gains; do not call shared and
+  untied layers equivalent; do not equate latent recurrence with hidden or
+  suppressed chain-of-thought; do not present the reported Astra architecture as
+  verified.
+- Dependencies: complete the ordinary decoder, implement the optional recurrent
+  variant, and verify parameter-, compute-, and wall-clock-accounting examples.
+- Suggested destination: Chapter 5 and course site; possible later architecture
+  article only after the canonical treatment is stable.
+- Next decision: Revisit during Days 6–7. Production requires explicit learner
+  approval and remains on the Mac Studio.
 
 ## Two-way proposal mechanism
 

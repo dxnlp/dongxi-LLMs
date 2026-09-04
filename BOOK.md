@@ -44,7 +44,11 @@ The book moves through one continuous argument:
 5. **Building a Modern Decoder**
    Transformer blocks, residual streams, normalization, feed-forward layers,
    RMSNorm, RoPE, SwiGLU, GQA, QK normalization, KV caching, and `DongxiGPT`.
-   Synthesizes Days 5–7.
+   After the standard decoder is secure, a time-stamped frontier section uses
+   recurrent depth and looped Transformers to separate stored parameters,
+   effective depth, and per-token compute; it contrasts fixed stack reuse,
+   variable recurrence, adaptive token-level routing, and visible token-space
+   chain-of-thought. Synthesizes Days 5–7.
 
 ### Part II — From Base Model to Assistant
 

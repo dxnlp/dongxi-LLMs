@@ -114,6 +114,17 @@ At the start of each new day, create its directory and index. During the lesson,
 update the relevant focused topic whenever the learner states a prediction,
 demonstrates understanding, encounters a correction, or identifies an open edge.
 
+## Scheduled frontier modules
+
+| ID | Topic | Planned placement | Status | Durable source |
+|---|---|---|---|---|
+| `ARCH-LOOP-001` | Recurrent depth and looped Transformers: fixed stack reuse, variable recurrence, adaptive token-level routing, and latent versus token-space computation | Chapter 5; Days 6–7 | scheduled; primary sources captured; Astra attribution remains unverified | `learning_artifacts/day-04-attention-and-causal-information-boundary/future-recurrent-depth-and-looped-transformers.md` |
+
+This queue preserves worthwhile, time-sensitive architecture topics without
+expanding the active learning day. Recheck primary sources when the module is
+taught; keep model-vendor rumors out of the factual architecture narrative until
+they are corroborated.
+
 ## Public-content production queue
 
 | ID | Type | Topic | Status | Preferred machine | Dependency |

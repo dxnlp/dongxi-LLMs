@@ -9,9 +9,9 @@ This file is the operational source of truth for resuming work. Update it at the
 - Status: in progress
 - Current focus: attention and the causal information boundary from first
   principles
-- Next action: develop an exact mental model of queries, keys, and values before
-  deriving scaled dot-product attention
-- Last updated: 2026-09-03
+- Next action: implement single-head scaled causal attention, verify its
+  gradients, and diagnose deliberately broken scaling and masking variants
+- Last updated: 2026-09-04
 
 ## Four-week tracker
 
@@ -67,6 +67,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | D013 | Create and actively update `learning_artifacts/day-NN-topic/` during each lesson. | Deep discussions should be durable and reusable by topic and day, while `LEARNING_MEMORY.md` remains a compact index and production queue. |
 | D014 | Use a two-way, approval-gated animation proposal loop during learning and course development. | Strong mechanism animations should be surfaced when motion adds explanatory value, while explicit learner approval and the four-animation `v0.1` target prevent silent scope growth. |
 | D015 | Use interactive mechanism notebooks for important mathematical ideas. | The learner understands mathematics best by predicting, implementing, perturbing, and interpreting mechanisms in code while retaining deep conceptual discussion. |
+| D016 | Integrate emerging architectures through time-stamped frontier modules with explicit evidence tiers. | The course should remain current without presenting papers, implementation reports, secondary reporting, and vendor rumors as equally established facts. |
 
 ## End-of-day update template
 

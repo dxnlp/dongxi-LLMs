@@ -117,11 +117,23 @@ Build a minimal decoder-only Transformer and make it overfit one batch.
 
 Learn RMSNorm, RoPE, SwiGLU, GQA, QK normalization, KV caching, and parameter/FLOP/memory calculations.
 
-Evolve the minimal model into `DongxiGPT`; define candidate 50M, 100M, and 150M configurations; map the design to Qwen3.
+Evolve the minimal model into `DongxiGPT`; define candidate 50M, 100M, and 150M
+configurations; map the design to Qwen3. Then introduce recurrent depth as a
+frontier design axis: distinguish fixed shared-stack loops, variable recurrence,
+adaptive token-level routing, and visible chain-of-thought; account separately
+for stored parameters, effective block applications, compute, latency, and
+memory. Treat vendor architecture reports as unverified until primary evidence
+supports them.
 
 ### Day 7 — Architecture synthesis
 
 Explain and defend every important tensor shape and architecture choice.
+
+After the ordinary `DongxiGPT` baseline works, specify a small optional
+shared-block recurrence comparison. Keep parameter-matched, compute-matched, and
+wall-clock-matched claims separate; record effective depth, measured latency,
+peak memory, validation loss, and fixed samples. The experiment demonstrates a
+mechanism and trade-off, not the general superiority of recurrent depth.
 
 Publishable outputs:
 

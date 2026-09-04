@@ -123,6 +123,10 @@ Opened topics:
 6. [`attention-output-as-value-mixture.md`](attention-output-as-value-mixture.md)
 7. [`attention-weights-are-not-explanations.md`](attention-weights-are-not-explanations.md)
 8. [`how-loss-trains-qkv.md`](how-loss-trains-qkv.md)
+9. [`future-recurrent-depth-and-looped-transformers.md`](future-recurrent-depth-and-looped-transformers.md)
+
+The ninth artifact preserves a learner-requested frontier topic for Days 6–7.
+It is a forward link, not an expansion of the Day 4 completion contract.
 
 ## Animation opportunity
 
