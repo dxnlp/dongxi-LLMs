@@ -37,3 +37,5 @@ sessions as their chapters become active rather than adding empty placeholders.
   gradients, and a tiny learned distribution
 - [`day-04/`](day-04/) — scaled causal attention, gradient and failure diagnosis,
   and KV-cache equivalence
+- [`day-05/`](day-05/) — planned multi-head attention, residual/normalization/MLP,
+  and tiny-decoder integration sessions

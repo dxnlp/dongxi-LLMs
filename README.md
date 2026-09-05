@@ -8,8 +8,8 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
-- Current position: complete Day 4 chapter and companion materials available;
-  live notebook practice deferred; Day 5 decoder concepts are next
+- Current position: Day 5 in progress — assembling a decoder-only Transformer;
+  Day 4 material is complete and its live notebook practice is deferred
 - Primary machine: NVIDIA DGX Spark
 - Primary model family: Qwen3
 

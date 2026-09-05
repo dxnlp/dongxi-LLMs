@@ -5,13 +5,12 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 4
+- Active day: Day 5
 - Status: in progress
-- Current focus: Day 4 materials complete; live notebook practice deferred by
-  learner request. Chapter coverage does not depend on practice completion.
-- Next action: continue with Day 5's decoder-only Transformer, beginning with
-  why multiple attention heads and a residual stream are needed. Day 4 practice
-  can be revisited later; its mastery contract is not marked satisfied.
+- Current focus: Day 5 outline and the assembly of a decoder-only Transformer.
+  Day 4 material is complete; live practice remains deferred.
+- Next action: explain why multiple attention heads are useful, then trace their
+  split, independent retrievals, concatenation, and output projection.
 - Last updated: 2026-09-05
 
 ## Four-week tracker
@@ -24,7 +23,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-tokenizer-mechanics.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
 | 3 | Probabilities and next-token loss | complete | Chapter: `book/chapters/03-learning-the-next-token.md`; three interactive notebooks; report: `experiments/reports/2026-09-03-next-token-distribution.md` |
 | 4 | Attention from first principles | in progress | Complete Chapter 4, 12 solutions, three notebooks, two reports; hands-on practice deferred, mastery not fully assessed |
-| 5 | Decoder-only Transformer | pending | — |
+| 5 | Decoder-only Transformer | in progress | Outline: `learning_artifacts/day-05-decoder-only-transformer/README.md`; three notebook sessions planned |
 | 6 | Modern architecture design | pending | — |
 | 7 | Architecture synthesis | pending | — |
 | 8 | Pretraining data and recipe | pending | — |
