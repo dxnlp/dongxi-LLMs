@@ -7,11 +7,11 @@ This file is the operational source of truth for resuming work. Update it at the
 - Active release: `v0.1`
 - Active day: Day 4
 - Status: in progress
-- Current focus: attention and the causal information boundary from first
-  principles
-- Next action: guide the learner through the ready notebook
-  `notebooks/day-04/01_causal_attention_forward.ipynb`, beginning with
-  mask-before-softmax and prefix-invariance predictions
+- Current focus: Day 4 materials complete; live notebook practice deferred by
+  learner request. Chapter coverage does not depend on practice completion.
+- Next action: continue with Day 5's decoder-only Transformer, beginning with
+  why multiple attention heads and a residual stream are needed. Day 4 practice
+  can be revisited later; its mastery contract is not marked satisfied.
 - Last updated: 2026-09-05
 
 ## Four-week tracker
@@ -23,7 +23,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 1 | Laboratory and reproducibility | complete | Chapter: `book/chapters/01-evidence-before-optimization.md`; evidence: `experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md` |
 | 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-tokenizer-mechanics.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
 | 3 | Probabilities and next-token loss | complete | Chapter: `book/chapters/03-learning-the-next-token.md`; three interactive notebooks; report: `experiments/reports/2026-09-03-next-token-distribution.md` |
-| 4 | Attention from first principles | in progress | Learning index: `learning_artifacts/day-04-attention-and-causal-information-boundary/README.md` |
+| 4 | Attention from first principles | in progress | Complete Chapter 4, 12 solutions, three notebooks, two reports; hands-on practice deferred, mastery not fully assessed |
 | 5 | Decoder-only Transformer | pending | — |
 | 6 | Modern architecture design | pending | — |
 | 7 | Architecture synthesis | pending | — |
@@ -316,6 +316,23 @@ Copy this block below the daily log heading after each session:
   shared-prefix prediction, then Q/K/V shapes and mask placement.
 - Remaining: gradient session, cache session, and Chapter 4 synthesis with
   worked solutions. This session's evidence will be integrated at that synthesis.
+
+### Day 04 — 2026-09-05 — Complete chapter and companion materials
+
+- User requested full chapter coverage, including topics beyond live learning
+  progress, and deferred interactive notebook practice.
+- Produced complete Chapter 4, twelve worked solutions, notebook sessions 2–3,
+  reusable gradients/scaling/cache examples, and a specification/report pair.
+- Coverage map: `learning_artifacts/day-04-attention-and-causal-information-boundary/chapter-coverage-and-evidence.md`.
+- Verification: 26 repository tests pass; both new notebooks validate and execute
+  all 12 code cells each in fresh kernels. Earlier session 1 reference already
+  verified; locally edited learner notebooks are preserved.
+- Evidence: chain-rule/autograd error 2.22e-16; finite-difference error 1.83e-10;
+  verified mask/detach boundaries; paired scaling simulation; cached/full-prefix
+  agreement and stale-prefix counterexample. See the linked reports for limits.
+- Book and content sources are ready. No learner mastery, training run, serving
+  benchmark, animation render, or article publication is claimed.
+- Next action: Day 5 conceptual lesson on multi-head attention and residual flow.
 
 ## Learning memory and production queue
 

@@ -163,3 +163,17 @@ Day 3 contributes to:
   vocabulary-versus-sequence-length trade-off;
 - approved probability, cross-entropy, and next-token animation packets in
   `LEARNING_MEMORY.md`, with production retained for the Mac Studio.
+
+## Day 4 placement
+
+Day 4 contributes the complete Chapter 4 and twelve worked solutions:
+
+- `book/chapters/04-attention-and-the-causal-information-boundary.md`;
+- `book/solutions/04-attention-and-the-causal-information-boundary.md`;
+- three sessions under `notebooks/day-04/`, including adjacent runnable answers;
+- transparent attention, gradient, scaling, and cache implementations, tests,
+  and two reports under `experiments/reports/2026-09-05-*`;
+- canonical sources for the attention animation and attention/KV article.
+
+The chapter covers the complete Day 4 outline independently of learner practice.
+Material is ready; hands-on practice was deferred on 2026-09-05.

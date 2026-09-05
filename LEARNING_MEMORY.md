@@ -60,6 +60,9 @@ dependencies, preferred machine, and current status.
   mechanisms. Use the course-wide mechanism → perturbation/failure →
   integration/evidence pathway in `docs/NOTEBOOK_CURRICULUM.md`; refine and build
   the sessions as each chapter becomes active.
+- When requesting a complete chapter, wants all required topics developed for
+  a new reader, independently of live learning progress. On 2026-09-05 deferred
+  Day 4 notebook practice while requesting the complete chapter and companions.
 - The DGX Spark notebook kernel is `Python (DGX Spark Native)`, backed by
   `/home/dongxi/dgx-spark-dongxi/.venv/bin/python`. Recreate it with the platform
   repository's `scripts/setup_jupyter.sh`; it adds locked Jupyter components to
@@ -119,10 +122,11 @@ At the start of each new day, create its directory and index. During the lesson,
 update the relevant focused topic whenever the learner states a prediction,
 demonstrates understanding, encounters a correction, or identifies an open edge.
 
-Day 4 session 1 is ready at
-`notebooks/day-04/01_causal_attention_forward.ipynb`: all 13 code cells and
-three focused tests verified on 2026-09-05. Start with the shared-prefix
-prediction; learner checkpoints remain pending. Sessions 2–3 remain planned.
+Day 4 has a complete chapter, twelve worked solutions, three reference notebooks,
+and verified forward/gradient/scaling/cache evidence. See
+`learning_artifacts/day-04-attention-and-causal-information-boundary/chapter-coverage-and-evidence.md`.
+Live practice is deferred at the learner's request. Continue conceptual study
+with Day 5; do not infer mastery from the agent's notebook execution.
 
 ## Scheduled frontier modules
 
@@ -141,7 +145,7 @@ they are corroborated.
 |---|---|---|---|---|---|
 | `X-BPE-001` | X article | What is a token? Unicode → BPE → model IDs | bilingual local packages prepared; editorial review pending | Mac | Chapter 2 tokenizer-mechanics enrichment complete |
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
-| `X-ATTN-KV-001` | X article | Why LLMs cache K and V—but not Q | concept approved; portable outline ready, drafting waits for canonical Chapter 4 | Mac | Day 4 attention derivation and cached/uncached verification |
+| `X-ATTN-KV-001` | X article | Why LLMs cache K and V—but not Q | ready for Mac drafting | Mac | Chapter 4 and toy cached/uncached verification complete; no serving benchmark claimed |
 | `X-LOOP-001` | X article | Looped Transformers: more effective depth without more stored weights—but not free compute | future creation reminder; drafting waits for Days 6–7 | Mac | Chapter 5 frontier treatment, refreshed primary-source check, and controlled recurrence comparison |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac Studio | Day 2 explanation complete |
 | `ANIM-BPE-002` | Animation | Meteor corpus → counted character BPE → vocabulary subset 1–5 → encoding | local 1080p review candidate ready; user visual approval pending | Mac Studio | Verified corpus trace and explicit second-round tie preference |
@@ -149,7 +153,7 @@ they are corroborated.
 | `ANIM-CE-001` | Animation | LLM target probability → per-token NLL → masked mean cross-entropy | approved; canonical Day 3 evidence ready for Mac production review | Mac Studio | Chapter 3, target alignment, and PyTorch verification complete |
 | `ANIM-NTP-001` | Animation | One-hot next-token supervision → `p-q` gradient → distribution learning across examples | approved; verified 70/30 trajectory ready for Mac production review | Mac Studio | Gradient verification and controlled target-frequency experiment complete |
 | `ANIM-LOGLOSS-001` | Animation | Why `-log p_target`: additive sequence surprise, confident-error gradients, and proper probability reporting | approved; canonical derivations and controlled evidence ready for Mac review | Mac Studio | Chapter 3 chain rule, gradient, and expected-scoring treatment complete |
-| `ANIM-ATTN-001` | Animation | How loss trains attention routing and value content | approved; complete Mac task packet ready, production waits for Day 4 verification | Mac Studio | Chapter 4 synthesis plus forward, gradient, mask, and autograd evidence |
+| `ANIM-ATTN-001` | Animation | How loss trains attention routing and value content | approved; canonical material and numerical evidence ready for Mac production | Mac Studio | Chapter 4, forward/gradient checks, finite differences, and mask/detach evidence complete |
 
 ## Production-system tasks
 
@@ -385,6 +389,11 @@ Transformer mathematics versus runtime policy. Cached and uncached outputs must
 be verified equivalent within the declared numerical tolerance before the
 article calls that behavior demonstrated.
 
+**Dependency update — 2026-09-05:** Chapter 4 and its solutions are complete.
+`experiments/reports/2026-09-05-attention-gradients-cache.md` verifies the toy
+cache example. Use the first-layer versus deeper-layer distinction explicitly;
+no speedup benchmark is implied. The packet is ready for Mac drafting.
+
 ### Task packet: `X-LOOP-001`
 
 **Working title:** Looped Transformers: More Depth Without More Weights—but Not
@@ -516,8 +525,9 @@ its own correct-map labels.
 `learning_artifacts/day-04-attention-and-causal-information-boundary/attention-output-as-value-mixture.md`;
 `learning_artifacts/day-04-attention-and-causal-information-boundary/attention-weights-are-not-explanations.md`;
 `learning_artifacts/day-04-attention-and-causal-information-boundary/how-loss-trains-qkv.md`;
-the future canonical Chapter 4, worked solutions, Day 4 notebook, reusable
-source, tests, and experiment report.
+`book/chapters/04-attention-and-the-causal-information-boundary.md`, its worked
+solutions, all three Day 4 notebooks, reusable source and tests, and both
+`experiments/reports/2026-09-05-*` attention reports.
 
 **Evidence dependency:** Do not freeze displayed numerical values or begin final
 rendering until the manual forward pass agrees with a trusted PyTorch reference,
@@ -525,6 +535,11 @@ analytical gradients agree with autograd and finite differences under declared
 tolerances, forbidden future edges are verified zero, and detach experiments
 confirm the two branches. Chapter 4 must be synthesized before final editorial
 review.
+
+**Dependency update — 2026-09-05:** All preceding evidence requirements are
+satisfied by the complete chapter and the two attention reports. Mac production
+can use the verified fixtures; preserve their dtype, shapes, and evidence
+boundaries when choosing displayed values.
 
 **Expected outputs:** Editable Manim source, 16:9 H.264 MP4, lightweight GIF
 preview, one Chapter 4 still, exact render command, Python/Manim revision

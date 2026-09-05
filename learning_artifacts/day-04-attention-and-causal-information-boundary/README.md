@@ -1,7 +1,7 @@
 # Day 4 — Attention and the Causal Information Boundary
 
 - Date opened: 2026-09-03
-- Day status: in progress
+- Day status: material complete; live practice deferred, mastery not fully assessed
 - Book destination: `book/chapters/04-attention-and-the-causal-information-boundary.md`
 - Required build: derive and implement single-head scaled dot-product attention
   without `nn.MultiheadAttention`, inspect attention weights and gradients, and
@@ -74,6 +74,13 @@ The detailed three-session plan is
 attention forward mechanics, gradient and broken-variant diagnosis, and KV-cache
 equivalence. The first session begins with the current mask-ordering question.
 
+All three reference notebooks are now available. The complete
+[chapter](../../book/chapters/04-attention-and-the-causal-information-boundary.md),
+[twelve worked solutions](../../book/solutions/04-attention-and-the-causal-information-boundary.md),
+and [coverage/evidence map](chapter-coverage-and-evidence.md) address every topic
+in the Day 4 outline. Historical topic entries below preserve earlier discussion
+states; use the coverage map for current verification and remaining learning gaps.
+
 The first-class Day 4 notebook should let the learner:
 
 - predict which keys a hand-designed query should retrieve;
@@ -129,6 +136,7 @@ Opened topics:
 7. [`attention-weights-are-not-explanations.md`](attention-weights-are-not-explanations.md)
 8. [`how-loss-trains-qkv.md`](how-loss-trains-qkv.md)
 9. [`future-recurrent-depth-and-looped-transformers.md`](future-recurrent-depth-and-looped-transformers.md)
+10. [`chapter-coverage-and-evidence.md`](chapter-coverage-and-evidence.md)
 
 The ninth artifact preserves a learner-requested frontier topic for Days 6–7.
 It is a forward link, not an expansion of the Day 4 completion contract.
@@ -141,5 +149,5 @@ the causal mask removes forbidden edges before row-wise softmax; normalized
 weights transport value vectors into new contextual states; and backward credit
 splits into value/content and query-key/routing branches. The learner approved
 the concept and it is promoted into `ANIM-ATTN-001` with a complete task packet
-in `LEARNING_MEMORY.md`. Production waits for Day 4 executable evidence and
-belongs exclusively on the Mac Studio.
+in `LEARNING_MEMORY.md`. Chapter and executable evidence are now complete;
+production belongs exclusively on the Mac Studio.

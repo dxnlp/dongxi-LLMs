@@ -8,8 +8,8 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
-- Current position: Day 4 in progress — attention and the causal information
-  boundary from first principles
+- Current position: complete Day 4 chapter and companion materials available;
+  live notebook practice deferred; Day 5 decoder concepts are next
 - Primary machine: NVIDIA DGX Spark
 - Primary model family: Qwen3
 

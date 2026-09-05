@@ -125,6 +125,12 @@ For every learning day:
    explicitly record why its evidence will be integrated during a named later
    synthesis day. “No course content” is not the default.
 
+When the learner requests a complete chapter, cover the full assigned outline,
+including topics not yet reached in live discussion. Write for a new reader and
+include the required derivations, examples, executable companions, exercises,
+solutions, and evidence boundaries. Keep learner progress and deferred practice
+in the trackers; do not use them to limit the chapter's subject coverage.
+
 Continuously check book-level coherence: chapter order, prerequisite flow,
 terminology, notation, repeated explanations, pacing, and whether each experiment
 advances the book's central argument.
