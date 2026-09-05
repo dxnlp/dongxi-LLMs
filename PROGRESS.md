@@ -9,10 +9,10 @@ This file is the operational source of truth for resuming work. Update it at the
 - Status: in progress
 - Current focus: attention and the causal information boundary from first
   principles
-- Next action: build and guide
+- Next action: guide the learner through the ready notebook
   `notebooks/day-04/01_causal_attention_forward.ipynb`, beginning with
   mask-before-softmax and prefix-invariance predictions
-- Last updated: 2026-09-04
+- Last updated: 2026-09-05
 
 ## Four-week tracker
 
@@ -305,6 +305,17 @@ Copy this block below the daily log heading after each session:
   candidate retains `008`. `ANIM-BPE-002` is unchanged.
 - Preserve the remote Day 4 learning state and newer task packets. This sync
   does not finalize visual approval or authorize public publication.
+
+### Day 04 — 2026-09-05 — First attention notebook ready
+
+- Prepared `notebooks/day-04/01_causal_attention_forward.ipynb` with adjacent
+  runnable solutions and optional learner implementations.
+- Verified 13 code cells in a fresh kernel and three focused regression tests.
+  Report: `experiments/reports/2026-09-05-causal-attention-forward.md`.
+- Learner has not yet completed the notebook checkpoints. Begin with the
+  shared-prefix prediction, then Q/K/V shapes and mask placement.
+- Remaining: gradient session, cache session, and Chapter 4 synthesis with
+  worked solutions. This session's evidence will be integrated at that synthesis.
 
 ## Learning memory and production queue
 

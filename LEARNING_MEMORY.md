@@ -119,6 +119,11 @@ At the start of each new day, create its directory and index. During the lesson,
 update the relevant focused topic whenever the learner states a prediction,
 demonstrates understanding, encounters a correction, or identifies an open edge.
 
+Day 4 session 1 is ready at
+`notebooks/day-04/01_causal_attention_forward.ipynb`: all 13 code cells and
+three focused tests verified on 2026-09-05. Start with the shared-prefix
+prediction; learner checkpoints remain pending. Sessions 2–3 remain planned.
+
 ## Scheduled frontier modules
 
 | ID | Topic | Planned placement | Status | Durable source |

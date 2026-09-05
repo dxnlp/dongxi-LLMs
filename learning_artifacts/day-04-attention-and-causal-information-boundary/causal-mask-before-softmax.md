@@ -4,7 +4,8 @@
 - Date opened: 2026-09-03
 - Status: introduced
 - Book destination: Chapter 4, causal masking and row-wise normalization
-- Related evidence: planned Day 4 attention notebook and broken-mask experiment
+- Related evidence: `notebooks/day-04/01_causal_attention_forward.ipynb` and
+  `experiments/reports/2026-09-05-causal-attention-forward.md`
 - Related production tasks: `CAND-ANIM-008`
 
 ## Questions that drove the discussion
@@ -103,6 +104,13 @@ to satisfy the declared numerical tolerance. Mask orientation and broadcasting
 remain common implementation failure modes.
 
 ## Open edges
+
+On 2026-09-05 the reference notebook and three focused tests verified forward
+mask placement, prefix invariance, both broken variants, and post-mask
+renormalization's finite-precision failure. Learner interpretation remains
+pending; the agent's execution is not evidence of learner mastery. These
+examples extend the existing `ANIM-ATTN-001` mask sequence without creating a
+separate animation task.
 
 - Distinguish causal masks from padding masks and Day 3 loss masks.
 - Verify lower-triangular orientation for explicit tensor shapes.

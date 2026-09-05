@@ -8,7 +8,7 @@ visible. Multi-head integration and a complete decoder block remain in Chapter 5
 
 | Session | Deep question | Primary mechanism | Deliberate perturbation | Evidence state |
 |---|---|---|---|---|
-| `01_causal_attention_forward.ipynb` | Where must the causal boundary be imposed so the future cannot influence even the competition among past tokens? | $QK^\top/\sqrt{d_k}$, pre-softmax mask, row-wise softmax, $AV$, and prefix invariance | Compare correct masking with zeroing weights after softmax and replacing forbidden scores with zero | planned next |
+| [`01_causal_attention_forward.ipynb`](01_causal_attention_forward.ipynb) | Where must the causal boundary be imposed so the future cannot influence even the competition among past tokens? | $QK^\top/\sqrt{d_k}$, pre-softmax mask, row-wise softmax, $AV$, and prefix invariance | Compare correct masking with zeroing weights after softmax and replacing forbidden scores with zero | ready; all 13 code cells verified, learner session pending |
 | `02_attention_gradients_and_failures.ipynb` | How can one next-token loss teach both where to retrieve and what content to transmit? | gradients through values, softmax routing, Q/K scores, and projection matrices | Remove scaling as $d_k$ grows; detach routing or value branches; inspect forbidden-edge gradients | planned |
 | `03_kv_cache_equivalence.ipynb` | Why may a runtime retain past K/V without changing the model's mathematical result? | causal prefix immutability, prefill, incremental decode, per-layer cache growth, and equality checks | Reuse K/V from a different prefix or modify a cached prefix and expose invalid reuse | planned |
 
