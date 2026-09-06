@@ -11,6 +11,86 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### Chapter 5 notebook evidence update — 2026-09-06
+
+Source: agent automatic mathematics check while fulfilling the learner's request
+to build the entire Chapter 5 notebook pathway. All eleven reference notebooks
+execute successfully; evidence is in
+`experiments/reports/2026-09-06-decoder-notebooks.md`.
+
+- `CAND-ANIM-012`: head splitting, independent/vectorized agreement, head ablation,
+  and causal invariance now have executable examples in Day 5 notebook 02.
+- `CAND-ANIM-013`: zero-branch identity, direct/branch gradient sum, cancellation,
+  and pre/post-norm contrast now have examples in Day 5 notebooks 03–04.
+- `CAND-ANIM-011`: optional Day 7 notebook verifies fixed shared-block outputs,
+  gradient accumulation, parameter/application accounting, and distinct K/V
+  states across applications. This is not the planned trained architecture
+  comparison or an adaptive-routing implementation. `X-LOOP-001` remains queued.
+- Reuse `ANIM-EMB-001` and `ANIM-ATTN-001` for the embedding and attention paths
+  rather than duplicating their existing storyboards.
+
+### CAND-ANIM-014 — Centering, scaling, and the residual bypass
+
+- Source: agent, automatic math trigger, 2026-09-06; Chapter 5.
+- State: discuss; production not approved.
+- Mathematics: LN(x)=gamma*(x-mean(x))/sqrt(var(x)+eps)+beta;
+  RMSNorm(x)=gamma*x/sqrt(mean(x*x)+eps).
+- Motion: keep one position's feature vector together; show mean subtraction,
+  scale normalization, then learned affine change. Contrast RMS scaling without
+  centering. Zoom out to pre/post-norm placement and the residual bypass.
+- Precision: feature axis, not time; epsilon prevents exact scale invariance;
+  affine outputs need not have zero mean/unit variance. Wrong time-axis
+  normalization can leak the future despite a valid attention mask.
+- Evidence: Day 5 notebook 04 and Day 6 notebook 01 forward/backward references,
+  constant-vector and wrong-axis controls. Canonical source: Chapter 5 lab.
+- Dependency: learner approval and final storyboard; production on Mac Studio.
+
+### CAND-ANIM-015 — Nonlinear and gated feature transformations
+
+- Source: agent, automatic math trigger, 2026-09-06; Chapter 5.
+- State: discuss; production not approved.
+- Mathematics: down(GELU(up(x))) versus down(SiLU(gate(x))*up(x)); removing
+  nonlinearity collapses two affine layers, including their combined bias.
+- Motion: expand one position's features, transform them, and contract. Reveal
+  a second gate branch and elementwise multiplication; zero it and watch the
+  bias-free output disappear. Keep token positions fixed throughout.
+- Precision: SiLU is not a probability; three matrices alter parameter budgets;
+  isolated MLPs do not directly mix tokens but can read contextual input states.
+- Evidence: Day 5 notebook 05 and Day 6 notebook 01, affine-collapse and
+  positionwise-gradient checks. No trained quality ranking.
+- Dependency: learner approval and canonical storyboard; render on Mac Studio.
+
+### CAND-ANIM-016 — Relative angles and a cache position mistake
+
+- Source: agent, automatic math trigger, 2026-09-06; Chapter 5.
+- State: discuss; production not approved.
+- Mathematics: R(theta)(a,b)=(a*cos(theta)-b*sin(theta),a*sin(theta)+b*cos(theta));
+  (R_m q) dot (R_n k) = q dot (R_(n-m) k).
+- Motion: rotate coordinate pairs while preserving length; shift both positions
+  together and keep their dot product fixed. Retain old rotated keys in a cache;
+  contrast correct continuing query positions with a mistaken restart at zero.
+- Precision: adjacent-pair toy layout, base 10,000; not every checkpoint layout.
+  Fixed-vector geometry does not establish long-context generalization.
+- Evidence: Day 6 notebook 02 norm/relative-position/gradcheck tests and full
+  decoder cached replay with an intentionally wrong offset.
+- Dependency: learner approval; coordinate with the cache candidate; Mac only.
+
+### CAND-ANIM-017 — Many queries, compact shared keys and values
+
+- Source: agent, automatic math trigger, 2026-09-06; Chapter 5.
+- State: discuss; production not approved.
+- Mathematics: Hq/Hkv query heads share each KV head; logical cache payload
+  equals 2*layers*batch*Hkv*length*head_width*bytes_per_element.
+- Motion: retain four query distributions while KV stores contract from four
+  to two to one head. Track source sharing, gradient accumulation, and compact
+  cache bytes independently from query attention arithmetic.
+- Precision: grouped sharing is not dropping query heads; logical payload is not
+  allocator memory or measured speed. The teaching kernel expands KV temporarily.
+- Evidence: Day 6 notebook 03 grouped/reference forward and backward checks,
+  MHA/MQA endpoints, compact cache bytes, and analytical parameter agreement.
+- Dependency: learner approval; consider extending the existing cache candidate
+  rather than commissioning a separate film; production on Mac Studio.
+
 ### CAND-ANIM-013 — Attention as an update to the residual stream
 
 - Source: agent, automatic mathematics trigger, 2026-09-06
@@ -25,7 +105,7 @@ same proposal is not repeatedly rediscovered.
   state, not always the original embedding. The identity path does not guarantee
   information preservation or prevent all gradient cancellation.
 - Evidence: analytical identity only; verify forward zero-update and backward
-  examples in planned notebook 2 before rendering.
+  examples in planned `day-05/03_residual_stream.ipynb` before rendering.
 - Source: `learning_artifacts/day-05-decoder-only-transformer/residual-stream-and-attention-updates.md`.
 - Production: Mac Studio after explicit approval; consider scope alongside the
   existing multi-head candidate rather than assuming an additional film.

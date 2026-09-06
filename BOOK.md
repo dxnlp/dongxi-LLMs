@@ -177,3 +177,20 @@ Day 4 contributes the complete Chapter 4 and twelve worked solutions:
 
 The chapter covers the complete Day 4 outline independently of learner practice.
 Material is ready; hands-on practice was deferred on 2026-09-05.
+
+## Chapter 5 executable companion placement
+
+On 2026-09-06 the learner requested the full notebook sequence before guided
+study. Seven baseline sessions, three modern-architecture sessions, and one
+optional recurrent-depth session are built and reference-verified under
+`notebooks/day-05/`, `day-06/`, and `day-07/`.
+
+- Reader route: `book/labs/05-building-a-modern-decoder.md`.
+- Solution guide: `book/solutions/05-decoder-notebook-solutions.md`; runnable
+  answers are adjacent to each exercise in all eleven notebooks.
+- Evidence: `experiments/reports/2026-09-06-decoder-notebooks.md`.
+- Reusable implementation: `src/dongxi_llms/decoder_lab.py` and its tests.
+
+Integrate this companion's verified mechanisms into the complete Chapter 5
+narrative at the Day 7 synthesis. Notebook readiness does not complete learner
+practice, an architecture defense, or a trained recurrent-depth comparison.

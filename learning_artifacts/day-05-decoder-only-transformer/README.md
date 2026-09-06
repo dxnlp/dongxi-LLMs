@@ -1,7 +1,8 @@
 # Day 5 — The Decoder-Only Transformer
 
 - Opened: 2026-09-05
-- Status: in progress; outline introduced, implementation not yet started
+- Status: in progress; eleven companion notebooks built and reference-verified;
+  live layer-by-layer practice not yet started
 - Book destination: Chapter 5, Building a Modern Decoder (Days 5–7)
 - Central question: how do attention, feature transformations, and a persistent
   representation combine into a trainable next-token model?
@@ -29,13 +30,26 @@
 
 ## Planned companion sessions
 
-See `notebooks/day-05/README.md`: multiple heads, residual/normalization/MLP
-interventions, and end-to-end tiny-decoder integration. Each notebook will
-include adjacent runnable solutions and explanations. Live notebook practice
-is optional for the current discussion; complete material remains part of the
-course deliverable.
+On 2026-09-06 the learner explicitly requested hands-on sessions for each
+important architecture component. The expanded canonical design is
+`notebooks/day-05/README.md`: seven baseline sessions, three modern-architecture
+sessions across Days 6–7, and one optional recurrent-depth extension. Residuals,
+LayerNorm, and MLPs now each have their own baseline notebook. Each includes an
+implementation, controlled intervention, adjacent runnable solution, explanation,
+and acceptance checks. At the learner's subsequent explicit request, all eleven
+were built and executed in fresh kernels on 2026-09-06. See
+`experiments/reports/2026-09-06-decoder-notebooks.md` and
+`book/labs/05-building-a-modern-decoder.md`.
+
+The Chapter 4 conceptual review reached projection-matrix gradients before this
+transition. Its hands-on practice remains deferred; no additional mastery claim
+is inferred. Next: open the embeddings/positions notebook, then guide the
+learner through the component sequence toward a trainable decoder.
 
 ## Boundaries and completion evidence
+
+Implementation record:
+[`notebook-pathway-and-evidence.md`](notebook-pathway-and-evidence.md).
 
 The baseline uses ordinary multi-head attention, LayerNorm, a GELU MLP, learned
 absolute positions, and causal next-token loss. RMSNorm, RoPE, SwiGLU, GQA,

@@ -8,7 +8,8 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
-- Current position: Day 4 conceptual review before proceeding with Day 5;
+- Current position: Day 5 layer-by-layer decoder study; eleven Chapter 5
+  companion notebooks are built and reference-verified;
   Day 4 material is complete and its live notebook practice is deferred
 - Primary machine: NVIDIA DGX Spark
 - Primary model family: Qwen3

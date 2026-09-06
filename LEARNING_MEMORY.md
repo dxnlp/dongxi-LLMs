@@ -126,10 +126,17 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 Day 4 has a complete chapter, twelve worked solutions, three reference notebooks,
 and verified forward/gradient/scaling/cache evidence. See
 `learning_artifacts/day-04-attention-and-causal-information-boundary/chapter-coverage-and-evidence.md`.
-Live notebook practice is deferred. On 2026-09-06 the learner requested returning
-to Day 4 conceptual study before Day 5. Resume with causal prefix invariance
-and the difference between forward context and supervision. Do not infer mastery
-from the agent's notebook execution.
+Live notebook practice is deferred. On 2026-09-06 the learner returned to Day 4
+conceptual study, reaching backward credit into the Q/K/V projection matrices,
+then requested a layer-by-layer Chapter 5 hands-on pathway. Resume from
+`notebooks/day-05/README.md`: seven baseline notebooks, three modern sessions
+across Days 6–7, and optional recurrence. The learner then requested building
+all notebooks before studying them one by one. All eleven are now created and
+reference-verified (93 code cells, 38 repository tests). Residuals, normalization,
+and MLPs have separate baseline sessions with adjacent solutions. Companion lab:
+`book/labs/05-building-a-modern-decoder.md`; report:
+`experiments/reports/2026-09-06-decoder-notebooks.md`. Resume at notebook 01.
+Do not infer mastery from explanations or agent notebook execution.
 
 ## Scheduled frontier modules
 

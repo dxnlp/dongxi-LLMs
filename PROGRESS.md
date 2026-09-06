@@ -5,14 +5,17 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 4 (review before Day 5)
+- Active day: Day 5 (Chapter 5 notebook pathway ready)
 - Status: in progress
-- Current focus: Chapter 4 single-head attention gradients. The learner asked
-  to remain in Chapter 4 after the discussion moved prematurely into Chapter 5.
-- Next action: trace downstream loss through O=AV, row-wise masked softmax,
-  and QK^T/sqrt(d_k), then derive X^T G_Q, X^T G_K, and X^T G_V for the
-  projection matrices. Other review checkpoints remain open; do not resume
-  residual/normalization topics until the Chapter 4 discussion is consolidated.
+- Current focus: learner-requested eleven-notebook Chapter 5 pathway built and
+  reference-verified; ready for guided hands-on study.
+  Chapter 4 conceptual review reached Q/K/V projection gradients; its deferred
+  practice and independently unassessed checkpoints remain open.
+- Next action: open notebooks/day-05/01_embeddings_and_positions.ipynb and guide
+  the first prediction and lookup exercise. All seven baseline sessions, three
+  modern sessions, and optional recurrence are built: 11 fresh-kernel passes,
+  93 executed code cells, 38 repository tests. Full Chapter 5 narrative synthesis
+  remains scheduled for Day 7; companion lab and solutions are ready.
 - Last updated: 2026-09-06
 
 ## Four-week tracker
@@ -25,7 +28,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-tokenizer-mechanics.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
 | 3 | Probabilities and next-token loss | complete | Chapter: `book/chapters/03-learning-the-next-token.md`; three interactive notebooks; report: `experiments/reports/2026-09-03-next-token-distribution.md` |
 | 4 | Attention from first principles | in progress | Complete Chapter 4, 12 solutions, three notebooks, two reports; hands-on practice deferred, mastery not fully assessed |
-| 5 | Decoder-only Transformer | in progress | Outline: `learning_artifacts/day-05-decoder-only-transformer/README.md`; three notebook sessions planned |
+| 5 | Decoder-only Transformer | in progress | Eleven Chapter 5 notebooks reference-verified, companion lab and solutions, 38 tests; hands-on learner completion not claimed |
 | 6 | Modern architecture design | pending | — |
 | 7 | Architecture synthesis | pending | — |
 | 8 | Pretraining data and recipe | pending | — |
@@ -336,6 +339,22 @@ Copy this block below the daily log heading after each session:
 - Next action: Day 5 conceptual lesson on multi-head attention and residual flow.
 
 ## Learning memory and production queue
+
+### Chapter 5 notebook production — 2026-09-06
+
+- User requested all sessions be built before guided study, including the
+  optional recurrence lesson, then requested committing and pushing the result.
+- Delivered: 11 notebooks, adjacent solutions, transparent decoder source,
+  12 new tests, execution runner, specification/report, companion lab, solution
+  guide, and updated curriculum/artifact/animation indexes.
+- Verification: 93 code cells executed in 11 fresh kernels; 38 repository tests
+  pass. Fixed CPU seed-505 training: loss 2.774792432785034 to
+  0.0007856183219701052 after 160 AdamW steps; training accuracy 1.0.
+- Evidence boundaries: memorization only, no GPU or serving benchmark, no Mac
+  execution, no trained recurrence comparison, no completed learner practice.
+- Day 3/4 learner notebook edits remain untouched and excluded from the commit.
+- Next: notebook 01's first conceptual prediction and lookup exercise. Full
+  Chapter 5 narrative synthesis remains scheduled for Day 7.
 
 Detailed learner understanding is maintained by day and topic under
 `learning_artifacts/`. Its index, the X article backlog, animation storyboards,

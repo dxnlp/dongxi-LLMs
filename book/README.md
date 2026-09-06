@@ -20,3 +20,9 @@ first-class companion lessons and part of the course material: they turn the
 chapter's mathematics into prediction, implementation, perturbation, and
 interpretation. Experiment specifications, reports, manifests, reusable code,
 and notebooks support rather than substitute for the canonical narrative.
+
+Chapter 5 now has a complete executable pathway in its
+[companion lab](labs/05-building-a-modern-decoder.md) and
+[notebook solution guide](solutions/05-decoder-notebook-solutions.md).
+All eleven reference notebooks are verified; full narrative synthesis remains
+scheduled for Day 7, independently of live learner progress.

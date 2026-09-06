@@ -21,8 +21,10 @@ Each chapter normally contains three focused notebook sessions:
    dataset, or evaluation contract; separate observation from interpretation
    and state what the result cannot prove.
 
-A chapter may use two sessions when the mechanism is compact or four when an
-important architecture and its experiment need separation. Sessions should be
+A chapter may use two sessions when the mechanism is compact or more when an
+important architecture and its experiment need separation. Chapter 5 has an
+explicit learner-requested layer-by-layer exception: ten core sessions across
+Days 5–7 and an optional recurrent-depth extension. Sessions should be
 small enough to complete interactively. Several focused notebooks are preferred
 to one long notebook that mixes unrelated ideas.
 
@@ -57,7 +59,7 @@ claims matter, an experiment specification and report.
 
 ## Activation and maintenance
 
-- At the start of a chapter, refine its three entries into named notebook
+- At the start of a chapter, refine its pathway into named notebook
   sessions and add a local `README.md` under the relevant notebook directory.
 - Create notebooks only as the corresponding learning material becomes active;
   do not commit empty placeholder notebooks for later chapters.
@@ -80,3 +82,22 @@ Day 4 activates three sessions under `notebooks/day-04/`:
    uncached equality, request-local lifecycle, and the compute-memory trade.
 
 Their detailed learning sequence is maintained in `notebooks/day-04/README.md`.
+
+## Chapter 5 activation — revised 2026-09-06
+
+The canonical detailed plan is `notebooks/day-05/README.md`. The learner asked
+for separate hands-on treatment of important architecture layers rather than
+combining residual connections, normalization, and MLPs into one session.
+
+- Day 5: embeddings/positions; multi-head attention; residual stream;
+  LayerNorm/placement; positionwise MLP; decoder assembly; one-batch learning.
+- Days 6–7: RMSNorm/SwiGLU; RoPE; GQA/QK normalization/cost accounting and modern
+  decoder integration, followed by an architecture defense.
+- Optional Day 7 extension: fixed recurrent depth, linked to `ARCH-LOOP-001`.
+
+On 2026-09-06 the learner explicitly requested building the entire pathway ahead
+of live study. All eleven notebooks are now built and reference-verified: 93 code
+cells across fresh kernels, with adjacent solutions, controlled changes, and
+38 passing repository tests. This is a user-requested exception to incremental
+creation, not a change to learner completion. See the Chapter 5 companion lab,
+solution guide, and experiments/reports/2026-09-06-decoder-notebooks.md.
