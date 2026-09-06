@@ -73,6 +73,16 @@ strong query-key match does not guarantee a useful result because the value
 supplies the content. This demonstrates the routing/content distinction; full
 tensor-shape understanding has not yet been assessed.
 
+The learner next described the branches as three FFNs needed to store more
+information. Refine this to three learned linear/affine projections, commonly
+implemented by linear layers (sometimes fused), distinct from the decoder's
+separate nonlinear feed-forward sublayer. They provide different learned views
+of the same incoming state: receiver matching, source matching, and message
+content. They do not introduce new context or act as three independent stores.
+Three describes the standard query/key/value factorization, not a theorem that
+attention requires exactly three independently parameterized networks. This
+correction is introduced; learner restatement remains pending.
+
 ## Requested workflow and animation refinement — 2026-09-06
 
 ```text
