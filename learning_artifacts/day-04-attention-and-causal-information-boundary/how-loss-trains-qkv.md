@@ -157,6 +157,27 @@ uses the chapter's already verified matrix identity.
 
 ## Remaining learning and verification edges
 
+### Update principles — 2026-09-06
+
+The learner asked whether Q/K/V weight changes follow principles. Distinguish
+trainable projection matrices W_Q/W_K/W_V from activation tensors Q/K/V and
+the attention distribution A. The optimizer updates the matrices; forward
+computation recomputes Q/K/V and A from current states and parameters.
+
+All three projection gradients are obtained by differentiating the same
+downstream objective through the same forward pass. They generally differ in
+direction and magnitude. A simple SGD sketch is W_P <- W_P - eta*dL/dW_P for
+P in {Q,K,V}; AdamW uses adaptive, stateful updates and weight decay instead of
+this exact sketch. There is no hand-authored semantic rule telling W_Q which
+linguistic feature to encode. Shared parameters accumulate credit over valid
+positions and examples. Masked edges contribute no routing gradient, although
+the shared matrices still learn from allowed edges.
+
+Any statement that a useful source's score should rise concerns a local
+derivative holding other intermediates fixed. Real shared-parameter steps can
+change multiple scores and contents jointly; they do not guarantee that every
+individual example improves. This clarification is introduced, not yet assessed.
+
 - Verify every matrix derivative with PyTorch autograd and finite differences.
 - Inspect how a forbidden future edge receives zero routing gradient.
 - Compare value-path and routing-path gradient norms without treating magnitude

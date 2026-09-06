@@ -9,10 +9,10 @@ This file is the operational source of truth for resuming work. Update it at the
 - Status: in progress
 - Current focus: strengthen Day 4 understanding at learner request. Material is
   complete; notebook practice remains deferred. Day 5 outline is retained.
-- Next action: consolidate the content gradient a_j*g and its accumulation from
-  multiple receivers; distinguish intermediate value gradients from shared W_V
-  updates. Revisit identical-value routing invariance before treating it as
-  understood, then connect the full forward/backward tensor shapes.
+- Next action: distinguish trainable Q/K/V projection matrices from computed
+  attention weights and activation vectors; explain joint chain-rule gradients
+  and optimizer updates. Then reconnect these principles to full tensor shapes
+  and revisit the identical-values checkpoint.
 - Last updated: 2026-09-06
 
 ## Four-week tracker
