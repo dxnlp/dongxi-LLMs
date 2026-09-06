@@ -25,6 +25,12 @@ same proposal is not repeatedly rediscovered.
 | `CAND-ANIM-009` | Agent, automatic math trigger from learner inference | Chapter 4–modern decoder bridge | Contrast the same token in two contexts to establish distinct request-local K/V states; show optional runtime retention across prefill and decoding, each transient new query reading the unchanged-prefix cache, and logical cache release at sequence completion | discuss | Toy cache shapes and equivalence verified on 2026-09-05; lifecycle derived, no allocator benchmark; distinguish first-layer and contextual deeper-layer keys; production only on Mac after explicit approval |
 | `CAND-ANIM-011` | User reminder + agent automatic math trigger | Chapter 5 frontier section | Reuse one visually identical Transformer stack for recurrent state updates; let stored-parameter, effective-depth, and compute counters diverge; then contrast fixed loops with adaptive token-level exit and visible token-space reasoning | discuss | Revisit for production approval during Days 6–7; verify all accounting in the controlled comparison; production only on the Mac Studio after explicit approval |
 
+Q/K/V workflow refinement (user request, 2026-09-06): extend `CAND-ANIM-008`
+and its approved `ANIM-ATTN-001` packet. Keep the V content branch separate
+from Q/K scores and softmax weights until O=AV. Include fixed-Q/K, changed-V
+and fixed-V, changed-routing contrasts. See the packet for precision and
+Mac production requirements; no duplicate candidate is created.
+
 ### CAND-ANIM-002 — NLL to cross-entropy in an LLM
 
 - Source: user

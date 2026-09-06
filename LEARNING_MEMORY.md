@@ -492,6 +492,16 @@ the attention matrix as unrelated objects.
 7. Compress later model computation into a clearly labeled downstream
    next-token loss $L$ without implying a separate attention-supervision label.
 
+**Forward storyboard refinement — 2026-09-06:** The learner requested a Q/K/V
+workflow after distinguishing values from attention scores. Show X splitting
+into three learned projections, Q/K joining to produce scaled masked scores,
+row-wise softmax producing A, and the separate V branch meeting A at O=AV.
+Keep labels for scores, weights, and content visible at their respective stages.
+Include a controlled contrast with fixed Q/K and changed V: weights unchanged,
+output changed. A complementary fixed-V routing change can follow. Use verified
+numbers for any new displayed examples. This extends the existing approved
+concept; production remains on the Mac Studio.
+
 **Canonical backward spine:**
 
 8. Reverse motion from $G_O=\partial L/\partial O$ and split visibly at $O=AV$.

@@ -67,13 +67,49 @@ they are not vocabulary-wide logit vectors and their indices are not token IDs.
 
 ## Demonstrated understanding
 
-No explanation-back has yet been recorded. The mechanism is currently
-introduced rather than demonstrated.
+On 2026-09-06 the learner initially identified V with attention scores. After
+separating scores, weights, and values, the learner correctly explained that a
+strong query-key match does not guarantee a useful result because the value
+supplies the content. This demonstrates the routing/content distinction; full
+tensor-shape understanding has not yet been assessed.
+
+## Requested workflow and animation refinement — 2026-09-06
+
+```text
+                         Incoming states X
+                     /          |          \\
+                 X W_Q        X W_K        X W_V
+                   Q            K            V
+                    \          /             |
+                       Q K^T                 |
+                          |                  |
+                   divide by sqrt(d_k)       |
+                          |                  |
+                   apply causal mask         |
+                          |                  |
+                   softmax over sources      |
+                          |                  |
+                    weights A -------------- V
+                                  |
+                                O = A V
+```
+
+Every position creates all three projected vectors. Each query row compares
+against allowed source keys, including its own position, then mixes the matching
+values. V is neither the compatibility scores nor their normalized weights.
+The output O is a continuous feature matrix, not vocabulary logits or token IDs.
+
+Extend the existing `CAND-ANIM-008` / `ANIM-ATTN-001` rather than duplicating it.
+Keep the V branch visibly separate while Q and K form scores; transform those
+scores into weights, then join the two branches for the value mixture. Hold
+Q/K fixed while changing V to show unchanged weights and a changed output.
+Conversely, hold V fixed while changing routing. These are storyboard requests;
+new displayed numerical examples must be verified before Mac rendering.
 
 ## Evidence and limitations
 
-The equations are the intended Day 4 derivation, not yet verified by a preserved
-implementation in this course. The database analogy explains role separation
+The forward implementation and gradient/cache reports dated 2026-09-05 verify
+the chapter's small examples. The database analogy explains role separation
 but should not be used to claim that a head contains explicit symbolic records
 or that individual attention weights faithfully explain model reasoning.
 
