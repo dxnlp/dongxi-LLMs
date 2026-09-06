@@ -139,9 +139,21 @@ teaching fixture, receiver 2, and the fixed cross-entropy head from notebook 2,
 at tolerance 1e-12. This is an algebraic refinement of the already verified
 matrix derivative, not a new trained-model claim.
 
-Next discussion: if all allowed values are identical, changing routing cannot
-change the output. The learner has not yet answered this checkpoint. Capture
-this comparison in the existing `ANIM-ATTN-001` rather than a new candidate.
+The learner predicted that a small routing change could improve prediction even
+with identical values. The correction showed that any normalized mixture of
+identical vectors is unchanged, so the local score gradient is zero. The learner
+requested continuation; independent restatement is still pending. Capture this
+comparison in the existing `ANIM-ATTN-001` rather than a new candidate.
+
+The next explanation follows the value branch: for a single receiver with
+output gradient g, partial L/partial v_j = a_j g. Changing content can change
+the output even when redistributing fixed identical content cannot. Multiple
+receivers contribute a sum to each source value, yielding G_V=A^T G_O. These
+are gradients of intermediate values, not independent per-token stored
+parameters: backward proceeds through the shared W_V and earlier input states.
+Zero routing gradient does not imply zero content gradient or guarantee that
+an optimizer step will separate previously identical values. This extension
+uses the chapter's already verified matrix identity.
 
 ## Remaining learning and verification edges
 

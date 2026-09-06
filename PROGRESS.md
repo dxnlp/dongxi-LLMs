@@ -9,10 +9,10 @@ This file is the operational source of truth for resuming work. Update it at the
 - Status: in progress
 - Current focus: strengthen Day 4 understanding at learner request. Material is
   complete; notebook practice remains deferred. Day 5 outline is retained.
-- Next action: explain how values and downstream loss train routing; use the
-  identical-values thought experiment to connect the output mixture to score
-  gradients, then trace the signal through Q/K. Detailed masking and scaling
-  remain to be consolidated.
+- Next action: consolidate the content gradient a_j*g and its accumulation from
+  multiple receivers; distinguish intermediate value gradients from shared W_V
+  updates. Revisit identical-value routing invariance before treating it as
+  understood, then connect the full forward/backward tensor shapes.
 - Last updated: 2026-09-06
 
 ## Four-week tracker
