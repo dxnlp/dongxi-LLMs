@@ -7,12 +7,12 @@ This file is the operational source of truth for resuming work. Update it at the
 - Active release: `v0.1`
 - Active day: Day 4 (review before Day 5)
 - Status: in progress
-- Current focus: strengthen Day 4 understanding at learner request. Material is
-  complete; notebook practice remains deferred. Day 5 outline is retained.
-- Next action: consolidate the multi-head bridge: each head has its own learned
-  projections and routing distribution, all heads can read the allowed prefix,
-  and feature concatenation precedes W_O. Introduced during Day 4 review; no
-  new mastery claimed. Identical-value invariance remains a review checkpoint.
+- Current focus: review bridge from single-head attention to Day 5 multi-head
+  and residual mechanisms; notebook practice remains deferred. Day 4 learning
+  gaps are retained rather than silently marked complete.
+- Next action: consolidate X + attention_update, same-width addition versus
+  concatenation, and the direct gradient path; then introduce normalization.
+  Earlier identical-value and detailed masking checkpoints remain open.
 - Last updated: 2026-09-06
 
 ## Four-week tracker

@@ -11,6 +11,25 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### CAND-ANIM-013 — Attention as an update to the residual stream
+
+- Source: agent, automatic mathematics trigger, 2026-09-06
+- Book placement: Chapter 5, residual connections
+- State: discuss; production not approved
+- Equation: X_next = X + MHA(X), initially omitting norm/dropout; later reveal
+  the pre-norm form X + MHA(LN(X)).
+- Motion: keep the incoming [T,D] stream visible while a branch computes a
+  same-shaped update; add coordinatewise. Set the update to zero and retain
+  the unchanged input. Reverse gradients through the direct and learned paths.
+- Precision: addition differs from feature concatenation; X is the current
+  state, not always the original embedding. The identity path does not guarantee
+  information preservation or prevent all gradient cancellation.
+- Evidence: analytical identity only; verify forward zero-update and backward
+  examples in planned notebook 2 before rendering.
+- Source: `learning_artifacts/day-05-decoder-only-transformer/residual-stream-and-attention-updates.md`.
+- Production: Mac Studio after explicit approval; consider scope alongside the
+  existing multi-head candidate rather than assuming an additional film.
+
 ### CAND-ANIM-012 — Several retrieval mixtures for one position
 
 - Source: agent, automatic mathematics trigger; introduced 2026-09-06

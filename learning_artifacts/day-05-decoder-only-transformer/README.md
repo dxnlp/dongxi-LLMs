@@ -56,6 +56,9 @@ Opened topic:
 [`multiple-heads-and-output-projection.md`](multiple-heads-and-output-projection.md).
 Introduced during the Day 4 review; this does not mark Day 4 mastery complete.
 
+Next topic introduced:
+[`residual-stream-and-attention-updates.md`](residual-stream-and-attention-updates.md).
+
 Why could one weighted mixture be insufficient when a position needs several
 different kinds of information from its prefix? Begin with this motivation for
 multiple heads without assigning guaranteed linguistic roles to individual heads.
