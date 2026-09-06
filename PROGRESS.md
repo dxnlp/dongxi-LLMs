@@ -7,12 +7,12 @@ This file is the operational source of truth for resuming work. Update it at the
 - Active release: `v0.1`
 - Active day: Day 4 (review before Day 5)
 - Status: in progress
-- Current focus: review bridge from single-head attention to Day 5 multi-head
-  and residual mechanisms; notebook practice remains deferred. Day 4 learning
-  gaps are retained rather than silently marked complete.
-- Next action: consolidate X + attention_update, same-width addition versus
-  concatenation, and the direct gradient path; then introduce normalization.
-  Earlier identical-value and detailed masking checkpoints remain open.
+- Current focus: Chapter 4 single-head attention gradients. The learner asked
+  to remain in Chapter 4 after the discussion moved prematurely into Chapter 5.
+- Next action: trace downstream loss through O=AV, row-wise masked softmax,
+  and QK^T/sqrt(d_k), then derive X^T G_Q, X^T G_K, and X^T G_V for the
+  projection matrices. Other review checkpoints remain open; do not resume
+  residual/normalization topics until the Chapter 4 discussion is consolidated.
 - Last updated: 2026-09-06
 
 ## Four-week tracker

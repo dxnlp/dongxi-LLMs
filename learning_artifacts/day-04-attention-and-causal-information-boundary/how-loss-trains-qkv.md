@@ -157,6 +157,23 @@ uses the chapter's already verified matrix identity.
 
 ## Remaining learning and verification edges
 
+### Requested focus — projection-matrix gradients (2026-09-06)
+
+The learner explicitly chose a direct explanation of how gradients reach the
+Q/K/V projection matrices. Keep this within Chapter 4's single head; preceding
+multi-head/residual discussion moved ahead of the requested review.
+
+Start with downstream G_O, split at O=AV into G_V=A^T G_O and G_A=G_O V^T,
+then pass the routing derivative through row-softmax and the fixed causal mask
+to obtain G_S. With S=QK^T/sqrt(d_k), use G_Q=G_S K/sqrt(d_k) and
+G_K=G_S^T Q/sqrt(d_k). Finally each shared linear projection obeys
+G_W=X^T G_projected. Explain that this product sums per-position outer-product
+contributions; it is not an independently stored parameter per token. The
+optimizer applies these gradients after backward and changes shared matrices
+for subsequent forward computation. These identities are already covered by
+the verified Chapter 4 fixture and `ANIM-ATTN-001`. No new learner mastery is
+inferred from requesting or receiving this explanation.
+
 ### Update principles — 2026-09-06
 
 The learner asked whether Q/K/V weight changes follow principles. Distinguish
