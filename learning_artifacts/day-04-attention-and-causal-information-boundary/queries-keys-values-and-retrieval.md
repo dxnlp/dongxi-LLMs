@@ -85,6 +85,23 @@ correction is introduced; learner restatement remains pending.
 
 ## Requested workflow and animation refinement — 2026-09-06
 
+### Tensor-shape review after parameter-update discussion
+
+Use four illustrative token positions, incoming width D=8, query/key width
+d_k=3, and value width d_v=2. X is [4,8]; W_Q/W_K are [8,3] and W_V is [8,2].
+The projected Q/K are [4,3], V is [4,2], scores and A are [4,4], and O is
+[4,2]. A's rows are receiving queries and its columns are source positions.
+The [4,4] matrix contains no vocabulary-candidate axis. Every source weight
+multiplies the source's entire value vector, so one head uses the same routing
+distribution across all its output features.
+
+Longer supported inputs add position rows to activations and expand the
+receiver/source score matrix without resizing the learned projection matrices.
+This is a statement about the attention operation; positional handling, context
+limits, and compute/memory still constrain a complete model. The review is
+introduced; no new learner shape explanation is claimed. Its workflow is
+already covered by `ANIM-ATTN-001`.
+
 ```text
                          Incoming states X
                      /          |          \\

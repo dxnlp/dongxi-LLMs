@@ -9,10 +9,11 @@ This file is the operational source of truth for resuming work. Update it at the
 - Status: in progress
 - Current focus: strengthen Day 4 understanding at learner request. Material is
   complete; notebook practice remains deferred. Day 5 outline is retained.
-- Next action: distinguish trainable Q/K/V projection matrices from computed
-  attention weights and activation vectors; explain joint chain-rule gradients
-  and optimizer updates. Then reconnect these principles to full tensor shapes
-  and revisit the identical-values checkpoint.
+- Next action: consolidate the full single-head tensor path and its receiver,
+  source, and feature axes; explain that each head shares one routing
+  distribution across value coordinates. Check these distinctions before
+  returning to multi-head attention; identical-value invariance remains a
+  review checkpoint.
 - Last updated: 2026-09-06
 
 ## Four-week tracker
