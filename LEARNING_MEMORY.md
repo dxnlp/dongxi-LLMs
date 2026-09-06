@@ -504,6 +504,13 @@ concept; production remains on the Mac Studio.
 
 **Canonical backward spine:**
 
+Review refinement (2026-09-06): for one receiver show the scalar identity
+`dL/ds_j = a_j * g dot (v_j - o)`, where s is already scaled, g is the
+downstream output gradient, and o is the current value mixture. Contrast a
+useful change of message with identical values that make routing ineffective.
+The identity was checked against the existing float64 fixture; verify displayed
+numbers during Mac production. This extends `ANIM-ATTN-001`'s routing branch.
+
 8. Reverse motion from $G_O=\partial L/\partial O$ and split visibly at $O=AV$.
 9. Send the value/content branch through
    $G_V=A^\top G_O$ and $G_{W_V}=X^\top G_V$. Its visual question is: “What

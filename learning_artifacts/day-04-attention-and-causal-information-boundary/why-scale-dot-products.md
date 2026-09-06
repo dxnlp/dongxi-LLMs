@@ -77,8 +77,13 @@ by their individual norms, so learned vector magnitudes can still affect scores.
 
 ## Demonstrated understanding
 
-No explanation-back has yet been recorded. The derivation is introduced and
-awaits a conceptual restatement or executable observation.
+The variance derivation awaits independent restatement. During review on
+2026-09-06, the learner proposed inspecting raw scores and softmax probabilities
+to diagnose sharp attention. The response correctly identifies internal
+measurements; the additional step introduced was testing whether the routing
+helps the downstream prediction. Concentration alone establishes neither useful
+specialization nor a defect. Scaling's statistical assumptions remain to be
+consolidated.
 
 ## Evidence and limitations
 

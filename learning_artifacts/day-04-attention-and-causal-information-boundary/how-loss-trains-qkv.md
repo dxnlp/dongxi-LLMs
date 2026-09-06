@@ -117,7 +117,33 @@ does not have a uniquely human-interpretable meaning. The downstream residual
 stream, multiple heads, and later layers create additional paths not represented
 in this isolated-head derivation.
 
-## Open edges
+## Review bridge — How values teach routing (2026-09-06)
+
+For one receiver, let s_j be its scaled score for allowed source j,
+a=softmax(s), o=sum_j a_j v_j, and g=partial L/partial o. Holding the value
+vectors fixed for this local derivative gives
+
+$$
+\frac{\partial L}{\partial s_j}
+=a_j\,g\mathbin{\cdot}(v_j-o).
+$$
+
+This follows by substituting partial L/partial a_j = g dot v_j into the
+row-softmax derivative. The comparison is against the current mixture, because
+raising one score redistributes weight away from the other sources. A negative
+score derivative locally favors increasing the score under gradient descent;
+the actual shared-parameter update need not move every score independently.
+
+The identity was checked against autograd using the existing CPU float64
+teaching fixture, receiver 2, and the fixed cross-entropy head from notebook 2,
+at tolerance 1e-12. This is an algebraic refinement of the already verified
+matrix derivative, not a new trained-model claim.
+
+Next discussion: if all allowed values are identical, changing routing cannot
+change the output. The learner has not yet answered this checkpoint. Capture
+this comparison in the existing `ANIM-ATTN-001` rather than a new candidate.
+
+## Remaining learning and verification edges
 
 - Verify every matrix derivative with PyTorch autograd and finite differences.
 - Inspect how a forbidden future edge receives zero routing gradient.

@@ -411,6 +411,19 @@ $$
 where the [T,1] row sum broadcasts across sources. Forbidden entries have zero
 weight and zero score gradient. M is fixed, so it has no learned update.
 
+For one receiver, this has a useful interpretation. Let g be its output
+gradient and s_j an allowed scaled score. Substituting the value-path expression
+for the incoming weight derivative yields
+
+$$
+\frac{\partial L}{\partial s_j}=a_j\,g\cdot(v_j-o).
+$$
+
+Increasing a score redistributes weight toward its value and away from the
+current mixture. The loss evaluates that change through g. If all allowed
+values are identical, every v_j-o is zero: routing cannot change the output,
+so this local routing gradient vanishes. The value projections can still learn.
+
 Through scaled dot products,
 
 $$
