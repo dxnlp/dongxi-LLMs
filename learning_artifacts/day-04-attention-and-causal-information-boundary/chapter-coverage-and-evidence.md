@@ -38,6 +38,26 @@ practice as deferred.
 
 ## Evidence and content reuse
 
+## Review checkpoint — 2026-09-06
+
+The learner chose to revisit attention before advancing beyond the Day 5 outline.
+This is a conceptual review; renewed live notebook practice was not requested.
+
+- Demonstrated in discussion: compatibility depends on contextual retrieval;
+  attention constructs a mixture; weights alone do not fully explain a result;
+  KV retention reuses the same growing prefix rather than vocabulary entries.
+- Introduced but not yet independently consolidated: detailed Q/K/V shapes,
+  square-root scaling, mask normalization, and routing/content derivatives.
+- Specific unresolved correction: changing a future token does not change an
+  earlier causal output under fixed parameters and deterministic execution.
+- First discussion: separate input visible at the prediction position from the
+  observed next-token label. Both sentences can yield the same prediction at a
+  shared prefix but different losses because their labels differ.
+- No numerical mastery percentage is assigned; the record distinguishes direct
+  explanations from material merely presented. Reassess through discussion.
+
+## Evidence and content reuse (current)
+
 - Forward report: `experiments/reports/2026-09-05-causal-attention-forward.md`.
 - Gradient/cache report: `experiments/reports/2026-09-05-attention-gradients-cache.md`.
 - `ANIM-ATTN-001` now has canonical chapter, gradients, mask/detach examples, and

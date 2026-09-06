@@ -126,8 +126,10 @@ demonstrates understanding, encounters a correction, or identifies an open edge.
 Day 4 has a complete chapter, twelve worked solutions, three reference notebooks,
 and verified forward/gradient/scaling/cache evidence. See
 `learning_artifacts/day-04-attention-and-causal-information-boundary/chapter-coverage-and-evidence.md`.
-Live practice is deferred at the learner's request. Continue conceptual study
-with Day 5; do not infer mastery from the agent's notebook execution.
+Live notebook practice is deferred. On 2026-09-06 the learner requested returning
+to Day 4 conceptual study before Day 5. Resume with causal prefix invariance
+and the difference between forward context and supervision. Do not infer mastery
+from the agent's notebook execution.
 
 ## Scheduled frontier modules
 

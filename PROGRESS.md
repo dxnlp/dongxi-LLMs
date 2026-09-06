@@ -5,13 +5,14 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 5
+- Active day: Day 4 (review before Day 5)
 - Status: in progress
-- Current focus: Day 5 outline and the assembly of a decoder-only Transformer.
-  Day 4 material is complete; live practice remains deferred.
-- Next action: explain why multiple attention heads are useful, then trace their
-  split, independent retrievals, concatenation, and output projection.
-- Last updated: 2026-09-05
+- Current focus: strengthen Day 4 understanding at learner request. Material is
+  complete; notebook practice remains deferred. Day 5 outline is retained.
+- Next action: revisit causal prefix invariance and distinguish the available
+  forward context from the next-token label; then consolidate Q/K/V shapes,
+  masking before softmax, scaling, and backward routing/content paths.
+- Last updated: 2026-09-06
 
 ## Four-week tracker
 
