@@ -95,6 +95,15 @@ The learner correctly explained the causal requirement that the model cannot see
 the future. The specific normalization mechanism and denominator-leak argument
 were then introduced and await explanation-back or executable observation.
 
+On 2026-09-06, when asked how a forbidden next token can still teach the model,
+the learner independently identified both mechanisms: cross-entropy evaluates
+the prediction against the gold label, while causal masking prevents the
+prediction position from reading that next token. This demonstrates separation
+of supervision from forward visibility. The next refinement is that backward
+computes derivatives and the optimizer updates shared parameters for subsequent
+forward passes; neither retroactively changes the prediction already evaluated.
+Detailed mask normalization and the full Q/K/V chain rule remain open.
+
 ## Evidence and limitations
 
 The identities are analytical. Practical kernels often use a sufficiently large

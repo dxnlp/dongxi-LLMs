@@ -9,9 +9,10 @@ This file is the operational source of truth for resuming work. Update it at the
 - Status: in progress
 - Current focus: strengthen Day 4 understanding at learner request. Material is
   complete; notebook practice remains deferred. Day 5 outline is retained.
-- Next action: revisit causal prefix invariance and distinguish the available
-  forward context from the next-token label; then consolidate Q/K/V shapes,
-  masking before softmax, scaling, and backward routing/content paths.
+- Next action: connect the correctly identified gold-label loss and causal
+  visibility distinction to backward credit and optimizer updates; then trace
+  routing/content gradients through Q/K/V. Detailed masking and scaling remain
+  to be consolidated.
 - Last updated: 2026-09-06
 
 ## Four-week tracker
