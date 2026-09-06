@@ -36,8 +36,6 @@ all required topics regardless of the point reached in interactive practice.
 Future sessions may proceed to the decoder chapter while retaining Day 4
 practice as deferred.
 
-## Evidence and content reuse
-
 ## Review checkpoint — 2026-09-06
 
 The learner chose to revisit attention before advancing beyond the Day 5 outline.
@@ -56,7 +54,7 @@ This is a conceptual review; renewed live notebook practice was not requested.
 - No numerical mastery percentage is assigned; the record distinguishes direct
   explanations from material merely presented. Reassess through discussion.
 
-## Evidence and content reuse (current)
+## Evidence and content reuse
 
 - Forward report: `experiments/reports/2026-09-05-causal-attention-forward.md`.
 - Gradient/cache report: `experiments/reports/2026-09-05-attention-gradients-cache.md`.
