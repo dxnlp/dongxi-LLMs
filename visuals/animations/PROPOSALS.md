@@ -11,6 +11,24 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### CAND-ANIM-012 — Several retrieval mixtures for one position
+
+- Source: agent, automatic mathematics trigger; introduced 2026-09-06
+- Book placement: Chapter 5, bridge from single-head attention
+- State: discuss; no production approval
+- Mechanism: O_h=A_h V_h, then O_multi=Concat(O_1,...,O_H) W_O.
+- Motion: preserve X and receiver identity while multiple head-specific Q/K/V
+  branches create different weight rows and value mixtures; concatenate feature
+  segments and project them back to model width, leaving token positions fixed.
+- Precision: heads see the allowed prefix rather than disjoint token subsets;
+  fixed human-readable roles are not guaranteed; W_O differs from the vocabulary
+  head; concatenation is across features and is not averaging.
+- Evidence: conceptual explanation and shape accounting; executable examples
+  and canonical Chapter 5 treatment pending.
+- Source artifact: `learning_artifacts/day-05-decoder-only-transformer/multiple-heads-and-output-projection.md`.
+- Next decision: consider after multi-head implementation and verification.
+  Production requires explicit approval and belongs on the Mac Studio.
+
 | Candidate ID | Source | Book placement | Mechanism | State | Dependency or next decision |
 |---|---|---|---|---|---|
 | `CAND-ANIM-010` | User | Chapter 2 supporting example | Five supplied Chinese strings → counted BPE merges `流 + 星`, `流星 + 雨` → retained vocabulary → illustrative IDs 1–5 → encoding | review; promoted into `ANIM-BPE-002` | 40.23-second 1080p Mac Studio render ready on 2026-09-03; round-2 tie disclosed; source integration approved on 2026-09-04; final visual approval pending |

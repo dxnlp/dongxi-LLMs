@@ -9,11 +9,10 @@ This file is the operational source of truth for resuming work. Update it at the
 - Status: in progress
 - Current focus: strengthen Day 4 understanding at learner request. Material is
   complete; notebook practice remains deferred. Day 5 outline is retained.
-- Next action: consolidate the full single-head tensor path and its receiver,
-  source, and feature axes; explain that each head shares one routing
-  distribution across value coordinates. Check these distinctions before
-  returning to multi-head attention; identical-value invariance remains a
-  review checkpoint.
+- Next action: consolidate the multi-head bridge: each head has its own learned
+  projections and routing distribution, all heads can read the allowed prefix,
+  and feature concatenation precedes W_O. Introduced during Day 4 review; no
+  new mastery claimed. Identical-value invariance remains a review checkpoint.
 - Last updated: 2026-09-06
 
 ## Four-week tracker

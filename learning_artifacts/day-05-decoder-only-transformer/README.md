@@ -52,6 +52,10 @@ tensor path. Day 4 practice remains deferred; it is not silently marked complete
 
 ## First discussion
 
+Opened topic:
+[`multiple-heads-and-output-projection.md`](multiple-heads-and-output-projection.md).
+Introduced during the Day 4 review; this does not mark Day 4 mastery complete.
+
 Why could one weighted mixture be insufficient when a position needs several
 different kinds of information from its prefix? Begin with this motivation for
 multiple heads without assigning guaranteed linguistic roles to individual heads.
