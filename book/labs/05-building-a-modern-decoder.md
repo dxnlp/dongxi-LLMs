@@ -13,6 +13,20 @@ one by one remains separate from their reference verification.
 
 ## One model, inspected at several levels
 
+The notebook pathway now includes 48 explanatory visuals. Each notebook opens
+with a whole-model map and a component close-up; the modern-block lesson also
+zooms into SwiGLU. These 23 schematics separate structure from measured values
+and distinguish learned absolute positions from RoPE inside attention.
+The 25 existing mechanism figures include lookup and attention
+heatmaps, actual weighted value contributions, residual/gradient vector sums,
+normalization and MLP transformations, a decoder schematic, measured training
+curves, RoPE geometry, grouped KV sharing, and recurrence accounting. Saved
+reference previews appear next to their reading guides; plotting cells regenerate
+data plots from the current lesson tensors and schematics from their drawing
+definitions. See
+[`docs/NOTEBOOK_VISUALS.md`](../../docs/NOTEBOOK_VISUALS.md) for the distinction
+between a fixed preview and a newly executed experiment.
+
 Begin with a small baseline: two sequences, six input positions, vocabulary 16,
 model width 16, four query heads of width four, two blocks, and MLP width 32.
 The small dimensions expose the same tensor roles without requiring a GPU or

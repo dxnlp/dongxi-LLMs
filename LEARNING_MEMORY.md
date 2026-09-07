@@ -55,6 +55,15 @@ dependencies, preferred machine, and current status.
 - Treats guided notebooks as first-class course material rather than temporary
   session scratchpads. Preserve, validate, index, and link them from the
   corresponding chapter or solutions while keeping reusable logic in `src/`.
+- On 2026-09-07 explicitly requested explanatory visuals because text/code-only
+  notebooks felt boring. Include data-backed diagrams, heatmaps, vector/gradient
+  views, and learning curves next to the mechanism, with concise reading guides
+  and runnable plot code. Also requested architecture visuals: include a whole-
+  model map with the current component highlighted and a detailed component
+  close-up showing operations, branches, and tensor shapes. Chapter 5 now has
+  48 saved previews (25 existing figures plus 23 architecture schematics) across
+  eleven notebooks; see `docs/NOTEBOOK_VISUALS.md`. Static notebook plots stay
+  distinct from approval-gated animation production on Mac Studio.
 - Wants every book chapter to contain several focused notebook sessions for its
   important LLM mathematics, architecture, optimization, data, or evaluation
   mechanisms. Use the course-wide mechanism → perturbation/failure →

@@ -12,8 +12,15 @@ See the [companion lab](../../book/labs/05-building-a-modern-decoder.md),
 [verification report](../../experiments/reports/2026-09-06-decoder-notebooks.md).
 On Spark choose **Python (DGX Spark Native)**. On another machine choose a local
 Python kernel with Torch installed; no GPU or downloads are required. Source
-outputs are cleared intentionally. Keep notebooks inside this checkout so their
-startup cells can locate the reusable code.
+reference outputs were originally cleared; the visual revisions now add 48
+saved PNG previews and runnable plot cells, preserving existing learner outputs.
+Install the additive Matplotlib dependency from `../requirements-visuals.txt`
+once in the selected kernel. Runtime lessons require no network downloads.
+Keep notebooks inside this checkout so startup cells and preview image paths
+can locate their dependencies. Visual evidence is recorded in
+[`2026-09-07-decoder-architecture-visuals.md`](../../experiments/reports/2026-09-07-decoder-architecture-visuals.md).
+Each notebook begins with a whole-model map highlighting its component and a
+close-up showing the branches, operations, and tensor dimensions.
 
 ## Baseline decoder — Day 5
 

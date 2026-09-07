@@ -94,6 +94,19 @@ active; avoid empty placeholders. Evidence-oriented chapters may use executable
 audits, simulations, or metric explorations instead of forcing an artificial
 neural-network mechanism.
 
+Notebook lessons must also explain visually when spatial structure, tensor
+layout, comparison, or a trajectory materially clarifies the mechanism. The
+learner explicitly requested this on 2026-09-07. Use data-backed Python plots
+next to the relevant exercise and solution, with axis/shape labels, a short
+reading guide, and runnable regeneration code. Preserve existing learner cells.
+For architecture lessons, also provide a whole-model map highlighting the current
+component and a detailed branch/operation diagram with tensor shapes. Clearly
+separate architecture schematics from measured plots and distinguish baseline
+learned position embeddings from modern RoPE inside attention.
+Use `docs/NOTEBOOK_VISUALS.md` for reference previews, dependency handling,
+evidence boundaries, and visual verification. Static notebook plots do not
+authorize animation rendering; Mac Studio remains the animation production lane.
+
 Do not mark a day complete merely because prose or code exists. The stated evidence of completion must be present.
 
 ## Book-first course development

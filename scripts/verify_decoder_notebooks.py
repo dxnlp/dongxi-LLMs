@@ -19,6 +19,7 @@ import nbclient
 import nbformat
 from nbclient import NotebookClient
 import torch
+import matplotlib
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src'))
@@ -42,10 +43,13 @@ def main():
     manifest = dict(timestamp=datetime.now(timezone.utc).isoformat(),
                     python=sys.version, torch=torch.__version__,
                     nbformat=nbformat.__version__, nbclient=nbclient.__version__,
+                    matplotlib=matplotlib.__version__,
                     platform=platform.platform(), kernel='dgx-spark-native',
                     initial_mem_available=mem,
                     base_commit=subprocess.check_output(['git','rev-parse','HEAD'], cwd=ROOT, text=True).strip(),
                     source_sha256=sha(ROOT/'src/dongxi_llms/decoder_lab.py'),
+                    visuals_sha256=sha(ROOT/'src/dongxi_llms/decoder_visuals.py'),
+                    architecture_sha256=sha(ROOT/'src/dongxi_llms/decoder_architecture.py'),
                     test_sha256=sha(ROOT/'tests/test_decoder_lab.py'),
                     notebooks=[])
     start = time.perf_counter()
@@ -58,7 +62,10 @@ def main():
             nbformat.validate(notebook)
             NotebookClient(notebook, timeout=180, kernel_name='dgx-spark-native',
                            resources={'metadata': {'path': str(path.parent)}}).execute()
-            item.update(status='passed', code_cells=sum(c.cell_type=='code' for c in notebook.cells))
+            images=sum('image/png' in o.get('data',{}) for c in notebook.cells
+                       for o in c.get('outputs',[]))
+            item.update(status='passed', code_cells=sum(c.cell_type=='code' for c in notebook.cells),
+                        rendered_figures=images)
         except Exception as error:
             failed = True
             item.update(status='failed', error=str(error))

@@ -33,6 +33,12 @@ sessions as their chapters become active rather than adding empty placeholders.
 
 ## Sessions
 
+Chapter 5 now includes 48 explanatory figures: 25 existing mechanism plots and
+23 architecture schematics. Saved previews are visible before execution;
+runnable cells redraw model maps/close-ups and plot live tensors. The plotting dependency
+is pinned in [`requirements-visuals.txt`](requirements-visuals.txt). Design and
+regeneration instructions: [`Notebook visuals`](../docs/NOTEBOOK_VISUALS.md).
+
 - [`day-03/`](day-03/) — logits, probability, next-token loss, causal alignment,
   gradients, and a tiny learned distribution
 - [`day-04/`](day-04/) — scaled causal attention, gradient and failure diagnosis,

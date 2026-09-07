@@ -11,6 +11,25 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### CAND-ANIM-018 — Same gradient, different learning-rate steps
+
+- Source: agent automatic math trigger following learner's optimizer question,
+  2026-09-07; introduced in Chapter 5, deeper treatment in Chapter 6/Days 8–9.
+- State: discuss; production not approved; rendering stays on Mac Studio.
+- Mathematics: scalar L=(e-1)^2, gradient=2(e-1), SGD e_new=e-eta*gradient.
+- Motion: place three identical markers at e=.2 on the same quadratic, expose
+  the common gradient -1.6, then step with eta=.01, .1, and 1.5. Show small
+  progress, larger progress, and overshoot to e=2.6 with increased loss. Keep
+  parameter position, gradient sign, update arrow, and loss height distinct.
+- Precision: illustrative quadratic, not an LLM loss landscape or recommended
+  learning-rate range. Local descent direction does not guarantee a decrease
+  for an arbitrary step. AdamW uses adaptive gradient-history statistics and
+  must not be animated as plain raw-gradient SGD.
+- Evidence: analytical one-step values .216, .36, 2.6; loss .64 to 2.56 in
+  the large-step case. Verify rendered trajectories numerically before production.
+- Dependencies: approve storyboard and connect to existing ANIM-EMB-001 optimizer
+  segment without silently replacing its SGD sketch with an AdamW claim.
+
 ### Chapter 5 notebook evidence update — 2026-09-06
 
 Source: agent automatic mathematics check while fulfilling the learner's request

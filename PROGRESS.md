@@ -5,18 +5,23 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 5 (Chapter 5 notebook pathway ready)
+- Active day: Day 5 (Notebook 02, architecture visuals ready)
 - Status: in progress
-- Current focus: learner-requested eleven-notebook Chapter 5 pathway built and
-  reference-verified; ready for guided hands-on study.
+- Current focus: learner requested explanatory visuals while opening Notebook 02.
+  Added 25 mechanism figures and 23 architecture maps/close-ups across all eleven
+  Chapter 5 notebooks (48 saved previews with runnable regeneration cells);
+  retain every saved learner cell and output. Notebook 01 discussion covered
+  vocabulary capacity, gradients, end-to-end training, optimizers, and step size.
   Chapter 4 conceptual review reached Q/K/V projection gradients; its deferred
   practice and independently unassessed checkpoints remain open.
-- Next action: open notebooks/day-05/01_embeddings_and_positions.ipynb and guide
-  the first prediction and lookup exercise. All seven baseline sessions, three
-  modern sessions, and optional recurrence are built: 11 fresh-kernel passes,
-  93 executed code cells, 38 repository tests. Full Chapter 5 narrative synthesis
-  remains scheduled for Day 7; companion lab and solutions are ready.
-- Last updated: 2026-09-06
+- Next action: reload notebooks/day-05/02_multi_head_attention.ipynb safely from
+  disk and study its model map, Q/K/V close-up, head-split, and attention maps.
+  Preserve any unsaved browser edits before reloading. Do not infer completion
+  of every Notebook 01 exercise from moving on. Current visual reference suite:
+  11 notebook passes, 152 code cells, 48 figures, 47 repository tests; report:
+  `experiments/reports/2026-09-07-decoder-architecture-visuals.md`. Full
+  Chapter 5 narrative synthesis remains scheduled for Day 7.
+- Last updated: 2026-09-07
 
 ## Four-week tracker
 
