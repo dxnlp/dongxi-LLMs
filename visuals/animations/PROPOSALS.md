@@ -11,6 +11,31 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### Day 5 foundation synthesis — 2026-09-07
+
+Source: agent automatic math-opportunity check while writing the requested
+chapter foundation. Canonical source is now
+`book/chapters/05-building-a-modern-decoder.md`, with worked answers in
+`book/solutions/05-decoder-notebook-solutions.md`. Reuse existing candidates:
+
+- CAND-ANIM-012: extend the multi-head scene backward through distinct W_O
+  blocks, showing dL/do_r=g W_O,r^T. One shared loss need not send identical
+  gradients to each head. Symmetric heads can remain duplicates; diverse
+  initialization is not proof of learned semantic specialization. The scalar
+  1-versus-2 gradient illustration is algebraic, not a trained-model result.
+- CAND-ANIM-013: show the skip carrying X into addition, with only the sum
+  passed onward. Preserve the distinction from an untouched recoverable backup.
+- CAND-ANIM-014/015: canonical readable normalization and affine-collapse
+  explanations are now in sections 5.5–5.6; keep position and feature axes clear.
+- ANIM-CE-001 / ANIM-NTP-001: reuse section 5.8's twelve aligned target losses
+  combining into one mean and one parameter update. Generation selects new IDs
+  sequentially with fixed weights; training does not update after each token.
+- CAND-ANIM-018 and ANIM-EMB-001 retain the optimizer and shared-parameter paths.
+
+Existing notebooks verify the baseline mechanisms. This refinement captures
+storyboard opportunities, not a new rendering commission. All production stays
+on Mac Studio after the applicable explicit approval; no media produced here.
+
 ### CAND-ANIM-018 — Same gradient, different learning-rate steps
 
 - Source: agent automatic math trigger following learner's optimizer question,
@@ -123,8 +148,8 @@ execute successfully; evidence is in
 - Precision: addition differs from feature concatenation; X is the current
   state, not always the original embedding. The identity path does not guarantee
   information preservation or prevent all gradient cancellation.
-- Evidence: analytical identity only; verify forward zero-update and backward
-  examples in planned `day-05/03_residual_stream.ipynb` before rendering.
+- Evidence: forward zero-update, backward split, and cancellation controls are
+  verified in `day-05/03_residual_stream.ipynb` and the 2026-09-06 report.
 - Source: `learning_artifacts/day-05-decoder-only-transformer/residual-stream-and-attention-updates.md`.
 - Production: Mac Studio after explicit approval; consider scope alongside the
   existing multi-head candidate rather than assuming an additional film.
@@ -141,8 +166,9 @@ execute successfully; evidence is in
 - Precision: heads see the allowed prefix rather than disjoint token subsets;
   fixed human-readable roles are not guaranteed; W_O differs from the vocabulary
   head; concatenation is across features and is not averaging.
-- Evidence: conceptual explanation and shape accounting; executable examples
-  and canonical Chapter 5 treatment pending.
+- Evidence: executable split/merge, ablation, and causal controls are in
+  notebook 02 and the 2026-09-06 report; Chapter 5 section 5.3 now supplies
+  the canonical narrative. No trained specialization experiment is claimed.
 - Source artifact: `learning_artifacts/day-05-decoder-only-transformer/multiple-heads-and-output-projection.md`.
 - Next decision: consider after multi-head implementation and verification.
   Production requires explicit approval and belongs on the Mac Studio.

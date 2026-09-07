@@ -101,3 +101,10 @@ cells across fresh kernels, with adjacent solutions, controlled changes, and
 38 passing repository tests. This is a user-requested exception to incremental
 creation, not a change to learner completion. See the Chapter 5 companion lab,
 solution guide, and experiments/reports/2026-09-06-decoder-notebooks.md.
+
+On 2026-09-07 the Day 5 foundation was synthesized into
+[`Chapter 5`](../book/chapters/05-building-a-modern-decoder.md), with twelve
+conceptual exercises and worked answers. Seven baseline notebooks are linked
+at the point of use. The visual reference revision has 152 code cells and 48
+figures across all eleven notebooks. Days 6–7 extend the same chapter; reference
+execution and written prose do not complete learner practice or the defense.

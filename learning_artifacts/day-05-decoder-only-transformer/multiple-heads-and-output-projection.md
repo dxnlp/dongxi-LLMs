@@ -37,6 +37,24 @@ its value coordinates; multiple heads can supply several such distributions.
 
 ## Animation opportunity
 
+### Live refinement — 2026-09-07
+
+The learner asked whether random initialization explains head diversity and
+whether minimizing the same loss should make their weights converge to similar
+values. Clarified: separately parameterized, jointly learned—not independently
+trained predictors. With row-vector outputs, u=sum_r o_r W_O,r and
+dL/do_r=g W_O,r^T. Different paths from one scalar objective can receive
+different gradients. Complementarity can help the combined prediction, but
+standard training does not enforce unique roles or prevent redundant heads.
+If corresponding head and output parameters are exactly symmetric and the
+computation/optimizer preserve symmetry, the heads can remain duplicates.
+Different initialization helps break symmetry but is not a diversity guarantee.
+
+Canonical treatment: Chapter 5 section 5.3 and worked answer 3. The learner
+acknowledged the explanation; independent explanation-back or a trained
+head-specialization experiment has not been recorded. Extend CAND-ANIM-012's
+backward sequence rather than opening a duplicate animation task.
+
 `CAND-ANIM-012`: keep one receiving position fixed while the same X fans out
 into heads with different projections. Show distinct causal weight rows and
 value mixtures, concatenate the output features, then apply W_O. Preserve the

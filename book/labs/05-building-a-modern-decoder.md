@@ -6,10 +6,11 @@ operation. It must turn IDs into states, preserve and transform those states
 through depth, represent position, and return vocabulary-wide next-token scores.
 This lab follows that complete path through eleven executable lessons.
 
-This is the Chapter 5 **companion lab**, not a claim that the full Days 5–7
-narrative chapter has been synthesized. Integrate its evidence into that chapter
-during Day 7. All sessions already contain adjacent worked solutions; doing them
-one by one remains separate from their reference verification.
+This is the Chapter 5 **companion lab**. The
+[Day 5 narrative foundation](../chapters/05-building-a-modern-decoder.md) is now
+written; modern-variant sections and complete synthesis follow during Days 6–7.
+All sessions already contain adjacent worked solutions; doing them one by one
+remains separate from their reference verification.
 
 ## One model, inspected at several levels
 

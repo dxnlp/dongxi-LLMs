@@ -8,6 +8,7 @@ adjacent runnable solutions and explanations. Learner sessions begin with 01;
 reference verification does not mark learner completion.
 
 See the [companion lab](../../book/labs/05-building-a-modern-decoder.md),
+[narrative chapter](../../book/chapters/05-building-a-modern-decoder.md),
 [solution guide](../../book/solutions/05-decoder-notebook-solutions.md), and
 [verification report](../../experiments/reports/2026-09-06-decoder-notebooks.md).
 On Spark choose **Python (DGX Spark Native)**. On another machine choose a local

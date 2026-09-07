@@ -191,6 +191,11 @@ optional recurrent-depth session are built and reference-verified under
 - Evidence: `experiments/reports/2026-09-06-decoder-notebooks.md`.
 - Reusable implementation: `src/dongxi_llms/decoder_lab.py` and its tests.
 
-Integrate this companion's verified mechanisms into the complete Chapter 5
-narrative at the Day 7 synthesis. Notebook readiness does not complete learner
-practice, an architecture defense, or a trained recurrent-depth comparison.
+The Day 5 foundation is now written in
+`book/chapters/05-building-a-modern-decoder.md`, with twelve conceptual exercises
+and worked answers in the existing solution guide. It integrates the seven
+baseline notebooks and the learner's questions about jointly trained heads,
+residual preservation, normalization, local MLPs, and batched token losses.
+Extend this same chapter with modern variants and the architecture defense on
+Days 6–7. Notebook readiness and prose do not complete learner practice, an
+architecture defense, or a trained recurrent-depth comparison.

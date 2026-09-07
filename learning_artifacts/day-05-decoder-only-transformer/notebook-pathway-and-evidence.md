@@ -8,8 +8,8 @@
   predictions, adjacent runnable solutions, explanations, and controlled changes.
 - Canonical index: `notebooks/day-05/README.md`.
 - Book placement: `book/labs/05-building-a-modern-decoder.md` and
-  `book/solutions/05-decoder-notebook-solutions.md`; integrate into Chapter 5's
-  full narrative during Day 7 synthesis.
+  `book/solutions/05-decoder-notebook-solutions.md`; Day 5 foundation now in
+  `book/chapters/05-building-a-modern-decoder.md`, to extend during Days 6–7.
 
 ## Mechanisms made inspectable
 
@@ -36,7 +36,9 @@ fixed sharing only, not adaptive routing or a trained architecture comparison.
 - Specification/report: `experiments/{specs,reports}/2026-09-06-decoder-notebooks.md`.
 - Learner has not yet completed the pathway. Day 4 practice stays deferred.
 - Existing Day 3/4 learner edits were preserved and excluded from this work.
-- Next: notebook 01, first lookup prediction and implementation.
+- Original next action was notebook 01. Current position (2026-09-07): live
+  explanations reached notebook 07, and the learner requested foundation prose.
+  Review its evidence boundary before the Day 6 transition; mastery remains open.
 
 ## Live notebook 01 discussion — 2026-09-07
 

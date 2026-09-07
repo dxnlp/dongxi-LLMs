@@ -5,22 +5,22 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 5 (Notebook 02, architecture visuals ready)
+- Active day: Day 5 (baseline discussions reached Notebook 07; chapter foundation written)
 - Status: in progress
-- Current focus: learner requested explanatory visuals while opening Notebook 02.
-  Added 25 mechanism figures and 23 architecture maps/close-ups across all eleven
-  Chapter 5 notebooks (48 saved previews with runnable regeneration cells);
-  retain every saved learner cell and output. Notebook 01 discussion covered
-  vocabulary capacity, gradients, end-to-end training, optimizers, and step size.
-  Chapter 4 conceptual review reached Q/K/V projection gradients; its deferred
-  practice and independently unassessed checkpoints remain open.
-- Next action: reload notebooks/day-05/02_multi_head_attention.ipynb safely from
-  disk and study its model map, Q/K/V close-up, head-split, and attention maps.
-  Preserve any unsaved browser edits before reloading. Do not infer completion
-  of every Notebook 01 exercise from moving on. Current visual reference suite:
+- Current focus: synthesized the seven Day 5 baseline lessons and live questions
+  into `book/chapters/05-building-a-modern-decoder.md`, with twelve worked answers
+  in the existing solution guide. Includes head symmetry/joint training, residual
+  bypass versus backup, feature-axis normalization, positionwise MLPs, and the
+  many-token-loss/one-update distinction. Learner requested this foundation now;
+  modern-variant prose will extend the same chapter during Days 6–7.
+- Next action: review the chapter or resume Notebook 07's interpretation of
+  one-batch learning; invite an explanation of the complete decoder path before
+  proceeding to Day 6. Do not infer completed exercises or mastery from browser
+  navigation or acknowledgement. Chapter 4 deferred practice remains open.
+  Existing learner notebook edits are preserved. Current visual reference suite:
   11 notebook passes, 152 code cells, 48 figures, 47 repository tests; report:
   `experiments/reports/2026-09-07-decoder-architecture-visuals.md`. Full
-  Chapter 5 narrative synthesis remains scheduled for Day 7.
+  modern Chapter 5 extension and architecture defense remain scheduled for Days 6–7.
 - Last updated: 2026-09-07
 
 ## Four-week tracker
@@ -33,7 +33,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-tokenizer-mechanics.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
 | 3 | Probabilities and next-token loss | complete | Chapter: `book/chapters/03-learning-the-next-token.md`; three interactive notebooks; report: `experiments/reports/2026-09-03-next-token-distribution.md` |
 | 4 | Attention from first principles | in progress | Complete Chapter 4, 12 solutions, three notebooks, two reports; hands-on practice deferred, mastery not fully assessed |
-| 5 | Decoder-only Transformer | in progress | Eleven Chapter 5 notebooks reference-verified, companion lab and solutions, 38 tests; hands-on learner completion not claimed |
+| 5 | Decoder-only Transformer | in progress | Day 5 chapter foundation and 12 worked answers; eleven reference notebooks, 48 figures, 47 tests; learner mastery not yet assessed |
 | 6 | Modern architecture design | pending | — |
 | 7 | Architecture synthesis | pending | — |
 | 8 | Pretraining data and recipe | pending | — |
@@ -366,6 +366,25 @@ Detailed learner understanding is maintained by day and topic under
 and cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
 
 ## Open questions
+
+### Day 5 foundation synthesis — 2026-09-07
+
+- User requested the Day 5 contribution now, retaining Days 6–7 in Chapter 5.
+- Delivered: `book/chapters/05-building-a-modern-decoder.md`, twelve worked
+  answers in the existing solution guide, linked notebook/figure pathway, and
+  updated topic records, book indexes, and existing animation candidates.
+- Validation: chapter's runnable 160-step code excerpt reproduces final loss
+  0.0007856183219701052 and accuracy 1.0 under the existing reference contract;
+  LayerNorm and distinct-head gradient examples checked; 92 local links checked;
+  47 tests pass in 3.572 seconds; validation commands and diff check exit 0.
+- Boundaries: documentation synthesis and reproduction of a fixed toy example,
+  not a new model comparison, learner mastery, or completed modern architecture.
+  No notebooks were edited by this task; active saved/unsaved learner work stays
+  separate. No animation rendered; no commit or push performed for this synthesis.
+- Next: review this foundation/Notebook 07's evidence limits, then proceed to
+  Day 6's isolated modern-variant comparisons when ready.
+
+### Unresolved course-design questions
 
 - Which exact dataset and capability mix should anchor the general-assistant SFT branch?
 - Which verifiable task mixture should anchor the GRPO branch beyond initial arithmetic smoke tests?

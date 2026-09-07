@@ -144,8 +144,22 @@ all notebooks before studying them one by one. All eleven are now created and
 reference-verified (93 code cells, 38 repository tests). Residuals, normalization,
 and MLPs have separate baseline sessions with adjacent solutions. Companion lab:
 `book/labs/05-building-a-modern-decoder.md`; report:
-`experiments/reports/2026-09-06-decoder-notebooks.md`. Resume at notebook 01.
-Do not infer mastery from explanations or agent notebook execution.
+`experiments/reports/2026-09-06-decoder-notebooks.md`. Those counts describe the
+initial reference revision; the visual revision has 152 code cells, 48 figures,
+and 47 tests. Live discussion has since reached Notebook 07 (2026-09-07).
+
+At the learner's request, the Day 5 foundation is now a coherent narrative in
+`book/chapters/05-building-a-modern-decoder.md`, with twelve worked conceptual
+answers in `book/solutions/05-decoder-notebook-solutions.md`. Extend this same
+chapter with Days 6–7 material rather than creating disconnected daily chapters.
+Preserve the accessible examples: head-specific gradient paths under a shared
+loss; residual skip versus recoverable backup; per-token feature centering and
+scaling; contextual inputs to a positionwise MLP; many token losses before one
+optimizer step. Focused discussion record:
+`learning_artifacts/day-05-decoder-only-transformer/normalization-mlp-and-batched-learning.md`.
+Next: review the foundation/Notebook 07 evidence boundary, then transition to Day
+6 when the learner is ready. Do not infer mastery from explanations or agent
+notebook execution. No animation production or new publication was authorized.
 
 ## Scheduled frontier modules
 

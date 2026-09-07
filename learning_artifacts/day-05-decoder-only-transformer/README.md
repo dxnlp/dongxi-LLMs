@@ -1,8 +1,8 @@
 # Day 5 — The Decoder-Only Transformer
 
 - Opened: 2026-09-05
-- Status: in progress; eleven companion notebooks built and reference-verified;
-  live layer-by-layer practice not yet started
+- Status: in progress; live discussions reached Notebook 07; Day 5 narrative
+  foundation and worked answers written; independent mastery not yet assessed
 - Book destination: Chapter 5, Building a Modern Decoder (Days 5–7)
 - Central question: how do attention, feature transformations, and a persistent
   representation combine into a trainable next-token model?
@@ -43,13 +43,21 @@ were built and executed in fresh kernels on 2026-09-06. See
 
 The Chapter 4 conceptual review reached projection-matrix gradients before this
 transition. Its hands-on practice remains deferred; no additional mastery claim
-is inferred. Next: open the embeddings/positions notebook, then guide the
-learner through the component sequence toward a trainable decoder.
+is inferred. The Day 5 discussions have reached batched next-token learning.
+Next: review the chapter/Notebook 07 evidence boundary and explain the whole
+decoder path before moving to the Day 6 variants.
 
 ## Boundaries and completion evidence
 
 Implementation record:
 [`notebook-pathway-and-evidence.md`](notebook-pathway-and-evidence.md).
+
+Reader-facing foundation:
+[`Chapter 5`](../../book/chapters/05-building-a-modern-decoder.md), with
+[twelve worked conceptual answers](../../book/solutions/05-decoder-notebook-solutions.md#day-5-foundation--worked-conceptual-solutions).
+Discussion refinements:
+[`normalization-mlp-and-batched-learning.md`](normalization-mlp-and-batched-learning.md).
+Days 6–7 will extend the same chapter rather than replace this foundation.
 
 The baseline uses ordinary multi-head attention, LayerNorm, a GELU MLP, learned
 absolute positions, and causal next-token loss. RMSNorm, RoPE, SwiGLU, GQA,
