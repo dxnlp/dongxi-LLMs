@@ -1,14 +1,28 @@
-# Chapter 5 — Optional Recurrent-Depth Session
+# Day 7 — Architecture synthesis and optional recurrence
 
-11. [Reuse one block without treating compute as free](01_recurrent_depth.ipynb)
+Study in this order; numeric filenames preserve older links rather than defining
+the pedagogical order:
 
-Built and reference-verified, but optional for the learner. Complete the baseline
-and modern decoder sessions first. This CPU-only lab tests fixed weight sharing,
-gradient accumulation, causal invariance, and cache-state distinctions. It does
-not train a recurrent model, implement adaptive routing, or measure quality or
-speed advantages. The requested recurrent-depth and Mixture-of-Recursions papers
-are linked in the notebook.
+1. **Core:** [Architecture defense](02_architecture_defense.ipynb).
+   Trace the actual modern decoder, reconcile unique parameters and cache bytes,
+   inspect shared loss gradients, diagnose wrong-offset and wrong-axis variants,
+   and write a budget-controlled comparison proposal. Includes architecture
+   diagrams, data-backed plots, safe attempt cells, and adjacent worked solutions.
+2. **Optional:** [Recurrent depth](01_recurrent_depth.ipynb).
+   Apply one shared block repeatedly, compare independent copies, verify gradient
+   accumulation, and separate stored parameters from block applications and K/V
+   activations. No adaptive router or trained quality gain is implied.
 
-Keep `ARCH-LOOP-001`, `X-LOOP-001`, and `CAND-ANIM-011` as the canonical frontier,
-article, and animation records. This notebook supplies narrow mechanism evidence,
-not completion of those broader production tasks. Rendering stays on Mac Studio.
+Prerequisites: [Chapter 5 Days 5–6](../../book/chapters/05-building-a-modern-decoder.md)
+and the [Day 6 notebooks](../day-06/README.md). Both sessions use small CPU
+fixtures, Torch, and the Matplotlib dependency in `../requirements-visuals.txt`.
+Choose **Python (DGX Spark Native)** on Spark or a validated local equivalent;
+Mac execution is not claimed. Saved PNG previews are visible before execution.
+
+The architecture defense is an explanation backed by controlled evidence, not
+merely successful cell execution. A trained recurrence comparison requires a
+separate approved experiment with concrete data/seed/budget/measurement choices.
+Animations and public articles remain separately approved Mac Studio work.
+
+See the [verification report](../../experiments/reports/2026-09-07-day7-architecture-defense.md)
+and [worked-solution guide](../../book/solutions/05-decoder-notebook-solutions.md).

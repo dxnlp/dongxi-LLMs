@@ -4,21 +4,22 @@ Chapter 4 isolated attention: a position asks a learned query, compares legal
 keys, and retrieves a value mixture. A language model needs more than this one
 operation. It must turn IDs into states, preserve and transform those states
 through depth, represent position, and return vocabulary-wide next-token scores.
-This lab follows that complete path through eleven executable lessons.
+This lab follows that complete path through twelve executable lessons.
 
 This is the Chapter 5 **companion lab**. The
-[Day 5 narrative foundation](../chapters/05-building-a-modern-decoder.md) is now
-written; modern-variant sections and complete synthesis follow during Days 6–7.
+[Days 5–7 narrative](../chapters/05-building-a-modern-decoder.md) is now
+written, including the concluding architecture defense and 30 conceptual
+exercises with worked answers. Any trained comparison requires its own run.
 All sessions already contain adjacent worked solutions; doing them one by one
 remains separate from their reference verification.
 
 ## One model, inspected at several levels
 
-The notebook pathway now includes 48 explanatory visuals. Each notebook opens
+The notebook pathway now includes 52 explanatory visuals. Each notebook opens
 with a whole-model map and a component close-up; the modern-block lesson also
-zooms into SwiGLU. These 23 schematics separate structure from measured values
+zooms into SwiGLU. These 25 schematics separate structure from measured values
 and distinguish learned absolute positions from RoPE inside attention.
-The 25 existing mechanism figures include lookup and attention
+The 27 mechanism figures include lookup and attention
 heatmaps, actual weighted value contributions, residual/gradient vector sums,
 normalization and MLP transformations, a decoder schematic, measured training
 curves, RoPE geometry, grouped KV sharing, and recurrence accounting. Saved
@@ -126,6 +127,12 @@ it is not an optimized grouped-attention kernel. Dense forward matrix-multiply
 FLOP estimates count a multiply-add as two operations and do not measure speed.
 
 ## Optional: share depth without hiding the accounting
+
+Before the optional extension, complete the core
+[Day 7 architecture defense](../../notebooks/day-07/02_architecture_defense.ipynb).
+It integrates shape traces, parameter and cache audits, loss gradients, controlled
+bug diagnosis, and a comparison-design worksheet. The notebook filenames retain
+their existing links; the intended study order is defense before recurrence.
 
 11. [Recurrent depth](../../notebooks/day-07/01_recurrent_depth.ipynb) applies
     one block twice and compares it with two equal-valued independent copies.

@@ -7,6 +7,13 @@
 - Status: scheduled frontier topic, not part of the Day 4 completion contract
 - Evidence snapshot: 2026-09-04
 
+Update, 2026-09-07: the conceptual introduction now appears in Chapter 5 section
+5.20, with refreshed primary abstracts for both requested papers. The historical
+source details below remain a snapshot, not newly verified vendor claims. The
+Day 7 design defense and any trained budget-controlled comparison remain pending;
+the existing notebook verifies only fixed sharing. X-LOOP-001/CAND-ANIM-011
+remain canonical reminders, with no new drafting or rendering authorization.
+
 ## Why preserve this topic
 
 A standard decoder normally applies a sequence of separately parameterized

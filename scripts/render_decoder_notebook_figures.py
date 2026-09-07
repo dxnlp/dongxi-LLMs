@@ -16,8 +16,8 @@ def main():
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     manifest = json.loads((args.executed_directory/'manifest.json').read_text())
-    if manifest.get('status') != 'passed' or len(manifest['notebooks']) != 11:
-        raise ValueError('A successful eleven-notebook verification manifest is required')
+    if manifest.get('status') != 'passed' or len(manifest['notebooks']) not in (11, 12):
+        raise ValueError('A successful Chapter 5 verification manifest is required')
     destination = root/'notebooks/figures/chapter-05'
     destination.mkdir(parents=True, exist_ok=True)
     count = 0

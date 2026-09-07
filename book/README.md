@@ -8,7 +8,7 @@ The narrative architecture is defined in [`../BOOK.md`](../BOOK.md).
 2. [`chapters/02-text-tokens-and-embeddings.md`](chapters/02-text-tokens-and-embeddings.md)
 3. [`chapters/03-learning-the-next-token.md`](chapters/03-learning-the-next-token.md)
 4. [`chapters/04-attention-and-the-causal-information-boundary.md`](chapters/04-attention-and-the-causal-information-boundary.md)
-5. [`chapters/05-building-a-modern-decoder.md`](chapters/05-building-a-modern-decoder.md) — Day 5 foundation; Days 6–7 extensions forthcoming
+5. [`chapters/05-building-a-modern-decoder.md`](chapters/05-building-a-modern-decoder.md) — Days 5–7: foundation, modern mechanisms, and architecture defense
 6. [`appendices/a-laboratory-setup.md`](appendices/a-laboratory-setup.md), when setting up or reproducing the lab
 7. Chapter solutions, after attempting the exercises:
    [`Chapter 1`](solutions/01-evidence-before-optimization.md) and
@@ -26,6 +26,9 @@ and notebooks support rather than substitute for the canonical narrative.
 Chapter 5 now has a complete executable pathway in its
 [companion lab](labs/05-building-a-modern-decoder.md) and
 [notebook solution guide](solutions/05-decoder-notebook-solutions.md).
-All eleven reference notebooks are verified. The Day 5 narrative foundation
-is now written, with twelve worked conceptual solutions. Extend the same
-chapter through Days 6–7; material readiness remains separate from learner mastery.
+All twelve reference notebooks are verified, including the new Day 7 core
+architecture defense alongside optional recurrence. The complete Days 5–7
+narrative is written, with 30 worked conceptual solutions. Its concluding
+sections connect model tracing, gradient evidence, failure diagnosis, and fair
+architecture comparisons. The learner's defense and any trained comparison
+remain pending; material readiness is separate from learner mastery.

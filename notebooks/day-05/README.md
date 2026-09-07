@@ -1,8 +1,8 @@
 # Chapter 5 — Layer-by-Layer Notebook Pathway
 
 Designed on 2026-09-06 at the learner's request. Chapter 5 spans Days 5–7;
-these are focused sessions, not a requirement to finish ten notebooks in one day.
-This replaces the earlier three-session plan. All **eleven notebooks are built
+these are focused sessions, not a requirement to finish the pathway in one day.
+This replaces the earlier three-session plan. All **twelve notebooks are built
 and verified** in fresh kernels, including the optional extension. Each includes
 adjacent runnable solutions and explanations. Learner sessions begin with 01;
 reference verification does not mark learner completion.
@@ -13,7 +13,7 @@ See the [companion lab](../../book/labs/05-building-a-modern-decoder.md),
 [verification report](../../experiments/reports/2026-09-06-decoder-notebooks.md).
 On Spark choose **Python (DGX Spark Native)**. On another machine choose a local
 Python kernel with Torch installed; no GPU or downloads are required. Source
-reference outputs were originally cleared; the visual revisions now add 48
+reference outputs were originally cleared; the visual revisions now add 52
 saved PNG previews and runnable plot cells, preserving existing learner outputs.
 Install the additive Matplotlib dependency from `../requirements-visuals.txt`
 once in the selected kernel. Runtime lessons require no network downloads.
@@ -53,6 +53,12 @@ Day 7 uses the assembled model for an architecture defense: explain each shape,
 component, gradient path, and cost; diagnose a withheld broken variant; reconcile
 the implementation with its configuration. Candidate 50M/100M/150M designs are
 accounting exercises until a separate profiled run is authorized.
+
+The core [architecture-defense notebook](../day-07/02_architecture_defense.ipynb)
+now makes this session runnable. Study it before optional recurrence; its later
+filename preserves the original recurrence links rather than defining study order.
+The [Day 7 report](../../experiments/reports/2026-09-07-day7-architecture-defense.md)
+records the expanded twelve-notebook verification.
 
 Optional [session 11](../day-07/01_recurrent_depth.ipynb)
 implements fixed shared-block reuse after the baseline works. Compare stored

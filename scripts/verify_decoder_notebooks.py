@@ -36,8 +36,8 @@ def main():
     files = sorted(ROOT.glob('notebooks/day-05/*.ipynb'))
     files += sorted(ROOT.glob('notebooks/day-06/*.ipynb'))
     files += sorted(ROOT.glob('notebooks/day-07/*.ipynb'))
-    if len(files) != 11:
-        raise RuntimeError(f'Expected exactly 11 notebooks; found {len(files)}')
+    if len(files) != 12:
+        raise RuntimeError(f'Expected exactly 12 notebooks; found {len(files)}')
     mem = next((line for line in Path('/proc/meminfo').read_text().splitlines()
                 if line.startswith('MemAvailable:')), 'not available') if Path('/proc/meminfo').exists() else 'not available'
     manifest = dict(timestamp=datetime.now(timezone.utc).isoformat(),
@@ -50,6 +50,7 @@ def main():
                     source_sha256=sha(ROOT/'src/dongxi_llms/decoder_lab.py'),
                     visuals_sha256=sha(ROOT/'src/dongxi_llms/decoder_visuals.py'),
                     architecture_sha256=sha(ROOT/'src/dongxi_llms/decoder_architecture.py'),
+                    audit_sha256=sha(ROOT/'src/dongxi_llms/decoder_audit.py'),
                     test_sha256=sha(ROOT/'tests/test_decoder_lab.py'),
                     notebooks=[])
     start = time.perf_counter()

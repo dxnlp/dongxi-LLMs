@@ -196,6 +196,17 @@ The Day 5 foundation is now written in
 and worked answers in the existing solution guide. It integrates the seven
 baseline notebooks and the learner's questions about jointly trained heads,
 residual preservation, normalization, local MLPs, and batched token losses.
-Extend this same chapter with modern variants and the architecture defense on
-Days 6–7. Notebook readiness and prose do not complete learner practice, an
-architecture defense, or a trained recurrent-depth comparison.
+The same chapter now includes the Day 6 modern variants, parameter/cache/FLOP
+derivations, pinned Qwen shape comparison, accounting-only larger candidates,
+and a sourced introduction to recurrent depth in sections 5.11–5.22. The solution
+guide now answers 30 conceptual exercises. Sections 5.23–5.27 conclude the
+Days 5–7 narrative with model tracing, gradient evidence, differential failure
+diagnosis, budget-controlled comparison design, and the transition to pretraining.
+Notebook readiness and prose do not complete learner practice or establish a
+preferred model architecture; any trained comparison requires its own evidence.
+
+The Day 7 core defense is now executable in
+`notebooks/day-07/02_architecture_defense.ipynb`; study it before the existing
+optional recurrence notebook. The pathway has twelve sessions. Trace, cost,
+gradient, diagnostic, and proposal exercises support—but do not complete—the
+learner's architecture defense. No trained comparison was launched.

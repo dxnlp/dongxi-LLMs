@@ -76,6 +76,18 @@ class DecoderVisualTests(unittest.TestCase):
         self.assertNotIn('Token + position embeddings',modern_text)
         baseline.canvas.draw(); modern.canvas.draw()
 
+    def test_parameter_budget_uses_actual_ledger(self):
+        figure = viz.parameter_budget({'Embeddings': 256, 'MLP': 3072})
+        self.assertEqual([p.get_width() for p in figure.axes[0].patches], [256, 3072])
+        figure.canvas.draw()
+
+    def test_audit_tiles_match_report_values(self):
+        figure = viz.audit_outcomes({'good': {'finite': True, 'causal': True, 'cache': True},
+                                     'bad': {'finite': True, 'causal': False, 'cache': False}})
+        np.testing.assert_array_equal(figure.axes[0].images[0].get_array(), [[1,1,1],[1,0,0]])
+        self.assertEqual([t.get_text() for t in figure.axes[0].texts].count('FAIL'), 2)
+        figure.canvas.draw()
+
     def test_all_architecture_focuses_render(self):
         for focus in ('embeddings','attention','residual','norm','mlp','assembly',
                       'training','modern','positions','gqa','recurrence'):

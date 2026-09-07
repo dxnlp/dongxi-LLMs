@@ -61,8 +61,8 @@ dependencies, preferred machine, and current status.
   and runnable plot code. Also requested architecture visuals: include a whole-
   model map with the current component highlighted and a detailed component
   close-up showing operations, branches, and tensor shapes. Chapter 5 now has
-  48 saved previews (25 existing figures plus 23 architecture schematics) across
-  eleven notebooks; see `docs/NOTEBOOK_VISUALS.md`. Static notebook plots stay
+  52 saved previews across twelve notebooks, including the Day 7 defense;
+  see `docs/NOTEBOOK_VISUALS.md`. Static notebook plots stay
   distinct from approval-gated animation production on Mac Studio.
 - Wants every book chapter to contain several focused notebook sessions for its
   important LLM mathematics, architecture, optimization, data, or evaluation
@@ -127,6 +127,8 @@ ledger.
 | 3 | Probabilities and next-token loss | complete | `learning_artifacts/day-03-probabilities-and-next-token-loss/README.md` |
 | 4 | Attention and the causal information boundary | in progress | `learning_artifacts/day-04-attention-and-causal-information-boundary/README.md` |
 | 5 | Decoder-only Transformer | in progress | `learning_artifacts/day-05-decoder-only-transformer/README.md` |
+| 6 | Modern architecture design | material ready; guided study pending | `learning_artifacts/day-06-modern-architecture/README.md` |
+| 7 | Architecture synthesis | notebooks ready; guided defense pending | `learning_artifacts/day-07-architecture-synthesis/README.md` |
 
 At the start of each new day, create its directory and index. During the lesson,
 update the relevant focused topic whenever the learner states a prediction,
@@ -161,11 +163,44 @@ Next: review the foundation/Notebook 07 evidence boundary, then transition to Da
 6 when the learner is ready. Do not infer mastery from explanations or agent
 notebook execution. No animation production or new publication was authorized.
 
+Day 6 preparation (2026-09-07): at the learner's direct request, extended the
+same chapter with sections 5.11–5.22 and worked answers 13–24. Includes RMSNorm,
+SwiGLU and its product gradients, RoPE and cache offsets, GQA, the lab's explicitly
+defined Q/K norm, parameter/cache/FLOP accounting, pinned Qwen shapes, three
+accounting-only larger candidates, and a sourced recurrent-depth introduction.
+The existing three notebooks passed another source-preserving readiness run
+(43 code cells, 13 figures). No duplicate notebooks were created. Begin guided
+Day 6 study at RMSNorm/SwiGLU; material readiness is not learner completion.
+The Day 7 architecture defense and any budget-controlled trained comparison
+remain pending. Both requested recurrent-depth papers are cited in section 5.20;
+X-LOOP-001 and CAND-ANIM-011 remain the canonical public-content reminders.
+
+Day 7 notebook preparation (2026-09-07): added the missing core defense
+`notebooks/day-07/02_architecture_defense.ipynb`, retaining the existing optional
+`01_recurrent_depth.ipynb`. Study defense first, recurrence second; filenames
+preserve old links. Includes actual shape traces, budgets, loss gradients,
+controlled wrong-offset/time-mixing faults, and a comparison proposal. Twelve
+notebooks now pass (168 code cells, 52 figures); 53 tests pass. This does not
+execute the proposed trained comparison or complete learner mastery. Continue
+guided Day 6 first unless the learner requests the Day 7 review directly.
+
+Day 7 chapter synthesis (2026-09-07): at the learner's request, completed the
+Days 5–7 narrative arc in Chapter 5 through section 5.27, with 30 worked answers.
+The new conclusion explains actual tensor boundaries, mean-loss backward
+connectivity versus optimizer updates, independent finite/causal/cache checks,
+the GQA parameter/cache ledger, and distinct parameter/compute/time comparison
+contracts. It reuses the verified Day 7 fixture and two saved figures; no new
+training result is claimed. The defense rubric is choice → mechanism → shapes →
+evidence → trade-off → failure risk → next experiment. Guided study and independent
+defense remain pending. The portable record is
+`learning_artifacts/day-07-architecture-synthesis/README.md`; reuse existing
+animation candidates, with production still approval-gated on Mac Studio.
+
 ## Scheduled frontier modules
 
 | ID | Topic | Planned placement | Status | Durable source |
 |---|---|---|---|---|
-| `ARCH-LOOP-001` | Recurrent depth and looped Transformers: fixed stack reuse, variable recurrence, adaptive token-level routing, and latent versus token-space computation | Chapter 5; Days 6–7 | scheduled; primary sources captured; Astra attribution remains unverified | `learning_artifacts/day-04-attention-and-causal-information-boundary/future-recurrent-depth-and-looped-transformers.md` |
+| `ARCH-LOOP-001` | Recurrent depth and looped Transformers: fixed stack reuse, variable recurrence, adaptive token-level routing, and latent versus token-space computation | Chapter 5; Days 6–7 | conceptual prose ready in section 5.20; Day 7 comparison pending; vendor attribution unverified | `learning_artifacts/day-04-attention-and-causal-information-boundary/future-recurrent-depth-and-looped-transformers.md` |
 
 This queue preserves worthwhile, time-sensitive architecture topics without
 expanding the active learning day. Recheck primary sources when the module is
@@ -179,7 +214,7 @@ they are corroborated.
 | `X-BPE-001` | X article | What is a token? Unicode → BPE → model IDs | bilingual local packages prepared; editorial review pending | Mac | Chapter 2 tokenizer-mechanics enrichment complete |
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
 | `X-ATTN-KV-001` | X article | Why LLMs cache K and V—but not Q | ready for Mac drafting | Mac | Chapter 4 and toy cached/uncached verification complete; no serving benchmark claimed |
-| `X-LOOP-001` | X article | Looped Transformers: more effective depth without more stored weights—but not free compute | future creation reminder; drafting waits for Days 6–7 | Mac | Chapter 5 frontier treatment, refreshed primary-source check, and controlled recurrence comparison |
+| `X-LOOP-001` | X article | Looped Transformers: more effective depth without more stored weights—but not free compute | conceptual source ready; drafting waits for Day 7 evidence | Mac | Chapter 5 section 5.20 and refreshed primary abstracts ready; controlled recurrence comparison pending |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac Studio | Day 2 explanation complete |
 | `ANIM-BPE-002` | Animation | Meteor corpus → counted character BPE → vocabulary subset 1–5 → encoding | local 1080p review candidate ready; user visual approval pending | Mac Studio | Verified corpus trace and explicit second-round tie preference |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac Studio | Day 2 embedding lab and Day 3 loss derivation |

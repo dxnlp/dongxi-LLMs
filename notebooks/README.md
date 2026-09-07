@@ -33,8 +33,8 @@ sessions as their chapters become active rather than adding empty placeholders.
 
 ## Sessions
 
-Chapter 5 now includes 48 explanatory figures: 25 existing mechanism plots and
-23 architecture schematics. Saved previews are visible before execution;
+Chapter 5 now includes 52 explanatory figures across twelve notebooks, including
+the core Day 7 architecture defense. Saved previews are visible before execution;
 runnable cells redraw model maps/close-ups and plot live tensors. The plotting dependency
 is pinned in [`requirements-visuals.txt`](requirements-visuals.txt). Design and
 regeneration instructions: [`Notebook visuals`](../docs/NOTEBOOK_VISUALS.md).
@@ -46,4 +46,4 @@ regeneration instructions: [`Notebook visuals`](../docs/NOTEBOOK_VISUALS.md).
 - [`day-05/`](day-05/) — seven ready baseline layer/integration notebooks;
   includes the complete Chapter 5 pathway index
 - [`day-06/`](day-06/) — three ready modern-architecture notebooks
-- [`day-07/`](day-07/) — ready optional recurrent-depth notebook
+- [`day-07/`](day-07/) — core architecture-defense notebook, then optional recurrent depth

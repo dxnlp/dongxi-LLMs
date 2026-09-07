@@ -8,10 +8,10 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
-- Current position: Day 5 layer-by-layer decoder study; eleven Chapter 5
+- Current position: Day 5 baseline discussed; Days 6–7 material prepared; twelve Chapter 5
   companion notebooks are built and reference-verified;
-  [Chapter 5's Day 5 foundation](book/chapters/05-building-a-modern-decoder.md)
-  and twelve worked conceptual solutions are written;
+  [Chapter 5's complete Days 5–7 narrative](book/chapters/05-building-a-modern-decoder.md)
+  and 30 worked conceptual solutions are written (guided mastery remains pending);
   Day 4 material is complete and its live notebook practice is deferred
 - Primary machine: NVIDIA DGX Spark
 - Primary model family: Qwen3

@@ -11,16 +11,19 @@ learning.
 This chapter builds that connection. Its foundation, developed through Day 5,
 uses learned absolute positions, ordinary multi-head attention, LayerNorm, and
 a GELU feed-forward network. It is a complete small baseline, not yet the full
-modern architecture. Days 6–7 will extend this same chapter with RMSNorm,
-SwiGLU, RoPE, grouped-query attention, Q/K normalization, cost accounting, and
-architecture synthesis. The optional recurrent-depth extension follows those
-foundations; it is not required to understand this part.
+modern architecture. The Day 6 continuation begins at Section 5.11 and develops
+RMSNorm, SwiGLU, RoPE, grouped-query attention, Q/K normalization, cost accounting,
+and recurrent depth as a design axis. The Day 7 synthesis, beginning at Section
+5.23, brings these parts together into an architecture defense: trace the actual
+computation, diagnose failures, and design an evidence-bearing comparison.
+The frontier section is optional; no trained recurrence comparison is claimed.
 
 Prerequisites are the token/embedding distinction from Chapter 2, next-token
 cross-entropy from Chapter 3, and causal attention from Chapter 4. By the end
-of this foundation, you should be able to follow every tensor boundary, explain
-why the block has two different processing branches, and distinguish a working
-training mechanism from evidence of language capability.
+of the chapter, you should be able to follow every tensor boundary, explain
+why the block has two different processing branches, distinguish a working
+training mechanism from evidence of language capability, and defend a modern
+variant under an explicit resource and evaluation contract.
 
 The seven [Day 5 notebooks](../../notebooks/day-05/README.md) are first-class
 companion lessons. Read an explanation, predict the effect of its intervention,
@@ -592,14 +595,842 @@ features; normalization prepares branch inputs; residual paths carry the
 evolving state; and the vocabulary head connects that state to next-token loss.
 Backpropagation trains the designated parameters jointly through this chain.
 
-The next part will change specific mechanisms while preserving these roles.
+The next part changes specific mechanisms while preserving these roles.
 RMSNorm changes normalization, SwiGLU changes the MLP, RoPE changes position
 handling inside attention, and GQA changes key/value sharing. None should be
 introduced as an unexplained replacement acronym. Each needs a controlled
 comparison and explicit parameter, compute, and memory accounting.
 
-Those extensions already have [companion notebooks](../labs/05-building-a-modern-decoder.md#change-one-mechanism-at-a-time),
-but their full narrative and the architecture defense remain the Days 6–7 work.
-This foundation does not claim the final `DongxiGPT` design or the planned
-larger configurations are complete. It gives us the baseline from which their
-choices can be explained and tested.
+The [modern companion notebooks](../labs/05-building-a-modern-decoder.md#change-one-mechanism-at-a-time)
+support the continuation below. The baseline gives us something precise to
+change; the architecture defense will ask whether those changes are justified.
+
+## 5.11 Modernize mechanisms, not just names
+
+The Day 6 question is not “Which acronyms should a decoder contain?” It is:
+**Which operation should change, for what reason, and at what cost?** The
+next-token contract and residual-stream interface remain the same while we
+change how the branches read, transform, and share information.
+
+| Role | Day 5 baseline | Day 6 teaching variant |
+|---|---|---|
+| Prepare branch inputs | LayerNorm | RMSNorm |
+| Transform position-wise features | Two-projection GELU MLP | Three-projection SwiGLU |
+| Represent position | Add learned position vectors | Rotate projected Q/K coordinates |
+| Form source representations | One K/V head per query head | Share K/V within query-head groups |
+| Regulate Q/K magnitude | Scaled dot product only | Optional RMS normalization before RoPE |
+| Produce next-token scores | Final norm and vocabulary head | Same roles, with final RMSNorm |
+
+Our three [Day 6 notebooks](../../notebooks/day-06/README.md) move from local
+replacements to position/caching consistency and finally to a composed model.
+Their figures and reference solutions are part of the reading route. At the
+end, you should be able to distinguish a mathematical property, a tested
+implementation invariant, an arithmetic estimate, and a measured quality claim.
+
+## 5.12 RMSNorm: rescale without recentering
+
+LayerNorm subtracts a token's feature mean before rescaling. Must normalization
+always remove that common component? RMSNorm instead divides by the
+root-mean-square magnitude, then applies a learned feature scale. This is the
+central change introduced by [Zhang and Sennrich](https://arxiv.org/abs/1910.07467).
+
+Our implementation uses, for one token vector $x\in\mathbb R^D$:
+
+$$
+r(x)=\sqrt{\frac1D\sum_i x_i^2+\epsilon},\qquad
+\operatorname{RMSNorm}(x)_i=\gamma_i\frac{x_i}{r(x)}.
+$$
+
+There is no mean subtraction and no learned additive bias in this variant.
+The scale $\gamma\in\mathbb R^D$ is shared across token positions; the RMS
+statistic is computed separately for each token. The output shape stays
+$[B,T,D]$, and pre-norm placement leaves the skip path unchanged.
+
+To see the distinction, set learned scales to one and LayerNorm biases to zero.
+Ignoring epsilon only for this arithmetic illustration:
+
+| Input | LayerNorm | RMSNorm |
+|---|---|---|
+| $[3,4]$ | $[-1,1]$ | approximately $[0.849,1.131]$ |
+| $[13,14]$ | $[-1,1]$ | approximately $[0.962,1.036]$ |
+| $[5,5]$ | $[0,0]$ with positive epsilon | approximately $[1,1]$ |
+
+RMSNorm keeps information about the common component relative to the vector's
+overall scale. It does not preserve the original magnitude or guarantee that
+no information is lost. Adding the same number to all coordinates can change
+its output, whereas LayerNorm removes that common shift.
+
+Before learned scaling, the mean square of the RMS-normalized output is
+$\operatorname{mean}(x^2)/(\operatorname{mean}(x^2)+\epsilon)$, approximately
+one when epsilon is negligible. Its mean need not be zero. For positive $a$:
+
+$$
+\frac{ax}{\sqrt{a^2\operatorname{mean}(x^2)+\epsilon}}
+=\frac{x}{\sqrt{\operatorname{mean}(x^2)+\epsilon/a^2}}.
+$$
+
+This derives approximate positive-scale invariance and shows exactly where
+epsilon matters. It is not a guarantee that subsequent projections or learned
+scales cannot produce large values.
+
+![Feature values before normalization, after centering with LayerNorm, and after RMS scaling without centering.](../../notebooks/figures/chapter-05/day-06-01_rmsnorm_and_swiglu-visual-rms-vs-ln.png)
+
+This saved notebook plot compares actual fixture vectors before learned affine
+changes. The implementation avoids the mean-subtraction operation, but fewer
+formula steps do not by themselves establish a speedup on a particular device.
+We verify forward values and input/scale gradients against the library reference;
+we do not claim a local latency or trained-quality comparison.
+
+**Companion:** [RMSNorm and SwiGLU, first experiment](../../notebooks/day-06/01_rmsnorm_and_swiglu.ipynb).
+Change a common feature offset, then inspect what each normalization preserves.
+
+## 5.13 SwiGLU: learn how features modulate other features
+
+The baseline MLP has one expanded feature branch. A gated MLP gives the same
+input two learned views and multiplies their results coordinate by coordinate.
+SwiGLU belongs to the GLU family explored by
+[Shazeer](https://arxiv.org/abs/2002.05202). We use the bias-free form already
+implemented in the lab:
+
+$$
+c=XW_{\rm up},\qquad a=XW_{\rm gate},\qquad
+g=\operatorname{SiLU}(a)=a\odot\sigma(a),
+$$
+
+$$
+\operatorname{SwiGLU}(X)=(g\odot c)W_{\rm down}.
+$$
+
+Both $c$ and $g$ have shape $[B,T,F]$; the down projection returns $[B,T,D]$.
+Think of one branch proposing feature values and the other modulating them
+based on the same contextual state. These labels describe computational roles,
+not a guarantee that individual coordinates are interpretable concepts.
+
+![A SiLU gate and a content projection meet in an elementwise product before the down projection.](../../notebooks/figures/chapter-05/day-06-01_rmsnorm_and_swiglu-architecture-gated-mlp.png)
+
+The gate is not an attention probability. Although sigmoid alone lies between
+zero and one, SiLU multiplies it by its input. At inputs $-1,0,2$, SiLU is
+approximately $-0.269,0,1.762$. Gate values can be negative or exceed one, and
+neither the gate vector nor the product must sum to one. This is feature
+modulation, not selection of another token position.
+
+The product also gives two gradient routes. If $u=g\odot c$ and its arriving
+gradient is $\delta$, then:
+
+$$
+\frac{\partial\mathcal L}{\partial c}=\delta\odot g,\qquad
+\frac{\partial\mathcal L}{\partial a}
+=\delta\odot c\odot\operatorname{SiLU}'(a).
+$$
+
+One branch affects the other branch's learning signal. A zero gate makes this
+bias-free MLP's output zero, but that alone does not imply zero gate-parameter
+gradients: $\operatorname{SiLU}'(0)=1/2$, so the gate can still learn when the
+content and downstream gradient are nonzero. Forward suppression and permanent
+inability to learn are different claims.
+
+### Match budgets, not just hidden widths
+
+A bias-free GELU MLP stores $2DF$ matrix parameters; SwiGLU stores $3DF$.
+Matching their matrix counts approximately gives
+$F_{\rm gated}\approx(2/3)F_{\rm GELU}$. Width must still be an integer and
+may be rounded for an implementation's preferred dimensions.
+
+The notebook's GELU MLP includes biases. At $D=16,F=32$, its actual count is
+$2(16)(32)+32+16=1072$. A same-width SwiGLU has 1536 parameters; using gated
+width 22 gives 1056. That is a close budget comparison, not exact equality.
+Replacing normalization alone, MLP alone, and then both distinguishes the
+functional interventions. Different untrained outputs do not identify which
+replacement will achieve better held-out loss after training.
+
+**Companion:** [RMSNorm and SwiGLU, remaining experiments](../../notebooks/day-06/01_rmsnorm_and_swiglu.ipynb).
+Inspect both branches, their product, the zero-gate control, and parameter counts.
+
+## 5.14 RoPE: let position change the query–key comparison
+
+The baseline adds a position vector to the token embedding. RoPE takes another
+route: it rotates coordinates of projected queries and keys according to their
+positions. The [RoFormer paper](https://arxiv.org/abs/2104.09864) introduces
+this connection between absolute-position rotations and relative-position
+dependence in attention.
+
+For one two-coordinate column vector, define:
+
+$$
+R(\theta)=
+\begin{bmatrix}\cos\theta&-\sin\theta\\
+\sin\theta&\cos\theta\end{bmatrix},\qquad
+R(\theta)\begin{bmatrix}a\\b\end{bmatrix}
+=\begin{bmatrix}a\cos\theta-b\sin\theta\\a\sin\theta+b\cos\theta\end{bmatrix}.
+$$
+
+As a geometric example, rotating $[1,0]$ by 90 degrees gives $[0,1]$. Its
+length stays one, but its compatibility with another fixed vector changes.
+The notebook uses angles in radians rather than forcing a 90-degree step.
+
+Our implementation groups adjacent coordinates into pairs. Pair $j$ at
+position $m$ rotates by $m\omega_j$, with
+$\omega_j=10000^{-2j/d}$ for $j=0,\ldots,d/2-1$. Head width must therefore
+be even. Different pairs rotate at different rates; position zero is the
+identity. These frequencies are deterministic configuration, not a learned
+position table. The Q/K projections remain learned.
+
+### Why does relative distance appear?
+
+Use fixed unrotated vectors $q,k$ and write $R_m$ for the block-diagonal rotation
+at position $m$. Orthogonality and angle addition give:
+
+$$
+(R_mq)^\top(R_nk)
+=q^\top R_m^\top R_nk
+=q^\top R_{n-m}k.
+$$
+
+The score can therefore depend on the difference between positions. Moving
+both fixed vectors forward by the same position offset preserves their rotated
+dot product. This is an identity for those vectors, not proof that every model
+output depends only on distance: their unrotated states also depend on tokens,
+prefix boundaries, and previous layers.
+
+![RoPE rotates projected Q and K, while V bypasses rotation and supplies the attention mixture.](../../notebooks/figures/chapter-05/day-06-02_rotary_positions-architecture-detail.png)
+
+RoPE does not decide which positions are visible. The causal mask still does
+that. Our modern path no longer adds learned absolute positions at the input;
+instead, each attention layer rotates its Q/K coordinates. Values are unrotated
+by this operation, though their incoming states can already contain positional
+effects from earlier layers. Shape and coordinate-pair norm are preserved.
+
+A formula that can evaluate rotations at a longer index is not proof of good
+long-context behavior. Frequency choices, training lengths, numerical handling,
+and the trained model all matter. Nor does using RoPE make this adjacent-pair
+toy implementation compatible with every checkpoint's coordinate layout.
+
+**Companion:** [Rotary positions](../../notebooks/day-06/02_rotary_positions.ipynb).
+Check pair norms, derivatives, and the relative-position identity before using a cache.
+
+## 5.15 Correct caching requires consistent positions
+
+For a fixed causal prefix under unchanged weights, past per-layer keys and
+values need not be recomputed when we append tokens. RoPE adds a precise
+condition: cached keys must retain the rotations for their original positions.
+
+Suppose prefill processes positions 0 and 1. The next query and key use position
+2. An old key from position 1 is already rotated for position 1; do not rotate
+it again. Restarting the new query at zero creates the wrong relative angle,
+even if every attention edge is causally legal.
+
+This separates two correctness checks:
+
+- **Visibility:** no query reads a future key.
+- **Position consistency:** each query/key comparison uses the intended indices.
+
+The first can pass while the second fails. A cache is not just a bag of vectors;
+its entries have layer, request/prefix, head, position, and parameter-version
+meaning. Reusing entries after relevant weights or the prefix change generally
+invalidates them. Prefix sharing across requests requires equivalent prefix
+computation and explicit serving support, not arbitrary sentence reuse.
+
+Prefill computes many positions together and builds the cache. Ordinary decode
+then projects the new token's states and reads cached source states. It avoids
+redoing old projections and other prefix work, but the new query still attends
+over its retained sources. Caching is an optional inference optimization, not
+a prerequisite for the transformer definition or teacher-forced training.
+
+**Companion:** [Cached replay and broken offsets](../../notebooks/day-06/02_rotary_positions.ipynb).
+The reference compares full-sequence logits with prefill plus incremental
+decoding. It deliberately restarts rotation offsets while keeping visibility
+correct, making the resulting mismatch attributable to positional consistency.
+
+## 5.16 GQA: keep several questions, share source representations
+
+Ordinary multi-head attention has matching query and K/V head counts.
+Grouped-query attention decouples them. Let $H_q$ be the query-head count and
+$H_{kv}$ the K/V-head count, with $H_q$ divisible by $H_{kv}$. Multiple queries
+can ask different questions about the same projected keys and values. This is
+the sharing axis studied by [Ainslie et al.](https://arxiv.org/abs/2305.13245).
+
+For four query heads and two K/V heads, queries 0–1 use K/V head 0, and queries
+2–3 use K/V head 1 in our contiguous-group implementation. Their queries differ,
+so sharing keys does not force identical attention weights. Their value mixtures
+can differ even when they use the same source value vectors.
+
+![Four query heads share two key/value heads in groups; sharing arrows are not attention weights.](../../notebooks/figures/chapter-05/day-06-03_gqa_qknorm_and_costs-visual-gqa-routing.png)
+
+With $r=H_q/H_{kv}$ and group index $g(h)=\lfloor h/r\rfloor$:
+
+$$
+A_h=\operatorname{softmax}
+\left(\frac{Q_hK_{g(h)}^\top}{\sqrt d}+C\right),\qquad
+O_h=A_hV_{g(h)}.
+$$
+
+Queries have shape $[B,H_q,T,d]$; compact K/V have $[B,H_{kv},S,d]$; attention
+weights still have $[B,H_q,T,S]$. Full-sequence execution uses $S=T$, whereas
+decoding includes cached source positions. $H_{kv}=H_q$ recovers ordinary MHA;
+$H_{kv}=1$ is multi-query attention.
+
+K/V sharing constrains the learned source representations and sums gradient
+contributions from all query heads using each shared source head. That can
+reduce storage and projection work, but the model has less independent K/V
+parameterization. The quality effect needs training and evaluation, not just
+a shape check.
+
+The lab explicitly repeats compact K/V to compare its arithmetic with a
+reference attention operation. Repetition is useful for explanation and gradient
+verification, but introduces temporary tensors. An optimized grouped-attention
+kernel need not implement the same physical expansion. Do not confuse our
+mathematical equivalence test with a serving-speed benchmark.
+
+## 5.17 Q/K normalization is not one universal formula
+
+Recall that multiplying both Q and K by 10 multiplies their raw dot products by
+100. The $1/\sqrt d$ factor does not undo input-dependent magnitude growth.
+Normalizing projected Q/K can reduce that sensitivity before softmax.
+
+Our explicitly defined variant does the following in each attention layer:
+
+1. Project and split Q and K into heads.
+2. RMS-normalize each head vector over its $d$ coordinates.
+3. Apply learned Q and K feature scales.
+4. Apply RoPE, compute dot products, and retain division by $\sqrt d$.
+
+The two learned scale vectors each have shape $[d]$ and are broadcast across
+heads and positions within the layer. Thus the lab adds $2d$ parameters per
+layer, not $d(H_q+H_{kv})$. “Per-head normalization” here describes where
+statistics are computed, not a separate scale vector for every head.
+
+The [original QKNorm paper](https://arxiv.org/abs/2010.04245) instead describes
+L2-normalized Q/K and a learned score scale in place of the usual square-root
+division. Do not treat its reported results as a measurement of our different
+RMS-based implementation.
+
+Even with unit feature scales, RMS normalization is not unit-L2 normalization:
+for negligible epsilon a $d$-coordinate RMS-normalized vector has L2 length
+$\sqrt d$. With learned coordinate scales, scores are not simply cosine
+similarities. Epsilon makes positive-rescaling invariance approximate. Moreover,
+featurewise scaling and rotation need not commute, so the declared order—Q/K
+normalization before RoPE—is part of the model definition.
+
+**Companion:** [GQA and Q/K normalization](../../notebooks/day-06/03_gqa_qknorm_and_costs.ipynb).
+Check grouped forward/backward agreement and sensitivity to rescaling, then
+verify that the optional normalization parameters receive finite gradients.
+This is not evidence that the variant improves trained stability or quality.
+
+## 5.18 Count parameters, cache bytes, and arithmetic separately
+
+“Smaller” could mean fewer parameters, fewer stored activations, less arithmetic,
+or lower latency. These quantities can move differently. Derive each from the
+operations rather than treating parameter count as a universal cost score.
+
+### Stored parameters
+
+For our bias-free modern projections, attention stores:
+
+$$
+P_{\rm attn}
+=DH_qd+DH_{kv}d+DH_{kv}d+H_qdD
+=2Dd(H_q+H_{kv}).
+$$
+
+The four terms correspond to Q, K, V, and the attention output projection.
+One SwiGLU stores $3DF$ parameters. Two block RMSNorm scales store $2D$.
+Let $I_{qk}$ be 1 when the optional Q/K norm is enabled and 0 otherwise.
+With $L$ blocks, tied embeddings, no learned position table, and final RMSNorm:
+
+$$
+P_{\rm total}=VD+
+L\left[2Dd(H_q+H_{kv})+3DF+2D+2dI_{qk}\right]+D.
+$$
+
+Untying the vocabulary head adds another $VD$. Biases or another normalization
+variant require changing this formula. Count shared Parameter objects once;
+two equal-valued but independent tensors are still two sets of parameters.
+
+### Logical KV payload
+
+If each cached element occupies $b_e$ bytes, retained length is $S$, and batch
+size is $B$, compact keys and values require:
+
+$$
+\boxed{M_{\rm KV}=2LBH_{kv}Sd\,b_e.}
+$$
+
+The factor 2 is for K and V. This is tensor payload, excluding allocation
+overhead, metadata, temporary expansion, and other model memory. Reducing
+$H_{kv}$ by half halves this payload under fixed other factors; it does not
+halve model weights or total runtime memory.
+
+As a hypothetical sizing example, $L=24,B=1,S=4096,H_{kv}=8,d=64,b_e=2$
+gives 201,326,592 bytes, or 192 MiB. With four KV heads it gives 96 MiB.
+Those are calculated payloads, not observed device-memory readings.
+
+Weight payload is separately $P_{\rm total}b_w$ for $b_w$ bytes per stored
+weight, before quantization metadata or implementation overhead. Training also
+needs gradients, optimizer state, and saved/recomputed activations. For an
+illustrative all-float32 Adam setup, weights, gradients, and two moment tensors
+alone total roughly 16 bytes per parameter; mixed precision, master copies,
+sharding, and optimizer implementations change that accounting. This is not a
+complete training-memory estimate.
+
+### Dense forward matrix-multiply FLOPs
+
+Count a multiply-add as two operations. For full-sequence attention at $S=T$:
+
+$$
+F_{\rm block}
+=4BTDd(H_q+H_{kv})+4BH_qT^2d+6BTDF.
+$$
+
+The terms count projections, the score/value matrix multiplications, and
+SwiGLU's three projections. The vocabulary head adds $2BTDV$ once after the
+stack. The estimate excludes normalization, softmax, nonlinearities, masking,
+embedding lookup, backward, and other work. It counts the score matrices as
+dense even though future entries are masked.
+
+GQA reduces the K/V projection terms, but $H_q$ query distributions remain in
+the quadratic term. During one-token decoding, the score/value products instead
+scale as approximately $4BH_qSd$ per layer: fewer queries, but a growing source
+length. Neither expression directly predicts latency, which also depends on
+memory traffic, kernel implementation, hardware, and batching.
+
+The [recorded tiny-model comparison](../../experiments/reports/2026-09-06-decoder-notebooks.md)
+uses $B=2,T=6,L=2,D=16,H_q=4,d=4,F=32$, tied embeddings, Q/K norm, and
+float64 cache elements:
+
+| KV heads | Unique parameters | Compact KV bytes | Estimated dense forward matmul FLOPs |
+|---:|---:|---:|---:|
+| 4 | 5,472 | 6,144 | 138,240 |
+| 2 | 4,960 | 3,072 | 125,952 |
+| 1 | 4,704 | 1,536 | 119,808 |
+
+Parameter and payload counts were reconciled with instantiated tensors; FLOPs
+are analytical estimates. None of the columns is a measured speedup or
+validation-quality result.
+
+## 5.19 Compose a modern teaching decoder
+
+The block still has two residual updates. Its attention branch now contains
+Q/K normalization when enabled, RoPE, and grouped source sharing. Its MLP is
+SwiGLU, and its branch/final norms are RMSNorm. Initial states come from token
+embeddings alone; RoPE provides position handling within each attention layer.
+
+The following small CPU example reuses the importable implementation. Run it
+after the notebook's import-path setup; it performs no training or downloads:
+
+```python
+import torch
+from dongxi_llms.decoder_lab import (
+    DecoderConfig, TinyDecoder, teaching_batch, parameter_count, cost_estimate,
+)
+
+torch.set_num_threads(1)
+torch.manual_seed(505)
+cfg = DecoderConfig(modern=True, qk_norm=True, kv_heads=2)
+model = TinyDecoder(cfg).double().eval()
+ids, labels = teaching_batch()
+
+with torch.no_grad():
+    full = model(ids)
+    _, cache = model(ids[:, :2], return_cache=True)
+    suffix = model(ids[:, 2:], caches=cache)
+
+torch.testing.assert_close(suffix, full[:, 2:], atol=1e-10, rtol=1e-8)
+assert full.shape == (2, 6, 16)
+assert parameter_count(model) == 4960
+print(cost_estimate(cfg, batch=2, length=6, bytes_per_element=8))
+```
+
+This establishes the tested cached/full-forward agreement and shape/count
+contract. It does not establish that an untrained modern variant is better
+than the fitted Day 5 baseline. The source remains named `TinyDecoder`; it is
+the transparent architecture prototype for `DongxiGPT`, not a renamed released
+checkpoint or a completed pretraining system.
+
+### Read a real configuration without pretending to load its weights
+
+The pinned [Qwen3-0.6B configuration at c1899de](https://huggingface.co/Qwen/Qwen3-0.6B/raw/c1899de289a04d12100db370d81485cdf75e47ca/config.json),
+rechecked 2026-09-07, provides a useful shape contrast:
+
+| Field | Value |
+|---|---:|
+| Residual width | 1,024 |
+| Query / KV heads | 16 / 8 |
+| Head width | 128 |
+| MLP intermediate width | 3,072 |
+| Layers | 28 |
+| Vocabulary entries | 151,936 |
+| RoPE base | 1,000,000 |
+
+Here $H_qd=2048$, not $D=1024$. In PyTorch storage convention the query
+projection therefore has shape `[2048,1024]`, and the attention output
+projection `[1024,2048]`. The projections connect different widths; $D=H_qd$
+was a baseline choice, not a universal law. The config also enables tied
+embeddings. These fields support a configuration comparison, not a claim that
+our RoPE layout or implementation can load Qwen weights.
+
+### Candidate model sizes are designs, not allocated models
+
+Notebook 3 defines three accounting-only candidates with vocabulary 16,000,
+$d=64$, $H_{kv}=2$, tied embeddings, Q/K norm, and a configured context limit
+of 2,048. It uses the formula above without allocating the larger models:
+
+| Target scale | $D$ | $L$ | $H_q$ | $F$ | Calculated parameters |
+|---|---:|---:|---:|---:|---:|
+| Approximately 50M | 512 | 15 | 8 | 1,408 | 50,480,512 |
+| Approximately 100M | 640 | 21 | 10 | 1,728 | 100,587,008 |
+| Approximately 150M | 768 | 23 | 12 | 2,048 | 152,508,544 |
+
+The vocabulary is an explicit budget assumption, not an already trained course
+tokenizer or the Qwen vocabulary. Before adopting a candidate, choose its data
+and tokenizer contract, profile the training implementation, and state the
+available memory and compute budget. The table establishes neither trainability
+on a particular machine nor a preferred final design.
+
+## 5.20 Frontier: reuse depth without pretending compute is free
+
+Evidence snapshot: 2026-09-07. After understanding a block, we can ask whether
+every depth must own independent weights. A simple fixed recurrence instead
+uses $h_{r+1}=F_\theta(h_r)$ several times with the same $\theta$. Stored
+parameters stay shared while the number of transformations grows.
+
+For $L_P$ prelude blocks, $L_R$ shared core blocks repeated $R$ times, and
+$L_C$ final blocks, effective block applications are:
+
+$$
+L_{\rm effective}=L_P+RL_R+L_C.
+$$
+
+This is an accounting identity, not a claim that tied depth equals the capacity
+of independently parameterized depth. Backward sums contributions through the
+shared weights' multiple uses. Training must preserve or recompute enough
+intermediate state for those paths; weight sharing alone does not make
+activation memory constant.
+
+Keep three designs distinct:
+
+- **Fixed recurrence:** use a specified number of shared applications.
+- **Variable recurrence:** train or evaluate at different iteration counts.
+- **Adaptive token-level recurrence:** a routing mechanism allocates different
+  amounts of computation to different tokens.
+
+Geiping et al. study a recurrent-depth model that spends additional test-time
+computation in hidden states rather than requiring additional emitted tokens.
+That is the relevant conceptual link here; the paper's reported quality gains
+are not results from our teaching decoder.
+[*Scaling up Test-Time Compute with Latent Reasoning*](https://arxiv.org/abs/2502.05171v2).
+
+Bae et al. combine shared recursive layers with learned token-level depth
+routing and describe recursion-aware KV mechanisms, including a separate
+KV-sharing variant. Those are explicit architectural choices, not consequences
+of weight tying alone.
+[*Mixture-of-Recursions*](https://arxiv.org/abs/2507.10524v3).
+
+In the ordinary repeated-block thought experiment, the second application reads
+a different state, so it generally produces different K/V even with the same
+weights. It is not safe to reuse first-application K/V merely because parameters
+match. An explicit architecture can choose different cache semantics, but must
+define and validate them.
+
+Extra latent computation and visible chain-of-thought are distinct channels.
+Reusing layers does not itself suppress generated reasoning text or prove that
+fewer intermediate tokens will be needed. No closed-vendor architecture claim
+is required for this argument.
+
+The [optional Day 7 notebook](../../notebooks/day-07/01_recurrent_depth.ipynb)
+compares fixed shared applications with equal-valued independent copies and
+checks gradient accumulation. It does not implement adaptive routing or show a
+trained quality improvement. A later comparison must say whether parameters,
+FLOPs, or wall-clock budget are held fixed, and must measure loss, latency,
+memory, and fixed samples under the declared contract.
+
+## 5.21 Modern-decoder exercises
+
+Continue the Day 5 exercise numbering. [Worked answers](../solutions/05-decoder-notebook-solutions.md#day-6-modern-decoder--worked-conceptual-solutions)
+and the three notebooks support each question.
+
+13. Why do LayerNorm and RMSNorm treat a common feature offset differently?
+    What happens to a constant nonzero vector in each?
+14. Why is positive-scale invariance only approximate with epsilon? Does RMS
+    normalization imply a zero mean or unit L2 length?
+15. Why can a SwiGLU gate be negative or exceed one? If its output is zero,
+    can its gate weights still receive a gradient?
+16. Why is equal MLP hidden width not a parameter-matched GELU/SwiGLU comparison?
+17. Derive the relative-position RoPE identity. Why does it not prove arbitrary
+    long-context generalization or entire-model translation invariance?
+18. A cache has a correct causal mask but incorrect rotation offsets. Why can
+    its outputs disagree with a full forward pass?
+19. Which tensor dimensions shrink under GQA, which do not, and where do the
+    gradients from shared query groups accumulate?
+20. Specify the exact Q/K norm used in the lab. Why does “per-head” not mean
+    one independently learned scale vector for every head here?
+21. What does halving KV heads do to cache payload, total parameters, and
+    dense score/value arithmetic? Which statements require a benchmark?
+22. Why can $D$ differ from $H_qd$? What evidence does the pinned config provide,
+    and what does it not establish about checkpoint compatibility?
+23. Does a 100M parameter estimate establish that a training run fits memory?
+    What must be added to the accounting before selecting a candidate?
+24. When a shared block runs twice, what is shared and what can differ? Why
+    are parameter-matched and compute-matched comparisons different experiments?
+
+## 5.22 Bringing the mechanisms together
+
+The modern decoder is not a new collection of unrelated components. Its
+residual path, causal information boundary, and next-token objective still
+connect the whole model. RMSNorm changes the normalized view, SwiGLU changes
+feature computation, RoPE changes positional geometry, GQA changes source
+sharing, and optional Q/K norm changes score sensitivity. Recurrence introduces
+another axis: how often shared transformations are applied.
+
+The implementation and notebooks establish controlled properties of these
+mechanisms. They do not establish a universally best combination. An architecture
+defense explains each choice, its tensor shapes, the evidence supporting it,
+what it costs, and a failure that would challenge it. This final part of the
+chapter develops that argument. Candidate selection, hardware profiling, any
+trained recurrence comparison, and the complete release design still require
+their own evidence.
+
+The [Day 7 architecture-defense notebook](../../notebooks/day-07/02_architecture_defense.ipynb)
+now provides that practical route: trace real module boundaries, audit the
+parameter and cache ledger, inspect backward connectivity, diagnose controlled
+failures, and write a comparison proposal. Study it before the optional
+recurrent-depth notebook. Runnable worked solutions support the exercise; they
+do not replace your explanation or execute the proposed training comparison.
+
+## 5.23 Read the model as a connected argument
+
+An architecture diagram says what should connect. A trace asks whether the
+implementation actually makes those connections. Begin with a small enough
+model that every boundary can be inspected: the defense notebook uses two
+blocks, residual width $D=16$, four query heads, two KV heads, head width $d=4$,
+and SwiGLU width $F=32$. Its batch has two sequences of six token IDs and its
+vocabulary has sixteen entries. These are teaching dimensions, not claims about
+the size of a useful language model.
+
+The token IDs have shape `[2,6]`. An embedding lookup produces `[2,6,16]` states.
+Unlike the baseline, this modern fixture does not add learned absolute position
+embeddings. Position enters through RoPE on Q/K inside each attention branch.
+The residual stream remains sixteen features wide throughout both blocks.
+
+Within a block, RMSNorm prepares a view of each position for the attention
+projections. The trace records Q projection output `[2,6,16]` and K/V projection
+outputs `[2,6,8]`. These are **before head splitting**. Rearranging them gives
+Q `[2,4,6,4]` and compact K/V `[2,2,6,4]`. The two KV heads supply four query
+heads; they do not reduce the number of query-specific attention distributions.
+Q/K normalization, rotation, causal scores, softmax, and value mixing then
+produce one result per query head. Concatenation and the output projection
+return `[2,6,16]`, ready for residual addition.
+
+The second branch normalizes the updated stream and sends each position
+through SwiGLU. Gate and content projections each create `[2,6,32]` features;
+their elementwise product is projected back to `[2,6,16]`. Another residual
+addition completes the block. After the last block, final normalization and
+the tied vocabulary head produce logits `[2,6,16]`.
+
+The final 16 is a different axis from the residual 16. One counts candidate
+tokens; the other counts learned features. They happen to match in this fixture.
+If vocabulary size changed to 10,000 while residual width stayed sixteen, the
+last tensor would be `[2,6,10000]`. The model would still carry sixteen features
+per position between blocks. Shape agreement is necessary, but equal numbers
+do not mean equal roles.
+
+This tracing exercise also has a boundary: module hooks expose module outputs,
+not every internal operation. The separate attention and RoPE notebooks expose
+head rearrangement, score matrices, and rotation arithmetic. Together they let
+us move between the whole-model explanation and the mechanism microscope.
+
+### From logits back to parameters
+
+The notebook pairs the twelve output positions with twelve correctly shifted
+labels. Their mean cross-entropy is one scalar loss. For each position, the
+logit derivative is the familiar prediction-minus-target vector, divided by
+twelve because this example averages twelve equally weighted losses:
+
+$$
+\frac{\partial L}{\partial z_{b,t,i}}
+=\frac{p_{b,t,i}-q_{b,t,i}}{12}.
+$$
+
+This does not mean the optimizer updates twelve times. Backward combines the
+paths into parameter gradients. With tied embeddings, the same table receives
+contributions through both input lookup and vocabulary scoring. Attention
+connects an answer loss to legal earlier states; it never requires the target
+token to enter that position's forward representation.
+
+In the recorded untrained fixture, mean loss was about 2.79849 and all 24
+parameter tensors had connected, finite gradients. No optimizer step was taken,
+and the parameter values remained unchanged. This verifies backward connectivity
+on that batch. It does not show that every scalar derivative is nonzero, that
+every head has a useful specialization, or that learning has already occurred.
+Backward computes a proposed direction of change; the optimizer applies a rule
+for using it.
+
+## 5.24 Diagnose the contract that failed
+
+A program can return plausible numbers while computing the wrong function.
+That is why “the loss is finite” is too weak to be our entire correctness test.
+The architecture-defense notebook asks three different forward questions:
+
+1. **Finiteness:** are the logits free of infinities and NaNs on this input?
+2. **Future invariance:** if later input tokens change, do earlier logits stay
+   unchanged within numerical tolerance?
+3. **Cache equivalence:** does prefix prefill followed by cached suffix
+   processing reproduce the corresponding suffix of a full forward pass?
+
+For the last test, weights and tokens are identical, evaluation mode removes
+training-time stochasticity, and the positional convention is held fixed.
+The fixture uses float64 CPU arithmetic and an explicit comparison tolerance;
+other numerical implementations need tolerances appropriate to their precision.
+
+![Finite outputs do not guarantee causality or cache correctness](../../notebooks/figures/chapter-05/day-07-02_architecture_defense-visual-diagnostics.png)
+
+Read the figure by row: each is a controlled implementation variant. Read it by
+column: each check asks about a different property. The correct fixture passes
+all three. Resetting the new RoPE offsets passes finiteness and future invariance,
+but fails cache equivalence. Centering states across the whole time axis passes
+finiteness but fails both causal and cache checks.
+
+Why does the offset bug leave causality intact? The mask can still exclude
+every future position while permitted Q/K pairs use the wrong relative angles.
+It is the geometry of legal edges, not the visibility rule, that has changed.
+The recorded maximum cached-suffix logit difference was approximately 0.03252,
+while changing future tokens caused no earlier-logit difference in that test.
+
+Why does time-axis centering leak information despite masked attention? An
+earlier state now subtracts a mean that includes later states. The forbidden
+information arrives through normalization, before the attention mask can help.
+The measured earlier-logit difference was about 0.000347. Small is not the same
+as absent: under this controlled perturbation it is evidence against the causal
+contract, not a harmless improvement in numerical accuracy.
+
+These cases illustrate differential diagnosis, not a universal lookup table of
+bugs. A cache mismatch might also come from concatenating along the wrong axis,
+stale parameters, a different prefix, or an incorrect mask. A failing check
+narrows the investigation; inspecting the relevant operation identifies the
+cause. Conversely, passing one short example does not prove correctness for
+every length, batch shape, padding pattern, or precision.
+
+The [verification report](../../experiments/reports/2026-09-07-day7-architecture-defense.md)
+records the exact fixture and observations. Its successful mechanism tests are
+not measurements of language quality or serving performance.
+
+## 5.25 Defend a choice under a declared budget
+
+Now ask a design question: why retain two KV heads rather than four in this
+teaching model? “GQA is modern” is not an explanation. A defensible answer
+identifies what changes, what remains, and what has actually been measured.
+
+At fixed query-head count, two KV heads reduce the K/V projection matrices and
+compact cache payload. They leave four query distributions. In the notebook's
+paired configurations, unique parameters decrease from 5,472 to 4,960 and
+float64 cache payload decreases from 6,144 to 3,072 bytes. Total model parameters
+do not halve because embeddings, MLPs, norms, and Q/output projections remain.
+
+![The unique-parameter ledger for the modern teaching decoder](../../notebooks/figures/chapter-05/day-07-02_architecture_defense-visual-budget.png)
+
+The longest bar is the MLP budget. Changing KV sharing cannot remove those
+parameters. The embedding/head bar counts one shared Parameter, not two
+equal-valued copies. This is why a component-level ledger is more informative
+than a single model-size number.
+
+The two-KV-head fixture stores 3,072 bytes of compact cache tensors, but that is
+not the process's peak memory. Its estimated dense forward matrix arithmetic is
+125,952 FLOPs, but that is not measured latency. A design defense can honestly
+conclude that this variant satisfies the tested shape and cache contracts with
+a smaller logical KV payload. It cannot conclude that it is twice as fast or
+retains the same trained quality.
+
+### There is more than one fair comparison
+
+Consider the optional recurrent-depth experiment. One shared block application
+and two shared applications can store the same parameters, but they do not
+spend the same computation. The question determines which budget to hold fixed:
+
+| Contract | What the comparison asks | What is not automatically equal |
+|---|---|---|
+| Fixed stored parameters and training-token budget | Does extra repeated computation help this parameter-limited model? | FLOPs, elapsed time, activation memory |
+| Fixed training-compute budget | Which design makes better use of the allowed arithmetic? | Tokens seen, updates, elapsed time |
+| Fixed wall-clock budget on declared hardware | Which implementation reaches better validation quality in the available time? | FLOPs, tokens, utilization |
+
+These are different scientific questions, not three names for the same fair
+test. Compensating for extra recurrence by reducing width changes capacity;
+compensating by reducing updates changes training exposure. Neither is forbidden,
+but both must be visible in the interpretation. Training budget and inference
+budget must also be stated separately.
+
+Before running a comparison, write down the tokenizer and data revisions, split
+definitions, initialization and seed policy, optimizer and schedule, sequence
+length, batch and accumulation settings, stopping budget, and checkpoint
+selection rule. Keep tokenization and evaluation loss reduction identical if
+comparing token-level cross-entropy directly. Use validation data for recipe
+selection and preserve an untouched test set for the final assessment.
+
+Report validation loss together with the resource measurements relevant to the
+question. For generation, declare prompt lengths, generated lengths, cache use,
+precision, decoding settings, warm-up, and timing boundaries. Fixed prompts
+help illustrate behavior; a few attractive samples are not an independent
+quality metric. Multiple seeds help reveal whether a small difference is
+repeatable, but only runs actually performed may be reported as evidence.
+
+The notebook's recurrence worksheet is such a proposal, not a completed
+comparison. Its placeholders for concrete budgets and data must be resolved
+before training. The correct conclusion today is that the experiment has a
+testable structure—not that recurrence has won.
+
+## 5.26 Architecture-defense exercises
+
+Use the [Day 7 worked answers](../solutions/05-decoder-notebook-solutions.md#day-7-architecture-defense--worked-conceptual-solutions)
+after forming an explanation. These questions ask for reasoning, not memorized
+acronyms or lengthy arithmetic.
+
+25. The residual states and logits both end in width sixteen in the teaching
+    model. Why are they not interchangeable? Which shapes change if only the
+    vocabulary grows to 10,000?
+26. Every parameter tensor has a connected finite gradient, but the notebook
+    takes no optimizer step. What has been established, and what has not? Why
+    does averaging twelve token losses matter to their gradients?
+27. A model is finite and passes a future-token perturbation check, but cached
+    generation differs from full recomputation. Explain one plausible mechanism
+    and a follow-up check without claiming that the signature uniquely identifies it.
+28. Why can an attention mask be correct while the complete model is noncausal?
+    Describe the information path in the time-centering failure.
+29. A colleague says, “Halving KV heads halves memory and doubles speed.” Rewrite
+    this as a precise supported claim and identify the missing measurements.
+30. Design the question for a fixed-parameter one-use versus two-use recurrent
+    comparison. What additional contract would make it a compute-efficiency
+    study, and what would count as evidence against your initial hypothesis?
+
+## 5.27 From architecture to controlled pretraining
+
+The chapter began with an incomplete explanation: attention retrieves context.
+We can now follow the complete path. IDs select embedding rows; residual states
+carry learned features; attention mixes information across permitted positions;
+MLPs transform each position's contextual features; normalization prepares the
+branch inputs; and a vocabulary projection turns final states into candidate
+scores. Shifted labels define losses whose gradients reach the shared trainable
+parameters. An optimizer then changes those parameters.
+
+Modern choices alter parts of this path without changing its central purpose.
+RMSNorm changes normalization, SwiGLU changes feature transformation, RoPE changes
+attention's positional geometry, GQA changes K/V sharing, and recurrence changes
+how often a shared transformation is applied. Their names do not replace an
+explanation of tensor shapes, gradient paths, costs, and failure conditions.
+
+A compact architecture defense follows this chain:
+
+**Choice → mechanism → tensor shapes → evidence → trade-off → failure risk → next experiment.**
+
+For example: “I use two KV heads for four query heads to reduce compact cache
+payload. Queries retain separate distributions while groups share source K/V.
+The teaching implementation passes the recorded causal and cache checks and
+uses half the KV payload of its four-KV-head counterpart. I have not established
+a latency or quality benefit. I would next profile the intended workload and
+compare validation quality under a declared training budget.” That is stronger
+than either an unqualified endorsement or an unexplained list of components.
+
+The next chapter moves from the function we built to the learning process we
+can trust: data provenance and splits, token budgets, optimization schedules,
+memory and throughput, checkpoints, and held-out evaluation. The small
+memorization experiment establishes that the mechanism can fit its batch. The
+architecture audit establishes selected implementation properties. Neither
+settles whether a larger model will learn useful language patterns from the
+planned corpus. That becomes the next controlled experiment.

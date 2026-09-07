@@ -31,8 +31,8 @@ not as optional decoration added after the lesson.
 
 ## Reference previews versus live plots
 
-The Chapter 5 notebooks include 48 saved PNG previews: 25 existing explanatory
-figures plus 23 architecture schematics (one model map and one close-up per
+The Chapter 5 notebooks include 52 saved PNG previews: 27 mechanism figures
+plus 25 orientation/component schematics (one model map and one close-up per
 notebook, with an extra SwiGLU close-up). Runnable cells regenerate schematics
 from their drawing definitions and data plots from live lesson tensors. Previews remain
 visible before a kernel starts. They are labeled as saved reference results;

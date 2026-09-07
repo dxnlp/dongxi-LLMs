@@ -108,3 +108,15 @@ conceptual exercises and worked answers. Seven baseline notebooks are linked
 at the point of use. The visual reference revision has 152 code cells and 48
 figures across all eleven notebooks. Days 6–7 extend the same chapter; reference
 execution and written prose do not complete learner practice or the defense.
+
+The Day 6 modern-mechanism continuation is now written in Chapter 5 sections
+5.11–5.22, with worked answers 13–24. The three existing Day 6 sessions were
+rechecked in fresh kernels (43 code cells, 13 figures); no duplicate notebooks
+were created. Guided learner sessions remain distinct from this preparation.
+
+Day 7 now has a core architecture-defense notebook in addition to the existing
+optional recurrence notebook. This brings Chapter 5 to twelve sessions. Study
+`day-07/02_architecture_defense.ipynb` before `01_recurrent_depth.ipynb`; preserve
+the older filename for stable links. The core session integrates actual shape
+traces, budgets, gradients, controlled failures, and a comparison proposal. It
+does not execute a trained recurrence comparison or certify learner mastery.

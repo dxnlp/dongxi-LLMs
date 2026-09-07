@@ -5,22 +5,21 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 5 (baseline discussions reached Notebook 07; chapter foundation written)
+- Active day: Days 6–7 material preparation; live baseline discussion last reached Day 5 Notebook 07
 - Status: in progress
-- Current focus: synthesized the seven Day 5 baseline lessons and live questions
-  into `book/chapters/05-building-a-modern-decoder.md`, with twelve worked answers
-  in the existing solution guide. Includes head symmetry/joint training, residual
-  bypass versus backup, feature-axis normalization, positionwise MLPs, and the
-  many-token-loss/one-update distinction. Learner requested this foundation now;
-  modern-variant prose will extend the same chapter during Days 6–7.
-- Next action: review the chapter or resume Notebook 07's interpretation of
-  one-batch learning; invite an explanation of the complete decoder path before
-  proceeding to Day 6. Do not infer completed exercises or mastery from browser
-  navigation or acknowledgement. Chapter 4 deferred practice remains open.
-  Existing learner notebook edits are preserved. Current visual reference suite:
-  11 notebook passes, 152 code cells, 48 figures, 47 repository tests; report:
-  `experiments/reports/2026-09-07-decoder-architecture-visuals.md`. Full
-  modern Chapter 5 extension and architecture defense remain scheduled for Days 6–7.
+- Current focus: Chapter 5 now covers the full Days 5–7 narrative through
+  section 5.27, with 30 worked conceptual answers. The conclusion integrates
+  actual model tracing, gradient evidence, controlled failure diagnosis, budget
+  accounting, and fair comparison design, then bridges to controlled pretraining.
+- Next action: begin `notebooks/day-06/01_rmsnorm_and_swiglu.ipynb` with the
+  LayerNorm/RMSNorm contrast, reconnecting the Day 5 baseline if needed. Material
+  was requested ahead of study: do not infer completed exercises or mastery.
+  Day 5 mastery and Chapter 4 deferred practice remain open. Current visual suite:
+  12 notebook passes, 168 code cells, 52 figures, 53 repository tests; report:
+  `experiments/reports/2026-09-07-day7-architecture-defense.md`. Day 6 prose
+  checks: `experiments/reports/2026-09-07-day6-chapter-verification.md`.
+  Day 7 now has a core defense notebook plus optional recurrence. The learner's
+  defense and any specified trained comparison remain pending.
 - Last updated: 2026-09-07
 
 ## Four-week tracker
@@ -33,9 +32,9 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 2 | Tokenization and embeddings | complete | Chapter: `book/chapters/02-text-tokens-and-embeddings.md`; reports: `experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md`, `experiments/reports/2026-08-31-tokenizer-mechanics.md`, `experiments/reports/2026-08-31-embedding-gradient-paths.md`, `experiments/reports/2026-08-31-qwen3-embedding-inspection.md` |
 | 3 | Probabilities and next-token loss | complete | Chapter: `book/chapters/03-learning-the-next-token.md`; three interactive notebooks; report: `experiments/reports/2026-09-03-next-token-distribution.md` |
 | 4 | Attention from first principles | in progress | Complete Chapter 4, 12 solutions, three notebooks, two reports; hands-on practice deferred, mastery not fully assessed |
-| 5 | Decoder-only Transformer | in progress | Day 5 chapter foundation and 12 worked answers; eleven reference notebooks, 48 figures, 47 tests; learner mastery not yet assessed |
-| 6 | Modern architecture design | pending | — |
-| 7 | Architecture synthesis | pending | — |
+| 5 | Decoder-only Transformer | in progress | Day 5 chapter foundation and 12 worked answers; expanded Chapter 5 suite has twelve notebooks, 52 figures, 53 tests; learner mastery not yet assessed |
+| 6 | Modern architecture design | in progress | Chapter 5 sections 5.11–5.22, worked answers 13–24, three ready notebooks; guided study pending |
+| 7 | Architecture synthesis | in progress | Chapter 5 sections 5.23–5.27 and answers 25–30; core defense notebook and optional recurrence ready; guided defense and trained comparison pending |
 | 8 | Pretraining data and recipe | pending | — |
 | 9 | Pretraining run and diagnosis | pending | — |
 | 10 | Evaluation before training | pending | — |
@@ -365,7 +364,7 @@ Detailed learner understanding is maintained by day and topic under
 `learning_artifacts/`. Its index, the X article backlog, animation storyboards,
 and cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
 
-## Open questions
+## Recent material synthesis
 
 ### Day 5 foundation synthesis — 2026-09-07
 
@@ -384,7 +383,43 @@ and cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
 - Next: review this foundation/Notebook 07's evidence limits, then proceed to
   Day 6's isolated modern-variant comparisons when ready.
 
-### Unresolved course-design questions
+### Day 6 narrative preparation — 2026-09-07
+
+- User requested ready notebooks and then coherent chapter material ahead of
+  guided study. Reused the three already-committed notebooks; no duplicates.
+- Extended Chapter 5 through section 5.22; now 24 worked answers. Covers modern
+  mechanisms, exact lab conventions, design accounting, pinned Qwen shapes,
+  larger calculated candidates, and both requested recurrent-depth papers.
+- Verification: new chapter snippet and numerical examples pass; 47 tests pass;
+  95 local links and seven heading anchors checked. Three-session readiness:
+  43 code cells, 13 figures, source-preserving fresh kernels. Full evidence in
+  `experiments/reports/2026-09-07-day6-chapter-verification.md`.
+- No notebook edits, large-model allocation/training, animation render, or
+  public publication. Day 5/6 mastery and Day 7 defense remain unclaimed.
+- Next: guided Day 6 notebook 01, starting with the norm contrast.
+
+### Day 7 chapter synthesis — 2026-09-07
+
+- User requested a coherent chapter update after preparing the core Day 7
+  notebook. Extended the existing Chapter 5, not a competing daily chapter.
+- Sections 5.23–5.27 complete the narrative through architecture defense;
+  exercises and worked answers now total 30. Integrated two verified figures
+  and the existing report's tensor, gradient, cost, and controlled-fault evidence.
+- New prose distinguishes finite outputs from causal/cache correctness,
+  backward connectivity from learning updates, and parameter budgets from
+  compute/time contracts. It closes with a concrete defense and a pretraining
+  transition. No trained recurrence result or preferred large model is claimed.
+- Chapter navigation and portable learning memory updated. Existing notebook
+  content and all earlier uncommitted work preserved; no publication or render.
+- Verification: mean-loss derivative, gradient connectivity, unchanged weights,
+  trace shapes, paired budgets, and three diagnostic signatures rechecked on
+  the existing CPU float64 fixture. All 93 local links and six heading anchors
+  pass; 27 chapter sections and 30 answers are sequential; twelve notebook hashes
+  are unchanged. Details in the Day 7 learning artifact.
+- Next: guided Day 6 notebook 01 unless the learner chooses Day 7 review first.
+  Material completion does not close outstanding practice or defense requirements.
+
+## Open questions
 
 - Which exact dataset and capability mix should anchor the general-assistant SFT branch?
 - Which verifiable task mixture should anchor the GRPO branch beyond initial arithmetic smoke tests?

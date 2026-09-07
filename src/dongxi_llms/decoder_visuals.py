@@ -35,6 +35,34 @@ def styled(function):
     return wrapper
 
 
+@styled
+def parameter_budget(ledger):
+    fig, ax = plt.subplots(figsize=(9, 4), layout='constrained')
+    ax.barh(list(ledger), list(ledger.values()), color=BLUE)
+    ax.invert_yaxis()
+    ax.set(xlabel='Unique stored scalar parameters', title='Where the parameter budget goes')
+    for i, value in enumerate(ledger.values()):
+        ax.text(value, i, f' {value:,}', va='center', fontsize=9)
+    ax.margins(x=.18)
+    return fig
+
+
+@styled
+def audit_outcomes(reports):
+    from matplotlib.colors import ListedColormap
+    columns = ['finite', 'causal', 'cache']
+    values = np.array([[int(row[key]) for key in columns] for row in reports.values()])
+    fig, ax = plt.subplots(figsize=(8, 3.5), layout='constrained')
+    ax.imshow(values, cmap=ListedColormap(['#FEE2E2', '#D1FAE5']), vmin=0, vmax=1, aspect='auto')
+    ax.set(xticks=range(3), xticklabels=['Finite values', 'Future invariance', 'Cache equivalence'],
+           yticks=range(len(reports)), yticklabels=list(reports),
+           title='A finite forward pass is not a complete correctness check')
+    for i in range(len(reports)):
+        for j in range(3):
+            ax.text(j, i, 'PASS' if values[i,j] else 'FAIL', ha='center', va='center')
+    return fig
+
+
 def _heat(ax, values, title, xlabel='Feature coordinate', ylabel='Position', limit=None):
     data = array(values)
     if data.ndim != 2:

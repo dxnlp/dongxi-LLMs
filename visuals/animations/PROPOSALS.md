@@ -11,6 +11,57 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### Day 7 chapter synthesis — 2026-09-07
+
+Source: user-requested chapter update; agent automatic mathematics review.
+Chapter 5 sections 5.23–5.27 reuse the embedding/CE backward packets for
+`dL/dz = (p-q)/12` in the twelve-target mean-loss fixture; CAND-ANIM-014 for the
+future-state → time-mean → earlier-state leak; CAND-ANIM-016 for incorrect cache
+rotation offsets; and CAND-ANIM-017 for distinct query-count, KV-payload, and
+whole-model-budget counters. The fixed-parameter/compute/time comparison in
+5.25 strengthens CAND-ANIM-011's accounting caveats. Evidence is the executable
+Day 7 teaching audit, not trained comparative quality. Two existing static
+figures illustrate the prose. No duplicate animation or rendering task is
+created; production still requires explicit approval and runs on Mac Studio.
+
+### Day 7 defense notebook — 2026-09-07
+
+Automatic mechanism check: the new core defense notebook supplies actual module
+shape traces, parameter/cache accounting, backward connectivity, and two
+controlled failure signatures. Reuse the existing embedding/attention/loss
+packets and CAND-ANIM-014/016/017 rather than creating duplicate animations.
+CAND-ANIM-011 and X-LOOP-001 can reuse its comparison-design worksheet; that
+worksheet is a proposal, not a trained result or rendering approval. All media
+production remains approval-gated on Mac Studio. Canonical evidence:
+`experiments/reports/2026-09-07-day7-architecture-defense.md`.
+
+### Day 6 narrative readiness — 2026-09-07
+
+Source: agent automatic mathematics check during requested chapter creation.
+Canonical material is Chapter 5 sections 5.11–5.22 and worked answers 13–24.
+Refine existing proposals rather than creating duplicates:
+
+- CAND-ANIM-014: contrast feature centering with RMS magnitude; show the constant
+  vector and common-offset cases, epsilon, and the untouched residual bypass.
+- CAND-ANIM-015: follow the two expanded branches through SiLU and multiplication;
+  extend backward with dL/dc=delta*g and dL/da=delta*c*SiLU'(a). A zero forward
+  gate is not necessarily a dead gradient path. Verify numeric motion before render.
+- CAND-ANIM-016: preserve coordinate-pair norms and show R_m^T R_n=R_(n-m),
+  then keep the causal mask correct while deliberately restarting decode offsets.
+- CAND-ANIM-017: keep Hq attention distributions visible while compact Hkv
+  storage shrinks. Distinguish tensor payload, dense FLOPs, and actual latency.
+  Add Q/K RMS rescaling as an optional subscene; the lab's learned scales are
+  shared across heads, and the original QKNorm paper uses a different formula.
+- CAND-ANIM-011 / X-LOOP-001: both requested primary papers are linked in the
+  canonical frontier introduction. Fixed sharing, variable depth, token-level
+  routing, and explicit KV sharing remain distinct. The trained comparison and
+  architecture defense still belong to Day 7; no quality result is inferred.
+
+Static notebook previews and reference calculations are available. All animation
+production remains on Mac Studio under the existing approval gates. This
+chapter-writing request does not commission rendering, article drafting, or
+public publication.
+
 ### Day 5 foundation synthesis — 2026-09-07
 
 Source: agent automatic math-opportunity check while writing the requested

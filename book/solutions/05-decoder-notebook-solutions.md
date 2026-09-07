@@ -5,9 +5,11 @@ sequential route. Every exercise has its runnable solution and explanation
 immediately below it in the notebook. This guide summarizes what a sound
 interpretation must preserve; it is not a replacement for running the cells.
 
-The [Day 5 foundation of Chapter 5](../chapters/05-building-a-modern-decoder.md)
-now supplies the continuous narrative. Its twelve conceptual exercises are
-answered below; the table also retains the Days 6–7 notebook pathway.
+The [Chapter 5 narrative](../chapters/05-building-a-modern-decoder.md) now covers
+the Day 5 foundation, Day 6 modern mechanisms, and Day 7 architecture synthesis.
+Its 30 conceptual exercises are answered below. The table covers the original
+eleven notebooks; the core Day 7 defense immediately below it brings the full
+pathway to twelve. Study that defense before optional recurrence.
 
 | Session | Core reasoning in the worked solution |
 |---|---|
@@ -25,6 +27,25 @@ answered below; the table also retains the Days 6–7 notebook pathway.
 
 ## Architecture defense
 
+The core [Day 7 notebook](../../notebooks/day-07/02_architecture_defense.ipynb)
+now makes this defense executable. Its worked solutions establish:
+
+- Trace: Q output is `[2,6,16]`, compact K projection output `[2,6,8]` before
+  splitting, MLP intermediate `[2,6,32]`, and vocabulary logits `[2,6,16]`.
+  The two occurrences of width 16 have different roles; hooks are removed.
+- Accounting: the modern fixture has 4,960 unique parameters and 3,072 compact
+  float64 KV bytes; the dense forward matmul estimate is 125,952, not latency.
+- Backward: all parameter tensors have connected finite gradients in the
+  fixture, but weights remain unchanged without an optimizer step. Nonzero
+  gradients are not a capability or component-importance measurement.
+- Diagnosis: the reference passes finite/causal/cache checks. Wrong RoPE
+  offsets remain causal but fail replay. Full-time centering can remain finite
+  while failing causality and replay. These controlled examples do not imply
+  a one-to-one mapping from every real failure signature to a unique cause.
+- Comparison: one versus two shared applications can match stored parameters
+  while spending different computation. Specify actual training/evaluation and
+  measurement budgets before executing the proposal.
+
 Use the modern tiny model after session 10. Explain, without relying on its
 class names alone, what each operation does to the token, head, and feature
 axes; why it is causal; which parameters it trains; and which invariants survive
@@ -32,8 +53,9 @@ its controlled intervention. An answer is strong when it identifies the relevant
 test and its evidence boundary, not merely when it repeats a layer name.
 
 Notebook readiness and the recorded reference experiment are complete material
-deliverables. The Day 5 narrative foundation is written; Days 6–7 narrative
-extensions, the architecture defense, and learner completion remain separate.
+deliverables. The Days 5–7 narrative, including the architecture-defense method,
+is written; the learner's independent defense, any trained comparison, and
+learner completion remain separate.
 
 ## Day 5 foundation — worked conceptual solutions
 
@@ -167,3 +189,227 @@ compensation by other components. Neither different attention maps nor a
 changed output after ablation establishes a unique semantic function by itself.
 The reversed-context probe cannot supply an accuracy score without declared
 gold labels.
+
+## Day 6 modern decoder — worked conceptual solutions
+
+### 13. Removing an offset is different from scaling a vector
+
+LayerNorm subtracts the feature mean. Adding a common constant to the input
+does not change its centered vector or variance. RMSNorm does not subtract
+that constant: both its numerator and RMS magnitude change, generally producing
+a different result. For a positive constant vector, LayerNorm produces zero
+before its affine transform, whereas RMSNorm produces values approximately one
+before its learned scale. With default affine parameters these remain zero and
+approximately one. Arbitrary learned LayerNorm beta or RMS scales change those
+final values. Neither method mixes token positions when statistics are over D.
+
+### 14. Epsilon and vector length matter
+
+For positive $a$, normalizing $ax$ with epsilon is equivalent to normalizing
+$x$ with epsilon divided by $a^2$. The outputs are approximately equal only
+where that denominator change is negligible. Without learned scaling, RMSNorm
+gives approximately unit root-mean-square magnitude, not a zero mean. Its L2
+length is approximately $\sqrt D$, not one. This distinction becomes important
+when interpreting RMS-normalized Q/K scores as though they were cosines.
+
+### 15. A gate is a feature multiplier, not a probability
+
+SiLU is $a\sigma(a)$: it can be negative for negative $a$ and exceed one for
+sufficiently positive $a$. Its outputs are not normalized across coordinates.
+For $u=\operatorname{SiLU}(a)\odot c$, an arriving gradient $\delta$ gives
+$d\mathcal L/da=\delta\odot c\odot\operatorname{SiLU}'(a)$. At $a=0$,
+the derivative of SiLU is one half. Thus a zero gate can suppress forward
+content without preventing gradient flow into the gate weights. This requires
+appropriate nonzero content, inputs, and downstream gradients; it is not a
+guarantee for every state or loss. The notebook's zero-output result also
+depends on its bias-free projections.
+
+### 16. Count all three projections
+
+At feature widths D and F, the bias-free gated MLP has three matrices totaling
+$3DF$, compared with two totaling $2DF$ in a bias-free ordinary MLP. Matching
+matrix budgets suggests gated width near two-thirds of the original width.
+The notebook's biased GELU MLP at D=16,F=32 has 1072 parameters. SwiGLU at
+F=32 has 1536, and F=22 has 1056. A claim about quality must distinguish exact
+and approximate parameter matching, and additionally declare training/evaluation
+data and compute budgets. Interface-compatible replacements are not automatically
+fair quality comparisons.
+
+### 17. Relative position arises inside a dot product
+
+For orthogonal pair rotations, $R_m^\top R_n=R_{n-m}$. Substituting this into
+$(R_mq)^\top(R_nk)$ gives $q^\top R_{n-m}k$. A common position shift cancels
+for fixed unrotated q and k. A whole language model also changes those vectors
+with tokens, boundaries, and prior layers; the identity alone does not make its
+outputs invariant to arbitrary sentence shifts. Being able to calculate an
+angle at a new index likewise does not establish trained quality beyond the
+training context range. Different checkpoints can use different pair layouts,
+bases, or scaling rules.
+
+### 18. Causal edges can use incorrect geometry
+
+If the prefix occupies positions 0 and 1, the next Q/K should use position 2.
+Restarting them at position 0 creates the wrong angle relative to already
+rotated cached keys. The mask may still forbid every future edge, but the
+allowed scores differ from the full-pass computation. Correct replay requires
+both valid visibility and consistent positions under the same parameters and
+prefix. Cached keys keep their original rotations; they are not rotated again
+each time they are read.
+
+### 19. Share source representations, not query distributions
+
+GQA shrinks K/V projections from $DH_qd$ each to $DH_{kv}d$ each, and compact
+K/V tensors from `[B,Hq,S,d]` to `[B,Hkv,S,d]`. Query tensors still use Hq,
+as do attention distributions `[B,Hq,T,S]` and head outputs `[B,Hq,T,d]`.
+Different Q vectors can form different weights over shared K and thus different
+mixtures of shared V. Backward sums the contributions from all using query
+heads into their shared K/V activations and parameters. Explicitly repeating
+K/V verifies this arithmetic, but does not establish an efficient memory-access
+implementation.
+
+### 20. State the implementation, not just the acronym
+
+The lab computes RMS statistics over each projected Q/K head's d features,
+applies learned feature scales, then applies RoPE and retains division by
+$\sqrt d$. There are separate Q and K scale vectors of length d per layer,
+broadcast over heads and positions, so the extra parameter count is 2d per
+layer. Separate statistics do not imply separate learned parameters for every
+head. This is not the original L2-normalized, learned-score-scale QKNorm formula.
+Learned coordinate scaling can also change direction, and need not commute with
+rotation. Preserving the stated operation order is part of reproducing the lab.
+
+### 21. One reduction does not reduce every cost equally
+
+With fixed layer count, batch, source length, head width, and element size,
+halving Hkv halves compact KV payload and K/V projection parameters. Q and
+output projections, MLPs, embeddings, and norms remain. The dense score/value
+matmul term still uses Hq; therefore total parameters and full arithmetic do
+not halve. In the recorded fixture, four to two KV heads changes cache payload
+6144 to 3072 bytes, parameters 5472 to 4960, and estimated matmul FLOPs
+138240 to 125952. Latency, peak allocated memory, and quality need their own
+measurements; none is established by those ratios alone.
+
+### 22. Projections connect different feature spaces
+
+Residual width D is the interface between blocks. Concatenated head width Hq*d
+is internal to attention. A Q projection can map D to Hq*d and W_O can map
+back. The pinned Qwen config sets D=1024 and Hq*d=16*128=2048, giving stored
+projection shapes `[2048,1024]` and `[1024,2048]`. The chapter links the exact
+configuration revision. This establishes those fields and the resulting shape
+calculation, not compatibility with the toy model's RoPE layout, parameter
+names, full implementation, or trained checkpoint.
+
+### 23. Parameters are only one memory category
+
+A 100M parameter count gives weight payload only after choosing a storage
+dtype or quantization scheme. Training additionally needs gradients, optimizer
+states, saved or recomputed activations, and temporary workspaces. Sequence
+length, batch size, checkpointing, precision, attention implementation, and
+sharding all affect the result. Inference KV payload is a separate function of
+layers, retained length, KV heads, head width, batch, and cache dtype. The
+larger candidate table is an analytical design exercise, not a successful
+allocation or training run. Selecting a candidate requires profiling the actual
+recipe and resolving the assumed tokenizer/vocabulary and data budget.
+
+### 24. Shared weights do not imply shared states or free depth
+
+Applying the same block twice stores one set of weights but evaluates two
+transformations. Its second input, activations, and generally K/V differ from
+the first application's; backward accumulates both uses' parameter gradients.
+Two equal-valued independent blocks can initially produce the same outputs
+while owning twice the block parameters and receiving separate updates.
+
+A parameter-matched experiment permits additional recurrent computation; a
+compute-matched experiment must compensate elsewhere for the additional work.
+Neither guarantees equal latency or peak memory. Adaptive early exit and
+recursion-specific KV sharing need explicit mechanisms beyond ordinary weight
+tying. A fixed two-use notebook does not establish those mechanisms or any
+trained quality benefit. Visible reasoning tokens and latent block applications
+are separate ways of spending computation, not interchangeable evidence.
+
+## Day 7 architecture defense — worked conceptual solutions
+
+### 25. Equal widths can describe different spaces
+
+Residual states have shape `[B,T,D]`; their last axis contains learned features.
+Logits have shape `[B,T,V]`; each entry on the last axis scores a candidate token
+ID. Equality of D and V is incidental. Growing V from sixteen to 10,000 changes
+the embedding table from `[16,16]` to `[10000,16]` and logits from `[2,6,16]` to
+`[2,6,10000]`. The tied head uses that enlarged table. Residual states remain
+`[2,6,16]`, and internal attention and MLP dimensions need not change. Adding
+vocabulary entries is still a change to model parameters and the tokenizer
+contract, not merely renaming the final axis of an existing trained model.
+
+### 26. Backward connectivity is not an optimizer update
+
+A non-None finite gradient on every parameter tensor establishes that the
+tested loss has backward paths to those tensors and that the resulting entries
+are finite. It does not establish nonzero values in every entry, useful roles,
+good conditioning, or generalization. No optimizer step means no learning update
+was applied, even though gradients were calculated. The notebook explicitly
+checks unchanged parameter values rather than equating backward with training.
+
+With twelve equally weighted token losses, the mean objective gives each logit
+the derivative `(p - q) / 12`. The corresponding parameter contributions add
+through the chain rule. A sum objective would multiply this batch's gradients
+by twelve. That scale change must not be confused with twelve sequential
+updates; nor does it imply every optimizer's eventual step scales identically.
+Masking or weighting would require the objective's actual denominator instead.
+
+### 27. Legal visibility can coexist with incorrect positions
+
+One plausible cause is restarting RoPE offsets for the suffix after a cached
+prefix. No future edge is opened, but new Q/K rotations no longer match the
+positions used by full recomputation. Compare cached suffix logits with the
+same full-pass positions under fixed weights and evaluation mode, then inspect
+the new position indices and already-rotated cached keys. Restore the correct
+offset and repeat the test. A recovered match supports this diagnosis in the
+controlled fixture. It is not a universal conclusion from the initial signature:
+cache concatenation, mask alignment, stale weights, or prefix mismatch can also
+cause replay failure. Test more lengths and cache split points before broadening
+the correctness claim.
+
+### 28. Causality belongs to the whole computation graph
+
+Subtracting a mean over all sequence positions makes the normalized state at
+an early position depend on later input states. The information path is
+`future token → future state → time-axis mean → earlier normalized state`.
+Masked attention cannot erase a dependency already introduced on its input
+path. Per-position feature normalization does not create this particular
+cross-time edge. Perturb future tokens while holding the prefix fixed and
+compare earlier outputs; the deliberate time-centering case fails this test
+even though its logits remain finite. Finiteness, causality, and cache
+equivalence are separate properties.
+
+### 29. State the memory category before claiming a reduction
+
+At fixed layer count, batch, source length, head width, and cache element size,
+halving KV heads halves compact K/V cache payload and K/V projection parameter
+counts. It does not halve Q/output projections, MLPs, embeddings, gradients,
+optimizer state, or all activations. Query-head count still determines the
+number of attention distributions and the dense score/value arithmetic term.
+In the paired teaching configurations, cache payload goes from 6,144 to 3,072
+bytes while total unique parameters go from 5,472 to 4,960. Measure actual peak
+memory and latency on the intended workload before claiming a runtime benefit;
+evaluate trained quality before claiming that the savings preserve capability.
+
+### 30. Fix a question, not an attractive outcome
+
+A valid fixed-parameter question is: “With the same stored block weights in
+size, the same training-token budget, and a declared training recipe, does two-use
+recurrence achieve lower validation cross-entropy than one use?” Use a declared
+initialization/seed policy, identical tokenizer and data splits, a checkpoint
+selection rule, and recorded resource measurements. The shared weights are
+shared across uses *within* each model; separately trained comparison models
+will generally learn different values.
+
+This question allows additional computation. A compute-efficiency study instead
+declares a common training-compute budget and how it is measured or estimated,
+then makes any resulting token/update differences explicit. Inference recurrence
+count and inference costs need a separate evaluation contract. Evidence against
+the quality hypothesis could be no repeatable validation improvement under the
+declared criterion; evidence against a practical deployment choice could be a
+small gain accompanied by an unacceptable measured latency or memory cost.
+Nonfinite loss, safety-limit violations, or a failed causal/cache contract should
+trigger the predeclared failure rules, not be hidden by favorable samples. No
+such trained comparison has been run by creating this material.
