@@ -420,9 +420,9 @@ A token ID is an address, not a learned semantic vector. Let:
 
 For token IDs $I \in \{0,\ldots,V_m-1\}^{B \times T}$, lookup produces:
 
-\[
+$$
 X = E[I], \qquad X \in \mathbb{R}^{B \times T \times d}.
-\]
+$$
 
 For example:
 
@@ -438,9 +438,9 @@ rather than replacing the batch or sequence dimensions.
 Mathematically, selecting row $i$ is equivalent to multiplying a one-hot row
 vector by $E$:
 
-\[
+$$
 e_i^\top E = E[i].
-\]
+$$
 
 Implementations use indexed lookup because materializing a mostly zero vector of
 length $V_m$ is wasteful.
@@ -473,9 +473,9 @@ The first and third values are copies used at different sequence positions, but
 they come from the same trainable row. If their position-level gradients are
 $g_0$ and $g_2$, the shared parameter receives their sum:
 
-\[
+$$
 \frac{\partial L}{\partial E[2]} = g_0 + g_2.
-\]
+$$
 
 Under the controlled sum loss in our transparent PyTorch lab, each occurrence
 contributed a vector of ones:
@@ -514,9 +514,9 @@ For a hidden tensor $H \in \mathbb{R}^{B \times T \times d}$, we use lowercase
 $h = H[b,t,:] \in \mathbb{R}^d$ for one position's contextual state. With input
 `[cat, sat]`, the final position can be summarized as:
 
-\[
-h_{\text{sat}} = \operatorname{Transformer}(E[\text{cat}], E[\text{sat}]).
-\]
+$$
+h_{\text{sat}} = \mathrm{Transformer}(E[\text{cat}], E[\text{sat}]).
+$$
 
 The two occurrences of one token begin with the same row but can develop
 different hidden states because position and surrounding context differ.
@@ -543,9 +543,9 @@ describe different events. Token identity alone is insufficient.
 Qwen3 uses rotary positional embeddings, or RoPE, inside attention. At a high
 level, RoPE rotates queries and keys according to position:
 
-\[
+$$
 q_t' = R_t q_t, \qquad k_s' = R_s k_s.
-\]
+$$
 
 Their dot product can then depend on the relative position $t-s$. RoPE does not
 simply replace the token embedding with a “position 7” vector; it makes attention
@@ -586,9 +586,9 @@ embedding table and the transformations that consume it.
 An untied language model has a separate output matrix $W_{out}$. A tied model
 reuses $E$:
 
-\[
+$$
 z = hE^\top, \qquad z_i = h \cdot E[i].
-\]
+$$
 
 Here $z_i$ is the logit for candidate token $i$: a raw compatibility score,
 not yet a probability. Softmax converts all logits into a shared probability
@@ -597,10 +597,10 @@ distribution. Chapter 3 derives that conversion and the next-token loss in full.
 For target token $y$, the output-side gradient of cross-entropy with respect to
 one tied row is:
 
-\[
+$$
 \left.\frac{\partial L}{\partial E[i]}\right|_{output}
 = \left(p_i - \mathbf{1}[i=y]\right)h.
-\]
+$$
 
 This creates two distinct paths:
 
@@ -736,9 +736,9 @@ inside the loss computation; Chapter 3 makes that alignment explicit.
 In common PyTorch cross-entropy usage, label `-100` means “ignore this target.” If
 the padded label remained ID 0, the objective would include:
 
-\[
+$$
 L_{pad} = -\log P(\text{PAD}\mid\text{preceding context}),
-\]
+$$
 
 training the model on batch formatting rather than intended language.
 

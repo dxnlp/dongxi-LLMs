@@ -95,10 +95,10 @@ output.shape    = [3, 7, 1024]
 If ID $i$ appears at four positions with position-level lookup gradients
 $g_1,g_2,g_3,g_4 \in \mathbb{R}^{1024}$, its shared row receives:
 
-\[
+$$
 \left.\frac{\partial L}{\partial E[i]}\right|_{lookup}
 = g_1+g_2+g_3+g_4.
-\]
+$$
 
 The contributions need not be equal. Lookup returned the same initial row, but
 position, causal context, attention, and later nonlinear computation can send a
@@ -169,10 +169,10 @@ ordinary direct lookup-path gradient. The model still emits a logit for every
 row. Under dense cross-entropy, each candidate generally receives an output-side
 contribution:
 
-\[
+$$
 \left.\frac{\partial L}{\partial E[i]}\right|_{output}
 = \left(p_i-\mathbf{1}[i=y]\right)h.
-\]
+$$
 
 Because an unassigned ID is not a valid target under the paired tokenizer, its
 indicator term is zero in ordinary data, but its probability term can still
@@ -209,9 +209,9 @@ gradients because the supervised response attended to them.
 If PAD remains an ordinary label, the model is rewarded for predicting artificial
 batch formatting:
 
-\[
+$$
 L_{pad}=-\log P(\text{PAD}\mid\text{prefix}).
-\]
+$$
 
 Frequent padded positions can waste optimization capacity and distort the learned
 termination distribution.

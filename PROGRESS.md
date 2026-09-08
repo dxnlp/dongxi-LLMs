@@ -20,7 +20,7 @@ This file is the operational source of truth for resuming work. Update it at the
   checks: `experiments/reports/2026-09-07-day6-chapter-verification.md`.
   Day 7 now has a core defense notebook plus optional recurrence. The learner's
   defense and any specified trained comparison remain pending.
-- Last updated: 2026-09-07
+- Last updated: 2026-09-08
 
 ## Four-week tracker
 
@@ -418,6 +418,19 @@ and cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
   are unchanged. Details in the Day 7 learning artifact.
 - Next: guided Day 6 notebook 01 unless the learner chooses Day 7 review first.
   Material completion does not close outstanding practice or defense requirements.
+
+## Latest maintenance — GitHub math, 2026-09-08
+
+- Learner reported forbidden `operatorname` macros and requested a check across
+  all chapters, explicitly reiterating Chapters 4 and 5. Repaired all five
+  chapters and affected solutions/lab: 54 macro substitutions, 78 display and
+  seven inline delimiter conversions, and one mismatched delimiter repair.
+- All 13 book Markdown files pass source checks; all 560 extracted expressions
+  render without errors in the local MathJax check. All 59 tests pass. Added a
+  dependency-free regression check and portable authoring guidance at
+  `docs/MATH_FORMATTING.md`. Live GitHub rendering has not yet been rechecked.
+- No notebook/code-model edits, training, or change to learner mastery. Next
+  learning action remains Day 6 notebook 01, unless the learner chooses otherwise.
 
 ## Open questions
 

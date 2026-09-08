@@ -63,28 +63,28 @@ from the learned vectors and transformations associated with those addresses.
 
 The first vector is the second plus a shared constant 1000:
 
-\[
+$$
 [1002,1001,999]=[2,1,-1]+1000.
-\]
+$$
 
 Softmax cancels that constant:
 
-\[
+$$
 \frac{e^{z_i+1000}}{\sum_je^{z_j+1000}}
 =
 \frac{e^{1000}e^{z_i}}{e^{1000}\sum_je^{z_j}}
 =
 \frac{e^{z_i}}{\sum_je^{z_j}}.
-\]
+$$
 
 The two vectors therefore produce the same mathematical distribution.
 
 Computing $e^{1002}$ directly can overflow in finite precision. Stable softmax
 subtracts $m=\max_i z_i$ first:
 
-\[
+$$
 [1002,1001,999]-1002=[0,-1,-3].
-\]
+$$
 
 Every exponential is now at most one. This is not a changed model or an
 approximate probability rule; it is an algebraically identical computation with
@@ -96,15 +96,15 @@ zero.
 
 The target is class 1, so:
 
-\[
+$$
 q=[0,1,0].
-\]
+$$
 
 Therefore:
 
-\[
+$$
 p-q=[0.7054,-0.7405,0.0351].
-\]
+$$
 
 Interpretation by coordinate:
 
@@ -127,21 +127,21 @@ the observed mistake.
 
 Let:
 
-\[
+$$
 z=Wh+b,
 \qquad
 g=\frac{\partial L}{\partial z}=p-q.
-\]
+$$
 
 The chain rule gives:
 
-\[
+$$
 \frac{\partial L}{\partial b}=g,
 \qquad
 \frac{\partial L}{\partial W}=gh^\top,
 \qquad
 \frac{\partial L}{\partial h}=W^\top g.
-\]
+$$
 
 $gh^\top$ is an outer product with shape `[V,D]`. Under a simple gradient step,
 the target row is strengthened in the direction of the current hidden state,
@@ -161,26 +161,26 @@ possibly a tied embedding table.
 
 At $p=[0.7,0.3]$, the `dog` one-hot target produces:
 
-\[
+$$
 g_{dog}=[0.7,0.3]-[1,0]=[-0.3,0.3].
-\]
+$$
 
 The `cat` target produces:
 
-\[
+$$
 g_{cat}=[0.7,0.3]-[0,1]=[0.7,-0.7].
-\]
+$$
 
 Weighting by target frequencies:
 
-\[
+$$
 \begin{aligned}
 \mathbb{E}[g]
 &=0.7g_{dog}+0.3g_{cat}\\
 &=0.7[-0.3,0.3]+0.3[0.7,-0.7]\\
 &=[0,0].
 \end{aligned}
-\]
+$$
 
 Each sample still prefers its observed outcome, but across the distribution the
 corrections balance. With small stochastic minibatches, realized gradients can
@@ -188,9 +188,9 @@ fluctuate around this zero expectation.
 
 The cross-entropy decomposition is:
 
-\[
+$$
 H(q,p)=H(q)+D_{KL}(q\|p).
-\]
+$$
 
 At $p=q$, KL mismatch is zero while $H(q)$ remains positive because both outcomes
 can occur. The optimizer has reached the best calibrated prediction available
@@ -201,15 +201,15 @@ not necessarily residual model error.
 
 Model A's product is:
 
-\[
+$$
 0.5^4=0.0625.
-\]
+$$
 
 Model B's product is approximately:
 
-\[
+$$
 0.99^3\times0.0644\approx0.0625.
-\]
+$$
 
 The products and therefore total sequence NLLs are equal. This establishes one
 narrow claim: both models assign approximately the same probability to this
@@ -233,28 +233,28 @@ forgets this information when it reduces many factors to one product.
 
 For tokenizer A:
 
-\[
-\operatorname{NLL}_{total}=-\log0.25\approx1.386.
-\]
+$$
+\mathrm{NLL}_{total}=-\log0.25\approx1.386.
+$$
 
 There is one token, so mean NLL is 1.386 and:
 
-\[
-\operatorname{PPL}_A=e^{1.386}=4.
-\]
+$$
+\mathrm{PPL}_A=e^{1.386}=4.
+$$
 
 For tokenizer B, the complete text probability remains:
 
-\[
+$$
 0.5\times0.5=0.25,
-\]
+$$
 
 so total NLL is still 1.386. There are two tokens, however, so mean NLL is
 $1.386/2=0.693$ and:
 
-\[
-\operatorname{PPL}_B=e^{0.693}=2.
-\]
+$$
+\mathrm{PPL}_B=e^{0.693}=2.
+$$
 
 The lower number does not indicate a more probable text. The denominator counts
 different units.
@@ -263,12 +263,12 @@ A multilingual comparison should freeze the corpora, domains, preprocessing,
 special tokens, target masks, and context policy; report tokenizer compression
 such as tokens per UTF-8 byte; and normalize total NLL to a common unit such as:
 
-\[
+$$
 \text{bits per byte}
 =
-\frac{\operatorname{NLL}_{total}}
+\frac{\mathrm{NLL}_{total}}
 {N_{bytes}\ln2}.
-\]
+$$
 
 It should also compare how much raw text fits inside the fixed token context.
 Even then, lower predictive loss does not by itself establish comprehension,

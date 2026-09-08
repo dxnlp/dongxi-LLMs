@@ -35,9 +35,9 @@ row-wise normalization can still make the final attention matrix asymmetric.
 With independent zero-mean coordinates,
 
 $$
-\operatorname{Var}(q_m k_m)=\sigma_q^2\sigma_k^2,
+\mathrm{Var}(q_m k_m)=\sigma_q^2\sigma_k^2,
 \qquad
-\operatorname{Var}(q\cdot k)=d_k\sigma_q^2\sigma_k^2.
+\mathrm{Var}(q\cdot k)=d_k\sigma_q^2\sigma_k^2.
 $$
 
 Dividing by sqrt(d_k) removes the dimension factor but retains
@@ -92,7 +92,7 @@ $$
 The softmax derivative supplies
 
 $$
-G_R=A\odot\left(G_A-\operatorname{rowsum}(A\odot G_A)\right).
+G_R=A\odot\left(G_A-\mathrm{rowsum}(A\odot G_A)\right).
 $$
 
 Then

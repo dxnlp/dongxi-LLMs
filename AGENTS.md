@@ -183,6 +183,9 @@ than leaving status only in a chat transcript.
 - Write course prose for a reader following a book, not for the author recalling a work session.
 - Reusable logic belongs in importable Python modules; notebooks narrate and visualize experiments.
 - Keep mathematical notation consistent across lessons.
+- Follow `docs/MATH_FORMATTING.md` for GitHub-compatible book math. Run
+  `python3 scripts/check_book_math.py` after equation edits; do not rely on a
+  notebook preview as evidence of GitHub Markdown rendering.
 - Define symbols, tensor shapes, gradient boundaries, and optimization direction.
 - Prefer small readable implementations before framework integrations.
 - Generated figures and animations must retain their source, render command, and learning objective.

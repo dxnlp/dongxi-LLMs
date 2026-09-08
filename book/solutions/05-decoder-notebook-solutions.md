@@ -120,9 +120,9 @@ boundary. Other full-sequence operations must be checked by the same principle.
 
 ### 7. Normalizing the branch differs from normalizing the sum
 
-Pre-norm gives $Y=X+F(\operatorname{LN}(X))$. If the branch is identically zero,
+Pre-norm gives $Y=X+F(\mathrm{LN}(X))$. If the branch is identically zero,
 $Y=X$ and its input Jacobian is the identity. Post-norm gives
-$Y=\operatorname{LN}(X+F(X))$, becoming $\operatorname{LN}(X)$ under the same
+$Y=\mathrm{LN}(X+F(X))$, becoming $\mathrm{LN}(X)$ under the same
 intervention. Its backward signal passes through the LayerNorm Jacobian.
 This is not merely a naming difference; the skip contribution is itself
 transformed in post-norm. The final normalization after a pre-norm stack remains
@@ -216,8 +216,8 @@ when interpreting RMS-normalized Q/K scores as though they were cosines.
 
 SiLU is $a\sigma(a)$: it can be negative for negative $a$ and exceed one for
 sufficiently positive $a$. Its outputs are not normalized across coordinates.
-For $u=\operatorname{SiLU}(a)\odot c$, an arriving gradient $\delta$ gives
-$d\mathcal L/da=\delta\odot c\odot\operatorname{SiLU}'(a)$. At $a=0$,
+For $u=\mathrm{SiLU}(a)\odot c$, an arriving gradient $\delta$ gives
+$d\mathcal L/da=\delta\odot c\odot\mathrm{SiLU}'(a)$. At $a=0$,
 the derivative of SiLU is one half. Thus a zero gate can suppress forward
 content without preventing gradient flow into the gate weights. This requires
 appropriate nonzero content, inputs, and downstream gradients; it is not a

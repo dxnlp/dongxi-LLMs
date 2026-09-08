@@ -139,7 +139,7 @@ For one product,
 
 $$
 \mathbb{E}[q_mk_m]=0,\qquad
-\operatorname{Var}(q_mk_m)
+\mathrm{Var}(q_mk_m)
 =\mathbb{E}[q_m^2]\mathbb{E}[k_m^2]=1.
 $$
 
@@ -147,15 +147,15 @@ The score sums d_k such products:
 
 $$
 s=\sum_{m=1}^{d_k}q_mk_m,\qquad
-\operatorname{Var}(s)=d_k,\qquad
-\operatorname{Std}(s)=\sqrt{d_k}.
+\mathrm{Var}(s)=d_k,\qquad
+\mathrm{Std}(s)=\sqrt{d_k}.
 $$
 
 Positive and negative contributions partly cancel; the standard deviation grows
 as the square root, not linearly with width. Thus
 
 $$
-\operatorname{Var}\left(\frac{s}{\sqrt{d_k}}\right)=1.
+\mathrm{Var}\left(\frac{s}{\sqrt{d_k}}\right)=1.
 $$
 
 Without this correction, wider random heads tend to create wider score gaps.
@@ -167,7 +167,7 @@ spread. This is the scaled dot-product mechanism introduced in
 For a softmax row a, the Jacobian is
 
 $$
-J=\operatorname{diag}(a)-aa^\top,\qquad
+J=\mathrm{diag}(a)-aa^\top,\qquad
 J_{ij}=a_i(\mathbf{1}[i=j]-a_j).
 $$
 
@@ -205,7 +205,7 @@ Scaled, masked scores and weights are
 
 $$
 R=\frac{QK^\top}{\sqrt{d_k}}+M,\qquad
-A=\operatorname{softmax}_{\mathrm{row}}(R).
+A=\mathrm{softmax}_{\mathrm{row}}(R).
 $$
 
 For four positions the allowed pattern is
@@ -229,7 +229,7 @@ Take one row with scores [0,0,10], where the third source is forbidden.
 Correct pre-softmax masking produces
 
 $$
-\operatorname{softmax}([0,0,-\infty])=[0.5,0.5,0].
+\mathrm{softmax}([0,0,-\infty])=[0.5,0.5,0].
 $$
 
 If softmax is applied first, the forbidden score participates in the denominator.
@@ -245,7 +245,7 @@ allowed weights. The row no longer sums to one.
 Replacing the forbidden score with zero before softmax is also incorrect:
 
 $$
-\operatorname{softmax}([0,0,0])=[1/3,1/3,1/3].
+\mathrm{softmax}([0,0,0])=[1/3,1/3,1/3].
 $$
 
 Zero is an ordinary score with exponential one. In an additive mask, adding zero
@@ -325,7 +325,7 @@ $$
 O \longrightarrow \text{later decoder computation}
 \longrightarrow h_i
 \longrightarrow z_i=h_iW_{\mathrm{out}}+b
-\longrightarrow p_i=\operatorname{softmax}(z_i).
+\longrightarrow p_i=\mathrm{softmax}(z_i).
 $$
 
 A's columns index source positions. The final vocabulary logits' columns index
@@ -405,7 +405,7 @@ Stacking rows gives
 
 $$
 G_R=A\odot\left(G_A-
-\operatorname{rowsum}(A\odot G_A)\right),
+\mathrm{rowsum}(A\odot G_A)\right),
 $$
 
 where the [T,1] row sum broadcasts across sources. Forbidden entries have zero
@@ -511,7 +511,7 @@ K_{\le t}=[K_{<t};k_t],\qquad V_{\le t}=[V_{<t};v_t],
 $$
 
 $$
-o_t=\operatorname{softmax}\left(
+o_t=\mathrm{softmax}\left(
 \frac{q_tK_{\le t}^{\top}}{\sqrt{d_k}}\right)V_{\le t}.
 $$
 

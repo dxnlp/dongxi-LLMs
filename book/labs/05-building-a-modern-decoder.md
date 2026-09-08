@@ -78,8 +78,8 @@ the attention value tensor, also conventionally named V.
 For the pre-norm baseline, one block is:
 
 $$
-U=X+\operatorname{MHA}(\operatorname{LN}_1(X)),\qquad
-Y=U+\operatorname{MLP}(\operatorname{LN}_2(U)).
+U=X+\mathrm{MHA}(\mathrm{LN}_1(X)),\qquad
+Y=U+\mathrm{MLP}(\mathrm{LN}_2(U)).
 $$
 
 The normalization modules transform the branch inputs; the skip paths carry X

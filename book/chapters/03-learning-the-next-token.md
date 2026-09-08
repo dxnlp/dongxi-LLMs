@@ -78,37 +78,37 @@ Let:
 
 The transformer produces:
 
-\[
+$$
 H\in\mathbb{R}^{B\times T\times D}.
-\]
+$$
 
 For one batch item and position, write:
 
-\[
+$$
 h=H[b,t,:]\in\mathbb{R}^{D}.
-\]
+$$
 
 The output head contains one row for every candidate token ID:
 
-\[
+$$
 W_{out}\in\mathbb{R}^{V\times D},
 \qquad
 b\in\mathbb{R}^{V}.
-\]
+$$
 
 It computes:
 
-\[
+$$
 z=W_{out}h+b,
 \qquad
 z\in\mathbb{R}^{V}.
-\]
+$$
 
 For candidate ID $i$:
 
-\[
+$$
 z_i=W_{out,i}\cdot h+b_i.
-\]
+$$
 
 $z_i$ is a **logit**: a raw compatibility score between this context and token
 $i$. It is not constrained to be positive, does not sum to one, and has no
@@ -150,9 +150,9 @@ among the printed ID numbers.
 
 Dense projection across all positions can be written:
 
-\[
+$$
 Z_{[B,T,V]}=H_{[B,T,D]}W_{out,[V,D]}^\top.
-\]
+$$
 
 Its arithmetic scales approximately as $BTDV$, and the matrix contains $VD$
 weights when untied. Chapter 2's pinned Qwen3-0.6B interface had $D=1024$ and
@@ -167,11 +167,11 @@ autoregressive steps, and KV-cache use. A larger vocabulary increases
 embedding/output cost through $V$ and may allocate many rows to rare pieces. A
 rough full-sequence decomposition is:
 
-\[
+$$
 \text{cost}
 \approx
 c_1LTD^2+c_2LT^2D+c_3TDV,
-\]
+$$
 
 where $L$ is layer count and the constants hide implementation details. The
 equation is a scaling guide, not a latency prediction. Vocabulary size alone
@@ -182,17 +182,17 @@ matters.
 
 Softmax converts logits into a categorical distribution:
 
-\[
+$$
 p_i=\frac{e^{z_i}}{\sum_{j=0}^{V-1}e^{z_j}}.
-\]
+$$
 
 Now:
 
-\[
+$$
 p_i>0,
 \qquad
 \sum_i p_i=1.
-\]
+$$
 
 Each probability is conditional on the current context and relative to every
 other candidate. Increasing one candidate's logit can lower another candidate's
@@ -218,12 +218,12 @@ The largest logit becomes the largest probability, but its value `2` never meant
 
 Adding the same constant $c$ to every logit changes nothing:
 
-\[
+$$
 \frac{e^{z_i+c}}{\sum_j e^{z_j+c}}
 =
 \frac{e^c e^{z_i}}{e^c\sum_j e^{z_j}}
 =p_i.
-\]
+$$
 
 Softmax therefore identifies relative gaps, not an absolute logit height. This
 shared-shift symmetry will reappear when the logit gradients sum to zero.
@@ -234,9 +234,9 @@ Directly computing $e^{1002}$ can overflow even though logits
 `[1002,1001,999]` describe the same distribution as `[2,1,-1]`. Let
 $m=\max_j z_j$ and compute:
 
-\[
+$$
 p_i=\frac{e^{z_i-m}}{\sum_j e^{z_j-m}}.
-\]
+$$
 
 The largest shifted logit is zero, so every exponential is at most one. The
 subtraction preserves the exact mathematical distribution while avoiding an
@@ -273,11 +273,11 @@ The selected index is appended to the input, and the process repeats.
 
 Greedy decoding selects:
 
-\[
-\operatorname*{argmax}_i z_i
+$$
+\underset{i}{\mathrm{argmax}} z_i
 =
-\operatorname*{argmax}_i p_i.
-\]
+\underset{i}{\mathrm{argmax}} p_i.
+$$
 
 If several candidates share the exact maximum, the mathematical argmax is a
 set. A concrete implementation needs a policy. Many tensor libraries return the
@@ -289,19 +289,19 @@ are different from exact ties and can be sensitive to numerical precision.
 Sampling draws one categorical index instead of always choosing the maximum.
 Temperature rescales logit gaps:
 
-\[
+$$
 p_i(\tau)=
 \frac{e^{z_i/\tau}}{\sum_j e^{z_j/\tau}},
 \qquad \tau>0.
-\]
+$$
 
 The ratio form reveals the mechanism:
 
-\[
+$$
 \frac{p_i(\tau)}{p_j(\tau)}
 =
 \exp\left(\frac{z_i-z_j}{\tau}\right).
-\]
+$$
 
 - $0<\tau<1$ sharpens the distribution;
 - $\tau=1$ preserves the trained distribution;
@@ -332,36 +332,36 @@ the unfiltered model distribution in its cross-entropy objective.
 
 For a causal model, the probability of a token sequence follows the chain rule:
 
-\[
+$$
 P(x_0,\ldots,x_{T-1})
 =
 \prod_{t=0}^{T-1}P(x_t\mid x_{<t}).
-\]
+$$
 
 The initial term may be conditioned on a beginning token or another declared
 prompt convention. Multiplying many probabilities produces very small numbers
 and makes it difficult to see which token caused trouble. Logs turn the product
 into a sum:
 
-\[
+$$
 \log P(x_{0:T-1})
 =
 \sum_{t=0}^{T-1}\log P(x_t\mid x_{<t}).
-\]
+$$
 
 Negative log-likelihood, or NLL, is:
 
-\[
-\operatorname{NLL}(x_{0:T-1})
+$$
+\mathrm{NLL}(x_{0:T-1})
 =
 -\sum_t\log P(x_t\mid x_{<t}).
-\]
+$$
 
 At one target position $y$:
 
-\[
+$$
 L=-\log p_y.
-\]
+$$
 
 This quantity is predictive surprise. A likely observed token contributes little
 loss. An unlikely observed token contributes much more. As $p_y\to0$, the loss
@@ -370,10 +370,10 @@ impossible.
 
 Stable target NLL can be computed directly from logits:
 
-\[
+$$
 L=-z_y+m+\log\sum_j e^{z_j-m},
 \qquad m=\max_jz_j.
-\]
+$$
 
 This is algebraically identical to $-\log p_y$ but avoids materializing an
 underflowed target probability.
@@ -391,23 +391,23 @@ label:  scalar  one observed target ID
 Framework cross-entropy usually accepts integer labels without constructing a
 dense one-hot vector. Conceptually, let $q$ be the target distribution:
 
-\[
+$$
 H(q,p)=-\sum_iq_i\log p_i.
-\]
+$$
 
 For a one-hot target $y$:
 
-\[
+$$
 q_y=1,
 \qquad
 q_{i\ne y}=0,
-\]
+$$
 
 so every term except one disappears:
 
-\[
+$$
 H(q,p)=-\log p_y.
-\]
+$$
 
 Token-level one-hot cross-entropy and observed-token NLL are numerically the same
 quantity. The names emphasize different views: NLL focuses on the observed
@@ -417,55 +417,55 @@ sample; cross-entropy compares target and model distributions.
 
 Let:
 
-\[
+$$
 S=\sum_j e^{z_j},
 \qquad
 p_k=\frac{e^{z_k}}{S}.
-\]
+$$
 
 Then:
 
-\[
+$$
 \log p_k=z_k-\log S.
-\]
+$$
 
 Substitute into cross-entropy:
 
-\[
+$$
 \begin{aligned}
 L
 &=-\sum_kq_k\log p_k\\
 &=-\sum_kq_k(z_k-\log S)\\
 &=-\sum_kq_kz_k+\log S,
 \end{aligned}
-\]
+$$
 
 because $\sum_kq_k=1$. Differentiate with respect to one logit $z_i$:
 
-\[
+$$
 \begin{aligned}
 \frac{\partial L}{\partial z_i}
 &=-q_i+\frac{1}{S}\frac{\partial S}{\partial z_i}\\
 &=-q_i+\frac{e^{z_i}}{S}\\
 &=p_i-q_i.
 \end{aligned}
-\]
+$$
 
 For a one-hot target:
 
-\[
+$$
 \frac{\partial L}{\partial z_y}=p_y-1<0,
 \qquad
 \frac{\partial L}{\partial z_i}=p_i>0\quad(i\ne y).
-\]
+$$
 
 Gradient descent moves opposite these signs. In a direct-logit sketch:
 
-\[
+$$
 z_y\leftarrow z_y+\eta(1-p_y),
 \qquad
 z_i\leftarrow z_i-\eta p_i.
-\]
+$$
 
 The target rises. Every non-target falls in proportion to the probability it
 wrongly captured. A confidently wrong candidate receives more correction than
@@ -474,9 +474,9 @@ mass from the main wrong competitor helps the target most.
 
 The gradient components sum to zero:
 
-\[
+$$
 \sum_i(p_i-q_i)=1-1=0.
-\]
+$$
 
 This is the differential form of the shared-logit-shift symmetry. The loss has no
 reason to move all logits together because that direction changes no
@@ -487,13 +487,13 @@ probability.
 Logits are intermediate activations, not normally optimizer parameters. For
 $z=W_{out}h+b$, write $g=p-q$. The chain rule gives:
 
-\[
+$$
 \frac{\partial L}{\partial b}=g,
 \qquad
 \frac{\partial L}{\partial W_{out}}=gh^\top,
 \qquad
 \frac{\partial L}{\partial h}=W_{out}^\top g.
-\]
+$$
 
 The output rows learn how to recognize contexts that support their candidate
 tokens. The target row moves toward the current state under a simple SGD update;
@@ -514,39 +514,39 @@ sample's one-hot target.
 
 Because:
 
-\[
+$$
 \mathbb{E}[q]=r,
-\]
+$$
 
 the expected logit gradient is:
 
-\[
+$$
 \mathbb{E}[p-q]=p-r.
-\]
+$$
 
 The competing updates balance when:
 
-\[
+$$
 p=r.
-\]
+$$
 
 At that point a `dog` sample still has gradient:
 
-\[
+$$
 [0.7,0.3]-[1,0]=[-0.3,0.3],
-\]
+$$
 
 and a `cat` sample has:
 
-\[
+$$
 [0.7,0.3]-[0,1]=[0.7,-0.7].
-\]
+$$
 
 Their frequency-weighted average is zero:
 
-\[
+$$
 0.7[-0.3,0.3]+0.3[0.7,-0.7]=[0,0].
-\]
+$$
 
 Individual minibatches can therefore keep producing noisy gradients near the
 optimum even though the population gradient vanishes.
@@ -556,7 +556,7 @@ optimum even though the population gradient vanishes.
 Let $q$ now denote the population target distribution and $p$ the model. Add and
 subtract the target's own log term:
 
-\[
+$$
 \begin{aligned}
 H(q,p)
 &=-\sum_iq_i\log p_i\\
@@ -564,7 +564,7 @@ H(q,p)
   +\sum_iq_i\log\frac{q_i}{p_i}\\
 &=H(q)+D_{KL}(q\|p).
 \end{aligned}
-\]
+$$
 
 $H(q)$ is uncertainty in the data. The model cannot reduce it. The nonnegative
 KL term measures mismatch and reaches zero when $p=q$ on the relevant support.
@@ -577,9 +577,9 @@ optimizer failure.
 The optimizer never receives the true population distribution directly. For a
 context observed $n$ times, it sees counts $n_i$ and an empirical estimate:
 
-\[
+$$
 \hat q_i=\frac{n_i}{n}.
-\]
+$$
 
 Exact long contexts rarely repeat. A language model must share parameters and
 representations across related contexts so that evidence from many examples
@@ -616,17 +616,17 @@ tolerance.
 
 The final logits were approximately:
 
-\[
+$$
 [0.42364874,-0.42364898].
-\]
+$$
 
 Their difference has an exact interpretation:
 
-\[
+$$
 \frac{p_0}{p_1}=e^{z_0-z_1}
 \quad\Longrightarrow\quad
 z_0-z_1=\log\frac{0.7}{0.3}\approx0.8472979.
-\]
+$$
 
 The observed gap was $0.8472977$. The individual logit heights remain arbitrary;
 adding a shared constant preserves the distribution.
@@ -642,29 +642,29 @@ and [report](../../experiments/reports/2026-09-03-next-token-distribution.md).
 
 For valid aligned targets, a common reduced loss is:
 
-\[
+$$
 L_{mean}
 =
 \frac{\sum_{b,t}m_{b,t}\left[-\log p_{b,t}(y_{b,t})\right]}
 {\sum_{b,t}m_{b,t}},
-\]
+$$
 
 where $m_{b,t}=1$ for included targets and zero otherwise. The denominator is
 the number of valid targets, not padded tensor capacity.
 
 Perplexity is:
 
-\[
-\operatorname{PPL}=e^{L_{mean}}.
-\]
+$$
+\mathrm{PPL}=e^{L_{mean}}.
+$$
 
 Equivalently:
 
-\[
+$$
 e^{-L_{mean}}
 =
 \left(\prod_{t=1}^{N}p_t(y_t)\right)^{1/N},
-\]
+$$
 
 so perplexity is the reciprocal geometric-mean probability assigned to observed
 targets. Calling it an “effective branching factor” is exact for an equal-choice
@@ -692,11 +692,11 @@ $4$.
 Tokenizer B represents the same fragment as two successive tokens, each assigned
 probability $0.5$. The text probability and total NLL remain:
 
-\[
+$$
 0.5\times0.5=0.25,
 \qquad
 -\log0.25=1.386.
-\]
+$$
 
 But mean NLL is now $1.386/2=0.693$, so perplexity is $2$. Nothing became twice
 as predictable; the counting unit changed.
@@ -727,10 +727,10 @@ the causal training relationships are:
 
 The state at position $t$ may use $x_{\le t}$ and predicts $x_{t+1}$:
 
-\[
+$$
 y_t=x_{t+1},
 \qquad 0\le t<T-1.
-\]
+$$
 
 Explicit alignment is:
 
@@ -768,11 +768,11 @@ the trajectory into a context that appeared rarely in training, making later
 predictions less reliable. This train-generation context mismatch is often
 called exposure bias:
 
-\[
+$$
 \text{training prefixes}\sim p_{data},
 \qquad
 \text{generated prefixes}\sim p_{model}.
-\]
+$$
 
 It can occur even with perfect shifting and causal masking. Lowering temperature
 may reduce random low-probability deviations, but it cannot repair a wrong mode
@@ -953,7 +953,7 @@ Visible prompt computations can remain ancestors of supervised answer losses.
    transformer learn from their respective gradients.
 
 6. **Nonzero loss, zero expected gradient.** For a 70/30 target distribution,
-   show how the two one-hot gradients cancel at $p=[0.7,0.3]`. Explain why the
+   show how the two one-hot gradients cancel at $p=[0.7,0.3]$. Explain why the
    remaining cross-entropy is successful learning rather than failure.
 
 7. **Same NLL, different behavior.** Compare `[0.5,0.5,0.5,0.5]` with

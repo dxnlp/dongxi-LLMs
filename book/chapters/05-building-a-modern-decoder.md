@@ -136,7 +136,7 @@ Q_r=XW_{Q,r},\quad K_r=XW_{K,r},\quad V_r=XW_{V,r},
 $$
 
 $$
-A_r=\operatorname{softmax}_{\text{sources}}
+A_r=\mathrm{softmax}_{\text{sources}}
 \left(\frac{Q_rK_r^\top}{\sqrt d}+C\right),\qquad O_r=A_rV_r.
 $$
 
@@ -268,7 +268,7 @@ $$
 
 $$
 \hat x_i=\frac{x_i-\mu}{\sqrt{\sigma^2+\epsilon}},\qquad
-\operatorname{LN}(x)_i=\gamma_i\hat x_i+\beta_i.
+\mathrm{LN}(x)_i=\gamma_i\hat x_i+\beta_i.
 $$
 
 Use population variance, dividing by $D$, not the sample-variance correction
@@ -297,7 +297,7 @@ masked. Causality must hold throughout the model, not only inside softmax.
 A pre-norm sublayer is:
 
 $$
-Y=X+F(\operatorname{LN}(X)).
+Y=X+F(\mathrm{LN}(X)).
 $$
 
 Normalize what the branch reads; add its update to the unnormalized stream.
@@ -307,11 +307,11 @@ $Y=X$.
 A post-norm sublayer is:
 
 $$
-Y=\operatorname{LN}(X+F(X)).
+Y=\mathrm{LN}(X+F(X)).
 $$
 
 Here normalization acts on the combined result. A zero branch gives
-$Y=\operatorname{LN}(X)$, generally not $X$. Backward also passes through that
+$Y=\mathrm{LN}(X)$, generally not $X$. Backward also passes through that
 normalization: the sublayer no longer has the same untouched identity route.
 This establishes a structural difference, not universal superiority for every
 possible training recipe. Our baseline chooses pre-norm and still applies a
@@ -336,7 +336,7 @@ by attention. Position-wise does not mean context-free.
 The baseline MLP expands, applies a nonlinear function, and projects back:
 
 $$
-\operatorname{MLP}(X)=\operatorname{GELU}(XW_{\rm up}+b_{\rm up})W_{\rm down}
+\mathrm{MLP}(X)=\mathrm{GELU}(XW_{\rm up}+b_{\rm up})W_{\rm down}
 +b_{\rm down}.
 $$
 
@@ -377,8 +377,8 @@ unchanged. A whole decoder need not have that invariance because it has attentio
 We can now write one complete pre-norm block:
 
 $$
-U=X+\operatorname{MHA}(\operatorname{LN}_1(X)),\qquad
-Y=U+\operatorname{MLP}(\operatorname{LN}_2(U)).
+U=X+\mathrm{MHA}(\mathrm{LN}_1(X)),\qquad
+Y=U+\mathrm{MLP}(\mathrm{LN}_2(U)).
 $$
 
 ![A pre-norm decoder block with separate attention and MLP updates and their residual bypasses.](../../notebooks/figures/chapter-05/day-05-06_assemble_decoder-architecture-detail.png)
@@ -461,7 +461,7 @@ batch, the mean loss is:
 
 $$
 \mathcal L=\frac1{BT}\sum_{b,t}
--\log\operatorname{softmax}(z_{b,t})_{y_{b,t}}.
+-\log\mathrm{softmax}(z_{b,t})_{y_{b,t}}.
 $$
 
 Each prediction can read only its legal prefix, despite processing positions
@@ -638,7 +638,7 @@ Our implementation uses, for one token vector $x\in\mathbb R^D$:
 
 $$
 r(x)=\sqrt{\frac1D\sum_i x_i^2+\epsilon},\qquad
-\operatorname{RMSNorm}(x)_i=\gamma_i\frac{x_i}{r(x)}.
+\mathrm{RMSNorm}(x)_i=\gamma_i\frac{x_i}{r(x)}.
 $$
 
 There is no mean subtraction and no learned additive bias in this variant.
@@ -661,12 +661,12 @@ no information is lost. Adding the same number to all coordinates can change
 its output, whereas LayerNorm removes that common shift.
 
 Before learned scaling, the mean square of the RMS-normalized output is
-$\operatorname{mean}(x^2)/(\operatorname{mean}(x^2)+\epsilon)$, approximately
+$\mathrm{mean}(x^2)/(\mathrm{mean}(x^2)+\epsilon)$, approximately
 one when epsilon is negligible. Its mean need not be zero. For positive $a$:
 
 $$
-\frac{ax}{\sqrt{a^2\operatorname{mean}(x^2)+\epsilon}}
-=\frac{x}{\sqrt{\operatorname{mean}(x^2)+\epsilon/a^2}}.
+\frac{ax}{\sqrt{a^2\mathrm{mean}(x^2)+\epsilon}}
+=\frac{x}{\sqrt{\mathrm{mean}(x^2)+\epsilon/a^2}}.
 $$
 
 This derives approximate positive-scale invariance and shows exactly where
@@ -694,11 +694,11 @@ implemented in the lab:
 
 $$
 c=XW_{\rm up},\qquad a=XW_{\rm gate},\qquad
-g=\operatorname{SiLU}(a)=a\odot\sigma(a),
+g=\mathrm{SiLU}(a)=a\odot\sigma(a),
 $$
 
 $$
-\operatorname{SwiGLU}(X)=(g\odot c)W_{\rm down}.
+\mathrm{SwiGLU}(X)=(g\odot c)W_{\rm down}.
 $$
 
 Both $c$ and $g$ have shape $[B,T,F]$; the down projection returns $[B,T,D]$.
@@ -720,12 +720,12 @@ gradient is $\delta$, then:
 $$
 \frac{\partial\mathcal L}{\partial c}=\delta\odot g,\qquad
 \frac{\partial\mathcal L}{\partial a}
-=\delta\odot c\odot\operatorname{SiLU}'(a).
+=\delta\odot c\odot\mathrm{SiLU}'(a).
 $$
 
 One branch affects the other branch's learning signal. A zero gate makes this
 bias-free MLP's output zero, but that alone does not imply zero gate-parameter
-gradients: $\operatorname{SiLU}'(0)=1/2$, so the gate can still learn when the
+gradients: $\mathrm{SiLU}'(0)=1/2$, so the gate can still learn when the
 content and downstream gradient are nonzero. Forward suppression and permanent
 inability to learn are different claims.
 
@@ -859,7 +859,7 @@ can differ even when they use the same source value vectors.
 With $r=H_q/H_{kv}$ and group index $g(h)=\lfloor h/r\rfloor$:
 
 $$
-A_h=\operatorname{softmax}
+A_h=\mathrm{softmax}
 \left(\frac{Q_hK_{g(h)}^\top}{\sqrt d}+C\right),\qquad
 O_h=A_hV_{g(h)}.
 $$

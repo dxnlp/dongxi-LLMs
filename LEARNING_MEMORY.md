@@ -37,6 +37,12 @@ dependencies, preferred machine, and current status.
 
 ## Learner profile and working preferences
 
+- On 2026-09-08 reported mathematical rendering errors on GitHub, explicitly
+  including Chapters 4 and 5. Check all book chapters and solutions, not just
+  notebook previews. Use dollar delimiters and portable upright function names;
+  follow `docs/MATH_FORMATTING.md` and run the book-math regression check.
+  Formatting maintenance does not change learning progress or notebook results.
+
 - Learns best through prediction, a concrete example, a short explanation, and
   an immediate check for understanding.
 - Prefers profound, mechanism-level discussion over calculation quizzes. Use
