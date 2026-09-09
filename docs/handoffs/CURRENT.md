@@ -1,16 +1,14 @@
 # Current learning handoff
 
-- Task ID: `LEARN-MAC-001`
+- Task ID: `LEARN-SPARK-DAY08-001` (supersedes `LEARN-MAC-001`).
 - Prepared: 2026-09-09.
-- State: departure requested with `Switch to Mac` on 2026-09-09; Spark-side
-  handoff prepared for publication. Mac arrival and runtime validation pending.
-  Verify the published commit on arrival; do not infer that study has resumed.
+- State: learner reported Mac sync but dependency friction, rejected the stale
+  Day 6 continuation, and explicitly returned to **Day 8 on Spark**.
 - Source execution verified: `spark-aa66`, Linux/aarch64.
-- Destination: Mac Studio, local execution; local path/runtime not yet verified.
+- Current destination: Spark; actual execution on `spark-aa66` verified again.
 - Repository: `dxnlp/dongxi-LLMs`; intended branch: `main`.
-- Base commit before this workflow record: `221caed238e08468c58cf1223822206d2aee63b8`.
-- Departure phrase: **Switch to Mac**.
-- Arrival phrase: **Continue on Mac**.
+- Base commit before this correction: `f9b8d97237763814c8fc78e5c19abac3c829f1a2`.
+- Current continuation: **Continue on Spark**; remain in Day 8.
 - Contract: [learning workflow](../LEARNING_WORKFLOW.md).
 
 ## What the next session must know
@@ -18,43 +16,51 @@
 The learner wants live, richly visual interaction beyond text/code notebooks:
 clickable architecture components, linked equations and calculations, adjustable
 controls, paired runs, and deliberate failures. Mac is the default learning and
-media machine; Spark handles approved GPU work. These choices are recorded;
-the interactive textbook and Optimizer Playground have **not** been built.
+media machine in the general plan, but the learner currently chooses Spark.
+Rich visuals belong directly in the conversation, not only notebooks or a
+separate website. The learner found the isolated SGD slider boring, then asked
+for complete Day 8 notebooks and a coherent chapter. Chapter 6's Day 8 foundation
+and three worked visual notebooks are now prepared. The full live
+SGD/momentum/AdamW playground remains unimplemented.
 
 Days 1–3 are recorded complete. Chapter 4 is written but hands-on practice was
 deferred. The live baseline discussion reached Day 5 notebook 07; mastery remains
 unassessed. Chapter 5 covers Days 5–7, with 12 verified notebooks and 30 worked
 answers. Day 6 guided study and Day 7 independent defense remain open. Day 8
-received an outline and a proposed interactive route, not completed instruction.
+has complete prepared companion material, not completed learner instruction.
 
 The latest math-formatting repair is committed in the base above. Five chapters
 and affected companions were fixed; 560 expressions rendered in local MathJax,
 and 59 tests passed. Keep GitHub-safe math rules in force. These results were on
 Spark; they do not establish Mac environment readiness.
 
-## Exact next action on Mac
+Day 8 addition: three fresh-kernel notebook passes (29 code cells, 10 figures),
+71 current repository tests, and 605 expressions passing source/local MathJax
+checks. See `experiments/reports/2026-09-09-day8-material-verification.md` and
+its JSON manifest. No notebook server or GPU campaign was started.
 
-1. On `Continue on Mac`, follow the arrival checklist: verify local execution,
-   synchronize safely, then reread the durable course state.
-2. Locate the local checkout/runtime and explain any missing setup. Do not try
-   to use `/home/dongxi/dgx-spark-dongxi/.venv` as a Mac environment or silently
-   change previously committed notebooks to force a kernel match.
-3. Recap this plan. Default lesson continuation is Day 6's LayerNorm/RMSNorm
-   contrast using the existing notebook as a companion, not the entire lesson.
-   The proposed Day 8 Optimizer Playground is the first new interactive build
-   candidate; proceed with it when requested, without marking Day 6/7 complete.
-4. For a build request, inspect available Mac tooling, choose the smallest
-   appropriate UI, and implement/verify the pilot before expanding to other
-   lessons. Reuse the course computations and adjacent worked explanations.
+## Exact next action on Spark
+
+1. Continue Day 8 with documents → token windows → correctly weighted updates,
+   using `notebooks/day-08/01_data_batches_and_token_budget.ipynb` and Chapter 6.
+   Offer discussion around an actual recipe dilemma; do not restart the isolated
+   quadratic slider. Notebook execution is optional, not the only teaching mode.
+2. Preserve older Day 4–7 gaps as a review backlog. Do not restart Day 6 merely
+   because it was the earliest incomplete row in the tracker.
+3. Honor the learner's preference for rich live visuals, linked mathematics,
+   controlled interventions, and deep explanations. Notebooks remain companions.
+4. No heavy GPU run, Mac installation, film production, or public publication is
+   authorized by this lesson. Update progress from actual learner responses.
 
 ## Task boundaries and acceptance
 
 - Inputs: `AGENTS.md`, `PROGRESS.md`, `LEARNING_MEMORY.md`, the workflow above,
   `docs/NOTEBOOK_CURRICULUM.md`, Day 6/7 artifacts, and
   `learning_artifacts/day-08-pretraining-data-and-recipe/README.md`.
-- Current allowed outputs: workflow/memory/progress records. Future implementation
-  scope must be established when the learner requests the pilot; this packet is
-  not approval for GPU training, renderer production, or public publication.
+- Current allowed outputs: the requested Day 8 chapter, worked solutions,
+  visual notebooks, CPU verification and scoped workflow/memory/progress records.
+  This is not approval for GPU training,
+  produced animation films, or public publication.
 - Arrival success: expected course commit present, correct execution host,
   platform-appropriate runtime checked, short progress recap, and recorded next
   action resumed without inventing completed work.
@@ -65,11 +71,11 @@ Spark; they do not establish Mac environment readiness.
   query returned no rows (exit 0). This is a point-in-time observation, not a
   guarantee about future jobs or differently named processes. Nothing was
   stopped, restarted, or migrated by the handoff.
-- Interactive state: no live playground exists yet; no slider values, runtime
-  variables, or browser session are claimed to have been saved.
+- Interactive source: task-owned `day-eight-learning-rate.html` outside the
+  repository. Initial example is w=2, gradient=4, learning rate=0.20 for L=w².
+  Learner-selected controls are not yet captured in this packet; do not claim
+  browser state was synchronized to Mac. See the Day 8 artifact for the mechanism.
 
-The departure task commits/pushes this packet and the scoped workflow records,
-then reports the verified published commit in the conversation. On arrival,
-Git history can identify this packet's commit without embedding its own hash
-in itself. No application-level conversation transfer has been performed;
-opening a local Mac course task and using the arrival phrase is sufficient.
+Historical Mac departure was published in `f9b8d97`. The learner's return
+supersedes that destination and its incorrect Day 6 resume step. No
+application-level conversation transfer is performed by this correction.

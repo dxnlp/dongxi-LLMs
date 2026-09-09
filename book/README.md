@@ -9,13 +9,15 @@ The narrative architecture is defined in [`../BOOK.md`](../BOOK.md).
 3. [`chapters/03-learning-the-next-token.md`](chapters/03-learning-the-next-token.md)
 4. [`chapters/04-attention-and-the-causal-information-boundary.md`](chapters/04-attention-and-the-causal-information-boundary.md)
 5. [`chapters/05-building-a-modern-decoder.md`](chapters/05-building-a-modern-decoder.md) — Days 5–7: foundation, modern mechanisms, and architecture defense
-6. [`appendices/a-laboratory-setup.md`](appendices/a-laboratory-setup.md), when setting up or reproducing the lab
-7. Chapter solutions, after attempting the exercises:
+6. [`chapters/06-pretraining-as-a-controlled-system.md`](chapters/06-pretraining-as-a-controlled-system.md) — complete Day 8 foundation; Day 9 run evidence pending
+7. [`appendices/a-laboratory-setup.md`](appendices/a-laboratory-setup.md), when setting up or reproducing the lab
+8. Chapter solutions, after attempting the exercises:
    [`Chapter 1`](solutions/01-evidence-before-optimization.md) and
    [`Chapter 2`](solutions/02-text-tokens-and-embeddings.md), then
    [`Chapter 3`](solutions/03-learning-the-next-token.md) and
    [`Chapter 4`](solutions/04-attention-and-the-causal-information-boundary.md), and
-   [`Chapter 5`](solutions/05-decoder-notebook-solutions.md)
+   [`Chapter 5`](solutions/05-decoder-notebook-solutions.md), and
+   [`Chapter 6`](solutions/06-pretraining-as-a-controlled-system.md)
 
 The book is written for sequential reading. Interactive notebooks are
 first-class companion lessons and part of the course material: they turn the

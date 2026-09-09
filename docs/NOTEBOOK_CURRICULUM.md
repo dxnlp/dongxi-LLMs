@@ -17,6 +17,11 @@ approved GPU evidence. The proposed first pilot is the Day 8 Optimizer
 Playground, not yet implemented. Do not replace existing worked notebooks or
 equate a proposed visualization with demonstrated understanding.
 
+Current override: Day 8 on Spark. Its three complete visual notebooks are now
+prepared, but they do not implement the full live playground. The learner found
+the isolated quadratic slider boring; start from meaningful decoder/data/recipe
+interventions and keep live discussion available outside notebook execution.
+
 ## Chapter contract
 
 Each chapter normally contains three focused notebook sessions:
@@ -54,7 +59,7 @@ claims matter, an experiment specification and report.
 | 3. Learning the Next Token | Logits → stable softmax → NLL and $p-q$ | Break causal shifting and loss-mask normalization | Learn a known conditional distribution from repeated one-hot targets |
 | 4. Attention and the Causal Information Boundary | Build scaled causal attention and verify its invariants | Break mask placement and score scaling; inspect gradient paths | Prove cached and uncached decoding equivalence for an unchanged prefix |
 | 5. Building a Modern Decoder | Assemble residual attention and feed-forward blocks | Compare normalization, position, activation, and attention variants | Build `DongxiGPT`, account for parameters/FLOPs/memory, then test optional recurrent depth |
-| 6. Pretraining as a Controlled System | Trace batches, token loss, AdamW, schedules, and clipping | Trigger instability, overflow, or incorrect accumulation safely | Resume a bounded run and reconcile checkpoints, metrics, throughput, and memory |
+| [6. Pretraining as a Controlled System](../notebooks/day-08/README.md) | Ready: document windows, budgets, correctly weighted accumulation | Ready: AdamW recurrence, schedule, clipping, dtype casts and memory ledger | Ready: fixed validation and complete/incomplete checkpoint recovery; GPU throughput/memory and Day 9 run pending |
 | 7. Evaluation Is a Contract | Implement metrics, frozen splits, and uncertainty | Reveal sampling variance, leakage, and misleading aggregate scores | Compare fixed checkpoints with slices and qualitative error analysis |
 | 8. Instruction Data as an Interface | Serialize roles and trace labels/loss masks | Break chat templates, packing boundaries, or assistant masking | Inspect a provenance-aware data mixture and its effective token weights |
 | 9. Supervised Fine-Tuning | Trace SFT loss and gradient flow through one batch | Ablate masks, mixture weights, or adaptation choices | Compare base and SFT checkpoints for gains, regressions, and uncertainty |

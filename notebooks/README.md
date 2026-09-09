@@ -47,3 +47,5 @@ regeneration instructions: [`Notebook visuals`](../docs/NOTEBOOK_VISUALS.md).
   includes the complete Chapter 5 pathway index
 - [`day-06/`](day-06/) — three ready modern-architecture notebooks
 - [`day-07/`](day-07/) — core architecture-defense notebook, then optional recurrent depth
+- [`day-08/`](day-08/) — three pretraining-recipe notebooks: data/budgets,
+  AdamW/stability, validation/recovery; 10 explanatory reference figures

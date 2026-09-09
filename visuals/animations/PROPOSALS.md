@@ -11,7 +11,52 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### Day 8 canonical material — 2026-09-09
+
+Source: agent automatic mathematics/opportunity check during the learner-requested
+Chapter 6 and notebook build. Reference: `book/chapters/06-pretraining-as-a-controlled-system.md`
+and `notebooks/day-08/`. Static reference figures are not produced animation.
+
+- Extend **CAND-ANIM-003 / ANIM-NTP-001**: follow document bytes into shifted
+  windows; fade ignored targets; accumulate summed NLL divided by the same total
+  N across microbatches. Canonical relation: gradient(mean over valid targets)
+  = sum of microbatch summed-loss gradients / N. Contrast a one-target tail with
+  sixteen targets and visibly expose why equal microbatch weights are wrong.
+  Notebook 1 verifies the correct and broken gradients with the actual decoder.
+- Extend **CAND-ANIM-018 / ANIM-EMB-001**: show actual decoder gradient coordinates
+  entering AdamW's m and v history, bias correction, adaptive update and separate
+  decay. Pair with the update-clock warmup/cosine schedule and a clip-after-sum
+  intervention. Canonical formulas are Chapter 6 sections 6.7–6.9. Preserve the
+  distinction between gradient norm, optimizer update and observed next loss.
+  Do not replay the isolated quadratic as the default: learner found it boring.
+  Notebook 2 verifies the recurrence and clipping, not optimizer superiority.
+- Precision/memory extension to the same stability segment: contrast range and
+  resolution with the actual FP16/BF16 casts, then distinguish 16P persistent
+  bytes from total memory. CPU cast evidence is not measured GPU BF16 training.
+
+### CAND-ANIM-019 — A checkpoint freezes a process, not only weights
+
+- Source: agent automatic transition/state check, Day 8 material creation.
+- State: candidate only; production not approved; Mac Studio production lane.
+- Mechanism: at update12 freeze weights, Adam moments, shuffle cursor/RNG,
+  update/token clocks and recipe identity. Branch into uninterrupted continuation,
+  complete restoration, missing moments, and missing cursor through update24.
+- Motion: align the first two trajectories; show the same next data but changed
+  update in the missing-moments branch; show changed next data in the cursor
+  branch. Keep “file loads,” “loss is finite,” and “trajectory replays” distinct.
+- Evidence: Notebook 3 runs the exact small decoder branches; full local CPU
+  replay matches, both omissions differ. Use report values for labels. Never
+  imply bitwise Mac/Spark equivalence or distributed recovery coverage.
+- Dependency: approve storyboard, use canonical Chapter 6/solutions and the
+  verified notebook manifest, then create a complete portable ANIM task packet.
+  No rendering or public publication authorized by this capture.
+
 ### Interactive-learning design — 2026-09-09
+
+Follow-up: first one-step SGD visual now demonstrated directly in conversation
+on Spark (not a produced film). It reuses CAND-ANIM-018's mechanism. Full
+momentum/AdamW interaction and animation production remain separate pending work;
+the learner explicitly chose direct in-app interaction over notebook-only study.
 
 Source: user request for real-time visual lessons and Mac/Spark workflow.
 The proposed Day 8 Optimizer Playground reuses CAND-ANIM-018 and ANIM-EMB-001's

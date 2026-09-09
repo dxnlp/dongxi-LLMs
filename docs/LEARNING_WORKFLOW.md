@@ -11,6 +11,16 @@ small CPU mathematics, chapter/solution editing, articles, and approved animatio
 production. DGX Spark is the execution home for CUDA-dependent mechanisms,
 substantial model training/inference, GPU profiling, and large checkpoints.
 
+Current learner override, 2026-09-09: remain on Spark after Mac dependency
+friction. Rich visuals should appear directly inside the app conversation.
+Browser-side toy interactions need not depend on a notebook kernel or local
+PyTorch. Machine preferences do not prevent this learning mode on Spark.
+
+Latest teaching feedback: the learner found the isolated quadratic SGD slider
+boring and asked for complete Day 8 notebooks and a coherent chapter. Those
+companions are now prepared. Prefer concrete LLM-system interventions over
+generic controls; this does not revoke the preference for direct live visuals.
+
 Choose by workload, not simply by day number. The same chapter may involve both:
 
 | Course stage | Mac Studio: understand, design, interpret | Spark: measure or execute |
@@ -146,7 +156,8 @@ Library/UI selection and implementation remain the next explicitly requested
 build task. Animation candidates reuse existing optimizer/gradient topics;
 interactive controls do not automatically approve produced animation media.
 
-The default learning continuation is still the recorded Day 6 norm comparison,
-with Day 4/5 practice and Day 7 defense open. Day 8's outline and interactive
-pilot may be explored when the learner chooses; neither completes those earlier
-requirements. See the live handoff for the current destination and next step.
+The intended continuation is **Day 8**, explicitly confirmed by the learner.
+The earlier Day 6 default was an agent handoff mistake. Keep Day 4–7 gaps as
+review items; return only when needed or requested, not automatically on a
+machine switch. Current user intent overrides stale resume instructions.
+See the live handoff for the current execution environment and next step.

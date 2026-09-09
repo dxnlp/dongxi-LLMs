@@ -47,6 +47,14 @@ agent-executed notebook.
 
 ## Dependencies and reproduction
 
+Chapter 6 adds 10 reference figures for the three Day 8 notebooks, including
+three whole-training-system maps, input/label grids, accumulation weighting,
+actual optimizer deltas, the schedule, clipping/memory categories, validation
+and recovery controls. Their source is `pretraining_visuals.py`; regenerate with
+`scripts/verify_pretraining_notebooks.py --kernel dgx-spark-native --figures`
+using the verified course interpreter. These are static notebook companions,
+not the proposed full live optimizer playground or produced animations.
+
 Install `notebooks/requirements-visuals.txt` into the intended notebook kernel
 environment. It pins Matplotlib 3.10.8 and does not replace the platform Torch
 lock. Verify proposed dependency changes before altering a shared environment.

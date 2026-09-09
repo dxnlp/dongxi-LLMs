@@ -8,12 +8,12 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
-- Current position: Day 5 baseline discussed; Days 6–7 material prepared; twelve Chapter 5
-  companion notebooks are built and reference-verified;
-  [Chapter 5's complete Days 5–7 narrative](book/chapters/05-building-a-modern-decoder.md)
-  and 30 worked conceptual solutions are written (guided mastery remains pending);
-  Day 4 material is complete and its live notebook practice is deferred
-- Primary learning/visual/media machine: Mac Studio
+- Current position: Day 8 on Spark; [Chapter 6's complete Day 8 foundation](book/chapters/06-pretraining-as-a-controlled-system.md),
+  three visual worked notebooks and twelve conceptual solutions are prepared.
+  Chapter 5's Days 5–7 material and twelve notebooks remain available; earlier
+  learner practice gaps are review items, not a forced rewind. Day 8 guided
+  mastery and Day 9's larger run remain pending.
+- Default learning/visual/media machine: Mac Studio; learner currently chooses Spark
 - GPU experiment machine: NVIDIA DGX Spark
 - Primary model family: Qwen3
 

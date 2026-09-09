@@ -55,6 +55,9 @@ The book moves through one continuous argument:
 6. **Pretraining as a Controlled System**
    Data and token budgets, batching, AdamW, schedules, clipping, precision,
    checkpoint recovery, scaling, and diagnosis. Synthesizes Days 8–9.
+   [Day 8 foundation written](book/chapters/06-pretraining-as-a-controlled-system.md),
+   with three executable notebooks and worked solutions; Day 9's larger run and
+   empirical diagnosis remain pending, not fabricated to fill the chapter.
 7. **Evaluation Is a Contract**
    Capability definitions, frozen splits, metrics, uncertainty, contamination,
    sampling variance, and error analysis. Primarily Day 10.

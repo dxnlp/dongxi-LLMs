@@ -5,21 +5,27 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Day 8 orientation and cross-machine interactive-learning planning; live baseline discussion last reached Day 5 Notebook 07
+- Active day: Day 8 pretraining data and recipe; complete requested materials prepared ahead of guided study
 - Status: in progress
-- Current focus: Chapter 5 now covers the full Days 5–7 narrative through
-  section 5.27, with 30 worked conceptual answers. The conclusion integrates
-  actual model tracing, gradient evidence, controlled failure diagnosis, budget
-  accounting, and fair comparison design, then bridges to controlled pretraining.
-- Next operational action: `Switch to Mac` received on 2026-09-09; Spark-side
-  handoff prepared for publication. On `Continue on Mac`, verify local execution,
-  safely sync, and resume from `docs/handoffs/CURRENT.md`. Mac arrival/runtime
-  validation remains pending. No interactive playground has been built.
-- Next learning action: begin `notebooks/day-06/01_rmsnorm_and_swiglu.ipynb` with the
-  LayerNorm/RMSNorm contrast, reconnecting the Day 5 baseline if needed. Material
-  was requested ahead of study: do not infer completed exercises or mastery.
-  Day 5 mastery and Chapter 4 deferred practice remain open. Current visual suite:
-  12 notebook passes, 168 code cells, 52 figures, 53 repository tests; report:
+- Current focus: Chapter 6's complete Day 8 foundation, three visual worked
+  notebooks, twelve conceptual solutions, and a bounded pretraining specification.
+  Chapter 5 still covers Days 5–7; its learner review backlog is unchanged.
+- Next operational action: remain on verified Spark execution at the learner's
+  request after Mac dependency friction. No Mac installation is required for
+  browser-side interactive teaching. See `docs/handoffs/CURRENT.md`.
+- Next learning action: **Day 8 on Spark**, starting with how actual documents
+  become supervised token windows and a correctly weighted update (Notebook 1).
+  Discuss a concrete data/recipe dilemma using the prepared figures and code;
+  notebooks remain optional companions to live discussion. The learner found
+  the isolated quadratic SGD slider boring; do not default back to it.
+  Earlier Day 6 resume instructions were an agent handoff mistake, not learner
+  intent. Preserve unfinished review without forcing a return to Day 6.
+  Material was requested ahead of study: do not infer exercises or mastery.
+  Day 5 mastery and Chapter 4 deferred practice remain open. Chapter 6 Day 8
+  verification: 3 notebook passes, 29 code cells, 10 figures, 71 repository tests;
+  report: `experiments/reports/2026-09-09-day8-material-verification.md`.
+  Historical Chapter 5 visual suite: 12 notebook passes, 168 code cells, 52 figures;
+  report:
   `experiments/reports/2026-09-07-day7-architecture-defense.md`. Day 6 prose
   checks: `experiments/reports/2026-09-07-day6-chapter-verification.md`.
   Day 7 now has a core defense notebook plus optional recurrence. The learner's
@@ -39,7 +45,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 5 | Decoder-only Transformer | in progress | Day 5 chapter foundation and 12 worked answers; expanded Chapter 5 suite has twelve notebooks, 52 figures, 53 tests; learner mastery not yet assessed |
 | 6 | Modern architecture design | in progress | Chapter 5 sections 5.11–5.22, worked answers 13–24, three ready notebooks; guided study pending |
 | 7 | Architecture synthesis | in progress | Chapter 5 sections 5.23–5.27 and answers 25–30; core defense notebook and optional recurrence ready; guided defense and trained comparison pending |
-| 8 | Pretraining data and recipe | in progress | Orientation outline introduced; Mac interactive pilot planned, not built; guided learning and specification pending |
+| 8 | Pretraining data and recipe | in progress | Complete Day 8 Chapter 6 foundation, three visual worked notebooks, twelve solutions and bounded specification prepared; learner study pending on Spark |
 | 9 | Pretraining run and diagnosis | pending | — |
 | 10 | Evaluation before training | pending | — |
 | 11 | Instruction-data engineering | pending | — |
@@ -464,6 +470,42 @@ and cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
   of the pushed commit and local execution must still be verified on Mac.
 - Arrival phrase: `Continue on Mac`. Preserve all existing learning gaps and
   proposed-versus-built distinctions. This is not a completed lesson.
+
+## Return to Spark and direct visual learning — 2026-09-09
+
+- Learner reported Mac dependency friction and requested continuation on Spark.
+  Verified `spark-aa66`; clean fast-forward sync reported already up to date.
+- Corrected stale Day 6 resumption across current progress, handoff, workflow,
+  and agent memory. Intended lesson is Day 8; earlier gaps remain review items.
+- Clarification: rich visuals directly inside the conversation, not only
+  notebooks or a standalone website. Built the first small SGD step-size visual
+  outside the repo, with adjustable learning rate and discussion action.
+- Browser checks passed numerical updates at three rates, light/dark themes,
+  and 736px/360px layouts. This is not the full optimizer lab, model training,
+  or learner mastery. Notebook/model source and course environment unchanged.
+- Next: discuss the learner's chosen step size and proceed through Day 8.
+
+## Complete Day 8 material build — 2026-09-09
+
+- User found the isolated SGD slider boring and requested complete notebooks
+  and a coherent Day 8 chapter. Created Chapter 6's full Day 8 foundation,
+  three worked visual notebooks, twelve conceptual solutions, companion lab and
+  bounded recipe. This is content readiness, not completed guided study.
+- Reused the existing modern decoder; added authored byte-text data, correctly
+  weighted accumulation, explicit AdamW/schedule/clipping probes, validation and
+  complete/incomplete checkpoint controls. No earlier learner notebook changed.
+- Verified on Spark CPU: 3 fresh-kernel passes, 29 code cells, 10 PNGs, 71 tests;
+  605 book formulas passed source and local MathJax checks, 161 local targets
+  resolved. Evidence: `experiments/reports/2026-09-09-day8-material-verification.md`.
+- Complete recovery matched exactly in the fixture; missing optimizer/cursor
+  controls differed. The missing-cursor control even had slightly lower tiny-
+  holdout loss, illustrating why a nicer metric cannot establish faithful replay.
+- Extended existing training/optimizer animation candidates and captured
+  CAND-ANIM-019 for process-state recovery. Production remains approval-gated on
+  Mac Studio. No animation render, GPU campaign, persistent server, commit or
+  push was performed by this content request.
+- Next: Day 8 on Spark, document windows and the valid-token objective with
+  meaningful recipe dilemmas. Earlier study gaps remain optional review.
 
 ## Open questions
 

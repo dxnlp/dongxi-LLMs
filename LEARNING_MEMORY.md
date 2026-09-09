@@ -37,6 +37,22 @@ dependencies, preferred machine, and current status.
 
 ## Learner profile and working preferences
 
+- Latest request, 2026-09-09: create the complete Day 8 notebooks and coherent
+  chapter directly. The isolated one-step quadratic SGD slider was described as
+  boring. Prefer meaningful LLM-system dilemmas and interventions tied to the
+  decoder/data/recipe; rich visuals should explain a mechanism, not merely add
+  controls. Prepared content is not demonstrated mastery. Day 8 companion path:
+  `notebooks/day-08/README.md`; canonical Chapter 6 and twelve worked solutions
+  are linked there. Current continuation remains on Spark.
+
+- Correction on 2026-09-09: learner rejected the stale Day 6 handoff. Intended
+  continuation is Day 8, not the earliest unfinished lesson. After reporting
+  Mac dependency issues, explicitly chose to continue on Spark. "Interactive"
+  means rich adjustable visuals **directly in the app conversation**, not only
+  notebooks or an external learning website. Use this surface for explanations;
+  do not require local PyTorch/Jupyter for a browser-side toy demonstration.
+  Keep earlier gaps as optional review, never silently rewind the course.
+
 - On 2026-09-09 explicitly requested live, richly visual learning beyond notebooks:
   linked architecture views, mathematics and controls, single-step experiments,
   paired runs, deliberate failures, and question-driven exploration. Keep the
@@ -49,8 +65,8 @@ dependencies, preferred machine, and current status.
   then resume. Never confuse a Mac client viewing Spark with Mac execution.
   Remind the learner at workload boundaries without automatically switching.
   Standing contract: `docs/LEARNING_WORKFLOW.md`; current packet:
-  `docs/handoffs/CURRENT.md` (`LEARN-MAC-001`, departure requested on 2026-09-09;
-  source handoff prepared, Mac arrival/runtime verification pending).
+  `docs/handoffs/CURRENT.md` (supersedes `LEARN-MAC-001`: learner returned to
+  Day 8 on Spark after reported Mac dependency friction).
 
 - On 2026-09-08 reported mathematical rendering errors on GitHub, explicitly
   including Chapters 4 and 5. Check all book chapters and solutions, not just
@@ -150,7 +166,7 @@ ledger.
 | 5 | Decoder-only Transformer | in progress | `learning_artifacts/day-05-decoder-only-transformer/README.md` |
 | 6 | Modern architecture design | material ready; guided study pending | `learning_artifacts/day-06-modern-architecture/README.md` |
 | 7 | Architecture synthesis | notebooks ready; guided defense pending | `learning_artifacts/day-07-architecture-synthesis/README.md` |
-| 8 | Pretraining recipe and interactive-learning design | outline introduced; Mac pilot planned, study pending | `learning_artifacts/day-08-pretraining-data-and-recipe/README.md` |
+| 8 | Pretraining recipe and interactive-learning design | Chapter 6 Day 8 foundation + 3 worked notebooks prepared; guided study pending on Spark | `learning_artifacts/day-08-pretraining-data-and-recipe/README.md` |
 
 At the start of each new day, create its directory and index. During the lesson,
 update the relevant focused topic whenever the learner states a prediction,

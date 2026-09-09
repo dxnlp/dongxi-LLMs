@@ -1,0 +1,110 @@
+{
+  "base_commit": "f9b8d97237763814c8fc78e5c19abac3c829f1a2",
+  "timestamp_utc": "2026-09-09T20:43:59.573676+00:00",
+  "torch": "2.13.0+cu130",
+  "matplotlib": "3.10.8",
+  "nbformat": "5.11.1",
+  "nbclient": "0.11.0",
+  "host": "spark-aa66",
+  "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+  "python": "3.12.14",
+  "kernel": "dgx-spark-native",
+  "notebooks": [
+    {
+      "path": "notebooks/day-08/01_data_batches_and_token_budget.ipynb",
+      "sha256": "add3856beea4bdcfb7e94d791bfe9f67fc701fa9b6c2605a9aa25e030bc99737",
+      "code_cells": 10,
+      "images": [
+        "01-system.png",
+        "01-windows.png",
+        "01-accumulation.png"
+      ]
+    },
+    {
+      "path": "notebooks/day-08/02_adamw_schedule_and_stability.ipynb",
+      "sha256": "9ef0fb7ce35c5dd63ef438a8a827fef6c1a2c9f57a6d8c290248b276eddb7e30",
+      "code_cells": 11,
+      "images": [
+        "02-system.png",
+        "02-optimizer.png",
+        "02-schedule.png",
+        "02-stability.png"
+      ]
+    },
+    {
+      "path": "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb",
+      "sha256": "b29cc4e951605f591962c03010a20b2d4d00226051ba4ec116a12ba9fe4b854a",
+      "code_cells": 8,
+      "images": [
+        "03-system.png",
+        "03-validation.png",
+        "03-recovery.png"
+      ]
+    }
+  ],
+  "helpers": {
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/pretraining_visuals.py": "cfd4169cf963da74c4edb69d4a75fbf08a641e0a0ab4bb9e82fd45a9812855fa",
+    "scripts/verify_pretraining_notebooks.py": "ceec824176616d9d4d8e71c09dbd59abb68cc82d305ac42e536b3eb7c9b07a91",
+    "tests/test_pretraining_lab.py": "a86059a81b5cf36e8cf48bf058a5ab05ba7a636a424c00710e5dbcdaaf2852be"
+  },
+  "elapsed_seconds": 11.485974672948942,
+  "sampled_min_mem_available_bytes": 125669801984,
+  "memory_samples": 115,
+  "data": {
+    "train_sha256": "e1805964a9d271bcdac8e4a4ef7af2e58c973dc9aa625e5c197ecc35a6f42c5d",
+    "valid_sha256": "65e27488d35766e1913c3f47edd1905712601ccd5a3b5145bd215d40ab6cce64",
+    "tokenizer": "utf8-bytes-v1:bytes=0..255,eos=256,bos=257"
+  },
+  "reference_stdout": {
+    "01_data_batches_and_token_budget.ipynb": [
+      "CPU teaching lab 2.13.0+cu130\n",
+      "Training documents: 8 validation documents: 2\nExpected rejection: Normalized text overlaps the held-out split\n",
+      "数 bytes: [230, 149, 176]\nInput IDs: [[257, 97, 98], [99, 256, 256]]\nTarget IDs: [[97, 98, 99], [256, -100, -100]]\nWindow shapes: torch.Size([24, 16]) torch.Size([24, 16])\n",
+      "{'length': 8, 'windows': 45, 'valid_targets': 334, 'processed_positions': 360, 'useful_fraction': 0.9277777777777778}\n{'length': 16, 'windows': 24, 'valid_targets': 334, 'processed_positions': 384, 'useful_fraction': 0.8697916666666666}\n{'length': 32, 'windows': 15, 'valid_targets': 334, 'processed_positions': 480, 'useful_fraction': 0.6958333333333333}\n",
+      "First shuffled document IDs: ['train-06', 'train-07', 'train-03', 'train-05', 'train-01', 'train-01', 'train-07', 'train-06']\nNext epoch can be replayed: [3, 8, 9, 22, 14]\n",
+      "Position budget: 768\nUnique fixture target positions: 334\nValidation target positions: 65\n",
+      "{'counts': [16, 1], 'correct_error': 5.551115123125783e-17, 'wrong_error': 1.3305337336094731}\n"
+    ],
+    "02_adamw_schedule_and_stability.ipynb": [
+      "CPU teaching lab 2.13.0+cu130\n",
+      "Maximum hand-written vs PyTorch AdamW error: 6.938893903907228e-18\ndef adamw_reference(parameter, gradient, m, v, step, lr, betas=(.9, .999), eps=1e-8, decay=.01):\n    \"\"\"Unfused AdamW recurrence; step is one-based; no AMSGrad/maximize.\"\"\"\n    b1, b2 = betas\n    m = b1*m + (1-b1)*gradient\n    v = b2*v + (1-b2)*gradient.square()\n    update = (m/(1-b1**step)) / ((v/(1-b2**step)).sqrt()+eps)\n    return parameter*(1-lr*decay)-lr*update, m, v\n\n",
+      "{'step': 1, 'current_gradient': 1.0, 'moment': 0.10000000149011612, 'update': -0.00999999981152433}\n{'step': 2, 'current_gradient': 1.0, 'moment': 0.19000000283122065, 'update': -0.00999999981152433}\n{'step': 3, 'current_gradient': -0.1, 'moment': 0.16100000184029342, 'update': -0.007259826200711861}\n",
+      "First rates: [0.0033333333333333335, 0.006666666666666667, 0.01, 0.00994973871801308] last rate: 0.001\n",
+      "{'before': 66.20057678222656, 'after': 0.9999989867210388, 'cosine': 1.0000019073486328}\nClip after sum: 1.0\nSum after separate clips: 0.0\n",
+      "torch.float32 [65536.0, 1.001953125]\ntorch.float16 [inf, 1.001953125]\ntorch.bfloat16 [65536.0, 1.0]\nAll decoder training in these notebooks remains CPU FP32.\n",
+      "Unique parameters: 8832 estimated persistent bytes: {'weights': 35328, 'gradients': 35328, 'adam_moments': 70656} sum: 141312\nIllustrative 100M-parameter ledger, GiB: 1.4901161193847656\n"
+    ],
+    "03_validation_and_checkpoint_recovery.ipynb": [
+      "CPU teaching lab 2.13.0+cu130\n",
+      "Validation NLL with different batch grouping: 5.538761127528601 5.5387611275286\n",
+      "First update: {'step': 1, 'loss': 5.530887126922607, 'lr': 0.0033333333333333335, 'grad_norm': 1.1875855922698975, 'tokens': 32, 'indices': [14, 17], 'validation': 5.5187100923978365}\nLast update: {'step': 24, 'loss': 3.280638813972473, 'lr': 0.001, 'grad_norm': 0.9656953811645508, 'tokens': 668, 'indices': [21, 0], 'validation': 3.275008803147536}\nActual valid targets vs position ceiling: 668 768\n",
+      "complete {'parameter_error': 0.0, 'same_history': True, 'same_batches': True, 'validation': 3.275008803147536}\nno_optimizer {'parameter_error': 0.03399824723601341, 'same_history': False, 'same_batches': True, 'validation': 3.318038060114934}\nno_cursor {'parameter_error': 0.02556600421667099, 'same_history': False, 'same_batches': False, 'validation': 3.266824751633864}\n",
+      "Expected contract rejection: Checkpoint experiment contract changed\n"
+    ]
+  },
+  "figure_sha256": {
+    "notebooks/figures/chapter-06/01-accumulation.png": "3a3a579c03d9c03c2c0297bade6b307775b3e7219a998edcf853f213fec90373",
+    "notebooks/figures/chapter-06/01-system.png": "8f490877e05e7edbac2a59c70de44d0f021dd09272579f3cb54e5c51b50cecf1",
+    "notebooks/figures/chapter-06/01-windows.png": "51503c5548bdc28dd4271af99c0dad59af857e8535e127f72067dea599bbc29a",
+    "notebooks/figures/chapter-06/02-optimizer.png": "806c0cf64684947c470f886f6eadd26871dc38b219ecc1e1f407c24a1c5c5c10",
+    "notebooks/figures/chapter-06/02-schedule.png": "47a69c70a0ead786781bb090b754d50e9c2181c44dc4b42d8137afff0a4f0eef",
+    "notebooks/figures/chapter-06/02-stability.png": "b24e20b9b7b4e3652d951124270b83e68b4e65326f27fbdfd761dd80b3c0b24e",
+    "notebooks/figures/chapter-06/02-system.png": "9c64c8c7e8c8e0dc181a365a944b8d339267dd08f77dd4519f4cff89921eefc5",
+    "notebooks/figures/chapter-06/03-recovery.png": "e236bec8e3c84bf7e6c0187ad6a19a6cc4427a45fb29b236b03a003f48a89127",
+    "notebooks/figures/chapter-06/03-system.png": "cf7dadb994cd0d5be437d594bc944a2b67af2cad0098560f4b2a28e36ed2a11f",
+    "notebooks/figures/chapter-06/03-validation.png": "0cff4a68953eb18cf94cbfeecc9ca27c963b3f47c938a0ee9c042c1da4567f1c"
+  },
+  "checks": {
+    "unit_tests": 71,
+    "book_math_expressions": 605,
+    "book_math_errors": 0,
+    "mathjax_passed": 605,
+    "mathjax_failed": 0,
+    "notebook_exit_code": 0,
+    "tests_exit_code": 0,
+    "local_link_targets": 161,
+    "missing_local_targets": 0
+  }
+}
