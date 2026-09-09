@@ -11,6 +11,17 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### Interactive-learning design — 2026-09-09
+
+Source: user request for real-time visual lessons and Mac/Spark workflow.
+The proposed Day 8 Optimizer Playground reuses CAND-ANIM-018 and ANIM-EMB-001's
+gradient/update teaching motivation. Preserve the distinction between a gradient
+arrow and an optimizer update, matched initial conditions, and extra history
+state for momentum/AdamW. This is a proposed interactive tool, not new measured
+evidence or approval for a produced animation. The workflow and portable state
+requirements are in `docs/LEARNING_WORKFLOW.md`; rendering remains on Mac Studio
+only after explicit production approval. No duplicate animation candidate added.
+
 ### Day 7 chapter synthesis — 2026-09-07
 
 Source: user-requested chapter update; agent automatic mathematics review.

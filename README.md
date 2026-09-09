@@ -13,7 +13,8 @@
   [Chapter 5's complete Days 5–7 narrative](book/chapters/05-building-a-modern-decoder.md)
   and 30 worked conceptual solutions are written (guided mastery remains pending);
   Day 4 material is complete and its live notebook practice is deferred
-- Primary machine: NVIDIA DGX Spark
+- Primary learning/visual/media machine: Mac Studio
+- GPU experiment machine: NVIDIA DGX Spark
 - Primary model family: Qwen3
 
 ## Start here
@@ -25,6 +26,16 @@
 5. Read [`learning_artifacts/`](learning_artifacts/) for deep discussions organized by day and topic.
 6. Use [`notebooks/`](notebooks/) for the book's interactive mechanism lessons.
 7. Contributors and coding agents must read [`AGENTS.md`](AGENTS.md) before changing the project.
+
+## Continue across machines
+
+Say **Switch to Mac** or **Switch to Spark** before leaving: the agent saves
+progress and commits/pushes scoped course work. On the destination, open the
+course project and say **Continue on Mac** or **Continue on Spark**: verify the
+execution host, safely synchronize, and resume the recorded next step.
+These are course conventions, not application slash commands. Full contract:
+[learning workflow](docs/LEARNING_WORKFLOW.md); latest
+[handoff packet](docs/handoffs/CURRENT.md).
 
 ## Learning promise
 

@@ -37,6 +37,21 @@ dependencies, preferred machine, and current status.
 
 ## Learner profile and working preferences
 
+- On 2026-09-09 explicitly requested live, richly visual learning beyond notebooks:
+  linked architecture views, mathematics and controls, single-step experiments,
+  paired runs, deliberate failures, and question-driven exploration. Keep the
+  coherent chapter and worked notebooks as companions. First proposed pilot is
+  the Day 8 Optimizer Playground; it has not been built or verified on Mac.
+- Mac Studio is the default learning/CPU/visual/media environment; Spark handles
+  approved heavy GPU tasks. Use `Switch to Mac` / `Switch to Spark` to save the
+  handoff and commit/push scoped work before departure. On `Continue on Mac` /
+  `Continue on Spark`, verify actual execution, safely sync and reread state,
+  then resume. Never confuse a Mac client viewing Spark with Mac execution.
+  Remind the learner at workload boundaries without automatically switching.
+  Standing contract: `docs/LEARNING_WORKFLOW.md`; current packet:
+  `docs/handoffs/CURRENT.md` (`LEARN-MAC-001`, departure requested on 2026-09-09;
+  source handoff prepared, Mac arrival/runtime verification pending).
+
 - On 2026-09-08 reported mathematical rendering errors on GitHub, explicitly
   including Chapters 4 and 5. Check all book chapters and solutions, not just
   notebook previews. Use dollar delimiters and portable upright function names;
@@ -135,6 +150,7 @@ ledger.
 | 5 | Decoder-only Transformer | in progress | `learning_artifacts/day-05-decoder-only-transformer/README.md` |
 | 6 | Modern architecture design | material ready; guided study pending | `learning_artifacts/day-06-modern-architecture/README.md` |
 | 7 | Architecture synthesis | notebooks ready; guided defense pending | `learning_artifacts/day-07-architecture-synthesis/README.md` |
+| 8 | Pretraining recipe and interactive-learning design | outline introduced; Mac pilot planned, study pending | `learning_artifacts/day-08-pretraining-data-and-recipe/README.md` |
 
 At the start of each new day, create its directory and index. During the lesson,
 update the relevant focused topic whenever the learner states a prediction,

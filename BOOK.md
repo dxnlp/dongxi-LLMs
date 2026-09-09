@@ -98,6 +98,14 @@ The book moves through one continuous argument:
 
 ## Chapter design contract
 
+The interactive reader experience combines the canonical chapter, real-time
+visual interventions, and executable notebook companions. Learning normally
+occurs on Mac Studio; model-scale GPU evidence is produced on Spark. Keep
+machine operations outside conceptual chapters, in
+[the learning workflow](docs/LEARNING_WORKFLOW.md), and preserve live progress
+through the handoff ledger. Proposed interactive interfaces do not count as
+implemented book assets or completed learner exercises.
+
 Each chapter should form an argument rather than a pile of artifacts. Use the
 following elements when they serve the material:
 

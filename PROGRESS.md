@@ -5,13 +5,17 @@ This file is the operational source of truth for resuming work. Update it at the
 ## Current position
 
 - Active release: `v0.1`
-- Active day: Days 6–7 material preparation; live baseline discussion last reached Day 5 Notebook 07
+- Active day: Day 8 orientation and cross-machine interactive-learning planning; live baseline discussion last reached Day 5 Notebook 07
 - Status: in progress
 - Current focus: Chapter 5 now covers the full Days 5–7 narrative through
   section 5.27, with 30 worked conceptual answers. The conclusion integrates
   actual model tracing, gradient evidence, controlled failure diagnosis, budget
   accounting, and fair comparison design, then bridges to controlled pretraining.
-- Next action: begin `notebooks/day-06/01_rmsnorm_and_swiglu.ipynb` with the
+- Next operational action: `Switch to Mac` received on 2026-09-09; Spark-side
+  handoff prepared for publication. On `Continue on Mac`, verify local execution,
+  safely sync, and resume from `docs/handoffs/CURRENT.md`. Mac arrival/runtime
+  validation remains pending. No interactive playground has been built.
+- Next learning action: begin `notebooks/day-06/01_rmsnorm_and_swiglu.ipynb` with the
   LayerNorm/RMSNorm contrast, reconnecting the Day 5 baseline if needed. Material
   was requested ahead of study: do not infer completed exercises or mastery.
   Day 5 mastery and Chapter 4 deferred practice remain open. Current visual suite:
@@ -20,7 +24,7 @@ This file is the operational source of truth for resuming work. Update it at the
   checks: `experiments/reports/2026-09-07-day6-chapter-verification.md`.
   Day 7 now has a core defense notebook plus optional recurrence. The learner's
   defense and any specified trained comparison remain pending.
-- Last updated: 2026-09-08
+- Last updated: 2026-09-09
 
 ## Four-week tracker
 
@@ -35,7 +39,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 5 | Decoder-only Transformer | in progress | Day 5 chapter foundation and 12 worked answers; expanded Chapter 5 suite has twelve notebooks, 52 figures, 53 tests; learner mastery not yet assessed |
 | 6 | Modern architecture design | in progress | Chapter 5 sections 5.11–5.22, worked answers 13–24, three ready notebooks; guided study pending |
 | 7 | Architecture synthesis | in progress | Chapter 5 sections 5.23–5.27 and answers 25–30; core defense notebook and optional recurrence ready; guided defense and trained comparison pending |
-| 8 | Pretraining data and recipe | pending | — |
+| 8 | Pretraining data and recipe | in progress | Orientation outline introduced; Mac interactive pilot planned, not built; guided learning and specification pending |
 | 9 | Pretraining run and diagnosis | pending | — |
 | 10 | Evaluation before training | pending | — |
 | 11 | Instruction-data engineering | pending | — |
@@ -78,6 +82,9 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | D015 | Use interactive mechanism notebooks for important mathematical ideas. | The learner understands mathematics best by predicting, implementing, perturbing, and interpreting mechanisms in code while retaining deep conceptual discussion. |
 | D016 | Integrate emerging architectures through time-stamped frontier modules with explicit evidence tiers. | The course should remain current without presenting papers, implementation reports, secondary reporting, and vendor rumors as equally established facts. |
 | D017 | Give every chapter a multi-session interactive notebook pathway. | Important LLM mathematics and architecture should be understood by inspecting, implementing, breaking, and integrating mechanisms rather than reading prose alone. |
+| D018 | Mac Studio hosts live learning and media; Spark hosts GPU-dependent work. | A lesson can use both without changing its coherent book placement. |
+| D019 | Use explicit departure/arrival phrases and a Git-backed handoff. | Verify execution host, save/push scoped work before moving, sync on arrival, and preserve dirty work. |
+| D020 | Add live, linked visual experiments beyond notebooks. | Retain actual calculations, saved controls, evidence limits, and deep discussion; proposed tools are not completed lessons. |
 
 ## End-of-day update template
 
@@ -431,6 +438,32 @@ and cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
   `docs/MATH_FORMATTING.md`. Live GitHub rendering has not yet been rechecked.
 - No notebook/code-model edits, training, or change to learner mastery. Next
   learning action remains Day 6 notebook 01, unless the learner chooses otherwise.
+
+## Latest learning design — 2026-09-09
+
+- Learner requested a more interactive course, agreed on Mac/Spark responsibilities,
+  and explicitly requested trigger phrases, pre-departure commit/push, arrival
+  sync, reminders, and portable progress. Recorded `docs/LEARNING_WORKFLOW.md`
+  and `docs/handoffs/CURRENT.md`; updated agent rules, memory, and reader entry.
+- First proposed pilot: Day 8 Optimizer Playground on Mac, with actual gradient
+  and update arrows, controlled comparisons, and step/reset/play controls. No
+  implementation, Mac environment validation, GPU experiment, or animation
+  production occurred. Existing notebook and model code remains unchanged.
+- Day 8 is orientation/planning only. Days 4–7 deferred learning requirements
+  remain open. Next is the learner-triggered Mac departure, then arrival
+  verification and the recorded learning continuation.
+
+## Departure to Mac — 2026-09-09
+
+- Learner invoked `Switch to Mac`. Verified source `spark-aa66`, Linux/aarch64,
+  intended repository and `main`; fetched remote was aligned before committing.
+- Refreshed `LEARN-MAC-001` with actual departure and next-arrival instructions.
+  Point-in-time process checks found no matching course Python/Jupyter/torchrun
+  jobs for `dongxi`; NVIDIA compute-process listing was empty. No jobs modified.
+- Publishing the scoped workflow/memory records is the departure step; receipt
+  of the pushed commit and local execution must still be verified on Mac.
+- Arrival phrase: `Continue on Mac`. Preserve all existing learning gaps and
+  proposed-versus-built distinctions. This is not a completed lesson.
 
 ## Open questions
 

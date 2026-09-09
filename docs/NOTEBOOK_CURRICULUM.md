@@ -9,6 +9,14 @@ important mathematical, architectural, optimization, data, or evaluation
 mechanism that becomes substantially clearer when the learner can inspect and
 change it.
 
+Since 2026-09-09 the learner also requests real-time visual tools outside
+notebooks. This file still defines the executable notebook pathway; pair it
+with [the live-learning and machine workflow](LEARNING_WORKFLOW.md). Mac Studio
+hosts low-latency conceptual interaction, while Spark supplies separately
+approved GPU evidence. The proposed first pilot is the Day 8 Optimizer
+Playground, not yet implemented. Do not replace existing worked notebooks or
+equate a proposed visualization with demonstrated understanding.
+
 ## Chapter contract
 
 Each chapter normally contains three focused notebook sessions:

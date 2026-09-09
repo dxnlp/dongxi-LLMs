@@ -5,6 +5,11 @@ journey. Artifacts are organized first by learning day and then by topic. They
 preserve deep discussions, corrected mental models, concrete examples, evidence
 levels, and open edges before the material is synthesized into the book.
 
+For cross-machine continuation, use the
+[learning workflow](../docs/LEARNING_WORKFLOW.md) and
+[current handoff](../docs/handoffs/CURRENT.md). Day 8's artifact records the
+2026-09-09 live-visual learning design; it is planning, not completed instruction.
+
 Learning artifacts are neither chat transcripts nor finished chapters:
 
 - chat is transient interaction;

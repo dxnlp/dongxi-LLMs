@@ -19,6 +19,17 @@ resume work, synchronize before relying on local project state:
 
 ## Required read order
 
+The learner's machine-switching phrases are standing course instructions:
+`Switch to Mac`, `Continue on Mac`, `Switch to Spark`, `Continue on Spark`.
+Follow `docs/LEARNING_WORKFLOW.md` and `docs/handoffs/CURRENT.md`. Departure
+means update the handoff and commit/push scoped course work before telling the
+learner to move. Arrival means verify the actual execution host, safely sync,
+reread the durable state, and continue. Never silently discard dirty changes,
+assume a Mac UI means local execution, or migrate/terminate running jobs.
+Remind the learner when the next workload belongs on the other machine; do not
+switch or launch expensive work without their instruction. A memory/planning
+request alone does not execute departure.
+
 Before starting work:
 
 1. Read `README.md`.
@@ -28,6 +39,9 @@ Before starting work:
 5. Read `LEARNING_MEMORY.md` for the learning-artifact index, public-content ideas, and cross-machine task packets.
 6. Read the active day's index and relevant topics under `learning_artifacts/` for demonstrated understanding and unresolved conceptual edges.
 7. Inspect existing work before creating a competing artifact.
+8. For machine switches, read the current handoff and workflow; reconcile them
+   with the latest progress before resuming. Mac is the default live-learning
+   environment; Spark is the GPU execution environment.
 
 ## Source of truth
 
@@ -74,6 +88,11 @@ For each learning day:
 
 When mathematics is central to the mechanism, pair the discussion with an
 interactive mechanism notebook when doing so materially improves understanding.
+The learner additionally requests live visual interaction beyond notebooks:
+follow the linked-equation/control/experiment contract in
+`docs/LEARNING_WORKFLOW.md`. Preserve notebooks as implementation companions,
+not the only interactive surface. Record proposed tools separately from built,
+verified tools and actual learner mastery.
 Use the learning cycle `deep question → prediction → small implementation →
 perturbation or broken variant → interpretation → evidence boundary`. Guide the
 learner through the notebook interactively rather than treating it as a passive
