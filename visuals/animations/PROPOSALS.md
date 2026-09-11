@@ -11,6 +11,36 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### CAND-ANIM-009 extension — CED global/local KV flow, 2026-09-10
+
+Design requested later on 2026-09-10 for two specific points. Storyboards:
+[`projects/deepseek-ced/DESIGN.md`](projects/deepseek-ced/DESIGN.md).
+Film 1 separates moving the global-KV source (CED) from sharing storage (CSA2).
+Film 2 extends CAND-ANIM-017 with the same selected KV buffer's score and payload
+roles, confirmed in the released sparse-attention kernel. English, motion-first;
+initial design was followed by explicit implementation/render approval.
+Return: ANIM-CED-001 and ANIM-KV-002 are locally rendered (50.3s/56.3s) with
+independent NumPy traces and nine passing checks. Review:
+[`projects/deepseek-ced/review.html`](projects/deepseek-ced/review.html).
+Source, media, geometry and browser evidence is in that project's manifests;
+no model-scale quality/speed result, publication, or Git integration claimed.
+
+- Source: user DeepSeek V4.1 deep-dive request; agent automatic equation and
+  dependency-flow check. Reuses the existing KV-cache candidate, not a new film.
+- Mechanism: move decoder global-KV creation from layer-local inputs to final
+  encoder states; keep current-layer main Q and SWA KV distinct. Overlay Full,
+  Reindex, and Reuse; shared selections must not imply equal attention weights.
+  Finally contrast full local dependency reconstruction with bounded tail replay.
+- Canonical source: `learning_artifacts/day-06-modern-architecture/deepseek-v41-causal-encoder-decoder.md`,
+  report sections 2.2-2.3 and 3.2.2, pinned reference model/config.
+- Evidence: report and code inspection; inline dependency schematic only.
+  No model-quality reproduction or measured serving speedup. Bounded replay is
+  approximate, and the public reference prefill traverses all backbone layers.
+- The global-source and two-role portions are now approved and rendered under
+  the two packets above. The bounded-replay extension still requires separate
+  approval and exact/approximate numerical traces. Article creation and public
+  publication remain outside this production authorization.
+
 ### Day 8 canonical material — 2026-09-09
 
 Source: agent automatic mathematics/opportunity check during the learner-requested
@@ -292,7 +322,7 @@ execute successfully; evidence is in
 | `CAND-ANIM-007` | Agent, automatic math trigger from learner question | Chapter 3 decoding bridge | Hold logits fixed while temperature continuously rescales their gaps: low temperature sharpens, high temperature flattens, ranking stays fixed, and exact tied maxima reveal the difference between greedy tie-breaking and sampling | discuss | Verify ratios and limiting behavior in the Day 3 notebook; likely defer or use as a compact decoding short. Production only on Mac Studio after explicit approval |
 | `CAND-ANIM-008` | Agent, automatic math trigger; approved by user | Chapter 4 | Input states → learned `Q`, `K`, and `V` projections → scaled query-key score matrix → causal mask → row-wise attention distributions → weighted value retrieval; reverse the loss gradient through a value/content path and a query-key/routing path; contrast broken scaling and masking | approved; promoted into `ANIM-ATTN-001` | Chapter, forward, gradient, finite-difference, mask, and detach evidence verified on 2026-09-05; ready for Mac production |
 | `CAND-ANIM-009` | Agent, automatic math trigger from learner inference | Chapter 4–modern decoder bridge | Contrast the same token in two contexts to establish distinct request-local K/V states; show optional runtime retention across prefill and decoding, each transient new query reading the unchanged-prefix cache, and logical cache release at sequence completion | discuss | Toy cache shapes and equivalence verified on 2026-09-05; lifecycle derived, no allocator benchmark; distinguish first-layer and contextual deeper-layer keys; production only on Mac after explicit approval |
-| `CAND-ANIM-011` | User reminder + agent automatic math trigger | Chapter 5 frontier section | Reuse one visually identical Transformer stack for recurrent state updates; let stored-parameter, effective-depth, and compute counters diverge; then contrast fixed loops with adaptive token-level exit and visible token-space reasoning | discuss | Revisit for production approval during Days 6–7; verify all accounting in the controlled comparison; production only on the Mac Studio after explicit approval |
+| `CAND-ANIM-011` | User reminder + agent automatic math trigger | Chapter 5 frontier section | Reuse one visually identical Transformer stack for recurrent state updates; let stored-parameter, effective-depth, and compute counters diverge; later consider adaptive exit and token-space reasoning | fixed-recurrence act approved as `ANIM-LOOP-001`, 2026-09-09 | Mac production from the verified Day 7 block; adaptive routing and trained comparison remain pending |
 
 Q/K/V workflow refinement (user request, 2026-09-06): extend `CAND-ANIM-008`
 and its approved `ANIM-ATTN-001` packet. Keep the V content branch separate
@@ -452,7 +482,8 @@ Mac production requirements; no duplicate candidate is created.
 
 - Source: user reminder plus agent automatic mathematics trigger
 - Proposed during: Day 4 as a future Chapter 5 module
-- State: discuss
+- State: fixed-recurrence first act approved on 2026-09-09; promoted to
+  `ANIM-LOOP-001`. Adaptive routing remains outside production scope.
 - Learning objective: Show how one parameterized block or stack can be applied
   repeatedly, increasing effective depth and compute without duplicating its
   stored weights; distinguish fixed recurrence from adaptive token-level depth
@@ -473,8 +504,10 @@ Mac production requirements; no duplicate candidate is created.
   [*Mixture-of-Recursions*](https://arxiv.org/abs/2507.10524) for adaptive
   token-level routing; the future Chapter 5 treatment; and the planned Day 7
   comparison.
-- Evidence status: primary papers and the architectural accounting identity are
-  captured; no local implementation or controlled experiment exists yet.
+- Evidence status: Chapter 5 section 5.20 and the Day 7 notebook now provide
+  verified fixed sharing, gradient accumulation, and parameter/application
+  accounting (September 6 update above). A trained architecture comparison and
+  adaptive-routing implementation remain pending.
 - Precision risks and required caveats: Do not say that effective depth is model
   parameter size; do not promise linear quality gains; do not call shared and
   untied layers equivalent; do not equate latent recurrence with hidden or
@@ -484,8 +517,8 @@ Mac production requirements; no duplicate candidate is created.
   variant, and verify parameter-, compute-, and wall-clock-accounting examples.
 - Suggested destination: Chapter 5 and course site; possible later architecture
   article only after the canonical treatment is stable.
-- Next decision: Revisit during Days 6–7. Production requires explicit learner
-  approval and remains on the Mac Studio.
+- Next action: produce the approved fixed-recurrence first act as `ANIM-LOOP-001`
+  on Mac Studio, then review it with the learner.
 
 ## Two-way proposal mechanism
 

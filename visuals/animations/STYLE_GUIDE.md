@@ -36,7 +36,18 @@ with the sound off, on a phone, and from a paused frame.
 
 ## Typography
 
+Final animations and their presentation pages contain concept titles, mechanism
+labels, and necessary accuracy caveats only. Keep toolchain credits, internal
+`ANIM-*` IDs, and production/review-status labels in README files and manifests.
+This preserves the user's 2026-09-04 presentation preference.
+
 - English: Arial, normal weight, natural kerning.
+- For new/refined Manim labels, use `label(..., layout_scale=16)`: shape the
+  whole string at a larger internal size and uniformly scale its vector outlines
+  back down. This reduces rounded Pango glyph-advance artifacts at small sizes.
+  The helper reserves sufficient SVG bounds even for low-resolution previews.
+  Do not fix this artifact by inserting spaces or positioning letters manually.
+  Existing projects retain their previous layout until explicitly rerendered.
 - Chinese: Songti SC (`宋体`), normal weight.
 - Do not simulate alignment with spaces or manually alter character spacing.
 - Do not place mixed English and Chinese in one `Text` object when font metrics
@@ -46,6 +57,12 @@ with the sound off, on a phone, and from a paused frame.
   these as starting points, then test at 50% scale.
 - Avoid sentences in persistent screen regions. If narration is required, put
   it in audio, captions, or surrounding book prose rather than the diagram.
+- Refinement from the 2026-09-10 review: use the full architecture name in the
+  concept title, such as “Causal Encoder–Decoder,” rather than acronym-only
+  headings. Keep established tensor labels such as Q and KV where useful.
+- Prefer no sentence-style bottom captions when the movement already conveys
+  the mechanism. Retain short object/operation labels and the smallest necessary
+  accuracy qualifier; put detailed qualifications in expandable player notes.
 
 ## Color roles
 

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from manim import RoundedRectangle, Text, VGroup, config
+from manim import RoundedRectangle, Text, VGroup, config, tempconfig
 
 
 BACKGROUND = "#FFFFFF"
@@ -21,16 +21,30 @@ CJK_FONT = "Songti SC"
 config.background_color = BACKGROUND
 
 
-def label(text: str, size: int, color: str = FOREGROUND, *, cjk: bool = False) -> Text:
+def label(text: str, size: int, color: str = FOREGROUND, *, cjk: bool = False,
+          layout_scale: float = 1) -> Text:
     """Create naturally kerned, normal-weight English or Chinese text."""
 
-    return Text(
-        text,
-        font=CJK_FONT if cjk else LATIN_FONT,
-        font_size=size,
-        color=color,
-        weight="NORMAL",
+    if layout_scale < 1:
+        raise ValueError("layout_scale must be at least 1")
+    # Pango's rounded glyph advances are conspicuous at Manim's tiny SVG size.
+    # Shape the entire string larger, then uniformly scale the vector outlines.
+    # Opt in per project so existing approved films keep their original layout.
+    # SVG export can clip enlarged text to the configured pixel canvas. Give
+    # shaping its own generous bounds, independently of preview resolution.
+    bounds = {} if layout_scale == 1 else dict(
+        pixel_width=max(config.pixel_width, int(len(text)*size*layout_scale+200)),
+        pixel_height=max(config.pixel_height, int((text.count('\n')+1)*size*layout_scale*2+200)),
     )
+    with tempconfig(bounds):
+        result = Text(
+            text,
+            font=CJK_FONT if cjk else LATIN_FONT,
+            font_size=size * layout_scale,
+            color=color,
+            weight="NORMAL",
+        )
+    return result.scale(1 / layout_scale)
 
 
 def token(text: str, color: str, *, width: float | None = None) -> VGroup:

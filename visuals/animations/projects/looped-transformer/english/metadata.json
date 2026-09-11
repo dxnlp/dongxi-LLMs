@@ -1,0 +1,350 @@
+{
+  "task": "ANIM-LOOP-001 English series",
+  "status": "local-review",
+  "rendered_at": "2026-09-09T21:42:06.101409+00:00",
+  "base_commit": "8e39e98cd45e024416041aed3015495f02d6a240",
+  "command": "uv run --project visuals/animations python visuals/animations/projects/looped-transformer/english/render.py",
+  "environment": {
+    "python": "3.12.11",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "packages": {
+      "manim": "0.21.0",
+      "manimpango": "0.6.1",
+      "numpy": "2.5.2",
+      "pillow": "12.3.0"
+    },
+    "torch": "2.10.0",
+    "font": "Arial"
+  },
+  "clips": [
+    {
+      "id": "01-one-block",
+      "title": "Reuse one block",
+      "width": 1920,
+      "height": 1080,
+      "fps": "30/1",
+      "duration_seconds": 41.333333,
+      "timeline": {
+        "checkpoints": [
+          {
+            "name": "one-parameter-set",
+            "seconds": 4.167
+          },
+          {
+            "name": "initial-hidden-state",
+            "seconds": 5.967
+          },
+          {
+            "name": "application-1",
+            "seconds": 12.0
+          },
+          {
+            "name": "return-1",
+            "seconds": 18.467
+          },
+          {
+            "name": "application-2",
+            "seconds": 24.5
+          },
+          {
+            "name": "return-2",
+            "seconds": 29.8
+          },
+          {
+            "name": "application-3",
+            "seconds": 35.833
+          },
+          {
+            "name": "final",
+            "seconds": 41.333
+          }
+        ],
+        "duration": 41.333333333333684,
+        "geometry_checks": true
+      }
+    },
+    {
+      "id": "02-repeat-stack",
+      "title": "Repeat a three-block stack",
+      "width": 1920,
+      "height": 1080,
+      "fps": "30/1",
+      "duration_seconds": 36.133333,
+      "timeline": {
+        "checkpoints": [
+          {
+            "name": "three-distinct-blocks",
+            "seconds": 4.3
+          },
+          {
+            "name": "pass-1",
+            "seconds": 15.767
+          },
+          {
+            "name": "same-stack-return",
+            "seconds": 21.367
+          },
+          {
+            "name": "pass-2",
+            "seconds": 31.433
+          },
+          {
+            "name": "final",
+            "seconds": 36.133
+          }
+        ],
+        "duration": 36.133333333333944,
+        "geometry_checks": true
+      }
+    },
+    {
+      "id": "03-unfold-sharing",
+      "title": "Unfold the shared computation",
+      "width": 1920,
+      "height": 1080,
+      "fps": "30/1",
+      "duration_seconds": 28.699349,
+      "timeline": {
+        "checkpoints": [
+          {
+            "name": "folded-stack",
+            "seconds": 3.6
+          },
+          {
+            "name": "six-applications",
+            "seconds": 9.7
+          },
+          {
+            "name": "paired-A",
+            "seconds": 12.7
+          },
+          {
+            "name": "paired-B",
+            "seconds": 16.3
+          },
+          {
+            "name": "paired-C",
+            "seconds": 19.9
+          },
+          {
+            "name": "shared-storage",
+            "seconds": 22.7
+          },
+          {
+            "name": "final",
+            "seconds": 28.7
+          }
+        ],
+        "duration": 28.700000000000305,
+        "geometry_checks": true
+      }
+    }
+  ],
+  "numerical_checks": {
+    "three_distinct_parameter_sets": true,
+    "distinct_weight_values": true,
+    "shared_storage": true,
+    "independent_storage": true,
+    "forward_copy_equivalence": true,
+    "paired_gradient_sum": true,
+    "weights_unchanged": true,
+    "states_change": true,
+    "finite_states": true
+  },
+  "chinese_artifacts_unchanged": true,
+  "sources": [
+    {
+      "path": "src/dongxi_llms/decoder_lab.py",
+      "sha256": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826"
+    },
+    {
+      "path": "visuals/animations/STYLE_GUIDE.md",
+      "sha256": "6976b983b2bee7ee41ae8f81c104b9d1b7040f8f5a3a73620aab031b96d41dd5"
+    },
+    {
+      "path": "visuals/animations/manim_style.py",
+      "sha256": "bd73a01130b6a4226fccb20738276622a459c0bc3d22a787267269ec56dd2c1f"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/assets/architecture.excalidraw",
+      "sha256": "55752bc293f7f1279cc76044f9aec0de15150282eb1ef5517fd438c280a3623c"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/assets/architecture.svg",
+      "sha256": "bb19ef8d22143c4785c2eef693e63d89f5caf5b4748b82a84ee471bbaa1f4c8e"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/assets/block.excalidraw",
+      "sha256": "a11eedf063e577c45fe8c2e1525a8bec4630534185a58fe1629e35e129aeed53"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/assets/block.svg",
+      "sha256": "aa286638d35335b3a7f402666ba9829cd9b8a30364112393f8943197ae12a033"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/assets/loop.excalidraw",
+      "sha256": "3191eff45806555bbf2f3530ba78a0cd4c1af0ab10b7dbcc28488513ae0b490b"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/assets/loop.svg",
+      "sha256": "12ced31541de68ed075bd6ae01a0990db13643d9772782d3861651507c15634d"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/build_sketches.py",
+      "sha256": "4d0bcaa1fa0d21a4e503f32da2d93023e57f08c8c8b97c30a3237fd77c2f9b2a"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/01-one-block-timeline.json",
+      "sha256": "a1b57023a6e2e3e8fd2234bd2c8cdfd1da91632a69f55bca4416e3d99859eead"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/01-one-block.html",
+      "sha256": "9cc2440f8b9e93744fdb623f4ca62814b85703a6c84dbd95ffd473fb73781898"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/02-repeat-stack-timeline.json",
+      "sha256": "ef685233b8e6a5d96ba247c953e811908af981b27948b3301a7e712ff5c35b5b"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/02-repeat-stack.html",
+      "sha256": "a19d47295dd32f4275e3e5698cde98442b8d3d4df7d31b668654eb97ccef30fa"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/03-unfold-sharing-timeline.json",
+      "sha256": "1585911a2c156274aaff444a30b3b4e0d3446e53e0ebd7fcdda63dc6c7c7fdf0"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/03-unfold-sharing.html",
+      "sha256": "c13af644506636511d736e52568ea5a2b4e22d291ef8708c6700125e02aea5bb"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/build_trace.py",
+      "sha256": "3d4c2983b9cb420daaf45cf64640b965e1c2b89328f91f6fff47546bc3ffb5ed"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/one_block.py",
+      "sha256": "b0f56551723607fd8b20545af59d54b994c3921d48e0cd381e71ff6bac881d84"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/render.py",
+      "sha256": "ba76234703b23cd5b9969f835b78bb0847727ef890ab62abb3aae81345e3ff67"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/review.html",
+      "sha256": "5fb25c14e9b2949b58ebd7e82dcf02a3cd8d6a96b50f0a73b3d8e3c94fef8561"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/scenes.py",
+      "sha256": "4c5dc64aa3408ab0f6183b14b88ff89b8e5cc779d51e6ad28f853e445c982504"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/trace.json",
+      "sha256": "f99287bff98c17f4bff0499decb2b4e044c8c8c2382a58aafd32adc4fff6ea9a"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/verify.mjs",
+      "sha256": "d7fdc317db9d6d02827e79a04bc1c23d32e8662ec3070dec4ea78b412d511cce"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/export.mjs",
+      "sha256": "eecb5e863db5bee4e09a2404f0cd783cdc12251f0484d4bbcdc7bbfd8539ff9c"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/package.json",
+      "sha256": "14a3c5745faafc6ab03abfbb8eb74037995488cebaea5f16c9ada395f719883f"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/pnpm-lock.yaml",
+      "sha256": "90f2aa83bed1af6210c8d73a429aaa3b06d993d50fa9abb8109643543821247c"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/sketches.json",
+      "sha256": "85b30984ae0a8be47bf8c8ead268022c910ee7f567d17f454231c687c3fd1c20"
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/trace.json",
+      "sha256": "26bbf000a4153d830f5774ae92abb828cfa6ade514b56822b59172721eee4d30"
+    },
+    {
+      "path": "visuals/animations/uv.lock",
+      "sha256": "c481639a558a546e45fa22bb251c318b8e439eccde30b96fb66dcb40ba448ef8"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/01-one-block/01-one-block.mp4",
+      "sha256": "18ffbde98614ec97ef46fba40fbcfecf338f2e3eb2276fc94e7b21a5ddd1f2aa",
+      "bytes": 2598640
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/01-one-block/01-one-block.gif",
+      "sha256": "0510d4285d1385ad1f7019e36e3a74540521c8b4f4a95e32617f8f99fd70e4fd",
+      "bytes": 2340355
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/01-one-block/still.png",
+      "sha256": "751c9b83e4d6fe50f92e0d1a9ca8a89d77fa1603562fee460be43ae83f992c5f",
+      "bytes": 315016
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/01-one-block/still-half.png",
+      "sha256": "f7f3e932fabea15a4025fa132eebddc7a429bb3847da89ee87d8a5c9f0569bb7",
+      "bytes": 128346
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/01-one-block/contact-sheet.png",
+      "sha256": "47be5bb4b663c0eac0e139cdfa9a0e8fb129163d9cbb4a2a3154e016720d5989",
+      "bytes": 284727
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/02-repeat-stack/02-repeat-stack.mp4",
+      "sha256": "9ebb767cef773e20f63a83925eaa6b5b6f1aeb83c0c9632b50a98990db209a51",
+      "bytes": 3101843
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/02-repeat-stack/02-repeat-stack.gif",
+      "sha256": "4a3a847b806390288595fee109a5ff67a675034ae21258d67c7bd99beb4caf1e",
+      "bytes": 2036354
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/02-repeat-stack/still.png",
+      "sha256": "03d2c7df54ac40e09a5a4b3383afe356f2d2075100ffd695bcf5ef86509f43c0",
+      "bytes": 370091
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/02-repeat-stack/still-half.png",
+      "sha256": "2dc910afc68bcee5c27e4df722f438a333d911bacddf3e7eb45c844f3e02a1b7",
+      "bytes": 147356
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/02-repeat-stack/contact-sheet.png",
+      "sha256": "470c5fe8ff6c648302cf55c03a3f0b22854dd620f6674d0fe5d7ebfc14d77727",
+      "bytes": 218860
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/03-unfold-sharing/03-unfold-sharing.mp4",
+      "sha256": "e47d11d432ecb4a512b94d9bf37848282a8a7a21833ab3a9f03b96f8607b25ff",
+      "bytes": 2667072
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/03-unfold-sharing/03-unfold-sharing.gif",
+      "sha256": "ee353f0071804ad8deac0c5cd8bd4ea1a2d9c63522ac71eb7fe60405878ad846",
+      "bytes": 2350682
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/03-unfold-sharing/still.png",
+      "sha256": "28c8da6c34ebd422738fc2d77115904aaeb69d5f673b22742c46dde519a47159",
+      "bytes": 420096
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/03-unfold-sharing/still-half.png",
+      "sha256": "487b5b2ebe9da3e85a38b006e8072417a6a8337e1ca13bc85fbf0dab53bcde40",
+      "bytes": 166623
+    },
+    {
+      "path": "visuals/animations/projects/looped-transformer/english/rendered/03-unfold-sharing/contact-sheet.png",
+      "sha256": "de55480e6d3757321cf54f196fdea351b516f5163fda6bda62d6bb71fe94762c",
+      "bytes": 298255
+    }
+  ]
+}

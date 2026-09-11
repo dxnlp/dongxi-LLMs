@@ -236,6 +236,14 @@ animation candidates, with production still approval-gated on Mac Studio.
 
 ## Scheduled frontier modules
 
+2026-09-10 user-led addition: [DeepSeek V4.1 causal encoder-decoder and KV flow](learning_artifacts/day-06-modern-architecture/deepseek-v41-causal-encoder-decoder.md).
+Distinguish encoder-derived global KV, CSA2 cross-layer sharing/index selection,
+per-layer main Q/local KV, and approximate bounded replay. Primary report and
+pinned reference source inspected; inline schematic prepared, learner prediction
+and numerical verification pending. No model run, media production, or article
+approved by this discussion. Resume this requested topic in this conversation;
+the separate Day 8 Spark plan and earlier review backlog remain recorded.
+
 | ID | Topic | Planned placement | Status | Durable source |
 |---|---|---|---|---|
 | `ARCH-LOOP-001` | Recurrent depth and looped Transformers: fixed stack reuse, variable recurrence, adaptive token-level routing, and latent versus token-space computation | Chapter 5; Days 6–7 | conceptual prose ready in section 5.20; Day 7 comparison pending; vendor attribution unverified | `learning_artifacts/day-04-attention-and-causal-information-boundary/future-recurrent-depth-and-looped-transformers.md` |
@@ -254,6 +262,7 @@ they are corroborated.
 | `X-ATTN-KV-001` | X article | Why LLMs cache K and V—but not Q | ready for Mac drafting | Mac | Chapter 4 and toy cached/uncached verification complete; no serving benchmark claimed |
 | `X-LOOP-001` | X article | Looped Transformers: more effective depth without more stored weights—but not free compute | conceptual source ready; drafting waits for Day 7 evidence | Mac | Chapter 5 section 5.20 and refreshed primary abstracts ready; controlled recurrence comparison pending |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac Studio | Day 2 explanation complete |
+| `ANIM-LOOP-001` | Animation | Fixed recurrence, repeated stack, unfolded shared applications | Chinese introduction and three English 1080p clips ready for visual review | Mac Studio | `visuals/animations/projects/looped-transformer/english/review.html` |
 | `ANIM-BPE-002` | Animation | Meteor corpus → counted character BPE → vocabulary subset 1–5 → encoding | local 1080p review candidate ready; user visual approval pending | Mac Studio | Verified corpus trace and explicit second-round tie preference |
 | `ANIM-EMB-001` | Animation | End-to-end embedding training and tied gradient paths | continuous-animation Mac handoff ready | Mac Studio | Day 2 embedding lab and Day 3 loss derivation |
 | `ANIM-CE-001` | Animation | LLM target probability → per-token NLL → masked mean cross-entropy | approved; canonical Day 3 evidence ready for Mac production review | Mac Studio | Chapter 3, target alignment, and PyTorch verification complete |
@@ -262,6 +271,74 @@ they are corroborated.
 | `ANIM-ATTN-001` | Animation | How loss trains attention routing and value content | approved; canonical material and numerical evidence ready for Mac production | Mac Studio | Chapter 4, forward/gradient checks, finite differences, and mask/detach evidence complete |
 
 ## Production-system tasks
+
+2026-09-11 Git checkpoint: learner approved committing the accumulated local
+looped-Transformer and DeepSeek animation packages and synchronizing the current
+branch with `origin/main`. This supersedes the earlier uncommitted-status notes
+below; those notes remain production history. MP4s remain ignored. DeepSeek QA
+passes; older looped-Transformer render manifests retain their historical shared
+style hashes (now different from the current style files), with matching media.
+No public upload or push is part of this checkpoint.
+
+### Approved production: ANIM-CED-001 and ANIM-KV-002
+
+- Approval: 2026-09-10, user explicitly requested implementation and rendering
+  of both `projects/deepseek-ced/DESIGN.md` storyboards.
+- Base: branch `codex/visuals/looped-transformer`; HEAD recorded in the render
+  manifest. Existing dirty work is preserved; no Git integration authorized.
+- Owner: verified Darwin arm64 local Mac; no Spark or model-scale job.
+- Inputs: approved style/primitives, pinned DeepSeek report/model/kernel/config,
+  and `learning_artifacts/day-06-modern-architecture/deepseek-v41-causal-encoder-decoder.md`.
+- Allowed changes: new `visuals/animations/projects/deepseek-ced/` project and
+  scoped index/proposal/progress entries. Do not change other rendered projects.
+- ANIM-CED-001: distinguish layer-local global-KV source, CED encoder-derived
+  global KV, then CSA2 shared storage; retain distinct Q/local KV at each layer.
+- ANIM-KV-002: contrast separate K/V with directly produced shared KV; show the
+  same rows used for scores and weighted accumulation, then distinct head reads.
+- Precision: independently implemented tiny causal NumPy fixture; exact toy
+  values, no DeepSeek activation/quality/latency claim. Shared KV is not fused
+  independent K and V, nor weight sharing. Omitted sink/RoPE/quantization and
+  fixed selected pool are explicitly documented; bounded replay is out of scope.
+- Predeclared checks: shared global storage identity and unchanged reads;
+  distinct layer states; causal prefix invariance; normalized attention weights;
+  shared-buffer arithmetic equals equal-valued separate copies; changing V
+  breaks equivalence; opposite queries favor opposite fixed rows.
+- Expected return: reproducible source/trace, two English 1080p H.264 videos,
+  GIFs/stills/contact sheets, series and standalone players, manifests and
+  numerical/geometry/browser QA. MP4s remain ignored. Rendering approval does
+  not authorize publication, commit, push, or course mastery completion.
+
+- Return, 2026-09-10: both English films are implemented in
+  `visuals/animations/projects/deepseek-ced/`; approximately 50.3s and 56.3s.
+  Nine predeclared NumPy checks passed. Local 1080p30 H.264 MP4s, GIFs,
+  full/half stills, checkpoint sheets, timelines, source/media manifests and
+  series/individual players are present. Decimal cells were widened and moving
+  contributions use unlabeled transient copies to avoid numeric overlap.
+  See `metadata.json` and `qa.json` for exact render and browser evidence.
+  Other animation assets were hash-protected. Ready for learner review;
+  uncommitted, unpublished, MP4s ignored, no Spark run.
+
+- Review refinement, 2026-09-10: learner requested the full architecture term
+  and fewer words. Title now reads “Causal Encoder–Decoder”; both films remove
+  sentence-style bottom captions and use short operation/tensor labels. The
+  head-count explanation moves to expandable page notes. Re-rendered in place;
+  current durations supersede the initial return and live in metadata/QA.
+  This preference is also recorded in the animation style guide.
+
+- Typography refinement, 2026-09-10: learner reported uneven character gaps.
+  The tiny Pango SVG layout rounded glyph advances. These two films now opt
+  into 16x whole-string shaping followed by uniform vector downscaling; Arial,
+  scene wording and motion remain unchanged. `check_typography.py` verifies
+  six representative strings against a higher-resolution layout and provides
+  a visual comparison. Original Figure 3 posters are preserved. Other films
+  retain their previous layout; the reusable helper is opt-in.
+
+2026-09-10 animation design request: two English CED films are storyboarded in
+[`visuals/animations/projects/deepseek-ced/DESIGN.md`](visuals/animations/projects/deepseek-ced/DESIGN.md).
+Scope: encoder-derived decoder global KV, followed by one shared KV representation
+serving score and value roles. Reuses CAND-ANIM-009/017. Distinguish CED from CSA2
+sharing and avoid a false K/V-array fusion. Subsequently approved and rendered as
+ANIM-CED-001/ANIM-KV-002 above. Next: learner reviews the two videos; no Spark run.
 
 | ID | Type | Objective | Status | Durable output |
 |---|---|---|---|---|
@@ -502,6 +579,10 @@ no speedup benchmark is implied. The packet is ready for Mac drafting.
 
 ### Task packet: `X-LOOP-001`
 
+Related production update, 2026-09-09: the learner approved the fixed-recurrence
+animation recommended alongside this article. See `ANIM-LOOP-001` below. This
+does not start article drafting or the trained Day 7 comparison.
+
 **Working title:** Looped Transformers: More Depth Without More Weights—but Not
 Free Compute
 
@@ -551,6 +632,74 @@ accounting identity, local measurement, primary-paper result, interpretation, or
 unverified report. Parameter, FLOP, latency, memory, and quality comparisons use
 clearly named contracts. A reader can explain why recurrence adds computation
 without adding a new copy of the recurrent weights.
+
+### Task packet: `ANIM-LOOP-001`
+
+English-series expansion approved on 2026-09-09 after comparison with Sebastian
+Raschka's article: create three separate videos under this packet—one-block
+introduction, three distinct blocks repeated twice, and an unfolded six-application
+view paired by shared weights. Keep the Chinese original. Sources/outputs live
+in `projects/looped-transformer/english/`; preserve the same style and checks.
+Predeclare the new CPU check: three distinct parameter sets total 6,480 values;
+two stack passes execute six blocks; six equal-valued independent copies use
+12,960 values and agree forward at initialization; each shared gradient equals
+the sum of its two application-copy gradients. No adaptive router or trained
+quality comparison is included. English learner-facing pages omit production labels.
+
+- Approval: 2026-09-09; user accepted the proposed fixed-recurrence animation.
+- Objective: preserve one block and one parameter set while successive hidden
+  states pass through it three times. Separate stored parameters, block
+  applications, and analytical matrix-operation work.
+- Source: Chapter 5 section 5.20, `CAND-ANIM-011`, Day 7 recurrence notebook,
+  and the canonical `src/dongxi_llms/decoder_lab.py` implementation.
+- Owner: verified local Mac Studio; branch `codex/visuals/looped-transformer`;
+  starting revision is recorded in the project README and render manifest.
+- Allowed files: `visuals/animations/projects/looped-transformer/`, shared style
+  instructions, animation index/proposal queue and this production ledger.
+- Storyboard: input state → one causal block → changed state → return through
+  the same block twice → final state. Parameter count stays fixed, application
+  count and modeled matrix arithmetic increase. Heatmap colors show signed
+  actual activations using a single fixed scale, not reasoning quality.
+- Precision: use the existing CPU float64 block and notebook seed. Count block
+  parameters only; arithmetic excludes embedding/head, normalization, activation,
+  and softmax. No latency, memory, quality improvement, adaptive routing, or
+  vendor-architecture claims. No training or GPU jobs.
+- Predictions before execution: all three uses share parameter identities;
+  stored values stay unchanged; states differ; equal-valued independent copies
+  agree forward; shared gradients equal the sum of copy gradients; analytical
+  matrix-operation count grows linearly for fixed shapes.
+- Outputs: editable Excalidraw geometry and Manim scene, exact trace, local
+  1080p MP4, GIF, stills, HTML player, reproducible scripts and hashes.
+- Acceptance: numerical identities, fixed heatmap scale, source/asset integrity,
+  full/half still and transition inspection, real browser playback. White canvas,
+  Arial/Songti, minimal concept text; production labels stay in internal files.
+- Return, 2026-09-09: `visuals/animations/projects/looped-transformer/review.html`
+  contains a 41.33s 1920×1080/30fps H.264 animation. Editable Excalidraw assets,
+  scene, trace, GIF, full/half stills, contact sheet, and reproduction/QA manifests
+  are retained alongside it. MP4 is local and ignored.
+- Measured evidence: 2,160 block parameters through all three applications;
+  53,760 dense matrix FLOPs per application (whole batch), 161,280 for three;
+  equal-valued independent-copy forward discrepancy 0; gradient-sum discrepancy
+  1.11e-16. All eight numerical checks pass. Counts exclude non-matmul work and
+  embedding/head; there is no trained quality or runtime claim.
+- Acceptance evidence: six deterministically reproduced sketch files, matching
+  source/output hashes, eight scene checkpoints, full/half stills and nine
+  transition samples inspected, real Chrome playback/seek and mobile overflow
+  checks passed. Final media/page contain no production credits or task labels.
+- Exact next action: learner watches the local animation and discusses refinements.
+  Source is uncommitted on `codex/visuals/looped-transformer` from
+  `8e39e98cd45e024416041aed3015495f02d6a240`; article and adaptive routing remain queued.
+
+English-series return: `projects/looped-transformer/english/review.html` under
+`visuals/animations/` selects three videos: single-block recurrence (~41s), a
+three-block stack repeated twice (~36s), and unfolded shared applications (~29s).
+Each has an individual player, GIF, stills, source and manifest. Nine additional
+CPU checks verify three distinct blocks / six applications: 6,480 shared versus
+12,960 independent-copy parameters, identical initial forward outputs, and
+paired-gradient discrepancy 2.78e-17. Original Chinese artifacts are hash-checked
+as unchanged. Player selection, playback/seek, individual pages, English-only
+content, responsive layout and manifest checks passed. Review the series before
+any further expansion; no article drafting, adaptive routing or publication.
 
 ### Task packet: `ANIM-ATTN-001`
 

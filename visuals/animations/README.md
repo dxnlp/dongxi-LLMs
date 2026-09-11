@@ -88,6 +88,21 @@ ffmpeg -version | head -n 1
 
 ## Learning objectives
 
+- [`projects/deepseek-ced/`](projects/deepseek-ced/README.md): two English films
+  distinguishing encoder-derived global KV from cross-layer sharing, and the
+  same selected KV representation's score and payload roles. Independent NumPy
+  toy traces, editable Manim scenes and a [series player](projects/deepseek-ced/review.html).
+  No DeepSeek model run or serving-speed claim.
+
+- [`projects/looped-transformer/`](projects/looped-transformer/README.md): one
+  shared causal block applied three times, with actual hidden-state matrices,
+  constant stored parameters, and increasing matrix-operation counts.
+  `ANIM-LOOP-001` uses editable Excalidraw structure and continuous Manim motion;
+  its HTML player contains teaching content only.
+  The [English series](projects/looped-transformer/english/review.html) separates
+  one-block recurrence, two passes through a three-block stack, and unfolded
+  shared-weight applications into three standalone videos.
+
 - `bpe_byte_merges.py`: distinguish universal byte coverage from learned BPE
   compression, using `数` and `数据库` as the running example.
 - `manim_bpe_byte_merges.py`: show the same mechanism as one continuous frozen

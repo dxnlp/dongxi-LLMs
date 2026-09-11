@@ -507,7 +507,102 @@ and cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
 - Next: Day 8 on Spark, document windows and the valid-token objective with
   meaningful recipe dilemmas. Earlier study gaps remain optional review.
 
+## Local animation production — 2026-09-09
+
+- User approved the fixed-recurrence animation proposed from CAND-ANIM-011.
+  Promoted it to ANIM-LOOP-001; the adaptive-routing act and X-LOOP-001 article
+  remain pending. Active Day 8 learning and the Spark handoff are unchanged.
+- Verified Darwin/Mac execution and a clean tree; pulled main fast-forward,
+  then worked on `codex/visuals/looped-transformer` from revision
+  `8e39e98cd45e024416041aed3015495f02d6a240`.
+- Local result: `visuals/animations/projects/looped-transformer/review.html`;
+  41.33s, 1080p/30fps H.264, editable Excalidraw geometry and Manim source,
+  GIF, stills, trace and reproducible environment/hash manifests.
+- CPU float64 smoke verification uses the canonical decoder block and seed 505.
+  All eight checks pass: parameters stay at 2,160 across three applications,
+  matrix work is 53,760 FLOPs per application, shared/copy outputs match exactly,
+  and the shared-gradient sum error is 1.11e-16. No training or quality comparison.
+- QA: deterministic six-asset export, manifest integrity, eight checkpoints,
+  full/half stills, nine transition samples, browser playback/seek, and mobile
+  overflow checks. Removed the return-line overlap found in the preview. An
+  early SVG dependency race and too-short playback wait were corrected.
+- Applied the remembered presentation rule: learner-facing page/video contain
+  concept text only; tool names and task IDs stay in production records.
+- Next production action: learner reviews the animation. No commit, push,
+  publication, GPU run, or article drafting was performed; MP4 remains ignored.
+
+
+## English looped-Transformer series — 2026-09-09
+
+- User requested multiple English animations after the article comparison.
+  Created three independent clips under
+  `visuals/animations/projects/looped-transformer/english/`: one shared block,
+  a three-block stack repeated twice, and six unfolded applications paired by
+  parameter identity. A common selector page and standalone players are ready.
+- Final media are 1080p/30fps, approximately 41s, 36s and 29s. White canvas,
+  normal Arial text, stable parameter colors, and no production labels.
+- New CPU fixture: three distinct blocks store 6,480 parameters; six equal-valued
+  independent copies store 12,960 and initially agree forward exactly. Shared
+  gradients match the sum of paired copy gradients within 2.78e-17; nine checks
+  pass. This is mechanism evidence, not a trained quality comparison.
+- Preserved the Chinese original by source/output hashes. Verified all three
+  selectors, playback/seek, individual pages, English-only content, mobile layout,
+  and media/source hashes. Inspected stills/contact sheets and transition samples;
+  rerouted the unfolded copies above the first pass to avoid crossing labels.
+- Next production action: learner reviews the three English clips. Active Day 8,
+  Spark work, article drafting, and publication state are unchanged. No commit or
+  push was requested; MP4s remain local and ignored.
+
+
 ## Open questions
+
+Git synchronization checkpoint, 2026-09-11: learner authorized committing the
+pending looped-Transformer and DeepSeek animation work, then synchronizing the
+current branch with `origin/main`. Fetch found no new remote commits relative
+to the production base `8e39e98`. MP4s and transient typography SVG caches remain
+ignored and local. DeepSeek source/media hashes, both players, architecture
+posters and mobile-layout checks pass. The older looped-Transformer media hashes
+match their manifests; their recorded shared style-guide/helper hashes predate
+the DeepSeek typography refinement and therefore differ from the current files.
+Keep those historical render hashes intact; this checkpoint does not claim a
+fresh pass of the older projects' strict source-hash verifiers or a rerender.
+No push or publication is included in this checkpoint.
+
+Latest animation refinement, 2026-09-10: improved text spacing in both DeepSeek
+films using 16x whole-string shaping
+with uniform vector downscaling to reduce rounded glyph-advance artifacts.
+The comparison covers titles, small labels and decimals; full renders and browser
+verification are recorded in the project's metadata/QA. Original architecture
+posters and conceptual content are retained; no other films are rerendered.
+
+Earlier animation refinement, 2026-09-10: applied the learner's request to expand
+the title to “Causal Encoder–Decoder” and reduce words in both DeepSeek films.
+Removed sentence-style bottom captions, shortened stage labels, and kept detailed
+qualifications in expandable player notes. Re-rendered the same two files;
+see project metadata/QA for current durations and checks. Numerical trace remains
+unchanged. No Git integration or publication authorized.
+
+Animation production return, 2026-09-10: after explicit approval, implemented
+ANIM-CED-001 (global source versus cross-layer sharing) and ANIM-KV-002 (one
+selected representation used in scoring and weighted accumulation). The
+[two-film player](visuals/animations/projects/deepseek-ced/review.html) contains
+English 1080p30 H.264 clips of approximately 50.3s and 56.3s. Nine predeclared
+NumPy checks passed; project metadata and browser QA preserve acceptance evidence.
+Full/half stills, contact sheets and sampled transition frames were inspected;
+decimal spacing and moving-label overlap were refined. Source and rendering stay
+on local Mac. Existing animation work was preserved; no commit/push/publication.
+Next media action: learner reviews the films. This does not complete Day 8 or
+claim execution of DeepSeek weights, production serving, or a quality benchmark.
+
+User-led frontier discussion, 2026-09-10: DeepSeek V4.1 causal encoder/decoder
+and KV flow. [Topic record](learning_artifacts/day-06-modern-architecture/deepseek-v41-causal-encoder-decoder.md)
+contains pinned primary sources, the global/local dependency distinction,
+CSA2 sharing, bounded-replay approximation, and the minimal-reference serving
+boundary. Inline layer schematic prepared; next action in this conversation is
+the learner's prediction about shared KV/indices versus distinct main queries.
+No model experiment, mastery completion, new movie, or article claimed. Day 8's
+separate Spark plan remains unchanged. Existing uncommitted animation work was
+preserved; no pull, commit, push, or automatic machine switch performed.
 
 - Which exact dataset and capability mix should anchor the general-assistant SFT branch?
 - Which verifiable task mixture should anchor the GRPO branch beyond initial arithmetic smoke tests?

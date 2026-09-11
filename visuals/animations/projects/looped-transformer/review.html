@@ -1,0 +1,10 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>循环 Transformer</title>
+<style>body{margin:42px auto;max-width:1200px;padding:0 24px;font:18px/1.8 Arial,"Songti SC",serif;color:#111827;background:#fff}h1{font-weight:400;font-size:34px;margin:0 0 22px}video{width:100%;aspect-ratio:16/9;border:1px solid #e2e8f0;border-radius:12px}summary{cursor:pointer}details{margin-top:22px;color:#64748b}p{margin:12px 0}</style>
+<h1>循环 Transformer：同一组权重，多次计算</h1>
+<video controls playsinline preload="metadata" poster="rendered/still.png"><source src="rendered/looped-transformer.mp4" type="video/mp4"></video>
+<details><summary>如何理解这幅图</summary>
+<p>彩色矩阵是同一批输入在不同计算阶段的隐藏状态。展示其中一个样本的 6 个位置、每个位置 16 个特征。蓝色代表负值，紫色代表正值，颜色深浅使用统一尺度。颜色变化表示数值变化。</p>
+<p>同一个因果 Transformer 模块执行三次，始终共享 2,160 个参数。每次完整批次计算为 53,760 次浮点矩阵运算，三次为 161,280 次；乘加按两次运算计数。倍数以执行一次为基准。</p>
+<p>这里仅统计模块的矩阵乘法，省略嵌入、输出层、归一化、激活函数和 softmax 等开销。整个序列长度保持不变；额外的隐藏状态计算不会自动增加输出 token。</p>
+<p>这是固定递归的未训练示例。更多计算是否改善预测，需要经过训练和受控评估。动画没有实现自适应路由，也没有测量延迟或内存。</p></details></html>

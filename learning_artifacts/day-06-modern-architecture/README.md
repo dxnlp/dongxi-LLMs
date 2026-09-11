@@ -41,6 +41,12 @@ quizzes. Record subsequent learner explanations in this directory.
 
 ## Portable reuse
 
+User-led frontier discussion, 2026-09-10:
+[DeepSeek V4.1 causal encoder-decoder and KV flow](deepseek-v41-causal-encoder-decoder.md).
+Primary report and reference code inspected; first explanation and an inline
+layer-dependency schematic prepared. Learner prediction and numerical verification
+remain pending. This topic does not rewind or complete the separate Day 8 plan.
+
 Canonical refinements and source decisions:
 [modern-decoder-precision-and-evidence.md](modern-decoder-precision-and-evidence.md).
 Reuse CAND-ANIM-014–017 for norm/gates/RoPE/GQA and CAND-ANIM-011 for recurrence;
