@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>同一份方案，三次提问</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#fff;color:#111827;font:18px/1.7 Arial,"Songti SC",serif}main{max-width:1080px;margin:40px auto;padding:0 22px}h1{font-size:34px;font-weight:400}video{display:block;width:100%;border:1px solid #e2e8f0;border-radius:12px;background:white}p{max-width:820px;color:#64748b}a{color:#2563eb}nav{display:flex;gap:24px;margin:18px 0}details{border-top:1px solid #e2e8f0;padding-top:18px;margin-top:30px}summary{cursor:pointer}</style></head>
+<body><main><h1>同一份方案，三次提问</h1>
+<video controls playsinline preload="metadata" poster="rendered/still-half.png" src="rendered/prefix-abc.mp4"></video>
+<nav><a href="rendered/prefix-abc.mp4">MP4</a><a href="rendered/prefix-abc.gif">GIF</a></nav>
+<p>A：先看原方案。B：要求预算减半，输入文档仍是原方案。C：输入已经修改后的方案，再次检查。</p>
+<details><summary>如何理解这段动画</summary><p>Prefill 计算输入，KV cache 保存 K/V 状态，prefix caching 复用相同前缀的状态。新指令仍需处理，新回答仍需生成。</p>
+<p>图中是一层的输入片段和缓存示意，未实际运行 tokenizer 或模型。复用以完整输入中的实际 token 前缀为准，并假设模型、位置处理、执行设置一致且缓存仍可用。重算后缀不代表每个数值都必然变化。顺序出现的方块用于解释计算，不表示实际 prefill 调度顺序。</p></details>
+</main></body></html>

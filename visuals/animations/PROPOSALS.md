@@ -11,6 +11,56 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### CAND-ANIM-009 extension — A/B/C prefix reuse, 2026-09-13
+
+- Source: user; approved for social-post animation as `ANIM-KV-007`.
+- State: review; rendered MP4/GIF and checked stills in
+  `projects/kv-prefix-abc/` on Mac. Approximately 19 seconds; no article edits.
+- Mechanism: unchanged causal token prefix retains its per-layer K/V; an edit
+  instruction is a new suffix, whereas edited input changes the cache identity.
+- Evidence: canonical causal dependency plus executable illustrative-prefix
+  fixture; no measured tokenizer/model output or speed claim.
+- Motion: stable input/cache columns; B changes instruction only; C changes
+  budget and recomputes dependent suffix while keeping earlier state fixed.
+- Acceptance/return tracked in the `ANIM-KV-007` packet in LEARNING_MEMORY.md.
+
+### CAND-ANIM-009 extension — replace article code with a decode close-up
+
+- User approved `ANIM-KV-006` on 2026-09-12. One head/new position: Q/K/V
+  projections → append → scaled Q/K matching → softmax → weighted V sum → retain.
+- Source: existing executable article example and Chapter 4 §4.10. Toy fixture
+  arithmetic is explicit; no model observation is implied. Mac production only.
+- New article slot 4 replaces code; prior loops remain unchanged. Packet in
+  `LEARNING_MEMORY.md`; source in `projects/kv-decode-step/`.
+
+### CAND-ANIM-009 extension — cache memory growth, 2026-09-12
+
+- User approved the remaining memory figure as `ANIM-KV-005`; packet in
+  `LEARNING_MEMORY.md`, Mac production in `projects/kv-memory-growth/`.
+- Canonical equation: separate K/V bytes = 2 × B × L × T × H_KV × d × b.
+  Calculated payload only. Grow retained positions, then explicitly compare
+  KV-head configurations; no inference-time head deletion or allocation benchmark.
+- Replace article slot 5, preserve the other loops and static equation cards.
+
+### CAND-ANIM-009 extension — remaining article GIFs, 2026-09-12
+
+- User approved append/edit and global-sharing loops after viewing `ANIM-KV-001`.
+  Promoted as `ANIM-KV-003` and `ANIM-KV-004` with packets in `LEARNING_MEMORY.md`.
+- Reuse the existing causal-invariance and CED evidence; no competing candidate.
+- Mac production only. Preserve the existing prefill GIF and longer CED films.
+  Equations and the memory bar chart remain static.
+
+### CAND-ANIM-009 extension — short prefill/decode article loop, 2026-09-12
+
+- Source: user approval following agent suggestion; `ANIM-KV-001` promoted in
+  `LEARNING_MEMORY.md`. Only the first article loop is approved for production.
+- Mechanism: prompt prefill → retained K/V → first prediction → feed selected
+  token back → append new K/V → fresh Q reads past/self → next prediction.
+- Evidence: canonical causal-cache derivation; token labels/tensor glyphs are
+  illustrative. No new numerical result or timing benchmark is implied.
+- Scope: Mac Studio Manim production, then GIF/MP4/PNG export; article slot 1.
+  Append/edit and global-sharing GIF proposals remain unapproved for production.
+
 ### CAND-ANIM-009 extension — CED global/local KV flow, 2026-09-10
 
 Design requested later on 2026-09-10 for two specific points. Storyboards:

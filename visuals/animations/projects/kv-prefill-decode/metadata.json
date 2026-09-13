@@ -1,0 +1,175 @@
+{
+  "preview": false,
+  "base_commit": "d1374d1cbef9a149d19d625ebe61b59399bf7db5",
+  "environment": {
+    "host": "mac.lan",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.12.11",
+    "manim": "0.21.0",
+    "pillow": "12.3.0",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "render_command": [
+    "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+    "-m",
+    "manim",
+    "render",
+    "-r",
+    "1920,1080",
+    "--fps",
+    "30",
+    "--renderer",
+    "cairo",
+    "--progress_bar",
+    "none",
+    "--disable_caching",
+    "--verbosity",
+    "WARNING",
+    "--media_dir",
+    "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-prefill-render-f4ybh0sd",
+    "-o",
+    "prefill-decode",
+    "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/kv-prefill-decode/scenes.py",
+    "PrefillDecode"
+  ],
+  "timeline": {
+    "events": [
+      {
+        "name": "prompt_input",
+        "seconds": 0.6,
+        "cached_positions": 0
+      },
+      {
+        "name": "prompt_kv_ready",
+        "seconds": 1.267,
+        "cached_positions": 3,
+        "query_position": 3
+      },
+      {
+        "name": "prefill_read",
+        "seconds": 2.733,
+        "cached_positions": 3,
+        "query_position": 3,
+        "visible_positions": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "blue_selected",
+        "seconds": 3.433,
+        "cached_positions": 3,
+        "selected_token": "blue",
+        "selected_token_cached": false
+      },
+      {
+        "name": "blue_fed_back",
+        "seconds": 4.733,
+        "cached_positions": 3
+      },
+      {
+        "name": "new_kv_appended",
+        "seconds": 5.333,
+        "cached_positions": 4,
+        "query_position": 4
+      },
+      {
+        "name": "decode_read",
+        "seconds": 6.8,
+        "cached_positions": 4,
+        "query_position": 4,
+        "visible_positions": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "name": "period_selected",
+        "seconds": 7.5,
+        "cached_positions": 4,
+        "selected_token": ".",
+        "selected_token_cached": false
+      }
+    ],
+    "duration_seconds": 8.933,
+    "unchanged_past_geometry": true,
+    "all_objects_inside_canvas": true,
+    "scope": "One-layer schematic; no numeric attention weights or model predictions measured"
+  },
+  "duration_seconds": 8.933333,
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "codec": "h264",
+    "fps": "30/1"
+  },
+  "gif": {
+    "width": 960,
+    "height": 540,
+    "frames": 134,
+    "duration_ms": 8940,
+    "loop": 0,
+    "unique_frames": 126,
+    "bytes": 1154160
+  },
+  "checks": {
+    "event_order": true,
+    "past_geometry_unchanged": true,
+    "media_valid": true
+  },
+  "sources": [
+    {
+      "path": "visuals/animations/projects/kv-prefill-decode/scenes.py",
+      "sha256": "3edfe0c1fb160d1626014f19f23a413ec7604c420e33d462ad39aa7abbfc3d01"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefill-decode/render.py",
+      "sha256": "378afc16ecf63d8dbfe33671bcf57a8bf4b8e4262ea121531cc482a0aaa3aa5e"
+    },
+    {
+      "path": "visuals/animations/manim_style.py",
+      "sha256": "e5ef5e47a93647733e201e64abb16f6214d625fc907ae2b872e9705202c8259e"
+    },
+    {
+      "path": "visuals/animations/uv.lock",
+      "sha256": "c481639a558a546e45fa22bb251c318b8e439eccde30b96fb66dcb40ba448ef8"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "visuals/animations/projects/kv-prefill-decode/rendered/prefill-decode.mp4",
+      "bytes": 804695,
+      "sha256": "a9aa8d5dc131af9c26c3b961435378a9b8b447ec033256cdb8e17959158021c2"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefill-decode/rendered/prefill-decode-still.png",
+      "bytes": 211742,
+      "sha256": "a3a83d1386c8edb70f471ac5c555f796a4fd8059ae64e7b5ab17b71e65d359e2"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefill-decode/rendered/prefill-decode-still-half.png",
+      "bytes": 84060,
+      "sha256": "d4ae176c2f04138e02ae72799e0b9da099a24e93553a312e88af344d7c461094"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefill-decode/rendered/prefill-decode-contact-sheet.png",
+      "bytes": 257379,
+      "sha256": "79aabd4ae510c019a89d1f142a2356110d8a19786f5344faa2b8910037d381b4"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefill-decode/rendered/prefill-decode.gif",
+      "bytes": 1154160,
+      "sha256": "bec0834bb19b498d3a3dd18ae0778d606698c5cb36e2004eb6a242d9fc59adcd"
+    }
+  ],
+  "limitations": [
+    "Schematic token pieces; no tokenizer/model run.",
+    "Only final prompt query shown; prefill computes all prompt queries.",
+    "Vector glyphs and paths have no numeric activation/weight meaning.",
+    "Model tail summarizes remaining layers and vocabulary projection.",
+    "End fade is an editorial loop reset, not cache eviction."
+  ]
+}

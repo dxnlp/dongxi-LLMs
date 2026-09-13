@@ -1,0 +1,76 @@
+{
+  "events": [
+    {
+      "name": "encoder_output",
+      "seconds": 0.467,
+      "global_banks": 0
+    },
+    {
+      "name": "global_bank_created",
+      "seconds": 1.233,
+      "global_banks": 1,
+      "source": "encoder_output",
+      "producer_layer": 21
+    },
+    {
+      "name": "layer_local_state",
+      "seconds": 2.167,
+      "global_banks": 1,
+      "decoder_layers": [
+        21,
+        22,
+        40
+      ],
+      "distinct_queries": 3,
+      "local_caches": 3
+    },
+    {
+      "name": "layer_21_read",
+      "seconds": 2.767,
+      "global_banks": 1,
+      "bank_source_layer": 21,
+      "reader": 21
+    },
+    {
+      "name": "layer_22_read",
+      "seconds": 3.367,
+      "global_banks": 1,
+      "bank_source_layer": 21,
+      "reader": 22
+    },
+    {
+      "name": "layer_40_read",
+      "seconds": 3.967,
+      "global_banks": 1,
+      "bank_source_layer": 21,
+      "reader": 40
+    },
+    {
+      "name": "selected_entry_detail",
+      "seconds": 4.967,
+      "global_banks": 1,
+      "detail_of_entry": 0
+    },
+    {
+      "name": "same_entry_scores",
+      "seconds": 5.833,
+      "global_banks": 1,
+      "entry": 0,
+      "role": "query_matching"
+    },
+    {
+      "name": "same_entry_accumulates",
+      "seconds": 6.4,
+      "global_banks": 1,
+      "entry": 0,
+      "role": "weighted_accumulation"
+    }
+  ],
+  "duration_seconds": 7.833333333333321,
+  "checks": {
+    "one_unchanged_global_bank": true,
+    "distinct_local_queries_and_caches": true,
+    "same_selected_entry_in_both_roles": true,
+    "inside_canvas": true
+  }
+}

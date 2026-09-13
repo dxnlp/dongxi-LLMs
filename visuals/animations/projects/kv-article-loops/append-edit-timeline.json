@@ -1,0 +1,66 @@
+{
+  "events": [
+    {
+      "name": "two_prefixes",
+      "seconds": 0.6,
+      "original_positions": 4
+    },
+    {
+      "name": "append_input",
+      "seconds": 1.233,
+      "reusable": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "append_kv",
+      "seconds": 2.267,
+      "reusable": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "appended": 5
+    },
+    {
+      "name": "edit_input",
+      "seconds": 3.267,
+      "changed_position": 2
+    },
+    {
+      "name": "suffix_invalidated",
+      "seconds": 4.233,
+      "reusable": [
+        1
+      ],
+      "invalidated": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "name": "suffix_recomputed",
+      "seconds": 5.633,
+      "reusable": [
+        1
+      ],
+      "recomputed": [
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "duration_seconds": 7.666666666666659,
+  "checks": {
+    "append_preserves_old_geometry": true,
+    "edit_preserves_earlier_geometry": true,
+    "suffix_recomputed_from_edited_position": true,
+    "inside_canvas": true
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "preview": true,
+  "task": "ANIM-KV-007",
+  "base_commit": "d1374d1cbef9a149d19d625ebe61b59399bf7db5",
+  "duration_seconds": 19.0,
+  "fixture": {
+    "B_shared_groups": 4,
+    "C_shared_groups": 1,
+    "A_computed_groups": 5,
+    "B_computed_groups": 1,
+    "C_computed_groups": 4,
+    "evidence": "Illustrative grouped-prefix identity; no tokenizer, model or timing measurement"
+  },
+  "timeline": {
+    "events": [
+      {
+        "name": "A_input",
+        "seconds": 0.667,
+        "document": [
+          "project",
+          "budget=100",
+          "schedule",
+          "delivery"
+        ],
+        "instruction": "review-risks"
+      },
+      {
+        "name": "A_cache",
+        "seconds": 3.533,
+        "computed": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "reused": []
+      },
+      {
+        "name": "B_instruction_only",
+        "seconds": 5.2,
+        "document": [
+          "project",
+          "budget=100",
+          "schedule",
+          "delivery"
+        ],
+        "reused": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "changed": [
+          4
+        ]
+      },
+      {
+        "name": "B_new_instruction_computed",
+        "seconds": 8.6,
+        "reused": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "computed": [
+          4
+        ],
+        "document_geometry_unchanged": true,
+        "cache_geometry_unchanged": true
+      },
+      {
+        "name": "C_document_edited",
+        "seconds": 10.867,
+        "shared_prefix": 1,
+        "changed_position": 1
+      },
+      {
+        "name": "C_suffix_invalidated",
+        "seconds": 11.867,
+        "reused": [
+          0
+        ],
+        "invalidated": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "C_suffix_recomputed",
+        "seconds": 14.467,
+        "reused": [
+          0
+        ],
+        "computed": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "unchanged_text_recomputed": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "summary",
+        "seconds": 16.733,
+        "terms": [
+          "Prefill",
+          "KV cache",
+          "Prefix caching"
+        ]
+      }
+    ],
+    "duration_seconds": 18.999999999999975,
+    "checks": {
+      "inside_canvas": true,
+      "B_document_unchanged": true,
+      "B_cache_unchanged": true,
+      "C_earlier_cache_unchanged": true,
+      "edit_precedes_invalidation": true,
+      "new_instruction_computed_in_all_requests": true
+    }
+  },
+  "checks": {
+    "event_order": true,
+    "geometry": true,
+    "media": true
+  },
+  "gif": null,
+  "environment": {
+    "host": "mac.lan",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.12.11",
+    "manim": "0.21.0",
+    "pillow": "12.3.0",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "command": [
+    "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+    "-m",
+    "manim",
+    "render",
+    "-r",
+    "960,540",
+    "--fps",
+    "15",
+    "--renderer",
+    "cairo",
+    "--progress_bar",
+    "none",
+    "--disable_caching",
+    "--verbosity",
+    "WARNING",
+    "--media_dir",
+    "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/prefix-abc-manim-9btefzxu",
+    "-o",
+    "prefix-abc",
+    "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/kv-prefix-abc/scene.py",
+    "PrefixABC"
+  ],
+  "video": {
+    "codec": "h264",
+    "width": 960,
+    "height": 540,
+    "fps": "15/1"
+  },
+  "sources": [
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/scene.py",
+      "sha256": "71de895bf3362cd6015fd542a88771e70067dffc29526a13d38c331271f9c5ca"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/mechanism.py",
+      "sha256": "9b280d6caa3342810a3c6aacca204317d0e7e71be3a62bc6df33bb39389bb4dc"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/render.py",
+      "sha256": "1f15c1a2eb08004475c26e641e40182d7dadfeaf8da2c6dd72dc575c6420c090"
+    },
+    {
+      "path": "visuals/animations/manim_style.py",
+      "sha256": "e5ef5e47a93647733e201e64abb16f6214d625fc907ae2b872e9705202c8259e"
+    },
+    {
+      "path": "visuals/animations/STYLE_GUIDE.md",
+      "sha256": "31ff5d8915a4fca9e2542c8ae42a1fe7194d59c34f66a839b25579841fc78098"
+    },
+    {
+      "path": "visuals/animations/uv.lock",
+      "sha256": "c481639a558a546e45fa22bb251c318b8e439eccde30b96fb66dcb40ba448ef8"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/preview-prefix-abc.mp4",
+      "bytes": 761219,
+      "sha256": "f64f2d32dbf5de34467a65fc92510318d082fdc4a32c7963e8bc11b9db07fb86"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/preview-still.png",
+      "bytes": 125332,
+      "sha256": "07306c2cb93f8890895fa801684fa1e512f51a03b21370251b1db343ea3bf4cd"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/preview-still-half.png",
+      "bytes": 125332,
+      "sha256": "07306c2cb93f8890895fa801684fa1e512f51a03b21370251b1db343ea3bf4cd"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/preview-summary.png",
+      "bytes": 66552,
+      "sha256": "f5395cad66698a410f2a6ee3c3a1ee94a24a9758e767ca2dedb6fe51b55f6dd1"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/preview-contact-sheet.png",
+      "bytes": 613542,
+      "sha256": "b24ef1e7847d5fc846cef24fbb2c54c3fc5e91dd1185c15c94b7c3dfee612a97"
+    }
+  ],
+  "limitations": [
+    "Illustrative input groups and fingerprint glyphs; not actual tokens or activations.",
+    "Recomputing suffix is a conservative validity rule, not proof every activation changes.",
+    "Same weights, position handling, execution settings and available prefix cache assumed.",
+    "Only prompt processing shown; answer generation still needs computation.",
+    "Visual sweep is explanatory, not a prefill scheduling or timing measurement.",
+    "Changing requests replaces the displayed suffix, not a global cache eviction.",
+    "Fade/reset is editorial, not reverse inference."
+  ]
+}

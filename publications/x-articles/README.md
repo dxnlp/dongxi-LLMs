@@ -3,6 +3,13 @@
 These conventions apply to new X Article packages unless a reviewed article has
 a specific exception.
 
+## Article packages
+
+- [Text, tokens and BPE](x-bpe-001/review.html): English and Chinese visual drafts.
+- [KV cache: why K/V, not past Q](x-attn-kv-001/review.html): English draft,
+  [Chinese adaptation](x-attn-kv-001/zh/review.html), five figures and optional
+  DeepSeek companion animations. Local editorial review; not published.
+
 ## Cover images
 
 - Use a **5:2 aspect ratio** for X Article covers.

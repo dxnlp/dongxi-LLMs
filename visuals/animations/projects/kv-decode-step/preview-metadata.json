@@ -1,0 +1,223 @@
+{
+  "preview": true,
+  "base_commit": "d1374d1cbef9a149d19d625ebe61b59399bf7db5",
+  "environment": {
+    "host": "mac.lan",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.12.11",
+    "manim": "0.21.0",
+    "pillow": "12.3.0",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "checks": {
+    "event_order": true,
+    "first_loop_unchanged": true,
+    "media_valid": true,
+    "all_existing_loops_unchanged": true
+  },
+  "clips": [
+    {
+      "id": "decode-step",
+      "timeline": {
+        "events": [
+          {
+            "name": "new_hidden_state",
+            "seconds": 0.6,
+            "cached": 2
+          },
+          {
+            "name": "new_qkv",
+            "seconds": 1.467,
+            "cached": 2
+          },
+          {
+            "name": "append_before_read",
+            "seconds": 2.133,
+            "cached": 3,
+            "self_included": true
+          },
+          {
+            "name": "query_matches_all_keys",
+            "seconds": 3.2,
+            "cached": 3,
+            "read_positions": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "name": "softmax_weights",
+            "seconds": 3.867,
+            "cached": 3,
+            "weights": [
+              0.4011120926797859,
+              0.1977758146404282,
+              0.4011120926797859
+            ]
+          },
+          {
+            "name": "weighted_value_sum",
+            "seconds": 5.467,
+            "cached": 3,
+            "output": [
+              0.8022241853595719,
+              0.5988879073202141
+            ]
+          },
+          {
+            "name": "cache_retained",
+            "seconds": 7.067,
+            "cached": 3,
+            "query_retained": false
+          }
+        ],
+        "fixture": {
+          "h": [
+            1.0,
+            1.0
+          ],
+          "q": [
+            1.0,
+            0.0
+          ],
+          "K": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ],
+            [
+              1.0,
+              1.0
+            ]
+          ],
+          "V": [
+            [
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0
+            ],
+            [
+              1.0,
+              1.0
+            ]
+          ],
+          "scores": [
+            0.7071067811865475,
+            0.0,
+            0.7071067811865475
+          ],
+          "weights": [
+            0.4011120926797859,
+            0.1977758146404282,
+            0.4011120926797859
+          ],
+          "output": [
+            0.8022241853595719,
+            0.5988879073202141
+          ]
+        },
+        "checks": {
+          "old_cache_unchanged": true,
+          "inside_canvas": true,
+          "self_included": true
+        },
+        "duration_seconds": 8.66666666666666
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-ume0hdta",
+        "-o",
+        "decode-step",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/kv-decode-step/scenes.py",
+        "DecodeStep"
+      ],
+      "duration_seconds": 8.666667,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/kv-decode-step/rendered/decode-step/preview.mp4",
+          "bytes": 269573,
+          "sha256": "0b14b08396934fc0cd826cb3d2b4a1359ae76b0728a72b93c6ca2e541572a9dc"
+        },
+        {
+          "path": "visuals/animations/projects/kv-decode-step/rendered/decode-step/preview-still.png",
+          "bytes": 68693,
+          "sha256": "6cba5f876d6a42a8d1dd2ffffb05f3ab8dd4fc5b5fe520d60f7d035fcfbd982c"
+        },
+        {
+          "path": "visuals/animations/projects/kv-decode-step/rendered/decode-step/preview-still-half.png",
+          "bytes": 68693,
+          "sha256": "6cba5f876d6a42a8d1dd2ffffb05f3ab8dd4fc5b5fe520d60f7d035fcfbd982c"
+        },
+        {
+          "path": "visuals/animations/projects/kv-decode-step/rendered/decode-step/preview-contact-sheet.png",
+          "bytes": 341776,
+          "sha256": "92cc0d8fa36c0c8b6ae40451cf1b9139234b276365db3492174b90fcaccfe314"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "path": "visuals/animations/projects/kv-decode-step/scenes.py",
+      "sha256": "a6d64cb63534fce25b0456d148899d0365678f56c0087d96e88c36a9e5659cc6"
+    },
+    {
+      "path": "visuals/animations/projects/kv-decode-step/render.py",
+      "sha256": "10ef12b117fb8066532124f8873cc24e9be5489ffd83892b7f006511fab3daa0"
+    },
+    {
+      "path": "visuals/animations/manim_style.py",
+      "sha256": "e5ef5e47a93647733e201e64abb16f6214d625fc907ae2b872e9705202c8259e"
+    },
+    {
+      "path": "visuals/animations/uv.lock",
+      "sha256": "c481639a558a546e45fa22bb251c318b8e439eccde30b96fb66dcb40ba448ef8"
+    },
+    {
+      "path": "visuals/animations/projects/kv-article-loops/render.py",
+      "sha256": "49e496295364a87228c2dfc67dc8706f8a0a3db02c40409abf42cbf9df285b5e"
+    },
+    {
+      "path": "visuals/animations/projects/kv-decode-step/example.py",
+      "sha256": "8381a83e8d0c375038486f546f45ae873b2487a82cf617eab9c42a0537ce6aa7"
+    }
+  ],
+  "limitations": [
+    "One layer/head, one new position; no padding or positional operations.",
+    "Explicit toy fixture, not measured model activations; old vectors remain unchanged.",
+    "Softmax bar widths and flow strokes use the calculated toy weights.",
+    "Head output is a weighted V sum, not logits; multi-head output projection and model remainder omitted.",
+    "Cache retention does not require retaining past queries for ordinary decode.",
+    "Final fade is an editorial loop reset, not cache eviction."
+  ]
+}

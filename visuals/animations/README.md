@@ -30,6 +30,19 @@ stays at the top level.
 
 ## Render
 
+One document, three requests: [`projects/kv-prefix-abc/`](projects/kv-prefix-abc/)
+distinguishes an edit instruction from edited input, with stable retained K/V
+and recomputed suffixes. The 19-second social-post companion retains editable
+source, local 1080p MP4, looping GIF, stills and verification metadata.
+
+One decode step: [`projects/kv-decode-step/`](projects/kv-decode-step/) follows
+new-state projection, cache append, Q/K matching, softmax and a weighted V sum;
+editable source, checked toy computation, reusable local GIF and MP4 are retained.
+
+Cache memory growth: [`projects/kv-memory-growth/`](projects/kv-memory-growth/)
+contains the approved position-growth and KV-head configuration comparisons,
+with editable source, local GIF/MP4, stills and checked calculated payloads.
+
 From the repository root:
 
 ```bash
@@ -87,6 +100,16 @@ ffmpeg -version | head -n 1
 ```
 
 ## Learning objectives
+
+- [`projects/kv-article-loops/`](projects/kv-article-loops/README.md): two short
+  article GIFs contrast append/reuse with edit/recompute and explain encoder-derived
+  global KV, cross-layer reuse, and the same selected vector's scoring/value roles.
+  Distinct local state remains visible; no new model or benchmark claims.
+
+- [`projects/kv-prefill-decode/`](projects/kv-prefill-decode/README.md): a compact
+  prefill/decode loop for the KV-cache article. The cache grows only after the
+  selected token is fed back and processed; old K/V remain unchanged. Manim source,
+  MP4/GIF/PNG exports, event-order checks and bilingual article integration.
 
 - [`projects/deepseek-ced/`](projects/deepseek-ced/README.md): two English films
   distinguishing encoder-derived global KV from cross-layer sharing, and the

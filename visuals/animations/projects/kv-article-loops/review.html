@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KV cache: reuse and sharing</title>
+<style>
+body{max-width:1150px;margin:36px auto;padding:0 24px;background:white;color:#111827;font:18px/1.65 Arial,sans-serif}
+h1{font-size:36px;font-weight:400}h2{font-size:28px;font-weight:400;margin-top:40px}video{width:100%;display:block;border:1px solid #e2e8f0;border-radius:10px}details{margin-top:24px;color:#64748b}summary{cursor:pointer}
+</style>
+<h1>KV cache: reuse and sharing</h1>
+<h2>Append or edit?</h2>
+<video controls loop playsinline preload="metadata" poster="rendered/append-edit/still.png" src="rendered/append-edit/append-edit.mp4"></video>
+<h2>Causal Encoder–Decoder</h2>
+<video controls loop playsinline preload="metadata" poster="rendered/global-sharing/still.png" src="rendered/global-sharing/global-sharing.mp4"></video>
+<details><summary>Accuracy notes</summary>
+<p>Appending preserves earlier causal states under compatible inference conditions.
+Editing B requires recomputing the dependent suffix; it need not change every numerical value.</p>
+<p>The decoder global bank is derived from encoder output. Each decoder layer retains
+its own Q and local KV. The selected-vector detail is a magnified view, not another
+cache allocation. Sparse selection and intervening layers are omitted.</p>
+<p>These are dependency schematics, not measured activations or performance results.</p>
+</details>
+</html>

@@ -1,0 +1,113 @@
+{
+  "events": [
+    {
+      "name": "new_hidden_state",
+      "seconds": 0.567,
+      "cached": 2
+    },
+    {
+      "name": "new_qkv",
+      "seconds": 1.433,
+      "cached": 2
+    },
+    {
+      "name": "append_before_read",
+      "seconds": 2.1,
+      "cached": 3,
+      "self_included": true
+    },
+    {
+      "name": "query_matches_all_keys",
+      "seconds": 3.167,
+      "cached": 3,
+      "read_positions": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "name": "softmax_weights",
+      "seconds": 3.833,
+      "cached": 3,
+      "weights": [
+        0.4011120926797859,
+        0.1977758146404282,
+        0.4011120926797859
+      ]
+    },
+    {
+      "name": "weighted_value_sum",
+      "seconds": 5.433,
+      "cached": 3,
+      "output": [
+        0.8022241853595719,
+        0.5988879073202141
+      ]
+    },
+    {
+      "name": "cache_retained",
+      "seconds": 7.0,
+      "cached": 3,
+      "query_retained": false
+    }
+  ],
+  "fixture": {
+    "h": [
+      1.0,
+      1.0
+    ],
+    "q": [
+      1.0,
+      0.0
+    ],
+    "K": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ],
+    "V": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ],
+    "scores": [
+      0.7071067811865475,
+      0.0,
+      0.7071067811865475
+    ],
+    "weights": [
+      0.4011120926797859,
+      0.1977758146404282,
+      0.4011120926797859
+    ],
+    "output": [
+      0.8022241853595719,
+      0.5988879073202141
+    ]
+  },
+  "checks": {
+    "old_cache_unchanged": true,
+    "inside_canvas": true,
+    "self_included": true
+  },
+  "duration_seconds": 8.633333333333322
+}

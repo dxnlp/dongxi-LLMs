@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Prefill → decode</title>
+<style>
+body{max-width:1150px;margin:36px auto;padding:0 24px;background:white;color:#111827;font:18px/1.65 Arial,sans-serif}
+h1{font-size:36px;font-weight:400}video{width:100%;display:block;border:1px solid #e2e8f0;border-radius:10px}details{margin-top:24px;color:#64748b}summary{cursor:pointer}
+</style>
+<h1>Prefill → decode</h1>
+<video controls loop playsinline preload="metadata" poster="rendered/prefill-decode-still.png" src="rendered/prefill-decode.mp4"></video>
+<details><summary>How to read the animation</summary>
+<p>Prefill retains three positions. Selecting “blue” leaves that cache unchanged.
+When “blue” is fed back, its K/V are appended before its fresh query reads the four
+available positions. The remaining model then predicts the next token.</p>
+<p>One layer is shown. Token pieces, continuations, and vector glyphs are illustrative.
+Only the final prompt query is drawn. Flow paths show dependencies, not measured
+attention weights. The final fade resets the illustration.</p></details>
+</html>

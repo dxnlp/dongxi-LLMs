@@ -34,6 +34,14 @@ This file is the operational source of truth for resuming work. Update it at the
 
 ## Four-week tracker
 
+Animation return, 2026-09-13 (Mac only): approved `ANIM-KV-007` is rendered in
+`visuals/animations/projects/kv-prefix-abc/`. The A/B/C document-workflow
+companion shows prefill, retained KV and exact-prefix reuse in 18.97 seconds.
+1080p MP4 and 960px GIF, editable sources, hash metadata and visual QA retained;
+fixture, event/geometry and media checks pass. Awaiting learner review. Article
+and X draft unchanged; no publish, commit, push or GPU job. Day 8 status above
+is unchanged. Existing dirty work preserved; no pull attempted.
+
 Status values: `pending`, `in progress`, `complete`, `blocked`.
 
 | Day | Topic | Status | Primary evidence |
@@ -555,6 +563,89 @@ and cross-machine task packets are maintained in `LEARNING_MEMORY.md`.
 
 
 ## Open questions
+
+### KV-cache article draft — 2026-09-11, local Mac
+
+- Latest upload checkpoint (2026-09-12): user cleared the X draft body; the
+  latest Chinese local body was uploaded to draft `2098863329817051136` while
+  retaining the original cloud title and cover. Verified after reload: complete
+  source match, 82 text blocks, seven correctly placed media, zero placeholders.
+  All five GIFs play in preview. Evidence: article `zh/x-transfer-2026-09-12.md`.
+  This supersedes earlier local-only status. Saved as draft; no Publish, Git
+  action or change to Day 8 learning progress.
+
+- Latest editorial checkpoint (2026-09-12): at the learner's request, revised
+  only the local Chinese article with a project-document through-line, concrete
+  append/edit and shared-prefix examples, question-led headings and shorter
+  paragraphs. Seven existing visuals and English prose retained; no rendering.
+  Previous Chinese manuscript saved under `zh/revisions/`. The Chinese
+  follow-up removes the closing advanced details and companion-video section,
+  and answers all four concluding questions briefly; inline visuals retained.
+  Updated Chinese review and transfer plan; static QA in `zh/editorial-qa.json`. Fresh browser
+  visual QA is unavailable because local-page access was blocked by URL policy.
+  Earlier Chinese wording was saved/verified in X draft `2098863329817051136`;
+  this new revision is local only. Next: learner reviews local copy/layout;
+  cloud update and publishing remain separate. No commit/push or Day 8 change.
+
+- User approved the refined `X-ATTN-KV-001` outline. Created its local package on
+  `codex/content/x-attn-kv-guide`, based on synchronized `main` at `d1374d1`.
+- English article and Chinese adaptation cover Q/K/V roles, causal reuse,
+  prefill/decode timing, verified toy equivalence and stale-cache failure,
+  calculated cache memory, prefix reuse, and the DeepSeek case study.
+- Five original diagrams and one 5:2 cover; responsive bilingual HTML reviews
+  embed two existing videos as optional companions. Clean X transfer bodies and
+  image plans are separate from the review pages. No new animation rendering.
+- Arithmetic and asset checks pass; browser review validates six images per
+  language, image anchors, mobile layout, local links and companion playback.
+  Chinese editorial scan passes. Detailed evidence lives in package `qa.json`.
+- User requested self-contained articles without links. Both languages now use
+  direct examples and a short NumPy cache update; references remain separate.
+  Code-equivalence checks pass, and the browser audit confirms zero article links.
+- Math-format revision (2026-09-12): replaced three plain-text display formulas
+  with locally typeset equation cards, cleaned inline notation, and preserved
+  literal Python code. Both languages now have eight inline images (five diagrams
+  plus three equations), with desktop/mobile math screenshots and ordered-upload
+  checks. No model rerun, animation render, X transfer, commit or push.
+- Subsequent editorial cut (2026-09-12): removed the small-experiment/stale-cache
+  section from both languages and its two upload slots. Current review has six
+  inline images; original course evidence and reusable assets are preserved.
+- User approved the first article GIF (`ANIM-KV-001`, 2026-09-12). Rendered the
+  prefill/decode mechanism on Mac: ~9 seconds, 1080p MP4, 960×540 GIF at 1.15 MB,
+  and PNG fallback. Slot 1 in both article reviews now animates. Event-order,
+  unchanged-cache geometry, media/hash and browser playback/pause/reduced-motion
+  checks pass. At that checkpoint no other animation was produced.
+- Further user-approved article GIFs (`ANIM-KV-003/004`, 2026-09-12): rendered
+  append versus edit (7.67 seconds) and global KV source/sharing/selected-vector
+  roles (7.87 seconds), each about 1 MB, with 1080p MP4 and static PNG fallback.
+  Both languages now contain three GIFs and three static images. The original
+  prefill/decode project is byte-identical; equations and memory chart stay
+  static. Event/geometry/media checks and bilingual browser playback, pause,
+  reduced-motion and mobile checks pass. Awaiting learner review; no X transfer,
+  publication, commit or push. These are mechanism schematics, not model runs.
+- User then approved the memory-growth loop (`ANIM-KV-005`, 2026-09-12):
+  calculated 192→384 MiB as positions double, then a separate configuration
+  comparison of 192→96 MiB as KV heads halve. Rendered 9.67-second GIF (1.47 MB)
+  and 1080p MP4 on Mac; all prior loops unchanged. Article slot 5 now animates
+  in both languages, yielding four GIFs plus two static equation cards. Arithmetic,
+  geometry, media, bilingual playback/pause/reduced-motion and mobile QA pass.
+  Local only; no measured allocation claim, model run, X transfer, commit or push.
+- User requested animation instead of the dry code section (2026-09-12).
+  `ANIM-KV-006` now shows new-state projection, append-before-read, past/self
+  matching, softmax, weighted V sum and cache retention. Both languages were
+  shortened; new slot 4 replaces code, later slots shift to 5/6/7. Five GIFs and
+  two equation cards; no inline code. GIF: 8.60 seconds / 0.745 MB; 1080p MP4 and
+  editable source retained locally. Earlier loops unchanged. Toy arithmetic,
+  six-step cached/full attention equivalence and bilingual browser QA pass.
+  No model run, X transfer, publication, commit or push; learner review pending.
+- Cover exploration (2026-09-12): generated a new black-and-white stippled
+  “KV Cache” cover with a layered-information/reuse metaphor, exported at exact
+  2000×800 (5:2). Both local previews use the versioned cover; original preserved.
+  Prompt/source/export notes retained, dimensions/mobile checks pass. Article
+  bodies and animation style unchanged; no upload, engagement claim or Git action.
+- Source-reported model quality is distinguished from recorded course toy
+  evidence and newly calculated payloads. No model experiments or timing tests.
+- Next: learner reviews article wording and visual flow. No cloud draft,
+  publishing action, commit or push; active Day 8 progress remains unchanged.
 
 Git synchronization checkpoint, 2026-09-11: learner authorized committing the
 pending looped-Transformer and DeepSeek animation work, then synchronizing the

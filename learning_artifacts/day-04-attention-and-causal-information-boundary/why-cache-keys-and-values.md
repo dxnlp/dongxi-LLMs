@@ -184,6 +184,25 @@ inference.
 
 ## Reuse opportunities
 
+### Document-workflow clarification — 2026-09-13
+
+The approved A/B/C social animation distinguishes requesting an edit from
+supplying edited input. A sends the original project document and asks for risks.
+B sends the same document and asks to halve the budget: the instruction changes,
+so its states need computation, while available document-prefix KV can be reused.
+C sends a revised document with a changed budget: retain the matching prefix
+before that edit and recompute the related suffix, including unchanged text
+after the edit. All reuse assumes matching actual token prefixes and compatible
+execution settings. Answer generation still requires computation.
+
+`visuals/animations/projects/kv-prefix-abc/` contains the rendered companion and
+executable grouped-prefix fixture. The glyphs are schematic dependency identities,
+not tokenizer output or measured activations. Recomputing a suffix does not prove
+that every tensor element differs. This is production evidence, not a new learner
+mastery assessment or measured inference-speed result.
+
+### Further reuse
+
 - A Chapter 4 consequence box immediately after Q/K/V roles.
 - A forward reference to the modern architecture chapter's KV-cache accounting.
 - `X-ATTN-KV-001`: a reader-facing article connecting attention roles, causal

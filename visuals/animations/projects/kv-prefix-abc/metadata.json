@@ -1,0 +1,246 @@
+{
+  "preview": false,
+  "task": "ANIM-KV-007",
+  "base_commit": "d1374d1cbef9a149d19d625ebe61b59399bf7db5",
+  "duration_seconds": 18.965365,
+  "fixture": {
+    "B_shared_groups": 4,
+    "C_shared_groups": 1,
+    "A_computed_groups": 5,
+    "B_computed_groups": 1,
+    "C_computed_groups": 4,
+    "evidence": "Illustrative grouped-prefix identity; no tokenizer, model or timing measurement"
+  },
+  "timeline": {
+    "events": [
+      {
+        "name": "A_input",
+        "seconds": 0.667,
+        "document": [
+          "project",
+          "budget=100",
+          "schedule",
+          "delivery"
+        ],
+        "instruction": "review-risks"
+      },
+      {
+        "name": "A_cache",
+        "seconds": 3.533,
+        "computed": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "reused": []
+      },
+      {
+        "name": "B_instruction_only",
+        "seconds": 5.2,
+        "document": [
+          "project",
+          "budget=100",
+          "schedule",
+          "delivery"
+        ],
+        "reused": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "changed": [
+          4
+        ]
+      },
+      {
+        "name": "B_new_instruction_computed",
+        "seconds": 8.6,
+        "reused": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "computed": [
+          4
+        ],
+        "document_geometry_unchanged": true,
+        "cache_geometry_unchanged": true
+      },
+      {
+        "name": "C_document_edited",
+        "seconds": 10.867,
+        "shared_prefix": 1,
+        "changed_position": 1
+      },
+      {
+        "name": "C_suffix_invalidated",
+        "seconds": 11.867,
+        "reused": [
+          0
+        ],
+        "invalidated": [
+          1,
+          2,
+          3
+        ]
+      },
+      {
+        "name": "C_suffix_recomputed",
+        "seconds": 14.467,
+        "reused": [
+          0
+        ],
+        "computed": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "unchanged_text_recomputed": [
+          2,
+          3
+        ]
+      },
+      {
+        "name": "summary",
+        "seconds": 16.667,
+        "terms": [
+          "Prefill",
+          "KV cache",
+          "Prefix caching"
+        ]
+      }
+    ],
+    "duration_seconds": 18.96666666666669,
+    "checks": {
+      "inside_canvas": true,
+      "B_document_unchanged": true,
+      "B_cache_unchanged": true,
+      "C_earlier_cache_unchanged": true,
+      "edit_precedes_invalidation": true,
+      "new_instruction_computed_in_all_requests": true
+    }
+  },
+  "checks": {
+    "event_order": true,
+    "geometry": true,
+    "media": true
+  },
+  "gif": {
+    "width": 960,
+    "height": 540,
+    "frames": 284,
+    "duration_ms": 18940,
+    "unique_frames": 234,
+    "loop": 0,
+    "bytes": 2137794
+  },
+  "environment": {
+    "host": "mac.lan",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.12.11",
+    "manim": "0.21.0",
+    "pillow": "12.3.0",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "command": [
+    "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+    "-m",
+    "manim",
+    "render",
+    "-r",
+    "1920,1080",
+    "--fps",
+    "30",
+    "--renderer",
+    "cairo",
+    "--progress_bar",
+    "none",
+    "--disable_caching",
+    "--verbosity",
+    "WARNING",
+    "--media_dir",
+    "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/prefix-abc-manim-dxpm6v8p",
+    "-o",
+    "prefix-abc",
+    "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/kv-prefix-abc/scene.py",
+    "PrefixABC"
+  ],
+  "video": {
+    "codec": "h264",
+    "width": 1920,
+    "height": 1080,
+    "fps": "30/1"
+  },
+  "sources": [
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/scene.py",
+      "sha256": "71de895bf3362cd6015fd542a88771e70067dffc29526a13d38c331271f9c5ca"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/mechanism.py",
+      "sha256": "9b280d6caa3342810a3c6aacca204317d0e7e71be3a62bc6df33bb39389bb4dc"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/render.py",
+      "sha256": "1f15c1a2eb08004475c26e641e40182d7dadfeaf8da2c6dd72dc575c6420c090"
+    },
+    {
+      "path": "visuals/animations/manim_style.py",
+      "sha256": "e5ef5e47a93647733e201e64abb16f6214d625fc907ae2b872e9705202c8259e"
+    },
+    {
+      "path": "visuals/animations/STYLE_GUIDE.md",
+      "sha256": "31ff5d8915a4fca9e2542c8ae42a1fe7194d59c34f66a839b25579841fc78098"
+    },
+    {
+      "path": "visuals/animations/uv.lock",
+      "sha256": "c481639a558a546e45fa22bb251c318b8e439eccde30b96fb66dcb40ba448ef8"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/prefix-abc.mp4",
+      "bytes": 1727240,
+      "sha256": "7e9ce48bfe4f0b5fe0ab1f042cf8ebb769911bfafbab3787f0b681a782b9a086"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/still.png",
+      "bytes": 293271,
+      "sha256": "03ee12259189bea7dac480846c458010e0404dc785fb5c677f97ed0040f52579"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/still-half.png",
+      "bytes": 114316,
+      "sha256": "c1aa9cc0ddffb72ff374864b7d320f6365179946d23d6259df03f7b78c7d2c81"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/summary.png",
+      "bytes": 172991,
+      "sha256": "d81a4795c2659a9ea9e70b56b9d100ea949ae4229f9f375b140c7f3048306b2b"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/contact-sheet.png",
+      "bytes": 517069,
+      "sha256": "b18ad2c5beb8a0a46e796745121ae9ca4cf3cf82b8a16d6aed527ff3a2517389"
+    },
+    {
+      "path": "visuals/animations/projects/kv-prefix-abc/rendered/prefix-abc.gif",
+      "bytes": 2137794,
+      "sha256": "ef407c5d2ea91694c47a95aac815ed574d2be992cdefe036bb07c9432524c469"
+    }
+  ],
+  "limitations": [
+    "Illustrative input groups and fingerprint glyphs; not actual tokens or activations.",
+    "Recomputing suffix is a conservative validity rule, not proof every activation changes.",
+    "Same weights, position handling, execution settings and available prefix cache assumed.",
+    "Only prompt processing shown; answer generation still needs computation.",
+    "Visual sweep is explanatory, not a prefill scheduling or timing measurement.",
+    "Changing requests replaces the displayed suffix, not a global cache eviction.",
+    "Fade/reset is editorial, not reverse inference."
+  ]
+}

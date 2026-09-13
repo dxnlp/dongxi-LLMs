@@ -1,0 +1,299 @@
+{
+  "preview": true,
+  "base_commit": "d1374d1cbef9a149d19d625ebe61b59399bf7db5",
+  "environment": {
+    "host": "mac.lan",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.12.11",
+    "manim": "0.21.0",
+    "pillow": "12.3.0",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "checks": {
+    "event_order": true,
+    "first_loop_unchanged": true,
+    "media_valid": true
+  },
+  "clips": [
+    {
+      "id": "append-edit",
+      "timeline": {
+        "events": [
+          {
+            "name": "two_prefixes",
+            "seconds": 0.6,
+            "original_positions": 4
+          },
+          {
+            "name": "append_input",
+            "seconds": 1.2,
+            "reusable": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "name": "append_kv",
+            "seconds": 2.267,
+            "reusable": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "appended": 5
+          },
+          {
+            "name": "edit_input",
+            "seconds": 3.267,
+            "changed_position": 2
+          },
+          {
+            "name": "suffix_invalidated",
+            "seconds": 4.267,
+            "reusable": [
+              1
+            ],
+            "invalidated": [
+              2,
+              3,
+              4
+            ]
+          },
+          {
+            "name": "suffix_recomputed",
+            "seconds": 5.667,
+            "reusable": [
+              1
+            ],
+            "recomputed": [
+              2,
+              3,
+              4
+            ]
+          }
+        ],
+        "duration_seconds": 7.666666666666665,
+        "checks": {
+          "append_preserves_old_geometry": true,
+          "edit_preserves_earlier_geometry": true,
+          "suffix_recomputed_from_edited_position": true,
+          "inside_canvas": true
+        }
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-psqxr38f",
+        "-o",
+        "append-edit",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/kv-article-loops/scenes.py",
+        "AppendEdit"
+      ],
+      "duration_seconds": 7.666667,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/kv-article-loops/rendered/append-edit/preview.mp4",
+          "bytes": 356316,
+          "sha256": "84c6c24d716d0e232db839439603b551884edc16b75fe00f6b29a90ac6e2d852"
+        },
+        {
+          "path": "visuals/animations/projects/kv-article-loops/rendered/append-edit/preview-still.png",
+          "bytes": 109794,
+          "sha256": "5fe598dadfdf318af00e257a75e76281e19fe2bf284561b3c31434c7aaf5cfce"
+        },
+        {
+          "path": "visuals/animations/projects/kv-article-loops/rendered/append-edit/preview-still-half.png",
+          "bytes": 109794,
+          "sha256": "5fe598dadfdf318af00e257a75e76281e19fe2bf284561b3c31434c7aaf5cfce"
+        },
+        {
+          "path": "visuals/animations/projects/kv-article-loops/rendered/append-edit/preview-contact-sheet.png",
+          "bytes": 419632,
+          "sha256": "40b7ed00909f55fdedca3756b293cc57869bfe1f3fe98d9a1fd9dacc48d633bb"
+        }
+      ]
+    },
+    {
+      "id": "global-sharing",
+      "timeline": {
+        "events": [
+          {
+            "name": "encoder_output",
+            "seconds": 0.467,
+            "global_banks": 0
+          },
+          {
+            "name": "global_bank_created",
+            "seconds": 1.267,
+            "global_banks": 1,
+            "source": "encoder_output",
+            "producer_layer": 21
+          },
+          {
+            "name": "layer_local_state",
+            "seconds": 2.267,
+            "global_banks": 1,
+            "decoder_layers": [
+              21,
+              22,
+              40
+            ],
+            "distinct_queries": 3,
+            "local_caches": 3
+          },
+          {
+            "name": "layer_21_read",
+            "seconds": 2.867,
+            "global_banks": 1,
+            "bank_source_layer": 21,
+            "reader": 21
+          },
+          {
+            "name": "layer_22_read",
+            "seconds": 3.467,
+            "global_banks": 1,
+            "bank_source_layer": 21,
+            "reader": 22
+          },
+          {
+            "name": "layer_40_read",
+            "seconds": 4.067,
+            "global_banks": 1,
+            "bank_source_layer": 21,
+            "reader": 40
+          },
+          {
+            "name": "selected_entry_detail",
+            "seconds": 5.067,
+            "global_banks": 1,
+            "detail_of_entry": 0
+          },
+          {
+            "name": "same_entry_scores",
+            "seconds": 6.0,
+            "global_banks": 1,
+            "entry": 0,
+            "role": "query_matching"
+          },
+          {
+            "name": "same_entry_accumulates",
+            "seconds": 6.6,
+            "global_banks": 1,
+            "entry": 0,
+            "role": "weighted_accumulation"
+          }
+        ],
+        "duration_seconds": 7.999999999999996,
+        "checks": {
+          "one_unchanged_global_bank": true,
+          "distinct_local_queries_and_caches": true,
+          "same_selected_entry_in_both_roles": true,
+          "inside_canvas": true
+        }
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-p75mtrhu",
+        "-o",
+        "global-sharing",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/kv-article-loops/scenes.py",
+        "GlobalSharing"
+      ],
+      "duration_seconds": 7.999674,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/kv-article-loops/rendered/global-sharing/preview.mp4",
+          "bytes": 352533,
+          "sha256": "528278bc0a95706d1358f898392d0cbd477a9e40398e873584f35f16ea2027b4"
+        },
+        {
+          "path": "visuals/animations/projects/kv-article-loops/rendered/global-sharing/preview-still.png",
+          "bytes": 127761,
+          "sha256": "55cf062ed4b29b9b1bd6c854c1d2f4e29f5f693609482f3977a59698f28b5862"
+        },
+        {
+          "path": "visuals/animations/projects/kv-article-loops/rendered/global-sharing/preview-still-half.png",
+          "bytes": 127761,
+          "sha256": "55cf062ed4b29b9b1bd6c854c1d2f4e29f5f693609482f3977a59698f28b5862"
+        },
+        {
+          "path": "visuals/animations/projects/kv-article-loops/rendered/global-sharing/preview-contact-sheet.png",
+          "bytes": 519104,
+          "sha256": "6b05a88718b2b4b60985dbd31b03c8862676343d3fa2b67dc9feb94e29a17068"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "path": "visuals/animations/projects/kv-article-loops/scenes.py",
+      "sha256": "783a132da49ecbd9fbb36663d231f263ab297d2db3bd59892cfc2afda401f416"
+    },
+    {
+      "path": "visuals/animations/projects/kv-article-loops/render.py",
+      "sha256": "a43649f645ab2d0476e1fb14ec4788d9932a8a01904fe66b8d3bf68ebe599823"
+    },
+    {
+      "path": "visuals/animations/manim_style.py",
+      "sha256": "e5ef5e47a93647733e201e64abb16f6214d625fc907ae2b872e9705202c8259e"
+    },
+    {
+      "path": "visuals/animations/uv.lock",
+      "sha256": "c481639a558a546e45fa22bb251c318b8e439eccde30b96fb66dcb40ba448ef8"
+    }
+  ],
+  "limitations": [
+    "Dependency schematics; no new model or timing experiment.",
+    "Suffix recomputation does not claim every numerical value changes.",
+    "Global bank remains separate from distinct layer-local Q and KV.",
+    "Selected-vector detail is magnification, not another cache allocation.",
+    "Sparse selection/indexer mechanics and other model operations omitted.",
+    "Fade resets the illustration; it does not depict cache eviction."
+  ]
+}

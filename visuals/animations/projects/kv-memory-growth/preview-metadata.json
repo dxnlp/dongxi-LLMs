@@ -1,0 +1,151 @@
+{
+  "preview": true,
+  "base_commit": "d1374d1cbef9a149d19d625ebe61b59399bf7db5",
+  "environment": {
+    "host": "mac.lan",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.12.11",
+    "manim": "0.21.0",
+    "pillow": "12.3.0",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "checks": {
+    "event_order": true,
+    "first_loop_unchanged": true,
+    "media_valid": true,
+    "all_existing_loops_unchanged": true
+  },
+  "clips": [
+    {
+      "id": "memory-growth",
+      "timeline": {
+        "events": [
+          {
+            "name": "baseline",
+            "seconds": 0.6,
+            "positions": 4096,
+            "heads": 8,
+            "mib": 192,
+            "bar_fraction": 0.5
+          },
+          {
+            "name": "double_positions",
+            "seconds": 3.2,
+            "positions": 8192,
+            "heads": 8,
+            "mib": 384,
+            "bar_fraction": 1.0
+          },
+          {
+            "name": "comparison_baseline",
+            "seconds": 5.533,
+            "positions": 4096,
+            "heads": 8,
+            "mib": 192,
+            "bar_fraction": 0.5
+          },
+          {
+            "name": "half_heads",
+            "seconds": 7.733,
+            "positions": 4096,
+            "heads": 4,
+            "mib": 96,
+            "bar_fraction": 0.25
+          }
+        ],
+        "duration_seconds": 9.666666666666657,
+        "checks": {
+          "arithmetic": true,
+          "bar_ratios": true,
+          "old_positions_unchanged": true,
+          "remaining_heads_unchanged": true,
+          "inside_canvas": true
+        }
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-d5ir9qhz",
+        "-o",
+        "memory-growth",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/kv-memory-growth/scenes.py",
+        "MemoryGrowth"
+      ],
+      "duration_seconds": 9.666341,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/kv-memory-growth/rendered/memory-growth/preview.mp4",
+          "bytes": 457576,
+          "sha256": "0b46271b744b107a7eae6703b3007d837fd25e8d994aa7bc7f4bc87b304cc763"
+        },
+        {
+          "path": "visuals/animations/projects/kv-memory-growth/rendered/memory-growth/preview-still.png",
+          "bytes": 110847,
+          "sha256": "a7b64037b0095f40f171d3d2fbfd7a0819358ea846e5b2846d37e72720050b57"
+        },
+        {
+          "path": "visuals/animations/projects/kv-memory-growth/rendered/memory-growth/preview-still-half.png",
+          "bytes": 110847,
+          "sha256": "a7b64037b0095f40f171d3d2fbfd7a0819358ea846e5b2846d37e72720050b57"
+        },
+        {
+          "path": "visuals/animations/projects/kv-memory-growth/rendered/memory-growth/preview-contact-sheet.png",
+          "bytes": 329099,
+          "sha256": "2f0e239a3ea05aef208fea7461a86c690d888ac75027f3c498cd00bbec7b2985"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "path": "visuals/animations/projects/kv-memory-growth/scenes.py",
+      "sha256": "48986b5e5ab74e94dfe8c3ffae388804063f153d7ff00001083e87bda3571290"
+    },
+    {
+      "path": "visuals/animations/projects/kv-memory-growth/render.py",
+      "sha256": "6594918cff917cf79528df66e5d9816b066af789709177f5831fbd173b5b8a33"
+    },
+    {
+      "path": "visuals/animations/manim_style.py",
+      "sha256": "e5ef5e47a93647733e201e64abb16f6214d625fc907ae2b872e9705202c8259e"
+    },
+    {
+      "path": "visuals/animations/uv.lock",
+      "sha256": "c481639a558a546e45fa22bb251c318b8e439eccde30b96fb66dcb40ba448ef8"
+    },
+    {
+      "path": "visuals/animations/projects/kv-article-loops/render.py",
+      "sha256": "49e496295364a87228c2dfc67dc8706f8a0a3db02c40409abf42cbf9df285b5e"
+    }
+  ],
+  "limitations": [
+    "Calculated separate-K/V tensor payload, not measured GPU allocations.",
+    "Fixed batch 1, 24 layers, head width 64, 2 bytes per element; MiB = 2^20 bytes.",
+    "Each column groups 1024 positions; one paired K/V glyph per KV head.",
+    "Layer, feature and batch axes are omitted from the schematic, included in the calculation.",
+    "Fewer KV heads compares model configurations; it is not runtime head deletion.",
+    "Fades between comparisons and at loop end are editorial resets, not cache eviction.",
+    "Model weights, temporary buffers, cache metadata and allocator overhead excluded."
+  ]
+}

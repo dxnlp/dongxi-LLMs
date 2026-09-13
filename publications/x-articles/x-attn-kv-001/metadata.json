@@ -1,0 +1,300 @@
+{
+  "base_commit": "d1374d1cbef9a149d19d625ebe61b59399bf7db5",
+  "figures": "Code-native diagrams and animations; AI-generated editorial cover; shared English visual labels",
+  "cover": {
+    "path": "assets/cover-kv-cache-v2.png",
+    "method": "built-in image generation",
+    "prompt": "cover-concepts/kv-cache-v2.md"
+  },
+  "font": "Arial Regular; natural whole-string layout",
+  "cover_ratio": "5:2",
+  "equations": {
+    "math-attention.png": {
+      "size": [
+        1600,
+        400
+      ],
+      "title": "One query. All available keys and values.",
+      "lines": [
+        "\\mathrm{output}_{t} = \\mathrm{softmax}\\!\\left(\\frac{q_{t}K_{\\leq t}^{\\top}}{\\sqrt{d}}\\right)V_{\\leq t}"
+      ]
+    },
+    "math-projections.png": {
+      "size": [
+        1600,
+        500
+      ],
+      "title": "Rows processed per K or V projection",
+      "labels": [
+        "Cached",
+        "Full prefix"
+      ],
+      "lines": [
+        "2\\times(2+1+1+1+1)=12",
+        "2\\times(2+3+4+5+6)=40"
+      ]
+    },
+    "math-memory.png": {
+      "size": [
+        1600,
+        360
+      ],
+      "title": "Separate K/V tensor payload",
+      "lines": [
+        "\\mathrm{bytes}=2\\times B\\times L\\times T\\times H_{\\mathrm{KV}}\\times d\\times b"
+      ]
+    }
+  },
+  "math_renderer": "Matplotlib MathText 3.11.1",
+  "inline_image_order": [
+    "prefill-decode.gif",
+    "math-attention.png",
+    "append-edit.gif",
+    "decode-step.gif",
+    "math-memory.png",
+    "memory-growth.gif",
+    "global-sharing.gif"
+  ],
+  "animations": {
+    "prefill-decode": {
+      "project": "visuals/animations/projects/kv-prefill-decode",
+      "gif": {
+        "width": 960,
+        "height": 540,
+        "frames": 134,
+        "duration_ms": 8940,
+        "loop": 0,
+        "unique_frames": 126,
+        "bytes": 1154160
+      },
+      "manifest_sha256": "3040cbc66ba44d30832923631bd6bae543a9f88361cf30307e02a675a5d3b422"
+    },
+    "append-edit": {
+      "project": "visuals/animations/projects/kv-article-loops",
+      "gif": {
+        "width": 960,
+        "height": 540,
+        "frames": 115,
+        "duration_ms": 7670,
+        "unique_frames": 104,
+        "loop": 0,
+        "bytes": 1074254
+      },
+      "manifest_sha256": "4e4cb81d806b2968ce2bac6ad42e98c9048269cc3b98f258c3736ab38c850138"
+    },
+    "global-sharing": {
+      "project": "visuals/animations/projects/kv-article-loops",
+      "gif": {
+        "width": 960,
+        "height": 540,
+        "frames": 118,
+        "duration_ms": 7870,
+        "unique_frames": 113,
+        "loop": 0,
+        "bytes": 1039763
+      },
+      "manifest_sha256": "4e4cb81d806b2968ce2bac6ad42e98c9048269cc3b98f258c3736ab38c850138"
+    },
+    "memory-growth": {
+      "project": "visuals/animations/projects/kv-memory-growth",
+      "gif": {
+        "width": 960,
+        "height": 540,
+        "frames": 145,
+        "duration_ms": 9670,
+        "unique_frames": 119,
+        "loop": 0,
+        "bytes": 1468490
+      },
+      "manifest_sha256": "57499db4a271b9c8ec61cbd54b840ca11d48288e2e2fbed21e4071ab0fd1e24e"
+    },
+    "decode-step": {
+      "project": "visuals/animations/projects/kv-decode-step",
+      "gif": {
+        "width": 960,
+        "height": 540,
+        "frames": 129,
+        "duration_ms": 8600,
+        "unique_frames": 112,
+        "loop": 0,
+        "bytes": 744617
+      },
+      "manifest_sha256": "7cbd1b0e4f6bb67b0994070c045377f27075229de7570d81c58b2ea1d0080e10"
+    }
+  },
+  "calculations": {
+    "cache_mib": [
+      192,
+      384,
+      96
+    ],
+    "projected_rows_per_k_or_v": {
+      "cached": 12,
+      "uncached": 40
+    }
+  },
+  "experimental_values": "Transcribed from the committed 2026-09-05 report, not rerun on this host",
+  "source_report_sha256": "085bc3d2c2523d4dafcd7d48c5b552a23dcc29884ff7a3fa3b9d20a531594d5d",
+  "files": [
+    {
+      "path": "assets/01-prefill-decode.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "306a46b9cac624c15f80c60ad5448e6f8f8b2a3c93b5ec69b461cf976194c4a7"
+    },
+    {
+      "path": "assets/02-causal-reuse.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "67b0a7890bfff54704731c1780ed55093c314daea42beae558f2c7c1682cab05"
+    },
+    {
+      "path": "assets/03-cache-evidence.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "35bf68b0d5893cf076e099acb4130a466517d6804e77fd1130e708e73f7f78ef"
+    },
+    {
+      "path": "assets/04-memory.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "eec5e166f3afdc6bc94bd9ab8c103e2884d17ac94211f6e8959dfe52139d79f6"
+    },
+    {
+      "path": "assets/05-three-changes.png",
+      "dimensions": [
+        1600,
+        900
+      ],
+      "sha256": "3dd7fc036e8da7227d786eebcca125c61a34f5ad882cfe3bcc1fdf222163d852"
+    },
+    {
+      "path": "assets/append-edit-still.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "sha256": "21c6477f2f71ea0543b4eb4f9e337cce7ed6ddc9baad433baaa33ff61eadd02d"
+    },
+    {
+      "path": "assets/append-edit.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "sha256": "c8cf2b2352fbd6b48507440aeeb701f0a5c7029a28a2ea709810b589e93c550b"
+    },
+    {
+      "path": "assets/cover-kv-cache-v2.png",
+      "dimensions": [
+        2000,
+        800
+      ],
+      "sha256": "e8680a8ae56d9efb3d4d7707b7199583a844b9dd77a182b6a1d7aa1435407317"
+    },
+    {
+      "path": "assets/cover.png",
+      "dimensions": [
+        2000,
+        800
+      ],
+      "sha256": "5ed58b719b4da5639a2a04274f44019d326af79e2c65b0f511575a859d8fc8bc"
+    },
+    {
+      "path": "assets/decode-step-still.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "sha256": "a656da6c45fd5cfdb64c48b8312f952d8db70cad2f1f70a37c9a759c7014c0ae"
+    },
+    {
+      "path": "assets/decode-step.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "sha256": "b0a7df0eba51f3f702a75883bc6aa758f6b19c5343747c7121e8c027def72c2a"
+    },
+    {
+      "path": "assets/global-sharing-still.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "sha256": "7eac59c4c66dc8bd326a1d610e65e2aecadb91cda1f908b473faec1fac875cf8"
+    },
+    {
+      "path": "assets/global-sharing.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "sha256": "8f1245eb9a4bb8cf43d0114c64ba9a37c6cd02ed94128288385be75d54803b8c"
+    },
+    {
+      "path": "assets/math-attention.png",
+      "dimensions": [
+        1600,
+        400
+      ],
+      "sha256": "b10653b172053c132df02cf308431fab2127c71c24218f608f1c732f73cd4e3d"
+    },
+    {
+      "path": "assets/math-memory.png",
+      "dimensions": [
+        1600,
+        360
+      ],
+      "sha256": "bbefe6b27d7f170d2fd6eb1a4a6cb6402c7d38eb8e15ed8c6d2f9fa07e7a0bc8"
+    },
+    {
+      "path": "assets/math-projections.png",
+      "dimensions": [
+        1600,
+        500
+      ],
+      "sha256": "3eb57fe5ee42c8e22acf19ebd6303fa8ad7ef7adafb7eb61d6dce767827adcd3"
+    },
+    {
+      "path": "assets/memory-growth-still.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "sha256": "a53d6535abfc5e5ce029a2984d731b8442ef380e887d95f36117e323f0823cd8"
+    },
+    {
+      "path": "assets/memory-growth.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "sha256": "6df0ec26771c37c93b83738541c7a072075d1613be1cae57c5bf4ae706f61dd8"
+    },
+    {
+      "path": "assets/prefill-decode-still.png",
+      "dimensions": [
+        960,
+        540
+      ],
+      "sha256": "d4ae176c2f04138e02ae72799e0b9da099a24e93553a312e88af344d7c461094"
+    },
+    {
+      "path": "assets/prefill-decode.gif",
+      "dimensions": [
+        960,
+        540
+      ],
+      "sha256": "bec0834bb19b498d3a3dd18ae0778d606698c5cb36e2004eb6a242d9fc59adcd"
+    }
+  ]
+}
