@@ -1,81 +1,66 @@
 # Current learning handoff
 
-- Task ID: `LEARN-SPARK-DAY08-001` (supersedes `LEARN-MAC-001`).
-- Prepared: 2026-09-09.
-- State: learner reported Mac sync but dependency friction, rejected the stale
-  Day 6 continuation, and explicitly returned to **Day 8 on Spark**.
-- Source execution verified: `spark-aa66`, Linux/aarch64.
-- Current destination: Spark; actual execution on `spark-aa66` verified again.
-- Repository: `dxnlp/dongxi-LLMs`; intended branch: `main`.
-- Base commit before this correction: `f9b8d97237763814c8fc78e5c19abac3c829f1a2`.
-- Current continuation: **Continue on Spark**; remain in Day 8.
+- Task ID: `LEARN-SPARK-DAY09-001`.
+- Updated:2026-09-14. Current machine: Spark, Linux/aarch64.
+- Repository: `dxnlp/dongxi-LLMs`, branch `main`.
+- Current continuation: **Continue on Spark** — completed Day9 run interpretation.
 - Contract: [learning workflow](../LEARNING_WORKFLOW.md).
+- User authorized committing and pushing the course, pipeline, dashboard and
+  report work on2026-09-14. Check Git status and remote state on arrival; do not
+  infer synchronization from this handoff or reset/stash local work blindly.
 
-## What the next session must know
+## Current evidence
 
-The learner wants live, richly visual interaction beyond text/code notebooks:
-clickable architecture components, linked equations and calculations, adjustable
-controls, paired runs, and deliberate failures. Mac is the default learning and
-media machine in the general plan, but the learner currently chooses Spark.
-Rich visuals belong directly in the conversation, not only notebooks or a
-separate website. The learner found the isolated SGD slider boring, then asked
-for complete Day 8 notebooks and a coherent chapter. Chapter 6's Day 8 foundation
-and three worked visual notebooks are now prepared. The full live
-SGD/momentum/AdamW playground remains unimplemented.
+Run `day09-learning-01` completed14,000 updates,48.84M valid targets and3h22m,
+with actual child exit0 and final fixed-development NLL1.674315. The
+[completed report](../../experiments/reports/2026-09-14-tinystories-learning-result.md)
+and its adjacent portable JSON supersede all earlier waiting/preparation states.
+Raw logs and final checkpoint remain under `outputs/day09-learning-01/`.
+The checkpoint is `update-014000.pt`; final observation is `final.json`.
 
-Days 1–3 are recorded complete. Chapter 4 is written but hands-on practice was
-deferred. The live baseline discussion reached Day 5 notebook 07; mastery remains
-unassessed. Chapter 5 covers Days 5–7, with 12 verified notebooks and 30 worked
-answers. Day 6 guided study and Day 7 independent defense remain open. Day 8
-has complete prepared companion material, not completed learner instruction.
+The local dashboard/playground was stopped on user request on2026-09-14;
+port8765 was verified closed and the inference process exited. Do not restart
+it or training merely to resume reading. No checkpoint or result was deleted.
 
-The latest math-formatting repair is committed in the base above. Five chapters
-and affected companions were fixed; 560 expressions rendered in local MathJax,
-and 59 tests passed. Keep GitHub-safe math rules in force. These results were on
-Spark; they do not establish Mac environment readiness.
+Chapter6 now contains the completed case in sections6.14–6.20, eighteen worked
+answers, and a [standard-library evidence lab](../../book/labs/06-reading-a-pretraining-run.md).
+The existing three Day8 mechanism notebooks remain companions. A dedicated
+Day9 analysis notebook is planned, not built or executed.
 
-Day 8 addition: three fresh-kernel notebook passes (29 code cells, 10 figures),
-71 current repository tests, and 605 expressions passing source/local MathJax
-checks. See `experiments/reports/2026-09-09-day8-material-verification.md` and
-its JSON manifest. No notebook server or GPU campaign was started.
+The main evidence distinction is between completed computation, improved
+fixed-development prediction, and reliable coherence. Inspected samples remain
+repetitive/inconsistent; there is no systematic story-quality evaluation or
+unique established cause for those errors. The trained controlled comparison
+required by Day9 is still open. Brief batch-size profiles and sampling probes
+do not complete that learning requirement.
 
-## Exact next action on Spark
+## Exact next action
 
-1. Continue Day 8 with documents → token windows → correctly weighted updates,
-   using `notebooks/day-08/01_data_batches_and_token_budget.ipynb` and Chapter 6.
-   Offer discussion around an actual recipe dilemma; do not restart the isolated
-   quadratic slider. Notebook execution is optional, not the only teaching mode.
-2. Preserve older Day 4–7 gaps as a review backlog. Do not restart Day 6 merely
-   because it was the earliest incomplete row in the tracker.
-3. Honor the learner's preference for rich live visuals, linked mathematics,
-   controlled interventions, and deep explanations. Notebooks remain companions.
-4. No heavy GPU run, Mac installation, film production, or public publication is
-   authorized by this lesson. Update progress from actual learner responses.
+1. Read Chapter6's completed-run case and its worked solutions with the learner.
+2. Define the story-evaluation contract: fixed new prompts, entity/event
+   consistency, complete outputs, EOS versus caps, and controlled decoding.
+3. Propose one bounded training comparison only after defining the intended
+   claim. Do not automatically extend this checkpoint, restart training,
+   download data, install software, or start a server.
+4. Treat previous chapters as covered for planning at the learner's request.
+   Preserve earlier practice gaps without rewinding to Day6.
+5. Check repository status before a new session. When clean, sync with
+   `git pull --ff-only`; when dirty, preserve work and reconcile explicitly.
 
-## Task boundaries and acceptance
+## Machine and production boundaries
 
-- Inputs: `AGENTS.md`, `PROGRESS.md`, `LEARNING_MEMORY.md`, the workflow above,
-  `docs/NOTEBOOK_CURRICULUM.md`, Day 6/7 artifacts, and
-  `learning_artifacts/day-08-pretraining-data-and-recipe/README.md`.
-- Current allowed outputs: the requested Day 8 chapter, worked solutions,
-  visual notebooks, CPU verification and scoped workflow/memory/progress records.
-  This is not approval for GPU training,
-  produced animation films, or public publication.
-- Arrival success: expected course commit present, correct execution host,
-  platform-appropriate runtime checked, short progress recap, and recorded next
-  action resumed without inventing completed work.
-- Return evidence: changed paths/commit, what actually ran and on which machine,
-  tests and limitations, learner's new explanations/open questions, and next step.
-- Running jobs: departure checks on 2026-09-09 found no matching course Jupyter,
-  Python, or torchrun processes for user `dongxi`; the NVIDIA compute-process
-  query returned no rows (exit 0). This is a point-in-time observation, not a
-  guarantee about future jobs or differently named processes. Nothing was
-  stopped, restarted, or migrated by the handoff.
-- Interactive source: task-owned `day-eight-learning-rate.html` outside the
-  repository. Initial example is w=2, gradient=4, learning rate=0.20 for L=w².
-  Learner-selected controls are not yet captured in this packet; do not claim
-  browser state was synchronized to Mac. See the Day 8 artifact for the mechanism.
+Mac Studio is the default interactive/media lane; Spark owns heavy GPU work.
+The learner currently chooses Spark. The new lab needs no PyTorch and can be
+read/run on either machine after source sync. Do not equate the local desktop UI
+with the execution host or claim a Git sync moves running services.
 
-Historical Mac departure was published in `f9b8d97`. The learner's return
-supersedes that destination and its incorrect Day 6 resume step. No
-application-level conversation transfer is performed by this correction.
+The learner prefers deep explanations, useful visuals and light minimal
+interfaces, not calculation quizzes or decorative dashboard slogans.
+Explicit LLM mathematics still triggers animation candidate capture; production
+requires approval and remains on Mac Studio. Chapter synthesis extended existing
+budget/next-token/temperature candidates, without authorizing film production.
+
+The user requested committing and pushing this synthesis and its supporting
+pipeline/dashboard work. Departure on an explicit machine-switch phrase follows
+the usual scoped commit/push and
+handoff contract. Learner mastery and a completed Day9 defense remain unassessed.

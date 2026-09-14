@@ -4,33 +4,46 @@ This file is the operational source of truth for resuming work. Update it at the
 
 ## Current position
 
-- Active release: `v0.1`
-- Active day: Day 8 pretraining data and recipe; complete requested materials prepared ahead of guided study
-- Status: in progress
-- Current focus: Chapter 6's complete Day 8 foundation, three visual worked
-  notebooks, twelve conceptual solutions, and a bounded pretraining specification.
-  Chapter 5 still covers Days 5–7; its learner review backlog is unchanged.
-- Next operational action: remain on verified Spark execution at the learner's
-  request after Mac dependency friction. No Mac installation is required for
-  browser-side interactive teaching. See `docs/handoffs/CURRENT.md`.
-- Next learning action: **Day 8 on Spark**, starting with how actual documents
-  become supervised token windows and a correctly weighted update (Notebook 1).
-  Discuss a concrete data/recipe dilemma using the prepared figures and code;
-  notebooks remain optional companions to live discussion. The learner found
-  the isolated quadratic SGD slider boring; do not default back to it.
-  Earlier Day 6 resume instructions were an agent handoff mistake, not learner
-  intent. Preserve unfinished review without forcing a return to Day 6.
-  Material was requested ahead of study: do not infer exercises or mastery.
-  Day 5 mastery and Chapter 4 deferred practice remain open. Chapter 6 Day 8
-  verification: 3 notebook passes, 29 code cells, 10 figures, 71 repository tests;
-  report: `experiments/reports/2026-09-09-day8-material-verification.md`.
-  Historical Chapter 5 visual suite: 12 notebook passes, 168 code cells, 52 figures;
-  report:
-  `experiments/reports/2026-09-07-day7-architecture-defense.md`. Day 6 prose
-  checks: `experiments/reports/2026-09-07-day6-chapter-verification.md`.
-  Day 7 now has a core defense notebook plus optional recurrence. The learner's
-  defense and any specified trained comparison remain pending.
-- Last updated: 2026-09-09
+- Active release: `v0.1`; active day: Day9, experiment interpretation on Spark.
+- Status: learning run complete; Day9 remains in progress. The roadmap's
+  controlled trained scale/data/recipe comparison has not been performed.
+- Run01 completed all14,000 updates in12,102.9s, actual child exit0,
+  48,839,975 valid target presentations, final fixed-development NLL1.674315.
+  Canonical result: `experiments/reports/2026-09-14-tinystories-learning-result.md`.
+  Its adjacent JSON preserves portable measurements and structural-grid samples.
+- Model:66,638,848 randomly initialized parameters, GPT-2 tokenizer only,
+  12blocks/width512/eight MHA heads/context1024, RMSNorm/RoPE/SwiGLU.
+  Full preparation produced1,792,647 deduplicated training stories.
+- Interpretation: fixed-development prediction improved; inspected continuations
+  still contain repetition, malformed language and role inconsistencies.
+  No systematic coherence score, matched generalization-gap audit, or unique
+  cause for repetition is claimed.
+- Material: Chapter6 now integrates Days8–9 in sections6.1–6.20, with18 worked
+  solutions, the three existing Day8 visual notebooks, and a standard-library
+  evidence-reading lab. Dedicated Day9 analysis notebook remains planned.
+- Operational state: user requested dashboard shutdown on2026-09-14.
+  `dongxigpt-playground-20260914.service` was stopped and port8765 verified
+  closed. The loaded inference process exited; model files/logs remain intact.
+  No new training, inference restart or installation requested. The subsequent
+  user request authorizes committing and pushing the accumulated course work.
+- Next learning action: read the completed-run case study and define a frozen
+  story-evaluation contract; then propose one bounded controlled trained
+  comparison. Do not launch it automatically or treat sampling probes as that
+  comparison. Do not resume historical data-preparation/launch steps.
+- Machine: remain on Spark at learner request; the evidence-reading lab also
+  works with standard-library Python on Mac. Use `docs/handoffs/CURRENT.md`.
+- Prior chapters are treated as covered for planning at the learner's request,
+  not independently assessed mastery. Earlier Day4–7 practice remains a
+  review backlog, never an automatic rewind to Day6.
+- Historical verification: Day8's three notebooks/29code cells/10figures and
+  71tests are in its2026-09-09 report; Chapter5's12notebooks/168cells/52figures
+  are in its2026-09-07 report. These are material checks, not learner assessment.
+- Last updated:2026-09-14.
+
+Synthesis verification:40 source hashes and14,000 finite metric rows checked;
+all3 evidence-lab code blocks executed;20 chapter sections/18 solutions and local
+links checked;605 book math expressions passed source checks and6 checker tests.
+Full record: `experiments/reports/2026-09-14-chapter6-synthesis-verification.md`.
 
 ## Four-week tracker
 
@@ -54,7 +67,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 6 | Modern architecture design | in progress | Chapter 5 sections 5.11–5.22, worked answers 13–24, three ready notebooks; guided study pending |
 | 7 | Architecture synthesis | in progress | Chapter 5 sections 5.23–5.27 and answers 25–30; core defense notebook and optional recurrence ready; guided defense and trained comparison pending |
 | 8 | Pretraining data and recipe | in progress | Complete Day 8 Chapter 6 foundation, three visual worked notebooks, twelve solutions and bounded specification prepared; learner study pending on Spark |
-| 9 | Pretraining run and diagnosis | pending | — |
+| 9 | Pretraining run and diagnosis | in progress | Baseline complete:14,000 updates,48.84M valid targets; Chapter6 case, eighteen solutions and evidence lab ready. Frozen coherence evaluation and controlled trained comparison remain open |
 | 10 | Evaluation before training | pending | — |
 | 11 | Instruction-data engineering | pending | — |
 | 12 | SFT mechanics | pending | — |

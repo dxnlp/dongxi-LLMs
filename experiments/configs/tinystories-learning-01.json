@@ -1,0 +1,23 @@
+{
+  "data": "data/cache/day09-full-v2",
+  "data_service": "dongxigpt-data-20260913-v2.service",
+  "data_wait_seconds": 3600,
+  "output": "outputs/day09-learning-01",
+  "status_file": "outputs/day09-learning-launch/status.json",
+  "recovery_report": "outputs/day09-launch-recovery.json",
+  "training_args": [
+    "--total", "14000", "--warmup", "200",
+    "--microbatch", "16", "--accumulation", "1",
+    "--checkpoint-every", "400", "--valid-windows", "512",
+    "--sample-tokens", "256", "--max-seconds", "14400",
+    "--peak-lr", "0.0003", "--floor-lr", "0.00003"
+  ],
+  "sources": {
+    "src/dongxi_llms/stories_training.py": "d14070e2c3678d243a0a65a1ecf38196c4ad0fa25729d63695688619e1c1e8e9",
+    "src/dongxi_llms/stories_data.py": "12e43f24a092353b96e35cf3cb16414b22f9806b63423d0d57444e98a14730c8",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "scripts/train_stories.py": "567b2fdf5b854034143da58052a964308114f152891bd5af13653573e1f677f1",
+    "scripts/launch_stories_learning.py": "e1097e247c3965d624e3fe4882304f177ed5a142f86bf4562f9baa43c6db3e0c"
+  }
+}

@@ -31,7 +31,10 @@ switch or launch expensive work without their instruction. A memory/planning
 request alone does not execute departure.
 The learner's latest requested lesson takes precedence over older "next action"
 entries. Unfinished earlier practice is a review backlog, not an automatic
-rewind. Current override (2026-09-09): continue **Day 8 on Spark**, using rich
+rewind. Current override (2026-09-13): discuss **Day 9 on Spark**, with the first
+DongxiGPT objective of coherent short English stories. Treat current chapters as
+covered for planning at the learner's request, not as independently assessed
+mastery or completed training evidence. Continue using rich
 interactive visuals directly in the conversation. Notebooks are companions,
 not the required interface; do not force Mac setup or restart Day 6.
 

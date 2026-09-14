@@ -136,12 +136,95 @@ discriminating evidence is the continuation trajectory and data identity, not
 whether the file loaded. Exact CPU replay in this fixture does not establish
 cross-device or distributed reproducibility.
 
-## Integration: a convincing Day 8 defense
+## 13. Correct masking and inefficient computation
+
+The loss mask removes ignored positions from the objective, not necessarily
+from embedding, attention, MLP and output-projection computations. This
+implementation processes fixed1024-position windows even when stories are
+short. Its48.84M valid targets occupy about21.29% of229.38M processed positions.
+That is a measured utilization fraction, not a guaranteed speedup factor.
+
+A comparison must preserve intended supervision, per-document causal access,
+tokenization and reduction, and disclose changes to ordering or available
+context. An EOS separator alone does not forbid cross-document attention.
+Fixing updates while changing targets per update also changes exposure.
+
+## 14. Better likelihood, inconsistent characters
+
+Teacher-forced evaluation conditions on recorded prefixes. Free generation
+conditions on the model's own preceding choices. A mistaken speaker attribution
+can become part of the subsequent history. Separately, average loss improvement
+can be driven by frequent syntax while character tracking remains unreliable.
+Neither explanation requires a faulty causal mask.
+
+The objective can reward long-range consistency when it helps predict observed
+tokens; it does not prohibit learning it. Our evidence establishes improved
+fixed-development likelihood and remaining behavioral failures, not the unique
+mechanism responsible for each failure.
+
+## 15. Repetition and the overfitting hypothesis
+
+Retain the exact prompt, checkpoint, decoding mode, temperature, seed and length
+limit. Reproduce the symptom, then distinguish decoding from training effects.
+Evaluate fixed training and held-out samples under matched frozen-checkpoint
+settings, preferably across several checkpoints. Audit relevant content when
+making contamination or memorization claims.
+
+Our development loss continued decreasing. That does not support a claim of
+development-loss deterioration here, or prove absence of memorization. The
+last500 online losses came from changing weights and are averaged by batch;
+final development NLL uses fixed weights and valid-target weighting. Their
+difference is not a clean generalization gap. The defensible current label is
+repetitive/inconsistent generation with unresolved cause.
+
+## 16. Seeds, greedy decoding and length limits
+
+Greedy decoding selects a maximum-scoring token; there is no random draw for
+the seed to change. With positive-temperature sampling and identical inputs
+and runtime, a fixed seed repeats the tested trajectory. Raising the length
+limit usually permits more steps without changing its initial segment. These
+are expected behaviors, not evidence that controls are necessarily broken.
+
+Change one relevant variable at a time and verify submitted settings. Backend
+probes alone do not validate browser event handling. Temperature modifies
+selection probabilities, not learned parameters.
+
+## 17. EOS and narrative closure
+
+EOS establishes that the model selected termination before the cap in that
+generation. It does not establish consistent characters, resolved causality,
+factuality or natural plot closure. Our archived final greedy first-prompt
+sample emits EOS but contains unexplained speaker-role changes. Report
+termination and narrative quality separately.
+
+## 18. An honest next-experiment proposal
+
+A systems proposal is length-aware batching: hypothesize higher useful-target
+throughput while preserving the intended prediction problem. Declare baseline,
+exposure, model, dtype, safety cap and ordering policy. Measure wall time,
+throughput, memory and evaluation invariants. Failed equivalence checks block
+interpreting a speed change as a pure implementation benefit.
+
+A behavior proposal is more training under a frozen evaluation contract.
+Specify whether this means restarting with a longer learning-rate schedule
+or extending the existing checkpoint; those are different recipes. Keep prompts
+and decoding fixed, assess entity/event continuity, and allow little or no gain.
+Do not pick the nicest sampling seed.
+
+Neither trained comparison has been performed. Short batch-size profiles and
+sampling probes answer narrower questions. A proposal is not outcome evidence
+or approval to launch it.
+
+## Integration: a convincing Days 8–9 defense
 
 Explain the path from a source document to a recoverable update using the
 [bounded specification](../../experiments/specs/2026-09-09-day8-bounded-pretraining.md).
 Identify which claims are measured by the CPU fixtures, which are analytical
-estimates, and which require new GPU evidence. If a run has decreasing loss but
+estimates, and which are now supported by the
+[completed Spark run](../../experiments/reports/2026-09-14-tinystories-learning-result.md).
+Use the [evidence-reading lab](../labs/06-reading-a-pretraining-run.md) to
+reproduce the accounting and inspect complete archived samples.
+If a run has decreasing loss but
 leaked validation, an incorrect loss denominator or violated memory reserve,
 do not call the whole experiment successful. Completion is a conjunction of
 its stated criteria, not one attractive curve.
