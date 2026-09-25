@@ -16,9 +16,9 @@ inside a larger process.
 
 This chapter develops that process as an explicit contract: **what data enters,
 what objective is computed, how parameters change, what is measured, and what
-must survive interruption**. It covers the complete Day 8 foundation of the
-Days 8–9 chapter. Day 9's larger controlled run and its empirical diagnosis are
-not invented here; they will supply the next layer of evidence.
+must survive interruption**. It combines the Day 8 mechanisms with the completed Day 9 TinyStories learning
+run. The case study tests the difference between a finished process, improved
+next-token prediction, and reliable story generation.
 
 ## 6.1 The questions a recipe must answer
 
@@ -354,7 +354,7 @@ Measure throughput with a named denominator: processed positions/s and valid
 targets/s answer different questions. State whether timing includes compilation,
 warmup, validation, checkpointing and data loading. Accelerator timing also
 requires appropriate synchronization. The CPU smoke verification is not a
-GPU throughput benchmark, so this chapter reports none by inference.
+GPU throughput benchmark; section 6.15 separately reports actual Spark timings.
 
 ## 6.11 Validation measures a fixed prediction problem
 
@@ -419,17 +419,309 @@ of silently extending this lab's exact-equality claim.
 ## 6.13 From understanding to a bounded experiment
 
 The [Day 8 specification](../../experiments/specs/2026-09-09-day8-bounded-pretraining.md)
-fixes an executable CPU control and separates it from a later Spark candidate.
+fixed an executable CPU control and separated it from a later Spark candidate.
 It names the data, model, token budget, optimizer, schedule, clipping, precision,
 validation, recovery, time boundary and failure criteria. Its tiny run establishes
-mechanical evidence; the GPU candidate still needs a real corpus decision,
-profiling, safety measurements and explicit execution approval.
+mechanical evidence. At that stage the GPU candidate still needed a real corpus
+decision, profiling, safety measurements and explicit execution approval.
+Sections 6.14–6.20 describe the subsequent authorized run and its results.
 
 Before Day 9, be able to explain why each field is needed. A successful process
 exit is necessary evidence of completion, not sufficient evidence that every
 scientific and safety criterion passed. Conversely, a deliberate negative
 control that exposes an incorrect recipe is a successful teaching experiment,
 not a result to hide.
+
+## 6.14 Case study: a decoder learns short English stories
+
+The earlier sections described a controlled process. We can now examine one
+that actually ran. The question is deliberately narrower than “can we build a
+general assistant?”:
+
+> Can a small decoder, initialized from random weights, learn useful English
+> story continuations within a bounded run—and what evidence would justify
+> calling those continuations coherent?
+
+The [precommitted specification](../../experiments/specs/2026-09-13-tinystories-learning-01.md)
+defines the hypothesis and gates. The
+[completed-run report](../../experiments/reports/2026-09-14-tinystories-learning-result.md)
+and its compact JSON evidence preserve the observations used below. These are
+results from one learning run, not a benchmark ranking or an architecture sweep.
+
+### Reuse the alphabet, not the knowledge
+
+We reused GPT-2's byte-BPE tokenizer: 50,257 token IDs and its existing
+text-to-ID mapping. We did **not** load GPT-2's neural weights. Our own decoder
+started with random parameters. Its embedding lookup, contextual representations
+and output scores had to be learned from the story corpus.
+
+This connects Chapters 2, 3 and 5. A familiar tokenizer supplies categorical
+addresses; it does not supply the vector stored at each address, the ability to
+track a character, or a learned next-token distribution.
+
+The decoder has 12 blocks, width 512, eight query/key/value heads, a 1536-wide
+SwiGLU layer, pre-RMSNorm, RoPE, and a maximum context of 1024. Tied input/output
+embeddings give 66,638,848 unique parameters. Training used causal SDPA,
+activation checkpointing, BF16 autocast with FP32 parameters and AdamW state.
+
+The effective batch was 16 separate-document windows per update, with no
+gradient accumulation. The frozen recipe used 14,000 updates, 200 warmup
+updates, peak learning rate 0.0003, cosine decay to 0.00003, matrix weight decay
+0.1, and global gradient clipping at 1. The learning run began from fresh
+weights, not the weights used during throughput profiling.
+
+### Data preparation is part of the result
+
+The prepared training split contained 1,792,647 stories and 390,708,926 valid
+targets. The held-out split contained 21,990 stories. Preparation removed
+320,241 normalized-exact duplicate training documents and excluded 6,601
+training documents matching held-out content under that policy. This establishes
+a specific exact-match safeguard, not freedom from paraphrases or near-duplicate
+contamination.
+
+An earlier preparation attempt rejected the validation file's undelimited final
+story. The successful preparation verified the complete raw files against their
+pinned hashes before accepting end-of-file as the final boundary. This is an
+example of repairing an ingestion assumption without quietly accepting an
+unverified partial download. The failed attempt remains in the launch record.
+
+At every observation, evaluation used the same seeded selection of 512 held-out
+windows: 107,264 valid targets. It did **not** evaluate the entire prepared
+validation split. Repeated inspection makes this a development measurement, not
+an untouched final test.
+
+## 6.15 What did the budget actually buy?
+
+The run completed all 14,000 updates in 12,102.9 seconds, approximately 3 hours
+22 minutes, within its four-hour cap. The actual child process exited with code
+zero. Those facts establish completion; they do not establish every scientific
+claim about the model.
+
+| Quantity | Measured value | What it means |
+|---|---:|---|
+| Optimizer updates | 14,000 | Parameter-update count |
+| Processed positions | 229,376,000 | Batch × padded length summed over updates |
+| Valid target presentations | 48,839,975 | Labels actually included in training loss |
+| Prepared training targets | 390,708,926 | Available corpus targets, not consumed exposure |
+| Valid-position fraction | 21.29% | Valid targets divided by processed positions |
+| End-to-end target rate | 4,035/s | Valid targets divided by recorded run duration |
+| Update-timer target rate | 4,249/s | Valid targets divided by summed update durations |
+
+The last two rates differ because their timing boundaries differ. They are
+ratios of totals, not an average of per-batch rates. The run duration includes
+observation and save work within the trainer, but excludes earlier full-corpus
+preparation. This is one measured configuration, not a general Spark speed claim.
+
+The loss excluded padding correctly, yet the implementation still processed
+padded positions. With separate stories padded to 1024, many positions were
+not supervised. The median prepared training target length was 189, much shorter
+than the context ceiling. Correct loss masking does not itself eliminate the
+computation associated with padding.
+
+This gives a meaningful next experiment: compare the baseline with
+length-aware batching or document-isolated packing under a declared budget.
+It does not establish the speedup in advance. Packing must preserve causal
+document boundaries, label alignment and the loss denominator; changing context
+or data order can change the learning problem as well as efficiency.
+
+The consumed-to-prepared target ratio was about 12.5%. That is a useful exposure
+comparison, not a measurement of unique linguistic knowledge acquired or an
+automatic proof against overfitting. Do not describe this run as “training on
+390 million tokens” merely because that many were prepared.
+
+The minimum *sampled* host available memory was 104.70 GiB against a 25 GiB
+reserve, with sampling every 0.2 seconds and no recorded guard abort. CUDA peak
+allocated memory was 11,293,046,784 bytes. Host availability and CUDA allocations
+are different measurements and should not be added together. Sampled safety
+evidence also cannot rule out every transient between samples.
+
+## 6.16 Reading a learning curve beside actual stories
+
+The fixed-development loss decreased at every recorded observation. Selected
+points make the trajectory readable:
+
+| Completed updates | Mean development NLL |
+|---|---:|
+| 0 | 10.9049 |
+| 400 | 3.3941 |
+| 4,000 | 2.0861 |
+| 8,000 | 1.8282 |
+| 14,000 | 1.6743 |
+
+These rows are a retrospective structural grid: initialization, the first
+observation, two intermediate updates and completion. They were not selected
+for attractive generations. The portable evidence retains the full loss series
+and both decoding modes for the first configured prompt at these five points.
+The full local run retains all three prompts at every observation.
+
+Use the same opening throughout:
+
+> Once upon a time, a little rabbit lived near a forest.
+
+The following are literal **prefix excerpts**, not complete outputs. Each
+ellipsis below is editorial truncation, not a recorded EOS.
+
+| Update | Greedy continuation prefix |
+|---|---|
+| 0 | “anxious anxious anxious anxious…” |
+| 400 | “He was very happy and he had a big house. He would go on a big, a little girl named Lily.” |
+| 4,000 | “The rabbit was very happy to have a friend. They would play together every day.” |
+| 8,000 | “The rabbit was very happy because he had a big smile on his face.” |
+| 14,000 | “The rabbit was very happy and loved to hop around.” |
+
+The transition from repeated fragments to familiar English constructions is
+visible. But a pleasant first sentence is a weak narrative test. Read the
+whole final greedy continuation. It introduces a carrot too high to reach,
+an owl offering help, and a bear threatening to take the carrot. Later it says:
+
+> The rabbit said, "I will help you, little rabbit. I will protect you from the big, mean bear."
+
+The bear then promises protection from a bear, and the story ends in friendship.
+Those role changes are not explained by a consistent event sequence. The
+continuation reaches EOS, so a natural termination signal is present; that does
+not repair the earlier inconsistency.
+
+The final temperature-0.8 sample begins “The rabbit was very minding his long
+body” and later says the rabbit “decided to weather.” Both modes must remain in
+the evidence. The greedy sample's stronger opening does not authorize hiding
+the malformed sampled language.
+
+A careful conclusion is therefore two-part: fixed-development prediction
+improved substantially, and the inspected completions show more recognizable
+English story structure than initialization. Reliable narrative coherence
+has not been established. There is no scored, blinded story-quality evaluation
+or repeated training-seed comparison in this run.
+
+## 6.17 Why lower loss does not guarantee a coherent plot
+
+Recall what the next-token objective conditions on. In teacher-forced
+evaluation, the prefix is the recorded text. During generation, the prefix
+contains the model's previous choices. A model that handles recorded prefixes
+reasonably well can still struggle with the unusual or contradictory histories
+it creates itself.
+
+For example, a recorded story might make the owl offer help to the rabbit.
+Evaluation asks the model to predict words after that recorded attribution.
+If generation instead writes “The rabbit said,” later predictions must continue
+that new attribution. Evaluation does not silently replace all prefixes with
+these model-generated alternatives.
+
+This is not future-token leakage. Causal masking still prevents a position from
+reading the future. It is a difference in the histories on which predictions
+are conditioned. Correct label shifting, correct masking and weak free-running
+generation can coexist.
+
+Token-averaged loss also combines different demands into one scalar. Improvements
+on frequent syntax and familiar phrases can lower the average while errors in
+speaker identity or causal continuity remain. One aggregate number cannot tell
+us which capability improved without additional slices or behavioral checks.
+
+Avoid the opposite overstatement: next-token training is not incapable of
+learning long-range dependencies. The context and gradient paths allow them.
+The question is whether this data, model and finite training budget produced
+reliable behavior, not whether a locally computed loss forbids coherence.
+
+## 6.18 Diagnosis: does repetition mean overfitting?
+
+During interactive use, the learner observed repeated “big and scary”
+descriptions and suspected overfitting. This is a valuable diagnostic question
+because several mechanisms can produce the same surface symptom.
+
+| Possible explanation | Distinguishing evidence | Status here |
+|---|---|---|
+| Unchanged effective decoding settings | Reproduce exact prompt/settings and inspect request handling | Backend probes changed outputs; original browser inputs were not retained |
+| A repetitive generation trajectory | Compare greedy and multiple fixed-seed samples | Repetition observed; decoding influenced the continuations |
+| Overfitting the training examples | Matched train/development evaluation across checkpoints, with contamination checks | Development loss continued improving; exact matched gap not measured |
+| Memorized passages | Exact and near-duplicate searches against training text | One narrow literal search is insufficient |
+| Weak narrative consistency after limited learning | Frozen probes for entity tracking and event continuity | Qualitative symptoms present; causal attribution remains unresolved |
+
+Four backend requests with the same assumed opening and different
+temperature/seed combinations produced four different continuations. This
+establishes that those controls affected the backend in those probes. It does
+not reproduce the learner's unknown exact browser inputs or prove the browser
+submitted every intended change.
+
+The mean online training loss over the last 500 updates was 1.661964; the final
+development mean was 1.674315. It is tempting to subtract them and declare a
+precise generalization gap. But those losses used different examples, different
+measurement times and different averaging conventions. A clean comparison
+would freeze one checkpoint and evaluate declared training and development
+samples with the same reduction and inference settings.
+
+The falling development curve provides no evidence of the classic deterioration
+pattern in this observed series. It does not prove that memorization is absent
+or that every aspect of generalization improved. Likewise, limited corpus
+coverage does not make overfitting logically impossible.
+
+The defensible diagnosis is **repetitive and sometimes inconsistent generation,
+with cause not uniquely identified**. Do not treat dropout, repetition
+penalties or more training as established repairs before testing the hypothesis
+each intervention is supposed to address. The
+[diagnostic record](../../learning_artifacts/day-09-pretraining-run-and-diagnosis/repetition-versus-overfitting.md)
+separates the learner's observation, actual probes and unresolved questions.
+
+## 6.19 Sampling controls are experimental controls
+
+Chapter 3 explained the conversion from logits to probabilities. Here the
+distinction becomes operational: changing the rule used to choose a token is
+not the same as changing the learned model.
+
+At temperature zero, this implementation selects greedily; the sampling seed
+does not affect that choice. At positive temperature, the seed controls the
+random draws. A fixed prompt, checkpoint, implementation and seed can reproduce
+the same trajectory in the tested runtime. Changing only the maximum output
+length normally extends or truncates that trajectory rather than creating a
+different beginning.
+
+Higher temperature spreads probability toward less likely alternatives without
+changing the weights. It can add variety, but it can also expose poorly learned
+word combinations. In our limited probes, temperature 1.2 produced more malformed
+language. That observation does not establish a universally optimal temperature.
+
+For checkpoint comparisons, keep decoding fixed. Otherwise a model change and a
+sampling change are confounded. For sampling comparisons, keep the checkpoint
+fixed and retain multiple seeds; one fortunate output is not a reliable estimate
+of behavior.
+
+Always record whether generation ended because of EOS or an imposed limit.
+“Stopped after 128 tokens” and “learned to finish a story” are different claims.
+The fixed training observations allowed 256 new tokens; the later playground
+probes often used 128. Their outputs are not interchangeable controlled
+comparisons unless that difference is accounted for.
+
+## 6.20 From a finished process to a defensible conclusion
+
+A monitoring interface is useful because it brings evidence together. Its
+appearance is not evidence itself. Distinguish at least four questions:
+
+1. **Did the computation finish?** Check the actual process status and completed
+   update counter. Here, all 14,000 updates completed and the child exited zero.
+2. **Did it remain within the recorded safeguards?** Inspect the memory guard,
+   finite measurements and safety record. Here, the sampled reserve stayed above
+   its threshold and no guard abort was recorded.
+3. **Did prediction improve?** Compare the same development targets. Here, their
+   mean NLL fell from 10.9049 to 1.6743.
+4. **Did the desired behavior become reliable?** Evaluate complete stories
+   against explicit criteria. Here, inspected outputs retain meaningful errors,
+   and a systematic coherence evaluation is still missing.
+
+Recovery is a separate claim again. The preflight smoke test demonstrated exact
+next-update replay in its tested environment. Having saved the final large-run
+checkpoint does not by itself demonstrate a new interruption-and-resume test at
+that final state.
+
+The [evidence-reading lab](../labs/06-reading-a-pretraining-run.md) makes this
+analysis reproducible from compact JSON without starting training, loading model
+weights, or running a dashboard. The Day 8 notebooks remain the mechanism
+companions for accumulation, optimization and recovery. A dedicated Day 9
+analysis notebook is a planned extension, not an already executed lesson.
+
+The next learning step is to define a frozen story-evaluation contract and
+propose one controlled training comparison. The brief preflight batch-size
+profiles are systems measurements, not a demonstrated improvement in story
+learning. Sampling probes also do not satisfy the roadmap's requested trained
+comparison in scale, data or recipe. That comparison remains open; writing the
+chapter does not complete it.
 
 ## Exercises
 
@@ -451,11 +743,29 @@ provide complete reasoning.
 12. Design two separate recovery failures: same data but missing moments; same
     saved weights but missing data position. What observations distinguish them?
 
+13. Our baseline used 229.38 million processed positions but only 48.84 million
+    valid targets. How can the loss be correctly masked while computation is
+    inefficient? What must a packing comparison preserve?
+14. Why can the fixed-development loss fall while generated characters exchange
+    roles without explanation? Does this imply an incorrect causal mask?
+15. What evidence would you request before calling repeated story phrases
+    overfitting? Why is the online training/development difference insufficient?
+16. A learner changes the seed during greedy decoding, then changes only maximum
+    length. Why might the beginning stay the same in both cases?
+17. The final greedy continuation reaches EOS but contains inconsistent speakers.
+    Which success claims does EOS support, and which does it leave unanswered?
+18. Design one next experiment with a stated hypothesis, controlled variables,
+    budget, measurements and failure condition. Distinguish proposing it from
+    having authorization or evidence to run it.
+
 ## What follows
 
-The decoder defines a family of conditional distributions. The training system
-defines how evidence changes that distribution over time. Reliable pretraining
-requires both to be explicit. We now have a recipe that can be explained,
-perturbed and recovered on a small example. Day 9 will ask what happens when an
-approved run actually consumes a larger budget: how loss, examples, gradients,
-throughput and memory together support—or limit—our conclusions.
+The decoder specifies a family of conditional distributions. Training changes
+those distributions under a data and compute budget. Evaluation must now tell
+us whether that change achieved the behavior we intended.
+
+Our first run is a baseline, not a finished storytelling system. Chapter 7 turns
+“this story seems better” into a declared evaluation contract: unseen prompts,
+explicit error categories, controlled decoding, sampling variation and evidence
+boundaries. Better measurements should guide the next intervention; they should
+not be invented afterward to justify the most attractive sample.

@@ -37,6 +37,82 @@ dependencies, preferred machine, and current status.
 
 ## Learner profile and working preferences
 
+- 2026-09-14 course synthesis: Chapter 6 now integrates the completed TinyStories
+  run in sections6.14–6.20, with18 worked solutions and a standard-library
+  evidence-reading lab. Portable source-hashed metrics and fixed-grid samples:
+  `experiments/reports/2026-09-14-tinystories-learning-result.json`.
+  Main lesson: completed execution, improved prediction and reliable coherence
+  are separate claims. A dedicated Day9 analysis notebook and controlled trained
+  comparison remain pending. Dashboard/playground stopped at user request;
+  port8765 verified closed. Do not restart services or training automatically.
+
+- 2026-09-14: prefer light, minimal dashboard interfaces: plain headings,
+  restrained typography, compact controls and readable charts. Avoid decorative
+  slogans, oversized hero text, numbered cards and excessive boxes. Rich
+  learning visuals should explain the mechanism, not add interface decoration.
+
+-2026-09-14: user requested loading the trained model in the dashboard for custom
+  prompts. Added **Prompt DongxiGPT**, with final update14000 loaded on Spark,
+  temperature/seed/new-token controls and explicit generation bounds. It is a
+  story completion model, not a chat-tuned assistant. User prompts are not saved;
+  weights/logs are unchanged. Active inference service is
+  `dongxigpt-playground-20260914.service`; stop it before starting new training.
+  `docs/TRAINING_MONITOR.md` documents inference versus log-only modes.
+
+- Day9 learning launch,2026-09-13: user said "let's run the training". Full-data
+  preparation plus guarded background launch are authorized and started. Freeze
+ 14,000 updates,batch16,200 warmup,4-hour cap and checkpoint interval400; inspect
+  `outputs/day09-learning-launch/status.json` before making a status claim.
+  Initial launcher state was waiting for full data, not yet training. Canonical
+  record: `experiments/reports/2026-09-13-tinystories-learning-launch.md`.
+  No overnight extension, parallel training campaign or public publishing.
+  Start confirmed at20:56:39 UTC after95 tests:1,792,647 deduplicated training
+  stories prepared;21,990 validation stories held out. Initial waiting state is
+  superseded. Do not infer successful completion from service startup.
+
+- Day9 monitoring,2026-09-13: user accepted a local read-only dashboard. Built
+  the training observatory around existing JSON/JSONL evidence: loss, gradients,
+  LR, useful throughput, memory reserve, activation RMS and checkpoint story
+  comparisons. No GPU job controls, remote publication or new training run.
+  `docs/TRAINING_MONITOR.md` has Spark startup/Mac SSH-viewing instructions and
+  telemetry limitations. Live-looking timestamps are not process-health proof.
+
+- Day9 pipeline implementation,2026-09-13: user explicitly requested build and
+  verification. Separate SDPA trainer/data pipeline now passes82 CPU tests and
+  three full-model BF16 Spark updates, with bitwise-identical saved-state replay.
+  Prepared only1,024 training/128 validation stories; no multi-hour learning run.
+  Canonical report: `experiments/reports/2026-09-13-tinystories-pipeline-smoke.md`;
+  commands: `docs/TINYSTORIES_PIPELINE.md`. This supersedes earlier "no GPU run"
+  planning statements below without implying Day9 completion or story competence.
+
+- Day9 budget discussion,2026-09-13: learner accepted the tokenizer/model
+  baseline and asked for a hardware-informed runtime recommendation. Proposed
+  15–30-minute smoke/profile after preparation, then a4-hour learning cap;
+  overnight8–12-hour follow-up only after evidence review. This is an agent
+  recommendation, not approved execution or a prediction of time to coherence.
+  Host snapshot and FP4-vs-BF16 distinction are recorded in the Day9 design note.
+
+- Latest Day9 decision,2026-09-13: user selected TinyStories and asked to settle
+  tokenizer/model configuration. Working baseline: reuse GPT-2 byte-BPE only,
+  randomly initialize our12-layer512-wide modern decoder,8 MHA heads,1536-wide
+  SwiGLU,1024-token context, tied embedding/output;66.64M parameters verified
+  by shape-only counting. Canonical design and pending execution gates:
+  `learning_artifacts/day-09-pretraining-run-and-diagnosis/tokenizer-and-model-baseline.md`.
+  Corpus alternatives remain historical; no bulk data download or GPU run yet.
+
+- Day 9 dataset follow-up, 2026-09-13: learner wants to explore alternatives,
+  not automatically adopt TinyStories. Shortlist TinyStories and SimpleStories;
+  Cosmopedia stories and human WritingPrompts are potential later contrasts.
+  Preserve the English-story objective. Comparison rationale and primary sources
+  live in the Day 9 artifact; no final selection, download or run approval.
+
+- 2026-09-13: move forward assuming current chapters are covered for planning;
+  do not treat this premise as independently tested mastery. For Day 9 the
+  learner chose the easier goal of watching DongxiGPT learn coherent English
+  stories. TinyStories is the agent's proposed dataset, not a completed data
+  selection or approved run. Current discussion remains on Spark; source and
+  next decisions: `learning_artifacts/day-09-pretraining-run-and-diagnosis/README.md`.
+
 - Latest request, 2026-09-09: create the complete Day 8 notebooks and coherent
   chapter directly. The isolated one-step quadratic SGD slider was described as
   boring. Prefer meaningful LLM-system dilemmas and interventions tied to the
@@ -167,6 +243,7 @@ ledger.
 | 6 | Modern architecture design | material ready; guided study pending | `learning_artifacts/day-06-modern-architecture/README.md` |
 | 7 | Architecture synthesis | notebooks ready; guided defense pending | `learning_artifacts/day-07-architecture-synthesis/README.md` |
 | 8 | Pretraining recipe and interactive-learning design | Chapter 6 Day 8 foundation + 3 worked notebooks prepared; guided study pending on Spark | `learning_artifacts/day-08-pretraining-data-and-recipe/README.md` |
+| 9 | DongxiGPT English-story pretraining | Objective chosen; candidate data and bounded run planning, no GPU experiment yet | `learning_artifacts/day-09-pretraining-run-and-diagnosis/README.md` |
 
 At the start of each new day, create its directory and index. During the lesson,
 update the relevant focused topic whenever the learner states a prediction,

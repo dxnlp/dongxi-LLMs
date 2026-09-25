@@ -94,6 +94,46 @@ same proposal is not repeatedly rediscovered.
   categories, no implication that payload shrinkage guarantees speed or quality.
   Extend existing cache-memory visual language; static article chart may suffice.
 
+### Day9 completed-run extensions — 2026-09-14
+
+- Source: agent, automatic mechanism/budget capture during Chapter6 synthesis.
+- State: discuss; extends existing budget, next-token and temperature candidates,
+  not approval for additional films. Production remains on Mac Studio.
+- Budget scene: separate processed positions (229,376,000), valid targets
+  (48,839,975), and prepared targets (390,708,926). Animate masked positions
+  remaining in computation; valid/processed =21.29%. Rate denominators switch
+  between summed update timers and full trainer duration. No linear packing
+  speedup or unique-information claim is justified by those counters.
+- CAND-ANIM-001/003 extension: contrast fixed recorded prefixes during evaluation
+  with model-generated prefixes feeding subsequent predictions. This mechanism
+  explains why the two evaluations differ, not the uniquely proven cause of
+  our story failures. Keep causal masking correct in both lanes.
+- CAND-ANIM-007 extension: hold weights fixed while decoding settings change;
+  seed has no effect in greedy mode, and higher temperature does not teach new
+  knowledge. Backend probes are limited evidence, not browser-flow verification.
+- Sources: Chapter6 sections6.15–6.19 and the portable completed-run report.
+  Animation should retain poor samples and literal checkpoint/update labels.
+  Next decision: choose whether these strengthen an existing approved narrative;
+  no render or new production packet authorized by chapter writing.
+
+### Day9 tokenizer/model accounting —2026-09-13
+
+Budget extension: connect measured valid-target throughput to training exposure
+(rate × training time), separating padding, evaluation/checkpoint overhead and
+unique data from repeated presentations. Capture under the existing training
+update/budget candidate, not a new film. The10k targets/s illustration in the
+Day9 design note is hypothetical; no measured Spark training rate yet.
+
+Source: agent automatic math capture while settling the story-model baseline.
+Extend existing ANIM-EMB-001 and head-shape candidate CAND-ANIM-012: IDs[B,T]
+become states[B,T,512], split into8 heads of64, and project through the shared
+50,257×512 embedding/output matrix to logits[B,T,50257]. Keep the table's
+25,731,584 parameters counted once despite two computation roles; contrast this
+with51,463,168 per-sequence logit elements atT=1024. Parameter storage and
+activation storage are different. Source: Day9 tokenizer/model design note;
+meta-device count verified, no GPU peak measurement or trained result.
+This extends existing candidates only; production remains unapproved on Mac.
+
 ### CAND-ANIM-009 extension — A/B/C prefix reuse, 2026-09-13
 
 - Source: user; approved for social-post animation as `ANIM-KV-007`.

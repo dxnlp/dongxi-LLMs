@@ -8,11 +8,15 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
-- Current position: Day 8 on Spark; [Chapter 6's complete Day 8 foundation](book/chapters/06-pretraining-as-a-controlled-system.md),
-  three visual worked notebooks and twelve conceptual solutions are prepared.
-  Chapter 5's Days 5–7 material and twelve notebooks remain available; earlier
-  learner practice gaps are review items, not a forced rewind. Day 8 guided
-  mastery and Day 9's larger run remain pending.
+- Current position: Day 9 on Spark. The [TinyStories pipeline](docs/TINYSTORIES_PIPELINE.md)
+  is built and [bounded GPU smoke/recovery verified](experiments/reports/2026-09-13-tinystories-pipeline-smoke.md).
+  The [first story-learning run is complete](experiments/reports/2026-09-14-tinystories-learning-result.md):
+  14,000 updates, 48.84M valid target presentations, fixed-development NLL1.6743.
+  Reliable coherence and a controlled trained comparison remain unestablished.
+  [Chapter 6](book/chapters/06-pretraining-as-a-controlled-system.md) and its
+  Day 8 visual notebooks and [evidence-reading lab](book/labs/06-reading-a-pretraining-run.md)
+  are companions; earlier practice gaps are review
+  items, not a forced rewind or evidence of independently assessed mastery.
 - Default learning/visual/media machine: Mac Studio; learner currently chooses Spark
 - GPU experiment machine: NVIDIA DGX Spark
 - Primary model family: Qwen3
