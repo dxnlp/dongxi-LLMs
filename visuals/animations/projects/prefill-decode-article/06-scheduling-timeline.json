@@ -1,0 +1,65 @@
+{
+  "events": [
+    {
+      "name": "requests",
+      "seconds": 0.0,
+      "separate_state": true
+    },
+    {
+      "name": "iteration_1",
+      "seconds": 1.0,
+      "decode_request": "A",
+      "prefill_chunk": "B1"
+    },
+    {
+      "name": "chunk_1_retained",
+      "seconds": 1.933,
+      "B_chunks": 1,
+      "A_outputs": 1
+    },
+    {
+      "name": "iteration_2",
+      "seconds": 3.333,
+      "decode_request": "A",
+      "prefill_chunk": "B2"
+    },
+    {
+      "name": "chunk_2_retained",
+      "seconds": 4.267,
+      "B_chunks": 2,
+      "A_outputs": 2
+    },
+    {
+      "name": "iteration_3",
+      "seconds": 5.667,
+      "decode_request": "A",
+      "prefill_chunk": "B3"
+    },
+    {
+      "name": "chunk_3_retained",
+      "seconds": 6.6,
+      "B_chunks": 3,
+      "A_outputs": 3
+    },
+    {
+      "name": "separate_pools",
+      "seconds": 8.2,
+      "request": "B",
+      "B_chunks": 3
+    },
+    {
+      "name": "B_handoff",
+      "seconds": 9.933,
+      "B_chunks": 3,
+      "transferred_request": "B"
+    },
+    {
+      "name": "complete",
+      "seconds": 11.467
+    }
+  ],
+  "checks": {
+    "inside_canvas": true
+  },
+  "duration_seconds": 12.499999999999979
+}

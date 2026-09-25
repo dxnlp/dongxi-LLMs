@@ -34,6 +34,66 @@ This file is the operational source of truth for resuming work. Update it at the
 
 ## Four-week tracker
 
+Standalone animation return, 2026-09-15: user approved `ANIM-PD-002`, a readable
+project-document example for “Two phases. Two kinds of waiting.” Initial version
+rejected for insufficient TTFT/ITL focus; user approved the revised continuous
+arrival timeline. Independent 1080p MP4 and 960px GIF in
+`visuals/animations/projects/two-kinds-of-waiting/`; original article and seven
+clips hash-protected and unchanged. Preview and full/half stills inspected;
+event/media/hash checks recorded in project metadata. Example words and timings are illustrative,
+not measured model output or exact token segmentation. Next: user visual review.
+No X activity, GPU job, commit or push; dirty work preserved and pull skipped.
+
+X draft return, 2026-09-14: `X-PD-001` uploaded to user-specified draft
+`2099600211739803648`, not published. Exact title/body, 55 text blocks,
+7 animations/captions and 1 cover verified after reload; zero placeholders,
+all slots correct. First animation playback checked. Evidence:
+`publications/x-articles/x-prefill-decode-001/X_DRAFT_TRANSFER.md`.
+
+Cover return, 2026-09-14: `X-PD-001` now uses an original black-and-white
+stippled cover matching the KV Cache series, with a single-line title and exact
+2000×800 export. Source/prompt retained; previous white cover preserved. Article
+body and seven animations unchanged. Local review only; no X or Git action.
+
+Animation return, 2026-09-14: the learner approved the deferred seven-figure
+production pass for `X-PD-001`. `ANIM-PD-001` now contains seven 1080p MP4s and
+seven 960×540 GIFs, integrated in the Chinese review with static fallbacks.
+Numerical/event/media/hash checks pass; previews and final rendered frames
+inspected. Controls pass DOM-stub tests; browser HTML playback/layout is not
+claimed under the prior URL restriction. All durations are schematic. Next:
+learner reviews the seven loops. This supersedes the static-only deferrals below
+for this article. No Spark job, X upload, commit or push; Day 8 unchanged.
+
+Article return, 2026-09-14: independent `X-PD-001` (“Prefill and Decode”) is ready
+for local Chinese review at `publications/x-articles/x-prefill-decode-001/zh/review.html`.
+Six sections, seven static figures and 5:2 cover focus on phase mechanisms;
+Spark/Mac remains a short third-party illustration. Tiny two-layer cache/chunk
+equivalence and broken-causality checks pass; no benchmark claim. X transfer
+package prepared, not uploaded. Static figure QA completed; browser HTML visual
+QA unavailable under the prior URL-policy restriction. Next: review manuscript
+and figures before animation selection. Latest clarification: Decode received a
+static feedback-loop diagram; all animations are deferred for production together
+later. Prefill prose now explains input-derived Q/K/V versus attention outputs,
+with a two-position dependency still and reverse-row/batched equivalence check.
+No animation was started. Existing inference/KV packages and Day 8
+state unchanged. Existing dirty work retained; no pull, commit or push.
+
+Editorial follow-up: learner requested a less dry, example-led article like the
+KV article. Reworked all six sections around report/meeting, hypothetical next
+token, long speech and concurrent-document scenarios; updated workload and
+scheduling stills. Parallel-position precision and representation terminology
+retained. Static-only review continues; all animation deferred together.
+
+Article return, 2026-09-13: user approved `X-INFER-001`, an inference-systems
+overview beyond token generation. Chinese manuscript, seven static figures,
+5:2 concept cover and local HTML prepared in `publications/x-articles/x-inference-001/`.
+Source map, clean X body/image plan and structural/hash/arithmetic checks retained.
+Browser local-file preview blocked by URL policy; direct figure inspection only,
+mobile HTML layout not verified. Awaiting wording/visual review; animations are
+proposed, not rendered. No X action, GPU job, commit or push. Existing KV article
+and active Day 8 learning state unchanged; production-serving course expansion
+remains deferred beyond v0.1.
+
 Animation return, 2026-09-13 (Mac only): approved `ANIM-KV-007` is rendered in
 `visuals/animations/projects/kv-prefix-abc/`. The A/B/C document-workflow
 companion shows prefill, retained KV and exact-prefix reuse in 18.97 seconds.

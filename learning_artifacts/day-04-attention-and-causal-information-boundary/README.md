@@ -137,6 +137,12 @@ Opened topics:
 8. [`how-loss-trains-qkv.md`](how-loss-trains-qkv.md)
 9. [`future-recurrent-depth-and-looped-transformers.md`](future-recurrent-depth-and-looped-transformers.md)
 10. [`chapter-coverage-and-evidence.md`](chapter-coverage-and-evidence.md)
+11. [`inference-systems-map.md`](inference-systems-map.md): user-approved public
+    article extension connecting causal cache to latency, scheduling and memory;
+    no serving lab or Day 4 mastery claim.
+12. [`prefill-and-decode.md`](prefill-and-decode.md): standalone phase-mechanism
+    article, first-token/cache boundary, scheduling and bounded Spark/Mac case;
+    static review and tiny numerical checks, no hardware benchmark.
 
 The ninth artifact preserves a learner-requested frontier topic for Days 6–7.
 It is a forward link, not an expansion of the Day 4 completion contract.

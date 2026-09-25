@@ -261,6 +261,9 @@ they are corroborated.
 | `X-EMB-001` | X article | How transformer embedding tables are actually trained | ready for Mac drafting | Mac | Chapter 2 and embedding labs complete |
 | `X-ATTN-KV-001` | X article | Why LLMs cache K and V—but not Q | bilingual local draft and five figures ready for review | Mac | `publications/x-articles/x-attn-kv-001/`; Chapter 4 toy evidence and bounded DeepSeek case study; no serving benchmark claimed |
 | `X-LOOP-001` | X article | Looped Transformers: more effective depth without more stored weights—but not free compute | conceptual source ready; drafting waits for Day 7 evidence | Mac | Chapter 5 section 5.20 and refreshed primary abstracts ready; controlled recurrence comparison pending |
+| `X-INFER-001` | X article | LLM inference: latency, memory and scheduling | Chinese local draft and seven static figures ready for review | Mac | Chapters 3–5 plus primary-source systems map; no serving benchmark, new video or X upload |
+| `X-PD-001` | X article | Prefill and Decode | independent Chinese local draft and seven GIFs with static fallbacks ready for review | Mac | Chapter 4 §§4.10–4.11, Chapter 5 §5.18; phase mechanisms first, short third-party Spark/Mac case; ANIM-PD-001 rendered |
+| `ANIM-PD-001` | Animation | Prefill and Decode: seven article mechanisms | seven GIFs and 1080p MP4s rendered; article integrated for local review | Mac Studio | Numerical mechanism checks, event/media checks and direct frame inspection; browser playback not verified |
 | `ANIM-BPE-001` | Animation | Bytes → characters → Chinese word/phrase tokens | minimal Manim style approved and committed | Mac Studio | Day 2 explanation complete |
 | `ANIM-LOOP-001` | Animation | Fixed recurrence, repeated stack, unfolded shared applications | Chinese introduction and three English 1080p clips ready for visual review | Mac Studio | `visuals/animations/projects/looped-transformer/english/review.html` |
 | `ANIM-BPE-002` | Animation | Meteor corpus → counted character BPE → vocabulary subset 1–5 → encoding | local 1080p review candidate ready; user visual approval pending | Mac Studio | Verified corpus trace and explicit second-round tie preference |
@@ -271,6 +274,145 @@ they are corroborated.
 | `ANIM-ATTN-001` | Animation | How loss trains attention routing and value content | approved; canonical material and numerical evidence ready for Mac production | Mac Studio | Chapter 4, forward/gradient checks, finite differences, and mask/detach evidence complete |
 
 ## Production-system tasks
+
+### Task packet: `ANIM-PD-002` — document example, two kinds of waiting
+
+- User approval, 2026-09-15: standalone adaptation of the lifecycle clip, using
+  readable document content and output phrases. Do not modify the article.
+- Host/base: Mac production, dirty main at ca2cfe1; preserve work and skip pull.
+- Revision approval: initial document-processing focus rejected; user asks to
+  return to original lifecycle layout and explain TTFT and ITL explicitly.
+- Follow-up: timing revision approved; separate project-document facts and
+  User query into two clearly labeled input cards, preserving the timeline.
+- Objective: request sent → first output arrival (TTFT), then consecutive
+  output arrivals (individual ITLs), using readable word cards on one timeline.
+- Inputs: ANIM-PD-001 lifecycle, canonical style and authored project brief.
+- Allowed outputs: `visuals/animations/projects/two-kinds-of-waiting/`, scoped
+  production records. Existing article and its seven clips hash-protected.
+- Precision: each word card stands in for one token arrival; no literal
+  tokenizer segmentation or measured times. TTFT includes possible serving and
+  transport overhead in addition to prefill; all timings are schematic.
+- Acceptance: inspect preview/contact sheet and full/half poster; event order,
+  immutable protected files, dimensions/codec/GIF diversity and hash checks.
+- Deliverables: standalone 1080p MP4, 960px GIF, editable scene/example/exporter,
+  local player, metadata and limitations. No X upload, commit or push.
+- Return: revised standalone arrival-timeline animation; source and verification
+  results live in the project README and metadata. Initial 25.13-second version
+  superseded, not accepted. Article and original animation files hash-protected.
+
+### Task packet: `ANIM-PD-001` — seven Prefill and Decode article loops
+
+- Approval: learner explicitly starts animation production after static review,
+  2026-09-14. This supersedes the earlier defer-all-animation entries for this
+  package only. Verified Mac `mac.lan`, arm64; dirty `main` at `ca2cfe1`, preserved
+  existing work and skipped pull. No Spark jobs, commit, push or X action.
+- Objective: animate the seven reviewed mechanisms with continuous object
+  identity, minimal natural-kerning labels and white canvas; static cover retained.
+- Inputs: `X-PD-001` manuscript, seven stills and `visual-plan.md`, Chapter 4
+  causal invariance, article numerical fixture and canonical Manim style.
+- Allowed files: new `visuals/animations/projects/prefill-decode-article/`,
+  `publications/x-articles/x-prefill-decode-001/`, scoped production records.
+  Existing KV/inference article and earlier animation projects remain unchanged.
+- Outputs: seven 1080p H.264 MP4s, seven 960×540 looping GIFs, posters/contact
+  sheets, editable scenes/exporter, per-clip event traces and hash metadata;
+  article integration with static fallback, pause control and reduced motion.
+- Precision: input-derived K/V precede independent attention outputs; per-layer
+  cache; selecting y1 leaves N entries, feeding y1 produces N+1; generation
+  loops retain old entries; workload lines and clock lengths are schematic;
+  A/B request state stays separate; layerwise transfer leaves a visible tail.
+- Acceptance: numerical cached/full, chunked/full and reverse-row equivalence;
+  event-order, immutable old-cache geometry, bounds, codec/dimensions, GIF loop,
+  frame diversity/size, output/source hashes and all seven figure slots. Inspect
+  preview contact sheets then full/half-size stills before delivery.
+- Return status: seven loops rendered and integrated for local review, 2026-09-14.
+  GIFs are 960×540, 15 fps, individually below 5 MB; MP4s are 1080p H.264 at
+  30 fps, retained locally and Git-ignored. Previews and final rendered frames
+  inspected; event/media/hash checks pass. Static-toggle and reduced-motion
+  controls have DOM-stub tests. See project `metadata.json` and `QA.md`.
+  No claim of browser HTML visual QA under the existing local-URL policy
+  restriction. User retains publication control.
+
+### Task packet: `X-PD-001` — Prefill and Decode
+
+- X return, 2026-09-14: user-designated draft `2099600211739803648` populated,
+  not published. Post-reload audit: 55 body blocks, 6 headings, 7 animations with
+  matching captions, 1 cover, zero placeholders, exact text/slots. First clip
+  playback sampled successfully. See package `X_DRAFT_TRANSFER.md`; earlier
+  local-only entries below predate this authorized transfer.
+- Cover return, 2026-09-14: user requested the KV Cache cover style. New original
+  built-in-generated black/white stippled cover selected at exact 2000×800;
+  prompt/source retained in the package's `cover-concepts/prefill-decode-v2.md`.
+  Original white cover, article body and all seven animations preserved.
+- Latest production return: learner approved all seven loops as ANIM-PD-001;
+  rendered GIFs now replace seven inline stills, with static switches and locally
+  retained MP4s. Cover remains static. This supersedes the earlier deferrals
+  below; no X transfer/publication or Git integration was performed.
+- Earlier editorial direction: accurate but approachable, short example-first
+  paragraphs like the earlier KV article. Revised all six sections around a
+  meeting/report request and long-speech contrast, plus concrete scheduling A/B.
+  Updated two stills; preserved parallel dependencies and representation term.
+  At that stage, animation was deferred, with local source/transfer updates only.
+- Latest clarification: revised prefill's parallel-position explanation and
+  added a dependency still. Position 2 reads input-derived K1/V1, not O1;
+  layer-to-layer dependency remains. Seven-image plan; all animation deferred.
+- Latest scope, 2026-09-14: learner requested Decode illustration, then clarified
+  static images now and all animations together later. Added a feedback-loop
+  still in section 3 and refreshed six-image local transfer plan. No animation
+  scene or render was started. Representation terminology edits are retained.
+- Approval: learner selected a standalone mechanism-first article and requested
+  production, 2026-09-13; return 2026-09-14. Local `main` base `ca2cfe1` was
+  already dirty with the inference overview; preserved it and skipped pull.
+- Objective: explain known-position prefill, first-token selection, cached
+  autoregressive continuation and workload-dependent resource behavior. Separate
+  scheduling from worker placement. Spark/Mac is a short supporting example.
+- Inputs: Chapters 3–5; primary references in the new package `source-map.md`.
+- Scope: `publications/x-articles/x-prefill-decode-001/`, article index, focused
+  Day 4 record and production trackers. No existing article edits, cloud transfer,
+  benchmark, video rendering, installation, Git commit or push. Day 8 unchanged.
+- Precision: y1 selection leaves prompt KV length unchanged; processing y1
+  appends its per-layer KV. Causal visibility differs from parallel execution.
+  Compute/bandwidth tendencies depend on workload. Compatible state must cross
+  workers; communication has a tail. EXO case is third-party, not local evidence
+  or a general turnkey support claim.
+- Return: six-section Chinese manuscript, five original 1600×900 static figures,
+  single-line 2000×800 cover, local HTML, editable renderer/checker, source map,
+  motion plan and verified five-image X preparation package. Numerical toy checks
+  pass for cached/full equality, chunk offset and a broken noncausal control.
+  Figure contact sheet and detailed first-token/handoff/shapes views inspected.
+  Prior browser URL-policy block respected; browser/mobile HTML QA not claimed.
+- Next: learner reviews the animated article and requests refinements. Motion
+  extends `CAND-ANIM-009` under completed production packet `ANIM-PD-001`.
+
+### Task packet: `X-INFER-001` — inference beyond token generation
+
+- Approval: user, 2026-09-13; expanded from a request-lifecycle primer to a
+  systems overview, then explicitly requested production. Mac `mac.lan` ARM64;
+  clean `main` fast-forward sync at base `ca2cfe1`.
+- Objective: connect latency, memory and scheduling through one project-document
+  example. Generation is brief; cover TTFT/ITL/E2E/throughput, continuous batching,
+  paged KV, prefix reuse, chunked prefill, P/D separation, speculation, quantization
+  and model sharding versus replicas.
+- Inputs: Chapters 3–5, existing KV article, current primary docs and original
+  speculation/PagedAttention papers mapped in package `source-map.md`.
+- Scope: `publications/x-articles/x-inference-001/`, article index, focused
+  conceptual record and production trackers. Do not modify the existing KV
+  article/cloud draft. No GPU lab, deployment, X upload, publication or Git write.
+- Book placement: bounded public extension of Chapter 4 §4.11 and Chapter 5
+  §5.18; full serving curriculum remains deferred beyond v0.1. Day 8 unchanged.
+- Precision: client and server clocks differ; chunking preserves context; P/D
+  separation is not a blanket throughput improvement; exact speculation requires
+  correct rejection/correction; lower bits and more GPUs do not ensure speedup.
+  Distinguish weights, KV, buffers, payload arithmetic and measured allocation.
+- Deliverables/return: Chinese draft with 8 sections, 68 clean body blocks,
+  7 original static PNGs, 2000×800 concept cover, local HTML, source map, editable
+  build/check scripts and skill-generated seven-image transfer plan. Structural,
+  hash, image and payload checks pass. Contact sheet and three detailed figures
+  inspected. Browser file URL blocked by security policy; no workaround attempted,
+  desktop/mobile HTML visual QA not claimed.
+- Status: local draft ready for learner review. Proposed motion is recorded in
+  `visual-plan.md`, not rendered. Next: review wording/figure pacing and select
+  motion scope. Detailed animation production requires its own approved packet.
+
 
 2026-09-11 Git checkpoint: learner approved committing the accumulated local
 looped-Transformer and DeepSeek animation packages and synchronizing the current

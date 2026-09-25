@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two phases. Two kinds of waiting.</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#fff;color:#111827;font-family:Arial,"Songti SC",serif}main{max-width:1160px;padding:28px;margin:auto}h1{font-size:30px;font-weight:400;margin:12px 0 24px}video{display:block;width:100%;height:auto;border:1px solid #e2e8f0;border-radius:10px}p,details{line-height:1.8;color:#64748b}a{color:#2563eb;margin-right:24px}@media(max-width:600px){main{padding:16px}h1{font-size:23px}}</style></head>
+<body><main><h1>Two phases. Two kinds of waiting.</h1>
+<video controls playsinline loop preload="metadata" poster="rendered/two-waits/still.png" src="rendered/two-waits/two-waits.mp4"></video>
+<p><a href="rendered/two-waits/two-waits.mp4" download>MP4</a><a href="rendered/two-waits/two-waits.gif" download>GIF</a></p>
+<details><summary>如何理解这个例子</summary><p>TTFT（Time to First Token）：从请求发出，到首个输出 token 到达。ITL（Inter-Token Latency）：相邻两个输出 token 到达之间的间隔。橙色线在“上线”出现时停止；随后每段绿色线都从上一个输出到达开始，到下一个输出到达结束。</p><p>每张词语卡片代指一次 token 到达，分词与时长均为示意，未运行 tokenizer 或模型。TTFT 还可能包含排队、采样与传输等开销，不能直接等同于 prefill 计算时间。此动画简化了服务和网络细节。</p></details>
+</main></body></html>

@@ -1,0 +1,322 @@
+{
+  "preview": false,
+  "base_commit": "ca2cfe1900a70971dd2cb8873104229916f1f981",
+  "environment": {
+    "host": "mac.lan",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.12.11",
+    "manim": "0.21.0",
+    "pillow": "12.3.0",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "checks": {
+    "event_order": true,
+    "first_loop_unchanged": true,
+    "media_valid": true,
+    "article_and_original_animations_unchanged": true
+  },
+  "clips": [
+    {
+      "id": "two-waits",
+      "timeline": {
+        "events": [
+          {
+            "name": "request_sent",
+            "seconds": 2.9,
+            "visible_outputs": 0,
+            "x": -5.9
+          },
+          {
+            "name": "ttft_start",
+            "seconds": 2.9,
+            "start_x": -5.9,
+            "end_x": -0.5,
+            "visible_outputs": 0
+          },
+          {
+            "name": "output_1_received",
+            "seconds": 7.9,
+            "visible_outputs": 1,
+            "x": -0.5,
+            "interval": "TTFT"
+          },
+          {
+            "name": "itl_1_start",
+            "seconds": 7.9,
+            "start_x": -0.5,
+            "end_x": 1.6,
+            "visible_outputs": 1
+          },
+          {
+            "name": "output_2_received",
+            "seconds": 9.9,
+            "visible_outputs": 2,
+            "x": 1.6,
+            "interval": "ITL 1"
+          },
+          {
+            "name": "itl_2_start",
+            "seconds": 9.9,
+            "start_x": 1.6,
+            "end_x": 3.7,
+            "visible_outputs": 2
+          },
+          {
+            "name": "output_3_received",
+            "seconds": 11.9,
+            "visible_outputs": 3,
+            "x": 3.7,
+            "interval": "ITL 2"
+          },
+          {
+            "name": "itl_3_start",
+            "seconds": 11.9,
+            "start_x": 3.7,
+            "end_x": 5.8,
+            "visible_outputs": 3
+          },
+          {
+            "name": "output_4_received",
+            "seconds": 13.9,
+            "visible_outputs": 4,
+            "x": 5.8,
+            "interval": "ITL 3"
+          },
+          {
+            "name": "complete",
+            "seconds": 17.4,
+            "visible_outputs": 4
+          }
+        ],
+        "checks": {
+          "inside_canvas": true
+        },
+        "duration_seconds": 18.799999999999994
+      },
+      "gif": {
+        "width": 960,
+        "height": 540,
+        "frames": 282,
+        "duration_ms": 18800,
+        "unique_frames": 230,
+        "loop": 0,
+        "bytes": 747187
+      },
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "1920,1080",
+        "--fps",
+        "30",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-kq0vq38c",
+        "-o",
+        "two-waits",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/two-kinds-of-waiting/scenes.py",
+        "TwoWaits"
+      ],
+      "duration_seconds": 18.8,
+      "video": {
+        "width": 1920,
+        "height": 1080,
+        "codec": "h264",
+        "fps": "30/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/two-kinds-of-waiting/rendered/two-waits/two-waits.mp4",
+          "bytes": 652309,
+          "sha256": "a2de7d54c4ed1f59e8472ba517577779e9568c0639be6fb8e1f80845452dcb42"
+        },
+        {
+          "path": "visuals/animations/projects/two-kinds-of-waiting/rendered/two-waits/still.png",
+          "bytes": 289742,
+          "sha256": "d30f63838764cb6507079c4316f26f665f345a4355822e4c98da6eb438ba59ea"
+        },
+        {
+          "path": "visuals/animations/projects/two-kinds-of-waiting/rendered/two-waits/still-half.png",
+          "bytes": 110442,
+          "sha256": "1ee8aa89c3dc23b0f1c8c229591606117b9baa7fce5a8c6c524e9d4d28ab8a12"
+        },
+        {
+          "path": "visuals/animations/projects/two-kinds-of-waiting/rendered/two-waits/contact-sheet.png",
+          "bytes": 273156,
+          "sha256": "7d85541dbf78329ca061835058168b967e7d60318e7a17dbf276524c4b78fb91"
+        },
+        {
+          "path": "visuals/animations/projects/two-kinds-of-waiting/rendered/two-waits/two-waits.gif",
+          "bytes": 747187,
+          "sha256": "4940b8105caffa800d1d2960b61b4210b49c736633551d34e00431468d460629"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "path": "visuals/animations/projects/two-kinds-of-waiting/scenes.py",
+      "sha256": "e0380c61f0f1e941443f2bb1ee7b5931a79afed7dbe2536b7a21a1da3f5a6093"
+    },
+    {
+      "path": "visuals/animations/projects/two-kinds-of-waiting/render.py",
+      "sha256": "68858e79de4eb2b2429baafbebac85775fec84ccb9578a1d118f40e73a48862c"
+    },
+    {
+      "path": "visuals/animations/manim_style.py",
+      "sha256": "e5ef5e47a93647733e201e64abb16f6214d625fc907ae2b872e9705202c8259e"
+    },
+    {
+      "path": "visuals/animations/uv.lock",
+      "sha256": "c481639a558a546e45fa22bb251c318b8e439eccde30b96fb66dcb40ba448ef8"
+    },
+    {
+      "path": "visuals/animations/projects/two-kinds-of-waiting/example.json",
+      "sha256": "849b5178fbda73f30dd2bced5e5c2a96fb14eed75cd240e9976eceee0eb05c19"
+    },
+    {
+      "path": "visuals/animations/projects/kv-article-loops/render.py",
+      "sha256": "49e496295364a87228c2dfc67dc8706f8a0a3db02c40409abf42cbf9df285b5e"
+    }
+  ],
+  "limitations": [
+    "Authored project-document example, not a measured model response.",
+    "Each readable word card stands in for one token arrival; not actual tokenizer segmentation.",
+    "TTFT spans request send to first arrival; each ITL spans adjacent arrivals. Durations are illustrative.",
+    "TTFT can include queueing, prefill, sampling and transport; Prefill label is not a latency breakdown.",
+    "Ordinary causal autoregressive generation; actual model internals and serving overhead omitted.",
+    "Fade is an editorial reset, not cache eviction."
+  ],
+  "task": "ANIM-PD-002",
+  "protected_files": {
+    "publications/x-articles/x-prefill-decode-001/build.py": "3bb5a1e16b45b077bea0ba9c0922f9a81b5aeacdb4f1ef247381f0de4ae3839f",
+    "publications/x-articles/x-prefill-decode-001/check.py": "3691236e94393b64b1798d94a173b748e9ac72a7503cd7e8665c10e320f4c5af",
+    "publications/x-articles/x-prefill-decode-001/qa.json": "7a05adab115acf44ca71bc4b570ac5510b2434d379af057119376d008983ba21",
+    "publications/x-articles/x-prefill-decode-001/source-map.md": "59c7b8607efa19b995c936b25e005dae64fde2ea5f1d53427f3b6f287df2bf68",
+    "publications/x-articles/x-prefill-decode-001/X_DRAFT_TRANSFER.md": "d1e0ba393b411116a52f1e486c992f381cbd4c83b2238f98cb36763a75054041",
+    "publications/x-articles/x-prefill-decode-001/metadata.json": "f92315247269d6c639919856d7e4cc9ed09f22457fa749b8a7b33bd2c0aacf16",
+    "publications/x-articles/x-prefill-decode-001/test-review-player.cjs": "8eae673275e4fb5965b4f66e6147ac59e0019b1c5358de68d452db135e411f9e",
+    "publications/x-articles/x-prefill-decode-001/visual-plan.md": "81103c7489437abce85ae409d984cf950975367c833be16f288b5ff9c582e3e1",
+    "publications/x-articles/x-prefill-decode-001/README.md": "caf0f69c991df88ec6d2ff5741cf3880a89cc8da6f9e702cf58d204cac8cfb4a",
+    "publications/x-articles/x-prefill-decode-001/review-player.js": "8789286ae1c9332f2642a80af652bd9e13ddc0f0d6428bac1dadb7c68d2b723c",
+    "publications/x-articles/x-prefill-decode-001/contact-sheet.png": "414c6e18e45b2a1d687ea49d09a891ad1ed84255a94f78a64e933b374885ccf2",
+    "publications/x-articles/x-prefill-decode-001/transfer-inapp.mjs": "b6fb1ee14d8505d207a6d8d2be97f63b75af29277ef1c812e672d62ea1ec47fd",
+    "publications/x-articles/x-prefill-decode-001/zh/review.html": "70ae5286863780893944055b8233a752be7d8e43f4ad77476fe2164d3b7f117d",
+    "publications/x-articles/x-prefill-decode-001/zh/x-editor-clean-body-image-plan.md": "3530aad6b4ecaa16638d7f84f627626608d9490c5dd8532c9b3f30e4eac82115",
+    "publications/x-articles/x-prefill-decode-001/zh/image-upload-order.md": "bad3cd4b684e752eda19fcf452626e6ffe5685a694e1f86b449c2e4909b8059a",
+    "publications/x-articles/x-prefill-decode-001/zh/x-editor-draft-body-with-image-placeholders.html": "24e42d85fd30ddc68f6d01058650ddbb80203e59c933d0ae633311f4884fa910",
+    "publications/x-articles/x-prefill-decode-001/zh/x-editor-clean-body.md": "6ff9f8d3b3c68b9afbf0c4a8626abc9bed185cc4db60ccb1a7d7e93bd877de06",
+    "publications/x-articles/x-prefill-decode-001/zh/x-editor-clean-body-image-plan.json": "0c93f1811c4714a6473140d09238c9687ea0d56173d1f0ac274bb58e19577ee5",
+    "publications/x-articles/x-prefill-decode-001/zh/x-editor-clean-body.html": "414fe6c8300a7a529712303e6b5883863d67c984b8d95fdc5ad810730f7aa587",
+    "publications/x-articles/x-prefill-decode-001/zh/x-editor-draft-body-with-image-placeholders.md": "aacddcce18b691b85ae1d3a3cf7f66c7dd2525c7efeea96d7090493fa8e61cc4",
+    "publications/x-articles/x-prefill-decode-001/cover-concepts/prefill-decode-v2.md": "33ad5c9791fc50a4e35dd9bb18675ce92c8ee9363a2b1189b8487fd686107e8a",
+    "publications/x-articles/x-prefill-decode-001/cover-concepts/prefill-decode-v2-source.png": "67e25a160ff2609d6c3ce79112e9aa4bf88a8d6b385f4e4543d9a1fb8f382993",
+    "publications/x-articles/x-prefill-decode-001/assets/04-decode-loop.gif": "bd21a2d5c589c32698b0d7c5dd7f6fffb4b6526bfdbb8c1fb60d5e35b0cc9c68",
+    "publications/x-articles/x-prefill-decode-001/assets/01-lifecycle-poster.png": "270d5c456b8fe112b71fa6e462e9d2b25189df6b7f1854db53946f16bf2c756e",
+    "publications/x-articles/x-prefill-decode-001/assets/06-decode-loop.png": "8f276c46bb2f560d70aeae87212746cecff454f099d24b81fc8f3234f8dde78f",
+    "publications/x-articles/x-prefill-decode-001/assets/cover-prefill-decode-v2.png": "2605d11b6908b33ee5589a556a75dc799a6f7330eba9a355da761469eb4b231a",
+    "publications/x-articles/x-prefill-decode-001/assets/02-parallel-poster.png": "d8e899bd406d78235a8b2d24e9084d1d7e1bdd8baa33eb368b5abe9173a351a3",
+    "publications/x-articles/x-prefill-decode-001/assets/04-scheduling.png": "bed0382070199cbb34eef46c404b6f96cefbbabae8a055b7cab5d575fab1da01",
+    "publications/x-articles/x-prefill-decode-001/assets/03-first-token.gif": "b413976afd9cf3b55fff5e8d2fde74acc32a604ecf6c5b8587a954f687e0be2b",
+    "publications/x-articles/x-prefill-decode-001/assets/01-lifecycle.gif": "9a2b33d8b34a5acc88db2d33888c5726ad7e1d05b0e61da3795429cf5c29528c",
+    "publications/x-articles/x-prefill-decode-001/assets/04-decode-loop-poster.png": "f12498cc432f646eafe1eae94f3ceb0cf74a7e939b9e2724a8264c7c95ad5fe0",
+    "publications/x-articles/x-prefill-decode-001/assets/05-handoff.png": "9cd62b4ebec8b91afc3f0a22c68d065ea818be521158b25ab23d2594f7557e6e",
+    "publications/x-articles/x-prefill-decode-001/assets/02-parallel.gif": "5ec261aab029a72f5a58f0e21c5e83e140cece51a551a2ce9efc3f14f40a34b0",
+    "publications/x-articles/x-prefill-decode-001/assets/03-shapes.png": "eef3079e68e51d668285f93ef21c3343dd05fff451211f8538a8f1fff05e658c",
+    "publications/x-articles/x-prefill-decode-001/assets/02-first-token.png": "ecaecc3b370a952657d0752373bd5bfea41c4639c8e1a59fafd37cd5b0b0d7fe",
+    "publications/x-articles/x-prefill-decode-001/assets/06-scheduling.gif": "ac068657381b1fba2132ae9e9409c9ab402d2dffb83900466daaa704eaf024eb",
+    "publications/x-articles/x-prefill-decode-001/assets/06-scheduling-poster.png": "b501faa6914baaf0cd54b3a1706380611cf14278ef6df7036219971f5e4d5f33",
+    "publications/x-articles/x-prefill-decode-001/assets/03-first-token-poster.png": "09d439e17c1abd792838fd356f3ea33b37182f92415407eaaf61e5fc15960ce2",
+    "publications/x-articles/x-prefill-decode-001/assets/cover.png": "b6fad6a80071a3efd12cda035909f9ba218280d6a19255e853a5d9c90568bafd",
+    "publications/x-articles/x-prefill-decode-001/assets/07-parallel-positions.png": "a61da891e0e850ecf10d828a3c3b9648ddd6feff6bb2b4d6f85edfc4fc825cab",
+    "publications/x-articles/x-prefill-decode-001/assets/07-handoff-poster.png": "8db69adedd34f773dd0d062b6e2e7c94a61a9be23c64c0864f44345372720554",
+    "publications/x-articles/x-prefill-decode-001/assets/05-workloads.gif": "cad34d6c85a0865bff4cd3c770452e1415b10b777da2d82032f199148b6a72c1",
+    "publications/x-articles/x-prefill-decode-001/assets/07-handoff.gif": "fbf1ea0be1855bf9d7e8482c38148e3dd56c11b66698230d658becab455caf5d",
+    "publications/x-articles/x-prefill-decode-001/assets/05-workloads-poster.png": "1b7d6478c5ced706c6519726f81f1446eeca066b366e2a0ee938802d1829f01e",
+    "publications/x-articles/x-prefill-decode-001/assets/01-lifecycle.png": "eafb875bc4fccf6acdfde0ee79c040b1b2b7899efa3a18576fb7071496b30053",
+    "visuals/animations/projects/prefill-decode-article/06-scheduling-timeline.json": "a438e37263f3db9df672d80eba2d24ba2eeb0a1f4d35158ce8a51024c733e674",
+    "visuals/animations/projects/prefill-decode-article/04-decode-loop-timeline.json": "1813c4ad808880ade0c6a2caeed8371b9be4d719a8c8c1a72e3d60ab2bbcb767",
+    "visuals/animations/projects/prefill-decode-article/02-parallel-timeline.json": "bca30f85221922878fc710a82418e3c7fe2dd9d6cbb21b98f05c0efe6d32e82d",
+    "visuals/animations/projects/prefill-decode-article/render.py": "9cd96d041d266a41470570e488e953e6f5b4c9d03c47aa076dbd17f9773c10e3",
+    "visuals/animations/projects/prefill-decode-article/QA.md": "2a21667d0046b5c2158a68995fa37b89b41ab9065e0c4ce6a08c4c59d320e5fb",
+    "visuals/animations/projects/prefill-decode-article/metadata.json": "0e94aaa3d033abd727cbed09081aafafef97961352e56d7c3e0d81e682cc584b",
+    "visuals/animations/projects/prefill-decode-article/README.md": "28ed74d8200708f8b07f912c9c261e4498f36ee4964faeac37799be816482b1b",
+    "visuals/animations/projects/prefill-decode-article/scenes.py": "42d6c3ae4ad4f62405ac72b1d286aff1b54f7755a897e96a421d8ae387dc9af7",
+    "visuals/animations/projects/prefill-decode-article/05-workloads-timeline.json": "6ab87fe3a24d5a37dc44271bba33fd76b8fa908724abf1473ce818d3e3486c8e",
+    "visuals/animations/projects/prefill-decode-article/01-lifecycle-timeline.json": "1ad72a0b308f263a8328bdeabb2fdb504c5082fe4690f8cfbf8de1349ac5f563",
+    "visuals/animations/projects/prefill-decode-article/03-first-token-timeline.json": "be135aa88fc50c1b052b7b850f6c27842399a8c60101e5d2c534ef3320f40b12",
+    "visuals/animations/projects/prefill-decode-article/07-handoff-timeline.json": "709f0f40af1e07c8eeec0801073dfc2b0ab34ecb26618ef2bf13cbdbbff8ada2",
+    "visuals/animations/projects/prefill-decode-article/preview-metadata.json": "1e68e5d6a45def7b1757556aa0c16695d718dba53b4823f5508ec4280800e425",
+    "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/preview-still-half.png": "fa8ad1e86c6708ff354cadcd02f993781cbc13dc16b23d34b068e2612040a88e",
+    "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/preview-contact-sheet.png": "e1a01cb6e5d943c5485133665f9d6a64dd33a2e2edf72e92c39d1ae83b4b3146",
+    "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/01-lifecycle.mp4": "71790081b027a8571b85610c4346e677cb7f7c5d7749673cdc45ec078adb3df5",
+    "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/preview-still.png": "fa8ad1e86c6708ff354cadcd02f993781cbc13dc16b23d34b068e2612040a88e",
+    "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/01-lifecycle.gif": "9a2b33d8b34a5acc88db2d33888c5726ad7e1d05b0e61da3795429cf5c29528c",
+    "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/still.png": "270d5c456b8fe112b71fa6e462e9d2b25189df6b7f1854db53946f16bf2c756e",
+    "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/still-half.png": "983715ee640ed36c8659546df64487c900cfbe3a3af3eae03173780b9a231833",
+    "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/preview.mp4": "4ce911cc51047ac6810d32576fa7017514ca5ece979de9cb981100d8c37d3e70",
+    "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/contact-sheet.png": "079c3421f75ff1bd092d2d5f9d5be504de32aca88bd76b8683633df3505d51e8",
+    "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/preview-still-half.png": "5cc93b09c601e45a2d145dcee6d5b1cdd3f944bcef6a8e512dfbe3d83019b212",
+    "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/preview-contact-sheet.png": "cbe9183e32a14675c7f9f647089afbf92167f2db5c357da23c7bcdaa813c64b3",
+    "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/03-first-token.mp4": "782f1e18d8334ddb67bc9dad4c9961abc9d2da1ba7e1a07f0c496248ee4fa45e",
+    "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/preview-still.png": "5cc93b09c601e45a2d145dcee6d5b1cdd3f944bcef6a8e512dfbe3d83019b212",
+    "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/03-first-token.gif": "b413976afd9cf3b55fff5e8d2fde74acc32a604ecf6c5b8587a954f687e0be2b",
+    "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/still.png": "09d439e17c1abd792838fd356f3ea33b37182f92415407eaaf61e5fc15960ce2",
+    "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/still-half.png": "f7061aee38cf50eb04940f2cbb324f54201758d5fba1997092aa76fa134b0d18",
+    "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/preview.mp4": "0ca455aa9524569748563033868f65d0aa8df6b34bd5368d3c4fe6de3cd21bcc",
+    "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/contact-sheet.png": "d6223941bdf67346cf96e6287b0f6c6c644f8eb4e8e338b03368c0391a23d473",
+    "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/preview-still-half.png": "fb596cbce5e91299874d885e1e1cd970b58d8c8a7e48275b4ff422359131e96f",
+    "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/preview-contact-sheet.png": "f052978e90d356328a3e38873d17533338a5dc37034571ad54e81272b0ac287e",
+    "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/preview-still.png": "fb596cbce5e91299874d885e1e1cd970b58d8c8a7e48275b4ff422359131e96f",
+    "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/still.png": "1b7d6478c5ced706c6519726f81f1446eeca066b366e2a0ee938802d1829f01e",
+    "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/still-half.png": "d21cc74cfa01163245ab73219820273539b19e46de61c9035e188fc4a5dedf32",
+    "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/05-workloads.gif": "cad34d6c85a0865bff4cd3c770452e1415b10b777da2d82032f199148b6a72c1",
+    "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/preview.mp4": "3afdffb6410cc2f64e3dafdb6306fa755cfab76fba24b03204b6ec32ae4a5775",
+    "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/contact-sheet.png": "b8713af6b0208ff732ab7d8b93cfb85cf0f95e46f57ffd1a4a9c7b1ff47c22dd",
+    "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/05-workloads.mp4": "dde733a147563de6c6502490ca569c8e1d790ee52f503ac77d121e359252a919",
+    "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/preview-still-half.png": "275bb306d78b3c51f9c750d14ff2e683446a35abfdaeb2752791fb5fef392fb4",
+    "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/preview-contact-sheet.png": "6bf0e965421e0e726e0a5350e386233a278b969e345ecf569ea71bcd71ae7663",
+    "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/preview-still.png": "275bb306d78b3c51f9c750d14ff2e683446a35abfdaeb2752791fb5fef392fb4",
+    "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/06-scheduling.gif": "ac068657381b1fba2132ae9e9409c9ab402d2dffb83900466daaa704eaf024eb",
+    "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/still.png": "b501faa6914baaf0cd54b3a1706380611cf14278ef6df7036219971f5e4d5f33",
+    "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/still-half.png": "4ae7b1c18eb4e997bee06cd8590d3b6aed689181d79f88cb5956791673ebb260",
+    "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/preview.mp4": "1f39ee015e32b5d8f6ad2cafe7b0e3bc99cf9be7697de06a58310e0e7efbe99f",
+    "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/contact-sheet.png": "906184838fa9c7f16e66a05b376aa35dc305c415f7fbfe56996b61ca5678b74f",
+    "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/06-scheduling.mp4": "3476bb69d98f703d87e3cef44615145b518526f9cc4f6349050ccfa72f0388b1",
+    "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/preview-still-half.png": "1de5903a31f53facb7dd4d6a7210c901aaa41f60dc6a7e5d136dc234de6b64d6",
+    "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/04-decode-loop.gif": "bd21a2d5c589c32698b0d7c5dd7f6fffb4b6526bfdbb8c1fb60d5e35b0cc9c68",
+    "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/preview-contact-sheet.png": "83e93d0ea71d6a15a7715b7271cd67d6b6bcf3a66288284e1d78f24570f28bc5",
+    "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/preview-still.png": "1de5903a31f53facb7dd4d6a7210c901aaa41f60dc6a7e5d136dc234de6b64d6",
+    "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/04-decode-loop.mp4": "b9e3e8b9cacf55543c035c42d9c83883130468dd5f96ac368f98bf0514c8f36b",
+    "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/still.png": "f12498cc432f646eafe1eae94f3ceb0cf74a7e939b9e2724a8264c7c95ad5fe0",
+    "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/still-half.png": "44c873e93aff4f78a9a5f15d761c0a370572d20005df92c3c2c881297d4152aa",
+    "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/preview.mp4": "9399cc48eb01efce709ed62f768d137827c82b177bdec7ab612aa16fc33a38f4",
+    "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/contact-sheet.png": "b086cb7d310a5c2a72c2669ee8a3d4377fb4e420270befb01bebec101e2f0cb8",
+    "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/preview-still-half.png": "3f2d792aff7af869995eb84917ecf25a080d7e572157757384afa5e319e99e2b",
+    "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/preview-contact-sheet.png": "01c8284e803ad8d97f2996cbcd12ee079a2adaaf970e29a6f421350930236557",
+    "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/preview-still.png": "3f2d792aff7af869995eb84917ecf25a080d7e572157757384afa5e319e99e2b",
+    "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/07-handoff.mp4": "807c912028230a75091ce455e72b964198ea0a8c95fa686b3b4d8e1858d07b88",
+    "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/still.png": "8db69adedd34f773dd0d062b6e2e7c94a61a9be23c64c0864f44345372720554",
+    "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/still-half.png": "10d28f3f397ec5c81330129dd38b913b671e9016892f41a5bdc5c7c2371ed8cd",
+    "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/preview.mp4": "42a08a9888eb6885d244d2948ff86698ad2fc342b867d5b1dc4bdfb546a97e36",
+    "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/contact-sheet.png": "e87a6d27ea7b7b6d6770e13b6a8c6ca5401143ff70187b265dcd188b459b0474",
+    "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/07-handoff.gif": "fbf1ea0be1855bf9d7e8482c38148e3dd56c11b66698230d658becab455caf5d",
+    "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/preview-still-half.png": "e26cc6bce28ec991567a6cbffce1bcb42e332734aee14e7134e448f4667e03e5",
+    "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/preview-contact-sheet.png": "0368345623e240424313b359274a604da3e6ba9dffa61e131887976e93d417cd",
+    "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/preview-still.png": "e26cc6bce28ec991567a6cbffce1bcb42e332734aee14e7134e448f4667e03e5",
+    "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/02-parallel.gif": "5ec261aab029a72f5a58f0e21c5e83e140cece51a551a2ce9efc3f14f40a34b0",
+    "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/still.png": "d8e899bd406d78235a8b2d24e9084d1d7e1bdd8baa33eb368b5abe9173a351a3",
+    "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/still-half.png": "bf1f25fdd0485966f5e3bdbccb994ed7fd44f01860ac117de3e3eddbeb8241fb",
+    "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/preview.mp4": "73265ee693b37d94494e8279ba12c230e25ebbf4da103e9915bcde42500b816f",
+    "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/contact-sheet.png": "bf33d5b28da54a9b1051e07eb731f0819f42c4ff81d07ba456fd6ab26fe06e82",
+    "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/02-parallel.mp4": "60c75d3cc2e12ce42970edc1ff9cec49f0984684494cf90e024672476a7deb62"
+  }
+}

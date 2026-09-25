@@ -1,0 +1,868 @@
+{
+  "preview": true,
+  "base_commit": "ca2cfe1900a70971dd2cb8873104229916f1f981",
+  "environment": {
+    "host": "mac.lan",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.12.11",
+    "manim": "0.21.0",
+    "pillow": "12.3.0",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "checks": {
+    "event_order": true,
+    "first_loop_unchanged": true,
+    "media_valid": true
+  },
+  "clips": [
+    {
+      "id": "01-lifecycle",
+      "timeline": {
+        "events": [
+          {
+            "name": "prompt_received",
+            "seconds": 0.6,
+            "prompt": 4
+          },
+          {
+            "name": "prompt_kv_ready",
+            "seconds": 2.867,
+            "prompt_cache": 4
+          },
+          {
+            "name": "first_output",
+            "seconds": 4.4,
+            "selected": "y1",
+            "prompt_cache": 4
+          },
+          {
+            "name": "output_2",
+            "seconds": 5.667,
+            "selected": "y2"
+          },
+          {
+            "name": "output_3",
+            "seconds": 6.933,
+            "selected": "y3"
+          },
+          {
+            "name": "complete",
+            "seconds": 9.0
+          }
+        ],
+        "checks": {
+          "inside_canvas": true
+        },
+        "duration_seconds": 10.066666666666658
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-j7k3pwbm",
+        "-o",
+        "01-lifecycle",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/prefill-decode-article/scenes.py",
+        "Lifecycle"
+      ],
+      "duration_seconds": 10.066016,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/preview.mp4",
+          "bytes": 331918,
+          "sha256": "4ce911cc51047ac6810d32576fa7017514ca5ece979de9cb981100d8c37d3e70"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/preview-still.png",
+          "bytes": 100551,
+          "sha256": "fa8ad1e86c6708ff354cadcd02f993781cbc13dc16b23d34b068e2612040a88e"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/preview-still-half.png",
+          "bytes": 100551,
+          "sha256": "fa8ad1e86c6708ff354cadcd02f993781cbc13dc16b23d34b068e2612040a88e"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/01-lifecycle/preview-contact-sheet.png",
+          "bytes": 317344,
+          "sha256": "e1a01cb6e5d943c5485133665f9d6a64dd33a2e2edf72e92c39d1ae83b4b3146"
+        }
+      ]
+    },
+    {
+      "id": "02-parallel",
+      "timeline": {
+        "events": [
+          {
+            "name": "inputs_ready",
+            "seconds": 0.0
+          },
+          {
+            "name": "qkv_ready",
+            "seconds": 1.133
+          },
+          {
+            "name": "causal_reads",
+            "seconds": 3.2,
+            "reads": [
+              [
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "uses_O1": false
+          },
+          {
+            "name": "outputs_together",
+            "seconds": 4.333,
+            "same_layer_output_dependency": false
+          },
+          {
+            "name": "complete",
+            "seconds": 6.267
+          }
+        ],
+        "checks": {
+          "inside_canvas": true
+        },
+        "duration_seconds": 7.333333333333333
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-alghrrys",
+        "-o",
+        "02-parallel",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/prefill-decode-article/scenes.py",
+        "ParallelPositions"
+      ],
+      "duration_seconds": 7.333008,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/preview.mp4",
+          "bytes": 242083,
+          "sha256": "73265ee693b37d94494e8279ba12c230e25ebbf4da103e9915bcde42500b816f"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/preview-still.png",
+          "bytes": 106091,
+          "sha256": "e26cc6bce28ec991567a6cbffce1bcb42e332734aee14e7134e448f4667e03e5"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/preview-still-half.png",
+          "bytes": 106091,
+          "sha256": "e26cc6bce28ec991567a6cbffce1bcb42e332734aee14e7134e448f4667e03e5"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/02-parallel/preview-contact-sheet.png",
+          "bytes": 219332,
+          "sha256": "0368345623e240424313b359274a604da3e6ba9dffa61e131887976e93d417cd"
+        }
+      ]
+    },
+    {
+      "id": "03-first-token",
+      "timeline": {
+        "events": [
+          {
+            "name": "causal_grid",
+            "seconds": 0.8,
+            "allowed": [
+              [
+                true,
+                false,
+                false,
+                false
+              ],
+              [
+                true,
+                true,
+                false,
+                false
+              ],
+              [
+                true,
+                true,
+                true,
+                false
+              ],
+              [
+                true,
+                true,
+                true,
+                true
+              ]
+            ]
+          },
+          {
+            "name": "y1_selected",
+            "seconds": 2.533,
+            "cache": 4,
+            "selected": "y1"
+          },
+          {
+            "name": "y1_kv_appended",
+            "seconds": 5.067,
+            "cache": 5
+          },
+          {
+            "name": "y2_selected",
+            "seconds": 6.0,
+            "cache": 5,
+            "selected": "y2"
+          },
+          {
+            "name": "complete",
+            "seconds": 7.533
+          }
+        ],
+        "checks": {
+          "inside_canvas": true
+        },
+        "duration_seconds": 8.599999999999996
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-u7eokg26",
+        "-o",
+        "03-first-token",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/prefill-decode-article/scenes.py",
+        "FirstToken"
+      ],
+      "duration_seconds": 8.599349,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/preview.mp4",
+          "bytes": 259731,
+          "sha256": "0ca455aa9524569748563033868f65d0aa8df6b34bd5368d3c4fe6de3cd21bcc"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/preview-still.png",
+          "bytes": 80731,
+          "sha256": "5cc93b09c601e45a2d145dcee6d5b1cdd3f944bcef6a8e512dfbe3d83019b212"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/preview-still-half.png",
+          "bytes": 80731,
+          "sha256": "5cc93b09c601e45a2d145dcee6d5b1cdd3f944bcef6a8e512dfbe3d83019b212"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/03-first-token/preview-contact-sheet.png",
+          "bytes": 216786,
+          "sha256": "cbe9183e32a14675c7f9f647089afbf92167f2db5c357da23c7bcdaa813c64b3"
+        }
+      ]
+    },
+    {
+      "id": "04-decode-loop",
+      "timeline": {
+        "events": [
+          {
+            "name": "y1_selected",
+            "seconds": 0.533,
+            "cache": [
+              4,
+              4
+            ],
+            "selected": "y1"
+          },
+          {
+            "name": "y1_input",
+            "seconds": 2.267,
+            "cache": [
+              4,
+              4
+            ]
+          },
+          {
+            "name": "y1_layer1",
+            "seconds": 4.333,
+            "cache": [
+              5,
+              4
+            ],
+            "read_includes_self": true
+          },
+          {
+            "name": "y1_layer2",
+            "seconds": 6.2,
+            "cache": [
+              5,
+              5
+            ],
+            "read_includes_self": true
+          },
+          {
+            "name": "y2_selected",
+            "seconds": 7.467,
+            "cache": [
+              5,
+              5
+            ],
+            "selected": "y2",
+            "old_cache_unchanged": true
+          },
+          {
+            "name": "y2_input",
+            "seconds": 9.2,
+            "cache": [
+              5,
+              5
+            ]
+          },
+          {
+            "name": "y2_layer1",
+            "seconds": 11.267,
+            "cache": [
+              6,
+              5
+            ],
+            "read_includes_self": true
+          },
+          {
+            "name": "y2_layer2",
+            "seconds": 13.133,
+            "cache": [
+              6,
+              6
+            ],
+            "read_includes_self": true
+          },
+          {
+            "name": "y3_selected",
+            "seconds": 14.4,
+            "cache": [
+              6,
+              6
+            ],
+            "selected": "y3",
+            "old_cache_unchanged": true
+          },
+          {
+            "name": "complete",
+            "seconds": 15.933
+          }
+        ],
+        "checks": {
+          "inside_canvas": true
+        },
+        "duration_seconds": 16.99999999999997
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-_vikepb6",
+        "-o",
+        "04-decode-loop",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/prefill-decode-article/scenes.py",
+        "DecodeLoop"
+      ],
+      "duration_seconds": 16.999674,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/preview.mp4",
+          "bytes": 701823,
+          "sha256": "9399cc48eb01efce709ed62f768d137827c82b177bdec7ab612aa16fc33a38f4"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/preview-still.png",
+          "bytes": 107233,
+          "sha256": "1de5903a31f53facb7dd4d6a7210c901aaa41f60dc6a7e5d136dc234de6b64d6"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/preview-still-half.png",
+          "bytes": 107233,
+          "sha256": "1de5903a31f53facb7dd4d6a7210c901aaa41f60dc6a7e5d136dc234de6b64d6"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/04-decode-loop/preview-contact-sheet.png",
+          "bytes": 620656,
+          "sha256": "83e93d0ea71d6a15a7715b7271cd67d6b6bcf3a66288284e1d78f24570f28bc5"
+        }
+      ]
+    },
+    {
+      "id": "05-workloads",
+      "timeline": {
+        "events": [
+          {
+            "name": "inputs",
+            "seconds": 0.733,
+            "input_lines": [
+              7,
+              2
+            ]
+          },
+          {
+            "name": "outputs",
+            "seconds": 5.067,
+            "output_lines": [
+              3,
+              7
+            ],
+            "measured": false
+          },
+          {
+            "name": "complete",
+            "seconds": 7.0
+          }
+        ],
+        "checks": {
+          "inside_canvas": true
+        },
+        "duration_seconds": 8.066666666666665
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-hrp5v0vq",
+        "-o",
+        "05-workloads",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/prefill-decode-article/scenes.py",
+        "Workloads"
+      ],
+      "duration_seconds": 8.066341,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/preview.mp4",
+          "bytes": 228702,
+          "sha256": "3afdffb6410cc2f64e3dafdb6306fa755cfab76fba24b03204b6ec32ae4a5775"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/preview-still.png",
+          "bytes": 77862,
+          "sha256": "fb596cbce5e91299874d885e1e1cd970b58d8c8a7e48275b4ff422359131e96f"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/preview-still-half.png",
+          "bytes": 77862,
+          "sha256": "fb596cbce5e91299874d885e1e1cd970b58d8c8a7e48275b4ff422359131e96f"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/05-workloads/preview-contact-sheet.png",
+          "bytes": 112276,
+          "sha256": "f052978e90d356328a3e38873d17533338a5dc37034571ad54e81272b0ac287e"
+        }
+      ]
+    },
+    {
+      "id": "06-scheduling",
+      "timeline": {
+        "events": [
+          {
+            "name": "requests",
+            "seconds": 0.0,
+            "separate_state": true
+          },
+          {
+            "name": "iteration_1",
+            "seconds": 1.0,
+            "decode_request": "A",
+            "prefill_chunk": "B1"
+          },
+          {
+            "name": "chunk_1_retained",
+            "seconds": 1.933,
+            "B_chunks": 1,
+            "A_outputs": 1
+          },
+          {
+            "name": "iteration_2",
+            "seconds": 2.933,
+            "decode_request": "A",
+            "prefill_chunk": "B2"
+          },
+          {
+            "name": "chunk_2_retained",
+            "seconds": 3.867,
+            "B_chunks": 2,
+            "A_outputs": 2
+          },
+          {
+            "name": "iteration_3",
+            "seconds": 4.867,
+            "decode_request": "A",
+            "prefill_chunk": "B3"
+          },
+          {
+            "name": "chunk_3_retained",
+            "seconds": 5.8,
+            "B_chunks": 3,
+            "A_outputs": 3
+          },
+          {
+            "name": "separate_pools",
+            "seconds": 7.4,
+            "request": "B",
+            "B_chunks": 3
+          },
+          {
+            "name": "B_handoff",
+            "seconds": 9.133,
+            "B_chunks": 3,
+            "transferred_request": "B"
+          },
+          {
+            "name": "complete",
+            "seconds": 10.667
+          }
+        ],
+        "checks": {
+          "inside_canvas": true
+        },
+        "duration_seconds": 11.73333333333332
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-qobax_xk",
+        "-o",
+        "06-scheduling",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/prefill-decode-article/scenes.py",
+        "Scheduling"
+      ],
+      "duration_seconds": 11.733008,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/preview.mp4",
+          "bytes": 377176,
+          "sha256": "1f39ee015e32b5d8f6ad2cafe7b0e3bc99cf9be7697de06a58310e0e7efbe99f"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/preview-still.png",
+          "bytes": 70267,
+          "sha256": "275bb306d78b3c51f9c750d14ff2e683446a35abfdaeb2752791fb5fef392fb4"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/preview-still-half.png",
+          "bytes": 70267,
+          "sha256": "275bb306d78b3c51f9c750d14ff2e683446a35abfdaeb2752791fb5fef392fb4"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/06-scheduling/preview-contact-sheet.png",
+          "bytes": 433075,
+          "sha256": "6bf0e965421e0e726e0a5350e386233a278b969e345ecf569ea71bcd71ae7663"
+        }
+      ]
+    },
+    {
+      "id": "07-handoff",
+      "timeline": {
+        "events": [
+          {
+            "name": "L1_ready",
+            "seconds": 0.8,
+            "computed": [
+              1
+            ],
+            "received": []
+          },
+          {
+            "name": "L2_ready",
+            "seconds": 2.267,
+            "computed": [
+              1,
+              2
+            ],
+            "received": [],
+            "transfer_in_flight": [
+              1
+            ]
+          },
+          {
+            "name": "L3_ready",
+            "seconds": 3.733,
+            "computed": [
+              1,
+              2,
+              3
+            ],
+            "received": [
+              1
+            ],
+            "transfer_in_flight": [
+              2
+            ]
+          },
+          {
+            "name": "transfer_tail",
+            "seconds": 5.533,
+            "computed": [
+              1,
+              2,
+              3
+            ],
+            "received": [
+              1,
+              2
+            ],
+            "decode_started": false
+          },
+          {
+            "name": "all_received",
+            "seconds": 7.067,
+            "received": [
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "name": "decode_started",
+            "seconds": 7.933,
+            "received": [
+              1,
+              2,
+              3
+            ],
+            "decode_started": true
+          },
+          {
+            "name": "complete",
+            "seconds": 9.467
+          }
+        ],
+        "checks": {
+          "inside_canvas": true
+        },
+        "duration_seconds": 10.533333333333323
+      },
+      "gif": null,
+      "render_command": [
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/.venv/bin/python3",
+        "-m",
+        "manim",
+        "render",
+        "-r",
+        "960,540",
+        "--fps",
+        "15",
+        "--renderer",
+        "cairo",
+        "--progress_bar",
+        "none",
+        "--disable_caching",
+        "--verbosity",
+        "WARNING",
+        "--media_dir",
+        "/var/folders/m9/f8jjdh0140lc6vxx0ysvkstm0000gn/T/kv-article-loop-i9wmg7az",
+        "-o",
+        "07-handoff",
+        "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/prefill-decode-article/scenes.py",
+        "Handoff"
+      ],
+      "duration_seconds": 10.531706,
+      "video": {
+        "width": 960,
+        "height": 540,
+        "codec": "h264",
+        "fps": "15/1"
+      },
+      "outputs": [
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/preview.mp4",
+          "bytes": 363444,
+          "sha256": "42a08a9888eb6885d244d2948ff86698ad2fc342b867d5b1dc4bdfb546a97e36"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/preview-still.png",
+          "bytes": 103589,
+          "sha256": "3f2d792aff7af869995eb84917ecf25a080d7e572157757384afa5e319e99e2b"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/preview-still-half.png",
+          "bytes": 103589,
+          "sha256": "3f2d792aff7af869995eb84917ecf25a080d7e572157757384afa5e319e99e2b"
+        },
+        {
+          "path": "visuals/animations/projects/prefill-decode-article/rendered/07-handoff/preview-contact-sheet.png",
+          "bytes": 386729,
+          "sha256": "01c8284e803ad8d97f2996cbcd12ee079a2adaaf970e29a6f421350930236557"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "path": "visuals/animations/projects/prefill-decode-article/scenes.py",
+      "sha256": "1a9b8d22abf45a8e613eccc0ccad19d6b2d561016010e9544ba9853f8d9c8572"
+    },
+    {
+      "path": "visuals/animations/projects/prefill-decode-article/render.py",
+      "sha256": "9cd96d041d266a41470570e488e953e6f5b4c9d03c47aa076dbd17f9773c10e3"
+    },
+    {
+      "path": "visuals/animations/manim_style.py",
+      "sha256": "e5ef5e47a93647733e201e64abb16f6214d625fc907ae2b872e9705202c8259e"
+    },
+    {
+      "path": "visuals/animations/uv.lock",
+      "sha256": "c481639a558a546e45fa22bb251c318b8e439eccde30b96fb66dcb40ba448ef8"
+    },
+    {
+      "path": "visuals/animations/projects/kv-article-loops/render.py",
+      "sha256": "49e496295364a87228c2dfc67dc8706f8a0a3db02c40409abf42cbf9df285b5e"
+    },
+    {
+      "path": "publications/x-articles/x-prefill-decode-001/check.py",
+      "sha256": "f55b2e11ac3a0e6deb99ccffdf4c601dd3d5e26aa0754296119682be16585846"
+    },
+    {
+      "path": "visuals/animations/STYLE_GUIDE.md",
+      "sha256": "31ff5d8915a4fca9e2542c8ae42a1fe7194d59c34f66a839b25579841fc78098"
+    }
+  ],
+  "limitations": [
+    "Schematic dependencies and token identities, not measured activations, quality or speed.",
+    "Fade/reset is editorial, not cache eviction or reverse generation.",
+    "Parallel clip shows one attention head; other block operations omitted.",
+    "First-token clip aggregates per-layer KV; decode loop separates two illustrative layers.",
+    "Decode loop compresses embeddings, normalization, positional handling, residual/MLP and vocabulary selection.",
+    "Workload strokes are text-volume symbols, not actual tokens or a timed performance comparison.",
+    "Scheduling retains separate A/B state and B chunk dependencies; budgets/placement are conceptual.",
+    "Handoff is an EXO-inspired KV overlap schematic, not a local benchmark or turnkey software claim.",
+    "Handoff continuation assumes compatible weights, cache, positions and required generation metadata."
+  ],
+  "task": "ANIM-PD-001",
+  "fixture": {
+    "fixture": "two-layer residual causal attention, untrained float64",
+    "seed": 14,
+    "prefill_entries": 4,
+    "entries_after_selection": 4,
+    "entries_after_y1_forward": 5,
+    "cached_vs_full_max_error": 0.0,
+    "chunked_prefill_matches": true,
+    "reversed_row_order_matches_batched_attention": true,
+    "broken_noncausal_prefix_delta": 0.053022891418797985,
+    "benchmark": false
+  }
+}

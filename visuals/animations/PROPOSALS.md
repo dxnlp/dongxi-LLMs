@@ -11,6 +11,89 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### CAND-ANIM-009 extension — document example, two waits, 2026-09-15
+
+- Source: user approved a standalone adaptation of the lifecycle animation,
+  replacing symbolic tokens with readable document facts and output phrases.
+- Task: `ANIM-PD-002`, produced on Mac; revised MP4 and 960px GIF
+  in `projects/two-kinds-of-waiting/`. No modification to the article or original
+  loops. All source/return evidence is in the task packet and project metadata.
+- Mechanism: request send → first arrival (TTFT), then each adjacent pair of
+  output arrivals (ITL). Initial document-processing version rejected; timing
+  revision explicitly approved. One continuous timeline; no benchmark claim.
+- Precision: each word card stands in for one token arrival; no literal segmentation.
+  State: review. No new proposal or follow-on production inferred.
+
+### CAND-ANIM-009 extension — first-token boundary and KV handoff, 2026-09-14
+
+- Current state: review. Learner approved all seven article loops as
+  `ANIM-PD-001`, superseding the earlier deferrals below. Seven GIFs and 1080p
+  MP4s rendered locally and integrated in `X-PD-001`; original stills retained.
+  Numerical, event, media and source-hash checks pass. Previews/final frames
+  inspected; browser playback is not claimed. Await learner visual feedback.
+- Editorial refinement: use report → three conclusions and short prompt → long
+  speech to motivate phase workloads; A's active answer and B's incoming document
+  motivate chunk scheduling. Static images updated. Any future clip should carry
+  these examples without converting schematic sizes into timing/throughput claims.
+- Add the learner's parallel-position question: animate h1/h2 → Q/K/V, share
+  K1/V1 into both causal reads, then produce O1/O2 independently before the next
+  layer. Static dependency figure completed; reverse-row and batched attention
+  checked numerically. Motion remains deferred with all other article clips.
+- Earlier learner direction: add the Decode feedback-loop still now, defer all
+  article animations for later production together. Still is complete; no new
+  ANIM task or render was started. Await renewed production approval.
+- Source: user's standalone `X-PD-001` article approval and automatic mechanism
+  check. Static figures approved for production; motion is still a proposal.
+- Mechanism: prompt positions execute together within a causal layer; prefill
+  predicts y1 while cache length stays N; feeding y1 appends per-layer KV to N+1
+  and predicts y2. Then contrast chunk scheduling and cross-worker KV handoff,
+  including layerwise compute/transfer overlap with a visible communication tail.
+- Evidence: Chapter 4 invariance and Chapter 5 resource accounting; deterministic
+  two-layer fixture checks cached/full and chunked/full equality, with a broken
+  noncausal control. Handoff is a primary-source schematic, not a local benchmark.
+- Production record: `publications/x-articles/x-prefill-decode-001/visual-plan.md`
+  and `ANIM-PD-001`. Preserve object identity; no new candidate duplicate.
+
+### CAND-ANIM-009 extension — inference clocks and phase scheduling, 2026-09-13
+
+- Source: user-approved `X-INFER-001` overview and agent motion-opportunity check.
+- State: discuss motion; seven static article figures exist, no new video render.
+- Mechanism: distinguish TTFT/ITL; preserve per-request KV as batch members
+  complete/join; retain prefix context through chunks; move KV across separate
+  prefill/decode resource pools. Extend existing cache-flow grammar rather than
+  duplicate the article's earlier prefill/decode loop.
+- Evidence: Chapter 4 §4.11 and current primary documentation in the article
+  `source-map.md`; timelines are schematic, not measured speed comparisons.
+- Production dependency: learner selects batching and/or phase-flow storyboard;
+  define admission/preemption and KV ownership invariants in a Mac task packet.
+  Detailed plan: `publications/x-articles/x-inference-001/visual-plan.md`.
+
+### CAND-ANIM-020 — speculative acceptance and the new branch
+
+- Source: user requests speculative decoding in the inference article; agent
+  identifies draft/verify/reject as a mechanism that motion can clarify.
+- State: discuss motion; static rejection-branch figure prepared in `X-INFER-001`.
+- Mechanism: propose candidate sequence, target-model verification, accept a
+  prefix, reject at the first failed position, discard dependent draft suffix,
+  produce a corrected token and continue. Verification concerns probabilities.
+- Evidence: Leviathan et al. ICML 2023 and vLLM documentation in source map;
+  illustrative acceptance counts, no model output or throughput observation.
+- Production dependency: choose exact sampling or greedy scope explicitly;
+  implement acceptance/correction fixture before render, including all-accepted
+  and early-rejection boundaries. No unconditional speed or text-identity promise.
+
+### CAND-ANIM-021 — representation size versus total memory
+
+- Source: agent automatic arithmetic capture from user-approved quantization topic.
+- State: discuss motion; static calculated weight-payload comparison exists.
+- Canonical equation: weight payload = parameter count × bits per weight / 8.
+  Exactly 8 billion weights at 16 bits and 4 bits give 16 GB and 4 GB before
+  metadata; decimal GB, not measured GPU allocation.
+- Evidence: Chapter 5 §5.18 plus source-mapped quantization documentation.
+- Production dependency: fixed parameter identity, separate weight/KV/buffer
+  categories, no implication that payload shrinkage guarantees speed or quality.
+  Extend existing cache-memory visual language; static article chart may suffice.
+
 ### CAND-ANIM-009 extension — A/B/C prefix reuse, 2026-09-13
 
 - Source: user; approved for social-post animation as `ANIM-KV-007`.
