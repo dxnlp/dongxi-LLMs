@@ -1,0 +1,306 @@
+{
+  "video": "out/ppo-grpo-dpo-beginner.mp4",
+  "bytes": 12113289,
+  "sha256": "48ef06c548f5cef090e23abff55ddeb9d880d1737ba93549ff58ce762abae7a1",
+  "events": [
+    {
+      "name": "title",
+      "t": 2.0
+    },
+    {
+      "name": "words",
+      "t": 8.867
+    },
+    {
+      "name": "wheel",
+      "t": 11.567,
+      "shares": [
+        0.4,
+        0.35,
+        0.15,
+        0.1
+      ]
+    },
+    {
+      "name": "spun",
+      "t": 17.867,
+      "landed": "Sydney"
+    },
+    {
+      "name": "mistake",
+      "t": 19.667
+    },
+    {
+      "name": "soup",
+      "t": 26.567
+    },
+    {
+      "name": "judge",
+      "t": 33.4
+    },
+    {
+      "name": "hacking",
+      "t": 40.6,
+      "scores": [
+        7,
+        8,
+        9,
+        10
+      ]
+    },
+    {
+      "name": "leash",
+      "t": 44.3
+    },
+    {
+      "name": "pulled_back",
+      "t": 48.8
+    },
+    {
+      "name": "families",
+      "t": 53.5
+    },
+    {
+      "name": "ppo_scored",
+      "t": 62.5,
+      "score": 2.0
+    },
+    {
+      "name": "ppo_guesses",
+      "t": 70.767,
+      "guesses": [
+        6.0,
+        6.0,
+        6.5,
+        6.5,
+        7.0,
+        7.0,
+        2.0
+      ]
+    },
+    {
+      "name": "ppo_credit",
+      "t": 74.667,
+      "credits": [
+        0.0,
+        0.5,
+        0.0,
+        0.5,
+        0.0,
+        -5.0
+      ]
+    },
+    {
+      "name": "ppo_clip",
+      "t": 81.867,
+      "share": 0.32
+    },
+    {
+      "name": "ppo_rounds",
+      "t": 89.567,
+      "final": [
+        0.0902,
+        0.7696,
+        0.0841,
+        0.0561
+      ]
+    },
+    {
+      "name": "ppo_done",
+      "t": 95.067,
+      "models": [
+        "student",
+        "coach",
+        "judge",
+        "original"
+      ]
+    },
+    {
+      "name": "grpo_tries",
+      "t": 103.167,
+      "n": 4
+    },
+    {
+      "name": "grpo_no_coach",
+      "t": 105.867,
+      "models": [
+        "student",
+        "judge",
+        "original"
+      ]
+    },
+    {
+      "name": "grpo_scored",
+      "t": 110.367,
+      "scores": [
+        1,
+        0,
+        1,
+        0
+      ]
+    },
+    {
+      "name": "grpo_credit",
+      "t": 115.767,
+      "mean": 0.5,
+      "credits": [
+        0.5,
+        -0.5,
+        0.5,
+        -0.5
+      ]
+    },
+    {
+      "name": "grpo_shared",
+      "t": 119.067
+    },
+    {
+      "name": "grpo_done",
+      "t": 122.867,
+      "models": [
+        "student",
+        "judge",
+        "original"
+      ]
+    },
+    {
+      "name": "dpo_eye_test",
+      "t": 129.067
+    },
+    {
+      "name": "dpo_pair",
+      "t": 132.267
+    },
+    {
+      "name": "dpo_why",
+      "t": 135.767,
+      "models": [
+        "student",
+        "original"
+      ]
+    },
+    {
+      "name": "dpo_start",
+      "t": 139.367,
+      "margin": 0.0,
+      "push": 0.5
+    },
+    {
+      "name": "dpo_trained",
+      "t": 146.167,
+      "margin": 2.197225,
+      "ratio_a": 3.0,
+      "ratio_b": 0.333333,
+      "push": 0.1,
+      "lead": 9.0
+    },
+    {
+      "name": "dpo_leash",
+      "t": 151.067
+    },
+    {
+      "name": "dpo_done",
+      "t": 154.067,
+      "models": [
+        "student",
+        "original"
+      ]
+    },
+    {
+      "name": "summary",
+      "t": 162.567
+    }
+  ],
+  "duration_seconds": 165.767,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fps": "30/1",
+  "codec": "h264",
+  "render_command": [
+    "-m",
+    "manim",
+    "render",
+    "-r",
+    "1920,1080",
+    "--fps",
+    "30",
+    "--renderer",
+    "cairo",
+    "--progress_bar",
+    "none",
+    "--disable_caching",
+    "--verbosity",
+    "WARNING",
+    "--media_dir",
+    "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/rl-ppo-grpo-dpo-beginner/media",
+    "-o",
+    "ppo-grpo-dpo-beginner",
+    "scene.py",
+    "BeginnerFeedback"
+  ],
+  "environment": {
+    "host": "mac.lan",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.12.11",
+    "manim": "0.21.0",
+    "numpy": "2.5.2",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "checks": {
+    "event_order": true,
+    "events_monotonic": true,
+    "wheel_matches_fixture": true,
+    "spin_lands_on_biggest_slice": true,
+    "judge_fooled_by_length": true,
+    "ppo_score_matches": true,
+    "ppo_guess_line_matches": true,
+    "ppo_credit_is_change_in_guess": true,
+    "ppo_clip_stops_at_fence": true,
+    "ppo_rounds_end_on_fixture": true,
+    "ppo_four_models": true,
+    "grpo_drops_only_coach": true,
+    "grpo_scores_match_key": true,
+    "grpo_credit_is_score_minus_mean": true,
+    "dpo_two_models": true,
+    "dpo_starts_even": true,
+    "dpo_ends_on_fixture": true,
+    "dpo_push_is_one_over_one_plus_lead": true,
+    "video_dimensions": true,
+    "video_h264_yuv420p": true
+  },
+  "fixture_checks": {
+    "wheel_sums_to_one": true,
+    "fence_step_is_40_to_32": true,
+    "fence_step_keeps_total": true,
+    "picked_word_moves_at_most_20_percent": true,
+    "rounds_keep_total": true,
+    "canberra_ends_on_top": true,
+    "credits_add_up_to_surprise": true,
+    "sydney_gets_the_blame": true,
+    "ramble_scores_rise_with_length": true,
+    "tries_arithmetic_as_labelled": true,
+    "group_credits_sum_to_zero": true,
+    "dpo_ends_3x_and_one_third": true,
+    "dpo_push_starts_half_ends_tenth": true,
+    "dpo_push_fades_each_step": true,
+    "dpo_loss_falls_from_log2": true,
+    "dpo_push_is_minus_loss_slope": true
+  },
+  "sources": {
+    "scene.py": "15fccaceafeb5844f224fa41b8b09bdf3b423ce796941505fc255aff189e4eb3",
+    "kit.py": "7b324f33c12029d466cf5f5bf08248f4841fa4251afbf3e528a31d69a78e1641",
+    "fixture.py": "448335191d28dd15e0124a04cd229fa245be70c7697e6f7c86887a64ef3fabca",
+    "render.py": "99c1851228c659adf69b51e17aa667ba4e861536a75aced2b4ba744587db8a6d"
+  },
+  "contact_sheets": [
+    "out/ppo-grpo-dpo-beginner-sheet-1.png",
+    "out/ppo-grpo-dpo-beginner-sheet-2.png",
+    "out/ppo-grpo-dpo-beginner-sheet-3.png",
+    "out/ppo-grpo-dpo-beginner-sheet-4.png",
+    "out/ppo-grpo-dpo-beginner-sheet-5.png",
+    "out/ppo-grpo-dpo-beginner-sheet-6.png"
+  ],
+  "poster": "out/ppo-grpo-dpo-beginner-poster.png"
+}

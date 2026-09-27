@@ -1,0 +1,289 @@
+{
+  "note": "Illustrative toy values for the animation; not measurements of a trained model.",
+  "wheel": {
+    "words": [
+      "Sydney",
+      "Canberra",
+      "Melbourne",
+      "other"
+    ],
+    "shares": [
+      0.4,
+      0.35,
+      0.15,
+      0.1
+    ],
+    "eps": 0.2,
+    "after_one_round": [
+      0.32000000000000006,
+      0.3966666666666666,
+      0.16999999999999998,
+      0.11333333333333334
+    ],
+    "rounds": [
+      "Sydney",
+      "Canberra",
+      "Sydney",
+      "Canberra",
+      "Sydney",
+      "Canberra"
+    ],
+    "round_shares": [
+      [
+        0.4,
+        0.35,
+        0.15,
+        0.1
+      ],
+      [
+        0.32000000000000006,
+        0.3966666666666666,
+        0.16999999999999998,
+        0.11333333333333334
+      ],
+      [
+        0.2779226519337017,
+        0.4759999999999999,
+        0.14764640883977898,
+        0.09843093922651934
+      ],
+      [
+        0.22233812154696136,
+        0.5126418314255983,
+        0.15901202821646418,
+        0.10600801881097614
+      ],
+      [
+        0.17556356058742306,
+        0.6151701977107179,
+        0.12555974502111542,
+        0.08370649668074362
+      ],
+      [
+        0.14045084846993847,
+        0.6413702696906307,
+        0.13090732910365852,
+        0.08727155273577235
+      ],
+      [
+        0.09021463493363484,
+        0.7696443236287568,
+        0.08408462486256504,
+        0.056056416575043365
+      ]
+    ]
+  },
+  "ppo": {
+    "answer": [
+      "The",
+      "capital",
+      "of",
+      "Australia",
+      "is",
+      "Sydney"
+    ],
+    "coach_guesses": [
+      6.0,
+      6.0,
+      6.5,
+      6.5,
+      7.0,
+      7.0
+    ],
+    "judge_score": 2.0,
+    "credits": [
+      0.0,
+      0.5,
+      0.0,
+      0.5,
+      0.0,
+      -5.0
+    ],
+    "ramble": [
+      "Canberra",
+      "is",
+      "a",
+      "city,",
+      "a",
+      "big",
+      "city,",
+      "a",
+      "very,",
+      "very",
+      "big",
+      "city\u2026"
+    ],
+    "ramble_scores": [
+      [
+        1,
+        7
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        8,
+        9
+      ],
+      [
+        12,
+        10
+      ]
+    ]
+  },
+  "grpo": {
+    "question": "What is 17 \u00d7 3?",
+    "tries": [
+      [
+        "10 \u00d7 3 = 30",
+        "7 \u00d7 3 = 21",
+        "answer: 51"
+      ],
+      [
+        "10 \u00d7 3 = 30",
+        "7 \u00d7 3 = 11",
+        "answer: 41"
+      ],
+      [
+        "17 + 17 = 34",
+        "34 + 17 = 51",
+        "answer: 51"
+      ],
+      [
+        "20 \u00d7 3 = 60",
+        "60 \u2212 3 = 57",
+        "answer: 57"
+      ]
+    ],
+    "key": 51,
+    "scores": [
+      1,
+      0,
+      1,
+      0
+    ],
+    "mean": 0.5,
+    "std": 0.5,
+    "credits": [
+      0.5,
+      -0.5,
+      0.5,
+      -0.5
+    ],
+    "normalized_credits": [
+      1.0,
+      -1.0,
+      1.0,
+      -1.0
+    ]
+  },
+  "dpo": {
+    "ref_liking": {
+      "A": 0.2,
+      "B": 0.3
+    },
+    "eta": 1.151663505812214,
+    "steps": 8,
+    "path": [
+      {
+        "margin": 0.0,
+        "ratio_a": 1.0,
+        "ratio_b": 1.0,
+        "push": 0.5,
+        "loss": 0.6931471805599453
+      },
+      {
+        "margin": 0.575831752906107,
+        "ratio_a": 1.333645108447411,
+        "ratio_b": 0.7498246674965647,
+        "push": 0.35989227017072284,
+        "loss": 0.4461187889357182
+      },
+      {
+        "margin": 0.9903065464856382,
+        "ratio_a": 1.6407497028128237,
+        "ratio_b": 0.6094774835464832,
+        "push": 0.27085153323232686,
+        "loss": 0.3158779095914567
+      },
+      {
+        "margin": 1.3022363728025932,
+        "ratio_a": 1.9176839587059633,
+        "ratio_b": 0.5214623585185494,
+        "push": 0.21378887967324475,
+        "loss": 0.2405299216950756
+      },
+      {
+        "margin": 1.5484492234707479,
+        "ratio_a": 2.168909727861372,
+        "ratio_b": 0.46106114383379077,
+        "push": 0.17531036134123082,
+        "loss": 0.19274815899188774
+      },
+      {
+        "margin": 1.7503477688181959,
+        "ratio_a": 2.399292457248133,
+        "ratio_b": 0.41678954017425174,
+        "push": 0.1480033395887433,
+        "loss": 0.16017267186560114
+      },
+      {
+        "margin": 1.9207978137608837,
+        "ratio_a": 2.6127385049389447,
+        "ratio_b": 0.38274017782861447,
+        "push": 0.12777262613499762,
+        "loss": 0.13670513921730373
+      },
+      {
+        "margin": 2.067948884322348,
+        "ratio_a": 2.812220661271603,
+        "ratio_b": 0.3555908729963706,
+        "push": 0.11225127162703555,
+        "loss": 0.11906653957566331
+      },
+      {
+        "margin": 2.197224577336219,
+        "ratio_a": 2.9999999999999996,
+        "ratio_b": 0.33333333333333337,
+        "push": 0.10000000000000002,
+        "loss": 0.10536051565782634
+      }
+    ]
+  },
+  "models": {
+    "ppo": [
+      "student",
+      "coach",
+      "judge",
+      "original"
+    ],
+    "grpo": [
+      "student",
+      "judge",
+      "original"
+    ],
+    "dpo": [
+      "student",
+      "original"
+    ]
+  },
+  "checks": {
+    "wheel_sums_to_one": true,
+    "fence_step_is_40_to_32": true,
+    "fence_step_keeps_total": true,
+    "picked_word_moves_at_most_20_percent": true,
+    "rounds_keep_total": true,
+    "canberra_ends_on_top": true,
+    "credits_add_up_to_surprise": true,
+    "sydney_gets_the_blame": true,
+    "ramble_scores_rise_with_length": true,
+    "tries_arithmetic_as_labelled": true,
+    "group_credits_sum_to_zero": true,
+    "dpo_ends_3x_and_one_third": true,
+    "dpo_push_starts_half_ends_tenth": true,
+    "dpo_push_fades_each_step": true,
+    "dpo_loss_falls_from_log2": true,
+    "dpo_push_is_minus_loss_slope": true
+  }
+}

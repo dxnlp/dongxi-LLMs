@@ -1,0 +1,245 @@
+{
+  "video": "out/ppo-grpo-dpo.mp4",
+  "bytes": 6354560,
+  "sha256": "6896375b06f5ea80b494776dfd466ee937d2b3ee82fe9b0b7a5b4f917d4ea4fe",
+  "events": [
+    {
+      "name": "title",
+      "t": 2.9
+    },
+    {
+      "name": "shared_goal",
+      "t": 11.8
+    },
+    {
+      "name": "families",
+      "t": 16.9
+    },
+    {
+      "name": "ppo_sampled",
+      "t": 22.3,
+      "tokens": 6
+    },
+    {
+      "name": "ppo_scored",
+      "t": 26.2,
+      "reward": 0.62
+    },
+    {
+      "name": "ppo_values",
+      "t": 31.8,
+      "values": [
+        0.5,
+        0.55,
+        0.8,
+        0.4,
+        0.45,
+        0.5
+      ]
+    },
+    {
+      "name": "ppo_advantages",
+      "t": 35.8,
+      "signs": [
+        1,
+        1,
+        -1,
+        1,
+        1,
+        1
+      ],
+      "heights": [
+        0.3706,
+        0.2006,
+        -0.7362,
+        0.7409,
+        0.5904,
+        0.432
+      ]
+    },
+    {
+      "name": "ppo_clipped",
+      "t": 44.2,
+      "final_ratio": [
+        1.2,
+        1.2,
+        0.8,
+        1.2,
+        1.2,
+        1.2
+      ]
+    },
+    {
+      "name": "ppo_done",
+      "t": 49.4,
+      "models": [
+        "policy",
+        "critic",
+        "reward",
+        "reference"
+      ]
+    },
+    {
+      "name": "grpo_no_critic",
+      "t": 52.9,
+      "models": [
+        "policy",
+        "reward",
+        "reference"
+      ]
+    },
+    {
+      "name": "grpo_group",
+      "t": 56.5,
+      "group_size": 4
+    },
+    {
+      "name": "grpo_mean",
+      "t": 60.9,
+      "mean": 0.49999999999999994
+    },
+    {
+      "name": "grpo_advantages",
+      "t": 63.6,
+      "widths": [
+        1.3876,
+        -0.6938,
+        0.3469,
+        -1.0407
+      ]
+    },
+    {
+      "name": "grpo_broadcast",
+      "t": 65.7
+    },
+    {
+      "name": "grpo_done",
+      "t": 68.9
+    },
+    {
+      "name": "dpo_offline",
+      "t": 73.7,
+      "models": [
+        "policy",
+        "reference"
+      ]
+    },
+    {
+      "name": "dpo_pair",
+      "t": 77.5
+    },
+    {
+      "name": "dpo_implicit_reward",
+      "t": 81.7,
+      "start": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "name": "dpo_start",
+      "t": 84.0,
+      "margin": 0.0,
+      "loss": 0.6931
+    },
+    {
+      "name": "dpo_trained",
+      "t": 90.5,
+      "margin": 2.2419,
+      "loss": 0.101,
+      "weight": 0.096
+    },
+    {
+      "name": "dpo_done",
+      "t": 93.6
+    },
+    {
+      "name": "summary",
+      "t": 103.2
+    }
+  ],
+  "duration_seconds": 104.4,
+  "resolution": [
+    1920,
+    1080
+  ],
+  "fps": "30/1",
+  "codec": "h264",
+  "render_command": [
+    "-m",
+    "manim",
+    "render",
+    "-r",
+    "1920,1080",
+    "--fps",
+    "30",
+    "--renderer",
+    "cairo",
+    "--progress_bar",
+    "none",
+    "--disable_caching",
+    "--verbosity",
+    "WARNING",
+    "--media_dir",
+    "/Users/yongchao/dongxi-LLMs/visuals/animations/projects/rl-ppo-grpo-dpo/media",
+    "-o",
+    "ppo-grpo-dpo",
+    "scene.py",
+    "FeedbackFamilies"
+  ],
+  "environment": {
+    "host": "mac.lan",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "python": "3.12.11",
+    "manim": "0.21.0",
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.2",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "checks": {
+    "event_order": true,
+    "events_monotonic": true,
+    "ppo_bar_signs_match_fixture": true,
+    "ppo_bar_heights_proportional": true,
+    "ppo_ratios_end_on_clip_bounds": true,
+    "ppo_uses_four_models": true,
+    "grpo_drops_only_critic": true,
+    "grpo_bar_widths_proportional": true,
+    "grpo_mean_matches": true,
+    "dpo_two_models": true,
+    "dpo_starts_at_zero_margin": true,
+    "dpo_ends_at_fixture_state": true,
+    "video_dimensions": true,
+    "video_h264_yuv420p": true
+  },
+  "fixture_checks": {
+    "gae_recursion_matches_sum": true,
+    "gae_lambda1_is_return_minus_value": true,
+    "ppo_advantage_has_both_signs": true,
+    "ppo_bad_token_is_negative": true,
+    "ppo_clip_gradient_zero_outside_band": true,
+    "ppo_ratios_stay_in_band": true,
+    "ppo_ratio_direction_matches_advantage": true,
+    "grpo_advantages_zero_mean": true,
+    "grpo_advantages_unit_std": true,
+    "grpo_std_choice_only_rescales": true,
+    "dpo_starts_at_log2": true,
+    "dpo_loss_decreases": true,
+    "dpo_weight_decreases": true,
+    "dpo_gradient_is_minus_sigmoid_neg_margin": true
+  },
+  "sources": {
+    "scene.py": "7af82be7f0b51eed34531af69ffae9ef243c28e43a4d48029aa5576fba4878b8",
+    "kit.py": "38328d80092556172b459e9e96aed3feb089102d1038300db3cdac27873f304c",
+    "mathsvg.py": "5342109e9bea56e96f8e1c6d1bf6081e3efa8cd46f466c333550c136f418264b",
+    "fixture.py": "ff1776b83aed9691384297a2f4f5e05d34888044e9561881d8b35b7e7a135b38",
+    "render.py": "1fba4508116c173a3cad44d6e6eeb5f76c310db999b833dcf9691f6f20a202df"
+  },
+  "contact_sheets": [
+    "out/ppo-grpo-dpo-sheet-1.png",
+    "out/ppo-grpo-dpo-sheet-2.png",
+    "out/ppo-grpo-dpo-sheet-3.png",
+    "out/ppo-grpo-dpo-sheet-4.png"
+  ],
+  "poster": "out/ppo-grpo-dpo-poster.png"
+}

@@ -1,0 +1,198 @@
+{
+  "note": "Illustrative toy values for the animation; not measurements of a trained model.",
+  "ppo": {
+    "values": [
+      0.5,
+      0.55,
+      0.8,
+      0.4,
+      0.45,
+      0.5
+    ],
+    "reward": 0.62,
+    "gamma": 1.0,
+    "lam": 0.95,
+    "eps": 0.2,
+    "deltas": [
+      0.05,
+      0.25,
+      -0.4,
+      0.05,
+      0.05,
+      0.12
+    ],
+    "advantages": [
+      0.102948,
+      0.055734,
+      -0.20449,
+      0.2058,
+      0.164,
+      0.12
+    ],
+    "ratio_path": [
+      [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      [
+        1.069206,
+        1.036892,
+        0.875536,
+        1.14313,
+        1.112489,
+        1.081123
+      ],
+      [
+        1.143201,
+        1.075144,
+        0.8,
+        1.2,
+        1.2,
+        1.168826
+      ],
+      [
+        1.2,
+        1.114808,
+        0.8,
+        1.2,
+        1.2,
+        1.2
+      ],
+      [
+        1.2,
+        1.155935,
+        0.8,
+        1.2,
+        1.2,
+        1.2
+      ],
+      [
+        1.2,
+        1.19858,
+        0.8,
+        1.2,
+        1.2,
+        1.2
+      ],
+      [
+        1.2,
+        1.2,
+        0.8,
+        1.2,
+        1.2,
+        1.2
+      ]
+    ]
+  },
+  "grpo": {
+    "rewards": [
+      0.9,
+      0.3,
+      0.6,
+      0.2
+    ],
+    "lengths": [
+      6,
+      5,
+      7,
+      4
+    ],
+    "mean": 0.49999999999999994,
+    "std_population": 0.27386127875258304,
+    "std_unbiased": 0.31622776601683794,
+    "advantages": [
+      1.460593,
+      -0.730297,
+      0.365148,
+      -1.095445
+    ]
+  },
+  "dpo": {
+    "alpha": 0.6,
+    "trajectory": [
+      {
+        "r_w": 0.0,
+        "r_l": 0.0,
+        "margin": 0.0,
+        "loss": 0.693147,
+        "weight": 0.5
+      },
+      {
+        "r_w": 0.3,
+        "r_l": -0.3,
+        "margin": 0.6,
+        "loss": 0.437488,
+        "weight": 0.354344
+      },
+      {
+        "r_w": 0.512606,
+        "r_l": -0.512606,
+        "margin": 1.025212,
+        "loss": 0.306543,
+        "weight": 0.264013
+      },
+      {
+        "r_w": 0.671014,
+        "r_l": -0.671014,
+        "margin": 1.342028,
+        "loss": 0.232155,
+        "weight": 0.207177
+      },
+      {
+        "r_w": 0.79532,
+        "r_l": -0.79532,
+        "margin": 1.59064,
+        "loss": 0.185479,
+        "weight": 0.169294
+      },
+      {
+        "r_w": 0.896897,
+        "r_l": -0.896897,
+        "margin": 1.793793,
+        "loss": 0.15386,
+        "weight": 0.142608
+      },
+      {
+        "r_w": 0.982461,
+        "r_l": -0.982461,
+        "margin": 1.964923,
+        "loss": 0.131174,
+        "weight": 0.122935
+      },
+      {
+        "r_w": 1.056223,
+        "r_l": -1.056223,
+        "margin": 2.112445,
+        "loss": 0.114169,
+        "weight": 0.107893
+      },
+      {
+        "r_w": 1.120958,
+        "r_l": -1.120958,
+        "margin": 2.241917,
+        "loss": 0.10098,
+        "weight": 0.096049
+      }
+    ]
+  },
+  "checks": {
+    "gae_recursion_matches_sum": true,
+    "gae_lambda1_is_return_minus_value": true,
+    "ppo_advantage_has_both_signs": true,
+    "ppo_bad_token_is_negative": true,
+    "ppo_clip_gradient_zero_outside_band": true,
+    "ppo_ratios_stay_in_band": true,
+    "ppo_ratio_direction_matches_advantage": true,
+    "grpo_advantages_zero_mean": true,
+    "grpo_advantages_unit_std": true,
+    "grpo_std_choice_only_rescales": true,
+    "dpo_starts_at_log2": true,
+    "dpo_loss_decreases": true,
+    "dpo_weight_decreases": true,
+    "dpo_gradient_is_minus_sigmoid_neg_margin": true
+  }
+}
