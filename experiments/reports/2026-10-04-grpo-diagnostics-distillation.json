@@ -1,0 +1,3692 @@
+{
+  "mode": "cpu-mechanism",
+  "command": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python scripts/run_grpo_capstone_experiments.py",
+  "python": "3.12.14",
+  "torch": "2.13.0+cu130",
+  "machine": "aarch64",
+  "num_threads": 1,
+  "source_sha256": {
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/optimization_diagnostics_lab.py": "b7feb4704606e4cd3c62d1a361c19234b818c4b10ddf5d590db46b231ec1330e",
+    "src/dongxi_llms/distillation_lab.py": "1bb80abc3b9135d92577dcf827c3f5237e23ceb45759d7fd155a103380bc7c8c",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "scripts/run_grpo_capstone_experiments.py": "b971f7e96be179610c6165d1c83db958c7faf6d9b74181143ef1f753d3ee0c7f",
+    "experiments/specs/2026-10-04-grpo-diagnostics-distillation.md": "3ea2a658701eef69b6fa11cbd05d09fd330113cc58b5968eb9f103266803c828"
+  },
+  "seconds": 2.944359279994387,
+  "grpo": [
+    {
+      "mode": "cpu-mechanism",
+      "architecture": "one-layer TinyDecoder,16-wide",
+      "seed": 2223,
+      "group_size": 4,
+      "updates": 12,
+      "warm_start_updates": 60,
+      "sft_first_loss": 2.5161097049713135,
+      "sft_final_loss": 0.003726016730070114,
+      "beta": 0.02,
+      "advantage_std": "population",
+      "length_reduction": "per-response mean then batch mean",
+      "max_new_tokens": 3,
+      "verifier": "one-integer-then-eos-v1",
+      "data_sha256": "6c9f5672307c60d5981f34f203276054287a6f541d2cf3c2520711a4c54fdfa5",
+      "initial": {
+        "train": {
+          "accuracy": 1.0,
+          "n": 12,
+          "rows": [
+            {
+              "prompt": "0+0",
+              "expected": 0,
+              "tokens": [
+                4,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "0+1",
+              "expected": 1,
+              "tokens": [
+                5,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "0+3",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+0",
+              "expected": 1,
+              "tokens": [
+                5,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+1",
+              "expected": 2,
+              "tokens": [
+                6,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+2",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+1",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+2",
+              "expected": 4,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+3",
+              "expected": 5,
+              "tokens": [
+                9,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+0",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+2",
+              "expected": 5,
+              "tokens": [
+                9,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+3",
+              "expected": 6,
+              "tokens": [
+                10,
+                2,
+                2
+              ],
+              "reward": 1.0
+            }
+          ]
+        },
+        "heldout": {
+          "accuracy": 0.0,
+          "n": 4,
+          "rows": [
+            {
+              "prompt": "0+2",
+              "expected": 2,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "1+3",
+              "expected": 4,
+              "tokens": [
+                10,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "2+0",
+              "expected": 2,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "3+1",
+              "expected": 4,
+              "tokens": [
+                10,
+                2,
+                2
+              ],
+              "reward": 0.0
+            }
+          ]
+        }
+      },
+      "final": {
+        "train": {
+          "accuracy": 1.0,
+          "n": 12,
+          "rows": [
+            {
+              "prompt": "0+0",
+              "expected": 0,
+              "tokens": [
+                4,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "0+1",
+              "expected": 1,
+              "tokens": [
+                5,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "0+3",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+0",
+              "expected": 1,
+              "tokens": [
+                5,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+1",
+              "expected": 2,
+              "tokens": [
+                6,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+2",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+1",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+2",
+              "expected": 4,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+3",
+              "expected": 5,
+              "tokens": [
+                9,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+0",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+2",
+              "expected": 5,
+              "tokens": [
+                9,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+3",
+              "expected": 6,
+              "tokens": [
+                10,
+                2,
+                2
+              ],
+              "reward": 1.0
+            }
+          ]
+        },
+        "heldout": {
+          "accuracy": 0.0,
+          "n": 4,
+          "rows": [
+            {
+              "prompt": "0+2",
+              "expected": 2,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "1+3",
+              "expected": 4,
+              "tokens": [
+                6,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "2+0",
+              "expected": 2,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "3+1",
+              "expected": 4,
+              "tokens": [
+                6,
+                2,
+                2
+              ],
+              "reward": 0.0
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "update": 1,
+          "behavior_version": 0,
+          "policy_version": 1,
+          "loss": 1.4901161193847656e-08,
+          "mean_reward": 0.875,
+          "zero_variance_fraction": 0.5,
+          "mean_length": 2.0,
+          "valid_response_tokens": 16,
+          "gradient_norm": 5.010911464691162,
+          "entropy_nats": 0.07532599568367004,
+          "exact_kl_nats": 0.0069245086051523685,
+          "ratio_min": 0.12003633379936218,
+          "ratio_max": 1.0000011920928955,
+          "clip_fraction": 0.0625
+        },
+        {
+          "update": 2,
+          "behavior_version": 1,
+          "policy_version": 2,
+          "loss": 5.05298376083374e-05,
+          "mean_reward": 0.875,
+          "zero_variance_fraction": 0.5,
+          "mean_length": 2.125,
+          "valid_response_tokens": 17,
+          "gradient_norm": 0.9744006991386414,
+          "entropy_nats": 0.0535920076072216,
+          "exact_kl_nats": 0.012583843432366848,
+          "ratio_min": 0.7295845746994019,
+          "ratio_max": 1.0000215768814087,
+          "clip_fraction": 0.05882352963089943
+        },
+        {
+          "update": 3,
+          "behavior_version": 2,
+          "policy_version": 3,
+          "loss": 3.253874820074998e-05,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 16,
+          "gradient_norm": 0.004380787257105112,
+          "entropy_nats": 0.06886515766382217,
+          "exact_kl_nats": 0.004999716766178608,
+          "ratio_min": 0.9918450713157654,
+          "ratio_max": 0.9999665021896362,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 4,
+          "behavior_version": 3,
+          "policy_version": 4,
+          "loss": 3.6665398511104286e-05,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 16,
+          "gradient_norm": 0.005434611812233925,
+          "entropy_nats": 0.03802243620157242,
+          "exact_kl_nats": 0.003887358121573925,
+          "ratio_min": 0.9970216155052185,
+          "ratio_max": 1.0000008344650269,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 5,
+          "behavior_version": 4,
+          "policy_version": 5,
+          "loss": 1.7177426343550906e-06,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 16,
+          "gradient_norm": 0.0003074600244872272,
+          "entropy_nats": 0.01602671667933464,
+          "exact_kl_nats": 0.00013825218775309622,
+          "ratio_min": 0.9999361634254456,
+          "ratio_max": 1.0000090599060059,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 6,
+          "behavior_version": 5,
+          "policy_version": 6,
+          "loss": 3.998859028797597e-06,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 16,
+          "gradient_norm": 0.0005374816828407347,
+          "entropy_nats": 0.02211970090866089,
+          "exact_kl_nats": 0.00028718699468299747,
+          "ratio_min": 0.9998409748077393,
+          "ratio_max": 1.0000073909759521,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 7,
+          "behavior_version": 6,
+          "policy_version": 7,
+          "loss": 0.02158483862876892,
+          "mean_reward": 0.625,
+          "zero_variance_fraction": 0.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 16,
+          "gradient_norm": 18.425199508666992,
+          "entropy_nats": 0.2846273183822632,
+          "exact_kl_nats": 0.8046725988388062,
+          "ratio_min": 0.3538926839828491,
+          "ratio_max": 1.3397804498672485,
+          "clip_fraction": 0.1875
+        },
+        {
+          "update": 8,
+          "behavior_version": 7,
+          "policy_version": 8,
+          "loss": 0.0011870265007019043,
+          "mean_reward": 0.875,
+          "zero_variance_fraction": 0.5,
+          "mean_length": 2.0,
+          "valid_response_tokens": 16,
+          "gradient_norm": 10.938655853271484,
+          "entropy_nats": 0.03872835636138916,
+          "exact_kl_nats": 0.004801187664270401,
+          "ratio_min": 0.1738787144422531,
+          "ratio_max": 1.07662832736969,
+          "clip_fraction": 0.0625
+        },
+        {
+          "update": 9,
+          "behavior_version": 8,
+          "policy_version": 9,
+          "loss": 0.0006006360054016113,
+          "mean_reward": 0.875,
+          "zero_variance_fraction": 0.5,
+          "mean_length": 1.875,
+          "valid_response_tokens": 15,
+          "gradient_norm": 19.797407150268555,
+          "entropy_nats": 0.12020289152860641,
+          "exact_kl_nats": 0.03684582561254501,
+          "ratio_min": 0.24001337587833405,
+          "ratio_max": 1.0036280155181885,
+          "clip_fraction": 0.06666667014360428
+        },
+        {
+          "update": 10,
+          "behavior_version": 9,
+          "policy_version": 10,
+          "loss": 4.0351089410251006e-05,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 16,
+          "gradient_norm": 0.003187795402482152,
+          "entropy_nats": 0.035619597882032394,
+          "exact_kl_nats": 0.0021279240027070045,
+          "ratio_min": 0.9993043541908264,
+          "ratio_max": 1.0008552074432373,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 11,
+          "behavior_version": 10,
+          "policy_version": 11,
+          "loss": 2.8613088943529874e-05,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 16,
+          "gradient_norm": 0.002925296314060688,
+          "entropy_nats": 0.02386264130473137,
+          "exact_kl_nats": 0.0021274059545248747,
+          "ratio_min": 0.9988560676574707,
+          "ratio_max": 0.9999951124191284,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 12,
+          "behavior_version": 11,
+          "policy_version": 12,
+          "loss": 2.672050686669536e-05,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 16,
+          "gradient_norm": 0.0037569578271359205,
+          "entropy_nats": 0.025820456445217133,
+          "exact_kl_nats": 0.0015791421756148338,
+          "ratio_min": 0.9996470212936401,
+          "ratio_max": 1.0000214576721191,
+          "clip_fraction": 0.0
+        }
+      ],
+      "limits": "Original tiny arithmetic tokens; no natural-language reasoning or Qwen result."
+    },
+    {
+      "mode": "cpu-mechanism",
+      "architecture": "one-layer TinyDecoder,16-wide",
+      "seed": 2223,
+      "group_size": 8,
+      "updates": 12,
+      "warm_start_updates": 60,
+      "sft_first_loss": 2.5161097049713135,
+      "sft_final_loss": 0.003726016730070114,
+      "beta": 0.02,
+      "advantage_std": "population",
+      "length_reduction": "per-response mean then batch mean",
+      "max_new_tokens": 3,
+      "verifier": "one-integer-then-eos-v1",
+      "data_sha256": "6c9f5672307c60d5981f34f203276054287a6f541d2cf3c2520711a4c54fdfa5",
+      "initial": {
+        "train": {
+          "accuracy": 1.0,
+          "n": 12,
+          "rows": [
+            {
+              "prompt": "0+0",
+              "expected": 0,
+              "tokens": [
+                4,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "0+1",
+              "expected": 1,
+              "tokens": [
+                5,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "0+3",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+0",
+              "expected": 1,
+              "tokens": [
+                5,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+1",
+              "expected": 2,
+              "tokens": [
+                6,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+2",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+1",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+2",
+              "expected": 4,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+3",
+              "expected": 5,
+              "tokens": [
+                9,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+0",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+2",
+              "expected": 5,
+              "tokens": [
+                9,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+3",
+              "expected": 6,
+              "tokens": [
+                10,
+                2,
+                2
+              ],
+              "reward": 1.0
+            }
+          ]
+        },
+        "heldout": {
+          "accuracy": 0.0,
+          "n": 4,
+          "rows": [
+            {
+              "prompt": "0+2",
+              "expected": 2,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "1+3",
+              "expected": 4,
+              "tokens": [
+                10,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "2+0",
+              "expected": 2,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "3+1",
+              "expected": 4,
+              "tokens": [
+                10,
+                2,
+                2
+              ],
+              "reward": 0.0
+            }
+          ]
+        }
+      },
+      "final": {
+        "train": {
+          "accuracy": 1.0,
+          "n": 12,
+          "rows": [
+            {
+              "prompt": "0+0",
+              "expected": 0,
+              "tokens": [
+                4,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "0+1",
+              "expected": 1,
+              "tokens": [
+                5,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "0+3",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+0",
+              "expected": 1,
+              "tokens": [
+                5,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+1",
+              "expected": 2,
+              "tokens": [
+                6,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "1+2",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+1",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+2",
+              "expected": 4,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "2+3",
+              "expected": 5,
+              "tokens": [
+                9,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+0",
+              "expected": 3,
+              "tokens": [
+                7,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+2",
+              "expected": 5,
+              "tokens": [
+                9,
+                2,
+                2
+              ],
+              "reward": 1.0
+            },
+            {
+              "prompt": "3+3",
+              "expected": 6,
+              "tokens": [
+                10,
+                2,
+                2
+              ],
+              "reward": 1.0
+            }
+          ]
+        },
+        "heldout": {
+          "accuracy": 0.0,
+          "n": 4,
+          "rows": [
+            {
+              "prompt": "0+2",
+              "expected": 2,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "1+3",
+              "expected": 4,
+              "tokens": [
+                6,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "2+0",
+              "expected": 2,
+              "tokens": [
+                8,
+                2,
+                2
+              ],
+              "reward": 0.0
+            },
+            {
+              "prompt": "3+1",
+              "expected": 4,
+              "tokens": [
+                6,
+                2,
+                2
+              ],
+              "reward": 0.0
+            }
+          ]
+        }
+      },
+      "history": [
+        {
+          "update": 1,
+          "behavior_version": 0,
+          "policy_version": 1,
+          "loss": 1.4901161193847656e-08,
+          "mean_reward": 0.875,
+          "zero_variance_fraction": 0.5,
+          "mean_length": 2.0625,
+          "valid_response_tokens": 33,
+          "gradient_norm": 3.0605826377868652,
+          "entropy_nats": 0.09588480740785599,
+          "exact_kl_nats": 0.01108432188630104,
+          "ratio_min": 0.15654584765434265,
+          "ratio_max": 1.0000419616699219,
+          "clip_fraction": 0.09090909361839294
+        },
+        {
+          "update": 2,
+          "behavior_version": 1,
+          "policy_version": 2,
+          "loss": 4.4117317884229124e-05,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 0.008696882985532284,
+          "entropy_nats": 0.042984478175640106,
+          "exact_kl_nats": 0.008474588394165039,
+          "ratio_min": 0.9874996542930603,
+          "ratio_max": 1.0000200271606445,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 3,
+          "behavior_version": 2,
+          "policy_version": 3,
+          "loss": 4.720516244560713e-06,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 0.0009866229956969619,
+          "entropy_nats": 0.047965921461582184,
+          "exact_kl_nats": 0.00040454172994941473,
+          "ratio_min": 0.9995762705802917,
+          "ratio_max": 1.0000333786010742,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 4,
+          "behavior_version": 3,
+          "policy_version": 4,
+          "loss": 1.155986865342129e-05,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 0.0014972820645198226,
+          "entropy_nats": 0.027960672974586487,
+          "exact_kl_nats": 0.0008399266516789794,
+          "ratio_min": 0.9994233250617981,
+          "ratio_max": 1.0000238418579102,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 5,
+          "behavior_version": 4,
+          "policy_version": 5,
+          "loss": 2.951666829176247e-06,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 0.00063548848265782,
+          "entropy_nats": 0.016706246882677078,
+          "exact_kl_nats": 0.00016841842443682253,
+          "ratio_min": 0.9999620914459229,
+          "ratio_max": 1.0000057220458984,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 6,
+          "behavior_version": 5,
+          "policy_version": 6,
+          "loss": 4.8798333409649786e-06,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 0.0009025618783198297,
+          "entropy_nats": 0.021494142711162567,
+          "exact_kl_nats": 0.0002585475449450314,
+          "ratio_min": 0.9999404549598694,
+          "ratio_max": 1.0000406503677368,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 7,
+          "behavior_version": 6,
+          "policy_version": 7,
+          "loss": 0.014039292931556702,
+          "mean_reward": 0.5625,
+          "zero_variance_fraction": 0.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 14.603272438049316,
+          "entropy_nats": 0.25628095865249634,
+          "exact_kl_nats": 0.4799400866031647,
+          "ratio_min": 0.29010796546936035,
+          "ratio_max": 1.29670250415802,
+          "clip_fraction": 0.28125
+        },
+        {
+          "update": 8,
+          "behavior_version": 7,
+          "policy_version": 8,
+          "loss": 0.000288903946056962,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 0.04026324301958084,
+          "entropy_nats": 0.03199194371700287,
+          "exact_kl_nats": 0.0024206528905779123,
+          "ratio_min": 0.9998235702514648,
+          "ratio_max": 1.0222208499908447,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 9,
+          "behavior_version": 8,
+          "policy_version": 9,
+          "loss": 1.37149454531027e-05,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 0.001453917007893324,
+          "entropy_nats": 0.054491620510816574,
+          "exact_kl_nats": 0.0012111782561987638,
+          "ratio_min": 0.9972076416015625,
+          "ratio_max": 1.0000035762786865,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 10,
+          "behavior_version": 9,
+          "policy_version": 10,
+          "loss": 1.0847650628420524e-05,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 0.0010853295680135489,
+          "entropy_nats": 0.026219194754958153,
+          "exact_kl_nats": 0.000493658531922847,
+          "ratio_min": 0.9997429251670837,
+          "ratio_max": 1.0006002187728882,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 11,
+          "behavior_version": 10,
+          "policy_version": 11,
+          "loss": 2.716657718337956e-06,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 0.0002123543672496453,
+          "entropy_nats": 0.016538526862859726,
+          "exact_kl_nats": 0.00017901704995892942,
+          "ratio_min": 0.9997574090957642,
+          "ratio_max": 1.0001178979873657,
+          "clip_fraction": 0.0
+        },
+        {
+          "update": 12,
+          "behavior_version": 11,
+          "policy_version": 12,
+          "loss": 2.4390508315264015e-06,
+          "mean_reward": 1.0,
+          "zero_variance_fraction": 1.0,
+          "mean_length": 2.0,
+          "valid_response_tokens": 32,
+          "gradient_norm": 0.0003193006559740752,
+          "entropy_nats": 0.020263999700546265,
+          "exact_kl_nats": 0.00012102922482881695,
+          "ratio_min": 0.999950110912323,
+          "ratio_max": 1.0000840425491333,
+          "clip_fraction": 0.0
+        }
+      ],
+      "limits": "Original tiny arithmetic tokens; no natural-language reasoning or Qwen result."
+    }
+  ],
+  "reward_hacking": [
+    {
+      "repair": false,
+      "responses": [
+        "35",
+        "35 0",
+        "0"
+      ],
+      "history": [
+        {
+          "update": 0,
+          "proxy_reward": 1.0,
+          "strict_accuracy": 0.3333333333333333,
+          "entropy": 1.0986122886681096,
+          "probabilities": [
+            0.3333333333333333,
+            0.3333333333333333,
+            0.3333333333333333
+          ]
+        },
+        {
+          "update": 1,
+          "proxy_reward": 1.0886265248362712,
+          "strict_accuracy": 0.33136676757152317,
+          "entropy": 1.0927125879428385,
+          "probabilities": [
+            0.33136676757152317,
+            0.378629878632374,
+            0.2900033537961028
+          ]
+        },
+        {
+          "update": 2,
+          "proxy_reward": 1.175945477333919,
+          "strict_accuracy": 0.3217799768451996,
+          "entropy": 1.0752249388944664,
+          "probabilities": [
+            0.3217799768451996,
+            0.4270827502443597,
+            0.2511372729104406
+          ]
+        },
+        {
+          "update": 3,
+          "proxy_reward": 1.2608260755317917,
+          "strict_accuracy": 0.30559813454241724,
+          "entropy": 1.046648924577256,
+          "probabilities": [
+            0.30559813454241724,
+            0.47761397049468723,
+            0.21678789496289566
+          ]
+        },
+        {
+          "update": 4,
+          "proxy_reward": 1.3419068411596506,
+          "strict_accuracy": 0.28451421732781956,
+          "entropy": 1.0079766579172496,
+          "probabilities": [
+            0.28451421732781956,
+            0.5286963119159156,
+            0.18678947075626498
+          ]
+        },
+        {
+          "update": 5,
+          "proxy_reward": 1.4176766430765413,
+          "strict_accuracy": 0.2605582391478965,
+          "entropy": 0.9609736333418988,
+          "probabilities": [
+            0.2605582391478965,
+            0.5785592019643224,
+            0.16088255888778116
+          ]
+        },
+        {
+          "update": 6,
+          "proxy_reward": 1.48677307156234,
+          "strict_accuracy": 0.23570801329360896,
+          "entropy": 0.9081577257264508,
+          "probabilities": [
+            0.23570801329360896,
+            0.6255325291343655,
+            0.13875945757202565
+          ]
+        },
+        {
+          "update": 7,
+          "proxy_reward": 1.5483044223475004,
+          "strict_accuracy": 0.21156300780941084,
+          "entropy": 0.852407168806038,
+          "probabilities": [
+            0.21156300780941084,
+            0.6683707072690448,
+            0.12006628492154453
+          ]
+        },
+        {
+          "update": 8,
+          "proxy_reward": 1.6020062268673285,
+          "strict_accuracy": 0.1891834623981001,
+          "entropy": 0.7964172123915797,
+          "probabilities": [
+            0.1891834623981001,
+            0.7064113822346142,
+            0.10440515536728565
+          ]
+        },
+        {
+          "update": 9,
+          "proxy_reward": 1.6481843560199196,
+          "strict_accuracy": 0.16910694447184346,
+          "entropy": 0.7422927499426358,
+          "probabilities": [
+            0.16910694447184346,
+            0.7395387057740381,
+            0.09135434975411844
+          ]
+        },
+        {
+          "update": 10,
+          "proxy_reward": 1.6875282849449058,
+          "strict_accuracy": 0.15147376250883737,
+          "entropy": 0.6914064377835505,
+          "probabilities": [
+            0.15147376250883737,
+            0.7680272612180342,
+            0.08049897627312831
+          ]
+        },
+        {
+          "update": 11,
+          "proxy_reward": 1.720906905615626,
+          "strict_accuracy": 0.13617725759427257,
+          "entropy": 0.6444718427655138,
+          "probabilities": [
+            0.13617725759427257,
+            0.7923648240106768,
+            0.07145791839505067
+          ]
+        },
+        {
+          "update": 12,
+          "proxy_reward": 1.749213894333088,
+          "strict_accuracy": 0.1229871819969233,
+          "entropy": 0.6017138461598877,
+          "probabilities": [
+            0.1229871819969233,
+            0.8131133561680823,
+            0.06389946183499438
+          ]
+        },
+        {
+          "update": 13,
+          "proxy_reward": 1.77327713903922,
+          "strict_accuracy": 0.1116313331079215,
+          "entropy": 0.5630444533886481,
+          "probabilities": [
+            0.1116313331079215,
+            0.8308229029656492,
+            0.05754576392642928
+          ]
+        },
+        {
+          "update": 14,
+          "proxy_reward": 1.793818906305676,
+          "strict_accuracy": 0.10184131133446407,
+          "entropy": 0.5282017596984421,
+          "probabilities": [
+            0.10184131133446407,
+            0.845988797485606,
+            0.052169891179929886
+          ]
+        },
+        {
+          "update": 15,
+          "proxy_reward": 1.811447466154103,
+          "strict_accuracy": 0.09337402488850707,
+          "entropy": 0.49684455660815496,
+          "probabilities": [
+            0.09337402488850707,
+            0.8590367206327979,
+            0.04758925447869502
+          ]
+        },
+        {
+          "update": 16,
+          "proxy_reward": 1.826664796971668,
+          "strict_accuracy": 0.08601907812755741,
+          "entropy": 0.46861028347411204,
+          "probabilities": [
+            0.08601907812755741,
+            0.8703228594220553,
+            0.04365806245038714
+          ]
+        },
+        {
+          "update": 17,
+          "proxy_reward": 1.8398807118455038,
+          "strict_accuracy": 0.07959889945142123,
+          "entropy": 0.4431473032353041,
+          "probabilities": [
+            0.07959889945142123,
+            0.8801409061970413,
+            0.040260194351537486
+          ]
+        },
+        {
+          "update": 18,
+          "proxy_reward": 1.8514282198202634,
+          "strict_accuracy": 0.0739656451737333,
+          "entropy": 0.42013086925097354,
+          "probabilities": [
+            0.0739656451737333,
+            0.888731287323265,
+            0.037303067503001684
+          ]
+        },
+        {
+          "update": 19,
+          "proxy_reward": 1.8615777283401351,
+          "strict_accuracy": 0.06899703166302604,
+          "entropy": 0.3992694413062911,
+          "probabilities": [
+            0.06899703166302604,
+            0.8962903483385546,
+            0.034712619998419396
+          ]
+        },
+        {
+          "update": 20,
+          "proxy_reward": 1.870549219287755,
+          "strict_accuracy": 0.0645921393469228,
+          "entropy": 0.3803056493301197,
+          "probabilities": [
+            0.0645921393469228,
+            0.9029785399704161,
+            0.03242932068266115
+          ]
+        },
+        {
+          "update": 21,
+          "proxy_reward": 1.8785222777645647,
+          "strict_accuracy": 0.06066763176408445,
+          "entropy": 0.36301451494011633,
+          "probabilities": [
+            0.06066763176408445,
+            0.9089273230002402,
+            0.030405045235675325
+          ]
+        },
+        {
+          "update": 22,
+          "proxy_reward": 1.885644171781358,
+          "strict_accuracy": 0.05715452963296092,
+          "entropy": 0.3472004430286335,
+          "probabilities": [
+            0.05715452963296092,
+            0.9142448210741985,
+            0.02860064929284056
+          ]
+        },
+        {
+          "update": 23,
+          "proxy_reward": 1.8920362848087922,
+          "strict_accuracy": 0.05399553858805943,
+          "entropy": 0.332693820843165,
+          "probabilities": [
+            0.05399553858805943,
+            0.9190203731103663,
+            0.026984088301574234
+          ]
+        },
+        {
+          "update": 24,
+          "proxy_reward": 1.897799208027545,
+          "strict_accuracy": 0.05114287143159572,
+          "entropy": 0.31934766300633954,
+          "probabilities": [
+            0.05114287143159572,
+            0.9233281682979746,
+            0.025528960270429675
+          ]
+        },
+        {
+          "update": 25,
+          "proxy_reward": 1.9030167645237146,
+          "strict_accuracy": 0.04855648871864915,
+          "entropy": 0.30703451230674145,
+          "probabilities": [
+            0.04855648871864915,
+            0.9272301379025327,
+            0.024213373378818244
+          ]
+        },
+        {
+          "update": 26,
+          "proxy_reward": 1.9077591919738353,
+          "strict_accuracy": 0.04620268293046654,
+          "entropy": 0.29564367927064167,
+          "probabilities": [
+            0.04620268293046654,
+            0.9307782545216844,
+            0.023019062547848954
+          ]
+        },
+        {
+          "update": 27,
+          "proxy_reward": 1.9120856659698986,
+          "strict_accuracy": 0.044052940212818165,
+          "entropy": 0.285078836029765,
+          "probabilities": [
+            0.044052940212818165,
+            0.9340163628785402,
+            0.02193069690864172
+          ]
+        },
+        {
+          "update": 28,
+          "proxy_reward": 1.9160463076603806,
+          "strict_accuracy": 0.042083024327621725,
+          "entropy": 0.27525594633772515,
+          "probabilities": [
+            0.042083024327621725,
+            0.9369816416663794,
+            0.020935334005998882
+          ]
+        },
+        {
+          "update": 29,
+          "proxy_reward": 1.9196837878518018,
+          "strict_accuracy": 0.0402722377258871,
+          "entropy": 0.26610149876592903,
+          "probabilities": [
+            0.0402722377258871,
+            0.9397057750629574,
+            0.020021987211155497
+          ]
+        },
+        {
+          "update": 30,
+          "proxy_reward": 1.9230346146499173,
+          "strict_accuracy": 0.03860282360282905,
+          "entropy": 0.2575510054535902,
+          "probabilities": [
+            0.03860282360282905,
+            0.9422158955235441,
+            0.019181280873626985
+          ]
+        },
+        {
+          "update": 31,
+          "proxy_reward": 1.926130172134734,
+          "strict_accuracy": 0.03705948023372909,
+          "entropy": 0.2495477293525099,
+          "probabilities": [
+            0.03705948023372909,
+            0.9445353459505024,
+            0.01840517381576842
+          ]
+        },
+        {
+          "update": 32,
+          "proxy_reward": 1.9289975624060154,
+          "strict_accuracy": 0.03562896490115468,
+          "entropy": 0.24204160592856744,
+          "probabilities": [
+            0.03562896490115468,
+            0.9466842987524303,
+            0.01768673634641505
+          ]
+        },
+        {
+          "update": 33,
+          "proxy_reward": 1.931660291660661,
+          "strict_accuracy": 0.034299769507521546,
+          "entropy": 0.23498832924747814,
+          "probabilities": [
+            0.034299769507521546,
+            0.9486802610765698,
+            0.017019969415908807
+          ]
+        },
+        {
+          "update": 34,
+          "proxy_reward": 1.9341388319854556,
+          "strict_accuracy": 0.03306185373875027,
+          "entropy": 0.22834857648820372,
+          "probabilities": [
+            0.03306185373875027,
+            0.9505384891233526,
+            0.01639965713789722
+          ]
+        },
+        {
+          "update": 35,
+          "proxy_reward": 1.936451083642246,
+          "strict_accuracy": 0.03190642460486988,
+          "entropy": 0.2220873488029452,
+          "probabilities": [
+            0.03190642460486988,
+            0.952272329518688,
+            0.01582124587644199
+          ]
+        },
+        {
+          "update": 36,
+          "proxy_reward": 1.9386127573003265,
+          "strict_accuracy": 0.030825753502077773,
+          "entropy": 0.21617340991002065,
+          "probabilities": [
+            0.030825753502077773,
+            0.9538935018991244,
+            0.015280744598797875
+          ]
+        },
+        {
+          "update": 37,
+          "proxy_reward": 1.9406376915580397,
+          "strict_accuracy": 0.029813023756906993,
+          "entropy": 0.2105788068165682,
+          "probabilities": [
+            0.029813023756906993,
+            0.9554123339005663,
+            0.014774642342526576
+          ]
+        },
+        {
+          "update": 38,
+          "proxy_reward": 1.9425381179067982,
+          "strict_accuracy": 0.02886220303747736,
+          "entropy": 0.20527845963390776,
+          "probabilities": [
+            0.02886220303747736,
+            0.9568379574346604,
+            0.01429983952786232
+          ]
+        },
+        {
+          "update": 39,
+          "proxy_reward": 1.9443248828087902,
+          "strict_accuracy": 0.027967936136245163,
+          "entropy": 0.20024980960957214,
+          "probabilities": [
+            0.027967936136245163,
+            0.9581784733362725,
+            0.013853590527482262
+          ]
+        },
+        {
+          "update": 40,
+          "proxy_reward": 1.9460076346200301,
+          "strict_accuracy": 0.027125454510920684,
+          "entropy": 0.19547251630662574,
+          "probabilities": [
+            0.027125454510920684,
+            0.9594410900545547,
+            0.013433455434524608
+          ]
+        },
+        {
+          "update": 41,
+          "proxy_reward": 1.9475949815680533,
+          "strict_accuracy": 0.026330499667769708,
+          "entropy": 0.19092819636414754,
+          "probabilities": [
+            0.026330499667769708,
+            0.9606322409501418,
+            0.013037259382088549
+          ]
+        },
+        {
+          "update": 42,
+          "proxy_reward": 1.949094625793553,
+          "strict_accuracy": 0.02557925802494658,
+          "entropy": 0.18660019752020565,
+          "probabilities": [
+            0.02557925802494658,
+            0.9617576838843033,
+            0.012663058090750266
+          ]
+        },
+        {
+          "update": 43,
+          "proxy_reward": 1.950513477515088,
+          "strict_accuracy": 0.02486830533421083,
+          "entropy": 0.18247340261256956,
+          "probabilities": [
+            0.02486830533421083,
+            0.9628225860904386,
+            0.012309108575350466
+          ]
+        },
+        {
+          "update": 44,
+          "proxy_reward": 1.9518577526203935,
+          "strict_accuracy": 0.024194559091644134,
+          "entropy": 0.17853405912908044,
+          "probabilities": [
+            0.024194559091644134,
+            0.9638315967643747,
+            0.011973844143981187
+          ]
+        },
+        {
+          "update": 45,
+          "proxy_reward": 1.953133056384287,
+          "strict_accuracy": 0.023555237650641443,
+          "entropy": 0.17476963058979672,
+          "probabilities": [
+            0.023555237650641443,
+            0.9647889093668228,
+            0.01165585298253583
+          ]
+        },
+        {
+          "update": 46,
+          "proxy_reward": 1.9543444555290386,
+          "strict_accuracy": 0.02294782497812783,
+          "entropy": 0.17116866663236988,
+          "probabilities": [
+            0.02294782497812783,
+            0.9656983152754554,
+            0.01135385974641689
+          ]
+        },
+        {
+          "update": 47,
+          "proxy_reward": 1.9554965404530458,
+          "strict_accuracy": 0.022370040179051014,
+          "entropy": 0.16772068916189112,
+          "probabilities": [
+            0.022370040179051014,
+            0.9665632501369974,
+            0.011066709683951518
+          ]
+        },
+        {
+          "update": 48,
+          "proxy_reward": 1.9565934791381847,
+          "strict_accuracy": 0.021819811063627702,
+          "entropy": 0.1644160923341683,
+          "probabilities": [
+            0.021819811063627702,
+            0.9673868340372785,
+            0.01079335489909378
+          ]
+        },
+        {
+          "update": 49,
+          "proxy_reward": 1.957639063989955,
+          "strict_accuracy": 0.021295251153564232,
+          "entropy": 0.1612460544814876,
+          "probabilities": [
+            0.021295251153564232,
+            0.9681719064181954,
+            0.010532842428240452
+          ]
+        },
+        {
+          "update": 50,
+          "proxy_reward": 1.958636752655615,
+          "strict_accuracy": 0.02079463962302535,
+          "entropy": 0.15820246037417837,
+          "probabilities": [
+            0.02079463962302535,
+            0.9689210565162948,
+            0.01028430386067985
+          ]
+        },
+        {
+          "update": 51,
+          "proxy_reward": 1.9595897036944612,
+          "strict_accuracy": 0.020316403751828093,
+          "entropy": 0.15527783244944512,
+          "probabilities": [
+            0.020316403751828093,
+            0.9696366499713165,
+            0.01004694627685539
+          ]
+        },
+        {
+          "update": 52,
+          "proxy_reward": 1.9605008078338912,
+          "strict_accuracy": 0.01985910353562918,
+          "entropy": 0.15246526983888647,
+          "probabilities": [
+            0.01985910353562918,
+            0.970320852149131,
+            0.00982004431523992
+          ]
+        },
+        {
+          "update": 53,
+          "proxy_reward": 1.9613727154290177,
+          "strict_accuracy": 0.01942141815348768,
+          "entropy": 0.14975839419440737,
+          "probabilities": [
+            0.01942141815348768,
+            0.970975648637765,
+            0.00960293320874739
+          ]
+        },
+        {
+          "update": 54,
+          "proxy_reward": 1.9622078606477074,
+          "strict_accuracy": 0.019002134039302548,
+          "entropy": 0.1471513014542074,
+          "probabilities": [
+            0.019002134039302548,
+            0.9716028633042024,
+            0.009395002656494915
+          ]
+        },
+        {
+          "update": 55,
+          "proxy_reward": 1.9630084828232945,
+          "strict_accuracy": 0.0186001343419932,
+          "entropy": 0.14463851881058787,
+          "probabilities": [
+            0.0186001343419932,
+            0.9722041742406506,
+            0.009195691417356149
+          ]
+        },
+        {
+          "update": 56,
+          "proxy_reward": 1.9637766453508743,
+          "strict_accuracy": 0.01821438959131601,
+          "entropy": 0.14221496624309138,
+          "probabilities": [
+            0.01821438959131601,
+            0.9727811278797791,
+            0.009004482528904954
+          ]
+        },
+        {
+          "update": 57,
+          "proxy_reward": 1.964514252447644,
+          "strict_accuracy": 0.017843949413022496,
+          "entropy": 0.13987592206695648,
+          "probabilities": [
+            0.017843949413022496,
+            0.9733351515173108,
+            0.008820899069666616
+          ]
+        },
+        {
+          "update": 58,
+          "proxy_reward": 1.9652230640512538,
+          "strict_accuracy": 0.0174879351595814,
+          "entropy": 0.1376169920205199,
+          "probabilities": [
+            0.0174879351595814,
+            0.9738675644458362,
+            0.008644500394582512
+          ]
+        },
+        {
+          "update": 59,
+          "proxy_reward": 1.965904709091022,
+          "strict_accuracy": 0.017145533341653217,
+          "entropy": 0.13543408147807,
+          "probabilities": [
+            0.017145533341653217,
+            0.9743795878746844,
+            0.008474878783662324
+          ]
+        },
+        {
+          "update": 60,
+          "proxy_reward": 1.9665606973339145,
+          "strict_accuracy": 0.01681598976152512,
+          "entropy": 0.13332337042843312,
+          "probabilities": [
+            0.01681598976152512,
+            0.9748723537861946,
+            0.008311656452280304
+          ]
+        }
+      ]
+    },
+    {
+      "repair": true,
+      "responses": [
+        "35",
+        "35 0",
+        "0"
+      ],
+      "history": [
+        {
+          "update": 0,
+          "proxy_reward": 0.3333333333333333,
+          "strict_accuracy": 0.3333333333333333,
+          "entropy": 1.0986122886681096,
+          "probabilities": [
+            0.3333333333333333,
+            0.3333333333333333,
+            0.3333333333333333
+          ]
+        },
+        {
+          "update": 1,
+          "proxy_reward": 0.36359053297221855,
+          "strict_accuracy": 0.36359053297221855,
+          "entropy": 1.0965815495515763,
+          "probabilities": [
+            0.36359053297221855,
+            0.3182047335138907,
+            0.3182047335138907
+          ]
+        },
+        {
+          "update": 2,
+          "proxy_reward": 0.3962826578262728,
+          "strict_accuracy": 0.3962826578262728,
+          "entropy": 1.0899405691767412,
+          "probabilities": [
+            0.3962826578262728,
+            0.30185867108686365,
+            0.30185867108686365
+          ]
+        },
+        {
+          "update": 3,
+          "proxy_reward": 0.43108328485484615,
+          "strict_accuracy": 0.43108328485484615,
+          "entropy": 1.077960862293346,
+          "probabilities": [
+            0.43108328485484615,
+            0.2844583575725769,
+            0.2844583575725769
+          ]
+        },
+        {
+          "update": 4,
+          "proxy_reward": 0.4674753784456803,
+          "strict_accuracy": 0.4674753784456803,
+          "entropy": 1.060147923958414,
+          "probabilities": [
+            0.4674753784456803,
+            0.26626231077715984,
+            0.26626231077715984
+          ]
+        },
+        {
+          "update": 5,
+          "proxy_reward": 0.5047705642662296,
+          "strict_accuracy": 0.5047705642662296,
+          "entropy": 1.0363685504116535,
+          "probabilities": [
+            0.5047705642662296,
+            0.2476147178668852,
+            0.2476147178668852
+          ]
+        },
+        {
+          "update": 6,
+          "proxy_reward": 0.5421669001908205,
+          "strict_accuracy": 0.5421669001908205,
+          "entropy": 1.0069325806080625,
+          "probabilities": [
+            0.5421669001908205,
+            0.2289165499045898,
+            0.2289165499045898
+          ]
+        },
+        {
+          "update": 7,
+          "proxy_reward": 0.5788373331933405,
+          "strict_accuracy": 0.5788373331933405,
+          "entropy": 0.9725922192405672,
+          "probabilities": [
+            0.5788373331933405,
+            0.2105813334033297,
+            0.2105813334033297
+          ]
+        },
+        {
+          "update": 8,
+          "proxy_reward": 0.6140273970494736,
+          "strict_accuracy": 0.6140273970494736,
+          "entropy": 0.9344482718637807,
+          "probabilities": [
+            0.6140273970494736,
+            0.19298630147526316,
+            0.19298630147526316
+          ]
+        },
+        {
+          "update": 9,
+          "proxy_reward": 0.6471355545989851,
+          "strict_accuracy": 0.6471355545989851,
+          "entropy": 0.8937888279811204,
+          "probabilities": [
+            0.6471355545989851,
+            0.17643222270050743,
+            0.17643222270050743
+          ]
+        },
+        {
+          "update": 10,
+          "proxy_reward": 0.6777569102577973,
+          "strict_accuracy": 0.6777569102577973,
+          "entropy": 0.8519105774705584,
+          "probabilities": [
+            0.6777569102577973,
+            0.1611215448711014,
+            0.1611215448711014
+          ]
+        },
+        {
+          "update": 11,
+          "proxy_reward": 0.7056861703442909,
+          "strict_accuracy": 0.7056861703442909,
+          "entropy": 0.8099719596493644,
+          "probabilities": [
+            0.7056861703442909,
+            0.14715691482785453,
+            0.14715691482785453
+          ]
+        },
+        {
+          "update": 12,
+          "proxy_reward": 0.7308894380226384,
+          "strict_accuracy": 0.7308894380226384,
+          "entropy": 0.7689054040448956,
+          "probabilities": [
+            0.7308894380226384,
+            0.13455528098868083,
+            0.13455528098868083
+          ]
+        },
+        {
+          "update": 13,
+          "proxy_reward": 0.7534604190735269,
+          "strict_accuracy": 0.7534604190735269,
+          "entropy": 0.7293896700959352,
+          "probabilities": [
+            0.7534604190735269,
+            0.12326979046323654,
+            0.12326979046323654
+          ]
+        },
+        {
+          "update": 14,
+          "proxy_reward": 0.7735749582457521,
+          "strict_accuracy": 0.7735749582457521,
+          "entropy": 0.6918663441927442,
+          "probabilities": [
+            0.7735749582457521,
+            0.11321252087712404,
+            0.11321252087712404
+          ]
+        },
+        {
+          "update": 15,
+          "proxy_reward": 0.7914524402525179,
+          "strict_accuracy": 0.7914524402525179,
+          "entropy": 0.6565800798674422,
+          "probabilities": [
+            0.7914524402525179,
+            0.10427377987374113,
+            0.10427377987374113
+          ]
+        },
+        {
+          "update": 16,
+          "proxy_reward": 0.8073272513198072,
+          "strict_accuracy": 0.8073272513198072,
+          "entropy": 0.623625924108882,
+          "probabilities": [
+            0.8073272513198072,
+            0.09633637434009647,
+            0.09633637434009647
+          ]
+        },
+        {
+          "update": 17,
+          "proxy_reward": 0.8214299836606904,
+          "strict_accuracy": 0.8214299836606904,
+          "entropy": 0.5929934966472089,
+          "probabilities": [
+            0.8214299836606904,
+            0.08928500816965475,
+            0.08928500816965475
+          ]
+        },
+        {
+          "update": 18,
+          "proxy_reward": 0.8339764599469937,
+          "strict_accuracy": 0.8339764599469937,
+          "entropy": 0.56460339466818,
+          "probabilities": [
+            0.8339764599469937,
+            0.0830117700265032,
+            0.0830117700265032
+          ]
+        },
+        {
+          "update": 19,
+          "proxy_reward": 0.8451623283689124,
+          "strict_accuracy": 0.8451623283689124,
+          "entropy": 0.5383348361067748,
+          "probabilities": [
+            0.8451623283689124,
+            0.07741883581554376,
+            0.07741883581554376
+          ]
+        },
+        {
+          "update": 20,
+          "proxy_reward": 0.8551612763071633,
+          "strict_accuracy": 0.8551612763071633,
+          "entropy": 0.5140454149466451,
+          "probabilities": [
+            0.8551612763071633,
+            0.07241936184641826,
+            0.07241936184641826
+          ]
+        },
+        {
+          "update": 21,
+          "proxy_reward": 0.8641253988813482,
+          "strict_accuracy": 0.8641253988813482,
+          "entropy": 0.4915845197867497,
+          "probabilities": [
+            0.8641253988813482,
+            0.06793730055932586,
+            0.06793730055932586
+          ]
+        },
+        {
+          "update": 22,
+          "proxy_reward": 0.8721867224406297,
+          "strict_accuracy": 0.8721867224406297,
+          "entropy": 0.4708020088880055,
+          "probabilities": [
+            0.8721867224406297,
+            0.06390663877968526,
+            0.06390663877968526
+          ]
+        },
+        {
+          "update": 23,
+          "proxy_reward": 0.8794592466789195,
+          "strict_accuracy": 0.8794592466789195,
+          "entropy": 0.4515535050636336,
+          "probabilities": [
+            0.8794592466789195,
+            0.060270376660540144,
+            0.060270376660540144
+          ]
+        },
+        {
+          "update": 24,
+          "proxy_reward": 0.8860411258432843,
+          "strict_accuracy": 0.8860411258432843,
+          "entropy": 0.43370337227451117,
+          "probabilities": [
+            0.8860411258432843,
+            0.056979437078357856,
+            0.056979437078357856
+          ]
+        },
+        {
+          "update": 25,
+          "proxy_reward": 0.892016778726314,
+          "strict_accuracy": 0.892016778726314,
+          "entropy": 0.41712615459322105,
+          "probabilities": [
+            0.892016778726314,
+            0.05399161063684291,
+            0.05399161063684291
+          ]
+        },
+        {
+          "update": 26,
+          "proxy_reward": 0.8974588228497851,
+          "strict_accuracy": 0.8974588228497851,
+          "entropy": 0.401707029355938,
+          "probabilities": [
+            0.8974588228497851,
+            0.0512705885751075,
+            0.0512705885751075
+          ]
+        },
+        {
+          "update": 27,
+          "proxy_reward": 0.9024297911454946,
+          "strict_accuracy": 0.9024297911454946,
+          "entropy": 0.38734165329496795,
+          "probabilities": [
+            0.9024297911454946,
+            0.048785104427252715,
+            0.048785104427252715
+          ]
+        },
+        {
+          "update": 28,
+          "proxy_reward": 0.9069836248879634,
+          "strict_accuracy": 0.9069836248879634,
+          "entropy": 0.37393565545098706,
+          "probabilities": [
+            0.9069836248879634,
+            0.04650818755601841,
+            0.04650818755601841
+          ]
+        },
+        {
+          "update": 29,
+          "proxy_reward": 0.9111669551751562,
+          "strict_accuracy": 0.9111669551751562,
+          "entropy": 0.3614039431100061,
+          "probabilities": [
+            0.9111669551751562,
+            0.04441652241242184,
+            0.04441652241242184
+          ]
+        },
+        {
+          "update": 30,
+          "proxy_reward": 0.9150201937605753,
+          "strict_accuracy": 0.9150201937605753,
+          "entropy": 0.34966992704680794,
+          "probabilities": [
+            0.9150201937605753,
+            0.04248990311971244,
+            0.04248990311971244
+          ]
+        },
+        {
+          "update": 31,
+          "proxy_reward": 0.9185784568321095,
+          "strict_accuracy": 0.9185784568321095,
+          "entropy": 0.3386647320195967,
+          "probabilities": [
+            0.9185784568321095,
+            0.04071077158394537,
+            0.04071077158394537
+          ]
+        },
+        {
+          "update": 32,
+          "proxy_reward": 0.9218723450437583,
+          "strict_accuracy": 0.9218723450437583,
+          "entropy": 0.3283264317541733,
+          "probabilities": [
+            0.9218723450437583,
+            0.039063827478120865,
+            0.039063827478120865
+          ]
+        },
+        {
+          "update": 33,
+          "proxy_reward": 0.9249286012965411,
+          "strict_accuracy": 0.9249286012965411,
+          "entropy": 0.318599330254148,
+          "probabilities": [
+            0.9249286012965411,
+            0.03753569935172952,
+            0.03753569935172952
+          ]
+        },
+        {
+          "update": 34,
+          "proxy_reward": 0.9277706653305222,
+          "strict_accuracy": 0.9277706653305222,
+          "entropy": 0.3094333001388716,
+          "probabilities": [
+            0.9277706653305222,
+            0.03611466733473891,
+            0.03611466733473891
+          ]
+        },
+        {
+          "update": 35,
+          "proxy_reward": 0.9304191416240225,
+          "strict_accuracy": 0.9304191416240225,
+          "entropy": 0.30078318174903473,
+          "probabilities": [
+            0.9304191416240225,
+            0.0347904291879887,
+            0.0347904291879887
+          ]
+        },
+        {
+          "update": 36,
+          "proxy_reward": 0.9328921946532527,
+          "strict_accuracy": 0.9328921946532527,
+          "entropy": 0.2926082425467694,
+          "probabilities": [
+            0.9328921946532527,
+            0.03355390267337355,
+            0.03355390267337355
+          ]
+        },
+        {
+          "update": 37,
+          "proxy_reward": 0.9352058833625091,
+          "strict_accuracy": 0.9352058833625091,
+          "entropy": 0.28487169391311595,
+          "probabilities": [
+            0.9352058833625091,
+            0.032397058318745404,
+            0.032397058318745404
+          ]
+        },
+        {
+          "update": 38,
+          "proxy_reward": 0.9373744447713187,
+          "strict_accuracy": 0.9373744447713187,
+          "entropy": 0.27754026117003805,
+          "probabilities": [
+            0.9373744447713187,
+            0.03131277761434076,
+            0.03131277761434076
+          ]
+        },
+        {
+          "update": 39,
+          "proxy_reward": 0.9394105349991583,
+          "strict_accuracy": 0.9394105349991583,
+          "entropy": 0.2705838021018603,
+          "probabilities": [
+            0.9394105349991583,
+            0.030294732500420776,
+            0.030294732500420776
+          ]
+        },
+        {
+          "update": 40,
+          "proxy_reward": 0.9413254345991391,
+          "strict_accuracy": 0.9413254345991391,
+          "entropy": 0.2639749691426367,
+          "probabilities": [
+            0.9413254345991391,
+            0.02933728270043046,
+            0.02933728270043046
+          ]
+        },
+        {
+          "update": 41,
+          "proxy_reward": 0.9431292239296495,
+          "strict_accuracy": 0.9431292239296495,
+          "entropy": 0.2576889105493455,
+          "probabilities": [
+            0.9431292239296495,
+            0.02843538803517534,
+            0.02843538803517534
+          ]
+        },
+        {
+          "update": 42,
+          "proxy_reward": 0.9448309333259585,
+          "strict_accuracy": 0.9448309333259585,
+          "entropy": 0.25170300617854297,
+          "probabilities": [
+            0.9448309333259585,
+            0.027584533337020746,
+            0.027584533337020746
+          ]
+        },
+        {
+          "update": 43,
+          "proxy_reward": 0.9464386720321786,
+          "strict_accuracy": 0.9464386720321786,
+          "entropy": 0.24599663385172704,
+          "probabilities": [
+            0.9464386720321786,
+            0.02678066398391071,
+            0.02678066398391071
+          ]
+        },
+        {
+          "update": 44,
+          "proxy_reward": 0.9479597391908904,
+          "strict_accuracy": 0.9479597391908904,
+          "entropy": 0.24055096268586063,
+          "probabilities": [
+            0.9479597391908904,
+            0.02602013040455476,
+            0.02602013040455476
+          ]
+        },
+        {
+          "update": 45,
+          "proxy_reward": 0.9494007196396989,
+          "strict_accuracy": 0.9494007196396989,
+          "entropy": 0.23534877015246392,
+          "probabilities": [
+            0.9494007196396989,
+            0.02529964018015054,
+            0.02529964018015054
+          ]
+        },
+        {
+          "update": 46,
+          "proxy_reward": 0.9507675668110707,
+          "strict_accuracy": 0.9507675668110707,
+          "entropy": 0.23037427999557802,
+          "probabilities": [
+            0.9507675668110707,
+            0.024616216594464595,
+            0.024616216594464595
+          ]
+        },
+        {
+          "update": 47,
+          "proxy_reward": 0.9520656746573137,
+          "strict_accuracy": 0.9520656746573137,
+          "entropy": 0.2256130184774396,
+          "probabilities": [
+            0.9520656746573137,
+            0.023967162671343044,
+            0.023967162671343044
+          ]
+        },
+        {
+          "update": 48,
+          "proxy_reward": 0.9532999402125669,
+          "strict_accuracy": 0.9532999402125669,
+          "entropy": 0.22105168672750514,
+          "probabilities": [
+            0.9532999402125669,
+            0.023350029893716564,
+            0.023350029893716564
+          ]
+        },
+        {
+          "update": 49,
+          "proxy_reward": 0.9544748181467321,
+          "strict_accuracy": 0.9544748181467321,
+          "entropy": 0.21667804724496392,
+          "probabilities": [
+            0.9544748181467321,
+            0.022762590926633908,
+            0.022762590926633908
+          ]
+        },
+        {
+          "update": 50,
+          "proxy_reward": 0.9555943684529544,
+          "strict_accuracy": 0.9555943684529544,
+          "entropy": 0.21248082284831107,
+          "probabilities": [
+            0.9555943684529544,
+            0.02220281577352285,
+            0.02220281577352285
+          ]
+        },
+        {
+          "update": 51,
+          "proxy_reward": 0.9566622982327948,
+          "strict_accuracy": 0.9566622982327948,
+          "entropy": 0.20844960658004846,
+          "probabilities": [
+            0.9566622982327948,
+            0.021668850883602663,
+            0.021668850883602663
+          ]
+        },
+        {
+          "update": 52,
+          "proxy_reward": 0.95768199839535,
+          "strict_accuracy": 0.95768199839535,
+          "entropy": 0.20457478126268316,
+          "probabilities": [
+            0.95768199839535,
+            0.021159000802325054,
+            0.021159000802325054
+          ]
+        },
+        {
+          "update": 53,
+          "proxy_reward": 0.9586565759630162,
+          "strict_accuracy": 0.9586565759630162,
+          "entropy": 0.20084744756665643,
+          "probabilities": [
+            0.9586565759630162,
+            0.02067171201849186,
+            0.02067171201849186
+          ]
+        },
+        {
+          "update": 54,
+          "proxy_reward": 0.9595888825731823,
+          "strict_accuracy": 0.9595888825731823,
+          "entropy": 0.19725935959426133,
+          "probabilities": [
+            0.9595888825731823,
+            0.020205558713408817,
+            0.020205558713408817
+          ]
+        },
+        {
+          "update": 55,
+          "proxy_reward": 0.9604815396783556,
+          "strict_accuracy": 0.9604815396783556,
+          "entropy": 0.19380286710853545,
+          "probabilities": [
+            0.9604815396783556,
+            0.019759230160822133,
+            0.019759230160822133
+          ]
+        },
+        {
+          "update": 56,
+          "proxy_reward": 0.9613369608742582,
+          "strict_accuracy": 0.9613369608742582,
+          "entropy": 0.1904708636448059,
+          "probabilities": [
+            0.9613369608742582,
+            0.01933151956287094,
+            0.01933151956287094
+          ]
+        },
+        {
+          "update": 57,
+          "proxy_reward": 0.96215737172391,
+          "strict_accuracy": 0.96215737172391,
+          "entropy": 0.18725673983712238,
+          "probabilities": [
+            0.96215737172391,
+            0.01892131413804511,
+            0.01892131413804511
+          ]
+        },
+        {
+          "update": 58,
+          "proxy_reward": 0.9629448273937569,
+          "strict_accuracy": 0.9629448273937569,
+          "entropy": 0.18415434137403014,
+          "probabilities": [
+            0.9629448273937569,
+            0.01852758630312157,
+            0.01852758630312157
+          ]
+        },
+        {
+          "update": 59,
+          "proxy_reward": 0.9637012283738852,
+          "strict_accuracy": 0.9637012283738852,
+          "entropy": 0.18115793106968447,
+          "probabilities": [
+            0.9637012283738852,
+            0.018149385813057296,
+            0.018149385813057296
+          ]
+        },
+        {
+          "update": 60,
+          "proxy_reward": 0.9644283345170127,
+          "strict_accuracy": 0.9644283345170127,
+          "entropy": 0.17826215459856645,
+          "probabilities": [
+            0.9644283345170127,
+            0.01778583274149367,
+            0.01778583274149367
+          ]
+        }
+      ]
+    }
+  ],
+  "distillation": {
+    "seed": 2628,
+    "temperature": 2.0,
+    "updates": 80,
+    "objective": "T\u00b2 forward KL(teacher_T || student_T)",
+    "history": [
+      {
+        "update": 0,
+        "scaled_loss": 0.6571342287808944,
+        "student_p": [
+          0.3333333333333333,
+          0.3333333333333333,
+          0.3333333333333333
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 1,
+        "scaled_loss": 0.45666226903543317,
+        "student_p": [
+          0.42283422126736575,
+          0.30975548118671015,
+          0.2674102975459242
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 2,
+        "scaled_loss": 0.3186973677673964,
+        "student_p": [
+          0.5003235110237771,
+          0.2835004234289128,
+          0.21617606554731011
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 3,
+        "scaled_loss": 0.22439021206091564,
+        "student_p": [
+          0.5633967072062291,
+          0.2591314655979462,
+          0.17747182719582466
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 4,
+        "scaled_loss": 0.1599132715910923,
+        "student_p": [
+          0.6129918653917029,
+          0.23846104815029776,
+          0.14854708645799938
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 5,
+        "scaled_loss": 0.11558750596118852,
+        "student_p": [
+          0.6513558312737283,
+          0.22174916533176725,
+          0.12689500339450444
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 6,
+        "scaled_loss": 0.0848282570894536,
+        "student_p": [
+          0.6808711357168182,
+          0.2085905470525867,
+          0.110538317230595
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 7,
+        "scaled_loss": 0.06322399404328981,
+        "student_p": [
+          0.7035912212873751,
+          0.19838813109552814,
+          0.09802064761709671
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 8,
+        "scaled_loss": 0.04783760864771157,
+        "student_p": [
+          0.7211412989413006,
+          0.1905576529612561,
+          0.08830104809744314
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 9,
+        "scaled_loss": 0.036714078314081744,
+        "student_p": [
+          0.7347604790518826,
+          0.18459711724402686,
+          0.08064240370409073
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 10,
+        "scaled_loss": 0.02854703226314963,
+        "student_p": [
+          0.7453799394232936,
+          0.18009838476701315,
+          0.07452167580969334
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 11,
+        "scaled_loss": 0.02245760506340426,
+        "student_p": [
+          0.7536975617119056,
+          0.17673775609177636,
+          0.0695646821963179
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 12,
+        "scaled_loss": 0.017849222944152462,
+        "student_p": [
+          0.7602381270491173,
+          0.17426118194434118,
+          0.06550069100654166
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 13,
+        "scaled_loss": 0.014312582412971106,
+        "student_p": [
+          0.765398713602336,
+          0.17246996934568481,
+          0.062131317051979
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 14,
+        "scaled_loss": 0.011563440589514709,
+        "student_p": [
+          0.769481979793766,
+          0.1712087495470444,
+          0.05930927065918965
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 15,
+        "scaled_loss": 0.009401761708506567,
+        "student_p": [
+          0.7727203302762893,
+          0.17035590015153684,
+          0.056923769572173925
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 16,
+        "scaled_loss": 0.007684758173371865,
+        "student_p": [
+          0.7752934645686024,
+          0.1698160976313005,
+          0.05489043780009709
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 17,
+        "scaled_loss": 0.006308989825595426,
+        "student_p": [
+          0.7773411913051929,
+          0.16951457243911813,
+          0.05314423625568904
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 18,
+        "scaled_loss": 0.005198389672806329,
+        "student_p": [
+          0.7789728647298823,
+          0.16939267770694247,
+          0.05163445756317518
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 19,
+        "scaled_loss": 0.0042961853378868375,
+        "student_p": [
+          0.7802744021214628,
+          0.16940445771531562,
+          0.05032114016322156
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 20,
+        "scaled_loss": 0.0035593957861417176,
+        "student_p": [
+          0.7813135553704368,
+          0.16951397554884393,
+          0.049172469080719275
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 21,
+        "scaled_loss": 0.002955041582523743,
+        "student_p": [
+          0.782143910057149,
+          0.1696932194815765,
+          0.048162870461274404
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 22,
+        "scaled_loss": 0.0024575038263546685,
+        "student_p": [
+          0.7828079468366905,
+          0.1699204536453505,
+          0.04727159951795906
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 23,
+        "scaled_loss": 0.002046659663619624,
+        "student_p": [
+          0.783339404066378,
+          0.1701789126146929,
+          0.04648168331892903
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 24,
+        "scaled_loss": 0.0017065478588422812,
+        "student_p": [
+          0.7837651140404769,
+          0.17045576444959942,
+          0.04577912150992373
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 25,
+        "scaled_loss": 0.0014244000496955976,
+        "student_p": [
+          0.7841064386441582,
+          0.17074128490068147,
+          0.04515227645516031
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 26,
+        "scaled_loss": 0.0011899272698389675,
+        "student_p": [
+          0.7843803973737092,
+          0.1710281987919312,
+          0.04459140383435956
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 27,
+        "scaled_loss": 0.0009947869495154846,
+        "student_p": [
+          0.7846005572066025,
+          0.17131115444548634,
+          0.04408828834791113
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 28,
+        "scaled_loss": 0.000832179252003986,
+        "student_p": [
+          0.7847777368470938,
+          0.17158630439160158,
+          0.04363595876130469
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 29,
+        "scaled_loss": 0.0006965374026141544,
+        "student_p": [
+          0.7849205654599097,
+          0.17185097121109946,
+          0.04322846332899082
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 30,
+        "scaled_loss": 0.0005832872983705488,
+        "student_p": [
+          0.7850359268025932,
+          0.17210338167197928,
+          0.042860691525427534
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 31,
+        "scaled_loss": 0.0004886589005636439,
+        "student_p": [
+          0.7851293127623066,
+          0.17234245568540235,
+          0.042528231552291164
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 32,
+        "scaled_loss": 0.0004095368539400908,
+        "student_p": [
+          0.7852051050633415,
+          0.17256763925727683,
+          0.04222725567938167
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 33,
+        "scaled_loss": 0.000343341197151811,
+        "student_p": [
+          0.7852667998952954,
+          0.1727787727198652,
+          0.04195442738483936
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 34,
+        "scaled_loss": 0.00028793142499386123,
+        "student_p": [
+          0.7853171871059719,
+          0.1729759872160497,
+          0.041706825677978385
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 35,
+        "scaled_loss": 0.00024152886202153355,
+        "student_p": [
+          0.7853584931830615,
+          0.17315962376765906,
+          0.041481883049279286
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 36,
+        "scaled_loss": 0.00020265352821711644,
+        "student_p": [
+          0.7853924953512437,
+          0.1733301703566252,
+          0.04127733429213114
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 37,
+        "scaled_loss": 0.0001700725668131401,
+        "student_p": [
+          0.7854206126160697,
+          0.17348821333582495,
+          0.04109117404810522
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 38,
+        "scaled_loss": 0.0001427579612523289,
+        "student_p": [
+          0.7854439784028289,
+          0.17363440020587453,
+          0.04092162139129647
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 39,
+        "scaled_loss": 0.0001198517598342613,
+        "student_p": [
+          0.7854634984994082,
+          0.17376941137698299,
+          0.04076709012360883
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 40,
+        "scaled_loss": 0.00010063739926854942,
+        "student_p": [
+          0.785479897264854,
+          0.1738939390069092,
+          0.04062616372823671
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 41,
+        "scaled_loss": 8.451600419937585e-05,
+        "student_p": [
+          0.7854937544696231,
+          0.1740086713878078,
+          0.04049757414256928
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 42,
+        "scaled_loss": 7.098676153969533e-05,
+        "student_p": [
+          0.7855055346580221,
+          0.17411428166310006,
+          0.04038018367887784
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 43,
+        "scaled_loss": 5.9630642092159576e-05,
+        "student_p": [
+          0.7855156105434825,
+          0.17421141990416728,
+          0.040272969552350144
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 44,
+        "scaled_loss": 5.009687921184516e-05,
+        "student_p": [
+          0.7855242816436673,
+          0.17430070777680248,
+          0.040175010579530254
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 45,
+        "scaled_loss": 4.209172354777526e-05,
+        "student_p": [
+          0.7855317891196282,
+          0.1743827351881287,
+          0.04008547569224317
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 46,
+        "scaled_loss": 3.5369080502095814e-05,
+        "student_p": [
+          0.7855383275890728,
+          0.17445805843355056,
+          0.04000361397737666
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 47,
+        "scaled_loss": 2.9722707699257958e-05,
+        "student_p": [
+          0.7855440545285407,
+          0.1745271994663566,
+          0.03992874600510261
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 48,
+        "scaled_loss": 2.497970697917535e-05,
+        "student_p": [
+          0.7855490977551546,
+          0.17459064599480273,
+          0.039860256250042685
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 49,
+        "scaled_loss": 2.0995092020695966e-05,
+        "student_p": [
+          0.7855535613793811,
+          0.17464885217692816,
+          0.03979758644369071
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 50,
+        "scaled_loss": 1.7647250731721818e-05,
+        "student_p": [
+          0.7855575305409463,
+          0.17470223973527632,
+          0.03974022972377729
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 51,
+        "scaled_loss": 1.4834152707498584e-05,
+        "student_p": [
+          0.7855610751767023,
+          0.17475119935478176,
+          0.03968772546851596
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 52,
+        "scaled_loss": 1.2470177684549468e-05,
+        "student_p": [
+          0.7855642530186684,
+          0.1747960922594961,
+          0.03963965472183559
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 53,
+        "scaled_loss": 1.0483461966615286e-05,
+        "student_p": [
+          0.7855671119800984,
+          0.17483725188931273,
+          0.03959563613058883
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 54,
+        "scaled_loss": 8.813677239658544e-06,
+        "student_p": [
+          0.785569692055217,
+          0.17487498561780934,
+          0.03955532232697365
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 55,
+        "scaled_loss": 7.4101705430510475e-06,
+        "student_p": [
+          0.7855720268325841,
+          0.1749095764678973,
+          0.03951839669951863
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 56,
+        "scaled_loss": 6.230406097569932e-06,
+        "student_p": [
+          0.7855741447015793,
+          0.174941284794051,
+          0.03948457050436976
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 57,
+        "scaled_loss": 5.238659555367644e-06,
+        "student_p": [
+          0.785576069815184,
+          0.1749703499092192,
+          0.03945358027559667
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 58,
+        "scaled_loss": 4.4049234322086905e-06,
+        "student_p": [
+          0.7855778228592585,
+          0.17499699164167326,
+          0.03942518549906829
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 59,
+        "scaled_loss": 3.7039893107685892e-06,
+        "student_p": [
+          0.7855794216681697,
+          0.17502141181249062,
+          0.039399166519339716
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 60,
+        "scaled_loss": 3.114678066977808e-06,
+        "student_p": [
+          0.7855808817184136,
+          0.17504379562847405,
+          0.03937532265311225
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 61,
+        "scaled_loss": 2.619194080431017e-06,
+        "student_p": [
+          0.7855822165253306,
+          0.17506431298836125,
+          0.039353470486308134
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 62,
+        "scaled_loss": 2.202583354233385e-06,
+        "student_p": [
+          0.7855834379628236,
+          0.17508311970242058,
+          0.03933344233475594
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 63,
+        "scaled_loss": 1.8522787248574256e-06,
+        "student_p": [
+          0.785584556521866,
+          0.1751003586271368,
+          0.03931508485099723
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 64,
+        "scaled_loss": 1.5577180953876358e-06,
+        "student_p": [
+          0.785585581520307,
+          0.1751161607178183,
+          0.03929825776187468
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 65,
+        "scaled_loss": 1.3100239129421824e-06,
+        "student_p": [
+          0.7855865212738878,
+          0.17513064600270664,
+          0.039282832723405624
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 66,
+        "scaled_loss": 1.1017340292079555e-06,
+        "student_p": [
+          0.7855873832363225,
+          0.17514392448264524,
+          0.0392686922810323
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 67,
+        "scaled_loss": 9.26575665977287e-07,
+        "student_p": [
+          0.7855881741146652,
+          0.17515609696062262,
+          0.039255728924712026
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 68,
+        "scaled_loss": 7.792755622803649e-07,
+        "student_p": [
+          0.7855888999648909,
+          0.1751672558056104,
+          0.03924384422949881
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 69,
+        "scaled_loss": 6.554004921284604e-07,
+        "student_p": [
+          0.7855895662715935,
+          0.17517748565510458,
+          0.039232948073302014
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 70,
+        "scaled_loss": 5.512232765983297e-07,
+        "student_p": [
+          0.7855901780149003,
+          0.17518686406068865,
+          0.03922295792441105
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 71,
+        "scaled_loss": 4.6361021024829635e-07,
+        "student_p": [
+          0.7855907397270525,
+          0.17519546208078404,
+          0.03921379819216337
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 72,
+        "scaled_loss": 3.8992646070665346e-07,
+        "student_p": [
+          0.7855912555406023,
+          0.17520334482456965,
+          0.03920539963482806
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 73,
+        "scaled_loss": 3.279565739923245e-07,
+        "student_p": [
+          0.7855917292297729,
+          0.17521057195083964,
+          0.039197698819387394
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 74,
+        "scaled_loss": 2.758376642924697e-07,
+        "student_p": [
+          0.7855921642462153,
+          0.1752171981253467,
+          0.03919063762843795
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 75,
+        "scaled_loss": 2.3200326056089593e-07,
+        "student_p": [
+          0.7855925637501397,
+          0.17522327343994942,
+          0.03918416280991078
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 76,
+        "scaled_loss": 1.9513610507109575e-07,
+        "student_p": [
+          0.7855929306376099,
+          0.17522884379665662,
+          0.03917822556573347
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 77,
+        "scaled_loss": 1.641284798286171e-07,
+        "student_p": [
+          0.7855932675646257,
+          0.1752339512594402,
+          0.039172781175934146
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 78,
+        "scaled_loss": 1.3804885245471943e-07,
+        "student_p": [
+          0.7855935769685013,
+          0.17523863437647458,
+          0.03916778865502406
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 79,
+        "scaled_loss": 1.1611383968665695e-07,
+        "student_p": [
+          0.7855938610869465,
+          0.17524292847525846,
+          0.03916321043779499
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      },
+      {
+        "update": 80,
+        "scaled_loss": 9.766463083857421e-08,
+        "student_p": [
+          0.7855941219751807,
+          0.17524686593288155,
+          0.03915901209193768
+        ],
+        "teacher_p": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ]
+      }
+    ]
+  },
+  "inference_simulation": {
+    "mode": "categorical Monte Carlo simulation",
+    "seed": 2628,
+    "trials": 1200,
+    "single_sample_correct_probability": 0.45,
+    "rows": [
+      {
+        "n": 1,
+        "candidate_token_budget": 8,
+        "majority_accuracy": 0.44583333333333336,
+        "proxy_best_n_accuracy": 0.44583333333333336,
+        "oracle_any_correct": 0.44583333333333336,
+        "oracle_iid_formula": 0.44999999999999996
+      },
+      {
+        "n": 2,
+        "candidate_token_budget": 16,
+        "majority_accuracy": 0.44583333333333336,
+        "proxy_best_n_accuracy": 0.31916666666666665,
+        "oracle_any_correct": 0.6891666666666667,
+        "oracle_iid_formula": 0.6975
+      },
+      {
+        "n": 4,
+        "candidate_token_budget": 32,
+        "majority_accuracy": 0.5083333333333333,
+        "proxy_best_n_accuracy": 0.12166666666666667,
+        "oracle_any_correct": 0.8991666666666667,
+        "oracle_iid_formula": 0.90849375
+      },
+      {
+        "n": 8,
+        "candidate_token_budget": 64,
+        "majority_accuracy": 0.5608333333333333,
+        "proxy_best_n_accuracy": 0.020833333333333332,
+        "oracle_any_correct": 0.9916666666666667,
+        "oracle_iid_formula": 0.9916266062109375
+      },
+      {
+        "n": 16,
+        "candidate_token_budget": 128,
+        "majority_accuracy": 0.5683333333333334,
+        "proxy_best_n_accuracy": 0.0,
+        "oracle_any_correct": 1.0,
+        "oracle_iid_formula": 0.9999298862764533
+      }
+    ]
+  },
+  "evidence_limits": "Bounded CPU mechanisms only; no Qwen, CUDA or natural-language capability result."
+}

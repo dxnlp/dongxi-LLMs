@@ -1,0 +1,21 @@
+{
+  "status": "prepared; GPU execution unmeasured",
+  "script": "scripts/run_chapter09_spark_sft.py",
+  "model": "Qwen/Qwen3-0.6B-Base",
+  "revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+  "tokenizer_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+  "template": "experiments/data/instruction_interface_v1.jinja",
+  "train": "outputs/course-sft-interface-v1/train.jsonl",
+  "dev": "outputs/course-sft-interface-v1/dev.jsonl",
+  "output": "outputs/sft-0.6b-lora-control",
+  "microbatch": 1,
+  "accumulation": 4,
+  "max_length": 256,
+  "learning_rate": 0.00002,
+  "reserve_gib": 25,
+  "seed": 1212,
+  "mode": "lora",
+  "rank": 8,
+  "updates": 400,
+  "runtime_seconds": 3600
+}

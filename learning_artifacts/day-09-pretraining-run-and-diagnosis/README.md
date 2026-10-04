@@ -12,7 +12,10 @@ the chapter; a controlled trained comparison and learner defense remain open.
 - [Chapter6](../../book/chapters/06-pretraining-as-a-controlled-system.md):
   sections6.14–6.20 integrate the actual run rather than a hypothetical future
   success. Eighteen worked answers and a standard-library evidence-reading lab
-  are linked there. Dedicated Day9 analysis notebook remains planned.
+  are linked there. Update2026-10-04: three [Day9 visual notebooks](../../notebooks/day-09/README.md)
+  now implement saved clocks/targets, document masking and quality/decoding
+  analysis. This completes the material extension, not the learner's defense
+  or the controlled trained comparison.
 - [Repetition diagnosis](repetition-versus-overfitting.md): distinguish observed
   repetition, decoding controls, incomplete generalization evidence and
   unresolved coherence. Lower loss does not independently score whole stories.

@@ -18,14 +18,15 @@ This file is the operational source of truth for resuming work. Update it at the
   still contain repetition, malformed language and role inconsistencies.
   No systematic coherence score, matched generalization-gap audit, or unique
   cause for repetition is claimed.
-- Material: Chapter6 now integrates Days8–9 in sections6.1–6.20, with18 worked
+- Material: Chapter 6 now integrates Days8–9 in sections6.1–6.20, with18 worked
   solutions, the three existing Day8 visual notebooks, and a standard-library
-  evidence-reading lab. Dedicated Day9 analysis notebook remains planned.
+  evidence-reading lab. Three Day9 visual analysis notebooks are now built.
 - Operational state: user requested dashboard shutdown on2026-09-14.
   `dongxigpt-playground-20260914.service` was stopped and port8765 verified
   closed. The loaded inference process exited; model files/logs remain intact.
-  No new training, inference restart or installation requested. The subsequent
-  user request authorizes committing and pushing the accumulated course work.
+  No new training, inference restart or installation requested. The September
+  course work was subsequently committed/pushed; this October material build
+  remains local unless a new commit/push or departure request is made.
 - Next learning action: read the completed-run case study and define a frozen
   story-evaluation contract; then propose one bounded controlled trained
   comparison. Do not launch it automatically or treat sampling probes as that
@@ -38,7 +39,15 @@ This file is the operational source of truth for resuming work. Update it at the
 - Historical verification: Day8's three notebooks/29code cells/10figures and
   71tests are in its2026-09-09 report; Chapter5's12notebooks/168cells/52figures
   are in its2026-09-07 report. These are material checks, not learner assessment.
-- Last updated:2026-09-14.
+- Full-course material build,2026-10-04: all 15 chapters/15 worked solution guides,
+  16 lab guides,3 front-matter sections,4 appendices and61 notebooks across28days
+  are prepared. Fresh CPU references pass, including415 executed cells and131
+  image outputs;4 tagged unfinished learner exercises are preserved/skipped.
+  All146tests pass. Math/navigation/source checks and actual bounded experiments
+  are recorded in the [build report](experiments/reports/2026-10-04-complete-course-build.md).
+  Optional pretrained SFT/DPO/RLVR runners remain unexecuted. The current request
+  authorizes local course creation, not a new heavy campaign or external publication.
+- Last updated:2026-10-04. Active learner day remains9.
 
 Synthesis verification:40 source hashes and14,000 finite metric rows checked;
 all3 evidence-lab code blocks executed;20 chapter sections/18 solutions and local
@@ -135,25 +144,25 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 7 | Architecture synthesis | in progress | Chapter 5 sections 5.23–5.27 and answers 25–30; core defense notebook and optional recurrence ready; guided defense and trained comparison pending |
 | 8 | Pretraining data and recipe | in progress | Complete Day 8 Chapter 6 foundation, three visual worked notebooks, twelve solutions and bounded specification prepared; learner study pending on Spark |
 | 9 | Pretraining run and diagnosis | in progress | Baseline complete:14,000 updates,48.84M valid targets; Chapter6 case, eighteen solutions and evidence lab ready. Frozen coherence evaluation and controlled trained comparison remain open |
-| 10 | Evaluation before training | pending | — |
-| 11 | Instruction-data engineering | pending | — |
-| 12 | SFT mechanics | pending | — |
-| 13 | Qwen3-0.6B full SFT | pending | — |
-| 14 | SFT recipe defense | pending | — |
-| 15 | Preference data and Bradley–Terry | pending | — |
-| 16 | Reward models | pending | — |
-| 17 | DPO derivation and implementation | pending | — |
-| 18 | DPO experiment | pending | — |
-| 19 | Language generation as a policy | pending | — |
-| 20 | Baselines, RLOO, and PPO | pending | — |
-| 21 | Policy-gradient synthesis | pending | — |
-| 22 | GRPO derivation | pending | — |
-| 23 | Qwen3-0.6B GRPO/RLVR | pending | — |
-| 24 | Reward hacking and instability | pending | — |
-| 25 | Rollout systems and monitoring | pending | — |
-| 26 | Distillation and inference scaling | pending | — |
-| 27 | Capstone evaluation | pending | — |
-| 28 | Technical defense and release | pending | — |
+| 10 | Evaluation | pending | Prepared:Chapter7, worked solutions and [Day10 notebook route](notebooks/day-10/README.md); guided learning and model-scale evidence remain separate |
+| 11 | Instruction data | pending | Prepared:Chapter8, worked solutions and [Day11 notebook route](notebooks/day-11/README.md); guided learning and model-scale evidence remain separate |
+| 12 | SFT mathematics | pending | Prepared:Chapter9, worked solutions and [Day12 notebook route](notebooks/day-12/README.md); guided learning and model-scale evidence remain separate |
+| 13 | Base-to-assistant experiment | pending | Prepared:Chapter9, worked solutions and [Day13 notebook route](notebooks/day-13/README.md); guided learning and model-scale evidence remain separate |
+| 14 | SFT recipe defense | pending | Prepared:Chapter9, worked solutions and [Day14 notebook route](notebooks/day-14/README.md); guided learning and model-scale evidence remain separate |
+| 15 | Pairwise preference | pending | Prepared:Chapter10, worked solutions and [Day15 notebook route](notebooks/day-15/README.md); guided learning and model-scale evidence remain separate |
+| 16 | Reward models | pending | Prepared:Chapter10, worked solutions and [Day16 notebook route](notebooks/day-16/README.md); guided learning and model-scale evidence remain separate |
+| 17 | DPO derivation | pending | Prepared:Chapter11, worked solutions and [Day17 notebook route](notebooks/day-17/README.md); guided learning and model-scale evidence remain separate |
+| 18 | DPO experiment | pending | Prepared:Chapter11, worked solutions and [Day18 notebook route](notebooks/day-18/README.md); guided learning and model-scale evidence remain separate |
+| 19 | Policy gradients | pending | Prepared:Chapter12, worked solutions and [Day19 notebook route](notebooks/day-19/README.md); guided learning and model-scale evidence remain separate |
+| 20 | Baselines and PPO | pending | Prepared:Chapter12, worked solutions and [Day20 notebook route](notebooks/day-20/README.md); guided learning and model-scale evidence remain separate |
+| 21 | Algorithm defense | pending | Prepared:Chapter12, worked solutions and [Day21 notebook route](notebooks/day-21/README.md); guided learning and model-scale evidence remain separate |
+| 22 | GRPO derivation | pending | Prepared:Chapter13, worked solutions and [Day22 notebook route](notebooks/day-22/README.md); guided learning and model-scale evidence remain separate |
+| 23 | RLVR experiment | pending | Prepared:Chapter13, worked solutions and [Day23 notebook route](notebooks/day-23/README.md); guided learning and model-scale evidence remain separate |
+| 24 | Optimization failures | pending | Prepared:Chapter14, worked solutions and [Day24 notebook route](notebooks/day-24/README.md); guided learning and model-scale evidence remain separate |
+| 25 | Rollout systems | pending | Prepared:Chapter14, worked solutions and [Day25 notebook route](notebooks/day-25/README.md); guided learning and model-scale evidence remain separate |
+| 26 | Distillation and selection | pending | Prepared:Chapter15, worked solutions and [Day26 notebook route](notebooks/day-26/README.md); guided learning and model-scale evidence remain separate |
+| 27 | Capstone evaluation | pending | Prepared:Chapter15, worked solutions and [Day27 notebook route](notebooks/day-27/README.md); guided learning and model-scale evidence remain separate |
+| 28 | Defense and release | pending | Prepared:Chapter15, worked solutions and [Day28 notebook route](notebooks/day-28/README.md); guided learning and model-scale evidence remain separate |
 
 ## Durable decisions
 

@@ -712,9 +712,12 @@ that final state.
 
 The [evidence-reading lab](../labs/06-reading-a-pretraining-run.md) makes this
 analysis reproducible from compact JSON without starting training, loading model
-weights, or running a dashboard. The Day 8 notebooks remain the mechanism
-companions for accumulation, optimization and recovery. A dedicated Day 9
-analysis notebook is a planned extension, not an already executed lesson.
+weights, or running a dashboard. The Day8 notebooks remain the mechanism
+companions for accumulation, optimization and recovery. The
+[three Day9 sessions](../../notebooks/day-09/README.md) now plot measured clocks
+and loss, verify document-isolated packing boundaries, and inspect complete
+stored stories with decoding settings visible. These CPU references complement
+the standard-library evidence lab.
 
 The next learning step is to define a frozen story-evaluation contract and
 propose one controlled training comparison. The brief preflight batch-size

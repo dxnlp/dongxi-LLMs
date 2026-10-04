@@ -19,6 +19,14 @@ resume work, synchronize before relying on local project state:
 
 ## Required read order
 
+Full-course production request,2026-10-04: prepare all15 chapters and all28 days,
+including substantial future prose, visual notebooks, worked solutions, reusable
+code and experiments. This explicitly overrides the usual incremental rule that
+future notebooks wait for their chapter's live activation. Preserve completed
+evidence and learner cells. Run bounded CPU references and label new model-scale
+protocols as unexecuted until their own evidence exists. Course readiness does
+not move the learner's Day9 position or authorize external publication.
+
 The learner's machine-switching phrases are standing course instructions:
 `Switch to Mac`, `Continue on Mac`, `Switch to Spark`, `Continue on Spark`.
 Follow `docs/LEARNING_WORKFLOW.md` and `docs/handoffs/CURRENT.md`. Departure
@@ -116,8 +124,8 @@ two to three focused sessions: a transparent mechanism microscope, a deliberate
 perturbation or failure, and an integration/evidence session. At the start of a
 chapter, refine its entries in `docs/NOTEBOOK_CURRICULUM.md`, create the active
 notebook directory and session index, and link completed notebooks from the
-chapter and solutions. Create future notebooks only when their chapter becomes
-active; avoid empty placeholders. Evidence-oriented chapters may use executable
+chapter and solutions. The2026-10-04full-course request explicitly authorizes
+building all future notebook routes now; avoid empty placeholders. Evidence-oriented chapters may use executable
 audits, simulations, or metric explorations instead of forcing an artificial
 neural-network mechanism.
 

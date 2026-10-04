@@ -2,6 +2,14 @@
 
 This is the authoritative plan for the first 28 days. If scope pressure appears, protect mathematical clarity, executable code, controlled experiments, and honest evaluation before adding breadth.
 
+Material build update,2026-10-04: the learner explicitly requested creating the
+entire course now. The canonical design has **15 coherent chapters over28 days**,
+not28 unrelated chapters. All chapter prose, worked solutions and daily notebook
+routes are prepared ahead of learning; see [the sequence](docs/COURSE_SEQUENCE.md)
+and [blueprint](docs/COURSE_BLUEPRINT.md). This supersedes the incremental
+activation rule below for this build, without claiming completed learner practice,
+authorizing expensive campaigns or publishing a beta automatically.
+
 ## Target outcome
 
 By Day 28, release a coherent public beta covering:
@@ -304,7 +312,7 @@ A fifth PPO-clipping or Bradley–Terry animation is optional if time permits.
 
 - a clear README and navigable curriculum;
 - a reproducible DGX Spark environment path;
-- approximately 12–14 coherent core lessons;
+- 15 coherent chapters with worked solutions and all 28 day companion routes;
 - importable architecture and training code;
 - tested architecture, SFT, DPO, and GRPO labs;
 - a frozen evaluation panel;

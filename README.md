@@ -8,13 +8,22 @@
 
 - Release target: `v0.1` public beta
 - Schedule: 28 consecutive learning days
+- Complete teaching draft: [15 chapters and worked solutions](book/README.md),
+  [61 focused visual notebooks](notebooks/README.md), original bounded CPU
+  experiments, and executable Spark SFT/DPO/RLVR protocols. The
+  [28-day route](docs/COURSE_SEQUENCE.md) links every day's companions;
+  [course design](docs/COURSE_BLUEPRINT.md) explains the prerequisites and depth.
+  Prepared future material does not imply new pretrained-model results or
+  completed learner practice. Public release remains a separate decision.
+  [Build verification](experiments/reports/2026-10-04-complete-course-build.md)
+  records fresh-kernel execution, test results, source identity and limitations.
 - Current position: Day 9 on Spark. The [TinyStories pipeline](docs/TINYSTORIES_PIPELINE.md)
   is built and [bounded GPU smoke/recovery verified](experiments/reports/2026-09-13-tinystories-pipeline-smoke.md).
   The [first story-learning run is complete](experiments/reports/2026-09-14-tinystories-learning-result.md):
   14,000 updates, 48.84M valid target presentations, fixed-development NLL1.6743.
   Reliable coherence and a controlled trained comparison remain unestablished.
   [Chapter 6](book/chapters/06-pretraining-as-a-controlled-system.md) and its
-  Day 8 visual notebooks and [evidence-reading lab](book/labs/06-reading-a-pretraining-run.md)
+  Days8–9 visual notebooks and [evidence-reading lab](book/labs/06-reading-a-pretraining-run.md)
   are companions; earlier practice gaps are review
   items, not a forced rewind or evidence of independently assessed mastery.
 - Default learning/visual/media machine: Mac Studio; learner currently chooses Spark
@@ -25,7 +34,8 @@
 
 1. Read [`BOOK.md`](BOOK.md) for the reader-facing book architecture.
 2. Read [`ROADMAP.md`](ROADMAP.md) for the authoritative four-week production plan.
-3. Read [`PROGRESS.md`](PROGRESS.md) for the current position and next action.
+3. Follow [the daily course route](docs/COURSE_SEQUENCE.md), then read
+   [`PROGRESS.md`](PROGRESS.md) for the current position and next action.
 4. Read [`LEARNING_MEMORY.md`](LEARNING_MEMORY.md) for the artifact index, content ideas, and cross-machine task packets.
 5. Read [`learning_artifacts/`](learning_artifacts/) for deep discussions organized by day and topic.
 6. Use [`notebooks/`](notebooks/) for the book's interactive mechanism lessons.

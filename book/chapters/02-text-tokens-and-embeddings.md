@@ -1,5 +1,7 @@
 # Chapter 2 — Text, Tokens, and Embeddings
 
+Companion: [guided laboratory route](../labs/02-text-tokens-and-embeddings.md).
+
 A language model does not receive words. It receives integers.
 
 That simple fact creates an interface problem. Human text is written with
@@ -28,6 +30,11 @@ into that table. By the end, “text becomes vectors” will no longer be a hidd
 preprocessing step; it will be an inspectable part of the model.
 
 ## 2.1 Learning outcomes
+
+The [three Day2 notebooks](../../notebooks/day-02/README.md) trace English-trained
+byte BPE on unseen Chinese, vocabulary/sequence cost, and embedding-gradient
+paths. Their original toy encoder is labeled separately from the measured
+production-tokenizer comparisons below; no model download is required.
 
 After completing this chapter, you should be able to:
 

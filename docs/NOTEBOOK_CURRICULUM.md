@@ -17,19 +17,23 @@ approved GPU evidence. The proposed first pilot is the Day 8 Optimizer
 Playground, not yet implemented. Do not replace existing worked notebooks or
 equate a proposed visualization with demonstrated understanding.
 
-Current position: completed Day9 baseline on Spark, now interpreting results.
-The three Day8 visual notebooks remain ready, but do not implement the full
+Current position: completed Day 9 baseline on Spark, now interpreting results.
+The three Day 8 visual notebooks remain ready, but do not implement the full
 live optimizer playground. The learner found
 the isolated quadratic slider boring; start from meaningful decoder/data/recipe
 interventions and keep live discussion available outside notebook execution.
 
-Day9 companion plan: a saved-evidence notebook should plot the full fixed-dev
-curve, contrast padded positions with valid targets and timing boundaries, and
-compare complete fixed-prompt outputs across checkpoints. Use the portable
-`experiments/reports/2026-09-14-tinystories-learning-result.json`, with adjacent
-worked explanations and explicit retrospective sample-selection labels. The
-standard-library book lab already executes these checks; the plotted notebook
-extension is planned, not yet built or independently studied.
+Full-course build,2026-10-04: all 15 chapters now have an implemented notebook
+pathway,61 sessions across 28 days. The learner explicitly requested all future
+material ahead of live learning; this supersedes incremental activation for
+this build. The [daily route](COURSE_SEQUENCE.md) links every session index.
+Fresh-kernel verification checks material, not learner mastery.
+
+Day 9 now has three [built visual lessons](../notebooks/day-09/README.md):
+saved training clocks and useful targets; padding/document masks; and story
+quality versus decoding. They read the portable2026-09-14TinyStories JSON and
+retain retrospective sample-selection labels. These are completed-reference
+analyses, not a new controlled training comparison or independently studied work.
 
 ## Chapter contract
 
@@ -59,7 +63,7 @@ Reusable computation belongs in `src/dongxi_llms/`. Notebook claims remain
 exploratory until important results are reproduced by tests and, when empirical
 claims matter, an experiment specification and report.
 
-## Planned pathway by chapter
+## Implemented pathway by chapter
 
 | Chapter | Mechanism microscope | Perturbation and failure | Integration and evidence |
 |---:|---|---|---|
@@ -68,7 +72,7 @@ claims matter, an experiment specification and report.
 | 3. Learning the Next Token | Logits → stable softmax → NLL and $p-q$ | Break causal shifting and loss-mask normalization | Learn a known conditional distribution from repeated one-hot targets |
 | 4. Attention and the Causal Information Boundary | Build scaled causal attention and verify its invariants | Break mask placement and score scaling; inspect gradient paths | Prove cached and uncached decoding equivalence for an unchanged prefix |
 | 5. Building a Modern Decoder | Assemble residual attention and feed-forward blocks | Compare normalization, position, activation, and attention variants | Build `DongxiGPT`, account for parameters/FLOPs/memory, then test optional recurrent depth |
-| [6. Pretraining as a Controlled System](../notebooks/day-08/README.md) | Ready: document windows, budgets, correctly weighted accumulation | Ready: AdamW recurrence, schedule, clipping, dtype casts and memory ledger | Ready: fixed validation and recovery notebooks; completed Day9 Spark evidence in a [standard-library lab](../book/labs/06-reading-a-pretraining-run.md). Dedicated analysis notebook planned, not built |
+| [6. Pretraining as a Controlled System](../notebooks/day-08/README.md) | Document windows, budgets, correctly weighted accumulation | AdamW recurrence, schedule, clipping, dtype casts and memory ledger | Fixed validation/recovery plus three [Day 9 saved-evidence and mask lessons](../notebooks/day-09/README.md) |
 | 7. Evaluation Is a Contract | Implement metrics, frozen splits, and uncertainty | Reveal sampling variance, leakage, and misleading aggregate scores | Compare fixed checkpoints with slices and qualitative error analysis |
 | 8. Instruction Data as an Interface | Serialize roles and trace labels/loss masks | Break chat templates, packing boundaries, or assistant masking | Inspect a provenance-aware data mixture and its effective token weights |
 | 9. Supervised Fine-Tuning | Trace SFT loss and gradient flow through one batch | Ablate masks, mixture weights, or adaptation choices | Compare base and SFT checkpoints for gains, regressions, and uncertainty |
@@ -83,8 +87,8 @@ claims matter, an experiment specification and report.
 
 - At the start of a chapter, refine its pathway into named notebook
   sessions and add a local `README.md` under the relevant notebook directory.
-- Create notebooks only as the corresponding learning material becomes active;
-  do not commit empty placeholder notebooks for later chapters.
+- The 2026-10-04full-course request authorizes all future pathways now;
+  never count an empty placeholder as a built lesson.
 - Link finished sessions from the chapter, worked solutions, day artifact, and
   `notebooks/README.md`.
 - Execute every reference path in the declared environment before marking a

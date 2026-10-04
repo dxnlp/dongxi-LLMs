@@ -1,36 +1,57 @@
-# Book Draft
+# Dongxi LLMs — Reader's Guide
 
-The narrative architecture is defined in [`../BOOK.md`](../BOOK.md).
+The complete teaching draft contains **15 chapters across 28 learning days**.
+Read [the preface](front-matter/preface.md), [how to use the course](front-matter/how-to-use.md)
+and [notation](front-matter/notation.md) first. The [day-by-day route](../docs/COURSE_SEQUENCE.md)
+connects prose, visual notebooks, experiments and a defensible daily artifact.
 
-## Current reader path
+## Chapters and worked solutions
 
-1. [`chapters/01-evidence-before-optimization.md`](chapters/01-evidence-before-optimization.md)
-2. [`chapters/02-text-tokens-and-embeddings.md`](chapters/02-text-tokens-and-embeddings.md)
-3. [`chapters/03-learning-the-next-token.md`](chapters/03-learning-the-next-token.md)
-4. [`chapters/04-attention-and-the-causal-information-boundary.md`](chapters/04-attention-and-the-causal-information-boundary.md)
-5. [`chapters/05-building-a-modern-decoder.md`](chapters/05-building-a-modern-decoder.md) — Days 5–7: foundation, modern mechanisms, and architecture defense
-6. [`chapters/06-pretraining-as-a-controlled-system.md`](chapters/06-pretraining-as-a-controlled-system.md) — complete Day 8 foundation; Day 9 run evidence pending
-7. [`appendices/a-laboratory-setup.md`](appendices/a-laboratory-setup.md), when setting up or reproducing the lab
-8. Chapter solutions, after attempting the exercises:
-   [`Chapter 1`](solutions/01-evidence-before-optimization.md) and
-   [`Chapter 2`](solutions/02-text-tokens-and-embeddings.md), then
-   [`Chapter 3`](solutions/03-learning-the-next-token.md) and
-   [`Chapter 4`](solutions/04-attention-and-the-causal-information-boundary.md), and
-   [`Chapter 5`](solutions/05-decoder-notebook-solutions.md), and
-   [`Chapter 6`](solutions/06-pretraining-as-a-controlled-system.md)
+| Chapter | Learning days | Canonical chapter | Worked solutions |
+|---:|---|---|---|
+| 1 | 1 | [Evidence Before Optimization](chapters/01-evidence-before-optimization.md) | [Solutions](solutions/01-evidence-before-optimization.md) |
+| 2 | 2 | [Text, Tokens, and Embeddings](chapters/02-text-tokens-and-embeddings.md) | [Solutions](solutions/02-text-tokens-and-embeddings.md) |
+| 3 | 3 | [Learning the Next Token](chapters/03-learning-the-next-token.md) | [Solutions](solutions/03-learning-the-next-token.md) |
+| 4 | 4 | [Attention and the Causal Information Boundary](chapters/04-attention-and-the-causal-information-boundary.md) | [Solutions](solutions/04-attention-and-the-causal-information-boundary.md) |
+| 5 | 5–7 | [Building a Modern Decoder](chapters/05-building-a-modern-decoder.md) | [Solutions](solutions/05-decoder-notebook-solutions.md) |
+| 6 | 8–9 | [Pretraining as a Controlled System](chapters/06-pretraining-as-a-controlled-system.md) | [Solutions](solutions/06-pretraining-as-a-controlled-system.md) |
+| 7 | 10 | [Evaluation Is a Contract](chapters/07-evaluation-is-a-contract.md) | [Solutions](solutions/07-evaluation-is-a-contract.md) |
+| 8 | 11 | [Instruction Data as an Interface](chapters/08-instruction-data-as-an-interface.md) | [Solutions](solutions/08-instruction-data-as-an-interface.md) |
+| 9 | 12–14 | [Supervised Fine-Tuning](chapters/09-supervised-fine-tuning.md) | [Solutions](solutions/09-supervised-fine-tuning.md) |
+| 10 | 15–16 | [Preferences and Reward Models](chapters/10-preferences-and-reward-models.md) | [Solutions](solutions/10-preferences-and-reward-models.md) |
+| 11 | 17–18 | [Direct Preference Optimization](chapters/11-direct-preference-optimization.md) | [Solutions](solutions/11-direct-preference-optimization.md) |
+| 12 | 19–21 | [Language Generation as a Policy](chapters/12-language-generation-as-a-policy.md) | [Solutions](solutions/12-language-generation-as-a-policy.md) |
+| 13 | 22–23 | [Group-Relative Policy Optimization](chapters/13-group-relative-policy-optimization.md) | [Solutions](solutions/13-group-relative-policy-optimization.md) |
+| 14 | 24–25 | [When Optimization Goes Wrong](chapters/14-when-optimization-goes-wrong.md) | [Solutions](solutions/14-when-optimization-goes-wrong.md) |
+| 15 | 26–28 | [Distill, Evaluate, and Defend](chapters/15-distill-evaluate-and-defend.md) | [Solutions](solutions/15-distill-evaluate-and-defend.md) |
 
-The book is written for sequential reading. Interactive notebooks are
-first-class companion lessons and part of the course material: they turn the
-chapter's mathematics into prediction, implementation, perturbation, and
-interpretation. Experiment specifications, reports, manifests, reusable code,
-and notebooks support rather than substitute for the canonical narrative.
+## How the companions fit
 
-Chapter 5 now has a complete executable pathway in its
-[companion lab](labs/05-building-a-modern-decoder.md) and
-[notebook solution guide](solutions/05-decoder-notebook-solutions.md).
-All twelve reference notebooks are verified, including the new Day 7 core
-architecture defense alongside optional recurrence. The complete Days 5–7
-narrative is written, with 30 worked conceptual solutions. Its concluding
-sections connect model tracing, gradient evidence, failure diagnosis, and fair
-architecture comparisons. The learner's defense and any trained comparison
-remain pending; material readiness is separate from learner mastery.
+The chapter supplies the argument; the [61 focused notebooks](../notebooks/README.md)
+make its mechanisms inspectable. Each exercise has adjacent runnable reference
+answers, plots and interpretation boundaries. Reusable logic lives in `src/dongxi_llms/`,
+not in copied notebook fragments. [Companion labs](labs/) provide reproducible routes
+through the later experimental sections. Specifications, measured reports and
+model/data cards live under `experiments/`.
+
+All numerical teaching experiments are bounded CPU references. The existing
+TinyStories Spark run is real archived evidence. New pretrained SFT, DPO and
+RLVR routes are implemented protocols, not newly obtained pretrained-model
+results. An original arithmetic fixture is a mechanism microscope,
+not a broad assistant benchmark. Material preparation does not advance the
+learner automatically beyond Day 9 or establish mastery.
+
+## Appendices
+
+- [A — Laboratory setup](appendices/a-laboratory-setup.md)
+- [B — Mathematical and tensor notation](appendices/b-mathematical-and-tensor-notation.md)
+- [C — Evaluation and experiment templates](appendices/c-evaluation-and-experiment-templates.md)
+- [D — Reproduction and environments](appendices/d-reproduction-and-environments.md)
+
+## Quality and publication boundaries
+
+The [blueprint](../docs/COURSE_BLUEPRINT.md) defines teaching depth, prerequisites
+and evidence levels. [Release review](../docs/RELEASE_CHECKLIST.md) keeps material
+readiness separate from model-quality claims, licensing and permission to publish.
+Animation candidates have portable storyboards; production remains approval-gated
+on Mac Studio. These do not count as rendered films.

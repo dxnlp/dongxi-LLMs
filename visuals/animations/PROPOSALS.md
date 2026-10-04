@@ -11,6 +11,20 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### Full-course mathematics capture — 2026-10-04
+
+The learner requested the complete28-day/15-chapter teaching build. Automatic
+math-opportunity capture now adds CAND-ANIM-022 through029, with source modules,
+continuous storyboards, mathematical acceptance checks, evidence limitations
+and Mac ownership in [COURSE_STORYBOARDS.md](COURSE_STORYBOARDS.md).
+
+The new topics are paired evaluation, SFT masks/gradient paths, Bradley–Terry,
+DPO ratios, policy gradients/baselines/PPO, GRPO, reward hacking/rollout versions,
+and distillation/selection. Earlier BPE, embedding, attention/KV, modern-decoder,
+looped-transformer and pretraining packets remain authoritative and are reused.
+Status: proposed, not approved or rendered. No media/publication task is inferred.
+
+
 ### CAND-ANIM-009 extension — document example, two waits, 2026-09-15
 
 - Source: user approved a standalone adaptation of the lifecycle animation,

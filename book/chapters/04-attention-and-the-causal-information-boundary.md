@@ -1,5 +1,7 @@
 # Chapter 4 — Attention and the Causal Information Boundary
 
+Companion: [guided laboratory route](../labs/04-attention-and-the-causal-information-boundary.md).
+
 Chapter 3 began with a contextual hidden state and asked how it becomes a
 next-token prediction. We now examine how a position obtains information from
 other positions in the first place.

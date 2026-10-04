@@ -37,13 +37,28 @@ dependencies, preferred machine, and current status.
 
 ## Learner profile and working preferences
 
+-2026-10-04: learner explicitly requested a persistent goal to create the entire
+  in-depth course now: coherent chapters, notebooks, experiments and companions
+  across all28days/15chapters. Future material creation is authorized without
+  waiting for live lesson activation. Design: [blueprint](docs/COURSE_BLUEPRINT.md);
+  daily route: [sequence](docs/COURSE_SEQUENCE.md); all chapters:
+  [reader's guide](book/README.md). Source creation and CPU reference execution
+  do not authorize model-scale campaigns, external publishing or an automatic
+  learner-progress advance. Active learner day remains9.
+  New explicit mathematics has portable [animation storyboards](visuals/animations/COURSE_STORYBOARDS.md);
+  production remains separately approved on Mac Studio.
+  Material verification:61 fresh-kernel references,415 executed cells,131 images,
+  146passingtests; [final build record](experiments/reports/2026-10-04-complete-course-build.md).
+  Four unfinished learner scaffolds remain intact and are explicitly skipped
+  only in reference verification. All future learner days remain pending.
+
 - 2026-09-14 course synthesis: Chapter 6 now integrates the completed TinyStories
   run in sections6.14–6.20, with18 worked solutions and a standard-library
   evidence-reading lab. Portable source-hashed metrics and fixed-grid samples:
   `experiments/reports/2026-09-14-tinystories-learning-result.json`.
   Main lesson: completed execution, improved prediction and reliable coherence
-  are separate claims. A dedicated Day9 analysis notebook and controlled trained
-  comparison remain pending. Dashboard/playground stopped at user request;
+  are separate claims. Update2026-10-04: three Day9 analysis notebooks are built;
+  the controlled trained comparison remains pending. Dashboard/playground stopped at user request;
   port8765 verified closed. Do not restart services or training automatically.
 
 - 2026-09-14: prefer light, minimal dashboard interfaces: plain headings,

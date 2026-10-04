@@ -31,6 +31,14 @@ not as optional decoration added after the lesson.
 
 ## Reference previews versus live plots
 
+Full-course extension,2026-10-04: all 61 sessions now receive data-backed plots
+and saved reference previews. The general verifier
+`scripts/verify_course_notebooks.py --kernel dgx-spark-native --export-figures`
+exports images from executed copies to chapter-specific figure directories.
+Saved previews remain fixed even after an input changes; rerun the plot cell
+to see the current tensors. The reported image count measures output figures,
+not the number of subplots or an assessment of learner understanding.
+
 The Chapter 5 notebooks include 52 saved PNG previews: 27 mechanism figures
 plus 25 orientation/component schematics (one model map and one close-up per
 notebook, with an extra SwiGLU close-up). Runnable cells regenerate schematics

@@ -1,5 +1,7 @@
 # Chapter 3 — Learning the Next Token
 
+Companion: [guided laboratory route](../labs/03-learning-the-next-token.md).
+
 A tokenizer can turn text into IDs, and an embedding table can turn those IDs
 into vectors. Neither operation yet answers the question a language model is
 trained to solve:

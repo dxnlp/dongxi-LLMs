@@ -1,0 +1,36 @@
+{
+  "name": "Original instruction interface v1",
+  "creator": "Dongxi LLMs course",
+  "license": "Original course-authored fixture; redistribution follows the repository license when declared; no upstream material copied",
+  "tasks": [
+    "copy",
+    "reverse two words",
+    "extract labeled value"
+  ],
+  "splits": {
+    "train": {
+      "examples": 240,
+      "source_groups": 80,
+      "sha256": "50e0375220c97ee3a75509148f5024c3f3120185af3b5878ca5b8e8f7e01d234"
+    },
+    "dev": {
+      "examples": 60,
+      "source_groups": 20,
+      "sha256": "7e615ca255e9d026534a47cddf82ff34fff5a9021c5132b6b536cf27080ac62e"
+    },
+    "test": {
+      "examples": 120,
+      "source_groups": 40,
+      "sha256": "68a51011e852e702281a29196e145187f4e63bfcae5b5bc1e94415350cdb3889"
+    }
+  },
+  "split_rule": "disjoint numeric value groups, all task families stay together",
+  "limitations": [
+    "narrow deterministic tasks",
+    "held-out lexical values, shared task templates",
+    "not a general assistant benchmark",
+    "publication test never used for recipe selection"
+  ],
+  "mask_policy": "assistant body plus end-of-message delimiter and trailing template separator",
+  "truncation": "reject overlength records; no silent truncation"
+}

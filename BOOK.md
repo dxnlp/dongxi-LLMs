@@ -17,7 +17,16 @@ The book moves through one continuous argument:
 6. optimize language generation as a policy;
 7. diagnose failures and defend a complete model-development process.
 
-## Planned contents
+## Complete teaching draft — 2026-10-04
+
+All 15 chapters, their worked solutions and the full28-day notebook pathway are
+now written. Start at the [reader's guide](book/README.md) or use the
+[day-by-day route](docs/COURSE_SEQUENCE.md). The design is documented in
+[the course blueprint](docs/COURSE_BLUEPRINT.md). This prepares future learning;
+the learner's active position remains Day 9. Fresh-kernel reference checks and
+bounded CPU measurements are distinct from unexecuted pretrained-model campaigns.
+
+## Contents
 
 ### Front matter
 
@@ -56,7 +65,7 @@ The book moves through one continuous argument:
    Data and token budgets, batching, AdamW, schedules, clipping, precision,
    checkpoint recovery, scaling, and diagnosis. Synthesizes Days 8–9.
    [Days 8–9 chapter written](book/chapters/06-pretraining-as-a-controlled-system.md),
-   with three mechanism notebooks, eighteen worked solutions and a lightweight
+   with six notebooks across Days8–9, eighteen worked solutions and a lightweight
    [completed-run evidence lab](book/labs/06-reading-a-pretraining-run.md).
    The measured TinyStories case distinguishes prediction gains, padded compute,
    decoding effects and unresolved coherence. A trained controlled comparison

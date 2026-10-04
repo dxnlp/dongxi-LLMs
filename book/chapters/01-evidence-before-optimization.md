@@ -1,5 +1,7 @@
 # Chapter 1 — Evidence Before Optimization
 
+Companion: [guided laboratory route](../labs/01-evidence-before-optimization.md).
+
 A training process ends without an error. Its loss is lower than it was one minute
 ago. A checkpoint appears on disk. Did the model improve?
 
@@ -35,6 +37,11 @@ After completing this chapter, you should be able to:
 The practical reproduction instructions live in
 [Appendix A](../appendices/a-laboratory-setup.md). The complete experiment contract
 and evidence remain in the companion repository.
+
+The [three Day1 notebooks](../../notebooks/day-01/README.md) make the evidence
+standard executable: canonical run identity, deliberately failed smoke criteria,
+and a read of the actual later TinyStories result. They use CPU computations
+and stored reports, with adjacent explanations and useful plots.
 
 ## 1.2 An experiment produces measurements, not conclusions
 

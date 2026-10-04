@@ -29,7 +29,7 @@ and the [reported operator-name rendering issue](https://github.com/github/marku
 ## Checks
 
 The dependency-free source check covers every Markdown file under `book/`,
-including all five chapters, worked solutions, the companion lab, and appendix:
+including all15chapters, worked solutions, lab guides, front matter and appendices:
 
 ```bash
 python3 scripts/check_book_math.py
