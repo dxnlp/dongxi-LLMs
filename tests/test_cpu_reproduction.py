@@ -9,7 +9,6 @@ import tomllib
 import unittest
 
 import psutil
-import yaml
 from scripts.run_cpu_verification import CPU_VERIFICATION_SCOPE, execute
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,26 +38,6 @@ class CPUReproductionTests(unittest.TestCase):
         for package in lock['package']:
             for wheel in package.get('wheels', []):
                 self.assertRegex(wheel['hash'], r'^sha256:[0-9a-f]{64}$')
-
-    def test_workflow_is_read_only_pinned_cpu_and_retains_failures(self):
-        workflow = yaml.load((ROOT/'.github/workflows/course-cpu.yml').read_text(), Loader=yaml.BaseLoader)
-        self.assertEqual(workflow['permissions'], {'contents':'read'})
-        job = workflow['jobs']['references']
-        self.assertEqual(job['strategy']['matrix']['os'], ['ubuntu-24.04','macos-15'])
-        self.assertEqual(job['env']['CUDA_VISIBLE_DEVICES'], '')
-        self.assertEqual(job['env']['HF_HUB_OFFLINE'], '1')
-        for step in job['steps']:
-            if 'uses' in step:
-                self.assertRegex(step['uses'], r'^[\w/-]+@[0-9a-f]{40}$')
-        checkout = job['steps'][0]
-        self.assertEqual(checkout['with']['persist-credentials'], 'false')
-        install = next(s['run'] for s in job['steps'] if s.get('name','').startswith('Install locked'))
-        self.assertIn('--locked --extra course', install)
-        upload = job['steps'][-1]
-        self.assertEqual(upload['if'], 'always()')
-        text = (ROOT/'.github/workflows/course-cpu.yml').read_text()
-        self.assertNotIn('pull_request_target', text)
-        self.assertNotIn('secrets.', text)
 
     def test_command_failure_and_timeout_outputs_are_kept(self):
         with tempfile.TemporaryDirectory(prefix='dongxi-command-test-') as directory:

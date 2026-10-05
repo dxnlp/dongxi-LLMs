@@ -132,7 +132,7 @@ def main():
                     input_hashes={path:hashlib.sha256((ROOT/path).read_bytes()).hexdigest()
                                   for path in ['pyproject.toml','uv.lock','docs/course_manifest.json']})
     source_paths = sorted([*(ROOT/'src').rglob('*.py'), *(ROOT/'scripts').glob('*.py'),
-                           *(ROOT/'tests').glob('*.py'), ROOT/'.github/workflows/course-cpu.yml'])
+                           *(ROOT/'tests').glob('*.py')])
     manifest['source_hashes'] = {path.relative_to(ROOT).as_posix():hashlib.sha256(path.read_bytes()).hexdigest()
                                  for path in source_paths}
     report = output/'cpu-verification.json'

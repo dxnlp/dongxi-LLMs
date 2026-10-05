@@ -112,22 +112,17 @@ Do not copy that virtual environment onto Mac. A successful verifier run is
 material readiness evidence; learner practice and model-scale outcomes remain
 separate records.
 
-## D.2.1 What continuous verification would prove
+## D.2.1 Local verification and platform evidence
 
-The repository now includes an original
-[CPU workflow definition](../../.github/workflows/course-cpu.yml): Linux x64
-and macOS ARM64 lanes, Python3.12, locked dependencies, temporary-prefix kernels,
-an offline model-hub execution panel and always-retained evidence artifacts.
-Those runner labels are listed in
-[GitHub's runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
-Actions are pinned to full commit IDs and checkout retains no credential;
-read-only repository permissions follow
-[GitHub's secure-use guidance](https://docs.github.com/en/actions/reference/security/secure-use).
+The course uses local verification. The learner requested removal of the
+GitHub Actions workflow on2026-10-05; do not recreate hosted CI without a new
+explicit request. The local verifier, dependency lock and notebook route remain
+available. Earlier workflow definitions and source hashes describe the tested
+historical revision, not a requirement to keep hosted automation enabled.
 
-A checked workflow file is not a hosted run. Publication/enabling requires the
-appropriate Git request. A Linux CPU installation proves only the reported
-Linux panel; a hosted Mac run would be separate evidence and would still not
-transfer live kernels or checkpoints to the learner's Mac Studio. The
+A Linux CPU installation proves only the reported Linux panel; a separate Mac
+run would still not transfer live kernels or checkpoints to the learner's Mac
+Studio. The
 [reproduction specification](../../experiments/specs/2026-10-04-course-reproduction.md)
 fixes these scope distinctions before measurement.
 
@@ -142,12 +137,12 @@ it does not convert portable source checks into another platform's pass.
 | --- | --- | --- |
 | Spark/Linux ARM64 | Final clean locked CPU panel:1,533 tests; all76 fresh references,539 code cells/535 executed/210 images/four preserved unfinished skips | CPU/Linux evidence is not a Mac, hosted, inline-host learner or model-quality pass |
 | Mac | Portable route and return-evidence packet | Not executed/unverified in this task |
-| Hosted CI | Pinned workflow definition and locally exercised commands | Not executed; publishing/enabling requires appropriate Git authority |
+| Hosted CI | Workflow removed at the learner's request; earlier source evidence is historical | Not required; do not recreate without an explicit request |
 
 The final [current-source verification report](../../experiments/reports/2026-10-05-final-course-verification.md),
 [CPU test log](../../experiments/reports/2026-10-05-final-goal-cpu/run-01/tests.log)
 and [full76 fresh-kernel manifest](../../experiments/reports/2026-10-05-final-goal-notebooks/run-01/manifest.json)
-record the current-source checks above. Full76 execution and the final test/
+record the goal-closure snapshot before CI removal. Full76 execution and the final test/
 five-selected-reference orchestrator were separate runs on the same frozen
 sources, not two all76 executions. The [signed original-criteria review](../../experiments/reports/2026-10-05-final-original-criteria-signoff.md)
 closes18/18 bounded packages against86 unchanged criteria/dependencies, not

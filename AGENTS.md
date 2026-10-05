@@ -61,6 +61,11 @@ Before starting work:
 
 ## Source of truth
 
+Hosted-CI policy,2026-10-05: the learner does not want the course's GitHub
+Actions workflow. Keep verification local; do not recreate or enable hosted
+course CI without a new explicit request. Earlier workflow/source/hash records
+describe their historical revision and must not be rewritten as new results.
+
 Gap-applicability rule,2026-10-05: before implementing a proposed improvement,
 check whether it still exists, matters locally, and is already solved by current
 upstream versions or adequate existing code. Reuse resolved fixes instead of

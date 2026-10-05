@@ -1,5 +1,10 @@
 # Learning Memory and Production Queue
 
+User's CI preference,2026-10-05: remove the course GitHub Actions workflow.
+Use local CPU/notebook verification; do not recreate hosted course CI unless
+explicitly requested. Earlier goal-closure receipts retain their historical
+revision and results.
+
 User's audit rule,2026-10-05: before implementing any gap, establish that it
 still exists and matters to this course. Check current upstream fixes and the
 installed environment; reuse an adequate existing solution, classify resolved
