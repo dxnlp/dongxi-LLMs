@@ -27,19 +27,22 @@ connects prose, visual notebooks, experiments and a defensible daily artifact.
 
 ## How the companions fit
 
-The chapter supplies the argument; the [61 focused notebooks](../notebooks/README.md)
+The chapter supplies the argument; the [76 visual notebooks](../notebooks/README.md)
 make its mechanisms inspectable. Each exercise has adjacent runnable reference
 answers, plots and interpretation boundaries. Reusable logic lives in `src/dongxi_llms/`,
 not in copied notebook fragments. [Companion labs](labs/) provide reproducible routes
 through the later experimental sections. Specifications, measured reports and
 model/data cards live under `experiments/`.
 
-All numerical teaching experiments are bounded CPU references. The existing
-TinyStories Spark run is real archived evidence. New pretrained SFT, DPO and
-RLVR routes are implemented protocols, not newly obtained pretrained-model
-results. An original arithmetic fixture is a mechanism microscope,
-not a broad assistant benchmark. Material preparation does not advance the
-learner automatically beyond Day 9 or establish mastery.
+Numerical teaching experiments are bounded CPU references. Separate Spark
+evidence includes the original TinyStories run, a matched 400-update story
+comparison, Qwen3 full/LoRA SFT, chosen-only/DPO comparisons, and bounded
+reasoning/RLVR runs. The [experiment matrix](../docs/EXPERIMENT_MATRIX.md)
+distinguishes these measured outcomes from prepared protocols and unrun stages.
+An original arithmetic fixture is a mechanism microscope, not a broad assistant
+benchmark; optimizer execution does not imply reward-driven learning.
+Material preparation does not advance the learner automatically beyond Day 9
+or establish mastery.
 
 ## Appendices
 

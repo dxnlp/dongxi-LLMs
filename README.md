@@ -1,135 +1,168 @@
 # Dongxi LLMs
 
-**From equations to experiments: architecture, supervised fine-tuning, and reinforcement learning for language models.**
+**Understand the model. Build the mechanisms. Train it. Defend what you learned.**
 
-`Dongxi_LLMs` is an English-first, experiment-driven learning course for technically capable Python users with a foundation in deep learning. Its first learner is Dongxi; its public purpose is to help others move beyond calling LLM APIs and understand how models are designed, trained, evaluated, and diagnosed.
+A hands-on book and experimental lab for learning how language models work,
+from token IDs and gradients to pretraining, supervised fine-tuning, preference
+optimization, and reinforcement learning. The course connects mathematical
+derivations to readable PyTorch implementations, visual notebooks, and real
+training evidence from an NVIDIA DGX Spark.
 
-## Current status
+**15 chapters · 28 learning days · 76 visual notebooks · worked solutions**
 
-The teaching draft covers **15 chapters, 28 days and 76 visual notebooks**, with
-worked solutions, original bounded CPU experiments and optional Spark
-SFT/DPO/RLVR runners. Start with the [reader's guide](book/README.md) and
-[day-by-day route](docs/COURSE_SEQUENCE.md). Prepared material is not completed
-learner practice or proof of pretrained-model performance.
+[Read the book](book/README.md) · [Explore the notebooks](notebooks/README.md) ·
+[Follow the daily route](docs/COURSE_SEQUENCE.md) · [Inspect the experiments](docs/EXPERIMENT_MATRIX.md)
 
-The bounded reference-audit campaign and final Linux verification have completed.
-The [signed original-criteria review](experiments/reports/2026-10-05-final-original-criteria-signoff.md)
-closes **18 of 18 packages against all86 unchanged criteria and their dependencies**.
-This is bounded course-production acceptance, not learner mastery. The
-[pinned repository audit](docs/REFERENCE_REPOSITORY_AUDIT.md),
-[improvement plan](docs/COURSE_IMPROVEMENT_PLAN.md) and
-[acceptance review](docs/UPGRADE_ACCEPTANCE_REVIEW.md) distinguish implemented
-mechanisms from scoped model and platform evidence.
-The [JSON ledger](docs/course_improvements.json) is the cross-session record.
-The [current empirical defense](experiments/reports/2026-10-05-final-native-campaign-defense.md)
-now joins the actual first400 story, assistant400 and preference100 comparisons,
-including432 common preference responses and680/800 initial reasoning responses.
-Both RLVR groups have exact recovery and completed16 policies; four fresh
-post-evaluations and both matched32/128 comparisons are complete. G4's failed
-supervision is retained separately from its explicit export-consistency closure.
-Held-out cap128 sampled correct counts are13/44,11/44,13/44 for unchanged
-Instruct/G4/G8, with greedy7/11 unchanged—not a general method ranking.
-Missing responses and failed attempts remain visible rather than becoming zero
-scores or successful runs.
+![The four-part course: build a decoder, train and evaluate it, learn preferences and policies, then diagnose and defend the results.](visuals/readme/course-map.svg)
 
-Final [current-source Linux verification](experiments/reports/2026-10-05-final-course-verification.md) passes
-[1,533 CPU tests](experiments/reports/2026-10-05-final-goal-cpu/run-01/tests.log)
-and [all76 fresh notebook references](experiments/reports/2026-10-05-final-goal-notebooks/run-01/manifest.json):
-539 code cells,535 executed references,210 images and four preserved unfinished
-learner exercises. The [campaign archive closing receipt](experiments/reports/native-campaign-evidence-20261005-run-01/closing-bindings.json)
-binds45 original stage rows and74 retained model-directed terminal receipts, including
-failures. It is a model-free evidence archive, not portable weights or a raw
-corpus; its preclosure15/18 status documents remain immutable.
-The [native recovery report](experiments/reports/2026-10-05-native-sft-replay.md)
-and [actual response replay](experiments/reports/2026-10-05-pretrained-evaluation-replay.md)
-keep exact recovery separate from negative answering/stopping behavior.
-Historical source revisions and failed
-checks remain in [the progress ledger](PROGRESS.md) and
-[experiment matrix](docs/EXPERIMENT_MATRIX.md). Mac execution, hosted CI and actual
-inline-host learner delivery remain unobserved; none is inferred from Linux or
-local browser tests. Original platform criteria require these distinctions,
-not added mandatory successful Mac/hosted runs. Apply the learner's current-gap
-rule before further engineering: check upstream fixes and the installed stack,
-reuse adequate solutions, and do not revive resolved memory-hang monitoring work.
+## What you will learn
 
-The learner is on **Day 9 on Spark**. The
-[first TinyStories run](experiments/reports/2026-09-14-tinystories-learning-result.md)
-completed 14,000 updates and 48.84M valid target presentations, reaching
-fixed-development NLL 1.6743 without establishing reliable coherence. The new
-paired first400 comparison is separate; its later14k-schedule/publication cells
-remain unrun. [Chapter 6](book/chapters/06-pretraining-as-a-controlled-system.md)
-and its [evidence-reading lab](book/labs/06-reading-a-pretraining-run.md) are
-the current companions; earlier practice is a review backlog, not a forced rewind.
+The course begins with a randomly initialized decoder, then moves to Qwen3
+post-training. Each stage asks you to explain not only *how an algorithm works*,
+but *why a particular experiment would tell you anything useful*.
 
-The release target is a `v0.1` public beta; publication is a separate decision.
-Mac Studio is the default live-learning, visual and media machine; DGX Spark
-handles approved GPU experiments. The learner currently chooses Spark.
-The primary pretrained model family is Qwen3.
-
-## Start here
-
-1. Read [`BOOK.md`](BOOK.md) for the reader-facing book architecture.
-2. Read [`ROADMAP.md`](ROADMAP.md) for the authoritative four-week production plan.
-3. Follow [the daily course route](docs/COURSE_SEQUENCE.md), then read
-   [`PROGRESS.md`](PROGRESS.md) for the current position and next action.
-4. Read [`LEARNING_MEMORY.md`](LEARNING_MEMORY.md) for the artifact index, content ideas, and cross-machine task packets.
-5. Read [`learning_artifacts/`](learning_artifacts/) for deep discussions organized by day and topic.
-6. Use [`notebooks/`](notebooks/) for the book's interactive mechanism lessons.
-7. Contributors and coding agents must read [`AGENTS.md`](AGENTS.md) before changing the project.
-
-## Continue across machines
-
-Say **Switch to Mac** or **Switch to Spark** before leaving: the agent saves
-progress and commits/pushes scoped course work. On the destination, open the
-course project and say **Continue on Mac** or **Continue on Spark**: verify the
-execution host, safely synchronize, and resume the recorded next step.
-These are course conventions, not application slash commands. Full contract:
-[learning workflow](docs/LEARNING_WORKFLOW.md); latest
-[handoff packet](docs/handoffs/CURRENT.md).
-
-## Learning promise
-
-At the end of the course, the learner should be able to:
-
-- design and defend an LLM architecture under explicit constraints;
-- determine what data is needed for a target capability;
-- design and justify pretraining, SFT, preference, and RL recipes;
-- measure model capability with a frozen evaluation contract;
-- monitor training health and diagnose common failure modes;
-- explain the mathematics, implementation, evidence, and trade-offs clearly.
-
-Expert answers should follow this structure:
-
-> Choice → rationale → evidence → trade-off → failure risk → next experiment
-
-## Project principles
-
-1. Predict before running an experiment.
-2. Evaluation is designed before training begins.
-3. Every public empirical claim links to reproducible evidence.
-4. Notebooks explain experiments; reusable logic lives in importable modules.
-5. Failed experiments and negative results are retained and explained.
-6. English is canonical. Chinese is used selectively for social publishing. Swedish reasoning research lives in the sibling `Dongxi_LLMs_Swedish` project.
-7. Existing repositories are references, not material to concatenate or paraphrase.
-
-## Local reference projects
-
-- `../LLMs-from-scratch`: architecture and from-scratch implementation reference
-- `../reasoning-from-scratch`: Qwen3-0.6B reasoning, evaluation, GRPO, and distillation reference
-- `../rlhf-book`: broad post-training and instrumentation reference
-- `/home/dongxi/dgx-spark-dongxi`: validated DGX Spark platform and memory-safety layer
-
-## Planned model ladder
-
-| Tier | Model | Role |
+| Part | Chapters / days | Questions you will be able to answer |
 |---|---|---|
-| Numerical microscope | 1–10M parameters | Derivations, gradients, and mechanism tests |
-| From-scratch model | `DongxiGPT`, approximately 50–150M | Architecture design and brief pretraining |
-| Glass-box model | Qwen3-0.6B | Frequent SFT, DPO, RM, and GRPO experiments |
-| Flagship model | Qwen3-1.7B | Validate and publish important post-training results |
-| Scale-transfer model | Qwen3-4B/8B | Selected LoRA and transfer experiments |
-| Teacher/judge | Approximately 14–32B | Inference, synthetic data, and evaluation assistance |
+| **I. Build a decoder** | Chapters 1–5 · Days 1–7 | How do tokens become predictions? How do gradients reach embeddings and Q/K/V? Why do residual streams, normalization, position encoding, and KV caches matter? |
+| **II. Train and evaluate** | Chapters 6–9 · Days 8–14 | How do data, batching, AdamW, and learning rates interact? What does a falling loss prove? How do templates, masks, and full tuning versus LoRA change an assistant? |
+| **III. Preferences and policies** | Chapters 10–12 · Days 15–21 | What can a reward model learn? How does DPO change relative response probabilities? What do REINFORCE, RLOO, and PPO actually optimize? |
+| **IV. Diagnose and defend** | Chapters 13–15 · Days 22–28 | When can GRPO learn from verifiable rewards? How do reward hacking and rollout failures arise? What do selection and distillation improve, and how do you demonstrate it? |
 
-## Version scope
+Modern architecture companions cover **RMSNorm, RoPE, SwiGLU, grouped-query
+attention, and recurrent/looped Transformers**. Later labs examine mathematical
+grading, judge disagreement, process versus outcome rewards, candidate
+selection, and response-level distillation. The
+[reader's guide](book/README.md) links every chapter to its worked solutions.
 
-The four-week target is a high-quality public beta, not the end of the mastery journey. Advanced architecture variants, broad algorithm surveys, large-model sweeps, full translations, and extensive distributed training are candidates for later releases.
+## Learn by changing the mechanism
+
+Why can a future token provide a training target without leaking into the
+current representation? Why can loss remain positive when the gradient is zero?
+Why don't all attention heads converge to the same thing?
+
+These questions lead the lessons. The learning cycle is:
+
+**Question → prediction → implementation → controlled change → explanation**
+
+For example, remove an attention head and inspect how the projected update
+changes—not just whether the code still runs:
+
+[![A notebook experiment comparing the projected update with all attention heads, with head zero removed, and their difference.](notebooks/figures/chapter-05/day-05-02_multi_head_attention-visual-head-ablation.png)](notebooks/day-05/02_multi_head_attention.ipynb)
+
+*A small, controlled teaching example from the
+[multi-head attention notebook](notebooks/day-05/02_multi_head_attention.ipynb),
+not a visualization of a pretrained model's semantic capabilities.*
+
+The companions include architecture maps, tensor heatmaps, probability plots,
+gradient checks, and deliberately broken variants. Reference answers sit next
+to the exercises with explanations; you do not have to search elsewhere for
+the missing step. Reusable implementations live in
+[src/dongxi_llms/](src/dongxi_llms/) and are tested outside the notebooks.
+
+Start with a lesson that interests you:
+
+- [Tokenization and vocabulary cost](notebooks/day-02/README.md): the same text,
+  different token boundaries, different compute budgets.
+- [Logits, softmax, and cross-entropy](notebooks/day-03/README.md): trace the
+  path from a hidden state to probabilities and learning signals.
+- [Causal attention and KV caching](notebooks/day-04/README.md): test the
+  information boundary and cached/full-prefix equivalence.
+- [Build the decoder](notebooks/day-05/README.md): connect embeddings,
+  attention, residuals, normalization, and feed-forward layers.
+- [Preferences and policy gradients](notebooks/day-17/README.md): begin with
+  DPO, then follow the [policy-gradient labs](notebooks/day-19/README.md).
+
+## Experiments we actually ran
+
+The course includes real Spark runs, not just proposed recipes. Their reports
+retain the settings, raw observations, failures, and limits of each conclusion.
+
+| Experiment | What happened | What it teaches |
+|---|---|---|
+| **DongxiGPT from scratch** | A **66.64M-parameter** decoder trained on TinyStories for **14,000 updates** and **48.84M valid target presentations**. Fixed-development NLL fell from **10.9049 to 1.6743**. [Run report](experiments/reports/2026-09-14-tinystories-learning-result.md) | Recognizable story structure can emerge while repetition and malformed language remain. Lower loss is not a certificate of coherence. |
+| **A matched learning-rate intervention** | Two fresh **400-update** runs used the same data exposure; one halved the learning rate. **192 continuations** were reviewed by two blinded AI reader instances. [Comparison](experiments/reports/2026-10-05-native-story-first400-comparison.md) | Prediction loss, natural stopping, repetition, and meaningful endings are different measurements. This early comparison is not two completed 14,000-update schedules. |
+| **Full tuning versus LoRA** | Qwen3-0.6B-Base received the same **400-update** instruction recipe in both arms. Full tuning passed **120/120** strict held-out-value items; merged rank-8 Q/V LoRA passed **0/120**. [Comparison](experiments/reports/2026-10-05-native-sft400-comparison.md) | Adapter choice and stopping behavior matter. Three shared copy/reverse/extract templates do not establish general assistant quality or a universal full-tuning advantage. |
+| **Chosen-only SFT versus DPO** | Two **100-update** interventions from the same parent were evaluated alongside that parent in **432 common responses**. [Comparison](experiments/reports/2026-10-05-native-preference-comparison.md) | A larger preference margin need not produce a more accurate decoded answer. Retention must be measured separately. |
+| **Reasoning interfaces and RLVR** | Base/Instruct interfaces and generation caps were tested; two policies completed **16 RLVR iterations** with group sizes 4 and 8. Reward advantages remained zero. [Evidence](experiments/reports/2026-10-05-native-reasoning-rlvr-evidence.md) | Running an optimizer is not evidence of reward-driven learning. Zero-variance groups, incomplete generations, and failed supervision are part of the result. |
+
+[![Actual training NLL versus matched target exposure, beside the learning-rate schedules for the two 400-update TinyStories runs.](experiments/reports/native-story-first400-figures/learning-curves.png)](experiments/reports/2026-10-05-native-story-first400-comparison.md)
+
+*Measured training curves from the matched 400-update comparison—not story
+quality scores. The report pairs them with fixed-panel likelihoods, generated
+text, stopping behavior, and reader ratings.*
+
+The [experiment matrix](docs/EXPERIMENT_MATRIX.md) distinguishes completed runs
+from prepared protocols and unrun stages. The
+[course evidence map](docs/COURSE_EVIDENCE_MAP.md) connects these observations
+back to the chapters. Archived evidence does not include checkpoint weights
+or a bundled copy of the training corpus.
+
+## Start reading or coding
+
+You can read the chapters and saved notebook figures without installing
+anything. For a guided beginning, read the
+[preface](book/front-matter/preface.md), then
+[Chapter 1: Evidence Before Optimization](book/chapters/01-evidence-before-optimization.md).
+For the from-scratch training story, jump to
+[Chapter 6](book/chapters/06-pretraining-as-a-controlled-system.md) and its
+[run-reading lab](book/labs/06-reading-a-pretraining-run.md).
+
+The coding route assumes familiarity with Python and basic deep learning;
+the mathematical reasoning is developed alongside the implementations.
+With **Python 3.12 and uv already installed**, run these commands from the
+repository root:
+
+```bash
+UV_PROJECT_ENVIRONMENT=.venv-course uv sync --locked --extra course --python 3.12 --no-python-downloads
+.venv-course/bin/python -m ipykernel install --prefix .course-kernel --name dongxi-course --display-name "Python (Dongxi CPU course)"
+JUPYTER_PATH="$PWD/.course-kernel/share/jupyter" .venv-course/bin/python -m jupyterlab
+```
+
+Select **Python (Dongxi CPU course)** in JupyterLab. This creates a separate
+CPU teaching environment; it does not replace the Spark GPU environment or
+download pretrained weights. [Appendix D](book/appendices/d-reproduction-and-environments.md)
+documents environment choices, focused notebook execution, and local verification.
+
+Small CPU experiments make the mechanisms inspectable. Model-scale training
+runs use a separately profiled GPU environment and explicit experiment budgets.
+**Mac Studio is the intended interactive-learning and media workspace; DGX
+Spark is the GPU lab.** Linux execution is recorded; Mac execution is not
+inferred from it. To continue across machines, use the
+[handoff workflow](docs/LEARNING_WORKFLOW.md): **Switch to Mac / Spark** before
+leaving, then **Continue on Mac / Spark** on the destination. Repository sync
+and saved progress carry the lesson; live kernels do not move with Git.
+
+## Material, evidence, and project history
+
+This is a complete teaching draft targeting a `v0.1` public beta, not a claim
+that every learner has completed the course or that every experimental protocol
+has run. The recorded goal-closure Linux snapshot executed **all 76 notebook
+references**, produced **210 figures**, and passed **1,533 CPU tests**.
+[Verification report](experiments/reports/2026-10-05-final-course-verification.md)
+and [notebook manifest](experiments/reports/2026-10-05-final-goal-notebooks/run-01/manifest.json)
+retain that revision's exact scope; later edits do not inherit its verification.
+Four explicitly unfinished learner exercise cells were preserved, with their
+adjacent reference solutions executed.
+
+The material grew through live discussions about tokenization, logits,
+gradients, attention, and training failures, then a systematic review against
+[LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch),
+[Reasoning from Scratch](https://github.com/rasbt/reasoning-from-scratch), and
+[the RLHF Book](https://github.com/natolambert/rlhf-book).
+Those projects are references; this book's prose and course implementations
+are authored for its own learning pathway. The
+[reference audit](docs/REFERENCE_REPOSITORY_AUDIT.md) and
+[18-package acceptance review](docs/UPGRADE_ACCEPTANCE_REVIEW.md) document
+what was strengthened and what the evidence actually supports.
+
+For ongoing work:
+
+- [Progress](PROGRESS.md) and [learning memory](LEARNING_MEMORY.md): the actual
+  learner position, open questions, and next session.
+- [Learning artifacts](learning_artifacts/): deep discussions and portable
+  article/animation briefs organized by day and topic.
+- [Book architecture](BOOK.md) and [roadmap](ROADMAP.md): scope and sequencing.
+- [Contributor instructions](AGENTS.md): read before changing the project.
+
+The aim is to leave with more than working code: **a model of how learning
+happens, and the judgment to tell a useful result from a misleading one.**
