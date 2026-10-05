@@ -1,0 +1,256 @@
+{
+  "schema": "dongxi-response-distillation-verification-v1",
+  "date": "2026-10-04",
+  "scope": "Original bounded CPU response-level generating-teacher/student sequence experiment; not pretrained reasoning",
+  "commands": [
+    {
+      "kind": "premeasurement_tests",
+      "command": "PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python -m unittest discover -s tests -p test_response_distillation_lab.py -v",
+      "exit_code": 0,
+      "tests": 17,
+      "seconds": 0.468
+    },
+    {
+      "kind": "actual_measurement",
+      "command": "PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python -m dongxi_llms.response_distillation_lab --fixture fixtures/response-distillation/items.json --spec experiments/specs/2026-10-04-response-distillation.md --output experiments/reports/2026-10-04-response-distillation",
+      "exit_code": 0,
+      "source_input_bindings_unchanged": true
+    },
+    {
+      "kind": "final_tests",
+      "command": "PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python -m unittest discover -s tests -p test_response_distillation_lab.py -v",
+      "exit_code": 0,
+      "tests": 17,
+      "seconds": 0.464,
+      "expected_stderr": "One passing negative test deliberately invokes parser.error for existing output; not an experiment failure"
+    },
+    {
+      "kind": "fresh_notebook",
+      "command": "JUPYTER_PATH=/tmp/dongxi-course-reproduction.ZfVaEu/kernel/share/jupyter PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python scripts/verify_course_notebooks.py --notebooks notebooks/day-26/03_response_level_distillation.ipynb --kernel dongxi-course-clean --expected-prefix /tmp/dongxi-course-reproduction.ZfVaEu/venv --export-figures",
+      "exit_code": 0,
+      "manifest": "/tmp/dongxi-course-check-70rklqiv/manifest.json"
+    },
+    {
+      "kind": "math",
+      "command": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python scripts/check_book_math.py",
+      "exit_code": 0,
+      "markdown_files": 54,
+      "expressions": 1213,
+      "issues": 0
+    },
+    {
+      "kind": "integrity_snapshot",
+      "command": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python scripts/check_course_integrity.py --json",
+      "exit_code": 0,
+      "registered_notebooks": 74,
+      "notebooks": 74,
+      "problems": 0
+    }
+  ],
+  "acceptance": {
+    "genuine_autoregressive": "Actual causal TinyDecoder neural teacher and student; all15 token support each step; no forced syntax/EOS; width24teacher6552params versus width16student3088params",
+    "source_identity": "7 original source/test hashes plus actual fixture and spec bound before/after; complete raw checkpoints identified numerically; no external authentication inferred from digest",
+    "split_gates": "Original18items14groups; source/family-problem/encoded-prompt disjoint train/test; related source/alias siblings retained together in test",
+    "causal_objective": "Prompt labels excluded; response/EOS targets included; exactlyone causal shift; right padding ignored; no silent truncation; full/head/backbone gradients",
+    "controls": "Sameinitial studentweights, same6actualteacherparents; complete5targets vsansweronly3targets; fixed80updates unequal exposure disclosed",
+    "teacher_data": "144 actual neural attempts; all6sourcescovered for3seeds;18firsteligibleparents; no semantic filter; actualdata0rejections; wrongcontent/malformed/missingcoverage/errors testedseparately",
+    "evaluation": "1728 independent actual evaluationattempts on common18itemcontract; first/majority/meanlogp matched8pools, goldexcluded; all432attempts perarm denominators",
+    "contradictions": {
+      "teacher_wrong_step_right_answer": 80,
+      "teacher_valid_step_wrong_answer": 24,
+      "full_student_wrong_step_right_answer": 26,
+      "full_student_valid_step_wrong_answer": 15,
+      "authored_probes": 4,
+      "authored_controls_not_neural": true
+    },
+    "costs": {
+      "campaigns": 3,
+      "updates": 840,
+      "neural_responses": 1872,
+      "teacher_data_actions": 720,
+      "teacher_data_attempted_prefix_positions": 4320,
+      "evaluation_actions": 7365,
+      "evaluation_attempted_prefix_positions": 42575,
+      "evaluation_cap_stops": 300,
+      "ordinary_generation_errors": 0,
+      "teacher_student_costs_separate": true,
+      "inner_timers_exclude_hashing_and_journal": true,
+      "parameter_count_not_latency": true
+    },
+    "fresh_kernel": "9of9 referencecodecells,no skippedscaffolds;6figures;freshseed26011actual120teacher+2x80studentfits reproduce checkpoints and selected/generation tokens exactly",
+    "exact_forward_kl": "Existing distillation_lab.py SHA preserved; three-logit T² objective distinct from responseNLL",
+    "spark_transfer": "Bounded local-only validator and preparedspec; tempdummyfiles unitcheck filenames, not realmodel validation; executeTrue rejects; no modelscale execution",
+    "limits": [
+      "Printedstep correctness is outputproperty, not causalfaithfulness",
+      "Allnegative tinyheldouts/seeds/caps retained, no general Englishreasoning",
+      "No pretrained/GPU/installation/download/server/Git/media/publication",
+      "No crosshardware bitwise replay or optimized deployment speed",
+      "No learner mastery inference"
+    ]
+  },
+  "visual_inspection": {
+    "all_six_final_figures_inspected": true,
+    "shared_scales": true,
+    "first_pass_manifest": "/tmp/dongxi-course-check-543vd2nj/manifest.json",
+    "first_pass_issues": "Colorbar overlapped heatmap; dark labels lowcontrast; longaxeslabelcut. Allcorrected before finalfresh pass. Earlier manifest remains as historical verification.",
+    "final_figures": [
+      {
+        "cell": 4,
+        "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-01.png",
+        "sha256": "c616388fe03766148694ebac54f5b7343d9e10aa5faaec316d404d546b1c355e"
+      },
+      {
+        "cell": 8,
+        "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-02.png",
+        "sha256": "2ca2ff4d3253b6b5f0eb6a0b5e682786872439f9b884f7159e9775d727c34fc0"
+      },
+      {
+        "cell": 10,
+        "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-03.png",
+        "sha256": "cf54d2d830c206e78c10ad4e3ad8fb501c4fbd178b17fd9b0359bcb17af68993"
+      },
+      {
+        "cell": 12,
+        "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-04.png",
+        "sha256": "e47cc85c8e3494eb0dea42223e26ad31d5d222ae6350a36265ff9a4dcbe19b0e"
+      },
+      {
+        "cell": 14,
+        "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-05.png",
+        "sha256": "d4a0dc65e8723817dc9db290aeac2382f7cebb8f0b4c949be89003d4f2a22b0f"
+      },
+      {
+        "cell": 16,
+        "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-06.png",
+        "sha256": "af246a4fe25cc42ccfcc6d303856672a95039b702a4ea57ef2c54fd997c38e6a"
+      }
+    ]
+  },
+  "tooling_negative_attempts": [
+    {
+      "command": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python scripts/check_markdown_math.py",
+      "exit_code": 2,
+      "reason": "Guessed wrong checker filename; actual scripts/check_book_math.py subsequently passed. No course artifacts changed."
+    }
+  ],
+  "artifact_sha256": {
+    "src/dongxi_llms/response_distillation_lab.py": "0d41a4788aa64f622febd134da8e9607f4c9764bb85fff91abe54e88a13b4588",
+    "tests/test_response_distillation_lab.py": "a35279aac69fbcff21ec6f9993914900787567755866b2fb088690a7b36c27da",
+    "notebooks/day-26/03_response_level_distillation.ipynb": "4fe50de3f8294aecca7b573bb925d64cfe0e9f2cace17d75e7429b972ef92789",
+    "book/chapters/09-supervised-fine-tuning.md": "87f2b3e487eadaa91da8f4d8f857dbb109e80ca14daad0585cd1957cf97eb3f4",
+    "book/solutions/09-supervised-fine-tuning.md": "2c1191af88e2f399bfa13e840eafc47971ab14a6b869ff25543eba31e3fece78",
+    "book/labs/09-supervised-fine-tuning.md": "763188d43f0102b374d429df3b60377366ce467b9c7bd2c79f4c305f79f46ff8",
+    "notebooks/day-26/README.md": "1ae69052504e5bb3c7078ace73cd45af5cb54bf7387d3e5877147d0d657cb56b",
+    "fixtures/response-distillation/items.json": "11002087a951898ad11e45b0a0b545e68422f913e89ad489cf00108a35f610a1",
+    "fixtures/response-distillation/README.md": "e8a4e529158de821f2ad16d8586f14b61acd350e3042ca064a784c5eb026239d",
+    "experiments/specs/2026-10-04-response-distillation.md": "38eee27418dae81683ff7059012862fc82a56cf957a59e4d55a0d4e9cf6ad16d",
+    "experiments/specs/2026-10-04-response-distillation-spark-transfer.md": "f1ab7b17f94e520b2d1ccc3686900221c868f194a1c96a6e8992e1a8231720d3",
+    "experiments/reports/2026-10-04-response-distillation.md": "9e60cb45fea77bb8ec66d5a66d8eccade40a976322f0d2c9d87c3d25c02237e6",
+    "src/dongxi_llms/distillation_lab.py": "1bb80abc3b9135d92577dcf827c3f5237e23ceb45759d7fd155a103380bc7c8c",
+    "experiments/reports/2026-10-04-response-distillation/contract.json": "7b30dd82c7ca0c9b8fd1320ddc1a108c286f1cdcc6330b4583babf4df0ffae02",
+    "experiments/reports/2026-10-04-response-distillation/events.jsonl": "b6485eb840ae8fb5ea1e78ad673761c5c9a8af1bb9682372514acbf142a9568b",
+    "experiments/reports/2026-10-04-response-distillation/input-identity.json": "8b074a27a569cce05a8fbc53d0e427792ac6c1fd4e86d1c79237f112e4bcb177",
+    "experiments/reports/2026-10-04-response-distillation/responses.jsonl": "eba76d41b551f7763ef76760b45fd65211b78979aa829abe5602373b16616702",
+    "experiments/reports/2026-10-04-response-distillation/results.json": "8eea7cb206d449d0d3f4297248621463df8452980768792bf155ea869f2c2aee"
+  },
+  "fresh_notebook_manifest": {
+    "date_utc": "2026-10-04T21:35:17.838664+00:00",
+    "base_commit": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4",
+    "python": "3.12.14",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "kernel": "dongxi-course-clean",
+    "scope": "CPU teaching references and stored evidence",
+    "expected_kernel_prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+    "course_manifest_sha256": "51fc2646cb5a31c191ad5b53947d864da91b22e4db7cc1400fe716ab4971ffee",
+    "lock_sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "selected_routes": [
+      {
+        "path": "notebooks/day-26/03_response_level_distillation.ipynb",
+        "day": 26,
+        "chapter": 15,
+        "lane": "extension",
+        "execution": "cpu-offline",
+        "improvement": "DXI-15",
+        "requires": [
+          "notebooks/day-26/01_temperature_distillation.ipynb",
+          "notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb"
+        ]
+      }
+    ],
+    "notebooks": [
+      {
+        "path": "notebooks/day-26/03_response_level_distillation.ipynb",
+        "sha256": "4fe50de3f8294aecca7b573bb925d64cfe0e9f2cace17d75e7429b972ef92789",
+        "code_cells": 9,
+        "kernel_identity": {
+          "cuda_available": false,
+          "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "packages": {
+            "ipykernel": "7.4.0",
+            "matplotlib": "3.10.8",
+            "nbclient": "0.11.0",
+            "nbformat": "5.11.1",
+            "numpy": "2.5.3",
+            "peft": "0.20.0",
+            "tokenizers": "0.23.2",
+            "torch": "2.14.1+cpu",
+            "transformers": "5.18.0"
+          },
+          "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+          "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+          "python": "3.12.14",
+          "torch_cuda_build": null
+        },
+        "executed_code_cells": 9,
+        "skipped_unfinished_exercise_cells": [],
+        "images": 6,
+        "seconds": 3.005405404983321,
+        "output": "/tmp/dongxi-course-check-70rklqiv/day-26/03_response_level_distillation.ipynb",
+        "image_cells": [
+          4,
+          8,
+          10,
+          12,
+          14,
+          16
+        ],
+        "previews": [
+          {
+            "cell": 4,
+            "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-01.png",
+            "sha256": "c616388fe03766148694ebac54f5b7343d9e10aa5faaec316d404d546b1c355e"
+          },
+          {
+            "cell": 8,
+            "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-02.png",
+            "sha256": "2ca2ff4d3253b6b5f0eb6a0b5e682786872439f9b884f7159e9775d727c34fc0"
+          },
+          {
+            "cell": 10,
+            "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-03.png",
+            "sha256": "cf54d2d830c206e78c10ad4e3ad8fb501c4fbd178b17fd9b0359bcb17af68993"
+          },
+          {
+            "cell": 12,
+            "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-04.png",
+            "sha256": "e47cc85c8e3494eb0dea42223e26ad31d5d222ae6350a36265ff9a4dcbe19b0e"
+          },
+          {
+            "cell": 14,
+            "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-05.png",
+            "sha256": "d4a0dc65e8723817dc9db290aeac2382f7cebb8f0b4c949be89003d4f2a22b0f"
+          },
+          {
+            "cell": 16,
+            "path": "notebooks/figures/chapter-15/day-26-03_response_level_distillation-06.png",
+            "sha256": "af246a4fe25cc42ccfcc6d303856672a95039b702a4ea57ef2c54fd997c38e6a"
+          }
+        ]
+      }
+    ],
+    "failures": [],
+    "minimum_observed_available_gib": 118.06250762939453,
+    "required_host_reserve_gib": 25,
+    "seconds": 3.0287994770042133
+  }
+}

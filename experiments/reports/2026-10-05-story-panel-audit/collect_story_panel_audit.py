@@ -1,0 +1,428 @@
+"""Original read-only streaming audit; no course/model/data imports or mutations.
+
+Only this report directory receives generated empirical files. The disk-backed
+dedupe index is an audit artifact, not a modified dataset or training input.
+"""
+from __future__ import annotations
+
+import argparse
+import ast
+from collections import defaultdict
+from datetime import datetime, timezone
+import hashlib
+import json
+import os
+from pathlib import Path
+import platform
+import re
+import resource
+import sqlite3
+import stat
+import sys
+import time
+import traceback
+
+ROOT = Path(__file__).resolve().parents[3]
+HERE = Path(__file__).resolve().parent
+PROTOCOL = HERE / "protocol.json"
+WORD = re.compile(r"\w+(?:'\w+)?")
+RAW_NAMES = ("TinyStories-valid.txt", "TinyStories-train.txt")
+PREPARATION_SHA = "34db95a7dbdcbfbfb6b108943d5cb172b2026d5db8f8528942032be5963816c4"
+SOURCES = (
+    "src/dongxi_llms/staged_campaign.py", "src/dongxi_llms/stories_data.py",
+    "src/dongxi_llms/stories_training.py",
+    "experiments/specs/2026-10-04-staged-spark-campaign.md",
+    "experiments/specs/2026-09-13-tinystories-learning-01.md",
+    "experiments/reports/2026-10-04-staged-campaign-preparation.json",
+    "experiments/reports/2026-09-14-tinystories-learning-result.json",
+    "outputs/day09-learning-01/run.json", "outputs/day09-learning-01/initial.json",
+    "data/cache/day09-full-v2/manifest.json", "data/cache/day09-full-v2/tokenizer.json",
+)
+
+
+def canonical(value):
+    return hashlib.sha256(json.dumps(value, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
+def normalize(text):
+    return " ".join(text.casefold().split())
+
+
+def words(text):
+    return WORD.findall(text.casefold())
+
+
+def trigrams(tokens):
+    return set(zip(tokens, tokens[1:], tokens[2:]))
+
+
+def similarity(a, b):
+    union = a | b
+    return len(a & b) / len(union) if union else 0.0
+
+
+def literal(path, name):
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    for node in tree.body:
+        if isinstance(node, ast.Assign) and any(isinstance(t, ast.Name) and t.id == name for t in node.targets):
+            return ast.literal_eval(node.value)
+    raise ValueError(f"No literal {name}")
+
+
+def metadata(path):
+    resolved = path.resolve(strict=True)
+    s = resolved.stat()
+    if not stat.S_ISREG(s.st_mode):
+        raise ValueError("Input is not a regular file")
+    return {"declared_path": str(path), "resolved_path": str(resolved), "bytes": s.st_size,
+            "device": s.st_dev, "inode": s.st_ino, "mtime_ns": s.st_mtime_ns, "ctime_ns": s.st_ctime_ns}
+
+
+def digest(path, check):
+    before = metadata(path)
+    h = hashlib.sha256()
+    with Path(before["resolved_path"]).open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            h.update(chunk)
+            check()
+    after = metadata(path)
+    if before != after:
+        raise ValueError("Input changed during byte hashing")
+    return {**before, "sha256": h.hexdigest()}
+
+
+def available_bytes():
+    with Path("/proc/meminfo").open() as source:
+        for line in source:
+            if line.startswith("MemAvailable:"):
+                return int(line.split()[1]) * 1024
+    raise ValueError("Linux MemAvailable unavailable; this is the actual Spark audit, not a portable route")
+
+
+def process_memory():
+    """Linux process-since-exec counters, distinct from getrusage attribution."""
+    result = {}
+    with Path("/proc/self/status").open() as source:
+        for line in source:
+            key = line.partition(":")[0]
+            if key in {"VmHWM", "VmRSS", "VmSize", "VmPeak"}:
+                fields = line.split()
+                if fields[2] != "kB":
+                    raise ValueError("Unexpected Linux memory-counter unit")
+                result[key + "_bytes"] = int(fields[1]) * 1024
+    if len(result) != 4:
+        raise ValueError("Required Linux live-process counters unavailable")
+    return result
+
+
+def documents(path, maximum_bytes, raw_hash, counters):
+    """Mirror original framing; complete raw identity is verified after the scan.
+
+    The tail is provisional until the complete pinned SHA matches. Official
+    local files use LF; CR bytes are rejected rather than silently changing the
+    historical universal-newline semantics on an uninspected source.
+    """
+    pending = []
+    n = 0
+    with path.open("rb") as source:
+        for raw_line in source:
+            raw_hash.update(raw_line)
+            counters["bytes_read"] += len(raw_line)
+            if b"\r" in raw_line:
+                raise ValueError("Uninspected CR framing; do not accept a silent parser difference")
+            line = raw_line.decode("utf-8", errors="strict")
+            if line.rstrip("\n") == "<|endoftext|>":
+                text = "".join(pending)
+                if text.endswith("\n"):
+                    text = text[:-1]
+                if text.strip():
+                    yield text
+                pending, n = [], 0
+            else:
+                n += len(raw_line)
+                if n > maximum_bytes:
+                    raise ValueError("Document exceeded predeclared byte cap")
+                pending.append(line)
+        tail = "".join(pending)
+        if tail.strip():
+            counters["unterminated_final_document"] = True
+            yield tail
+
+
+def self_checks():
+    """Authored logical controls; no dataset-derived threshold selection."""
+    checks = {}
+    checks["normalized_exact_case_whitespace"] = normalize("  FOX\n apple ") == "fox apple"
+    checks["punctuation_not_removed_from_exact"] = normalize("fox.") != normalize("fox")
+    checks["prefix_is_not_whole_story_identity"] = "fox apple then ran".startswith("fox apple") and "fox apple then ran" != "fox apple"
+    checks["substring_is_not_prefix"] = "an old fox apple".find("fox apple") > 0
+    checks["identical_trigrams_one"] = similarity(trigrams(words("a red kite flew")), trigrams(words("A red kite flew!"))) == 1.0
+    checks["disjoint_trigrams_zero"] = similarity(trigrams(words("a red kite flew")), trigrams(words("the dog slept here"))) == 0.0
+    checks["order_matters_for_trigrams"] = similarity(trigrams(words("a red kite flew")), trigrams(words("kite red a flew"))) == 0.0
+    checks["short_union_zero"] = similarity(set(), set()) == 0.0
+    if not all(checks.values()):
+        raise AssertionError(checks)
+    return checks
+
+
+def blank_metrics():
+    return {"stories": 0, "whole_story_equal": 0, "prefix_equal": 0, "substring_equal": 0,
+            "positive_near_candidates": 0, "near_threshold_count": 0, "maximum_near_score": 0.0,
+            "nearest_examples": [], "exact_examples": []}
+
+
+def add_example(examples, example, limit, score=False):
+    examples.append(example)
+    examples.sort(key=(lambda e: (-e["score"], e["raw_document_ordinal"])) if score
+                  else (lambda e: e["raw_document_ordinal"]))
+    del examples[limit:]
+
+
+def compare_development(panel, development):
+    rows = []
+    for item in panel:
+        p = normalize(item["prompt"])
+        pairs = []
+        for i, prompt in enumerate(development, 1):
+            d = normalize(prompt)
+            pairs.append({"development_id": f"development-{i:02d}", "equal": p == d,
+                "either_is_prefix": p.startswith(d) or d.startswith(p),
+                "either_is_substring": p in d or d in p,
+                "whole_opening_word_trigram_jaccard": similarity(trigrams(words(p)), trigrams(words(d)))})
+        rows.append({"publication_id": item["id"], "pairs": pairs})
+    return rows
+
+
+def run(output):
+    started = time.monotonic()
+    protocol = json.loads(PROTOCOL.read_bytes())
+    limits = protocol["limits"]
+    initial_process_memory = process_memory()
+    initial_rusage = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+    resource.setrlimit(resource.RLIMIT_AS, (limits["address_space_bytes"], limits["address_space_bytes"]))
+    receipt = {"schema": "dongxi-story-panel-audit-v1", "created_utc": datetime.now(timezone.utc).isoformat(),
+        "mode": protocol["mode"], "status": "running", "command": list(sys.orig_argv),
+        "environment": {"python": sys.version, "executable": sys.executable, "prefix": sys.prefix,
+            "platform": platform.platform(), "machine": platform.machine(),
+            "cuda_visible_devices": os.environ.get("CUDA_VISIBLE_DEVICES"),
+            "hf_hub_offline": os.environ.get("HF_HUB_OFFLINE"),
+            "transformers_offline": os.environ.get("TRANSFORMERS_OFFLINE")},
+        "self_checks": self_checks(), "source_before": {}, "source_after": {},
+        "raw_corpus": {}, "prepared_files": {}, "split_reconstruction": {},
+        "panel_metrics": {}, "failures": [], "jobs_started": 0, "models_loaded": 0,
+        "process_memory": {"initial": initial_process_memory, "initial_rusage_high_water_bytes": initial_rusage,
+            "observed_rlimit_as_soft_hard_bytes": list(resource.getrlimit(resource.RLIMIT_AS)),
+            "scope": "/proc/self counters are for the current exec. getrusage high-water may reflect launch attribution and is reported separately, not silently replaced."},
+        "scope_limitations": protocol["non_claims"], "host_available_samples": []}
+    output.mkdir(exist_ok=False)
+    connection = None
+
+    def check(sample=False):
+        if time.monotonic() - started > limits["wall_seconds"]:
+            raise TimeoutError("Predeclared corpus-audit wall bound reached")
+        if sample:
+            available = available_bytes()
+            receipt["host_available_samples"].append({"elapsed_seconds": time.monotonic()-started, "bytes": available})
+            if available < limits["minimum_sampled_host_available_bytes"]:
+                raise MemoryError("Sampled host reserve below 25 GiB")
+
+    try:
+        check(sample=True)
+        for relative in SOURCES:
+            receipt["source_before"][relative] = digest(ROOT / relative, check)
+        for path in (Path(__file__), PROTOCOL):
+            receipt["source_before"][str(path.relative_to(ROOT))] = digest(path, check)
+        if receipt["source_before"][protocol["panel_source"]]["sha256"] != PREPARATION_SHA:
+            raise ValueError("Original immutable preparation receipt differs")
+        preparation = json.loads((ROOT / protocol["panel_source"]).read_bytes())
+        panel_contract = preparation["campaign"]["evaluation_contracts"][protocol["panel_contract"]]
+        panel = panel_contract["items"]
+        if len(panel) != 12 or tuple(item["prompt"] for item in panel) != literal(ROOT / SOURCES[0], "STORY_OPENINGS"):
+            raise ValueError("Current panel literal no longer exactly matches frozen original12")
+        logical = {k: v for k, v in panel_contract.items() if k != "logical_contract_sha256"}
+        if canonical(logical) != panel_contract["logical_contract_sha256"]:
+            raise ValueError("Frozen panel logical digest is inconsistent")
+        initial = json.loads((ROOT / protocol["development_source"]).read_bytes())
+        development = list(dict.fromkeys(sample["prompt"] for sample in initial["samples"]))
+        if len(development) != 3 or tuple(development) != literal(ROOT / "src/dongxi_llms/stories_training.py", "PROMPTS"):
+            raise ValueError("Actual three historical openings no longer match source declaration")
+        receipt["panel"] = {"original_logical_contract_sha256": panel_contract["logical_contract_sha256"],
+            "source_unchanged": True, "items": panel, "development_prompts": development,
+            "development_separation": compare_development(panel, development)}
+        manifest = json.loads((ROOT / protocol["prepared_manifest"]).read_bytes())
+        historical = json.loads((ROOT / "outputs/day09-learning-01/run.json").read_bytes())
+        portable = json.loads((ROOT / "experiments/reports/2026-09-14-tinystories-learning-result.json").read_bytes())
+        if manifest != historical["data_manifest"] or manifest != portable["data_manifest"]:
+            raise ValueError("Actual prepared manifest differs from original stored run/report")
+        if receipt["source_before"][protocol["prepared_manifest"]]["sha256"] != historical["contract"]["data"]:
+            raise ValueError("Actual prepared manifest byte SHA differs from historical science contract")
+        if manifest["dataset_revision"] != protocol["dataset_revision"] or manifest["subset"]:
+            raise ValueError("Wrong corpus revision/subset")
+        receipt["corpus_provenance"] = {"dataset": manifest["dataset"], "dataset_revision": manifest["dataset_revision"],
+            "actual_prepared_manifest_sha256": historical["contract"]["data"], "manifest_matches_run_and_portable_report": True,
+            "preparation_policy": manifest["policy"], "upstream_provenance": "Local byte identities match the historical pinned declaration; this audit does not independently authenticate upstream synthetic generation/privacy."}
+        for split in ("valid", "train"):
+            for name, expected in manifest[split]["files"].items():
+                identity = digest((ROOT / protocol["prepared_manifest"]).parent / name, check)
+                receipt["prepared_files"][name] = identity
+                if identity["sha256"] != expected:
+                    raise ValueError(f"Prepared corpus file changed: {name}")
+        if receipt["source_before"]["data/cache/day09-full-v2/tokenizer.json"]["sha256"] != manifest["tokenizer_sha256"]:
+            raise ValueError("Actual tokenizer bytes differ from historical declaration")
+        prompts = [{**item, "role": "publication"} for item in panel] + [
+            {"id": f"development-{i:02d}", "prompt": p, "role": "historical-development"} for i, p in enumerate(development, 1)]
+        for prompt in prompts:
+            prompt["normalized"] = normalize(prompt["prompt"])
+            prompt["words"] = words(prompt["prompt"])
+            prompt["trigrams"] = trigrams(prompt["words"])
+        index = defaultdict(set)
+        for i, prompt in enumerate(prompts):
+            for gram in prompt["trigrams"]:
+                index[gram].add(i)
+        longest = max(len(p["words"]) for p in prompts)
+        validation_hashes = set()
+        database = output / "training-normalized-hashes.sqlite"
+        connection = sqlite3.connect(database)
+        connection.execute("PRAGMA journal_mode=OFF")
+        connection.execute("PRAGMA synchronous=OFF")
+        connection.execute("PRAGMA cache_size=-8192")
+        connection.execute("CREATE TABLE seen (hash BLOB PRIMARY KEY) WITHOUT ROWID")
+        for split in ("valid", "train"):
+            raw_path = Path(protocol["raw_cache_snapshot"]) / f"TinyStories-{split}.txt"
+            before = metadata(raw_path)
+            expected = manifest["raw_files"][raw_path.name]
+            if before["bytes"] != expected["bytes"]:
+                raise ValueError("Raw corpus byte size differs before reading")
+            receipt["raw_corpus"][split] = {"before": before, "expected": expected, "complete": False}
+            framed = hashlib.sha256()
+            raw_hash = hashlib.sha256()
+            counts = {"raw_documents": 0, "retained_documents": 0, "duplicate_documents": 0,
+                      "excluded_overlap": 0, "bytes_read": 0, "unterminated_final_document": False}
+            metrics = {p["id"]: {s: blank_metrics() for s in ("retained", "duplicate", "excluded_validation")} for p in prompts}
+            receipt["panel_metrics"][split] = metrics
+            for ordinal, text in enumerate(documents(Path(before["resolved_path"]), limits["maximum_document_utf8_bytes"], raw_hash, counts), 1):
+                counts["raw_documents"] = ordinal
+                if ordinal > limits["maximum_raw_documents_per_split"]:
+                    raise ValueError("Raw document count cap exceeded")
+                normalized = normalize(text)
+                normalized_hash = hashlib.sha256(normalized.encode()).digest()
+                if split == "train" and normalized_hash in validation_hashes:
+                    status = "excluded_validation"
+                    counts["excluded_overlap"] += 1
+                elif split == "valid":
+                    status = "duplicate" if normalized_hash in validation_hashes else "retained"
+                    if status == "retained":
+                        validation_hashes.add(normalized_hash)
+                        if len(validation_hashes) > limits["maximum_validation_hashes_in_memory"]:
+                            raise MemoryError("Validation hash-set cap exceeded")
+                else:
+                    inserted = connection.execute("INSERT OR IGNORE INTO seen VALUES (?)", (normalized_hash,)).rowcount
+                    status = "retained" if inserted else "duplicate"
+                if status == "duplicate":
+                    counts["duplicate_documents"] += 1
+                if status == "retained":
+                    counts["retained_documents"] += 1
+                    encoded = text.encode("utf-8")
+                    framed.update(len(encoded).to_bytes(8, "little"))
+                    framed.update(encoded)
+                # Only the first longest words feed the defined near-prefix
+                # metric. Full normalized text is still used for exact needles.
+                leading = []
+                for match in WORD.finditer(normalized):
+                    leading.append(match.group())
+                    if len(leading) == longest:
+                        break
+                candidates = set()
+                for gram in trigrams(leading):
+                    candidates.update(index.get(gram, ()))
+                for i, prompt in enumerate(prompts):
+                    m = metrics[prompt["id"]][status]
+                    m["stories"] += 1
+                    needle = prompt["normalized"]
+                    whole, prefix, substring = normalized == needle, normalized.startswith(needle), needle in normalized
+                    m["whole_story_equal"] += whole
+                    m["prefix_equal"] += prefix
+                    m["substring_equal"] += substring
+                    if whole or prefix or substring:
+                        add_example(m["exact_examples"], {"raw_document_ordinal": ordinal,
+                            "normalized_story_sha256": normalized_hash.hex(), "whole_story_equal": whole,
+                            "prefix_equal": prefix, "substring_equal": substring}, limits["maximum_examples_per_metric"])
+                    if i in candidates:
+                        candidate_tokens = leading[:len(prompt["words"])]
+                        score = similarity(prompt["trigrams"], trigrams(candidate_tokens))
+                        if score > 0:
+                            m["positive_near_candidates"] += 1
+                            m["near_threshold_count"] += score >= protocol["near_metric"]["threshold"]
+                            m["maximum_near_score"] = max(m["maximum_near_score"], score)
+                            add_example(m["nearest_examples"], {"raw_document_ordinal": ordinal,
+                                "normalized_story_sha256": normalized_hash.hex(), "score": score,
+                                "opening_word_count": len(candidate_tokens), "opening_words": " ".join(candidate_tokens),
+                                "shared_trigrams": [list(g) for g in sorted(prompt["trigrams"] & trigrams(candidate_tokens))]},
+                                limits["maximum_examples_per_metric"], score=True)
+                if ordinal % 10000 == 0:
+                    check(sample=True)
+                    connection.commit()
+                    if database.stat().st_size > limits["maximum_sqlite_bytes"]:
+                        raise MemoryError("Audit dedupe database exceeded predeclared byte cap")
+                if ordinal % 100000 == 0:
+                    print(json.dumps({"split": split, "raw_documents": ordinal, "retained": counts["retained_documents"],
+                        "elapsed_seconds": time.monotonic()-started}), flush=True)
+            connection.commit()
+            after = metadata(raw_path)
+            actual_hash = raw_hash.hexdigest()
+            if before != after or actual_hash != expected["sha256"] or counts["bytes_read"] != expected["bytes"]:
+                raise ValueError("Raw source changed or complete pinned SHA failed")
+            comparisons = {"documents": counts["retained_documents"] == manifest[split]["documents"],
+                "duplicate_documents": counts["duplicate_documents"] == manifest[split]["duplicate_documents"],
+                "excluded_overlap": counts["excluded_overlap"] == manifest[split]["excluded_overlap"],
+                "framed_text_sha256": framed.hexdigest() == manifest[split]["framed_text_sha256"]}
+            receipt["raw_corpus"][split].update(after=after, actual_sha256=actual_hash, complete=True)
+            receipt["split_reconstruction"][split] = {**counts, "framed_text_sha256": framed.hexdigest(),
+                "matches_actual_manifest": comparisons, "normalized_cross_split_overlap_after_filter": 0}
+            if not all(comparisons.values()):
+                raise ValueError(f"Reconstruction mismatch: {split}: {comparisons}")
+        receipt["audit_index"] = digest(database, check)
+        receipt["audit_index"]["purpose"] = "Disk-backed normalized full-story hashes; no corpus text stored."
+        for relative in receipt["source_before"]:
+            receipt["source_after"][relative] = digest(ROOT / relative, check)
+        receipt["source_stable"] = receipt["source_before"] == receipt["source_after"]
+        if not receipt["source_stable"]:
+            raise ValueError("Bound source/input changed during audit")
+        # Final prepared byte identities are stat-bound, not gratuitously
+        # reread. Their initial observed SHA must match the manifest.
+        receipt["prepared_files_unchanged_by_metadata"] = all(
+            metadata(Path(value["declared_path"])) == {k: value[k] for k in metadata(Path(value["declared_path"]))}
+            for value in receipt["prepared_files"].values())
+        if not receipt["prepared_files_unchanged_by_metadata"]:
+            raise ValueError("Prepared file metadata changed after its observed SHA")
+        check(sample=True)
+        receipt["status"] = "passed-bounded-audit"
+    except BaseException as error:
+        receipt["status"] = "failed"
+        receipt["failures"].append({"type": type(error).__name__, "message": str(error), "traceback": traceback.format_exc()})
+    finally:
+        if connection is not None:
+            connection.close()
+        receipt["elapsed_seconds"] = time.monotonic() - started
+        receipt["peak_resident_bytes"] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        receipt["peak_resident_bytes_metric"] = "Observed getrusage RUSAGE_SELF.ru_maxrss*1024; not assumed to be this scan's since-exec live RSS peak."
+        receipt["process_memory"]["final"] = process_memory()
+        receipt["process_memory"]["final_rusage_high_water_bytes"] = receipt["peak_resident_bytes"]
+        receipt["process_memory"]["rusage_high_water_already_present_at_start"] = initial_rusage == receipt["peak_resident_bytes"]
+        samples = receipt["host_available_samples"]
+        receipt["minimum_sampled_host_available_bytes"] = min(s["bytes"] for s in samples) if samples else None
+        receipt["continuous_memory_monitoring"] = False
+        with (output / "audit.json").open("x", encoding="utf-8") as target:
+            json.dump(receipt, target, indent=2, sort_keys=True)
+            target.write("\n")
+        print(json.dumps({"status": receipt["status"], "output": str(output), "elapsed_seconds": receipt["elapsed_seconds"]}), flush=True)
+    return 0 if receipt["status"] == "passed-bounded-audit" else 1
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    if args.output.resolve().parent != HERE:
+        parser.error("Output must be an exclusive direct child of this owned report directory")
+    raise SystemExit(run(args.output))

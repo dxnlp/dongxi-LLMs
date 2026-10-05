@@ -1,0 +1,25 @@
+======================================================================
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/lib/python3.12/unittest/__main__.py", line 18, in <module>
+    main(module=None)
+  File "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/lib/python3.12/unittest/main.py", line 105, in __init__
+    self.runTests()
+  File "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/lib/python3.12/unittest/main.py", line 281, in runTests
+    self.result = testRunner.run(self.test)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/lib/python3.12/unittest/runner.py", line 247, in run
+    result.printErrors()
+  File "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/lib/python3.12/unittest/runner.py", line 146, in printErrors
+    self.printErrorList('ERROR', self.errors)
+  File "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/lib/python3.12/unittest/runner.py", line 158, in printErrorList
+    self.stream.writeln("%s: %s" % (flavour,self.getDescription(test)))
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/lib/python3.12/unittest/runner.py", line 50, in getDescription
+    doc_first_line = test.shortDescription()
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_native_profile_supervisor.py", line 143, in shortDescription
+    def shortDescription(self): return self.original.shortDescription()
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'shortDescription'

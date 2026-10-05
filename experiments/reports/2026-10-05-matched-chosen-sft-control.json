@@ -1,0 +1,37 @@
+{
+  "schema": "dongxi-matched-chosen-sft-component-report-v1",
+  "status": "PASS",
+  "scope": "Actual bounded CPU scientific control only; pretrained Spark and accounted production recovery remain pending",
+  "verification": {
+    "path": "experiments/reports/2026-10-05-matched-chosen-sft/run-01/verification.json",
+    "sha256": "3bf1189bea1ec047d5044f49fb60eb9e3d350343ad899445f9e34d3bebb8f3da"
+  },
+  "observations": {
+    "path": "experiments/reports/2026-10-05-matched-chosen-sft/run-01/campaign/results.json",
+    "sha256": "d2bc2f19496e871cc864cfa7a1c6947e994364a6db0d08b0b0dea26490e0f00e"
+  },
+  "actual_focused_tests": 18,
+  "actual_unittest_seconds": 3.180,
+  "actual_test_child_seconds": 5.167253778025042,
+  "actual_campaign_child_seconds": 2.3829587439540774,
+  "actual_exit_codes": [0, 0],
+  "sampled_minimum_mem_available_bytes": 126090657792,
+  "sampled_interval_seconds": 0.05,
+  "child_deadline_seconds": 60,
+  "source_and_input_bindings_unchanged": 16,
+  "archived_artifacts": 75,
+  "actual_model_parameters": 6592,
+  "seeds": [1818, 1819],
+  "original_fixture_counts": {"train": 8, "validation": 4, "evaluation": 4},
+  "updates_per_trained_arm": 6,
+  "actual_total_campaign_updates": 24,
+  "actual_publication_records": 24,
+  "all_six_arm_exact_matches": "0/4; all negative outcomes retained without tuning",
+  "matching": ["actual parent bytes", "tokenizer/template/stops", "raw and encoded source-disjoint inputs", "replacement draws", "chosen IDs/masks/targets", "optimizer rate/decay/clipping", "fixed horizon"],
+  "not_matching": ["objective reduction", "rejected supervision", "reference forwards", "policy input positions", "compute", "runtime", "memory"],
+  "chosen_sft_per_seed_training": {"draws": 12, "chosen_targets": 48, "rejected_targets": 0, "policy_calls": 12, "policy_positions": 288, "reference_calls": 0, "reference_positions": 0},
+  "dpo_per_seed_training": {"draws": 12, "chosen_targets": 48, "rejected_targets": 36, "policy_calls": 24, "policy_positions": 540, "reference_calls": 24, "reference_positions": 540},
+  "remaining_gates": ["actual pretrained profile/smoke/recovery", "accounted chosen-SFT production recovery", "external Spark supervisor and separately approved stage", "branch pilots and independent model evaluation/genealogy"],
+  "external_stage_rows_populated": 0,
+  "learner_day": 9
+}

@@ -1,0 +1,80 @@
+{
+  "schema": "dongxi-story-panel-audit-execution-v1",
+  "scope": "Actual local read-only corpus audit, not model generation/training, a trained comparison or Mac/hosted evidence.",
+  "actual_commands": [
+    {
+      "argv": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "experiments/reports/2026-10-05-story-panel-audit/collect_story_panel_audit.py", "--output", "experiments/reports/2026-10-05-story-panel-audit/run-01"],
+      "execution_session_id": 83850,
+      "observed_process_exit_code": 0,
+      "collector_measured_wall_seconds": 60.25538561696885,
+      "receipt": "run-01/audit.json",
+      "receipt_sha256": "f0e5e45b0a5967e487e2798d169d24bc4d385103e388f5d52bc267f6c258787a"
+    },
+    {
+      "argv": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "experiments/reports/2026-10-05-story-panel-audit/collect_story_panel_audit.py", "--output", "experiments/reports/2026-10-05-story-panel-audit/run-02"],
+      "execution_session_id": 23259,
+      "observed_process_exit_code": 0,
+      "collector_measured_wall_seconds": 58.37866002996452,
+      "receipt": "run-02/audit.json",
+      "receipt_sha256": "d60ef85a0c00deef17c4d24d14e1e7470bc173ca6fe05bafe80f95bb1d24bce9"
+    }
+  ],
+  "environment_assignments": {"CUDA_VISIBLE_DEVICES": "", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1", "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "MKL_NUM_THREADS": "1"},
+  "premeasurement_protocol": {"path": "protocol.json", "sha256": "bc69cab029f145eb516b4a88b5dc3e70d5b9e0237672aed6e04ffdc4f1e100bc"},
+  "collector": {"path": "collect_story_panel_audit.py", "sha256": "c47a34323deb2c6a607cb4543e2d3897b458abb0adcad08301ed224a092eadad"},
+  "historical_source_archives": {
+    "method": "Exact inversion of the instrumentation-only run02 patch after retaining run01; restored bytes independently SHA-match run01's observed source identities. These are not falsely labelled as before-run captures.",
+    "run-01-collector.py.txt": "a2c170981ce758758fc054f4c261fda0963e51d4ea8aaff28d976b3b48b42109",
+    "run-01-protocol.json.txt": "f1f534f3bc2585a11001cd8c5ca12c7f6d8de27ab75ec614b49ab1254686b9ff"
+  },
+  "verification": {
+    "path": "independent-verification.json",
+    "sha256": "74a8b28131172fb701a1d9af32bcab138f94816224ef339eda35774ca6e8a0ba",
+    "status": "passed",
+    "receipt_consistency_checks": 19,
+    "metric_groups_checked": 90,
+    "nearest_example_scores_independently_recomputed": 64,
+    "not_a_unittest_count": true,
+    "not_an_independent_full_corpus_implementation": true
+  },
+  "findings": {
+    "original_publication_openings": 12,
+    "historical_development_openings": 3,
+    "unchanged_original_logical_panel_sha256": "96155a17e1b1cfe065f005ae61b2c640b5b172509eba7162404bd7737119e659",
+    "publication_development_pairs": 36,
+    "publication_development_exact_prefix_substring_relationships": 0,
+    "publication_development_maximum_word_trigram_jaccard": 0.0,
+    "raw_training_documents": 2119489,
+    "retained_training_documents": 1792647,
+    "within_training_normalized_exact_duplicates": 320241,
+    "training_documents_excluded_for_normalized_exact_validation_overlap": 6601,
+    "validation_documents": 21990,
+    "raw_prepared_tokenizer_hashes_match_original_run": true,
+    "both_retained_framed_text_sha256_and_counts_reconstructed": true,
+    "publication_exact_whole_story_prefix_substring_hits_all_raw_categories": 0,
+    "maximum_publication_near_score_retained_training": 0.125,
+    "maximum_publication_near_score_retained_validation": 0.09090909090909091,
+    "publication_near_threshold_0_4_hits_all_raw_categories": 0,
+    "development_rabbit_opening_training_maximum_near_score": 0.5,
+    "development_rabbit_opening_training_near_threshold_hits": 1,
+    "development_rabbit_opening_validation_maximum_near_score": 0.38461538461538464
+  },
+  "memory_instrumentation": {
+    "run01_observed_rusage_high_water_bytes_preserved": 832471040,
+    "run02_initial_and_final_rusage_high_water_bytes": 832471040,
+    "run02_observed_rlimit_as_soft_hard_bytes": [536870912, 536870912],
+    "run02_final_proc_vm_hwm_bytes": 39374848,
+    "run02_final_proc_vm_peak_bytes": 95809536,
+    "run02_final_proc_vm_rss_bytes": 37814272,
+    "interpretation": "The large getrusage high-water was already present at collector start and did not increase. It is not attributed to this scan's since-exec RSS. The launch baseline supports this distinction, but does not independently prove the exact upstream inheritance mechanism.",
+    "run02_host_available_point_samples": 215,
+    "continuous_monitoring": false
+  },
+  "scratch": "Both 74,129,408-byte hash-only SQLite indexes remain retained and SHA-bound in the audit receipts, ignored by the new scoped .gitignore; they are not intended material Git content. No source corpus was copied or deleted.",
+  "remaining_boundaries": [
+    "Prefix exact overlap differs from whole-story identity and does not prove memorization.",
+    "Near matching is opening-length lexical word-trigram Jaccard only; no global train/validation all-pairs near audit, body semantic similarity, paraphrase audit or proof of global contamination absence.",
+    "Development string separation is observed; unrestricted prior human/agent exposure cannot be independently reconstructed.",
+    "This resolves a bounded story-panel audit subgate only. DXI-03 trained comparison, DXI-17 actual Mac/hosted evidence and DXI-18 final defense remain separate."
+  ]
+}

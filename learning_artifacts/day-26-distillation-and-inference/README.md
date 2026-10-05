@@ -23,6 +23,12 @@ arithmetic as the main learning activity.
 
 T² scaling changes gradient strength; temperature used for training need not be used at inference. Best-of-N can amplify scorer mistakes. Rejection changes the data mixture.
 
+The expanded chapter also separates realized response NLL from distribution KL,
+critique from revision/acceptance, and state coverage from KL direction. See
+[selection is not truth](selection-is-not-truth.md) for the portable discussion
+and proposed article/animation handoff. Actual neural students, authored finite
+teachers and programmatic revisions have distinct evidence labels.
+
 ## Demonstration still required
 
 Verify teacher detach and aligned vocabulary; identify winner's curse and cost/selection boundaries.

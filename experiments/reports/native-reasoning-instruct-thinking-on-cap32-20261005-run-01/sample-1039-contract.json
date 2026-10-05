@@ -1,0 +1,82 @@
+{
+  "schema_version": "dongxi-response-record-v1",
+  "parser_version": "bounded-rational-set-interval-v1",
+  "rubric_version": "explicit-marker-fixture-v1",
+  "suite_sha256": "13a44f0451f14b9c0c7e30e49d3c541da57d755d18e99c64cc7b7983aa451794",
+  "settings": {
+    "template_id": "reasoning-panel-v1/instruct-thinking-on",
+    "thinking_mode": "enabled",
+    "decoding": {
+      "mode": "sample",
+      "seed": 1039,
+      "temperature": 1.0,
+      "top_k": null,
+      "top_p": 1.0
+    },
+    "stopping": {
+      "eos_token_ids": [
+        151643
+      ],
+      "turn_stop_token_ids": [
+        151645
+      ],
+      "pad_token_id": 151643
+    },
+    "max_new_tokens": 32,
+    "generation": {
+      "input_mode": "chat",
+      "template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0].role == 'system' %}\n        {{- messages[0].content + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0].role == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0].content + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for message in messages[::-1] %}\n    {%- set index = (messages|length - 1) - loop.index0 %}\n    {%- if ns.multi_step_tool and message.role == \"user\" and message.content is string and not(message.content.startswith('<tool_response>') and message.content.endswith('</tool_response>')) %}\n        {%- set ns.multi_step_tool = false %}\n        {%- set ns.last_query_index = index %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if message.content is string %}\n        {%- set content = message.content %}\n    {%- else %}\n        {%- set content = '' %}\n    {%- endif %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) %}\n        {{- '<|im_start|>' + message.role + '\\n' + content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is string %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- else %}\n            {%- if '</think>' in content %}\n                {%- set reasoning_content = content.split('</think>')[0].rstrip('\\n').split('<think>')[-1].lstrip('\\n') %}\n                {%- set content = content.split('</think>')[-1].lstrip('\\n') %}\n            {%- endif %}\n        {%- endif %}\n        {%- if loop.index0 > ns.last_query_index %}\n            {%- if loop.last or (not loop.last and reasoning_content) %}\n                {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content.strip('\\n') + '\\n</think>\\n\\n' + content.lstrip('\\n') }}\n            {%- else %}\n                {{- '<|im_start|>' + message.role + '\\n' + content }}\n            {%- endif %}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if (loop.first and content) or (not loop.first) %}\n                    {{- '\\n' }}\n                {%- endif %}\n                {%- if tool_call.function %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {{- '<tool_call>\\n{\"name\": \"' }}\n                {{- tool_call.name }}\n                {{- '\", \"arguments\": ' }}\n                {%- if tool_call.arguments is string %}\n                    {{- tool_call.arguments }}\n                {%- else %}\n                    {{- tool_call.arguments | tojson }}\n                {%- endif %}\n                {{- '}\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.first or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- endif %}\n{%- endif %}",
+      "context_window": 512,
+      "samples": 1,
+      "device": "cuda",
+      "dtype": "bfloat16",
+      "add_special_tokens": false,
+      "max_run_seconds": 900,
+      "scoring_text": "decode_without_terminal_stop",
+      "interface": {
+        "schema_version": 1,
+        "tokenizer": {
+          "vocab_sha256": "6e949d8fec10c504f4207a43cdeac7d7961f7fd9894d256f14a8153bb5479b63",
+          "encoding_sha256": "54c6b212118b62395ff290c0fe82ef0f84b465d4a71333035f43ffd847f46c94",
+          "special_ids": {
+            "bos_token_id": null,
+            "eos_token_id": 151645,
+            "pad_token_id": 151643,
+            "unk_token_id": null,
+            "sep_token_id": null,
+            "cls_token_id": null,
+            "mask_token_id": null,
+            "additional_special_tokens_ids": null
+          },
+          "vocab_size": 151669,
+          "max_token_id": 151668,
+          "wrapper_settings": {
+            "add_bos_token": false,
+            "add_eos_token": false,
+            "split_special_tokens": false,
+            "clean_up_tokenization_spaces": false,
+            "spaces_between_special_tokens": null
+          }
+        },
+        "template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+        "generation_stop_ids": [
+          151643,
+          151645
+        ],
+        "source": {
+          "tokenizer_id": null,
+          "tokenizer_revision": null
+        },
+        "implementation_class": "Qwen2Tokenizer",
+        "interface_sha256": "13252c7df16dc0ef0863a5b5e55d9414b1ceeb9da8eed6ac6ec23a4caf95789a"
+      }
+    }
+  },
+  "identity": "1d33c639d5aea3068d62d6ae5ef045b61c406145ec64bff0215ad1dd77699f9e",
+  "panel_binding": {
+    "logical_contract_sha256": "d5556d79358cf2cd7e961f94d525d512e8e5a9cce18bed23b51be7d7db9bc5be",
+    "original_items_sha256": "d674db480cab4fdb3fa3487146a1f107913bf1a6e55d2a64e42659729ee707b8",
+    "row": "instruct-thinking-on",
+    "prompt_policy": "Original prompt text unchanged; chat adds only the declared serialization"
+  }
+}

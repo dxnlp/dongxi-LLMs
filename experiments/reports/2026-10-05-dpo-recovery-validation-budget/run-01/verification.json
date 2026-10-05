@@ -1,0 +1,241 @@
+{
+  "budgeted_unbudgeted_parity": {
+    "actual_numerical_sha256": "7ed7c945c62c1fd26ae2edee889eb41362468bbeee9ae26e0061883999aff255",
+    "checkpointing": true,
+    "exact": true,
+    "expected_numerical_sha256": "7ed7c945c62c1fd26ae2edee889eb41362468bbeee9ae26e0061883999aff255"
+  },
+  "checkpoint_off_on_parity": {
+    "atol": 1e-06,
+    "discrete_work_and_rng_exact": true,
+    "max_absolute_difference": {
+      "adam": 0.0,
+      "gradient_norm": 0.0,
+      "loss": 0.0,
+      "margin": 0.0,
+      "policy": 0.0,
+      "reference": 0.0
+    },
+    "rtol": 1e-06,
+    "scope": "measured CPU FP32 parity; tolerance test is not a bitwise claim",
+    "tolerance_pass": true
+  },
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "tests/test_dpo_validation_budget.py",
+    "--collect",
+    "experiments/reports/2026-10-05-dpo-recovery-validation-budget/run-01"
+  ],
+  "commands": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "test_dpo_validation_budget",
+        "-v"
+      ],
+      "exit_code": 0,
+      "raw_log": {
+        "bytes": 2854,
+        "path": "new-focused.log",
+        "sha256": "68a951b2af76dc41e5a12075c93633335453bb759dc54294746b2a2a075ac85d"
+      },
+      "seconds": 6.647126197989564,
+      "tests_ran": 15,
+      "unittest_seconds": 4.717
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "test_dpo_runner_recovery",
+        "test_dpo_checkpoint_mode",
+        "test_dpo_work_budget",
+        "test_dpo_snapshot_artifacts",
+        "test_training_snapshot",
+        "test_training_snapshot_failure_paths",
+        "test_snapshot_artifact_budget",
+        "-v"
+      ],
+      "exit_code": 0,
+      "raw_log": {
+        "bytes": 23643,
+        "path": "existing-regressions.log",
+        "sha256": "7cf627dde3aa6b40933dae64f0baface985f072d6ddd4dee4d6aa51c28a43cd9"
+      },
+      "seconds": 25.108887518988922,
+      "tests_ran": 109,
+      "unittest_seconds": 23.022
+    }
+  ],
+  "created_utc": "2026-10-05T00:36:29.751582+00:00",
+  "environment": {
+    "cuda_visible_devices": "",
+    "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "hf_offline": true,
+    "machine": "aarch64",
+    "omp_num_threads": 1,
+    "packages": {
+      "peft": "0.20.0",
+      "tokenizers": "0.23.2",
+      "torch": "2.14.1+cpu",
+      "transformers": "5.18.0"
+    },
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "python": "3.12.14"
+  },
+  "fresh_process_replay": {
+    "actual_numerical_sha256": "7ed7c945c62c1fd26ae2edee889eb41362468bbeee9ae26e0061883999aff255",
+    "callback_restore_duplicate_costs": {
+      "recovery_history_rows": 3,
+      "recovery_rng_states": 2,
+      "recovery_sampler_draws": 6,
+      "recovery_tensor_elements": 37518,
+      "recovery_validation_operations": 1
+    },
+    "checkpointing": true,
+    "completed_updates": 6,
+    "exact": true,
+    "expected_numerical_sha256": "7ed7c945c62c1fd26ae2edee889eb41362468bbeee9ae26e0061883999aff255",
+    "final_failed_tickets": [
+      13
+    ],
+    "later_failed_tickets": [
+      13
+    ],
+    "next_history_row_exact": true,
+    "reserved_after_child": {
+      "evaluation_calls": 0,
+      "evaluation_positions": 0,
+      "generation_calls": 0,
+      "generation_position_upper_bound": 0,
+      "generation_tokens": 0,
+      "logical_sequence_tokens": 120,
+      "policy_forward_calls": 24,
+      "policy_forward_positions": 96,
+      "recovery_history_rows": 30,
+      "recovery_rng_states": 18,
+      "recovery_sampler_draws": 60,
+      "recovery_tensor_elements": 329008,
+      "recovery_validation_operations": 9,
+      "reference_forward_calls": 24,
+      "reference_forward_positions": 96,
+      "sampled_examples": 12,
+      "sampler_draws": 12,
+      "train_updates": 6,
+      "valid_targets": 72
+    },
+    "reserved_before_child": {
+      "evaluation_calls": 0,
+      "evaluation_positions": 0,
+      "generation_calls": 0,
+      "generation_position_upper_bound": 0,
+      "generation_tokens": 0,
+      "logical_sequence_tokens": 60,
+      "policy_forward_calls": 12,
+      "policy_forward_positions": 48,
+      "recovery_history_rows": 9,
+      "recovery_rng_states": 8,
+      "recovery_sampler_draws": 18,
+      "recovery_tensor_elements": 141418,
+      "recovery_validation_operations": 4,
+      "reference_forward_calls": 12,
+      "reference_forward_positions": 48,
+      "sampled_examples": 6,
+      "sampler_draws": 6,
+      "train_updates": 3,
+      "valid_targets": 36
+    },
+    "restored_update": 3
+  },
+  "fresh_replay_command": {
+    "command": [
+      "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_dpo_validation_budget.py",
+      "--child",
+      "experiments/reports/2026-10-05-dpo-recovery-validation-budget/run-01/interrupted-receipt.json",
+      "experiments/reports/2026-10-05-dpo-recovery-validation-budget/run-01/recovery-contract.json",
+      "experiments/reports/2026-10-05-dpo-recovery-validation-budget/run-01/recovery-journal/work.jsonl",
+      "experiments/reports/2026-10-05-dpo-recovery-validation-budget/run-01/fresh-replay"
+    ],
+    "deadline_seconds": 30,
+    "exit_code": 0,
+    "raw_log": {
+      "bytes": 0,
+      "path": "fresh-replay.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "seconds": 2.3104828049836215
+  },
+  "launch_authorized": false,
+  "limitations": {
+    "all45_external_outcomes": "null",
+    "generic_shared_pre_callback_loader_checks": "excluded/pending",
+    "production_backend_authority_gpu_mac_hosted": "not executed",
+    "serialization_hashing_journal_integrity_and_application_overhead": "excluded",
+    "units": "logical semantic verifier panel envelopes, not measured CPU instructions/time"
+  },
+  "model_scale_jobs_started": 0,
+  "production_ready": false,
+  "python_argv": [
+    "tests/test_dpo_validation_budget.py",
+    "--collect",
+    "experiments/reports/2026-10-05-dpo-recovery-validation-budget/run-01"
+  ],
+  "schema": "dongxi-dpo-validation-budget-cpu-v1",
+  "seconds": 35.267558498017024,
+  "source_sha256": {
+    "experiments/specs/2026-10-05-dpo-recovery-validation-budget.md": "403973fbd77072b9cb922bcb1c70ecd61a6de99f0d3016016489e147531b0e4e",
+    "experiments/specs/2026-10-05-validation-budget-fixture-compatibility.md": "d8f1c340fd477a2d6d64de080518c6bb61b8f6ca95480681d0dd8ce799fe8454",
+    "pyproject.toml": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+    "scripts/run_chapter11_spark_dpo.py": "9691fb080fca53b3f013150a6823017bc301dd2fa70b5285e1c1bb90993284cf",
+    "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+    "src/dongxi_llms/training_snapshot.py": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "tests/test_dpo_checkpoint_mode.py": "4179311168ceff0c9b0d0c3d15df4df1ab48f25b0336c182bf6446a7385459e4",
+    "tests/test_dpo_runner_recovery.py": "cf31bef76b2b8e7b47d405ccfa03337fe3a6e064afad661eedd02e577506eb35",
+    "tests/test_dpo_snapshot_artifacts.py": "fae1f5c2069dc3101e3128a446032c90d8296a842d6d23bf90015ac555134df4",
+    "tests/test_dpo_validation_budget.py": "67a09ea27442eb830aaca85a07dd3bf6ce144ccbd43b91d45ca110aaa4422253",
+    "tests/test_dpo_work_budget.py": "e34979850c0aa98679dcec37bc44f2f485a1ad2186ad487bfec05dd41a712a1b",
+    "tests/test_snapshot_artifact_budget.py": "fcc068f84e2b2268037ea42e141d223160083879a538376a5b2944d0ac2c3207",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "tests/test_training_snapshot_failure_paths.py": "845319a877e9bcef45989387859ab9d8b2da3b323131f0819a9984c8a721b261",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+  },
+  "source_sha256_after": {
+    "experiments/specs/2026-10-05-dpo-recovery-validation-budget.md": "403973fbd77072b9cb922bcb1c70ecd61a6de99f0d3016016489e147531b0e4e",
+    "experiments/specs/2026-10-05-validation-budget-fixture-compatibility.md": "d8f1c340fd477a2d6d64de080518c6bb61b8f6ca95480681d0dd8ce799fe8454",
+    "pyproject.toml": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+    "scripts/run_chapter11_spark_dpo.py": "9691fb080fca53b3f013150a6823017bc301dd2fa70b5285e1c1bb90993284cf",
+    "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+    "src/dongxi_llms/training_snapshot.py": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "tests/test_dpo_checkpoint_mode.py": "4179311168ceff0c9b0d0c3d15df4df1ab48f25b0336c182bf6446a7385459e4",
+    "tests/test_dpo_runner_recovery.py": "cf31bef76b2b8e7b47d405ccfa03337fe3a6e064afad661eedd02e577506eb35",
+    "tests/test_dpo_snapshot_artifacts.py": "fae1f5c2069dc3101e3128a446032c90d8296a842d6d23bf90015ac555134df4",
+    "tests/test_dpo_validation_budget.py": "67a09ea27442eb830aaca85a07dd3bf6ce144ccbd43b91d45ca110aaa4422253",
+    "tests/test_dpo_work_budget.py": "e34979850c0aa98679dcec37bc44f2f485a1ad2186ad487bfec05dd41a712a1b",
+    "tests/test_snapshot_artifact_budget.py": "fcc068f84e2b2268037ea42e141d223160083879a538376a5b2944d0ac2c3207",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "tests/test_training_snapshot_failure_paths.py": "845319a877e9bcef45989387859ab9d8b2da3b323131f0819a9984c8a721b261",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+  },
+  "sources_unchanged": true,
+  "status": "pass"
+}

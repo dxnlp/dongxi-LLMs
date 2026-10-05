@@ -1,0 +1,207 @@
+[
+  {
+    "control": "stream-overflow-retained8-and-reserved16",
+    "usage": {
+      "actual_pathname_bytes": 917,
+      "actual_entries": 2,
+      "reserved_pathname_bytes": 16400,
+      "reserved_entries": 2
+    }
+  },
+  {
+    "control": "exact24-byte-bundle-and-refused25th",
+    "usage": {
+      "actual_pathname_bytes": 1729,
+      "actual_entries": 3,
+      "reserved_pathname_bytes": 16408,
+      "reserved_entries": 3
+    }
+  },
+  {
+    "control": "fifo-journal-nonblocking-refusal",
+    "command": [
+      "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "-c",
+      "import json,sys,os\nfrom dongxi_llms.artifact_budget import ArtifactBudget\nfrom pathlib import Path\nroot=Path(sys.argv[2])\ntry:\n    if sys.argv[1]=='journal':\n        ArtifactBudget.restore(root,expected_receipt=json.loads(Path(sys.argv[3]).read_text()))\n    else:\n        with ArtifactBudget.create(root,campaign_id='fifo-digest-control',max_bytes=16448,max_entries=4,journal_max_bytes=16384) as b:\n            b.reserve_bundle('fifo-digest',{'fifo':8});os.mkfifo(root/'fifo',0o600);b._digest_file('fifo')\nexcept ValueError as error:print(str(error))\nelse:raise AssertionError('FIFO must be refused')\n",
+      "journal",
+      "/tmp/dongxi-artifact-budget-x0yym2th/owned",
+      "/tmp/dongxi-artifact-budget-x0yym2th/independent-receipt.json"
+    ],
+    "actual_exit_code": 0,
+    "stdout": "Artifact journal must be one private owned regular file\n",
+    "stderr": ""
+  },
+  {
+    "control": "hardlinked-header-pathname-coexistence",
+    "peak": {
+      "actual_pathname_bytes": 1768,
+      "actual_entries": 3,
+      "reserved_pathname_bytes": 16400,
+      "reserved_entries": 3
+    },
+    "ending": {
+      "actual_pathname_bytes": 2195,
+      "actual_entries": 2,
+      "reserved_pathname_bytes": 16392,
+      "reserved_entries": 2
+    }
+  },
+  {
+    "control": "visible-journal-fsync-failure-reservation-retained",
+    "usage": {
+      "actual_pathname_bytes": 702,
+      "actual_entries": 1,
+      "reserved_pathname_bytes": 16400,
+      "reserved_entries": 2
+    },
+    "limitation": "visible bytes after failure do not prove crash durability"
+  },
+  {
+    "control": "prefix-restore-retains-later32-reservation",
+    "usage": {
+      "actual_pathname_bytes": 1951,
+      "actual_entries": 3,
+      "reserved_pathname_bytes": 16440,
+      "reserved_entries": 4
+    },
+    "retained": {
+      "identity": {
+        "schema": "cooperative-artifact-budget-v1",
+        "campaign_id": "original-cpu-artifacts",
+        "ledger_id": "ae25d1b6cf174f579884287e1d7122ea",
+        "root_device": 66306,
+        "root_inode": 2237939,
+        "max_bytes": 16448,
+        "max_entries": 8,
+        "journal_max_bytes": 16384
+      },
+      "sequence": 3,
+      "head_sha256": "cc072ffdb686d587f8b80df4fd4b02ae1dab0414bebffeb4bee511ed1544bdaa",
+      "journal_bytes": 1194
+    }
+  },
+  {
+    "control": "actual-snapshot-exact-envelope",
+    "header": {
+      "schema_version": 1,
+      "payload_sha256": "838ec8b87b2d820f2cdf0d8811263def3f63a9e12e65d7ba2b5701764dd7b3f7",
+      "payload_bytes": 1833,
+      "contract_sha256": "6f9b6cd6f372fd92e0f64dc7149d29ce6a3f44a308337a409d1f4ba95cb7d1ed",
+      "phase": "completed",
+      "completed_updates": 1
+    },
+    "usage": {
+      "actual_pathname_bytes": 5190,
+      "actual_entries": 3,
+      "reserved_pathname_bytes": 34865,
+      "reserved_entries": 3
+    }
+  },
+  {
+    "control": "fifo-snapshot-header-nonblocking-refusal",
+    "command": [
+      "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "-c",
+      "import sys\nfrom unittest.mock import patch\nfrom dongxi_llms.training_snapshot import inspect_snapshot\ntry:\n    with patch('dongxi_llms.training_snapshot.torch.load',side_effect=AssertionError('No deserialization')):\n        inspect_snapshot(sys.argv[1],expected_sha256=sys.argv[2],expected_bytes=int(sys.argv[3]),\n            expected_contract={'source':'original-six-value-fixture','recipe':{'horizon':2,'lr':.01}},max_bytes=4096)\nexcept ValueError as error:print(str(error))\nelse:raise AssertionError('FIFO must be refused')\n",
+      "/tmp/dongxi-snapshot-budget-7sfy1p0y/header.pt",
+      "838ec8b87b2d820f2cdf0d8811263def3f63a9e12e65d7ba2b5701764dd7b3f7",
+      "1833"
+    ],
+    "actual_exit_code": 0,
+    "stdout": "Snapshot must be a regular file\n",
+    "stderr": ""
+  },
+  {
+    "control": "fifo-snapshot-payload-nonblocking-refusal",
+    "command": [
+      "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "-c",
+      "import sys\nfrom unittest.mock import patch\nfrom dongxi_llms.training_snapshot import inspect_snapshot\ntry:\n    with patch('dongxi_llms.training_snapshot.torch.load',side_effect=AssertionError('No deserialization')):\n        inspect_snapshot(sys.argv[1],expected_sha256=sys.argv[2],expected_bytes=int(sys.argv[3]),\n            expected_contract={'source':'original-six-value-fixture','recipe':{'horizon':2,'lr':.01}},max_bytes=4096)\nexcept ValueError as error:print(str(error))\nelse:raise AssertionError('FIFO must be refused')\n",
+      "/tmp/dongxi-snapshot-budget-7sfy1p0y/payload.pt",
+      "838ec8b87b2d820f2cdf0d8811263def3f63a9e12e65d7ba2b5701764dd7b3f7",
+      "1833"
+    ],
+    "actual_exit_code": 0,
+    "stdout": "Snapshot must be a regular file\n",
+    "stderr": ""
+  },
+  {
+    "control": "fresh-process-prefix-and-actual-snapshot",
+    "command": [
+      "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_snapshot_artifact_budget.py",
+      "--restore-child",
+      "/tmp/dongxi-snapshot-budget-z1bmg_hn/owned",
+      "--receipt",
+      "/tmp/dongxi-snapshot-budget-z1bmg_hn/independently-retained.json"
+    ],
+    "actual_exit_code": 0,
+    "stdout": "{\"identity\": {\"schema\": \"cooperative-artifact-budget-v1\", \"campaign_id\": \"fixed-snapshot-cpu\", \"ledger_id\": \"7e2889c3dbe442e8ac3583af9d66fac6\", \"root_device\": 66306, \"root_inode\": 2237939, \"max_bytes\": 200000, \"max_entries\": 16, \"journal_max_bytes\": 32768}, \"retained_partial_capacity\": 256, \"retained_partial_actual_bytes\": 8, \"completed_updates\": 1, \"tensor_exact\": true, \"usage\": {\"actual_pathname_bytes\": 10556, \"actual_entries\": 6, \"reserved_pathname_bytes\": 37218, \"reserved_entries\": 6}}\n",
+    "stderr": "",
+    "observation": {
+      "identity": {
+        "schema": "cooperative-artifact-budget-v1",
+        "campaign_id": "fixed-snapshot-cpu",
+        "ledger_id": "7e2889c3dbe442e8ac3583af9d66fac6",
+        "root_device": 66306,
+        "root_inode": 2237939,
+        "max_bytes": 200000,
+        "max_entries": 16,
+        "journal_max_bytes": 32768
+      },
+      "retained_partial_capacity": 256,
+      "retained_partial_actual_bytes": 8,
+      "completed_updates": 1,
+      "tensor_exact": true,
+      "usage": {
+        "actual_pathname_bytes": 10556,
+        "actual_entries": 6,
+        "reserved_pathname_bytes": 37218,
+        "reserved_entries": 6
+      }
+    }
+  },
+  {
+    "control": "header-publication-failure-retained",
+    "usage": {
+      "actual_pathname_bytes": 9090,
+      "actual_entries": 5,
+      "reserved_pathname_bytes": 102498,
+      "reserved_entries": 6
+    },
+    "stage_name": "failed-link.pt.commit-9b6c186441714bbc9914a7f174f9a990"
+  },
+  {
+    "control": "snapshot-bundle-before-serializer-refusal",
+    "required_peak_bytes": 167936,
+    "byte_cap": 167935,
+    "required_entries": 4,
+    "entry_cap": 3
+  },
+  {
+    "control": "failed-snapshot-partial-and-whole-reservation-retained",
+    "usage": {
+      "actual_pathname_bytes": 5758,
+      "actual_entries": 4,
+      "reserved_pathname_bytes": 170033,
+      "reserved_entries": 6
+    },
+    "partial_bytes": 16,
+    "new_output_refused": true
+  },
+  {
+    "control": "old-new-staging-snapshot-peak",
+    "peak": {
+      "actual_pathname_bytes": 5509,
+      "actual_entries": 3,
+      "reserved_pathname_bytes": 170033,
+      "reserved_entries": 6
+    },
+    "ending": {
+      "actual_pathname_bytes": 9853,
+      "actual_entries": 5,
+      "reserved_pathname_bytes": 36962,
+      "reserved_entries": 5
+    }
+  }
+]

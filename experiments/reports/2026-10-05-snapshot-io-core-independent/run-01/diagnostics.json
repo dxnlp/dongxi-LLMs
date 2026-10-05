@@ -1,0 +1,42 @@
+{
+  "schema": "dongxi-snapshot-io-independent-diagnostics-v1",
+  "actual_command_exit_code": 0,
+  "review_result": "three reproduced source defects; not acceptance",
+  "source_before": {
+    "experiments/specs/2026-10-05-snapshot-io-admission.md": "ad6547bec89399b2f3e29a0bfa15371205dfe8475d3ae7f848e144ff3d07c691",
+    "src/dongxi_llms/snapshot_io_budget.py": "4f04767037014eacf93446db09d66e7c4ea2d2ee357bcbb39160c62c8f900dcb",
+    "src/dongxi_llms/training_snapshot.py": "8e4b1c2922c81590df53cc608aca0b28e9a0c5b72bef23b092fe4158366297d4",
+    "tests/test_snapshot_io_budget.py": "3ae8c6d794b59d128ed41305e649cd907c8e411052a4d70a25c023b2e260f34b"
+  },
+  "source_after": {
+    "experiments/specs/2026-10-05-snapshot-io-admission.md": "ad6547bec89399b2f3e29a0bfa15371205dfe8475d3ae7f848e144ff3d07c691",
+    "src/dongxi_llms/snapshot_io_budget.py": "4f04767037014eacf93446db09d66e7c4ea2d2ee357bcbb39160c62c8f900dcb",
+    "src/dongxi_llms/training_snapshot.py": "8e4b1c2922c81590df53cc608aca0b28e9a0c5b72bef23b092fe4158366297d4",
+    "tests/test_snapshot_io_budget.py": "3ae8c6d794b59d128ed41305e649cd907c8e411052a4d70a25c023b2e260f34b"
+  },
+  "outcomes": [
+    {
+      "control": "save_tensor_byte_bound_before_finite",
+      "declared_tensor_bytes": 1,
+      "tensor_bytes": 8,
+      "finite_scan_bytes": [8],
+      "error": "WorkBudgetExceeded: Shared snapshot next visit exceeds its whole-operation envelope"
+    },
+    {
+      "control": "load_tensor_byte_bound_before_finite",
+      "declared_tensor_bytes": 8,
+      "tensor_bytes": 16,
+      "finite_scan_bytes": [16],
+      "error": null,
+      "accepted": true,
+      "method": "actual admitted load with original byte verification and a patched restricted deserializer returning an authored oversized float64 state"
+    },
+    {
+      "control": "mutated_receipt_bool_prefix",
+      "mutated_sequence": false,
+      "error": null,
+      "accepted": true
+    }
+  ],
+  "scope": "bounded trusted-local CPU diagnostic calls; no numerical training, external model or source modification"
+}

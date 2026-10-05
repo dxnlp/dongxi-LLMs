@@ -1,0 +1,37 @@
+{
+  "schema": "dongxi-snapshot-io-independent-final-acceptance-v1",
+  "date_utc": "2026-10-05",
+  "result": "scoped_pass",
+  "actual_exit_code": 0,
+  "actual_focused_tests_passed": 58,
+  "actual_test_components": {"snapshot_io_budget": 24, "training_snapshot": 8, "snapshot_io_schedule": 26},
+  "actual_unittest_duration_seconds": 1.205,
+  "actual_child_duration_seconds": 1.812304092978593,
+  "six_independently_reproduced_controls_pass": true,
+  "source_stable_during_final_review": true,
+  "scope": "trusted-local shared CPU core guards, legacy compatibility and separate pure schedule; no actual runner numerical replay, CLI ordering, pretrained/GPU/physical containment or adversarial authentication",
+  "production_ready": false,
+  "launch_authorized": false,
+  "source_sha256": {
+    "src/dongxi_llms/snapshot_io_budget.py": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4",
+    "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+    "tests/test_snapshot_io_budget.py": "e23d372f62d0d46eb454e615afe2527814957be0b5f89131ac028a0bd97e9fff",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "experiments/specs/2026-10-05-snapshot-io-admission.md": "ad6547bec89399b2f3e29a0bfa15371205dfe8475d3ae7f848e144ff3d07c691",
+    "src/dongxi_llms/snapshot_io_schedule.py": "6a1988d02651673d96f31407d7a088546a1c9bd435a111b22fe138f7fd94f1f8",
+    "tests/test_snapshot_io_schedule.py": "6f7fa649c5cec8b6f9c9307fb2d8e482abe1114f92ac609f86c81f1b61a0cfcc",
+    "experiments/specs/2026-10-05-snapshot-io-schedule-node-bound.md": "535711c66372efbc4ff6f023e443286d58978ebe7c5d6366237deb2e3bf4d8d5"
+  },
+  "artifact_sha256": {
+    "experiments/reports/2026-10-05-snapshot-io-core-independent-final.md": "423c52afa9532ebfd04ee188f0a431d169085f4b3b452238c835180756f34c81",
+    "experiments/reports/2026-10-05-snapshot-io-core-independent-count-correction.json": "a049540904ae81670eb0bce096bb13155277e2a7041e56bd5ad209e821b81463",
+    "experiments/reports/2026-10-05-snapshot-io-core-independent-acceptance.json": "ad0241af35ddd92cacf7372a5f6c42f3755f5e6617d679cb56e48b5c0fbb2262",
+    "experiments/reports/2026-10-05-snapshot-io-core-independent/run-04/verification.json": "5273b368ee3ac9dc7f6f1c2fa84104b6a797e531cfc2325bf85cab355c6abbce",
+    "experiments/reports/2026-10-05-snapshot-io-core-independent/run-04/tests.json": "a219dd26182808d40664ea51931415e01b0a78426bea5d918803fc4b65c5ed98",
+    "experiments/reports/2026-10-05-snapshot-io-core-independent/run-04/diagnostics.json": "7d0c4f968429e243521427c0fce795cc33d2d023f14fa7eba8a6150d7f756093",
+    "experiments/reports/2026-10-05-snapshot-io-core-independent/run-04/source-before.json": "dcb29c71384c0694f12714d6bf86495ab17b25c6a94f8bb028ab6471437ca2c2",
+    "experiments/reports/2026-10-05-snapshot-io-core-independent/run-04/source-after.json": "dcb29c71384c0694f12714d6bf86495ab17b25c6a94f8bb028ab6471437ca2c2",
+    "experiments/reports/2026-10-05-snapshot-io-schedule-node-bound.json": "95f8971087e3242fdbfdba734ed899cf3dcc94deb74862ab1baebf74ff5b7590"
+  },
+  "supersession": "actual test counts supersede only the mistaken inspector fields/narrative in the earlier review receipt and raw run-03/run-04 verification; those records and all six original failures remain unchanged; use retained unittest logs and explicit count correction"
+}

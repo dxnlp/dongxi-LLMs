@@ -1,0 +1,984 @@
+{
+  "schema": "dongxi-rlvr-snapshot-io-independent-review-v1",
+  "created_utc": "2026-10-05T01:57:16Z",
+  "status": "pass",
+  "reviewer": "independent child agent build_preference_audit",
+  "scope": "Read-only source, persisted CPU outcomes, exact journal-prefix reconstruction and figure inspection. No new fit, numerical replay, tensor deserialization, acquisition, GPU, service, installation, Git mutation or canonical-doc change.",
+  "reviewed_source_sha256": {
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-cpu-protocol.md": "a1cc8f7e850f164841f4afae21279aa6bd9335ef5a2a85aac26b4116f3341279",
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-preintegration/manifest.json": "5974f3044b245e92e24fa8b6c2e3b2389e237d01bd439a237ab44d4828d70c6a",
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-preintegration/qwen_rlvr_lab.py.txt": "819cd8bbfc1701416d050b14888cbc11d4128e143cb7c80266da9678b3f27df1",
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-preintegration/test_rlvr_runner_recovery.py.txt": "384b1eafb00bd47cb79cdfa1e91824e39e0b56103f36d9eff9242480fa575b92",
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-preintegration/test_rlvr_work_budget.py.txt": "6407a1c2d73a2509a5b0170e3307d691e32e43b48eae700c36f8e9f813dbd91a",
+    "experiments/reports/collect_rlvr_snapshot_io.py": "33fcc6cd749bd3f5360ca141363891c41623b558cc6ddd83ad0e4f3dea6ecf85",
+    "experiments/specs/2026-10-05-rlvr-reader-lesson.md": "e134966ef75758284a1919a934b9373a02d184085f69d05e68443ae8464130fd",
+    "experiments/specs/2026-10-05-rlvr-snapshot-io-admission.md": "4368f241ab504f7f8f7406847b91084b4c8073d36b436fa32b3f8fa7279242a5",
+    "pyproject.toml": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+    "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/qwen_rlvr_lab.py": "f32f41c77c7efe14b675d9a2e8371398e368e0ccdc1c376f787a40f5602636d7",
+    "src/dongxi_llms/rlvr_snapshot_io_lab.py": "f3dc22e7daa4713b9d09229bdfc040a6a8968d5e878d7da0ebd9fa61ceaa5592",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/snapshot_io_budget.py": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4",
+    "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "tests/snapshot_io_test_support.py": "4dd26b41faefa44c634ca76e52f4b9f8f98d8b6a8b5a06e8f8a18d524a561ccb",
+    "tests/test_rlvr_runner_recovery.py": "384b1eafb00bd47cb79cdfa1e91824e39e0b56103f36d9eff9242480fa575b92",
+    "tests/test_rlvr_snapshot_io.py": "bcc9e26fff274e86995c52b848b3910a43fb2e1ac486f169e1ff3fb0d9d4e84a",
+    "tests/test_rlvr_snapshot_io_lab.py": "e6fd0e2c8ea14428bb51c00a36b4fd34bcac1ad0dbafc27ef20640c8ed6cb0fd",
+    "tests/test_rlvr_work_budget.py": "c53e84c0abe2de8557c13a2bf32ee0e457280e9ae1684bf0532ee9e7a0b23ffd",
+    "tests/test_snapshot_io_budget.py": "e23d372f62d0d46eb454e615afe2527814957be0b5f89131ac028a0bd97e9fff",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "tests/test_training_snapshot_failure_paths.py": "845319a877e9bcef45989387859ab9d8b2da3b323131f0819a9984c8a721b261",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "docs/course_manifest.json": "2bb19dc1ec911ada5af544fbc5dcdbec423f1a3014c28e008fa66e96155d7098",
+    "notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb": "6775e7caf1db0adfab590485dafa701477d1a14db3ffbb603e771e520746c4a0",
+    "scripts/run_cpu_verification.py": "378f03a747c9cbf719a21ac215322f50e13e387e347943885e382efb528a282c",
+    "scripts/verify_course_notebooks.py": "5bbf0e7fd5d5d34ffbaa249f853a3492027805c29037be733000fe1585aee0bb",
+    "scripts/verify_rlvr_reader_lesson.py": "c7614c7ca2a698edf4dc1fc2f0211e0445ed0ec8fdf9347da9a9a70e3dc40fee",
+    "scripts/verify_semantic_validation_integration.py": "6ddc2bb89c34fcc5139dc3c94d66f652ad514fddf583f7e61f961ef5b65eeeb7"
+  },
+  "current_source_count": 33,
+  "evidence_sha256": {
+    "experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/verification.json": "f16126a598247adf53a931469dedddd824b406fd98b61369a0c3897a6dfc613a",
+    "experiments/reports/2026-10-05-rlvr-reader-lesson/run-02/verification.json": "ed9930ef9457d649f5e4ba6396554731a8f28ac7d92bc43554c4bf9d8b1a69a7",
+    "experiments/reports/2026-10-05-rlvr-reader-lesson/run-01/verification.json": "542aa3859bcf4d78656a8971d6611f06234aacca53de2f38fad9ff8be71bf6a5",
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-preintegration/manifest.json": "5974f3044b245e92e24fa8b6c2e3b2389e237d01bd439a237ab44d4828d70c6a",
+    "experiments/reports/2026-10-05-rlvr-reader-lesson/run-02/notebook/manifest.json": "a80444dabc38619c0512dbd647cac96f661f989a1fa9038aff1897dae9eb69aa",
+    "notebooks/figures/chapter-14/day-25-02_ragged_kv_cache_and_exact_recovery-08.png": "4191be9c206790d29ca2df2591a27a8443182713df4966b3747bc28125c4cfe2",
+    "experiments/reports/2026-10-05-rlvr-reader-lesson/run-02/notebook/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb": "8c9b3e165198f06d686e45bed1d37b5e9895556a08c5e65b6efbdb7b7bc97809"
+  },
+  "inspected_maps": [
+    {
+      "name": "actor_sources",
+      "command": "jq -r '.source_sha256 | to_entries[] | \"\\(.value)  \\(.key)\"' experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/verification.json | sha256sum --check --quiet",
+      "map_entries": 27,
+      "actual_exit_code": 0,
+      "stdout_stderr": ""
+    },
+    {
+      "name": "actor_artifacts",
+      "command": "jq -r '.artifact_sha256 | to_entries[] | \"\\(.value)  \\(.key)\"' experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/verification.json | sha256sum --check --quiet",
+      "map_entries": 440,
+      "actual_exit_code": 0,
+      "stdout_stderr": ""
+    },
+    {
+      "name": "lesson_sources",
+      "command": "jq -r '.source_sha256_before | to_entries[] | \"\\(.value)  \\(.key)\"' experiments/reports/2026-10-05-rlvr-reader-lesson/run-02/verification.json | sha256sum --check --quiet",
+      "map_entries": 16,
+      "actual_exit_code": 0,
+      "stdout_stderr": ""
+    },
+    {
+      "name": "lesson_previews",
+      "command": "jq -r '.old_preview_sha256 | to_entries[] | \"\\(.value)  \\(.key)\"' experiments/reports/2026-10-05-rlvr-reader-lesson/run-02/verification.json | sha256sum --check --quiet",
+      "map_entries": 7,
+      "actual_exit_code": 0,
+      "stdout_stderr": ""
+    }
+  ],
+  "all_map_checks_passed": true,
+  "nonadditive_actual_component_tests": [
+    {
+      "count": 21,
+      "unittest_seconds": 23.535,
+      "actual_exit_code": 0,
+      "raw_log": {
+        "bytes": 3859,
+        "path": "experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/new-focused.log",
+        "sha256": "07d70c42d7122788fb71af06aab66df8b5f35d52baf4cda359d5683c2aa4e9ce"
+      },
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "test_rlvr_snapshot_io",
+        "-v"
+      ]
+    },
+    {
+      "count": 102,
+      "unittest_seconds": 20.564,
+      "actual_exit_code": 0,
+      "raw_log": {
+        "bytes": 18712,
+        "path": "experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/existing-shared.log",
+        "sha256": "dfc4e2bb944d701c9e3e24ee477082a96185ad2602ecdc88f52b06f013178f84"
+      },
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "test_rlvr_runner_recovery",
+        "test_rlvr_work_budget",
+        "test_training_snapshot",
+        "test_training_snapshot_failure_paths",
+        "test_snapshot_io_budget",
+        "-v"
+      ]
+    },
+    {
+      "count": 6,
+      "unittest_seconds": 4.342,
+      "actual_exit_code": 0,
+      "raw_log": {
+        "bytes": 1132,
+        "path": "experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/reader-lesson.log",
+        "sha256": "7cddfdd02b5e7e288b998f5d93a244197dc87b08d722042fcbc33348564056a6"
+      },
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "test_rlvr_snapshot_io_lab",
+        "-v"
+      ]
+    }
+  ],
+  "separately_verified_lesson_tests": {
+    "count": 6,
+    "unittest_seconds": 4.455,
+    "actual_exit_code": 0,
+    "log": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-reader-lesson/run-02/tests.log",
+    "sha256": "3d49803946dc9a9adde6c92ca100176f97c45f667ae240e05930b2ed86bc90ec"
+  },
+  "footer_check": {
+    "command": "rg -n '^Ran [0-9]+ tests? in|^OK$|^FAILED' [three actor logs and root lesson run-02/tests.log]",
+    "actual_exit_code": 0,
+    "raw_output": "experiments/reports/2026-10-05-rlvr-reader-lesson/run-02/tests.log:11:Ran 6 tests in 4.455s\nexperiments/reports/2026-10-05-rlvr-reader-lesson/run-02/tests.log:13:OK\nexperiments/reports/2026-10-05-rlvr-snapshot-io/run-01/reader-lesson.log:9:Ran 6 tests in 4.342s\nexperiments/reports/2026-10-05-rlvr-snapshot-io/run-01/reader-lesson.log:11:OK\nexperiments/reports/2026-10-05-rlvr-snapshot-io/run-01/existing-shared.log:109:Ran 102 tests in 20.564s\nexperiments/reports/2026-10-05-rlvr-snapshot-io/run-01/existing-shared.log:111:OK\nexperiments/reports/2026-10-05-rlvr-snapshot-io/run-01/new-focused.log:24:Ran 21 tests in 23.535s\nexperiments/reports/2026-10-05-rlvr-snapshot-io/run-01/new-focused.log:26:OK\n"
+  },
+  "persisted_fresh_process_arms": [
+    {
+      "seed": 2323,
+      "phase": "completed",
+      "exact_fresh_numerical_replay": true,
+      "expected_numerical_sha256": "8c54b97225b6a137a5161af0c1d4ddcff6701a7b901c2af5c9d11f21144f0fa1",
+      "expected_tail_sha256": "cf21286dd2710028879d6c27ddb1a223f92efb11480a0e53fc258c0200f7d05d",
+      "execution": {
+        "exit_code": 0,
+        "deadline_seconds": 60,
+        "seconds": 2.994959942996502,
+        "command": [
+          "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_rlvr_snapshot_io.py",
+          "--child",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/2323-completed/bundle.json",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/2323-completed/fresh"
+        ]
+      },
+      "clean_save_operations": 9,
+      "carried_phase": "completed",
+      "carried_updates": 2,
+      "carried_runner_sequence": 18,
+      "carried_io_sequence": 8,
+      "fresh": {
+        "restored_update": 2,
+        "completed_updates": 4,
+        "state_sha256": "8c54b97225b6a137a5161af0c1d4ddcff6701a7b901c2af5c9d11f21144f0fa1",
+        "tail_sha256": "cf21286dd2710028879d6c27ddb1a223f92efb11480a0e53fc258c0200f7d05d",
+        "collect_completed_cursors": [
+          2,
+          3
+        ],
+        "no_collection_before_pending_apply": false,
+        "original_pending_pool_sha256": null,
+        "inspected_before_model": {
+          "completed_updates": 2,
+          "contract_sha256": "301b9a95d1e43499d97c12fc7959ed27dd1786bd3aa1977536dfe72f1056b11b",
+          "payload_bytes": 128801,
+          "payload_sha256": "965a47fb14cac7ac81f2f6189e253a28122cd94b707e64108d78256d4fac14c8",
+          "phase": "completed",
+          "schema_version": 2
+        },
+        "receipt_count": 5,
+        "model_failed": [
+          21
+        ],
+        "io_failed": [
+          11
+        ],
+        "save_reserved": 10,
+        "save_completed": 10,
+        "load_reserved": 2,
+        "load_completed": 1
+      },
+      "retained_model_failed": [
+        21
+      ],
+      "retained_io_failed": [
+        11
+      ]
+    },
+    {
+      "seed": 2323,
+      "phase": "pending",
+      "exact_fresh_numerical_replay": true,
+      "expected_numerical_sha256": "8c54b97225b6a137a5161af0c1d4ddcff6701a7b901c2af5c9d11f21144f0fa1",
+      "expected_tail_sha256": "cf21286dd2710028879d6c27ddb1a223f92efb11480a0e53fc258c0200f7d05d",
+      "execution": {
+        "exit_code": 0,
+        "deadline_seconds": 60,
+        "seconds": 2.7707424979889765,
+        "command": [
+          "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_rlvr_snapshot_io.py",
+          "--child",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/2323-pending/bundle.json",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/2323-pending/fresh"
+        ]
+      },
+      "clean_save_operations": 9,
+      "carried_phase": "pending",
+      "carried_updates": 2,
+      "carried_runner_sequence": 22,
+      "carried_io_sequence": 10,
+      "fresh": {
+        "restored_update": 2,
+        "completed_updates": 4,
+        "state_sha256": "8c54b97225b6a137a5161af0c1d4ddcff6701a7b901c2af5c9d11f21144f0fa1",
+        "tail_sha256": "cf21286dd2710028879d6c27ddb1a223f92efb11480a0e53fc258c0200f7d05d",
+        "collect_completed_cursors": [
+          3
+        ],
+        "no_collection_before_pending_apply": true,
+        "original_pending_pool_sha256": "079de75d4518834d82340146dec3304f6043744e06856e37d6123dde4f7ebd57",
+        "inspected_before_model": {
+          "completed_updates": 2,
+          "contract_sha256": "301b9a95d1e43499d97c12fc7959ed27dd1786bd3aa1977536dfe72f1056b11b",
+          "payload_bytes": 141516,
+          "payload_sha256": "8d898c3b45766fae48d8f74a1b529e1104233b8ebaccebf0b985f27682ad3a81",
+          "phase": "pending",
+          "schema_version": 2
+        },
+        "receipt_count": 4,
+        "model_failed": [
+          25
+        ],
+        "io_failed": [
+          13
+        ],
+        "save_reserved": 10,
+        "save_completed": 10,
+        "load_reserved": 2,
+        "load_completed": 1
+      },
+      "retained_model_failed": [
+        25
+      ],
+      "retained_io_failed": [
+        13
+      ]
+    },
+    {
+      "seed": 2324,
+      "phase": "completed",
+      "exact_fresh_numerical_replay": true,
+      "expected_numerical_sha256": "6c02bf9f251ef12445156c3b0632fad2f35b83c1acc2635fd23b28abaf62b804",
+      "expected_tail_sha256": "5dce10495dafbdf8463b2967e5ea75ee0696c400b24d2845e9a412ca776bdbca",
+      "execution": {
+        "exit_code": 0,
+        "deadline_seconds": 60,
+        "seconds": 2.867228772956878,
+        "command": [
+          "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_rlvr_snapshot_io.py",
+          "--child",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/2324-completed/bundle.json",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/2324-completed/fresh"
+        ]
+      },
+      "clean_save_operations": 9,
+      "carried_phase": "completed",
+      "carried_updates": 2,
+      "carried_runner_sequence": 18,
+      "carried_io_sequence": 8,
+      "fresh": {
+        "restored_update": 2,
+        "completed_updates": 4,
+        "state_sha256": "6c02bf9f251ef12445156c3b0632fad2f35b83c1acc2635fd23b28abaf62b804",
+        "tail_sha256": "5dce10495dafbdf8463b2967e5ea75ee0696c400b24d2845e9a412ca776bdbca",
+        "collect_completed_cursors": [
+          2,
+          3
+        ],
+        "no_collection_before_pending_apply": false,
+        "original_pending_pool_sha256": null,
+        "inspected_before_model": {
+          "completed_updates": 2,
+          "contract_sha256": "57b48d2255c523f8a05bc1123217b587bfc7a7c2962fac28539baaa8f0c3a892",
+          "payload_bytes": 128801,
+          "payload_sha256": "26cecd69bd3c72a2a1a08d2696a0fe0267b6e58d41266f8980c9065c44232fe0",
+          "phase": "completed",
+          "schema_version": 2
+        },
+        "receipt_count": 5,
+        "model_failed": [
+          21
+        ],
+        "io_failed": [
+          11
+        ],
+        "save_reserved": 10,
+        "save_completed": 10,
+        "load_reserved": 2,
+        "load_completed": 1
+      },
+      "retained_model_failed": [
+        21
+      ],
+      "retained_io_failed": [
+        11
+      ]
+    },
+    {
+      "seed": 2324,
+      "phase": "pending",
+      "exact_fresh_numerical_replay": true,
+      "expected_numerical_sha256": "6c02bf9f251ef12445156c3b0632fad2f35b83c1acc2635fd23b28abaf62b804",
+      "expected_tail_sha256": "5dce10495dafbdf8463b2967e5ea75ee0696c400b24d2845e9a412ca776bdbca",
+      "execution": {
+        "exit_code": 0,
+        "deadline_seconds": 60,
+        "seconds": 2.7676303990301676,
+        "command": [
+          "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_rlvr_snapshot_io.py",
+          "--child",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/2324-pending/bundle.json",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/2324-pending/fresh"
+        ]
+      },
+      "clean_save_operations": 9,
+      "carried_phase": "pending",
+      "carried_updates": 2,
+      "carried_runner_sequence": 22,
+      "carried_io_sequence": 10,
+      "fresh": {
+        "restored_update": 2,
+        "completed_updates": 4,
+        "state_sha256": "6c02bf9f251ef12445156c3b0632fad2f35b83c1acc2635fd23b28abaf62b804",
+        "tail_sha256": "5dce10495dafbdf8463b2967e5ea75ee0696c400b24d2845e9a412ca776bdbca",
+        "collect_completed_cursors": [
+          3
+        ],
+        "no_collection_before_pending_apply": true,
+        "original_pending_pool_sha256": "f0c48ffa96a81c0fe95a8be17d1e318e23d31a999fc31e77b3340bbcdd1f1e1d",
+        "inspected_before_model": {
+          "completed_updates": 2,
+          "contract_sha256": "57b48d2255c523f8a05bc1123217b587bfc7a7c2962fac28539baaa8f0c3a892",
+          "payload_bytes": 141516,
+          "payload_sha256": "8af390c1f3aaffb651a1e5008ece42e21efaf63702d1dff73200b8bb4be22e2c",
+          "phase": "pending",
+          "schema_version": 2
+        },
+        "receipt_count": 4,
+        "model_failed": [
+          25
+        ],
+        "io_failed": [
+          13
+        ],
+        "save_reserved": 10,
+        "save_completed": 10,
+        "load_reserved": 2,
+        "load_completed": 1
+      },
+      "retained_model_failed": [
+        25
+      ],
+      "retained_io_failed": [
+        13
+      ]
+    }
+  ],
+  "cli_controls": [
+    {
+      "exhausted": true,
+      "bootstrap_fields": null,
+      "alias_role": null,
+      "hardlink": false,
+      "identity_passes": 2,
+      "payload_verifier_calls": 0,
+      "model_provider_calls": 0,
+      "tokenizer_provider_calls": 1,
+      "journal_open_calls": 2,
+      "generic_identity_input_paths": [],
+      "failure": {
+        "message": "Whole operation refused before work: snapshot_inspect_operations",
+        "type": "WorkBudgetExceeded"
+      },
+      "scope": "mocked platform/parent/interface observers, actual CLI/journal/shared-inspection source order; no model loaded",
+      "verified": false,
+      "expected": true
+    },
+    {
+      "exhausted": false,
+      "bootstrap_fields": null,
+      "alias_role": null,
+      "hardlink": false,
+      "identity_passes": 2,
+      "payload_verifier_calls": 1,
+      "model_provider_calls": 1,
+      "tokenizer_provider_calls": 1,
+      "journal_open_calls": 2,
+      "generic_identity_input_paths": [],
+      "failure": {
+        "message": "authored model-allocation sentinel; no model loaded",
+        "type": "RuntimeError"
+      },
+      "scope": "mocked platform/parent/interface observers, actual CLI/journal/shared-inspection source order; no model loaded",
+      "verified": true,
+      "expected": true
+    },
+    {
+      "exhausted": false,
+      "bootstrap_fields": {
+        "phase": "unknown"
+      },
+      "alias_role": null,
+      "hardlink": false,
+      "identity_passes": 0,
+      "payload_verifier_calls": 0,
+      "model_provider_calls": 0,
+      "tokenizer_provider_calls": 0,
+      "journal_open_calls": 0,
+      "generic_identity_input_paths": [],
+      "failure": {
+        "message": "Invalid independent snapshot progress/size",
+        "type": "ValueError"
+      },
+      "scope": "mocked platform/parent/interface observers, actual CLI/journal/shared-inspection source order; no model loaded",
+      "verified": false,
+      "expected": false
+    },
+    {
+      "exhausted": false,
+      "bootstrap_fields": {
+        "completed_updates": 5
+      },
+      "alias_role": null,
+      "hardlink": false,
+      "identity_passes": 0,
+      "payload_verifier_calls": 0,
+      "model_provider_calls": 0,
+      "tokenizer_provider_calls": 0,
+      "journal_open_calls": 0,
+      "generic_identity_input_paths": [],
+      "failure": {
+        "message": "RLVR resume phase/cursor exceeds the fixed completed/pending horizon",
+        "type": "ValueError"
+      },
+      "scope": "mocked platform/parent/interface observers, actual CLI/journal/shared-inspection source order; no model loaded",
+      "verified": false,
+      "expected": false
+    },
+    {
+      "exhausted": false,
+      "bootstrap_fields": {
+        "completed_updates": 4,
+        "phase": "pending"
+      },
+      "alias_role": null,
+      "hardlink": false,
+      "identity_passes": 0,
+      "payload_verifier_calls": 0,
+      "model_provider_calls": 0,
+      "tokenizer_provider_calls": 0,
+      "journal_open_calls": 0,
+      "generic_identity_input_paths": [],
+      "failure": {
+        "message": "RLVR resume phase/cursor exceeds the fixed completed/pending horizon",
+        "type": "ValueError"
+      },
+      "scope": "mocked platform/parent/interface observers, actual CLI/journal/shared-inspection source order; no model loaded",
+      "verified": false,
+      "expected": false
+    },
+    {
+      "exhausted": false,
+      "bootstrap_fields": null,
+      "alias_role": "template",
+      "hardlink": false,
+      "identity_passes": 0,
+      "payload_verifier_calls": 0,
+      "model_provider_calls": 0,
+      "tokenizer_provider_calls": 0,
+      "journal_open_calls": 0,
+      "generic_identity_input_paths": [],
+      "failure": {
+        "message": "Resume payload aliases a generic identity role: template",
+        "type": "ValueError"
+      },
+      "scope": "mocked platform/parent/interface observers, actual CLI/journal/shared-inspection source order; no model loaded",
+      "verified": false,
+      "expected": false
+    },
+    {
+      "exhausted": false,
+      "bootstrap_fields": null,
+      "alias_role": "template",
+      "hardlink": true,
+      "identity_passes": 0,
+      "payload_verifier_calls": 0,
+      "model_provider_calls": 0,
+      "tokenizer_provider_calls": 0,
+      "journal_open_calls": 0,
+      "generic_identity_input_paths": [],
+      "failure": {
+        "message": "Resume payload inode aliases a generic identity role: template",
+        "type": "ValueError"
+      },
+      "scope": "mocked platform/parent/interface observers, actual CLI/journal/shared-inspection source order; no model loaded",
+      "verified": false,
+      "expected": false
+    },
+    {
+      "exhausted": false,
+      "bootstrap_fields": null,
+      "alias_role": "environment-lock",
+      "hardlink": false,
+      "identity_passes": 0,
+      "payload_verifier_calls": 0,
+      "model_provider_calls": 0,
+      "tokenizer_provider_calls": 0,
+      "journal_open_calls": 0,
+      "generic_identity_input_paths": [],
+      "failure": {
+        "message": "Resume payload aliases a generic identity role: environment-lock",
+        "type": "ValueError"
+      },
+      "scope": "mocked platform/parent/interface observers, actual CLI/journal/shared-inspection source order; no model loaded",
+      "verified": false,
+      "expected": false
+    },
+    {
+      "exhausted": false,
+      "bootstrap_fields": null,
+      "alias_role": "environment-lock",
+      "hardlink": true,
+      "identity_passes": 0,
+      "payload_verifier_calls": 0,
+      "model_provider_calls": 0,
+      "tokenizer_provider_calls": 0,
+      "journal_open_calls": 0,
+      "generic_identity_input_paths": [],
+      "failure": {
+        "message": "Resume payload inode aliases a generic identity role: environment-lock",
+        "type": "ValueError"
+      },
+      "scope": "mocked platform/parent/interface observers, actual CLI/journal/shared-inspection source order; no model loaded",
+      "verified": false,
+      "expected": false
+    },
+    {
+      "exhausted": false,
+      "bootstrap_fields": null,
+      "alias_role": "parent-artifact",
+      "hardlink": true,
+      "identity_passes": 0,
+      "payload_verifier_calls": 0,
+      "model_provider_calls": 0,
+      "tokenizer_provider_calls": 0,
+      "journal_open_calls": 0,
+      "generic_identity_input_paths": [],
+      "failure": {
+        "message": "Resume payload inode aliases a generic identity role: parent-artifact",
+        "type": "ValueError"
+      },
+      "scope": "mocked platform/parent/interface observers, actual CLI/journal/shared-inspection source order; no model loaded",
+      "verified": false,
+      "expected": false
+    }
+  ],
+  "journal_and_archived_ast_review": {
+    "command": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python - <<'PY'\nimport ast, copy, hashlib, json, os\nfrom pathlib import Path\nroot=Path('/home/dongxi/dongxi_ai/Dongxi_LLMs')\nbase=root/'experiments/reports/2026-10-05-rlvr-snapshot-io/run-01'\ndef hashed(v):return hashlib.sha256(json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()).hexdigest()\ndef read(path):return json.loads(Path(path).read_text())\ndef journal(path):\n    path=Path(path);raw=path.read_bytes();assert len(raw)<=2*1024**2 and raw.endswith(b'\\n')\n    rows=[json.loads(x) for x in raw.splitlines()];h=rows[0];st=path.stat();assert h['file_identity']==[st.st_dev,st.st_ino]\n    chain=hashed(h);tickets={};prefixes={}\n    def summary(sequence):\n        sums={k:dict.fromkeys(h['limits'],0) for k in ('reserved','completed','known_partial','attempted_upper','uncertain_upper')};opens=[];fails=[]\n        for i,t in tickets.items():\n            for k,v in t['costs'].items():sums['reserved'][k]+=v\n            if t['status']=='complete':\n                for k,v in t['actual'].items():sums['completed'][k]+=v;sums['attempted_upper'][k]+=v\n            else:\n                (opens if t['status']=='open' else fails).append(i)\n                for k,v in t['actual'].items():sums['known_partial'][k]+=v\n                for k,v in (t['costs'] if t['status']=='open' else t['attempted']).items():sums['attempted_upper'][k]+=v;sums['uncertain_upper'][k]+=v-t['actual'][k]\n        return dict(h,sequence=sequence,chain_sha256=chain,open_tickets=opens,failed_tickets=fails,**sums)\n    prefixes[0]=summary(0)\n    for n,e in enumerate(rows[1:],1):\n        r=e['record'];assert r['sequence']==n and type(r['sequence']) is int and r['previous']==chain and hashed(r)==e['sha256']\n        if r['event']=='reserve':\n            assert r['ticket']==n and r['ticket'] not in tickets and set(r['costs'])==set(h['limits'])\n            tickets[n]=dict(costs=r['costs'],actual=dict.fromkeys(h['limits'],0),status='open')\n        else:\n            t=tickets[r['ticket']];assert t['status']=='open' and r['event'] in ('complete','fail') and set(r['actual'])==set(h['limits'])\n            assert all(type(v) is int and 0<=v<=t['costs'][k] for k,v in r['actual'].items())\n            t.update(actual=r['actual'],status=r['event'])\n            if r['event']=='fail':t['attempted']=r['attempted'];assert all(r['actual'][k]<=v<=t['costs'][k] for k,v in r['attempted'].items())\n        chain=e['sha256'];prefixes[n]=summary(n);assert all(v<=h['limits'][k] for k,v in prefixes[n]['reserved'].items())\n    return prefixes,hashlib.sha256(raw).hexdigest(),len(rows)-1\nchecks=[]\nfor seed in (2323,2324):\n    for phase in ('completed','pending'):\n        d=base/f'{seed}-{phase}';arm=read(d/'arm.json');fresh=read(d/'fresh/fresh-result.json');receipt=arm['carried_receipt'];contract=read(d/'contract.json')\n        assert receipt['snapshot']['contract_sha256']==hashed(contract)\n        for role,key,external in (('work','runner_work_prefix','work'),('io','io_prefix','io')):\n            prefixes,sha,count=journal(d/f'retained-journals/{role}.jsonl');saved=receipt[key];assert prefixes[saved['sequence']]==saved\n            final=prefixes[count];assert final==fresh[external]\n            before=arm['retained_failures']['after']['model' if role=='work' else 'io'];assert set(before['failed_tickets'])<=set(final['failed_tickets'])\n            assert final['sequence']>saved['sequence'] and all(final['reserved'][k]>=before['reserved'][k] for k in final['reserved'])\n            checks.append(dict(seed=seed,phase=phase,role=role,journal_sha256=sha,records=count,saved_sequence=saved['sequence'],current_sequence=final['sequence'],prefix_exact=True,current_summary_exact=True,later_failures_retained=True))\n        assert fresh['state_sha256']==arm['expected_numerical_sha256'] and fresh['tail_sha256']==arm['expected_tail_sha256']\n        execution=read(d/'fresh-execution.json');stdout=json.loads(execution['stdout']);assert stdout==fresh and execution['exit_code']==0\n        assert fresh['collect_completed_cursors']==([2,3] if phase=='completed' else [3])\n    \npublication=read(base/'native-publication-failure/publication-control.json')\nfor role,key in (('work','work'),('io','io')):\n    prefixes,sha,count=journal(base/f'native-publication-failure/journals/{role}.jsonl');assert prefixes[count]==publication[key]\nfailed=Path(publication['failed_payload']);draft=read(publication['staging_header']);assert failed.stat().st_size==80308 and hashlib.sha256(failed.read_bytes()).hexdigest()==draft['payload_sha256']==publication['failed_payload_sha256']\nassert not Path(str(failed)+'.commit.json').exists() and not Path(str(failed)+'.work.json').exists()\nassert len(publication['on_commit_deliveries'])==1 and publication['on_commit_deliveries'][0]==publication['old_checkpoint']\nassert publication['io']['reserved']['snapshot_save_operations']==2 and publication['io']['completed']['snapshot_save_operations']==1\nassert publication['io']['known_partial']['snapshot_serialization_bytes']==80308 and publication['io']['uncertain_upper']['snapshot_save_operations']==1\n\nold=ast.parse((root/'experiments/reports/2026-10-05-rlvr-snapshot-io-preintegration/qwen_rlvr_lab.py.txt').read_text());new=ast.parse((root/'src/dongxi_llms/qwen_rlvr_lab.py').read_text())\ndef named(tree,name,cls=None):\n    body=tree.body if cls is None else next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name==cls).body\n    return next(n for n in body if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef)) and n.name==name)\nfunctions=['model_logits','collection_work','collect_rollouts','_collect_rollouts','apply_rollouts','_apply_rollouts','update_model','evaluate_model','collection_upper','pool_validation_upper','application_upper']\nmethods=['snapshot_state','validate_payload','_validate_payload','collect','apply_pending','validate_pool','_validate_pool','validate_rng']\ncomparisons=[]\nfor cls,names in ((None,functions),('RLVRLoop',methods)):\n    for name in names:\n        same=ast.dump(named(old,name,cls),include_attributes=False)==ast.dump(named(new,name,cls),include_attributes=False)\n        comparisons.append(dict(symbol=(cls+'.' if cls else '')+name,original_ast_equal=same))\n        assert same,(cls,name)\nprint(json.dumps(dict(journal_checks=checks,journal_count=10,publication_check=True,actual_failed_payload_bytes=80308,attempted_save_operations=2,completed_save_operations=1,ast_checks=comparisons),sort_keys=True))\nPY",
+    "actual_exit_code": 0,
+    "raw_stdout": "{\"actual_failed_payload_bytes\": 80308, \"ast_checks\": [{\"original_ast_equal\": true, \"symbol\": \"model_logits\"}, {\"original_ast_equal\": true, \"symbol\": \"collection_work\"}, {\"original_ast_equal\": true, \"symbol\": \"collect_rollouts\"}, {\"original_ast_equal\": true, \"symbol\": \"_collect_rollouts\"}, {\"original_ast_equal\": true, \"symbol\": \"apply_rollouts\"}, {\"original_ast_equal\": true, \"symbol\": \"_apply_rollouts\"}, {\"original_ast_equal\": true, \"symbol\": \"update_model\"}, {\"original_ast_equal\": true, \"symbol\": \"evaluate_model\"}, {\"original_ast_equal\": true, \"symbol\": \"collection_upper\"}, {\"original_ast_equal\": true, \"symbol\": \"pool_validation_upper\"}, {\"original_ast_equal\": true, \"symbol\": \"application_upper\"}, {\"original_ast_equal\": true, \"symbol\": \"RLVRLoop.snapshot_state\"}, {\"original_ast_equal\": true, \"symbol\": \"RLVRLoop.validate_payload\"}, {\"original_ast_equal\": true, \"symbol\": \"RLVRLoop._validate_payload\"}, {\"original_ast_equal\": true, \"symbol\": \"RLVRLoop.collect\"}, {\"original_ast_equal\": true, \"symbol\": \"RLVRLoop.apply_pending\"}, {\"original_ast_equal\": true, \"symbol\": \"RLVRLoop.validate_pool\"}, {\"original_ast_equal\": true, \"symbol\": \"RLVRLoop._validate_pool\"}, {\"original_ast_equal\": true, \"symbol\": \"RLVRLoop.validate_rng\"}], \"attempted_save_operations\": 2, \"completed_save_operations\": 1, \"journal_checks\": [{\"current_sequence\": 46, \"current_summary_exact\": true, \"journal_sha256\": \"9bbd0249062d771dee367d51da55c245bac338150a687a2b5934ee2d9d41ae18\", \"later_failures_retained\": true, \"phase\": \"completed\", \"prefix_exact\": true, \"records\": 46, \"role\": \"work\", \"saved_sequence\": 18, \"seed\": 2323}, {\"current_sequence\": 26, \"current_summary_exact\": true, \"journal_sha256\": \"7ddb71ee3c1095ffe9bcdf3b50373ee8cc5180fa50220a69a8c66daa9e04298c\", \"later_failures_retained\": true, \"phase\": \"completed\", \"prefix_exact\": true, \"records\": 26, \"role\": \"io\", \"saved_sequence\": 8, \"seed\": 2323}, {\"current_sequence\": 46, \"current_summary_exact\": true, \"journal_sha256\": \"2614b7738a99511773f6112ee49d9e475a0ecd6fe01c49b505652b51f293d65a\", \"later_failures_retained\": true, \"phase\": \"pending\", \"prefix_exact\": true, \"records\": 46, \"role\": \"work\", \"saved_sequence\": 22, \"seed\": 2323}, {\"current_sequence\": 26, \"current_summary_exact\": true, \"journal_sha256\": \"cef103630a984e21e9b3b416ab6896e7fc3c2b35794d8a780c703c3f48c1e841\", \"later_failures_retained\": true, \"phase\": \"pending\", \"prefix_exact\": true, \"records\": 26, \"role\": \"io\", \"saved_sequence\": 10, \"seed\": 2323}, {\"current_sequence\": 46, \"current_summary_exact\": true, \"journal_sha256\": \"4d12a5209c720c90fdd4134bbca0099e50b6e0495492cc97ba899a16df0194d8\", \"later_failures_retained\": true, \"phase\": \"completed\", \"prefix_exact\": true, \"records\": 46, \"role\": \"work\", \"saved_sequence\": 18, \"seed\": 2324}, {\"current_sequence\": 26, \"current_summary_exact\": true, \"journal_sha256\": \"4b862b47483698848a292cf84e43c6896907d1768e0b546ebaec91a90a5d4799\", \"later_failures_retained\": true, \"phase\": \"completed\", \"prefix_exact\": true, \"records\": 26, \"role\": \"io\", \"saved_sequence\": 8, \"seed\": 2324}, {\"current_sequence\": 46, \"current_summary_exact\": true, \"journal_sha256\": \"313e795b2c7114d7408d47ea49d0186190d25d389af27fefb30fd6fd4a4b8e83\", \"later_failures_retained\": true, \"phase\": \"pending\", \"prefix_exact\": true, \"records\": 46, \"role\": \"work\", \"saved_sequence\": 22, \"seed\": 2324}, {\"current_sequence\": 26, \"current_summary_exact\": true, \"journal_sha256\": \"57a3defc945267fc5aa8af233abc9cf6c44d634dd06de45848424e4bdfb85b66\", \"later_failures_retained\": true, \"phase\": \"pending\", \"prefix_exact\": true, \"records\": 26, \"role\": \"io\", \"saved_sequence\": 10, \"seed\": 2324}], \"journal_count\": 10, \"publication_check\": true}\n",
+    "result": {
+      "actual_failed_payload_bytes": 80308,
+      "ast_checks": [
+        {
+          "original_ast_equal": true,
+          "symbol": "model_logits"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "collection_work"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "collect_rollouts"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "_collect_rollouts"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "apply_rollouts"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "_apply_rollouts"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "update_model"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "evaluate_model"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "collection_upper"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "pool_validation_upper"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "application_upper"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "RLVRLoop.snapshot_state"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "RLVRLoop.validate_payload"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "RLVRLoop._validate_payload"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "RLVRLoop.collect"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "RLVRLoop.apply_pending"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "RLVRLoop.validate_pool"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "RLVRLoop._validate_pool"
+        },
+        {
+          "original_ast_equal": true,
+          "symbol": "RLVRLoop.validate_rng"
+        }
+      ],
+      "attempted_save_operations": 2,
+      "completed_save_operations": 1,
+      "journal_checks": [
+        {
+          "current_sequence": 46,
+          "current_summary_exact": true,
+          "journal_sha256": "9bbd0249062d771dee367d51da55c245bac338150a687a2b5934ee2d9d41ae18",
+          "later_failures_retained": true,
+          "phase": "completed",
+          "prefix_exact": true,
+          "records": 46,
+          "role": "work",
+          "saved_sequence": 18,
+          "seed": 2323
+        },
+        {
+          "current_sequence": 26,
+          "current_summary_exact": true,
+          "journal_sha256": "7ddb71ee3c1095ffe9bcdf3b50373ee8cc5180fa50220a69a8c66daa9e04298c",
+          "later_failures_retained": true,
+          "phase": "completed",
+          "prefix_exact": true,
+          "records": 26,
+          "role": "io",
+          "saved_sequence": 8,
+          "seed": 2323
+        },
+        {
+          "current_sequence": 46,
+          "current_summary_exact": true,
+          "journal_sha256": "2614b7738a99511773f6112ee49d9e475a0ecd6fe01c49b505652b51f293d65a",
+          "later_failures_retained": true,
+          "phase": "pending",
+          "prefix_exact": true,
+          "records": 46,
+          "role": "work",
+          "saved_sequence": 22,
+          "seed": 2323
+        },
+        {
+          "current_sequence": 26,
+          "current_summary_exact": true,
+          "journal_sha256": "cef103630a984e21e9b3b416ab6896e7fc3c2b35794d8a780c703c3f48c1e841",
+          "later_failures_retained": true,
+          "phase": "pending",
+          "prefix_exact": true,
+          "records": 26,
+          "role": "io",
+          "saved_sequence": 10,
+          "seed": 2323
+        },
+        {
+          "current_sequence": 46,
+          "current_summary_exact": true,
+          "journal_sha256": "4d12a5209c720c90fdd4134bbca0099e50b6e0495492cc97ba899a16df0194d8",
+          "later_failures_retained": true,
+          "phase": "completed",
+          "prefix_exact": true,
+          "records": 46,
+          "role": "work",
+          "saved_sequence": 18,
+          "seed": 2324
+        },
+        {
+          "current_sequence": 26,
+          "current_summary_exact": true,
+          "journal_sha256": "4b862b47483698848a292cf84e43c6896907d1768e0b546ebaec91a90a5d4799",
+          "later_failures_retained": true,
+          "phase": "completed",
+          "prefix_exact": true,
+          "records": 26,
+          "role": "io",
+          "saved_sequence": 8,
+          "seed": 2324
+        },
+        {
+          "current_sequence": 46,
+          "current_summary_exact": true,
+          "journal_sha256": "313e795b2c7114d7408d47ea49d0186190d25d389af27fefb30fd6fd4a4b8e83",
+          "later_failures_retained": true,
+          "phase": "pending",
+          "prefix_exact": true,
+          "records": 46,
+          "role": "work",
+          "saved_sequence": 22,
+          "seed": 2324
+        },
+        {
+          "current_sequence": 26,
+          "current_summary_exact": true,
+          "journal_sha256": "57a3defc945267fc5aa8af233abc9cf6c44d634dd06de45848424e4bdfb85b66",
+          "later_failures_retained": true,
+          "phase": "pending",
+          "prefix_exact": true,
+          "records": 26,
+          "role": "io",
+          "saved_sequence": 10,
+          "seed": 2324
+        }
+      ],
+      "journal_count": 10,
+      "publication_check": true
+    }
+  },
+  "publication": {
+    "native_header_error": {
+      "message": "authored pending0 atomic header publication failure",
+      "type": "OSError"
+    },
+    "pending_payload_bytes": 80308,
+    "pending_payload_sha256": "613be56a4ba8c5af3c7633a0b3934e98052ad29edfc9783bf44f76a11941bae1",
+    "failed_payload": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/native-publication-failure/native/snapshots/pending-000000.pt",
+    "retained_staging_header": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/native-publication-failure/native/snapshots/pending-000000.pt.commit-lhs_rw68",
+    "old_pointer_deliveries": [
+      {
+        "completed_updates": 0,
+        "contract_sha256": "301b9a95d1e43499d97c12fc7959ed27dd1786bd3aa1977536dfe72f1056b11b",
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/native-publication-failure/native/snapshots/completed-000000.pt",
+        "payload_bytes": 67145,
+        "payload_sha256": "e551d4d43ed28058fd73ee173a9e07cf3995ebd777ba05f69ac068437989825a",
+        "phase": "completed",
+        "schema_version": 2,
+        "work_receipt_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/native-publication-failure/native/snapshots/completed-000000.pt.work.json"
+      }
+    ],
+    "old_checkpoint_unchanged": true,
+    "failed_marker_published": false,
+    "failed_external_receipt_published": false,
+    "save_reserved": 2,
+    "save_completed": 1,
+    "known_partial_serialization_bytes": 80308,
+    "uncertain_save_operations": 1,
+    "additional_partial_serializer": {
+      "actual_partial_bytes": 8,
+      "error": {
+        "message": "authored eight-byte partial serializer publication",
+        "type": "OSError"
+      },
+      "old_checkpoint_unchanged": true,
+      "original_checkpoint": {
+        "completed_updates": 0,
+        "contract_sha256": "301b9a95d1e43499d97c12fc7959ed27dd1786bd3aa1977536dfe72f1056b11b",
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/partial-publication/completed0.pt",
+        "payload_bytes": 67145,
+        "payload_sha256": "58e5d009ae28997ee9e45beba6f50598d4fecf595396ca5ff7efcc033f4c54bd",
+        "phase": "completed",
+        "schema_version": 2,
+        "work_receipt_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/partial-publication/completed0.pt.work.json"
+      },
+      "original_payload_sha256": "58e5d009ae28997ee9e45beba6f50598d4fecf595396ca5ff7efcc033f4c54bd",
+      "partial_committed": false,
+      "partial_receipt_published": false,
+      "partial_sha256": "c6e164972efddcde6100b0208af46c2c333bbab14fc7645d228de6ff694997c8"
+    }
+  },
+  "notebook": {
+    "source": "notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb",
+    "source_sha256": "6775e7caf1db0adfab590485dafa701477d1a14db3ffbb603e771e520746c4a0",
+    "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-reader-lesson/run-02/notebook/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb",
+    "output_sha256": "8c9b3e165198f06d686e45bed1d37b5e9895556a08c5e65b6efbdb7b7bc97809",
+    "command": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python - <<'PY'\nimport base64,hashlib,json\nfrom pathlib import Path\nroot=Path('/home/dongxi/dongxi_ai/Dongxi_LLMs');d=root/'experiments/reports/2026-10-05-rlvr-reader-lesson/run-02'\nr=json.loads((d/'verification.json').read_text());m=json.loads((d/'notebook/manifest.json').read_text())\ns=json.loads((root/r['fresh_notebook']['path']).read_text());o=json.loads(Path(r['fresh_notebook']['output']).read_text())\nassert len(o['cells'])==len(s['cells'])+1\nfor n,c in enumerate(s['cells']):\n    e=o['cells'][n+1];assert c['cell_type']==e['cell_type'] and ''.join(c['source'])==''.join(e['source'])\ncodes=[c for c in o['cells'][1:] if c['cell_type']=='code'];assert len(codes)==10 and all(c['execution_count'] is not None for c in codes)\nimages=[base64.b64decode(x['data']['image/png']) for c in o['cells'][1:] for x in c.get('outputs',[]) if 'image/png' in x.get('data',{})];assert len(images)==8\nassert hashlib.sha256(images[-1]).hexdigest()==r['preview']['sha256']\nstreams=''.join(x.get('text','') if isinstance(x.get('text',''),str) else ''.join(x.get('text',[])) for x in o['cells'][0].get('outputs',[]))\nline=next(x for x in streams.splitlines() if x.startswith('__DONGXI_KERNEL_IDENTITY__:'))\nidentity=json.loads(line.split(':',1)[1]);assert identity==r['fresh_notebook']['kernel_identity'] and identity['cuda_available'] is False and identity['torch_cuda_build'] is None\nassert identity['prefix']=='/tmp/dongxi-course-reproduction.ZfVaEu/venv'\nassert m['notebooks'][0]==r['fresh_notebook']\nprint(json.dumps(dict(source_cells_preserved=True,source_reference_code_cells=10,execution_preambles=1,actual_executed_code_cells=11,images=8,final_embedded_png_sha256=hashlib.sha256(images[-1]).hexdigest(),kernel_identity_exact=True,unfinished_skips=0,manifest_exact=True,output_sha256=hashlib.sha256(Path(r['fresh_notebook']['output']).read_bytes()).hexdigest()),sort_keys=True))\nPY",
+    "actual_exit_code": 0,
+    "raw_stdout": "{\"actual_executed_code_cells\": 11, \"execution_preambles\": 1, \"final_embedded_png_sha256\": \"4191be9c206790d29ca2df2591a27a8443182713df4966b3747bc28125c4cfe2\", \"images\": 8, \"kernel_identity_exact\": true, \"manifest_exact\": true, \"output_sha256\": \"8c9b3e165198f06d686e45bed1d37b5e9895556a08c5e65b6efbdb7b7bc97809\", \"source_cells_preserved\": true, \"source_reference_code_cells\": 10, \"unfinished_skips\": 0}\n",
+    "independently_checked": {
+      "actual_executed_code_cells": 11,
+      "execution_preambles": 1,
+      "final_embedded_png_sha256": "4191be9c206790d29ca2df2591a27a8443182713df4966b3747bc28125c4cfe2",
+      "images": 8,
+      "kernel_identity_exact": true,
+      "manifest_exact": true,
+      "output_sha256": "8c9b3e165198f06d686e45bed1d37b5e9895556a08c5e65b6efbdb7b7bc97809",
+      "source_cells_preserved": true,
+      "source_reference_code_cells": 10,
+      "unfinished_skips": 0
+    },
+    "visual_inspection": {
+      "path": "notebooks/figures/chapter-14/day-25-02_ragged_kv_cache_and_exact_recovery-08.png",
+      "sha256": "4191be9c206790d29ca2df2591a27a8443182713df4966b3747bc28125c4cfe2",
+      "verdict": "Labels, count geometry, manual-lifecycle scope and completed-operation marks are legible; no substantive rendering issue."
+    },
+    "seven_prior_preview_hashes_unchanged": true,
+    "kernel_identity": {
+      "cuda_available": false,
+      "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "packages": {
+        "ipykernel": "7.4.0",
+        "matplotlib": "3.10.8",
+        "nbclient": "0.11.0",
+        "nbformat": "5.11.1",
+        "numpy": "2.5.3",
+        "peft": "0.20.0",
+        "tokenizers": "0.23.2",
+        "torch": "2.14.1+cpu",
+        "transformers": "5.18.0"
+      },
+      "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+      "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+      "python": "3.12.14",
+      "torch_cuda_build": null
+    }
+  },
+  "retained_negative_outcomes": [
+    {
+      "seed": 2323,
+      "phase": "completed",
+      "rewards": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "gradient_norms": [
+        1.6108637757028532e-9,
+        0.000011902845471922774,
+        0.002861372195184231,
+        0.0005057381931692362
+      ]
+    },
+    {
+      "seed": 2323,
+      "phase": "pending",
+      "rewards": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "gradient_norms": [
+        1.6108637757028532e-9,
+        0.000011902845471922774,
+        0.002861372195184231,
+        0.0005057381931692362
+      ]
+    },
+    {
+      "seed": 2324,
+      "phase": "completed",
+      "rewards": [
+        0,
+        0,
+        0,
+        0.3333333333333333
+      ],
+      "gradient_norms": [
+        2.401417287245522e-9,
+        0.00001068483561539324,
+        0.0008944530272856355,
+        2.06782865524292
+      ]
+    },
+    {
+      "seed": 2324,
+      "phase": "pending",
+      "rewards": [
+        0,
+        0,
+        0,
+        0.3333333333333333
+      ],
+      "gradient_norms": [
+        2.401417287245522e-9,
+        0.00001068483561539324,
+        0.0008944530272856355,
+        2.06782865524292
+      ]
+    }
+  ],
+  "historical_failure": {
+    "path": "experiments/reports/2026-10-05-rlvr-reader-lesson/run-01/verification.json",
+    "sha256": "542aa3859bcf4d78656a8971d6611f06234aacca53de2f38fad9ff8be71bf6a5",
+    "status": "failed",
+    "error": "RuntimeError('Boolean value of Tensor with more than one value is ambiguous')",
+    "current_binding": false,
+    "unchanged": true
+  },
+  "findings": [],
+  "corrections_and_inspector_diagnostics": [
+    "Earlier static suggestion to refresh the carried runner23 prefix after semantic save validation was unnecessary and withdrawn before implementation. Shared make_receipt copies the original carried prefix; independently reconstructed physical suffixes retain later validation charges. The archived snapshot_state AST is unchanged.",
+    "One notebook lookup initially used a guessed nonexistent filename; corrected to the existing day-25/02_ragged_kv_cache_and_exact_recovery.ipynb. No data or source changed.",
+    "An initial functions inspector attempted to parse a truncated large jq JSON dump; it raised SyntaxError before any report write. The corrected bounded projection parsed actual named fields. No empirical record changed."
+  ],
+  "source_order_review": [
+    "Bounded no-follow nonblocking bootstrap metadata is separate from payload work and records its actual bytes.",
+    "Payload/marker/contract/receipt paths are excluded from both generic identity input lists; stat/inode alias refusal protects template/lock/sources/recognized parent-artifact roles without reading payload bytes.",
+    "Both physical journal prefixes bind before actual shared inspection and model allocation. Declared expectation is distinct from observed inspection.",
+    "Unknown phase, out-of-horizon cursor and terminal pending pool are rejected before journals/model allocation.",
+    "Declared-hook omission/mismatch refuses before caller state capture, semantic validation, shared work or lifecycle directory creation.",
+    "Caller save-semantic charges remain separate from shared9 admission. Original before-validation runner prefix and pre-save I/O prefix are preserved exactly.",
+    "Native pending restore applies retained pool without a new collection; one native semantic callback is preserved.",
+    "Full contract is compared after model construction and before state application. Nested cleanup closes both journals."
+  ],
+  "evidence_boundaries": [
+    "Stored actual footers are21 new controls,102 selected existing shared controls and6 lesson controls; the separate lesson receipt also ran6. They overlap global tests and must not be summed as a new unique course count.",
+    "Four persisted fresh children exited0 for seeds2323/2324, completed/pending2 to4. This review independently checks their saved stdout, hashes, schedules and journal summaries, not a newly run numerical campaign.",
+    "Source-derived fresh/completed-resume/pending-resume schedules are1+2U,1+2(U-k),2+2(U-k-1). The manually published lesson measures1save/1inspect/2loads per arm and is not the complete lifecycle.",
+    "Seed2323 has zero reward on all four sampled updates; seed2324 has reward0,0,0,1/3. Replay and a sampled success do not establish better language or reasoning capability.",
+    "Shared logical9 plus original23 semantic/model work are not physical quotas, hostile-payload sandboxing, supplier authentication or cross-machine budget authority.",
+    "Caller capture, bootstrap/journal/other identity processing, state application, artifacts/logs/exports/scratch, deserializer internals and physical containment remain excluded.",
+    "No broader course status closure is made here. Standing Day9/13 completed packages/all45 unexecuted outcome rows and0 external jobs are not advanced by this review."
+  ],
+  "final_actor_source_recheck": {
+    "command": "jq -r '.source_sha256 | to_entries[] | \"\\(.value)  \\(.key)\"' experiments/reports/2026-10-05-rlvr-snapshot-io/run-01/verification.json | sha256sum --check --quiet",
+    "actual_exit_code": 0,
+    "stdout_stderr": ""
+  }
+}

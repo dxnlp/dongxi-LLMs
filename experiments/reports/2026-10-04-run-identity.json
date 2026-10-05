@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "package": "DXI-01",
+  "status": "cpu-verified; pretrained/Spark integration pending",
+  "date": "2026-10-04",
+  "scope": "original local tokenizer and tiny random CPU HF/PEFT fixtures; no model acquisition or GPU training",
+  "python": "3.12.14",
+  "interpreter": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+  "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+  "machine": "aarch64",
+  "packages": {
+    "torch": "2.13.0+cu130",
+    "transformers": "5.16.1",
+    "tokenizers": "0.23.1",
+    "peft": "0.20.0",
+    "matplotlib": "3.10.8",
+    "nbformat": "5.11.1",
+    "nbclient": "0.11.0"
+  },
+  "base_commit": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4",
+  "dirty": true,
+  "source_sha256": {
+    "src/dongxi_llms/run_identity.py": "6eb0cc124d1eef6929177d4cfd0a187bdd1a0dae586472012c253833628bad29",
+    "src/dongxi_llms/checkpoint_merge.py": "8c4c1712aeeb2bd65e5e44e08668fa13c239afb1fcd117fc68c6b4fa383101ad",
+    "src/dongxi_llms/qwen_rlvr_lab.py": "27ece983b9077b60a264ca2bc23196ca5a83acce16bdbf72e15ee5fbc8cea607",
+    "scripts/merge_course_adapter.py": "d3fedb98dfafa7f57f10269fd66ee8ea70240a927975cdfb55695157bbbb61ae",
+    "scripts/run_chapter09_spark_sft.py": "cd9bdfa3e5edfad32eb957bd2352671cbf02e5adf3e633c8e8b7021f41710aff",
+    "scripts/run_chapter11_spark_dpo.py": "cba27b08279bf109e26170f97cf0e398930d730f656ee8abcf5ab5b54d5eba93",
+    "tests/test_run_identity.py": "5306551d919e7318fdc99f70aaeab7d7bf6be7a6a9ee6c33821661734ed3733a",
+    "tests/test_spark_sft_contract.py": "a69fcff3d7fe0d2eb7e5dee1b84d4b34f8f70cb507dc4908f7a179ce61d401c9",
+    "tests/test_dpo_checkpoint_interface.py": "a46447ce4e537449604a27d563d0e909bb108b41c4395cf4a84dbc79a7b6e2c0",
+    "notebooks/day-01/04_checkpoint_interface.ipynb": "cd70d2cf372042dd975ffcecade562db36b6872a2ca4bc7b966db87a9fadaca9",
+    "book/chapters/01-evidence-before-optimization.md": "5ab8e9e8b3d5daf6386be8e5b6c52035d97ec819d492b35cbab6248ede9d63c8",
+    "book/solutions/01-evidence-before-optimization.md": "b08e1c7c4029ecd269ceccc37d94edf9116580f801f2e95dbc5e3a3a19b2dbbe",
+    "book/labs/01-evidence-before-optimization.md": "927e5230e16cc0ad19bc8a2002ca88bda4f6181a82ee60f0006d73cbd7a4c73d",
+    "book/labs/09-supervised-fine-tuning.md": "f38a62a25d175671b63fe6cd73b8871acbacb7344b2a305f5805f5433c5a0935",
+    "book/labs/11-direct-preference-optimization.md": "042f50924c76c0b9d7f177097bce0d1d26c070781a2566766d66274209749d56",
+    "book/labs/13-group-relative-policy-optimization.md": "d62d24f5ff1ab474fe1b76630d250672b5f7ddbeabfee496377ff561106ff916",
+    "experiments/specs/day-23-qwen-rlvr.md": "ff74e972d6d796bca307bdf06c65c870f9484ded895ebfb6913d51125d3d0568",
+    "experiments/specs/2026-10-04-run-identity.md": "aad6a5fdb47ec55a965d92d1927192536feb72d2ef2638e0915902725a4c27cc"
+  },
+  "environment_lock": {
+    "path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+    "sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261",
+    "boundary": "byte identity, not an assertion that all installed versions resolved from this file"
+  },
+  "notebook_reference": {
+    "date_utc": "2026-10-04T19:56:20.694699+00:00",
+    "base_commit": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4",
+    "python": "3.12.14",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "kernel": "dgx-spark-native",
+    "scope": "CPU teaching references and stored evidence",
+    "notebooks": [
+      {
+        "path": "notebooks/day-01/01_experiment_identity.ipynb",
+        "sha256": "c95d53bcba7c1d344de2367d643a94124186e98908af875155278589f6cd7cff",
+        "code_cells": 3,
+        "executed_code_cells": 3,
+        "skipped_unfinished_exercise_cells": [],
+        "images": 1,
+        "seconds": 1.6184721769823227,
+        "output": "/tmp/dongxi-course-check-s4oigs5n/day-01/01_experiment_identity.ipynb",
+        "image_cells": [
+          5
+        ],
+        "previews": [
+          {
+            "cell": 5,
+            "path": "notebooks/figures/chapter-01/day-01-01_experiment_identity-01.png",
+            "sha256": "f90e8dbdf83c034c1670bb94dece92195e371da629e8e10ec12ca300bf00e7bb"
+          }
+        ]
+      },
+      {
+        "path": "notebooks/day-01/02_smoke_criteria_and_claims.ipynb",
+        "sha256": "4105746f893377504840779435eabe1e9eb1df79b08493ba09921abaeaf8aa1c",
+        "code_cells": 3,
+        "executed_code_cells": 3,
+        "skipped_unfinished_exercise_cells": [],
+        "images": 1,
+        "seconds": 1.480350586003624,
+        "output": "/tmp/dongxi-course-check-s4oigs5n/day-01/02_smoke_criteria_and_claims.ipynb",
+        "image_cells": [
+          5
+        ],
+        "previews": [
+          {
+            "cell": 5,
+            "path": "notebooks/figures/chapter-01/day-01-02_smoke_criteria_and_claims-01.png",
+            "sha256": "499b9cc3c16681870566fd5487df2687342927ddcbaafb6fecbc00357d2dca43"
+          }
+        ]
+      },
+      {
+        "path": "notebooks/day-01/03_read_a_real_run.ipynb",
+        "sha256": "589e7a952a47a2e66da8e6a8bee851a09ca45a8eadc2ef227ff1a72aed570e95",
+        "code_cells": 3,
+        "executed_code_cells": 3,
+        "skipped_unfinished_exercise_cells": [],
+        "images": 1,
+        "seconds": 1.5598342120065354,
+        "output": "/tmp/dongxi-course-check-s4oigs5n/day-01/03_read_a_real_run.ipynb",
+        "image_cells": [
+          4
+        ],
+        "previews": [
+          {
+            "cell": 4,
+            "path": "notebooks/figures/chapter-01/day-01-03_read_a_real_run-01.png",
+            "sha256": "c65fd9a60ee71e19758bd8f5f965d1e1c7d974c26ee6506d480c966eb6625638"
+          }
+        ]
+      },
+      {
+        "path": "notebooks/day-01/04_checkpoint_interface.ipynb",
+        "sha256": "cd70d2cf372042dd975ffcecade562db36b6872a2ca4bc7b966db87a9fadaca9",
+        "code_cells": 5,
+        "executed_code_cells": 5,
+        "skipped_unfinished_exercise_cells": [],
+        "images": 1,
+        "seconds": 2.798974053002894,
+        "output": "/tmp/dongxi-course-check-s4oigs5n/day-01/04_checkpoint_interface.ipynb",
+        "image_cells": [
+          3
+        ],
+        "previews": [
+          {
+            "cell": 3,
+            "path": "notebooks/figures/chapter-01/day-01-04_checkpoint_interface-01.png",
+            "sha256": "ecb92dc3cbe8bafc968f5464401c07b1e73adcd0450eca3db2ea56f107f7425f"
+          }
+        ]
+      }
+    ],
+    "failures": [],
+    "minimum_observed_available_gib": 117.49898910522461,
+    "seconds": 7.481397655996261
+  },
+  "checks": {
+    "unit_suite": {
+      "command": "env CUDA_VISIBLE_DEVICES= HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python -m unittest discover -s tests -q",
+      "exit_code": 0,
+      "tests": 212,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 8.616
+    },
+    "focused_contracts": {
+      "identity": 12,
+      "sft": 8,
+      "dpo": 4
+    },
+    "book_math": {
+      "files": 54,
+      "expressions": 1099,
+      "issues": 0
+    },
+    "fresh_notebook": {
+      "new_code_cells": 5,
+      "new_figures": 1,
+      "day1_code_cells": 14,
+      "day1_figures": 4,
+      "failures": 0,
+      "source_preserved": true,
+      "preview_visually_inspected": true
+    },
+    "independent_source_review": "Five findings repaired and checked: resume overwrite, missing resume hash, pre-load byte identity, interruption journal, SFT paired-base tokenizer semantics.",
+    "final_integration_suite": {
+      "command": "env CUDA_VISIBLE_DEVICES= HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python -m unittest discover -s tests -q",
+      "exit_code": 0,
+      "tests": 218,
+      "failures": 0,
+      "errors": 0,
+      "seconds": 9.313,
+      "boundary": "later integration after DXI08/13 hardening; earlier212-test measurement retained above"
+    }
+  },
+  "observations": [
+    "Equal-sized cat/dog mapping exchange rejected.",
+    "Unchanged vocabulary with lowercasing rule change rejected.",
+    "Special IDs/template/stops/revision mismatch and tampered fingerprint rejected.",
+    "Actual local HF save/reload and transient padding/truncation contract pass.",
+    "Explicit legacy adoption is required; saved current semantics rechecked.",
+    "Actual tiny random HF model save/reload logits pass exact parity.",
+    "Nonzero local PEFT adapter merged/reloaded logits agree at rtol=1e-5, atol=1e-6; changed actual base bytes rejected.",
+    "Actual one-update CPU HF RLVR entry point carries common identity and interface; resource guard mocked in portable harness.",
+    "Preflight hardware failure and KeyboardInterrupt preserve source/lock identity and stage.",
+    "Existing SFT output cannot be overwritten even with --resume.",
+    "Snapshot path/revision failure and explicit mocked acquisition boundary tested.",
+    "Augmented identity digests reproduce canonical hashes."
+  ],
+  "boundaries": [
+    "No pretrained Qwen run, GPU kernel/performance result, actual Spark SFT/DPO/RLVR chain, or large adapter merge.",
+    "No exact interrupted/resumed model-scale equivalence.",
+    "HF RLVR resource guard returns a mocked 100 GiB in a portability test; this is not a memory measurement.",
+    "Selected platform lock bytes captured; fixture locks in unit tests do not resolve packages.",
+    "Source checks do not establish live GitHub rendering or actual Mac compatibility.",
+    "Slow/custom tokenizers fail closed without a supported serialization contract.",
+    "Recorded upstream SHA is a declaration, not authenticated provenance.",
+    "Ctrl-C is journaled; SIGKILL/power failure may leave running status."
+  ],
+  "pending": [
+    "Approved pretrained/Spark integration",
+    "Recovery equivalence under actual checkpoint replay",
+    "DXI-17 portable locks and actual Mac verification"
+  ]
+}

@@ -1,0 +1,638 @@
+{
+  "schema": "dongxi-goal-local-protected-audit-v1",
+  "recorded_utc": "2026-10-05T07:01:13.665138+00:00",
+  "status": "passed-read-only-integrity-audit",
+  "scope": "Final local campaign/protected acceptance consistency review; not new training, model evaluation, Mac/hosted execution, publication or achievement of the whole eighteen-package goal",
+  "overall_goal_complete": false,
+  "goal_status": "active",
+  "ledger_summary": {
+    "complete": 15,
+    "in_progress": 3,
+    "planned": 0,
+    "notebooks": 76,
+    "registered_notebooks": 76,
+    "learner_day": 9
+  },
+  "campaign": {
+    "stage_rows": 45,
+    "populated_ids": [
+      "assistant-profile-base06"
+    ],
+    "unrun_rows": 44,
+    "unrun_exact_preparation": true,
+    "unrun_exact_snapshot01": true,
+    "immutable_stage_id_order": true,
+    "jobs_started": 10,
+    "auxiliary_count": 9,
+    "failed_auxiliary_count": 2,
+    "auxiliary_outcomes": [
+      {
+        "role": "full-replay-original",
+        "exit": 0,
+        "status": "completed",
+        "stop_reason": null,
+        "receipt_fields_match": true
+      },
+      {
+        "role": "full-replay-resume-attempt01",
+        "exit": -15,
+        "status": "failed",
+        "stop_reason": "conflicting-process",
+        "receipt_fields_match": true
+      },
+      {
+        "role": "full-replay-resume-retry02",
+        "exit": 0,
+        "status": "completed",
+        "stop_reason": null,
+        "receipt_fields_match": true
+      },
+      {
+        "role": "lora-replay-original",
+        "exit": 0,
+        "status": "completed",
+        "stop_reason": null,
+        "receipt_fields_match": true
+      },
+      {
+        "role": "lora-replay-resume",
+        "exit": 0,
+        "status": "completed",
+        "stop_reason": null,
+        "receipt_fields_match": true
+      },
+      {
+        "role": "common-development-base",
+        "exit": 0,
+        "status": "completed",
+        "stop_reason": null,
+        "receipt_fields_match": true
+      },
+      {
+        "role": "common-development-sft20",
+        "exit": 0,
+        "status": "completed",
+        "stop_reason": null,
+        "receipt_fields_match": true
+      },
+      {
+        "role": "bf16-merge-failed",
+        "exit": 1,
+        "status": "failed",
+        "stop_reason": null,
+        "receipt_fields_match": true
+      },
+      {
+        "role": "fp32-merge-reload-passed",
+        "exit": 0,
+        "status": "completed",
+        "stop_reason": null,
+        "receipt_fields_match": true
+      }
+    ],
+    "profile_only_change_checkpoint_map": true,
+    "snapshot01_bug_preserved": true,
+    "child_map_exact_independent_inventory": true,
+    "child_model_sha256": "c165204ade77affa09b972b339ee97381424071c8600f2ab465b227b3e266816",
+    "parent_model_sha256": "cd2a512003e2f9f3cd3c32a9c3573f820bb28c940f73c57b1ddaa983d9223eba",
+    "first_collector_failure_retained": {
+      "stage": "collect-current-campaign-02 auxiliary genealogy bindings",
+      "actual_exit_code": 1,
+      "error": "FileNotFoundError: outputs/native-sft-lora-replay-20261005-original/adapter/course-genealogy.json",
+      "cause": "Collector used adapter as the directory name; actual native runner exports both modes under policy.",
+      "new_snapshot_created": false,
+      "model_or_training_executed": false,
+      "resolution": "Resolved exact files read-only with rg; corrected only collector path to policy/course-genealogy.json before collecting into the still-unused snapshot02 destination.",
+      "scope": "Root collection error, not native replay or model failure. Original snapshots and empirical receipts unchanged."
+    },
+    "retry_collection_boundary": "Root reported corrected campaign collector exit0. This audit did not rerun the exclusive collector: created snapshot transformations and actual receipt bytes were independently rechecked.",
+    "streamed_bindings": [
+      {
+        "path": "experiments/reports/2026-10-04-staged-campaign-preparation.json",
+        "bytes": 232392,
+        "sha256": "34db95a7dbdcbfbfb6b108943d5cb172b2026d5db8f8528942032be5963816c4",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-native-base-profile/current-campaign-evidence-01.json",
+        "bytes": 194796,
+        "sha256": "8fc364eb8fb82d88373c5cb115f3f3d7f29d3ae5c327b61121d58d745178082d",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-native-base-profile/independent-review-01.json",
+        "bytes": 20448,
+        "sha256": "d4672c08abb776107ea1613aad1dc41328dde731ca0bf017849cdb25c39dcf16",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-native-sft-full-replay/returned-supervision-1.json",
+        "bytes": 606233,
+        "sha256": "ab9415f27aebcfa3310ad42b2b4bb4fa209cdc409c20d073fb95d6c9a71daee2",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-native-sft-full-replay/returned-supervision-2.json",
+        "bytes": 45954,
+        "sha256": "fd6456284bddc4afb4c50a9e23b548de479979e6d4db0f4404d995feb84eab1f",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-native-sft-full-replay/returned-supervision-retry02.json",
+        "bytes": 673676,
+        "sha256": "94388d99d7240e3e936cc83e663a74fe87c31cfc568dc22a6d871702b1b02d6e",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-native-sft-lora-replay/returned-supervision-1.json",
+        "bytes": 508464,
+        "sha256": "e3f6f6ed12ae867fe70cb12817a5b38304543ebeb5e33727e46ac27c3462b8bd",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-native-sft-lora-replay/returned-supervision-2.json",
+        "bytes": 485408,
+        "sha256": "379492670a5f71d4b8994601df85f0376ca4b4d78715748fda978b851c17d842",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-pretrained-evaluation-replay/base-returned-supervision.json",
+        "bytes": 298185,
+        "sha256": "3009d547ce0dad996bc342d72387717dcfc74ffb6f60ba53aa5153505f4bceb2",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-pretrained-evaluation-replay/sft20-returned-supervision.json",
+        "bytes": 300644,
+        "sha256": "cea36b9c302529ccdd4a3947c1c57d0de351c77a557284e4b70dba23e69faabe",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-native-lora-merge-reload/returned-supervision.json",
+        "bytes": 122488,
+        "sha256": "76a9271765f47cf0aaf5850e8c04edafb6604bf1932fa2994bc8676d938f8a1d",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-native-lora-fp32-merge-reload/returned-supervision.json",
+        "bytes": 345049,
+        "sha256": "e8c01b7c892ba55dfddfbf55a60568467fca65a5cf18236b2d14e8a8bdb91274",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "outputs/native-sft-full-replay-20261005-original/policy/course-genealogy.json",
+        "bytes": 2349,
+        "sha256": "80247093e1cbace706987d53950476b73ec18786cf469cb9b6717eb149d227ac",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "outputs/native-sft-lora-replay-20261005-original/policy/course-genealogy.json",
+        "bytes": 2369,
+        "sha256": "610f81507065d77171d566ade0d34af78f7f5edd2d81ca5e610568dd86cc6d7e",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "outputs/native-lora20-fp32-merged-20261005/course-genealogy.json",
+        "bytes": 2791,
+        "sha256": "3876eed7cdea2189b6b534f482633ce4e786586a67b7d528c50b82ea83ebdae3",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "experiments/reports/2026-10-05-native-acceptance-independent.json",
+        "bytes": 38558,
+        "sha256": "963625149084c11c5cfd00e9515a9bc14bced407f9598453dc475cd45c5ef0d5",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "outputs/native-base-profile-20261005-run01/policy/chat_template.jinja",
+        "bytes": 197,
+        "sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "outputs/native-base-profile-20261005-run01/policy/config.json",
+        "bytes": 1418,
+        "sha256": "c8018233286f5f2a7ba340cad4ca11d5c54b400e8c201f764cb89a15376c9427",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "outputs/native-base-profile-20261005-run01/policy/course-genealogy.json",
+        "bytes": 2349,
+        "sha256": "7399147da74bfdc965c2cc0575665f8e8f97d8dc4b7eebdac0ba8bee1e86c8f7",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "outputs/native-base-profile-20261005-run01/policy/generation_config.json",
+        "bytes": 139,
+        "sha256": "a2ac0d07aac37502207a212b122abe32bd9564266594a317c0ff490ebce1f226",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "outputs/native-base-profile-20261005-run01/policy/model.safetensors",
+        "bytes": 1192135096,
+        "sha256": "c165204ade77affa09b972b339ee97381424071c8600f2ab465b227b3e266816",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "outputs/native-base-profile-20261005-run01/policy/tokenizer.json",
+        "bytes": 11422650,
+        "sha256": "be75606093db2094d7cd20f3c2f385c212750648bd6ea4fb2bf507a6a4c55506",
+        "matches_retained_binding": true
+      },
+      {
+        "path": "outputs/native-base-profile-20261005-run01/policy/tokenizer_config.json",
+        "bytes": 696,
+        "sha256": "2bb0fd393ee176b31a7e718941f30e2bc4c968a4325c22c3c11ea656ce138c5e",
+        "matches_retained_binding": true
+      }
+    ]
+  },
+  "protected_acceptance": {
+    "original_snapshot_sha256": "6cb9caee1d87b36f4a1ae6a9fbb5ef36889ad9f6e198cf822aeb11ec5bf2be2b",
+    "current_ledger_sha256": "a4b9c7be37fc84a57d11bbfb313cd9cb271a67a8e234794c0b0d5eb29163ebff",
+    "original_map_sha256": "bf00bdb6e8229ff2161fe280460e511bb04ddebaf03a434b13f5d19fbe79cd45",
+    "current_map_sha256": "bf00bdb6e8229ff2161fe280460e511bb04ddebaf03a434b13f5d19fbe79cd45",
+    "exact_eighteen_ids": true,
+    "all_acceptance_and_dependency_arrays_identical": true,
+    "missing_original_pending": [],
+    "complete_ids": [
+      "DXI-01",
+      "DXI-02",
+      "DXI-04",
+      "DXI-05",
+      "DXI-06",
+      "DXI-07",
+      "DXI-08",
+      "DXI-09",
+      "DXI-10",
+      "DXI-11",
+      "DXI-12",
+      "DXI-13",
+      "DXI-14",
+      "DXI-15",
+      "DXI-16"
+    ],
+    "partial_ids": [
+      "DXI-03",
+      "DXI-17",
+      "DXI-18"
+    ],
+    "learner_position": "Day9 on Spark; no mastery or day advancement by material creation.",
+    "package_checks": [
+      {
+        "id": "DXI-01",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 3,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 3,
+        "missing": 0
+      },
+      {
+        "id": "DXI-02",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 2,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 2,
+        "missing": 0
+      },
+      {
+        "id": "DXI-03",
+        "status": "in_progress",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 4,
+        "still_open": 4,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-04",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-05",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-06",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-07",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-08",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-09",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-10",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-11",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-12",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-13",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-14",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-15",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-16",
+        "status": "complete",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 0,
+        "still_open": 0,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-17",
+        "status": "in_progress",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 2,
+        "still_open": 2,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      },
+      {
+        "id": "DXI-18",
+        "status": "in_progress",
+        "acceptance_exact": true,
+        "dependencies_exact": true,
+        "original_pending": 3,
+        "still_open": 3,
+        "historical_with_explicit_resolution_or_routing": 0,
+        "missing": 0
+      }
+    ],
+    "pending_routing": "All original strings remain exactly open, or (DXI-01/02 only) exactly retained in historical_pending_checks with one explicit resolution/routing per string. Unfinished campaign-chain/containment remains unfinished under DXI-03/readiness, not declared achieved."
+  },
+  "canonical_review": {
+    "current_summary": "15 complete/3 partial; Day9; 15 chapters/28 days/76 notebooks; no whole-goal, Mac, hosted or mastery assertion",
+    "independent_subreview": "protected_criteria_review independently compared all original arrays/pending strings and current summaries; no remaining contradiction after root correction",
+    "resolved_finding": "Individual DXI-01/02 cards initially still said current in progress. Root added current original-scope-complete prefaces and explicitly preserved older pending paragraphs as historical, without changing acceptance bullets. Main and independent reviewer reread the corrected cards.",
+    "remaining_findings": []
+  },
+  "canonical_document_bindings": [
+    {
+      "path": "README.md",
+      "bytes": 6635,
+      "sha256": "3a91029d0aa4d263cb82b3d13bcbd084c6654d8dd54a26a9a904006bab82108e"
+    },
+    {
+      "path": "BOOK.md",
+      "bytes": 14026,
+      "sha256": "0987c5370bc034617335d75d4ffa69d9ee1a370e93c606c6e6e5a188c00470ec"
+    },
+    {
+      "path": "PROGRESS.md",
+      "bytes": 82297,
+      "sha256": "f00e66f85bca54a894ca3c4457638aab76cf5582bc183f20550c04d9efa61e59"
+    },
+    {
+      "path": "LEARNING_MEMORY.md",
+      "bytes": 123987,
+      "sha256": "54ed8d496e541f9b2de57bf97f59b71fb8f6b8b40b10fad96ff296c8c8e05ebd"
+    },
+    {
+      "path": "docs/handoffs/CURRENT.md",
+      "bytes": 20109,
+      "sha256": "be35a12790438509d24aa32797517e6a3bbca609aee2944c4d9d4c12cb3d05cb"
+    },
+    {
+      "path": "docs/COURSE_IMPROVEMENT_PLAN.md",
+      "bytes": 63080,
+      "sha256": "4ec4a067fa7423bd0e6df1fa3c282526f4324e5f55487aa597139c1af3eab4d7"
+    },
+    {
+      "path": "docs/course_improvements.json",
+      "bytes": 87414,
+      "sha256": "a4b9c7be37fc84a57d11bbfb313cd9cb271a67a8e234794c0b0d5eb29163ebff"
+    },
+    {
+      "path": "docs/COURSE_EVIDENCE_MAP.md",
+      "bytes": 12691,
+      "sha256": "bc260007fbae1ac252a66f4766126f3f5d351a1f6018b0b9f8d6eefec49a58c4"
+    },
+    {
+      "path": "docs/UPGRADE_ACCEPTANCE_REVIEW.md",
+      "bytes": 11220,
+      "sha256": "6592cec39e79a2c7fcfcd7ac77da435dfb2af467535306f8fb91de4c2c1bdc19"
+    },
+    {
+      "path": "experiments/reports/2026-10-05-goal-local-closure.md",
+      "bytes": 4935,
+      "sha256": "9a41e7288adfc565a26f09017af76cede92e83de03574ac8e3cb2ebd21705486"
+    }
+  ],
+  "bindings": [
+    {
+      "path": "experiments/reports/2026-10-05-native-base-profile/current-campaign-evidence-02.json",
+      "bytes": 201956,
+      "sha256": "d247121fd4590c5040107eb741b5ec0bddfc469bdc231f83e3b4a8d516fc808c"
+    },
+    {
+      "path": "experiments/reports/2026-10-05-native-base-profile/current-campaign-evidence-01.json",
+      "bytes": 194796,
+      "sha256": "8fc364eb8fb82d88373c5cb115f3f3d7f29d3ae5c327b61121d58d745178082d"
+    },
+    {
+      "path": "experiments/reports/2026-10-05-native-base-profile/original-acceptance-before-integration.json",
+      "bytes": 17005,
+      "sha256": "6cb9caee1d87b36f4a1ae6a9fbb5ef36889ad9f6e198cf822aeb11ec5bf2be2b"
+    },
+    {
+      "path": "experiments/reports/2026-10-05-native-base-profile/campaign-02-first-collection-failure.json",
+      "bytes": 708,
+      "sha256": "e588729a992d7de6ef015e180c6ea2d9bfe6d860085a4e9a21d27f106690ee7b"
+    },
+    {
+      "path": "experiments/reports/2026-10-05-native-base-profile/collect-current-campaign-02.py",
+      "bytes": 5432,
+      "sha256": "a28913e02124e0225d535abfcd7bcd6b408abcfcc25db924258291a42d4bfb91"
+    },
+    {
+      "path": "experiments/reports/2026-10-05-current-cpu-closure/run-03/cpu-verification.json",
+      "bytes": 81313,
+      "sha256": "3f796a00b293fbff1229f7c3a96cea198b569bf00f9b6848d7da9c7f9a9624fb"
+    },
+    {
+      "path": "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/manifest.json",
+      "bytes": 116020,
+      "sha256": "9b196165d676ed727cf50535627c14aa86d2819738a7d8088a0209d8860a6b54"
+    },
+    {
+      "path": "experiments/reports/2026-10-05-current-cpu-closure/run-03/independent-summary.json",
+      "bytes": 29800,
+      "sha256": "64961efe6c7d090f43bbadad7dbc7852edf3f96e9ac6bae6cf7e49d6632ce95e"
+    },
+    {
+      "path": "experiments/reports/2026-10-05-goal-local-closure/post-integration-commands.json",
+      "bytes": 8995,
+      "sha256": "e7a1575b31d7e62ab67e0f8c350e9edbe7e7d62a6e9cdf240216d5353b24e270"
+    },
+    {
+      "path": "experiments/reports/2026-10-05-goal-local-closure/integrated-links-02.json",
+      "bytes": 140735,
+      "sha256": "38ddcfc6fa78077c61c96426c5cb9e4f90aedc915660ad1296fb9b658bee91dc"
+    }
+  ],
+  "current_cpu": {
+    "actual_tests": 1134,
+    "test_status": "OK",
+    "notebooks": 76,
+    "reference_cells": 535,
+    "images": 210,
+    "preserved_scaffolds": 4,
+    "source_files": 195,
+    "source_changed": [],
+    "scope": "Retained actual complete Linux CPU run; all76 kernel identities/actual outputs independently checked previously. No other-platform or pretrained/GPU claim inferred.",
+    "new_rerun": false
+  },
+  "root_post_integration_checks": {
+    "status": "passed",
+    "command_exits": [
+      {
+        "label": "math",
+        "exit": 0
+      },
+      {
+        "label": "routes",
+        "exit": 0
+      },
+      {
+        "label": "diff",
+        "exit": 0
+      },
+      {
+        "label": "protected-ledger-json",
+        "exit": 0
+      }
+    ],
+    "latest_link_check": {
+      "status": "passed",
+      "files": 23,
+      "links": 519,
+      "failures": [],
+      "scope": "Local file-link existence only; not external URL or live GitHub rendering/anchor validation."
+    }
+  },
+  "collection_diagnostics": [
+    {
+      "scope": "Audit summary assembly only, no science/model execution",
+      "error": "First read-only Python summary printed a large integrated-link map; the wrapper received truncated stdout and JSON.parse rejected it. The Python audit command had exit0, but no report was written from that failed parse.",
+      "repair": "Reduced the link section to its actual status/counts and retained its full file hash; repeated read-only derivation and asserted all evidence before saving.",
+      "no_claimed_model_failure": true
+    }
+  ],
+  "execution": {
+    "torch_imported": false,
+    "models_loaded": false,
+    "forwards_or_fits": false,
+    "new_tests_run": false,
+    "gpu_jobs": 0,
+    "network_or_git_actions": false,
+    "shared_source_or_tracker_edits": false,
+    "method": "stdlibJSON/metadata review and1MiB streamingSHA256; original receipts/snapshots untouched"
+  },
+  "remaining_original_gates": [
+    "DXI-03 actual controlled comparisons/story ratings/appropriate branch genealogy and unchanged prerequisites",
+    "DXI-17 actual supportedMac and hostedCI receipts with genuine platform/Git/workflow authority",
+    "DXI-18 dependent actual capability/cost/regression/genealogy defense; local browser proof is not host rendering or learner mastery"
+  ]
+}

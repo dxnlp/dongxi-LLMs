@@ -841,6 +841,97 @@ The reference compares full-sequence logits with prefill plus incremental
 decoding. It deliberately restarts rotation offsets while keeping visibility
 correct, making the resulting mismatch attributable to positional consistency.
 
+### Ragged batches separate physical columns from logical positions
+
+The same cache argument becomes more demanding when prompts have different
+lengths. A two-token prompt and a six-token prompt can share a rectangular
+batch, but column two does not mean the same logical position in both rows.
+Our [systems extension](../../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb)
+left-pads the short row so every final real state occupies the last column.
+Let $m_{b,t}$ be its validity mask. Real positions are
+
+$$
+p_{b,t}=\sum_{u=0}^{t}m_{b,u}-1
+\quad\text{when }m_{b,t}=1.
+$$
+
+Dummy positions receive zero only as a numerical placeholder. A valid query
+can read a key only when that key is valid and causally earlier or current.
+Padding therefore changes storage geometry, not the intended context. If EOS
+and PAD share ID zero, the mask still distinguishes a real zero in the prompt
+from a dummy zero on its left. Testing `token != pad_id` would erase real data.
+
+The original decoder's learned modules are reused by an isolated ragged
+wrapper; its historical implementation is not silently changed. At prefill,
+compact K/V has shape $[B,H_{kv},S,d]$ in every layer. Decode adds one key and
+value per active row at that row's continuing position. Old keys retain their
+rotations. Once a row emits EOS or reaches its cap, later model calls omit
+that row while preserving its request ID, prefix and sampler state. Compaction
+does not renumber the surviving tokens' logical positions.
+
+Stopping is an observation, not a padding convention. Emitted EOS is a valid
+sampled action with a likelihood. Reaching a cap without EOS is truncation.
+Post-stop storage contains no further sampled actions. The primary behavior
+uses the full vocabulary at temperature one; a separate forced-EOS control
+is explicitly conditional and records both raw-model and behavior likelihoods.
+Its transformed likelihood must not be substituted for a raw-model objective.
+
+The frozen tiny run compares greedy single/batch and cached/full-prefix paths,
+then sampled paths with independent request-keyed generators. Selected IDs,
+stops and likelihoods agree under the predeclared $10^{-10}$ tolerance. All
+natural greedy rows nevertheless reach the cap. Correct computation does not
+teach this randomly initialized model how to finish a response.
+
+### Less prefix work is not a speed guarantee
+
+For twelve useful output tokens, the recorded single/full path forwards 66
+input positions; batch/full forwards 90, including 24 padding positions.
+Single/cache forwards 21 and batch/cache 27, including six pads. These count
+actual model input positions, not total attention arithmetic or billed tokens.
+Batch cache retains a peak 6,912 bytes of compact K/V between calls. That is
+not process memory: parameters, attention temporaries, allocator overhead and
+checkpoint copies are excluded.
+
+Five small runtime samples were retained for every path. Cached batch was
+slightly slower than full-prefix batch in this CPU fixture, despite fewer
+forwarded positions. Small matrices, Python and identity checking can dominate;
+neither the counts nor these timings predict a Spark or vLLM speedup. A real
+serving profile needs its own model, prompt/response distribution, precision,
+batching policy and memory/timing boundaries.
+
+### A saved distribution is not a saved continuation
+
+Weights determine next-token distributions; they do not determine which row
+has finished or which random number will be drawn next. The extension stops
+after two draws and retains active request IDs, actual prefixes, K/V tensors,
+next logits, per-request generators and draw cursors. A saved-cache continuation
+reproduces the exact next draw and complete trajectory on the same CPU
+environment. An explicitly requested full-prefix cache rebuild is checked
+separately to a tolerance; this is not a general bitwise rebuilding promise.
+
+Prefix, parameter bytes/version, token/template/position/support contract and
+precision belong to cache identity. A new policy version must not relabel old
+behavior likelihoods. The loader checks an independently expected contract
+and external byte digest before data-only tensor deserialization. A sidecar
+supplied by an untrusted sender is not authentication, and bounded trusted
+local snapshots are not an adversarial checkpoint sandbox.
+
+Training recovery needs more state again. The lab's actual tiny DPO and sampled
+RLVR sessions save policy/reference weights, Adam state, shuffle/data cursor,
+rollout and Torch RNGs, completed versions, history and a pending collected
+batch if interrupted before its update. Resume applies that same retained
+rollout before collecting another. Two fixed seeds and six primary updates
+per objective reproduce losses, next batches and final parameter bytes from
+both completed and post-collection boundaries. Applicable omitted-state
+controls diverge; DPO's unused rollout RNG is honestly marked not applicable.
+
+This is a recovery result, not a quality improvement or proof that the optional
+pretrained Spark runners support resume. Their model-scale recovery remains
+pending. The [full report](../../experiments/reports/2026-10-04-batched-cache-recovery.md)
+preserves cap failures, interruptions, rejected identities, actual work and
+all recovery branches. Day 25 returns to this contract when connecting rollout
+engines to changing policies; Chapter 6 next develops training-system state.
+
 ## 5.16 GQA: keep several questions, share source representations
 
 Ordinary multi-head attention has matching query and K/V head counts.
@@ -1398,6 +1489,14 @@ acronyms or lengthy arithmetic.
 30. Design the question for a fixed-parameter one-use versus two-use recurrent
     comparison. What additional contract would make it a compute-efficiency
     study, and what would count as evidence against your initial hypothesis?
+31. EOS and PAD share an ID. Which masks distinguish a real input zero,
+    emitted EOS, an unfinished cap and post-stop storage?
+32. Why can a ragged batch preserve logits while forwarding more padding than
+    separate requests? Which additional measurements justify a speed claim?
+33. Distinguish exact saved-cache continuation from tolerance-based cache
+    rebuilding. Which prefix, weight, interface and RNG identities matter?
+34. A rollout was collected before interruption but its optimizer update did
+    not run. Why is recollecting it different from applying the saved rollout?
 
 ## 5.27 From architecture to controlled pretraining
 

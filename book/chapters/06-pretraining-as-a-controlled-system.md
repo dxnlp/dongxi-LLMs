@@ -155,6 +155,48 @@ unique corpus content separately. Repeating an epoch increases presentations
 without creating new source information. Reporting “one million tokens” without
 saying which counter is being used makes comparisons ambiguous.
 
+There is another clock when work can fail or be repeated: the allowance already
+reserved for attempts. Completed training exposure tells us what successfully
+reached the optimizer boundary. It does not include a failed backward pass,
+repeated validation or the growing prefixes processed during story generation.
+Those activities consume work without becoming new completed training targets.
+The [native two-clock companion](../../experiments/reports/2026-10-05-story-work-lesson.md)
+and evidence-lab6 make that distinction measurable without the full corpus.
+
+### A target budget is an update-boundary contract
+
+A configured ceiling does not enforce itself. Let $C$ be a cumulative valid-
+target cap, $c$ the targets already learned from, and $n$ the valid labels in the
+entire next accumulation group. Accept that optimizer update only when
+
+$$
+c+n\le C.
+$$
+
+Otherwise leave the update unperformed. Do not silently remove labels or shorten
+the group: that would change the examples and loss weighting rather than merely
+enforce a stopping condition. Because collection advances the shuffle stream,
+refusal must also restore its permutation, cursor, epoch and RNG. Our deterministic
+single-process document loader can reconstruct the unconsumed group; this is not
+a guarantee for prefetched or randomly transformed examples.
+
+The [actual tiny CPU control](../../experiments/reports/2026-10-05-story-valid-target-budget.md)
+uses groups with 9 and 8 valid targets but 16 physical positions each. At cap 16,
+the first update completes and the second is refused, leaving 7 targets unused.
+That remainder is not an error: the declared next update cannot fit. Refusal
+makes zero forward calls and preserves weights, AdamW, gradients and stream
+state. Matching-cap recovery restores the cumulative count, while changing or
+removing the cap rejects continuation. The default uncapped numerical path is
+unchanged in the tested CPU controls. Current physical-position totals are
+measured from input tensor sizes; an explicitly marked legacy-shaped fixture
+derives its initial total from fixed geometry instead.
+
+The new option is a source-level guard, not a new Spark experiment. It does not
+make a half-executed optimizer step transactional, authenticate arbitrary
+checkpoint edits, enforce a physical-position quota or establish story quality.
+The [adjacent evidence lab](../labs/06-reading-a-pretraining-run.md#5-can-a-budget-leave-unused-targets)
+lets you inspect the boundary without loading a corpus or model.
+
 Shuffling is also state. Each window appears once in an epoch, but order matters
 because the parameters and AdamW moments change between updates. Our stream
 stores a permutation, cursor, epoch counter, and generator state. That is enough
@@ -416,6 +458,55 @@ can preserve the intended experiment while arithmetic differs. Define a numerica
 tolerance and meaningful continuation checks for that broader setting instead
 of silently extending this lab's exact-equality claim.
 
+### Restoring weights does not restore unused capacity
+
+Imagine completing a nine-target update and saving it. The next eight-target
+update fails after entering computation. Restoring the saved weights makes the
+eight targets available for another attempt, but does not erase the failed
+attempt's cost. If the retry succeeds, completed training exposure is17 targets;
+the three admitted groups reserved25 target places. These are different answers
+to different questions, not inconsistent measurements.
+
+For a vector of declared logical-work units, let $\mathbf{c}_j$ be the whole
+reservation for attempt $j$. A cumulative allowance uses
+
+$$
+\mathbf{W}_{\mathrm{reserved}}=\sum_{j\in\mathrm{admitted}}\mathbf{c}_j,
+\qquad
+\mathbf{W}_{\mathrm{reserved}}+\mathbf{c}_{\mathrm{next}}
+\le\mathbf{C}.
+$$
+
+The inequality is componentwise: fitting the target allowance cannot compensate
+for an exhausted forward-call or generation-position allowance. Record completed
+calls and known partial work separately. Early EOS may use less than the reserved
+generation ceiling; that observation does not refund the admitted operation.
+These logical counters are not measured FLOPs or a hard memory/disk quota.
+
+The checkpoint therefore freezes the numerical state and attests one prefix of
+a separate persistent work journal. Recovery binds that prefix to the same
+physical journal and retains its later reservations. A small independently
+retained receipt must supply this expectation before the tensor payload is read;
+otherwise the reader would need to do work to discover whether it has permission
+to do that work. Changing the output directory cannot refill the allowance.
+
+Refusing a whole update before computation leaves the original stream, gradients,
+LR, mode and weights unchanged. Failure after computation starts is different:
+an optimizer may have changed only some parameters. Mark that session unusable
+and restore a fresh session from a previously completed boundary; never save the
+half-mutated state as a completed update. Repeated evaluation, sampling and
+activation panels also need their own reservations. They remain observations,
+not successful training exposure.
+
+The [story work specification](../../experiments/specs/2026-10-05-story-persistent-work.md)
+defines the local source boundary without changing the prediction objective.
+The existing Day9 clocks notebook adds a small actual-runner companion to this
+thought experiment. Its tiny CPU checks do not extend the September GPU recovery
+claim, establish coherence, or cover data preparation, byte I/O, serialization,
+backward recomputation, all outputs or physical containment. The shared
+snapshot/I/O9 system used by later chapters is a separate interface, not an
+automatic migration of the historical story checkpoints.
+
 ## 6.13 From understanding to a bounded experiment
 
 The [Day 8 specification](../../experiments/specs/2026-09-09-day8-bounded-pretraining.md)
@@ -424,7 +515,7 @@ It names the data, model, token budget, optimizer, schedule, clipping, precision
 validation, recovery, time boundary and failure criteria. Its tiny run establishes
 mechanical evidence. At that stage the GPU candidate still needed a real corpus
 decision, profiling, safety measurements and explicit execution approval.
-Sections 6.14–6.20 describe the subsequent authorized run and its results.
+Sections 6.14–6.21 describe the subsequent authorized runs and their results.
 
 Before Day 9, be able to explain why each field is needed. A successful process
 exit is necessary evidence of completion, not sufficient evidence that every
@@ -719,12 +810,92 @@ and loss, verify document-isolated packing boundaries, and inspect complete
 stored stories with decoding settings visible. These CPU references complement
 the standard-library evidence lab.
 
-The next learning step is to define a frozen story-evaluation contract and
-propose one controlled training comparison. The brief preflight batch-size
+The production follow-up now freezes twelve publication openings separately
+from the three repeatedly inspected development prompts. A
+[bounded audit of the actual pinned corpus](../../experiments/reports/2026-10-05-story-panel-audit.md)
+reconstructs the original retained splits and finds no exact whole-story,
+prefix or substring matches for those twelve openings. A declared lexical
+opening-overlap check stays below its threshold; the historical rabbit
+development prompt has a retained near-match. These observations inspect
+specific overlap definitions, not all semantic contamination or memorization.
+They do not score stories or demonstrate a changed training recipe.
+
+At that historical baseline boundary, the next step was to apply the frozen
+story-evaluation contract and defend one controlled training comparison.
+Section6.21 now supplies a fresh matched early learning-rate intervention,
+actual continuations and separate AI reviews; the learner's own defense remains
+unassessed. Chapter7's blinded consumer still distinguishes its authored empty
+controls from those actual reviews. The brief preflight batch-size
 profiles are systems measurements, not a demonstrated improvement in story
 learning. Sampling probes also do not satisfy the roadmap's requested trained
-comparison in scale, data or recipe. That comparison remains open; writing the
-chapter does not complete it.
+comparison in scale, data or recipe. The later trained intervention supplies
+that comparison's first400 boundary, not its full scheduled horizon or broad
+storytelling competence. Writing the chapter does not demonstrate mastery.
+
+## 6.21 A completed tranche and an unfinished schedule
+
+The follow-up now runs a matched learning-rate intervention from fresh weights:
+original peak/floor rates versus half of both, with the same seed, data order,
+windows, masks and effective batch. Its
+[first-tranche report](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
+records actual execution, the measured publication panel and its missing later
+checkpoints.
+
+The requested stop is400 updates, but the learning-rate schedule still has its
+original14,000-update horizon and200-update warmup. These are different clocks.
+Changing the horizon to400 would accelerate decay and create a different
+intervention. Keeping the horizon fixed lets the two arms compare the same early
+part of their intended learning trajectories without claiming final convergence.
+
+Both children exited zero after400 updates,1,389,548 valid training targets
+and6,553,600 processed training positions each. Each completion record says both
+`requested_stop_reached=true` and `schedule_complete=false`. There is no
+contradiction: it completed the requested experiment boundary, not the whole
+training schedule. Their separate acceptance receipts and same-exposure curves
+now exist. A control receipt cannot supply another arm's results, and lower
+batch loss cannot supply a rubric score.
+
+The follow-up measures three different outcomes rather than treating them as
+interchangeable:
+
+| Update-400 observation | Control | Half learning rate |
+|---|---:|---:|
+| Fixed development NLL |3.388772|3.652813|
+| Natural EOS stops in 48 continuations |45|25|
+| Two-reader mean ending score, on a 0–2 scale |0.020833|0|
+
+The NLL compares the same 64 development windows and 13,132 valid targets;
+the separate 64 training-source windows contain 13,285 valid targets. Neither
+measure covers its whole split. Control predicts this fixed development slice
+better at update 400, but 45 EOS stops do not mean 45 coherent endings. EOS
+answers “did generation terminate?”; the ending rubric asks whether the events
+resolve meaningfully. Publication uses automatic causal SDPA with BF16 forward
+autocast, not the deterministic MATH-only entry used for training/recovery.
+
+Four publication children produce 192 actual continuations: twelve openings
+times four decoding recipes at each available initialization/update-400
+checkpoint. Two fresh, separately blinded AI instances score all 192, with
+56 candidate-level disagreements retained and averaged by the declared policy.
+These are actual AI judgments, not human consensus. The rubric remains
+five-dimensional. Initialization receives a repetition score of 1.5 but zero
+on grammar, entity consistency, causal continuity and ending: avoiding a loop
+is not the same as writing a story. Control's update-400 causal continuity mean
+is 0.197917 versus half-rate's 0.093750, while half-rate scores higher on freedom
+from repetition. Neither is established as a reliable coherent storyteller.
+
+Paired percentile intervals resample twelve source openings, carrying their
+four decoding settings together, with 800 draws and seed 1010. They describe
+this small one-greedy/three-sampled mixture, not 48 independent source stories,
+between-training-seed uncertainty or a general ranking of decoding strategies.
+The raw [ratings report](../../experiments/reports/native-story-publication-20261005-01/ratings-evaluation-01/report.json)
+retains each dimension, recipe and reader rather than hiding them in one score.
+
+Predetermined later checkpoints leave 288 of the original 480 cells missing.
+Missing quality is not zero quality, and a curve through available checkpoints
+is not a forecast for the rest. Even after a matched early comparison exists, it cannot
+identify the better final model or estimate between-training-seed variability.
+The earlier September run remains a distinct baseline, not a substitute control
+for this fresh paired intervention.
 
 ## Exercises
 
@@ -760,6 +931,16 @@ provide complete reasoning.
 18. Design one next experiment with a stated hypothesis, controlled variables,
     budget, measurements and failure condition. Distinguish proposing it from
     having authorization or evidence to run it.
+19. Why can a valid-target cap leave a positive unused allowance? What state
+    must remain unchanged when an accumulation group is refused?
+20. After restoring a nine-target checkpoint and retrying a failed eight-target
+    update, why can successful exposure be17 while reserved work is25? What
+    should happen if the next complete attempt does not fit, or if AdamW fails
+    after changing only some parameters?
+21. A child exits zero at its requested400-update boundary while reporting
+    `schedule_complete=false`. Is the experiment unsuccessful? What changes if
+    its learning-rate horizon was silently shortened from14,000 to400? Which
+    claims remain unsupported even after both matched arms finish400 updates?
 
 ## What follows
 

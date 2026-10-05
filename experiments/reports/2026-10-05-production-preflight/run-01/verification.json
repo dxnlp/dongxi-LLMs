@@ -1,0 +1,61 @@
+{
+  "status": "passed",
+  "scope": "Injected sanitized CPU backend observations only; no actual platform readiness or authorization",
+  "utc": "2026-10-04T23:16:57.819688+00:00",
+  "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+  "python": "3.12.14",
+  "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+  "source_hashes": {
+    "src/dongxi_llms/production_preflight.py": "712e67a85f8baead0e2b91bb7d7beeeb286d3481855ee7bd614db6b2c5135386",
+    "tests/test_production_preflight.py": "8c6d0faff9f47f8324eb6277c98012cbe841009a8a68e3ab420b9831fdfac0b3",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/staged_campaign.py": "c926adfa95165391498d78fb827c2cdfc3c1576b98bd58212f8d426cced747d7",
+    "scripts/verify_production_preflight.py": "ba750feb6b182361f4de2011f40f4586664755ba7046e564a77fa3d3fc2557b9",
+    "scripts/run_cpu_verification.py": "378f03a747c9cbf719a21ac215322f50e13e387e347943885e382efb528a282c",
+    "experiments/specs/2026-10-05-production-preflight.md": "63d6f52819ba2e9425e845bf109ff1fe91e773d81c0e36046e09f88c222b66e4"
+  },
+  "command": {
+    "command": [
+      "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_production_preflight.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "timed_out": false,
+    "seconds": 0.05829441800597124,
+    "log": "experiments/reports/2026-10-05-production-preflight/run-01/command.txt",
+    "log_sha256": "da3b310ab37df0bbe5310a9abe3ca04191e2b2682228bc1104df7c06a56285d6"
+  },
+  "failure": null,
+  "memory_observations": [
+    {
+      "utc": "2026-10-04T23:16:57.820895+00:00",
+      "available_bytes": 126806425600,
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "utc": "2026-10-04T23:16:57.879348+00:00",
+      "available_bytes": 126790254592,
+      "source": "actual-linux-MemAvailable"
+    }
+  ],
+  "resource_scope": "Actual before/after test-command samples, not continuous; external command timeout60seconds",
+  "source_hashes_after": {
+    "src/dongxi_llms/production_preflight.py": "712e67a85f8baead0e2b91bb7d7beeeb286d3481855ee7bd614db6b2c5135386",
+    "tests/test_production_preflight.py": "8c6d0faff9f47f8324eb6277c98012cbe841009a8a68e3ab420b9831fdfac0b3",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/staged_campaign.py": "c926adfa95165391498d78fb827c2cdfc3c1576b98bd58212f8d426cced747d7",
+    "scripts/verify_production_preflight.py": "ba750feb6b182361f4de2011f40f4586664755ba7046e564a77fa3d3fc2557b9",
+    "scripts/run_cpu_verification.py": "378f03a747c9cbf719a21ac215322f50e13e387e347943885e382efb528a282c",
+    "experiments/specs/2026-10-05-production-preflight.md": "63d6f52819ba2e9425e845bf109ff1fe91e773d81c0e36046e09f88c222b66e4"
+  },
+  "sources_unchanged": true,
+  "seconds": 0.058866976003628224,
+  "minimum_observed_available_bytes": 126790254592
+}

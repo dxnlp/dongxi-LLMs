@@ -1,0 +1,82 @@
+{
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "unittest",
+    "tests.test_training_snapshot",
+    "tests.test_training_snapshot_failure_paths",
+    "-v"
+  ],
+  "duration_seconds": 1.4957794349757023,
+  "environment": {
+    "cpu_threads": 1,
+    "cuda_visible_devices": "",
+    "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "offline": true,
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "python": "3.12.14 (main, Aug 25 2026, 13:59:30) [Clang 22.1.3 ]",
+    "torch": "2.14.1+cpu"
+  },
+  "historical_preservation": {
+    "after_matches_recorded": true,
+    "before_matches_recorded": true,
+    "count": 95,
+    "manifest": "experiments/reports/2026-10-05-recovery-tensor-bytes-verification.json",
+    "manifest_sha256": "bfbe0db38dc49dee62557a5fd1fff174e7ecd63c67985c183d7152029e356f45",
+    "unchanged": true
+  },
+  "initial_panel": "experiments/reports/2026-10-05-training-snapshot-failure-paths-first.json",
+  "limitations": [
+    "trusted-local only, not hostile allocation sandbox",
+    "no actual power loss or memory peak measurement",
+    "no production runner replay",
+    "no GPU/BF16 numerical recovery",
+    "inspect is byte/schema verification, not parsed progress proof"
+  ],
+  "no_test_failures_in_initial_panel": true,
+  "owners_released": [
+    "tests/test_training_snapshot_failure_paths.py",
+    "experiments/specs/2026-10-05-training-snapshot-failure-paths.md",
+    "experiments/reports/2026-10-05-training-snapshot-failure-paths.md",
+    "experiments/reports/2026-10-05-training-snapshot-failure-paths-first.json",
+    "experiments/reports/2026-10-05-training-snapshot-failure-paths-verification.json"
+  ],
+  "returncode": 0,
+  "schema_version": 1,
+  "scope": "Shared trusted-local format independent failure review; not runner or pretrained recovery",
+  "source_after": {
+    "experiments/reports/2026-10-05-training-snapshot-failure-paths-first.json": "88e2ca4cd6dc47d8a9fbd7dd4e031760b5717148b8dd6ba013676b601e2e068b",
+    "experiments/reports/2026-10-05-training-snapshot-failure-paths.md": "ec1d0051e768792d245f9504a3426c3bc346b73bd7b47d0dd1f2f8ab890cbb09",
+    "experiments/reports/2026-10-05-training-snapshot-first-command.json": "deff5f91a6ff55253a5b51121728bbe9c668cba85f08fbc0c3f65dfd83d2639e",
+    "experiments/specs/2026-10-05-training-snapshot-failure-paths.md": "2dfe59c56d8ac63178e19e1e67c228844c40b50783b3557d33c8b1c7bb2261da",
+    "src/dongxi_llms/training_snapshot.py": "9cad2851b665b5fe5d640c1327710352396218ea80fab3b0c82f01925e1749a3",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "tests/test_training_snapshot_failure_paths.py": "845319a877e9bcef45989387859ab9d8b2da3b323131f0819a9984c8a721b261",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+  },
+  "source_before": {
+    "experiments/reports/2026-10-05-training-snapshot-failure-paths-first.json": "88e2ca4cd6dc47d8a9fbd7dd4e031760b5717148b8dd6ba013676b601e2e068b",
+    "experiments/reports/2026-10-05-training-snapshot-failure-paths.md": "ec1d0051e768792d245f9504a3426c3bc346b73bd7b47d0dd1f2f8ab890cbb09",
+    "experiments/reports/2026-10-05-training-snapshot-first-command.json": "deff5f91a6ff55253a5b51121728bbe9c668cba85f08fbc0c3f65dfd83d2639e",
+    "experiments/specs/2026-10-05-training-snapshot-failure-paths.md": "2dfe59c56d8ac63178e19e1e67c228844c40b50783b3557d33c8b1c7bb2261da",
+    "src/dongxi_llms/training_snapshot.py": "9cad2851b665b5fe5d640c1327710352396218ea80fab3b0c82f01925e1749a3",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "tests/test_training_snapshot_failure_paths.py": "845319a877e9bcef45989387859ab9d8b2da3b323131f0819a9984c8a721b261",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+  },
+  "status": "pass",
+  "stderr": "test_adam_rng_and_tuple_payload (tests.test_training_snapshot.SnapshotTests.test_adam_rng_and_tuple_payload) ... ok\ntest_byte_tamper_rejects_before_loading (tests.test_training_snapshot.SnapshotTests.test_byte_tamper_rejects_before_loading) ... ok\ntest_contract_changes_reject_before_loading (tests.test_training_snapshot.SnapshotTests.test_contract_changes_reject_before_loading) ... ok\ntest_dense_exact_roundtrip (tests.test_training_snapshot.SnapshotTests.test_dense_exact_roundtrip) ... ok\ntest_exclusive_target_preserves_bytes (tests.test_training_snapshot.SnapshotTests.test_exclusive_target_preserves_bytes) ... ok\ntest_guard_observes_work (tests.test_training_snapshot.SnapshotTests.test_guard_observes_work) ... ok\ntest_inspection_has_no_deserialization (tests.test_training_snapshot.SnapshotTests.test_inspection_has_no_deserialization) ... ok\ntest_pending_phase_is_runner_owned (tests.test_training_snapshot.SnapshotTests.test_pending_phase_is_runner_owned) ... ok\ntest_callback_rejects_cursor_after_generic_validation (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_callback_rejects_cursor_after_generic_validation) ... ok\ntest_data_and_header_fsync_failures_retain_evidence (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_data_and_header_fsync_failures_retain_evidence) ... ok\ntest_data_only_payload_gate_rejects_nonfinite_and_unsupported_tree (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_data_only_payload_gate_rejects_nonfinite_and_unsupported_tree) ... ok\ntest_deep_and_oversized_headers_reject_before_load (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_deep_and_oversized_headers_reject_before_load) ... ok\ntest_directory_fsync_failure_may_leave_visible_commit_but_returns_failure (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_directory_fsync_failure_may_leave_visible_commit_but_returns_failure) ... ok\ntest_each_scientific_identity_change_rejects_before_load (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_each_scientific_identity_change_rejects_before_load) ... ok\ntest_existing_data_or_marker_cannot_be_overwritten (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_existing_data_or_marker_cannot_be_overwritten) ... ok\ntest_failed_atomic_header_publication_retains_full_data_and_header (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_failed_atomic_header_publication_retains_full_data_and_header) ... ok\ntest_failed_writer_retains_partial_bytes_and_previous_commit (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_failed_writer_retains_partial_bytes_and_previous_commit) ... ok\ntest_guard_failure_after_header_fsync_retains_unpublished_evidence (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_guard_failure_after_header_fsync_retains_unpublished_evidence) ... ok\ntest_guard_failure_before_serialization_creates_no_file (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_guard_failure_before_serialization_creates_no_file) ... ok\ntest_header_duplicate_keys_malformed_utf8_and_nonfinite_reject_before_load (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_header_duplicate_keys_malformed_utf8_and_nonfinite_reject_before_load) ... ok\ntest_header_schema_phase_counter_digest_size_reject_before_load (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_header_schema_phase_counter_digest_size_reject_before_load) ... ok\ntest_header_unknown_missing_and_non_object_fields_reject_before_load (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_header_unknown_missing_and_non_object_fields_reject_before_load) ... ok\ntest_independent_expectations_and_bounds_require_strict_types (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_independent_expectations_and_bounds_require_strict_types) ... ok\ntest_inspection_does_not_deserialize (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_inspection_does_not_deserialize) ... ok\ntest_loader_consumes_verified_buffer_not_reopened_path (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_loader_consumes_verified_buffer_not_reopened_path) ... ok\ntest_missing_marker_and_missing_payload_are_not_committed_snapshots (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_missing_marker_and_missing_payload_are_not_committed_snapshots) ... ok\ntest_moved_snapshot_and_new_parent_do_not_change_science (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_moved_snapshot_and_new_parent_do_not_change_science) ... ok\ntest_payload_byte_mutation_and_truncation_reject_before_load (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_payload_byte_mutation_and_truncation_reject_before_load) ... ok\ntest_payload_missing_fields_state_parent_and_contract_reject (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_payload_missing_fields_state_parent_and_contract_reject) ... ok\ntest_payload_unknown_schema_fields_and_header_progress_disagree (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_payload_unknown_schema_fields_and_header_progress_disagree) ... ok\ntest_pending_phase_is_generic_and_callback_owns_pending_semantics (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_pending_phase_is_generic_and_callback_owns_pending_semantics) ... ok\ntest_save_invalid_envelope_is_rejected_before_new_file (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_save_invalid_envelope_is_rejected_before_new_file) ... ok\ntest_save_unsupported_objects_nonfinite_cycles_and_layouts_reject (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_save_unsupported_objects_nonfinite_cycles_and_layouts_reject) ... /home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_training_snapshot_failure_paths.py:361: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)\n  sparse = torch.sparse_coo_tensor(torch.tensor([[0]]), torch.tensor([1.0]), (2,))\n/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_training_snapshot_failure_paths.py:362: UserWarning: torch.quantize_per_tensor, torch.quantize_per_channel and other quantized tensor creation functions that produce tensors with dtype torch.quint8, torch.qint8, and torch.qint32 are deprecated and will be removed in a future PyTorch release. Please see https://github.com/pytorch/pytorch/issues/184982 for more information. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/quantized/Quantizer.cpp:111.)\n  quantized = torch.quantize_per_tensor(torch.tensor([1.0]), 0.1, 0, torch.qint8)\nok\ntest_saved_state_and_contract_do_not_alias_later_caller_mutations (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_saved_state_and_contract_do_not_alias_later_caller_mutations) ... ok\ntest_self_consistent_forged_header_cannot_replace_external_receipt (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_self_consistent_forged_header_cannot_replace_external_receipt) ... ok\ntest_serialized_size_limit_is_hard_and_failure_does_not_commit (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_serialized_size_limit_is_hard_and_failure_does_not_commit) ... ok\ntest_symlink_payload_and_marker_are_rejected_before_load (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_symlink_payload_and_marker_are_rejected_before_load) ... ok\ntest_valid_roundtrip_is_data_only_with_explicit_cpu_mapping (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_valid_roundtrip_is_data_only_with_explicit_cpu_mapping) ... ok\ntest_wrong_independent_digest_and_size_reject_before_load (tests.test_training_snapshot_failure_paths.TrainingSnapshotFailurePaths.test_wrong_independent_digest_and_size_reject_before_load) ... ok\n\n----------------------------------------------------------------------\nRan 39 tests in 0.877s\n\nOK\n",
+  "stdout": "",
+  "test_counts": {
+    "independent_failure_path_tests": 31,
+    "parent_core_tests": 8,
+    "combined_tests": 39,
+    "failures": 0,
+    "errors": 0
+  },
+  "source_unchanged": true,
+  "warning_records": [
+    "Sparse tensor invariant-check default warning while constructing an authored rejection fixture",
+    "Quantized tensor creation deprecation warning while constructing an authored rejection fixture"
+  ]
+}

@@ -1,0 +1,204 @@
+{
+  "schema": "dongxi-student-prefix-fixture-v1",
+  "provenance": "original authored two-symbol reversal task; finite teacher rules are authored, not pretrained or human feedback",
+  "items": [
+    {
+      "id": "prefix-AA",
+      "source_group": "prefix-source-AA",
+      "split": "train",
+      "symbols": [
+        "A",
+        "A"
+      ],
+      "prompt": "Reverse A A",
+      "reference": [
+        "A",
+        "A"
+      ],
+      "teacher_hint": [
+        "A",
+        "A"
+      ]
+    },
+    {
+      "id": "prefix-AB",
+      "source_group": "prefix-source-AB",
+      "split": "train",
+      "symbols": [
+        "A",
+        "B"
+      ],
+      "prompt": "Reverse A B",
+      "reference": [
+        "B",
+        "A"
+      ],
+      "teacher_hint": [
+        "B",
+        "A"
+      ]
+    },
+    {
+      "id": "prefix-BA",
+      "source_group": "prefix-source-BA",
+      "split": "train",
+      "symbols": [
+        "B",
+        "A"
+      ],
+      "prompt": "Reverse B A",
+      "reference": [
+        "A",
+        "B"
+      ],
+      "teacher_hint": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "id": "prefix-BB",
+      "source_group": "prefix-source-BB",
+      "split": "train",
+      "symbols": [
+        "B",
+        "B"
+      ],
+      "prompt": "Reverse B B",
+      "reference": [
+        "B",
+        "B"
+      ],
+      "teacher_hint": [
+        "B",
+        "B"
+      ]
+    },
+    {
+      "id": "prefix-CA",
+      "source_group": "prefix-source-CA",
+      "split": "train",
+      "symbols": [
+        "C",
+        "A"
+      ],
+      "prompt": "Reverse C A",
+      "reference": [
+        "A",
+        "C"
+      ],
+      "teacher_hint": [
+        "A",
+        "C"
+      ]
+    },
+    {
+      "id": "prefix-AC",
+      "source_group": "prefix-source-AC",
+      "split": "train",
+      "symbols": [
+        "A",
+        "C"
+      ],
+      "prompt": "Reverse A C",
+      "reference": [
+        "C",
+        "A"
+      ],
+      "teacher_hint": [
+        "C",
+        "A"
+      ]
+    },
+    {
+      "id": "prefix-BC",
+      "source_group": "prefix-source-BC",
+      "split": "test",
+      "symbols": [
+        "B",
+        "C"
+      ],
+      "prompt": "Reverse B C",
+      "reference": [
+        "C",
+        "B"
+      ],
+      "teacher_hint": [
+        "C",
+        "B"
+      ]
+    },
+    {
+      "id": "prefix-CB",
+      "source_group": "prefix-source-CB",
+      "split": "test",
+      "symbols": [
+        "C",
+        "B"
+      ],
+      "prompt": "Reverse C B",
+      "reference": [
+        "B",
+        "C"
+      ],
+      "teacher_hint": [
+        "B",
+        "C"
+      ]
+    },
+    {
+      "id": "prefix-CC",
+      "source_group": "prefix-source-CC",
+      "split": "test",
+      "symbols": [
+        "C",
+        "C"
+      ],
+      "prompt": "Reverse C C",
+      "reference": [
+        "C",
+        "C"
+      ],
+      "teacher_hint": [
+        "C",
+        "C"
+      ]
+    }
+  ],
+  "tail_control": {
+    "p": [
+      0.4,
+      0.2,
+      0.1,
+      0.1,
+      0.05,
+      0.05,
+      0.05,
+      0.05
+    ],
+    "q": [
+      0.4,
+      0.2,
+      0.01,
+      0.01,
+      0.12,
+      0.12,
+      0.07,
+      0.07
+    ],
+    "meaning": "Top2 tokens and tail total identical; tail conditional allocation differs"
+  },
+  "zero_support_control": {
+    "p": [
+      0.5,
+      0.5,
+      0
+    ],
+    "q": [
+      1,
+      0,
+      0
+    ],
+    "meaning": "ForwardKL finite; reverseKL infinite because student assigns positive mass where teacher has zero"
+  }
+}

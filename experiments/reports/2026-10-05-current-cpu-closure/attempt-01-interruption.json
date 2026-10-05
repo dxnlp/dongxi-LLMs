@@ -1,0 +1,33 @@
+{
+  "schema": "dongxi-current-cpu-closure-interruption-v1",
+  "recorded_utc": "2026-10-05 06:24:47 UTC",
+  "scope": "Interrupted source-bound Linux CPU verification, not completed test or notebook evidence",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "scripts/run_cpu_verification.py", "--kernel", "dongxi-course-clean", "--full-notebooks", "--command-timeout", "1800", "--output", "experiments/reports/2026-10-05-current-cpu-closure"],
+  "environment": {
+    "JUPYTER_PATH": "/tmp/dongxi-course-reproduction.ZfVaEu/kernel/share/jupyter",
+    "PYTHONPATH": "src",
+    "CUDA_VISIBLE_DEVICES": "",
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "owned_verifier_pid": 247909,
+  "signal_command": ["kill", "-INT", "247909"],
+  "signal_command_exit": 0,
+  "verifier_exit": 130,
+  "verifier_error": "KeyboardInterrupt",
+  "reason": "The chosen-SFT owner corrected two omitted transitive recovery source identities (run_identity.py and batched_cache_lab.py) after the initial source map was captured. Root approved stopping only the owned verifier via its existing descendant cleanup, preserving this initial attempt, and restarting against the corrected seal.",
+  "interrupted_phase": "unittest discovery",
+  "completed_command_results": 0,
+  "completed_test_count": null,
+  "completed_notebook_count": 0,
+  "logging_limit": "The runner records a command log only after communicate completes. KeyboardInterrupt occurred before that return; its report retained the failure but no test footer or tests.log was flushed. No incomplete test output is represented as a passing panel.",
+  "report": "experiments/reports/2026-10-05-current-cpu-closure/cpu-verification.json",
+  "report_sha256": "ac3dd8071ee954e11cbae3bb4cd7efce2f15f059558cdd1ce4dc8fc7eb723545",
+  "original_chosen_source_sha256": "c6140d8948c8e3d7f08796b30352d4bd1829338cd7828d38a37fbae20c265960",
+  "corrected_chosen_source_sha256": "9b85d65b6ed5829901aeb667bc0a7a6fb3579764eee985f4f18fec83cacfe6ce",
+  "unchanged_chosen_test_sha256": "c2852fc150deca1b63a9931f0522ec0c12fe0fdc1b722090f6ac3c631dced72a",
+  "replacement_directory": "experiments/reports/2026-10-05-current-cpu-closure/run-02"
+}

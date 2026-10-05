@@ -1,0 +1,31 @@
+{
+  "scope": "Existing inadequate eight-token local-HF identity fixture after explicit bound; first actual new encoded-collision refusal, not final source acceptance",
+  "before": {
+    "chunk_id": "71067a",
+    "wall_time_seconds": 0.000012208,
+    "exit_code": 0,
+    "original_token_count": 48,
+    "output": "c6387f8c41aed4e8dee687a62add313ad5f0a156d1a6d31624819e37011044f2  tests/test_run_identity.py\nc0a764807fce515614df465c8f3ce492e93f39707900519c0e9cb4cd0bf11545  src/dongxi_llms/qwen_rlvr_lab.py\n"
+  },
+  "initial_chunk": {
+    "chunk_id": "05a9bf",
+    "wall_time_seconds": 1.001511185,
+    "session_id": 61056,
+    "original_token_count": 36,
+    "output": "test_tiny_random_hf_and_nonzero_peft_merge_reload (test_run_identity.RealLocalMergeTests.test_tiny_random_hf_and_nonzero_peft_merge_reload) ... "
+  },
+  "completion": {
+    "chunk_id": "356c2f",
+    "wall_time_seconds": 0.000007263,
+    "exit_code": 1,
+    "original_token_count": 435,
+    "output": "\rWriting model shards:   0%|          | 0/1 [00:00<?, ?it/s]\rWriting model shards: 100%|██████████| 1/1 [00:00<00:00, 1343.04it/s]\n\rLoading weights:   0%|          | 0/14 [00:00<?, ?it/s]\rLoading weights: 100%|██████████| 14/14 [00:00<00:00, 4535.43it/s]\n\rLoading weights:   0%|          | 0/14 [00:00<?, ?it/s]\rLoading weights: 100%|██████████| 14/14 [00:00<00:00, 9120.88it/s]\n\rWriting model shards:   0%|          | 0/1 [00:00<?, ?it/s]\rWriting model shards: 100%|██████████| 1/1 [00:00<00:00, 4609.13it/s]\n\rLoading weights:   0%|          | 0/14 [00:00<?, ?it/s]\rLoading weights: 100%|██████████| 14/14 [00:00<00:00, 21415.12it/s]\nERROR\n\n======================================================================\nERROR: test_tiny_random_hf_and_nonzero_peft_merge_reload (test_run_identity.RealLocalMergeTests.test_tiny_random_hf_and_nonzero_peft_merge_reload)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_run_identity.py\", line 268, in test_tiny_random_hf_and_nonzero_peft_merge_reload\n    rlvr_main(['--model-dir',str(base),'--revision',REVISION,\n  File \"/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/qwen_rlvr_lab.py\", line 753, in main\n    execute_run(args, journal)\n  File \"/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/qwen_rlvr_lab.py\", line 820, in execute_run\n    raise ValueError(\"Actual encoded train/evaluation prompts collide\")\nValueError: Actual encoded train/evaluation prompts collide\n\n----------------------------------------------------------------------\nRan 1 test in 1.794s\n\nFAILED (errors=1)\n"
+  },
+  "after": {
+    "chunk_id": "89b8c3",
+    "wall_time_seconds": 0.000007296,
+    "exit_code": 0,
+    "original_token_count": 48,
+    "output": "c6387f8c41aed4e8dee687a62add313ad5f0a156d1a6d31624819e37011044f2  tests/test_run_identity.py\nc0a764807fce515614df465c8f3ce492e93f39707900519c0e9cb4cd0bf11545  src/dongxi_llms/qwen_rlvr_lab.py\n"
+  }
+}

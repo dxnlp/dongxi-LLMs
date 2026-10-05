@@ -1,0 +1,52 @@
+{
+  "fixture": "success",
+  "limits": {
+    "seconds": 2.0,
+    "reserve_bytes": 26843545600,
+    "sampling_seconds": 0.02,
+    "term_grace_seconds": 0.1,
+    "kill_reap_seconds": 1.0
+  },
+  "disk_limits": {
+    "per_file_bytes": 65536,
+    "aggregate_bytes": 262144,
+    "minimum_free_bytes": 16777216
+  },
+  "actual_leader_exit_code": null,
+  "stop_reason": "filesystem-free-below-threshold",
+  "failure": null,
+  "status": "gate-rejected",
+  "owned_final_states": [],
+  "observations": [
+    {
+      "memory": {
+        "available_bytes": 126702555136,
+        "source": "actual-linux-MemAvailable"
+      },
+      "disk": {
+        "source": "injected-low-free-control-not-actual-shortage",
+        "artifact_bytes": 0,
+        "free_bytes": 0
+      },
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 400,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      },
+      "owned_workers": []
+    }
+  ],
+  "cleanup_errors": [],
+  "minimum_sampled_available_bytes": 126702555136,
+  "minimum_sampled_free_bytes": 0,
+  "maximum_sampled_artifact_bytes": 0,
+  "elapsed_seconds": 0.021169631014345214,
+  "scope": "fixed CPU controls; sampled owned discovery/group cleanup; not cgroup or production containment",
+  "journal": {
+    "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-owned-worker-fixtures/injected-preflight-free-stop/events.jsonl",
+    "sha256": "e035ff068a218ebb55d57934a121b15c17c8f4f7da9b8cafeac92c513f08ea46"
+  }
+}

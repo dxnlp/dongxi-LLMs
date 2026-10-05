@@ -4,6 +4,35 @@ Opened2026-09-13. Book placement: Chapter6's pretraining experiment and diagnosi
 sections. Updated2026-09-14: the baseline run is complete and integrated into
 the chapter; a controlled trained comparison and learner defense remain open.
 
+## Current production evidence on 2026-10-05
+
+The focused [technical-success versus quality record](technical-success-is-not-quality.md)
+connects the actual story rubric, native chosen replay and retained DPO deadline
+failures. It records a possible article/animation extension without claiming a
+new learner assessment or authorizing media production.
+
+Two fresh [matched first400 story runs](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
+now have accepted execution/exposure receipts. Both present1,389,548 valid
+training labels while processing6,553,600 training positions; the changed
+variable is half the learning-rate scale. They retain the original14,000-update
+schedule and200-update warmup, not a newly shortened400-update schedule.
+Later planned checkpoints remain absent. The original twelve-opening/four-recipe
+publication panel contains192 actual continuations and288 missing later cells.
+Two anonymous independent-instance AI reviews now cover all192 actual
+continuations each, with no abstentions and56 candidates carrying an axis
+disagreement. Natural EOS and lower NLL alone are not systematic coherence
+scores: control400's45/48 EOS stops coexist with an ending mean0.020833/2.
+Both arms remain poor by the frozen rubric. The
+[portable measurement archive](../../experiments/reports/native-story-publication-20261005-01-archive/acceptance.json)
+and [rating replay](../../experiments/reports/native-story-publication-20261005-01/ratings-evaluation-01/report.json)
+support a model-free evidence session on another checkout. Material production does not
+complete the learner's defense or move Day9.
+
+The [literal platform review](../../experiments/reports/2026-10-05-platform-scope-reading.md)
+also supersedes the stronger historical Mac requirement below. Keep Mac
+execution unverified and parallel, rather than claiming a Linux result as a
+Mac pass or inventing a mandatory second-machine launch gate.
+
 ## Completed evidence and chapter synthesis — 2026-09-14
 
 - [Completed-run report](../../experiments/reports/2026-09-14-tinystories-learning-result.md):
@@ -11,11 +40,33 @@ the chapter; a controlled trained comparison and learner defense remain open.
   Adjacent JSON preserves the full validation curve and fixed-grid samples.
 - [Chapter6](../../book/chapters/06-pretraining-as-a-controlled-system.md):
   sections6.14–6.20 integrate the actual run rather than a hypothetical future
-  success. Eighteen worked answers and a standard-library evidence-reading lab
+  success. Twenty worked answers and a standard-library evidence-reading lab
   are linked there. Update2026-10-04: three [Day9 visual notebooks](../../notebooks/day-09/README.md)
   now implement saved clocks/targets, document masking and quality/decoding
   analysis. This completes the material extension, not the learner's defense
   or the controlled trained comparison.
+- 2026-10-05 production follow-up: [target-budget boundary](target-budget-is-a-boundary.md)
+  records actual tiny cap/refusal/replay and worker/disk distinctions. This is
+  source progress and a Chapter6/14 bridge, not new story training or learner
+  mastery. Actual runner recovery/profile/pilot gates remain open.
+- The [persistent two-clock companion](../../experiments/reports/2026-10-05-story-work-lesson.md)
+  extends notebook01 and Chapter6/answer20: a real failed8-target attempt remains
+  charged after restoring9; retry reaches17 successful targets/25 reservations.
+  Cap24 refuses before work. Six tests and five fresh reference cells/two figures
+  pass; this lesson uses the native tiny CPU runner, not historical corpus weights.
+- [Portable replay and native watchdog source](../../experiments/reports/2026-10-05-native-profile-watchdog.md)
+  retain all four actual story2→5 arms with an explicit portable2GiB teaching
+  policy, leaving default/production25GiB safety unchanged. Root37 story tests
+  pass. The separate46-test controller/campaign/reproduction panel tests inert
+  shutdown/logging failures, not a new story or pretrained run. Day9 and its
+  unresolved coherence/controlled-comparison questions remain unchanged.
+- [Approved pinned Base/tokenizer inspection](../../experiments/reports/2026-10-05-base-tokenizer-sizing.md)
+  supplies a Chapter9 budget example without moving the learner:455 training
+  targets versus1,175 whole-run likelihood targets, with both development passes
+  included. All ten files and300 encodings independently verify; no model was
+  loaded or trained. Native input preparation, model-dependent snapshot/I/O
+  allowances and profile approval remain open. Existing budget-animation ideas
+  are extended only as Mac proposals, not production requests.
 - [Repetition diagnosis](repetition-versus-overfitting.md): distinguish observed
   repetition, decoding controls, incomplete generalization evidence and
   unresolved coherence. Lower loss does not independently score whole stories.
@@ -25,6 +76,22 @@ the chapter; a controlled trained comparison and learner defense remain open.
   candidates; production remains unapproved on Mac. No new article commissioned.
 - Next: study the case, define a frozen coherence evaluation, and propose a
   bounded controlled trained comparison. Do not automatically launch it.
+
+## Story evaluation and independent continuation
+
+Production continuation,2026-10-05: the frozen twelve-opening story panel now
+has a read-only pinned-corpus audit and a blinded two-rater consumer under
+verification. The [actual audit](../../experiments/reports/2026-10-05-story-panel-audit.md)
+passes its defined lexical checks; the consumer passes28 focused controls with
+actual campaign ratings empty. The [rating specification](../../experiments/specs/2026-10-05-story-rubric-evaluation.md)
+and Chapter7section7.17/solution23 keep authored controls and absent real reviews
+separate. The [actual model defense](../../experiments/reports/2026-10-05-current-model-defense.md)
+uses current measured genealogy/costs/negative outcomes, not invented campaign
+results. The [Mac packet](../../docs/handoffs/MAC_CPU_VERIFICATION.md) preserves
+the actual Mac requirement without adding mandatory hosted-CI success.
+Independent CPU work must continue without routine reapproval while that
+platform step is unavailable. LearnerDay9 and the controlled trained-comparison
+gap remain unchanged; these changes are material production, not mastery.
 
 ## Historical planning and launch record
 

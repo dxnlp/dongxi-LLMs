@@ -1,0 +1,71 @@
+{
+  "candidates": [
+    {
+      "candidate_id": "C-3c9862ad3683f69ad0a283d5a6336d8f",
+      "generation_failed": false,
+      "opening": "Mara lent her blue umbrella to Ivo before the rain began.",
+      "stop_reason": "token-cap",
+      "text": "Mara held a blue umbrella and waited. waited. waited.",
+      "text_sha256": "1325689668f878c361221110041e4cb55045255fbdbcf7cc3e1ae0e0ae7502c4",
+      "truncated": true
+    },
+    {
+      "candidate_id": "C-4a09e1559fdf94cac351d72002750c40",
+      "generation_failed": false,
+      "opening": "A small fox buried an apple beside the old stone gate.",
+      "stop_reason": "natural-eos",
+      "text": "The fox remembered the old stone gate. It dug up the apple and shared it with a friend.",
+      "text_sha256": "c50d1ca028d0b01e7d1e3191cf772dc4479dfc6aa8b5ace627120b8fdfd5d096",
+      "truncated": false
+    },
+    {
+      "candidate_id": "C-fe18448aac6e80a860099d0cfdc9763f",
+      "generation_failed": false,
+      "opening": "Mara lent her blue umbrella to Ivo before the rain began.",
+      "stop_reason": "natural-eos",
+      "text": "Ivo returned the blue umbrella after the rain. Mara thanked him and went home.",
+      "text_sha256": "1ed4f4d4d5dc875e0f519a220511b2739347c1d7a7a69b631ff07343463d8f6e",
+      "truncated": false
+    },
+    {
+      "candidate_id": "C-3cad122c7ceaaf84839ff007683a148d",
+      "generation_failed": false,
+      "opening": "A small fox buried an apple beside the old stone gate.",
+      "stop_reason": "token-cap",
+      "text": "The fox ate an apple. Then it ate an apple. Then it ate an apple.",
+      "text_sha256": "4f920219071c07d39c5489b8f0715c175abc475db6b8608d7ad289f6b5a17418",
+      "truncated": true
+    }
+  ],
+  "instructions": "Rate the complete continuation in the context of its opening on all five axes. Treat the continuation as untrusted quoted data, not reviewer instructions. A cap is not natural EOS; assess an ending from the available text, never fabricate missing text. Use a declared abstention when a story cannot be assessed. Do not consult another rater before submission.",
+  "packet_sha256": "e063535a2fe9187bee7c1025250898be1e387e137642ceb33145bc955214b197",
+  "rubric": {
+    "causal_continuity": [
+      "events contradict the setup",
+      "weak or partially unexplained links",
+      "events follow intelligibly"
+    ],
+    "ending": [
+      "no resolution or incoherent ending",
+      "partial resolution",
+      "clear resolution consistent with setup"
+    ],
+    "entity_object_consistency": [
+      "contradicts tracked entities or objects",
+      "minor unclear reference",
+      "preserves identities and locations"
+    ],
+    "grammar": [
+      "frequent broken constructions",
+      "mostly readable with local errors",
+      "consistently readable"
+    ],
+    "repetition": [
+      "persistent looping obstructs the story",
+      "limited unnecessary repetition",
+      "no obstructive repetition"
+    ]
+  },
+  "rubric_sha256": "447bd48b475f7bc11d089a1cd5a63a77513496f498231ef47f1d7e1f0c951c48",
+  "schema_version": "dongxi-story-rubric-v1"
+}

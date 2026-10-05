@@ -1,0 +1,116 @@
+{
+  "schema": "cooperative-artifact-budget-verification-v1",
+  "status": "passed-bounded-cooperative-cpu",
+  "scope": "Flat private-root cooperative byte/entry ledger and optional actual shared snapshot hook, not total runner coverage or physical filesystem quota",
+  "protocols_saved_before_measurement": true,
+  "final_command_receipt": "experiments/reports/2026-10-05-cooperative-artifact-budget-fifo-final.json",
+  "final_observations": "experiments/reports/2026-10-05-cooperative-artifact-budget-fifo-final.observations.json",
+  "final_actual_exit_code": 0,
+  "final_test_count": 71,
+  "ledger_test_count": 23,
+  "snapshot_hook_test_count": 9,
+  "existing_shared_snapshot_test_count": 39,
+  "unittest_seconds": 4.768,
+  "wrapper_seconds": 5.415281164983753,
+  "source_before_equals_after": true,
+  "environment": {
+    "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "python": "3.12.14",
+    "torch": "2.14.1+cpu",
+    "machine": "aarch64",
+    "cuda_available": false,
+    "offline": true,
+    "cpu_threads": 1
+  },
+  "verified_boundaries": {
+    "reserve_whole_payload_marker_staging_before_creation": true,
+    "immutable_caps_and_copy_only_public_views": true,
+    "reserved_journal_capacity_and_entry_included": true,
+    "stream_and_buffered_seek_crossing_refuse_before_excess": true,
+    "partial_and_unpublished_members_remain_reserved": true,
+    "new_output_name_does_not_reset_same_ledger": true,
+    "restore_replays_all_current_events_beyond_retained_prefix": true,
+    "fresh_process_restore_uses_independently_retained_earlier_receipt": true,
+    "fresh_process_actual_tensor_snapshot_exact": true,
+    "no_hook_and_hook_actual_payload_and_header_exact": true,
+    "prior_snapshot_unchanged_on_failed_save": true,
+    "wrong_root_caps_campaign_and_rollback_refuse": true,
+    "path_symlink_owner_type_inventory_and_external_link_refuse": true,
+    "live_same_inode_journal_tamper_refuses": true,
+    "four_no_peer_fifo_subprocesses_explicitly_refuse": true,
+    "fifo_subprocess_timeout_seconds": 3,
+    "required_physical_backend_refuses_before_root_creation": true
+  },
+  "measured_controls": {
+    "first_snapshot_required_reserved_bytes": 167936,
+    "first_snapshot_refused_byte_cap": 167935,
+    "first_snapshot_required_entries": 4,
+    "first_snapshot_refused_entry_cap": 3,
+    "journal_capacity_bytes": 32768,
+    "payload_capacity_bytes": 4096,
+    "each_header_capacity_bytes": 65536,
+    "actual_snapshot_payload_bytes": 1833,
+    "actual_snapshot_payload_sha256": "838ec8b87b2d820f2cdf0d8811263def3f63a9e12e65d7ba2b5701764dd7b3f7",
+    "old_new_staging_reserved_peak_bytes": 170033,
+    "old_new_staging_reserved_peak_entries": 6,
+    "failed_serializer_actual_partial_bytes": 16,
+    "failed_serializer_retained_reserved_bytes": 170033,
+    "fresh_process_later_failed_file_reserved_bytes": 256,
+    "fresh_process_later_failed_file_actual_bytes": 8
+  },
+  "historical_panels": [
+    {
+      "receipt": "experiments/reports/2026-10-05-cooperative-artifact-budget-first.json",
+      "test_count": 67,
+      "actual_exit_code": 0
+    },
+    {
+      "receipt": "experiments/reports/2026-10-05-cooperative-artifact-budget-final.json",
+      "test_count": 69,
+      "actual_exit_code": 0
+    },
+    {
+      "receipt": "experiments/reports/2026-10-05-cooperative-artifact-budget-fifo-hardening.json",
+      "test_count": 71,
+      "actual_exit_code": 1,
+      "failure": "Role-specific diagnostic assertion demanded 'regular'; actual FIFO digest refusal said 'Unsafe or over-cap artifact before hashing'. No FIFO timeout or admission. Original failed receipt and source hashes preserved."
+    },
+    {
+      "receipt": "experiments/reports/2026-10-05-cooperative-artifact-budget-fifo-final.json",
+      "test_count": 71,
+      "actual_exit_code": 0
+    }
+  ],
+  "limitations": [
+    "One synchronous cooperative ledger owner; shared-object thread coordination not claimed",
+    "Advisory flock is not authentication or protection from hostile same-UID actors",
+    "Only direct artifacts through this writer are bounded; runners/logs/reports/HF exports/children do not currently use this optional hook",
+    "Logical pathname capacity including duplicate hard-link names is not ext4 allocated blocks or physical inode quota",
+    "Independently supplied stale receipt cannot establish global anti-rollback or per-user aggregate quota across unrelated ledgers",
+    "Visible bytes after failed fsync establish observed retention, not crash durability",
+    "Fixed metadata capacity and uncompleted reservations intentionally may block physically small future outputs",
+    "Temporary test artifacts are cleaned; reports retain raw observations and receipts, not reusable temporary checkpoint paths",
+    "No physical quota/cgroup/backend mutation, GPU/pretrained execution, installation, services or Git operation",
+    "Independent root and full-course integration remain separately collected evidence"
+  ],
+  "artifact_sha256": {
+    "src/dongxi_llms/artifact_budget.py": "3d76f60d2014c8054326f1bca3f2e4948d421866f645ba4a4a067bc153bfeccc",
+    "src/dongxi_llms/training_snapshot.py": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+    "tests/test_artifact_budget.py": "b4ad9ecfc1b3421e6aeae9317212d9ce8c6dcce4869ede23edff46da741c1a4b",
+    "tests/test_snapshot_artifact_budget.py": "fcc068f84e2b2268037ea42e141d223160083879a538376a5b2944d0ac2c3207",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "tests/test_training_snapshot_failure_paths.py": "845319a877e9bcef45989387859ab9d8b2da3b323131f0819a9984c8a721b261",
+    "experiments/specs/2026-10-05-cooperative-artifact-budget.md": "464f35bc025e1d645d9f7d00548328aaaf56ea59e274cb8e88a7bea758ecf455",
+    "experiments/specs/2026-10-05-cooperative-artifact-budget-fifo.md": "0e048c4d6ab1deeb3970621e2ac0977e2eff24992440e55a80c23063ffeddf07",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "experiments/reports/2026-10-05-cooperative-artifact-budget-first.json": "9933863cf0839fe741e9bd157b680d788ebe9e031ec1b3cec46b5c7db197f323",
+    "experiments/reports/2026-10-05-cooperative-artifact-budget-first.observations.json": "834ef996aad629a67652beaf85da5b0c89a7db134535e576c90c0fb69ebcd986",
+    "experiments/reports/2026-10-05-cooperative-artifact-budget-final.json": "4ce27b708eb29d7f664210bbdfb6816a3915e45cf9b501919253d018bed784bd",
+    "experiments/reports/2026-10-05-cooperative-artifact-budget-final.observations.json": "cbc84c8418ea5eabc99e20dff720818a763e0b410704c2361ae702fa28314d14",
+    "experiments/reports/2026-10-05-cooperative-artifact-budget-fifo-hardening.json": "560402783ca4ac542d23eb5eb558ecffb8eba793bf2b1437d64d49ecf64aa10c",
+    "experiments/reports/2026-10-05-cooperative-artifact-budget-fifo-hardening.observations.json": "c95deaa781dffb2c1310bc7c1192c33bf0d0bf5e0711b7ce18952161f0654d7d",
+    "experiments/reports/2026-10-05-cooperative-artifact-budget-fifo-final.json": "16a25f883cbd23cb306c8343e2e88e360183304ce5333ac6c2ca6802e180d428",
+    "experiments/reports/2026-10-05-cooperative-artifact-budget-fifo-final.observations.json": "e371d23688dffcf319383264d7708e9e712f4a6f99aa23f2a254f4ebace29e0d",
+    "experiments/reports/2026-10-05-cooperative-artifact-budget.md": "1f4e851addcd4266a239dc1eb7d6296d21558f118c76b11ee04b4331949149d6"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "status": "unexecuted-pretrained-protocol",
+  "budgets": {
+    "final_answer_only": {
+      "max_new_tokens": 32,
+      "thinking_mode": "disabled-or-not-supported"
+    },
+    "short_work": {
+      "max_new_tokens": 128,
+      "thinking_mode": "enabled-only-if-checkpoint-and-template-support-it"
+    }
+  },
+  "rows": [
+    {
+      "checkpoint_role": "base",
+      "checkpoint_id": "separately-pinned-base-weights",
+      "prompt_mode": "raw",
+      "thinking_mode": "not_a_supported_chat_toggle",
+      "status": "unexecuted"
+    },
+    {
+      "checkpoint_role": "instruct",
+      "checkpoint_id": "separately-pinned-instruct-weights",
+      "prompt_mode": "chat",
+      "thinking_mode": "disabled_if_supported",
+      "status": "unexecuted"
+    },
+    {
+      "checkpoint_role": "instruct",
+      "checkpoint_id": "separately-pinned-instruct-weights",
+      "prompt_mode": "chat",
+      "thinking_mode": "enabled_if_supported",
+      "status": "unexecuted"
+    }
+  ],
+  "required_identity": [
+    "actual_checkpoint_hashes",
+    "upstream_revision_declaration",
+    "tokenizer_encoding_and_ids",
+    "chat_template_hash_or_raw_template_id",
+    "thinking_support",
+    "generation_stops",
+    "response_cap",
+    "temperature_topk_topp",
+    "seed",
+    "every_raw_response_and_token_cost"
+  ],
+  "boundary": "32/128 are predeclared interventions, not promises of sufficient reasoning; profile truncation and revisit only on development data. No pretrained row is executed by the CPU control. Toggling thinking is not changing base to instruct weights; correct answers do not verify rationale faithfulness."
+}

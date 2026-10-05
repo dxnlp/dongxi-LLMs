@@ -1,0 +1,335 @@
+{
+  "schema": "dongxi-planned-checkpoint-inspection-v1",
+  "collected_at_utc": "2026-10-05T03:06:07.486100+00:00",
+  "host": {
+    "name": "spark-aa66",
+    "system": "Linux",
+    "machine": "aarch64"
+  },
+  "target": {
+    "repository": "Qwen/Qwen3-0.6B-Base",
+    "declared_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+    "found_in_checked_locations": false,
+    "actual_weights_sha256": null,
+    "observed_tokenizer_interface_sha256": null
+  },
+  "configured_cache_paths": {
+    "HF_HOME": null,
+    "HF_HUB_CACHE": null,
+    "HUGGINGFACE_HUB_CACHE": null,
+    "TRANSFORMERS_CACHE": null
+  },
+  "checked_locations": [
+    {
+      "root": "/home/dongxi/.cache/huggingface/hub",
+      "exists": true,
+      "candidate_paths": [
+        {
+          "path": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B-Base",
+          "exists": false,
+          "pinned_snapshot_exists": false
+        },
+        {
+          "path": "/home/dongxi/.cache/huggingface/hub/Qwen3-0.6B-Base",
+          "exists": false,
+          "pinned_snapshot_exists": false
+        }
+      ]
+    },
+    {
+      "root": "/home/dongxi/dgx-spark-dongxi/models",
+      "exists": false,
+      "candidate_paths": [
+        {
+          "path": "/home/dongxi/dgx-spark-dongxi/models/models--Qwen--Qwen3-0.6B-Base",
+          "exists": false,
+          "pinned_snapshot_exists": false
+        },
+        {
+          "path": "/home/dongxi/dgx-spark-dongxi/models/Qwen3-0.6B-Base",
+          "exists": false,
+          "pinned_snapshot_exists": false
+        }
+      ]
+    },
+    {
+      "root": "/home/dongxi/dgx-spark-dongxi/outputs",
+      "exists": true,
+      "candidate_paths": [
+        {
+          "path": "/home/dongxi/dgx-spark-dongxi/outputs/models--Qwen--Qwen3-0.6B-Base",
+          "exists": false,
+          "pinned_snapshot_exists": false
+        },
+        {
+          "path": "/home/dongxi/dgx-spark-dongxi/outputs/Qwen3-0.6B-Base",
+          "exists": false,
+          "pinned_snapshot_exists": false
+        }
+      ]
+    },
+    {
+      "root": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs",
+      "exists": true,
+      "candidate_paths": [
+        {
+          "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/models--Qwen--Qwen3-0.6B-Base",
+          "exists": false,
+          "pinned_snapshot_exists": false
+        },
+        {
+          "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/Qwen3-0.6B-Base",
+          "exists": false,
+          "pinned_snapshot_exists": false
+        }
+      ]
+    }
+  ],
+  "scope": "Configured caches and known course/platform output roots; not an exhaustive filesystem search. No model/tokenizer load or safetensors read.",
+  "different_cached_model": {
+    "repository": "Qwen/Qwen3-0.6B",
+    "snapshot": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "path": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+    "config_sha256": "660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd",
+    "weight_file_bytes": 1503300328,
+    "weight_bytes_hashed": false,
+    "eligible_as_declared_base_parent": false
+  },
+  "declared_profile_data": {
+    "output_directory": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1",
+    "exists": false,
+    "in_memory_original_generator": {
+      "train": {
+        "examples": 240,
+        "source_groups": 80,
+        "generated_bytes_sha256": "50e0375220c97ee3a75509148f5024c3f3120185af3b5878ca5b8e8f7e01d234",
+        "matches_card": true
+      },
+      "dev": {
+        "examples": 60,
+        "source_groups": 20,
+        "generated_bytes_sha256": "7e615ca255e9d026534a47cddf82ff34fff5a9021c5132b6b536cf27080ac62e",
+        "matches_card": true
+      },
+      "test": {
+        "examples": 120,
+        "source_groups": 40,
+        "generated_bytes_sha256": "68a51011e852e702281a29196e145187f4e63bfcae5b5bc1e94415350cdb3889",
+        "matches_card": true
+      }
+    },
+    "groups_disjoint": true,
+    "actual_encoded_target_counts": null
+  },
+  "resources": {
+    "sampled_mem_available_bytes": 126639230976,
+    "filesystem_available_bytes": 3550378770432,
+    "measurement": "One read-only point sample; no continuous limit or memory-fit evidence"
+  },
+  "input_source_bindings": {
+    "scripts/run_chapter09_spark_sft.py": {
+      "sha256": "f8b51cda52e205c457cef34001e3165ec9f7ad381cb84d8e76a4dd1467357c40",
+      "bytes": 73759
+    },
+    "scripts/prepare_chapter09_instruction_fixture.py": {
+      "sha256": "02b2096b2ecbd59011df3da5fe16d0c6c8bfc7051df37a87aa191e9b38494674",
+      "bytes": 2735
+    },
+    "experiments/data/instruction_interface_v1.jinja": {
+      "sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+      "bytes": 197
+    },
+    "experiments/data/instruction-interface-v1-data-card.json": {
+      "sha256": "4c19d436497ecf97d30caf1f17caac4b119724a72249b77d9b2c5d7f060ebc3b",
+      "bytes": 1240
+    },
+    "experiments/reports/2026-10-04-staged-campaign-preparation.json": {
+      "sha256": "34db95a7dbdcbfbfb6b108943d5cb172b2026d5db8f8528942032be5963816c4",
+      "bytes": 232392
+    }
+  },
+  "observed_actions": {
+    "pretrained_loads": 0,
+    "tokenizer_loads": 0,
+    "gpu_jobs": 0,
+    "model_file_downloads": 0,
+    "installs": 0,
+    "services_started": 0,
+    "git_writes": 0
+  },
+  "upstream_metadata_url": "https://huggingface.co/api/models/Qwen/Qwen3-0.6B-Base/revision/da87bfb608c14b7cf20ba1ce41287e8de496c0cd?blobs=true",
+  "platform_environment": {
+    "collected_at_utc": "2026-10-05T03:09:00.750238+00:00",
+    "python": "3.12.14 (main, Aug 25 2026, 13:59:30) [Clang 22.1.3 ]",
+    "executable": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+    "versions": {
+      "torch": "2.13.0+cu130",
+      "transformers": "5.16.1",
+      "peft": "0.20.0",
+      "huggingface-hub": "1.28.0",
+      "tokenizers": "0.23.1",
+      "numpy": "2.5.2"
+    },
+    "lock_path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+    "lock_sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261",
+    "declared_lock_versions": {
+      "torch": [
+        "2.13.0",
+        "2.13.0+cu130"
+      ],
+      "transformers": [
+        "5.16.1"
+      ],
+      "peft": [
+        "0.20.0"
+      ],
+      "huggingface-hub": [
+        "1.28.0"
+      ],
+      "tokenizers": [
+        "0.23.1"
+      ],
+      "numpy": [
+        "2.5.2"
+      ]
+    },
+    "selected_versions_present_in_lock": {
+      "torch": true,
+      "transformers": true,
+      "peft": true,
+      "huggingface-hub": true,
+      "tokenizers": true,
+      "numpy": true
+    },
+    "proof": "Installed metadata and version membership only; torch/transformers not imported, no CUDA/BF16, binary compatibility or full locked-environment equality proof"
+  },
+  "campaign_state": {
+    "stage_rows": 45,
+    "actual_field_count": 945,
+    "null_actual_fields": 945,
+    "jobs_started": 0,
+    "actual_genealogy": [],
+    "package_counts": {
+      "in_progress": 5,
+      "complete": 13
+    },
+    "learner_day": 9,
+    "profile": {
+      "id": "assistant-profile-base06",
+      "branch": "assistant",
+      "stage": "profile",
+      "prerequisite_stage_ids": [],
+      "proposed_weight_start": "pinned-base06-no-profile-or-smoke-transfer",
+      "status": "pending-external-evidence",
+      "actual": {
+        "checkpoint_files": null,
+        "checkpoint_path": null,
+        "parent_checkpoint_files": null,
+        "interface_sha256": null,
+        "upstream_revision_verified": null,
+        "authorization_receipt": null,
+        "profile": null,
+        "recovery": null,
+        "evaluation": null,
+        "exit_code": null,
+        "elapsed_seconds": null,
+        "updates": null,
+        "valid_training_targets": null,
+        "padded_training_positions": null,
+        "valid_prompt_tokens": null,
+        "valid_response_tokens": null,
+        "forwarded_generation_positions": null,
+        "attempted_responses": null,
+        "minimum_sampled_host_available_bytes": null,
+        "cuda_peak_allocated_bytes": null,
+        "failure": null
+      },
+      "evaluation_contract": "assistant-interface-v1",
+      "proposed_budget": {
+        "status": "proposed-unapproved-ceilings-profile-required",
+        "maximum_updates": 20,
+        "microbatch": 1,
+        "accumulation": 4,
+        "sequence_positions_per_example_max": 256,
+        "valid_training_target_cap": null,
+        "maximum_padded_training_positions": 20480,
+        "external_seconds": 900,
+        "group_size": null,
+        "max_new_tokens": null,
+        "maximum_attempted_response_tokens": null,
+        "target_guard": "must resolve before pilot approval; null exposure is not inferred from padded geometry",
+        "memory": {
+          "minimum_host_available_bytes": 26843545600,
+          "cuda_peak": null,
+          "profile_measured": false
+        }
+      },
+      "intervention": null,
+      "dependencies": [
+        "DXI-01",
+        "DXI-02",
+        "DXI-17",
+        "DXI-07"
+      ],
+      "optional": false,
+      "gates": [
+        {
+          "id": "stage-specific-authorization",
+          "status": "pending",
+          "evidence": null,
+          "scope": "campaign pilot approval; stage-specific required subset must be declared before its launch"
+        },
+        {
+          "id": "acquisition-and-data-rights",
+          "status": "pending",
+          "evidence": null,
+          "scope": "campaign pilot approval; stage-specific required subset must be declared before its launch"
+        },
+        {
+          "id": "local-bytes-and-interface",
+          "status": "pending",
+          "evidence": null,
+          "scope": "campaign pilot approval; stage-specific required subset must be declared before its launch"
+        },
+        {
+          "id": "resource-and-external-supervisor",
+          "status": "pending",
+          "evidence": null,
+          "scope": "campaign pilot approval; stage-specific required subset must be declared before its launch"
+        },
+        {
+          "id": "profile",
+          "status": "pending",
+          "evidence": null,
+          "scope": "campaign pilot approval; stage-specific required subset must be declared before its launch"
+        },
+        {
+          "id": "finite-smoke-and-mask",
+          "status": "pending",
+          "evidence": null,
+          "scope": "campaign pilot approval; stage-specific required subset must be declared before its launch"
+        },
+        {
+          "id": "completed-and-pending-recovery",
+          "status": "pending",
+          "evidence": null,
+          "scope": "campaign pilot approval; stage-specific required subset must be declared before its launch"
+        },
+        {
+          "id": "frozen-evaluation-and-raw-records",
+          "status": "pending",
+          "evidence": null,
+          "scope": "campaign pilot approval; stage-specific required subset must be declared before its launch"
+        }
+      ],
+      "known_blocker": null,
+      "launch_command": null
+    }
+  },
+  "upstream_manifest_relative_path": "2026-10-05-checkpoint-inspection/upstream-manifest.json",
+  "verification_paths": [
+    "2026-10-05-checkpoint-inspection/portability-verification.json",
+    "2026-10-05-checkpoint-inspection/reproduction-scope-verification.json"
+  ],
+  "conclusion": "Planned base absent in scoped local inventory; cached post-trained checkpoint is not substituted. Request separate acquisition/tokenizer-only sizing authority before launch-ready profile approval; no model-scale outcomes executed."
+}

@@ -1,0 +1,14 @@
+Loading weights:   0%|          | 0/310 [00:00<?, ?it/s]Loading weights: 100%|██████████| 310/310 [00:00<00:00, 10433.09it/s]
+Traceback (most recent call last):
+  File "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-lora-merge-reload/merge-child.py", line 97, in <module>
+    try:raise SystemExit(main())
+                         ^^^^^^
+  File "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-lora-merge-reload/merge-child.py", line 63, in main
+    torch.testing.assert_close(a,b,atol=.125,rtol=.015625)
+  File "/home/dongxi/dgx-spark-dongxi/.venv/lib/python3.12/site-packages/torch/testing/_comparison.py", line 1631, in assert_close
+    raise error_metas[0].to_error(msg)
+AssertionError: Tensor-likes are not close!
+
+Mismatched elements: 260154 / 4406144 (5.9%)
+Greatest absolute difference: 0.67578125 at index (0, 0, 15859) (up to 0.125 allowed)
+Greatest relative difference: 52295.40234375 at index (0, 0, 78571) (up to 0.015625 allowed)

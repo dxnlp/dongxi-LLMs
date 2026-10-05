@@ -1,0 +1,20 @@
+{
+  "schema": "dongxi-sft-semantic-validation-development-diagnostic-v1",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "-m", "unittest", "test_sft_validation_budget", "test_sft_runner_recovery", "test_sft_work_budget", "test_spark_sft_contract", "test_work_budget", "-v"],
+  "actual_exit_code": 1,
+  "tests": 77,
+  "unittest_seconds": 28.716,
+  "source_sha256": {
+    "scripts/run_chapter09_spark_sft.py": "52ad82553a139e9f2e355567eb675087c58f1ae59557aafaa4634d0cbbc5720f",
+    "tests/test_sft_validation_budget.py": "c2a9c03cc0ba4e500217936cad704439f5d14963722324a70e8b55c0ba64e6db",
+    "tests/test_sft_work_budget.py": "2300db79f178e021316f74fe7ec52f7c256ec0c352949518b7b03c687c9d88e1"
+  },
+  "failures": [
+    {"test": "test_mocked_cuda_rng_rejected_before_any_state_application", "kind": "error", "file": "tests/test_sft_runner_recovery.py", "line": 399, "exception": "ValueError: SFT RNG container lengths differ from fixed layout", "diagnosis": "The old no-GPU fixture changes a constructed CPU loop.device to cuda and mocks CUDA state discovery, but does not update the newly retained observed CUDA-shape metadata. Actual CPU loops and new tests passed."},
+    {"test": "test_fresh_process_full_and_lora_retains_failed_spending", "kind": "failure", "mode": "full", "file": "tests/test_sft_work_budget.py", "line": 280, "assertion": "self.assertEqual(json.loads((self.root/f'{mode}-fresh/ledger-before.json').read_text()),charged)", "diagnosis": "The legacy child records ledger-before after restore. Restore now spends semantic-validation work, so it is not the pre-restore retained ledger snapshot."},
+    {"test": "test_fresh_process_full_and_lora_retains_failed_spending", "kind": "failure", "mode": "lora", "file": "tests/test_sft_work_budget.py", "line": 280, "assertion": "self.assertEqual(json.loads((self.root/f'{mode}-fresh/ledger-before.json').read_text()),charged)", "diagnosis": "Same actual post-restore spending versus pre-restore observation mismatch."}
+  ],
+  "terminal_summary": "Ran 77 tests in 28.716s\nFAILED (failures=2, errors=1)",
+  "new_controls": "All thirteen new semantic-validation controls passed in this combined execution.",
+  "scope": "Historical development compatibility failure. No old test assertions, source equations, seed, cap values or numerical recipe were weakened by this owner. Original terminal output remains in the agent tool record. Root owns separately declared legacy fixture compatibility changes."
+}

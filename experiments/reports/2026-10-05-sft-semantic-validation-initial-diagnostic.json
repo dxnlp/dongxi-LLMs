@@ -1,0 +1,16 @@
+{
+  "schema": "dongxi-sft-semantic-validation-development-diagnostic-v1",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "-m", "unittest", "test_sft_validation_budget", "-v"],
+  "environment": {"PYTHONPATH": "src:tests", "CUDA_VISIBLE_DEVICES": "", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1", "OMP_NUM_THREADS": "1"},
+  "actual_exit_code": 1,
+  "source_sha256": {"scripts/run_chapter09_spark_sft.py": "b2859e8a8a88be085fc08f5ffb8a5e4b0aa74b9a6371239f15e426e954810986", "tests/test_sft_validation_budget.py": "995ff33e2ce67d7189d578335fd6fc81cba3097dc67db49bb66c975246423373", "experiments/specs/2026-10-05-sft-semantic-validation-work.md": "ddd8f8abc07f44dddf19df29a416fb6c52e5bfe546508b7a507c63a996a905b8"},
+  "tests": 12,
+  "unittest_seconds": 8.009,
+  "failures": [
+    {"test": "test_fresh_full_lora_replay_keeps_later_failed_validation_and_duplicate_actual_checks", "mode": "full", "file": "tests/test_sft_validation_budget.py", "line": 247, "assertion": "self.assertEqual(result['before']['reserved'],spent['reserved'])", "exception": "AssertionError: actual retained budget differs from earlier spent budget"},
+    {"test": "test_fresh_full_lora_replay_keeps_later_failed_validation_and_duplicate_actual_checks", "mode": "lora", "file": "tests/test_sft_validation_budget.py", "line": 247, "assertion": "self.assertEqual(result['before']['reserved'],spent['reserved'])", "exception": "AssertionError: actual retained budget differs from earlier spent budget"}
+  ],
+  "terminal_summary": "Ran 12 tests in 8.009s\nFAILED (failures=2)",
+  "diagnosis": "The test took its expected journal snapshot after update2, then continued the original loop through update4 in that same journal before launching recovery. The child correctly retained that later training spending. The expected pre-child snapshot must include the later continuation; no refund, source equation, seed, cap or numerical recipe is changed.",
+  "scope": "Historical development control failure, not an accepted current collection or a failed pretrained run. Original terminal output is retained in the agent tool record."
+}

@@ -35,7 +35,17 @@ Code and notebook readiness do not mark this learning day complete.
 
 ## Spark extension and handoff
 
-The optional Chapter11 HF runner takes a local full/merged SFT checkpoint, pinned tokenizer, authored preference fixture, and disjoint independent generation records. Qwen smoke, memory profiling, training, and independent quality assessment remain proposed. Stop an existing inference service before approved training.
+The optional Chapter11 HF runner takes a local full/merged SFT checkpoint,
+pinned tokenizer, authored preference fixture and disjoint generation records.
+At the original2026-10-04 preparation, Qwen smoke, profiling, training and
+quality assessment were proposed. Later approved Spark work now has actual
+native recovery, fixed100-update pilots and a separately accepted
+[common preference comparison](../../experiments/reports/2026-10-05-native-preference-comparison.md).
+Chapter11section11.8.4 and its worked answer17 connect the derived ratio
+objective to those actual complete-answer failures and retention checks.
+The synthetic microscope and native evidence remain distinct. Existing saved
+reports can be studied without another GPU launch, and neither material nor
+technical completion advances the learner's unchanged Day9 position.
 
 Use the course machine-switching contract only when the learner requests a
 handoff; Git synchronization and current progress remain owned by the root

@@ -1,0 +1,51 @@
+name: Course CPU references
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  references:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      CUDA_VISIBLE_DEVICES: ''
+      HF_HUB_OFFLINE: '1'
+      TRANSFORMERS_OFFLINE: '1'
+      OMP_NUM_THREADS: '1'
+      OPENBLAS_NUM_THREADS: '1'
+      MKL_NUM_THREADS: '1'
+      UV_PROJECT_ENVIRONMENT: ${{ runner.temp }}/dongxi-course-env
+      JUPYTER_PATH: ${{ runner.temp }}/dongxi-course-kernel/share/jupyter
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          version: '0.12.6'
+          enable-cache: false
+      - name: Install locked CPU teaching dependencies
+        run: uv sync --locked --extra course --python 3.12 --no-python-downloads
+      - name: Register kernel only under the temporary prefix
+        shell: bash
+        run: '"$UV_PROJECT_ENVIRONMENT/bin/python" -m ipykernel install --prefix "${{ runner.temp }}/dongxi-course-kernel" --name dongxi-course-ci'
+      - name: Run acceptance panel and retain every command result
+        shell: bash
+        # A small hosted CPU VM cannot supply Spark's25GiB reserve. This2GiB
+        # setting applies only to these tiny CPU references, not GPU runners.
+        run: '"$UV_PROJECT_ENVIRONMENT/bin/python" scripts/run_cpu_verification.py --kernel dongxi-course-ci --host-reserve-gib 2 --output "${{ runner.temp }}/dongxi-course-evidence"'
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: always()
+        with:
+          name: course-cpu-${{ matrix.os }}
+          path: ${{ runner.temp }}/dongxi-course-evidence
+          if-no-files-found: warn
+          retention-days: 14

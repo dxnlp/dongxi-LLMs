@@ -39,6 +39,28 @@ class SavedTemplateTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "genealogy"):
                 runner.restore_saved_template(path)
 
+    def test_actual_saved_tokenizer_and_downstream_mapping_revision(self):
+        from transformers import AutoTokenizer
+        from test_run_identity import interface, local_tokenizer, REVISION, TEMPLATE
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            original = local_tokenizer()
+            original.save_pretrained(path)
+            (path / "course-genealogy.json").write_text(json.dumps({
+                "template_sha256": interface(original)["template_sha256"],
+                "checkpoint_interface": interface(original)}))
+            saved = AutoTokenizer.from_pretrained(path, local_files_only=True)
+            observed, adoption = runner.verify_parent_tokenizer(path, saved, local_tokenizer(),
+                tokenizer_id="original-local-fixture", tokenizer_revision=REVISION)
+            self.assertFalse(adoption["legacy_adoption"])
+            self.assertEqual(observed, interface(original))
+            for changed, revision in ((local_tokenizer(permuted=True), REVISION),
+                                      (local_tokenizer(lowercase=True), REVISION),
+                                      (local_tokenizer(), "2" * 40)):
+                with self.assertRaises(ValueError):
+                    runner.verify_parent_tokenizer(path, saved, changed,
+                        tokenizer_id="original-local-fixture", tokenizer_revision=revision)
+
 
 if __name__ == "__main__":
     unittest.main()

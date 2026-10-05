@@ -1,0 +1,36 @@
+{
+  "package": "DXI-16",
+  "schema_version": 1,
+  "status": "passed",
+  "created_utc": "2026-10-04T21:59:38Z",
+  "reference": "experiments/reports/2026-10-04-student-prefix-distillation/results.json",
+  "reference_sha256": "56ee9b50a319028716b395cf56d4130ced4377b3068c5418aa1124b414258f39",
+  "response_journal_sha256": "153065954a2efceb4caabea4a4cdc838e9cf056c650f4e8e7a83a2dd001b38a6",
+  "python": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+  "campaigns": 3,
+  "arms": 24,
+  "focused_tests": 27,
+  "focused_tests_passed": true,
+  "full_raw_replay_wall_seconds": 9.126496844022768,
+  "prior_returned_campaign_replay_wall_seconds": 8.815445487009129,
+  "exact_non_timing_campaign_replay": true,
+  "exact_non_timing_raw_response_replay": true,
+  "replayed_raw_records": 10656,
+  "replayed_update_events": 720,
+  "collection": "Actual fresh run_reference with a root-owned in-memory journal observer; every record was compared in order with the historical raw journal. No historical file was modified.",
+  "compared_keys": ["protocol", "fixture_audit", "controls", "campaigns", "all response journal records"],
+  "excluded_keys_recursively": ["keys ending in seconds", "payload_sha256", "parent_payload_sha256"],
+  "exclusion_boundary": "Actual measured durations differ; derived payload digests include durations. All other identities, outputs, targets, trajectories, probabilities, gradients, grades, decisions, counts and non-timing costs compare exactly. Top-level memory/environment are not asserted equal.",
+  "current_source_sha256": {
+    "src/dongxi_llms/student_prefix_lab.py": "022ec2957c1a42cb867a3f51e5f21190dd971a43b97ce52f147d83655653d828",
+    "tests/test_student_prefix_lab.py": "6897fb06e13893973c42831f7ecda902a32fc90a1e575e36a374eb6e652da464",
+    "experiments/specs/2026-10-04-student-prefix-hardening.md": "b17c57af87c844d3f7767398ccf81d086a6f43d2814c14df3c3ff8f444dc2ee6"
+  },
+  "source_unchanged_during_replay": true,
+  "independent_source_review": "Root read original module/tests and all hardened sections/new regressions; audit_rlhf independently verified all original raw digests, cohorts, final grades and work, and found the two now-hardened interface defects.",
+  "limits": [
+    "Positive-support tail-detail helper explicitly rejects zero-support vectors; full KL support semantics are separately retained.",
+    "Homogeneous campaign/phase/update/arm/checkpoint cohort is required; valid individual records do not establish a valid mixed pool.",
+    "Authored finite teacher and tiny neural students; no pretrained teacher, SDPO, full occupancy-gradient, broad reasoning, speed or Mac proof."
+  ]
+}

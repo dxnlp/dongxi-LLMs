@@ -1,0 +1,12 @@
+{
+  "schema": "dongxi-semantic-validation-independent-review-diagnostic-v1",
+  "status": "inspector_failure",
+  "actual_exit_code": 1,
+  "failure": {
+    "type": "AssertionError",
+    "interpretation": "The independent inspector counted the generated kernel-identity preamble as a source course cell and used original unfinished-cell indices directly in the executed notebook. The verifier intentionally inserts one execution-only preamble at index zero; manifest counts/indices refer to the source notebook. Corrected review must exclude this preamble, offset source indices by one, and check that original unfinished source and IDs remain unchanged while skip-verification tags prevent execution."
+  },
+  "observed_counts": {"course_cells": 43, "execution_only_preambles": 6, "all_executed_code_cells": 49, "images": 19, "preserved_unfinished_source_cells": 4},
+  "source_or_canonical_changes": false,
+  "numerical_jobs_run": 0
+}

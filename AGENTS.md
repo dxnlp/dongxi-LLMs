@@ -61,13 +61,70 @@ Before starting work:
 
 ## Source of truth
 
+Gap-applicability rule,2026-10-05: before implementing a proposed improvement,
+check whether it still exists, matters locally, and is already solved by current
+upstream versions or adequate existing code. Reuse resolved fixes instead of
+building duplicate infrastructure. In particular, historical DGX unified-memory
+hang warnings do not justify a custom monitoring project on the updated local
+stack. Keep ordinary bounded runs; prioritize useful course/model results.
+See `docs/REFERENCE_REPOSITORY_AUDIT.md` and `LEARNING_MEMORY.md` for evidence.
+
+Spark continuation correction,2026-10-05: the learner challenged Mac verification
+as a Spark blocker and then explicitly instructed completion of the goal.
+Separate package-completion dependencies from execution prerequisites. Preserve
+all original acceptance/dependency arrays as the completion baseline; for Spark
+execution, DXI-17 requires actual Linux/source verification only. Actual Mac
+portability remains unfinished parallel evidence work, not an additional
+successful-execution criterion or prerequisite for Spark profiles, recovery or
+pilots. Continue the predeclared bounded campaign
+after its own scientific, interface, recovery, resource and authority gates pass.
+This supersedes older text coupling all Spark launches to a Mac pass; it does not
+waive Mac evidence, authorize unlimited compute/publication or count unrun jobs.
+
+Current goal authorization,2026-10-05: the learner confirmed the proposed next
+step aligns with the improvement goal, said to perform it, and requested goal
+completion without repeated routine approval questions. The fixed20-update,
+900-second native profile is now approved, including its input preparation,
+declared limits, model loading and bounded evaluation/training. Continue the
+agreed goal's routine implementation, verification and predeclared bounded
+experiment progression when prerequisites are met; do not ask the same approval
+again. Preserve original acceptance criteria and actual failures. Stop only for
+a genuine missing authority, unavailable platform or consequential choice that
+cannot be resolved safely within the agreed scope. This is not unlimited
+compute, a new model-scale sweep, destructive cleanup, public publication or
+authority to invent Mac/hosted evidence. Earlier per-step approval reminders are
+historical where superseded by this instruction.
+
+Continuation correction,2026-10-05: a blocked dependency blocks its dependents,
+not unrelated approved implementation. Finish independent audits, consumers,
+course integration and evidence review before reporting the external boundary;
+do not ask whether to continue routine work already included in the goal.
+Preserve original acceptance: DXI-17 distinguishes actual Linux execution,
+unverified Mac portability and CI source/local/hosted evidence. Its literal
+criterion3 does not require a successful Mac run, just as criterion5 does not
+require hosted success. Stronger historical requests remain parallel evidence
+work; never label an unexecuted Mac run passed.
+This correction does not authorize publication, waive dependencies or invent
+an unavailable machine's execution.
+
 - `ROADMAP.md` defines the release plan and day-level outcomes.
 - `BOOK.md` defines the book structure and the narrative placement of course material.
 - `PROGRESS.md` defines the current state and exact next action.
 - `learning_artifacts/` defines the durable conceptual record organized by day and topic.
 - `LEARNING_MEMORY.md` defines the artifact index, public-content queue, and portable cross-machine task packets.
 - Experiment specifications define intended runs.
+- `docs/course_manifest.json` defines chapter/day/notebook routing and optional
+  extension dependencies; registration is not a readiness or mastery claim.
+- `pyproject.toml` plus `uv.lock` define the isolated CPU teaching environment.
+  Never synchronize that lock into the shared Spark GPU environment. Use a new
+  task/project-local environment and temporary-prefix kernel, retain actual
+  platform evidence, and distinguish workflow source from hosted CI execution.
 - Experiment reports and stored outputs define empirical evidence.
+- `docs/COURSE_IMPROVEMENT_PLAN.md` defines the active eighteen-package
+  reference-audit upgrade; `docs/course_improvements.json` records statuses,
+  dependencies and evidence. Read both before resuming production work.
+  Planned packages are not implementations, model-scale permission or learner
+  completion. Preserve the15chapter/28day core and separate enrichment lanes.
 - Chat transcripts and agent summaries are not durable project state.
 
 If two artifacts conflict, stop and record the conflict rather than silently choosing one.

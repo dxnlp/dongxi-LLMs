@@ -126,7 +126,138 @@ The automatic audit can verify syntax and alignment; a human or task verifier st
 
 The next chapter assumes these contracts are fixed. It derives the objective and follows the answer gradient through the whole decoder, then compares full tuning with a constrained low-rank update. Its actual CPU experiment teaches mechanics; its separately specified Spark run tests a real pretrained base model.
 
-## 8.11 Exercises
+## 8.11 A teacher response is an attempt before it is a demonstration
+
+Teacher-generated data adds another interface before the one the student sees.
+A request is sent, an execution succeeds or fails, a response is parsed, and a
+selection procedure decides whether to teach from it. Saving only the final
+accepted examples hides the evidence needed to explain that decision.
+
+Begin with an attempt record, not an answer string. Bind it to an item and source
+group, sample coordinate, retry coordinate, teacher implementation, sampler,
+verifier, content terms and actual input/interface identity. Preserve raw text,
+trace and final-answer fields, token IDs when representable, stopping, errors,
+and costs even when the attempt is rejected. A trace can be useful provenance
+without being a faithful explanation or a suitable student target.
+
+The [teacher-data laboratory](../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb)
+uses an explicitly programmatic copy/reverse teacher. Its controlled faults
+produce wrong answers, empty text, unsupported symbols, long answers, a missing
+END and an actual local exception. It is not a pretrained model or an API. The
+recorded text-serialization costs are therefore not language-model inference
+tokens, API charges or GPU throughput. This small teacher makes the accounting
+visible before a real, separately authorized teacher is substituted.
+
+Retries have distinct identities but share their originating source. If a retry
+repeats the same correct answer, it consumed another execution without adding
+another independent demonstration. Record that repetition. Do not make a failed
+request disappear merely because a later request succeeded.
+
+## 8.12 Resumption and filtering preserve the rejected evidence
+
+A resumable adapter must distinguish an execution from a committed result. The
+laboratory records execution starts, writes result lines with content digests,
+and synchronizes them before proceeding. Reopening the same frozen journal
+rejects duplicate committed identities and changed contracts. A single-writer
+lock prevents two collectors from independently appending the same attempt.
+
+A crash can leave an uncommitted final suffix. Explicit recovery first saves its
+exact bytes and a reason, then removes only that suffix. Complete corrupt lines
+are refused rather than quietly erased. An execution that started but never
+committed may physically run again; the repeated start and unknown lost cost
+remain visible. “No duplicate committed records” is not an exactly-once API-call
+guarantee or a production crash-recovery proof.
+
+Next separate acceptance from ranking. This lesson's acceptance policy rejects
+format, length, stopping, unsupported IDs, source leakage and within-prompt
+duplicates. It deliberately does **not** reject well-formed wrong answers.
+Otherwise a top-versus-random comparison could secretly compare two sets already
+made equally correct by the filter. Multiple reasons may apply to one attempt,
+so rejection-reason counts are not a partition of rejected records.
+
+The original reference retains 108 attempts, including twelve error retries.
+Seventy-two attempts are rejected and 36 unique candidates survive: twelve
+correct and 24 wrong. The fixed task verifier computes correctness from training
+prompts and candidate text, not teacher mode labels or held-out reference fields.
+Every surviving candidate and every rejection remains linked to its attempt.
+Source-group and actual student-ID collisions are gated before collection; an
+unseen polite prefix does not make a reused underlying task a new source group.
+
+## 8.13 Selection changes both answers and exposure
+
+Let $C_i$ be the frozen accepted candidate pool for training prompt $x_i$, and
+let $s(x_i,y)$ be the declared training-task score. A per-prompt selection is
+
+$$
+y_i^\star=\underset{y\in C_i}{\mathrm{argmax}}\,s(x_i,y).
+$$
+
+The implementation resolves ties by shorter supervised length and stable
+attempt identity. Its random control samples uniformly from the same $C_i$,
+using an independently item-keyed seeded stream. Both choose one demonstration
+per prompt, preserving prompt coverage. Neither can query the held-out panel.
+
+A global top-$K$ ranking over all pools solves a different problem. It can spend
+several selections on one source or omit an entire difficulty slice. Define
+prompt coverage as the fraction of training prompts represented at least once.
+In this fixture global top6 covers only six of twelve prompts, all two-word
+tasks, because correctness ties favor shorter answers. Global top12 covers all
+twelve. These are separate coverage audits at different sample budgets, not
+additional matched student results.
+
+Matching examples and prompts does not match supervised tokens. Let $n_{a,j}$
+count the final-answer and END targets in example $j$ of arm $a$. Under $U$
+full-batch updates, target exposure is
+
+$$
+E_a=U\sum_j n_{a,j}.
+$$
+
+All three selected datasets contain twelve examples and all twelve prompts.
+Top and length-stratified random each contain 42 targets per batch; unstratified
+random contains 46. At eighty updates their exposures are 3,360, 3,360 and 3,680
+respectively. Report that difference; do not redefine the denominator to claim
+the primary comparison controls everything.
+
+The length-stratified sensitivity samples from candidates with the top answer's
+target length for each prompt, without filtering on correctness. Here every
+stratum contains both a correct and a wrong response. In a different pool, a
+single eligible candidate offers no meaningful alternative; an empty pool
+cannot be repaired by inventing a response. Availability and degeneracy belong
+in the audit.
+
+## 8.14 A demonstration score is not student capability
+
+Only selected final answers and their real END markers become student targets.
+Traces and audit labels do not enter the loss. The existing encoder, collator
+and exactly-once shift from this chapter feed an actual tiny causal sequence
+student; the next chapter develops that supervised objective in detail.
+
+The experiment pairs initialization across top, random and length-random data
+with three fixed student seeds and eighty updates each. Development, test and
+polite-prefix control prompts are independently generated source groups under
+the frozen task contract. Evaluation records full-vocabulary free generation,
+not a forced answer grammar, and scores correctness, format and natural END
+separately. Wrong or truncated outputs remain in the denominator.
+
+The measured result is deliberately not a success story. Top chooses twelve
+correct demonstrations, but its held-out greedy test accuracy ranges from zero
+to 0.25 across seeds. Length-random ranges from zero to 0.5; unstratified random
+remains zero. All nine students score zero on the greedy polite-prefix control.
+The random data can also attain lower demonstration NLL while teaching wrong
+answers. These tiny four-prompt held-out slices cannot rank selection methods
+generally, and no recipe was retuned after their inspection.
+
+The [specification](../../experiments/specs/2026-10-04-teacher-data.md) and
+[complete report](../../experiments/reports/2026-10-04-teacher-data.md) preserve
+the declared teacher, selected IDs, exposure, learning curves and all negative
+outputs. The durable lesson is the comparison contract: provenance survives
+rejection, controls share a pool, budgets have explicit units, and student
+evaluation is independent of the score that selected its demonstrations.
+Chapter 15 returns to selection and distillation with reasoning responses; this
+programmatic control alone establishes no pretrained-model transfer.
+
+## 8.15 Exercises
 
 1. Draw the serialized sequence for a system-user-assistant conversation.
 2. Identify which logit predicts the first assistant body token.
@@ -138,5 +269,11 @@ The next chapter assumes these contracts are fixed. It derives the objective and
 8. Calculate token exposure for equally sampled ten-token and ninety-token answers.
 9. Design grouping rules for related synthetic examples.
 10. Write a data-card limitation that prevents a four-copy-task fixture from becoming a claim about general assistance.
+11. Explain why the format filter deliberately retains wrong answers in a top-versus-random experiment.
+12. Distinguish a unique committed attempt from an exactly-once physical execution after interruption.
+13. Identify what the 42-versus-46 target counts do and do not control at eighty updates.
+14. Explain why a shorter-answer tie-break can remove the harder slice under global top6 but not one-per-prompt selection.
+15. Interpret a very low selected-dataset NLL alongside zero held-out control accuracy.
+16. Describe how to audit an unsupported response without deleting its raw text or claiming token costs that the programmatic teacher never incurred.
 
 The [worked solutions](../solutions/08-instruction-data-as-an-interface.md) include executable checks and an interpretation of each failure.

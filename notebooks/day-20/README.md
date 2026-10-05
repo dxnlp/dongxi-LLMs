@@ -4,6 +4,23 @@ What changes the expectation, variance, and update restraint?.
 
 - [01 baselines and rloo](01_baselines_and_rloo.ipynb)
 - [02 ppo clipping and kl](02_ppo_clipping_and_kl.ipynb)
+- [03 behavior probabilities and support](03_behavior_probabilities_and_support.ipynb)
+- [04 learned critics and frozen text rewards](04_learned_critics_and_frozen_text_rewards.ipynb)
+
+The third session is the DXI-13 probability bridge into Chapter14: raw model,
+transformed behavior and declared target need not agree. It deliberately breaks
+the likelihood denominator, rejects missing target support, distinguishes KL
+values from gradients and tests EOS/padding/truncation boundaries. Read its
+[integrated explanation](../../book/chapters/14-when-optimization-goes-wrong.md#143-entropy-collapse-certainty-can-mean-several-things)
+and [CPU evidence](../../experiments/reports/2026-10-04-sampling-support.md).
+
+The fourth session adds a real actor/neural value head, returns/TD/GAE,
+EOS versus cap bootstrap masks and separate gradient contracts. It reloads
+actual fitted character rewards, then traces proxy scores versus independent
+quality across every fixed arm. Negative outcomes are central, not failed
+demonstrations to skip. [Chapter12 sections12.10–12.14](../../book/chapters/12-language-generation-as-a-policy.md#1210-a-critic-predicts-the-return-before-an-action)
+and the [new report](../../experiments/reports/2026-10-04-critic-policy.md) define
+its finite-grammar limits; no pretrained model or API is used.
 
 Read [the chapter](../../book/chapters/12-language-generation-as-a-policy.md),
 [worked solutions](../../book/solutions/12-language-generation-as-a-policy.md), and

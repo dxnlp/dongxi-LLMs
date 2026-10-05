@@ -78,5 +78,61 @@ State authorship, release license status, template, stopping marker, padding, re
 - [Roles and masks](../../notebooks/day-11/01_roles_templates_and_masks.ipynb).
 - [Padding and packing boundaries](../../notebooks/day-11/02_padding_packing_boundaries.ipynb).
 - [Mixtures and cards](../../notebooks/day-11/03_mixtures_and_data_cards.ipynb).
+- [Teacher attempts and matched rejection SFT](../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb).
 
 The corresponding plots display target alignment, actual visibility matrices and supervised-token shares.
+
+## 11. Acceptance is not ranking
+
+A format-valid wrong answer must remain available if the experiment asks whether
+ranking helps relative to random selection. If acceptance already requires
+correctness, both selectors may receive only correct examples and the proposed
+contrast disappears. This is not an argument that wrong answers should normally
+be deployed: it is the stated control in this bounded comparison. The notebook
+reveals twelve correct and 24 wrong candidates after its format filter.
+
+## 12. Commitment and execution
+
+A committed result has a complete synchronized record with a stable attempt ID.
+Resumption skips it. An interrupted execution may have only a start event and
+an incomplete final suffix. Preserve that suffix and recovery reason before any
+explicit repair. A repeated uncommitted execution gets a visible new execution
+index; its lost prior cost is unknown. Thus no duplicate committed records does
+not establish exactly-once API requests or exact model-state resume.
+
+## 13. Three budget units
+
+All arms have twelve samples and twelve prompts. Top/length-random each expose
+$80\cdot42=3360$ assistant-plus-END targets; unstratified random exposes
+$80\cdot46=3680$. The primary comparison therefore does not match token exposure.
+The sensitivity does, because each prompt has an eligible correct and wrong
+response at the same length. It does not establish equal gradient distributions,
+wall time, teacher quality, or broad-method superiority.
+
+## 14. Global coverage
+
+The top twelve correct candidates include six two-word and six three-word
+responses. Correctness ties plus shorter-answer preference make global top6
+select the six short prompts, giving coverage $6/12=0.5$ and no three-word
+examples. One candidate per prompt retains all twelve prompts by construction.
+Different global $K$ values have different example budgets; their coverage plots
+are audits, not extra matched student outcomes.
+
+## 15. Optimization and independent generation
+
+Low NLL says the model predicts its selected demonstrations well under teacher
+forcing. Those demonstrations can be wrong, and unseen combinations can remain
+wrong even when demonstrations are correct. Natural END also does not guarantee
+the requested answer. Keep free-generation raw IDs and separately score final
+correctness, format and termination on held-out source groups. All nine actual
+students fail the greedy polite-prefix control here; preserve that finding
+instead of choosing a new seed or silently extending the update budget.
+
+## 16. Unsupported text and honest cost
+
+Retain the raw unsupported symbol and mark symbolic final IDs unavailable. Audit
+its unsupported/format rejection without inventing an UNK encoding. The local
+teacher performs text transformations, so its recorded units are serialized
+words and measured elapsed seconds with zero model forwards/API calls. Student
+generation separately records actual symbolic tokens and full-prefix model
+positions. Neither unit is a pretrained inference bill.

@@ -11,6 +11,415 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### CAND-ANIM-001 extension — output rows versus decoder coverage,2026-10-05
+
+- Source: automatic agent capture of a central softmax/interface mechanism,
+  anchored in two actual failed Basechat cap profiles. Extend the existing
+  logits→probabilities→chosen-ID→decode candidate, not a duplicate commission.
+  State: evidence-backed suggestion only; no media or article production
+  approved. All later animation production remains on Mac Studio.
+- Keep input byte coverage and output mapping as separate lanes. Complete byte
+  coverage allows an input encoder to emit known pieces for unfamiliar text;
+  it does not ensure every model output row has a decoder entry. For this pinned
+  cache, show151936 configured output rows,151643 BPE base entries and151669
+  mapped IDs including the sidecar. Bare tokenizer JSON has22 added-token
+  records, while the sidecar has26; do not present151669 as the bare-JSON count.
+- Canonical mechanism: $p_i=e^{z_i}/\sum_{j=0}^{V-1}e^{z_j}$ over numeric rows.
+  Full-support temperature1 sampling chooses ID151768 at the24th action;
+  it is inside the configured range but lacks a tokenizer mapping, not an
+  out-of-bounds embedding index or input unknown word. Reveal the actual
+  selected logp−14.50478178687033 and conditional probability approximately
+  $5.019417364343248\times10^{-7}$, not a total tail mass or failure frequency.
+- In both cap32/cap128 profiles, retain all24 actions/likelihoods and828
+  forwarded positions for the failing attempt. Keep the panel's40 observed
+  rows, including its ERROR, separate from60 missing responses. Both actual
+  native exits are1. The trajectories and derived attempt seed agree; they are
+  not two independent rare-event samples and both fail before their cap.
+  Do not animate filtering, resampling, retry or retroactive acceptance.
+- A hypothetical valid-ID constraint belongs in a separate future-contract
+  lane: restrict support to decoder set $D$ and renormalize over $D$. It changes
+  the behavior distribution/likelihood contract; it is not this experiment's
+  repair. No assertion about why the extra267 rows exist or their pretraining.
+- Anchor: [focused Day2 evidence bridge](../../learning_artifacts/day-02-text-tokens-and-embeddings/output-vocabulary-and-decoder-coverage.md),
+  [cap32 acceptance](../../experiments/reports/native-reasoning-base-chat-cap32-20261005-run-01/acceptance.json)
+  and [cap128 acceptance](../../experiments/reports/native-reasoning-base-chat-cap128-20261005-run-01/acceptance.json).
+  Possible `X-EVAL-001` extension, suggestion only: “How a valid model output
+  index can still fail to become text.” Keep decode errors, missing responses,
+  output caps and answer grading distinct. No learner advancement or public
+  publication is authorized by capturing the idea.
+
+### CAND-ANIM-025 extension — actual margin versus generated answer,2026-10-05
+
+- Source: automatic agent capture of Chapter11 §11.8.4's explicit DPO
+  mathematics and completed native comparison. Extend the existing candidate,
+  not a duplicate commission. State: evidence-backed concept only; no film or
+  article production is approved. Mac Studio owns any later production.
+- Canonical equation:
+  $M_\theta=(\ell_\theta^+-\ell_\theta^-)-(\ell_{\mathrm{ref}}^+-\ell_{\mathrm{ref}}^-)$,
+  $L=-\log\sigma(0.1M_\theta)$. Show absolute sequence logp and unscaled
+  reference-relative margin as separate meters, with clear nats/sequence-sum
+  labels. Native chosen logp improves in **both** arms: unchanged−11.486888,
+  chosen-only−0.003524, DPO−6.642914. Margin grows to13.488587/71.370116;
+  rejected logp is−27.318045/−91.838970. Do not reuse the earlier CPU
+  falling-chosen-likelihood trajectory as this native observation.
+- Start from one byte-bound full400 parent. Identical400 replacement draws
+  deliver2,047 chosen targets over100 updates to both trainable branches.
+  DPO adds1,600 rejected targets,800 policy/800 reference forwards; chosen-only
+  uses400 policy/zero training reference forwards. Keep unequal position
+  geometry and separate diagnostic-reference work visible: matched exposure
+  is not equal compute or loss units.
+- Reveal the **different** four-location generation population only after
+  the four validation-pair likelihood panel: unchanged0/4, chosen-only4/4,
+  DPO1/4, all naturally stopped. Retain `purple pouch` versus `the purple pouch`
+  and `green` versus `the green folder`; missing articles and missing nouns
+  are different errors, without relaxing exact matching. This storyboard
+  does not establish the causal reason for either omission.
+- Then open separate retention lanes:120/120 instruction answers in all arms,
+  annotated reasoning5/20→6/20 in both descendants, only `math-10` gained.
+  Keep nine seen/development items5/9 and eleven controlled held-outs0/11→1/11
+  distinct; natural stopping and bounded-parser correctness are not broad
+  capability or reasoning-faithfulness certificates. Pair scoring is
+  FP32/BF16-autocast; common generation is BF16-loaded/eager/greedy64. Own-run
+  diagnostics and common evaluation remain separately labeled.
+- Production dependency: freeze actual report/figure input bindings, retain
+  strict contracts and raw answers, then obtain explicit Mac production
+  approval. Anchors: [focused Day18 lesson](../../learning_artifacts/day-18-dpo-experiment/margin-versus-generated-answer.md),
+  [native report](../../experiments/reports/2026-10-05-native-preference-comparison.md)
+  and [static figure acceptance](../../experiments/reports/native-preference-figures-20261005-run-01/acceptance.json).
+  Possible X article, suggestion only: “The preference margin improved. Why
+  didn't the answer?” Keep one recipe, unmatched compute, populations and
+  precision paths explicit; no universal DPO/SFT ranking or publication approval.
+
+### Four evidence lanes from actual story and native recovery,2026-10-05
+
+- Extend existing CAND-ANIM-003/004/019; do not create a duplicate commission.
+  Keep process acceptance, numerical recovery, teacher-forced likelihood and
+  free-generation quality in separate lanes. At the predeclared400 boundary,
+  show falling fixed NLL beside real story continuations and the frozen rubric:
+ 45/48 natural control stops coexist with ending-quality mean0.020833/2.
+  Later4000/8000/14000 cells remain visibly empty rather than interpolated.
+- For the native chosen path, replay a20-label tail:40 numerical training
+  labels become60 physical source/resume presentations, while the0/4 answering
+  panel still stops naturally4/4 times. Separate validation/snapshot cost lanes.
+  For failed DPO01/02, let durable update2/export tiles appear but keep final
+  process result and known native exit absent. Parent exit1 is not the child's
+  unknown exit. No “restored state means refunded work” transition is allowed.
+- Source: agent, automatic mechanism/evidence capture. Anchors: Chapter6.21,
+  Chapter11.8.3/solution16 and the
+  [focused record](../../learning_artifacts/day-09-pretraining-run-and-diagnosis/technical-success-is-not-quality.md).
+  Evidence is actual bounded Spark execution and separate AI ratings, not
+  broad capability, human review or a completed14k recipe. Suggested only;
+  storyboard/rendering still needs explicit approval on Mac Studio. No media
+  or X article is produced by this entry.
+
+### Native likelihood and completed replay,2026-10-05
+
+- Extend CAND-ANIM-003/004 with the measured Chapter9 profile: teacher-forced
+  target probability improves while the self-selected path remains incorrect;
+  keep NLL4.061965→1.100189 beside0/8 exact answers and0/8 natural endings.
+  Show the gold-prefix lane separately from the generated-prefix lane, including
+  the supervised message-end target that still fails to win during decoding.
+- Extend CAND-ANIM-019 with actual full-SFT checkpoint10→20 native replay:
+  numerical-tail and same-producer serialized-tensor bytes align; keep the
+  earlier conflict-stopped attempt on a separate cost/ownership timeline.
+  Do not animate a numerical restart as a cost refund. The chosen-only CPU
+  example retains seven reserved windows versus six completed updates.
+- Source: agent, automatic mechanism/state capture. Evidence: actual pinned
+  pretrained BF16 full replay and measured negative development generation;
+  chosen-only exact recovery is tiny CPU. Arbitrary Python pickle metadata,
+  cross-machine bitwise replay, merged LoRA and broad capability are not proved.
+  Existing candidates only; no animation commissioned/rendered. Production
+  remains separately approved on Mac Studio.
+
+### A budget and a shutdown are contracts 2026 10 05
+
+- Extend **CAND-ANIM-019**: cumulative valid targets $c$, complete next group $n$,
+  cap $C$, and accept only $c+n\le C$. Animate9 then8 targets under cap16:
+  retain7 unused, return the refused group and stream permutation/cursor/RNG,
+  and keep gradients/LR/Adam/weights unchanged. Parallel tiles show16 physical
+  positions per accepted group, not16 valid targets. Matching-cap resume restores
+  the cumulative allowance rather than resetting it. Anchor: Chapter6.5, worked
+  answer19, evidence-lab5 and the actual tiny CPU target-budget report.
+- Extend the process-freeze storyboard with a leader exiting0 while its worker
+  runs, then owned discovery/TERM/KILL/reap and separate safety status. Contrast
+  a hard per-file limit with a sampled sum of growing files; display actual
+  overshoot rather than drawing a false total quota. Anchor: Chapter14.8 and
+  the fixed CPU worker/disk controls. Typed tensor bytes preserve shape/dtype,
+  including BF16 bits, without pretending tiny recovery adds production resume.
+- Source: agent, automatic mathematics/mechanism capture. Evidence: actual
+  bounded CPU controls plus authored ownership faults, not a Spark pilot,
+  cgroup or new model quality. Status suggested; production remains a separately
+  approved Mac Studio task. No animation or article produced.
+
+### Real cache state and realized teacher responses 2026 10 04
+
+- Extend **CAND-ANIM-019** with ragged masks accumulating logical positions
+  $p_{b,t}=\sum_{u\le t}m_{b,u}-1$ on valid tokens, RoPE on new Q/K and
+  compact cached old keys. EOS and padding share an ID but not validity; finished
+  rows leave the active batch while a cap does not fabricate EOS. Count keys
+  and values into $M_{\mathrm{KV}}=2LBH_{\mathrm{kv}}Sdb$, explicitly tensor
+  payload only, not total device memory. Keep actual slower tiny-CPU batching
+  beside reduced forwarded positions rather than animating an assumed speedup.
+- Follow an interruption after collection: preserve actions/old likelihoods,
+  policy version, Adam, reference, data cursor and RNG; restore the pending
+  update before collecting again. Show ambiguous dictionary flattening versus
+  typed length-framed identities. Historical states remain visible and are
+  compared by actual tensor bytes, not rewritten hashes. Anchor: Chapter14.7–8,
+  Day25/02 and the independently verified v2 recovery/migration report.
+- Extend **CAND-ANIM-029** from actual teacher sampling to first format-eligible
+  parents and two student paths: complete `STEP total ANS binary EOS` versus
+  derived `ANS binary EOS`. Prompt labels are masked; response/EOS targets enter
+  $L_{\mathrm{response}}=-N_{\mathrm{targets}}^{-1}\sum_t\log p_\theta(y_t\mid x,y_{<t})$.
+  Keep this one-hot sequence objective separate from a full teacher-vector KL.
+  Split each evaluated response into final correctness and printed-step validity;
+  preserve wrong-step/right-answer and valid-step/wrong-answer actual outputs.
+  A checker does not reveal causal internal reasoning. Anchor: Chapter15.5,
+  Chapter9, Day26/03 and the three-seed response-distillation report.
+- Source: agent, automatic mathematics capture. State: suggested. Evidence:
+  actual bounded CPU mechanisms and root independent replays. No pretrained,
+  cross-host recovery, speedup or faithfulness claim. Production remains a
+  separately approved Mac task; no media is created by this entry.
+
+### An answer is not yet a demonstration 2026 10 04
+
+- Extend **CAND-ANIM-029** with the verified teacher-data pipeline. One source
+  prompt branches into fixed attempt slots; an error receives a distinct retry
+  identity, and a repeated answer remains in the raw journal but is rejected
+  from the unique candidate pool. Keep rejected output and incurred cost visible.
+- A format/END gate preserves well-formed wrong responses. Branch the same
+  frozen pool into top-per-prompt and seeded random selection, with gold outside
+  the selection path. Global top6 visibly loses all three-word sources; one-
+  per-prompt keeps coverage. This is an executed programmatic teacher, not
+  neural self-critique, human labels or faithful reasoning.
+- Animate target-count tiles $n_{a,j}$, including real END, into
+  $E_a=U\sum_j n_{a,j}$. Show42/46/42 targets times80 updates, separating
+  examples, supervised exposure, padded computation and upstream teacher cost.
+  Finish with held-out correctness and stopping panels side by side: all
+  greedy polite-prefix controls remain zero although END is learned.
+- Canonical anchors: Chapter8.11–8.14, Chapter15.4, the Day11/04 notebook and
+  preserved teacher-data journal/report. Source: agent, automatic mathematics
+  capture. Evidence: bounded CPU measurement and root exact numerical replay.
+  State: suggested; production requires a separately approved Mac task.
+
+### Actual candidate availability and a wrong majority 2026 10 04
+
+- Extend **CAND-ANIM-029** using the verified DXI-05 pool: eight actual parity
+  answer cards arrive, three0 and five1; a separately labeled evaluator shows
+  correct0 is available while the gold-blind vote chooses wrong1. Keep gold
+  labels out of the selector path. Increasing a nested prefix can increase
+  oracle availability while a real vote or likelihood decision worsens.
+- Count every EOS/cap/invalid attempt. Move the whole attempt crossing a token
+  cap into a charged-but-unselectable lane; distinguish actual consumed tokens,
+  nominal cap, mandatory rescoring and selector overhead. There is no free
+  rejected answer, exact token-level interrupt or optimized-serving claim.
+- Anchor: saved864-candidate ledger, Day10 notebook05, three declared seeds and
+  actual selection decisions. Reproduce source hashes and preview arrays before
+  a separately approved Mac production task. No animation was produced here.
+
+### Reward identity and objective weighting controls 2026 10 04
+
+- Source: automatic mathematics capture while implementing the reference-audit
+  improvements. Proposed only; no animation or article commissioned. Production
+  remains on approved Mac Studio task packets.
+- Extend **CAND-ANIM-024** with word-token aliases splitting into distinct fixed
+  character sequences. Keep the unchanged historical word-model result beside
+  the new character experiment: distinct encodings remove an impossibility, not
+  automatically poor held-out predictions. Anchor: Day 16 text/process notebook,
+  both saved reward exports and independent encoding-gate evidence.
+- Extend **CAND-ANIM-026** with a continuous short trajectory: reward only at
+  emitted EOS → TD residual
+  $\delta_t=r_t+\gamma(1-d_t)V(s_{t+1})-V(s_t)$ → backward GAE accumulation
+  $A_t=\delta_t+\gamma\lambda(1-d_t)A_{t+1}$ → detached policy advantage and
+  separate critic MSE. Show a collector cap retaining bootstrap, then the broken
+  cap-as-EOS switch. Distinguish terminal proxy reward from scoring an unfinished
+  prefix; retain learned-value failure, not just an ideal oracle. Anchor: new
+  verified Day20 critic notebook and `critic_policy_lab.py`. The hand-checked
+  gamma0.9/lambda sweep supplies static arrays; actual negative capped paths
+  remain separately labeled.
+- Extend **CAND-ANIM-025** with a growing DPO margin while chosen and rejected
+  absolute likelihoods move separately. Add chosen-NLL/rehearsal branches and
+  count their supervision; cross to fixed generation/retention evaluation rather
+  than implying a universal repair. Anchor: Day 18 retention notebook and all
+  verified predeclared noisy/length arms. Show imperfect warm parity before
+  labeling rehearsal as continued learning versus retention. A wrong chosen
+  label reinforces the wrong answer; answer→STYLE→STYLE→EOS can be correct at
+  its first atom but fail the fixed canonical-output contract.
+- Extend the same **CAND-ANIM-025** for the original-fixture matched chosen-SFT
+  path: one byte-identified parent splits into untouched, chosen-only CE and
+  DPO; identical replacement-draw cards enter both trainable lanes. Keep prompt
+  masks and terminal targets visible, then show global chosen-target averaging
+  versus mean-pair response-sum DPO. The chosen lane has no rejected or frozen
+  reference arrows. Count those unmatched forwards beside equal chosen exposure,
+  then reveal every fixed held-out generation, including failures. Source:
+  automatic agent capture during Chapter11 section11.8.2 integration and
+  `chosen_sft_control.py`. This is a proposed mechanism storyboard, not evidence
+  of pretrained quality, accounted recovery, a commissioned film or a rendered
+  animation; production stays on Mac after approval.
+- Extend **CAND-ANIM-027** with identical sampled action cards assigned
+  $m_{it}/(NT_i)$, $m_{it}/\sum_jT_j$ or $m_{it}/(NC)$. Animate coefficients
+  flowing into $\partial L/\partial\ell_{it}=-w_{it}A_i$ at ratio one; show
+  parameter-gradient rotation versus scalar rescaling, positive/negative clip
+  branches, and component versus total reward normalization. Then move rejected
+  all-wrong groups into a visibly counted cost ledger before selected groups.
+  Anchor: verified Day 22 objective notebook, analytical tests and three-seed
+  raw ledger. No training gain or complete named-algorithm reproduction.
+- Required production evidence: exact source revisions and static preview
+  arrays, inclusive EOS/masks, detached old/reward paths, enumerated GAE endpoints,
+  all failed outcomes and attempted-token counts. Film selection/rendering remains
+  separate from tested scientific notebook plots.
+
+### Refinement and conditional-distillation extensions — 2026-10-04
+
+- Source: agent automatic mathematics capture; state suggested, not approved.
+  Extend **CAND-ANIM-029** rather than commission duplicate media. Mac Studio
+  owns any later production; no animation or article is created by this entry.
+- Refinement: hold the delivered draft identity fixed while critique $C$ emits
+  advice, reviser $R$ proposes $u_r$, and acceptance chooses
+  $d_{r+1}=u_r$ or $d_r$. Animate an accepted right→wrong→right path whose final
+  score is unchanged. A format-score tie is not a correctness check. Show capped
+  critique tokens being charged and retained while the revision arrow is blocked.
+- Cost: accumulate $B=n_{\mathrm{draft}}+\sum_r(n_{\mathrm{critique},r}+
+  n_{\mathrm{revision},r})$ alongside independent attempts. Keep programmatic
+  serialized symbols and historical neural tokens/forwards on distinct ledgers;
+  overshooting whole attempts are charged but cannot vote. No compute equality.
+- Conditional distribution: hold one visited state fixed, detach teacher $q$,
+  and contrast forward $p_i-q_i$ with reverse
+  $p_i[\log(p_i/q_i)-\sum_jp_j\log(p_j/q_j)]$ logit gradients. Then move the
+  state source from offline teacher histories to actual student histories,
+  without silently reversing KL. Training-only teacher hint cards never enter
+  the student's input or the evaluation branch.
+- Occupancy: draw separate conditional-loss and state-distribution derivative
+  arrows for $J=\sum_s d_\theta(s)L_\theta(s)$; explicitly cross out the latter
+  in this implemented fixed-history backward. Current-policy collection is not
+  a complete occupancy-gradient estimate or a reproduction of SDPO.
+- Tail bucket: preserve selected coordinates and sum the others into one tile.
+  Two different internal tail allocations can yield zero bucket KL and positive
+  full KL. Reveal the exact teacher/student-tail-weighted conditional divergence
+  term; distinguish full-support main data from undefined zero-support controls.
+  No invented probability floor, identical-gradient promise or measured savings.
+- Anchors: Chapter15 sections15.8–15.9, Day26 notebooks04–05, their original
+  specifications, hardened tests and preserved measured campaign reports.
+  Dependencies: accepted final identities and mathematical replay, learner
+  selection of a complete task packet, then explicit production approval.
+
+### Text reward and sampled reasoning controls — 2026-10-04
+
+- Automatic capture for DXI-04,07 and the real-response adapter in DXI-02;
+  suggested only, Mac Studio production awaits approval.
+- Extend **CAND-ANIM-024**: prompt/completion token states → last actual
+  nonpadding endpoint (explicit inclusive/excluded EOS) → scalar reward →
+  pair margin. Slide left/right padding while the endpoint score stays fixed;
+  then supervise terminal outcome versus individual step boundaries. A process
+  label is not a critic's expected future reward. Anchor: Day16 notebook03,
+  `text_reward_lab.py`, and its separately labeled original/negative evidence.
+- Use the unknown-token failure as a continuous fork: two different texts
+  become the same ID sequence, so a deterministic scorer must agree:
+  $\mathrm{encode}(x)=\mathrm{encode}(x')\Rightarrow r_\theta(x)=r_\theta(x')$.
+  Opposite labels cannot both be fitted for those identical inputs. Keep raw
+  source separation distinct from encoded calibration/test independence;
+  a later tokenizer intervention is a new experiment, not a repaired old score.
+- Extend **CAND-ANIM-027**: sampled two-action paths → binary exact reward →
+  within-prompt detached advantage → old/current conditional-grammar likelihoods
+  → shared decoder update. Animate the complete-path factorization
+  $p_\theta(a,\mathrm{EOS}\mid x)=p_\theta(a\mid x)
+  p_\theta(\mathrm{EOS}\mid x,a)$; both answer and EOS are learned here.
+  Show all three predeclared seeds, the minority-answer failures and a
+  constant-answer comparator. Longer computation or a perfect imbalanced slice
+  must not become a reasoning-transfer claim. Anchor: Day23 notebook03 and
+  `reasoning_controls.py`; preserve the earlier negative GRPO experiment.
+- Extend **CAND-ANIM-022**: actual local HF forward → sampled ID with recorded
+  raw/behavior log probabilities → unmodified raw decoding → separately declared
+  terminal-stop removal for grading. Count attempted forward positions,
+  generated actions, EOSturndone, caps and context-limit/error branches. These
+  are real tiny-random CPU adapter events, not pretrained performance or an
+  optimized latency benchmark. Reuse the inference lifecycle packet for timing.
+- October5 continuation of existing **CAND-ANIM-022**: keep the actual native
+  Instruct/thinking-off/cap32 `5 + 6 = 11` response visible in three separate
+  lanes: preserved raw/scoring text, natural turn-stop versus cap, and frozen
+  extraction/canonicalization. The whole-equation fallback reaches `UNSUPPORTED`
+  while `format_policy="any"` remains valid; do not animate a last-numeral rescue
+  or replace the accepted negative grade. Show sampled repetitions versus the
+  separate greedy diagnostic and eleven overlap-excluded held-out problems,
+  not100 independent questions. Anchor: the [Day23 focused artifact](../../learning_artifacts/day-23-grpo-rlvr/generated-answers-and-grader-interfaces.md)
+  and [partial actual report](../../experiments/reports/2026-10-05-native-reasoning-rlvr-evidence.md).
+  State: suggested only, assigned to later Mac Studio production; no rendering
+  or publication. Later baseline/RLVR outcomes stay pending, and any improved
+  instruction or extraction is a new declared intervention, not current-result
+  repair. BF16/eager generation is not a MATH control or optimized latency claim.
+- Required checks: exact padding/endpoint invariance, recorded encoding aliases,
+  EOS-inclusive gradient and likelihood masks, sampler/recomputation agreement,
+  independently replayed grades and all failure/cost rows. No film/article
+  commissioned by this capture; production remains a separate Mac task.
+
+### Verified foundation extensions — 2026-10-04
+
+- Source: agent automatic mathematics/opportunity capture for DXI-01,02,08,13.
+  State: suggested; no rendering approval. Production stays on Mac Studio.
+- Extend **CAND-ANIM-019**: hold embedding/output rows fixed while token-ID
+  labels2/3 swap. Show shape checks still passing, then semantic checks rejecting;
+  keep an unchanged-map normalization intervention beside legitimate save/reload.
+  Anchor: Day1 notebook04 and the identity report. Tiny CPU serialization is
+  executable evidence, not pretrained ancestry or Spark compatibility.
+- Extend **CAND-ANIM-022**: raw answer → bounded extraction → supported equivalence
+  → separate format/task/stop decisions → paired source-group resampling.
+  Anchor: Day10 notebook04 and mathematical-grading report. Preserve unsupported
+  versus wrong, ambiguous versus malformed, and fixture intervals versus model scores.
+- Extend **CAND-ANIM-024**: blind display slots A/B move while canonical candidate
+  IDs stay fixed; ties, abstentions and invalid outputs follow separate paths.
+  Then distribute one source's weight over its sibling comparisons:
+  $L=\frac{1}{S}\sum_s\frac{1}{n_s}\sum_j\ell_{sj}$.
+  Anchor: Chapter10/Day15 notebook03 and preference-audit report. The averaging
+  convention is a declared population objective, not human consensus. Authored
+  references and simulated judges must stay visibly labeled; added injection
+  text also changes length, so require a matched-length benign control for causal claims.
+- October5 continuation extends **CAND-ANIM-022/024** with the actual story-rating
+  instrument: opening/complete response → shuffled anonymous display → two
+  explicitly declared reviews → retained disagreement/declared adjudication →
+  private-codebook join → paired source-opening resampling. Keep empty review
+  cells visibly empty and keep all four decoding recipes attached to one
+  opening when it moves into a bootstrap draw. Authored fixture scores stay
+  labeled authored; current corpus audit is separate from unrun model
+  continuations and missing human ratings. Anchors: Chapter7section7.17,
+  solution23, Lab7 and `src/dongxi_llms/story_rubric.py`. State: suggested,
+  agent opportunity capture; not approved or rendered. Production stays on Mac.
+- Extend **CAND-ANIM-027** with raw $p$ → transformed collector $b$ → declared
+  target $t$ → ratio $t(a)/b(a)$. Animate the exact support condition in
+  $\mathbb E_b[(t(a)/b(a))R(a)]=\mathbb E_t[R(a)]$; an excluded action cannot
+  return through a zeroed ratio. Fixed-support conditioning changes the objective,
+  and temperature remains part of its probability calculation.
+- Extend **CAND-ANIM-026/027** with equal forward KL values but different frozen
+  sample gradients. Display detached collection/reference arrows versus live target
+  weights before checking the exact categorical gradient. Separate EOS terminal,
+  continuing-task cap, prompt and padding masks. Anchor: Chapter14/Day20 notebook03
+  and sampling-support report. Fixed-state finite identities do not establish
+  general trajectory off-policy correctness or a universally valid PPO regularizer.
+- Required before production: reproduce numerical traces at the exact recorded
+  source revision, verify the support/normalization/detach masks, select and approve
+  a complete packet. Static reference plots do not count as produced animation.
+
+### Reference audit mechanism extensions 2026 10 04
+
+- Source: agent opportunity check during the learner-requested two-repository
+  audit and [improvement plan](../../docs/COURSE_IMPROVEMENT_PLAN.md).
+- Reuse CAND-ANIM-024 for text hidden-state pooling→reward margin→outcome or
+  step-boundary labels; preserve the difference between process correctness
+  and a critic's expected future return. Linked packages: DXI-07,08.
+- Extend CAND-ANIM-026 with reward→return/TD residual→GAE→detached advantage→
+  actor/critic updates, including EOS versus truncation and learned-value error;
+  extend CAND-ANIM-025 with DPO margin versus absolute likelihood/retention.
+  Linked packages: DXI-10,11. Canonical equations await those tested modules.
+- Extend CAND-ANIM-027 with identical-rollout denominator/scaling comparisons
+  and raw versus transformed behavior probabilities/support boundaries.
+  Linked packages: DXI-12,13; no named-algorithm or off-policy guarantee.
+- Extend CAND-ANIM-029 with candidate pool→vote/rank→selected/random corpus→
+  sequence student, draft→critique→revision decisions, and offline versus
+  student-prefix distillation. Count tokens/cost and right→wrong transitions.
+  Linked packages: DXI-05,06,09,15,16. Keep oracle selection visibly diagnostic.
+- Evidence state: planned mechanisms, no new numerical results or produced
+  media. Reuse existing packets rather than commission duplicate films.
+  Production dependency: implement/verify the underlying lesson, learner
+  selects a complete task packet, then render on Mac Studio with approval.
+
 ### Full-course mathematics capture — 2026-10-04
 
 The learner requested the complete28-day/15-chapter teaching build. Automatic
@@ -131,6 +540,18 @@ Status: proposed, not approved or rendered. No media/publication task is inferre
   no render or new production packet authorized by chapter writing.
 
 ### Day9 tokenizer/model accounting —2026-09-13
+
+Measured SFT extension,2026-10-05: agent automatic budget/mask capture for the
+existing training-update/budget scene, using Chapter9's
+[pinned tokenizer result](../../experiments/reports/2026-10-05-base-tokenizer-sizing.md).
+Render the selected80 transcripts as3,154 input-position tiles; keep455 shifted
+assistant targets lit, including each answer's end marker and newline. Add two
+separate development lanes of360 targets each: the work counter becomes1,175,
+but training exposure stays455. Keep16 proposed generation attempts/1,024
+new-token slots in a third lane, not mixed with teacher-forced labels. All these
+encodings are measured; updates/generations are unexecuted. This is a source-bound
+candidate extension, not a new film, throughput claim or render approval. Mac
+production/publication remains separately authorized.
 
 Budget extension: connect measured valid-target throughput to training exposure
 (rate × training time), separating padding, evaluation/checkpoint overhead and
@@ -264,9 +685,120 @@ and `notebooks/day-08/`. Static reference figures are not produced animation.
 - Evidence: Notebook 3 runs the exact small decoder branches; full local CPU
   replay matches, both omissions differ. Use report values for labels. Never
   imply bitwise Mac/Spark equivalence or distributed recovery coverage.
+- 2026-10-05 extension: use the [durable-boundary packet](../../learning_artifacts/day-12-sft-mechanics/durable-training-boundaries.md)
+  to contrast crash-before-commit with commit-before-metric failure, preserve the
+  original DPO reference, and later show RLVR's retained post-collection pool.
+  The shared format has CPU failure-path evidence; actual runner and Spark
+  replay gates remain distinct. Reuse this candidate, not a new commissioned film.
+- Current source extension: actual SFT/DPO/RLVR CPU gates now verify complete
+  history/original reference and pending-pool application without resampling.
+  Animate a pending group spending collection work before its optimizer step;
+  after restart, consume it once instead of drawing a favorable replacement.
+  Add a separately labeled cost inset: one DPO pair branches into chosen/rejected
+  on both policy and reference, so update geometry is not total logical forwards;
+  evaluation/replay/export counters remain separate. Source-derived bounds in
+  [the supervisor plan](../../docs/PRODUCTION_SUPERVISOR_PLAN.md) are not measured
+  GPU FLOPs or backward recomputation. Source: agent automatic mathematics/state
+  capture,2026-10-05. Extend this candidate only; no media production approved.
+- Whole-job extension,2026-10-05: freeze the numerical checkpoint cursor and a
+  separate cumulative work-journal cursor. Spend a reservation after the snapshot,
+  crash, restore old weights, then retain the later attempt charge before retry.
+  Contrast this with the invalid animation of rewinding both cursors. In a storage
+  inset, show old payload/new partial/temporary marker coexistence and reserve
+  entries before creation. Source: Chapter14 section14.8 and worked answers21–24;
+  numbers and backend observations are labelled source bounds/authored controls,
+  not actual quota, GPU clearance or model-scale replay. Reuse this Mac candidate;
+  no new rendering or publication authority is implied.
+- Recovery-validation extension: use canonical Chapter6/solutions and the
+  current Chapter14 answers25–28. Additional source inset: retain three histories
+  (numerical state, spent work, partial storage), charge a pending-pool validation
+  forward/draw replay, then restore weights without refunding either ledger.
+  The snapshot report's six completed versus ten charged updates and eight-byte
+  partial/256-byte reservation are tiny CPU controls, not physical/GPU claims.
+  Preserve cached SFT versus uncached DPO/RLVR dispatch. No rendering approved.
+- Semantic-validation extension,2026-10-05: Chapter14/answers29–30 separate the
+  live sampler from a temporary verifier. For $u$ completed updates and
+  accumulation $a$, animate $ua$ private replay draws while the live cursor
+  stays fixed; label repeated callback/restore panels as separate work. Show
+  generic byte/load/tree scans before the semantic callback, then the proposed
+  independent pre-read receipt outside the checkpoint. Source: agent automatic
+  mathematics/state capture and the inspection-budget plan. Do not label pending
+  reader integration implemented or infer CPU units as physical/GPU guarantees.
+  Reuse this candidate; Mac rendering/publication remains separately approved.
 - Dependency: approve storyboard, use canonical Chapter 6/solutions and the
   verified notebook manifest, then create a complete portable ANIM task packet.
   No rendering or public publication authorized by this capture.
+- Shared-reader extension,2026-10-05: reuse Chapter14/answers30–32 and Day25
+  Exercise7. Move a small retained receipt outside the tensor payload, bind the
+  same journals, reserve, then hash/load/check/apply. Show two equal returned
+  tensors and a rejected third load; three load reservations remain after
+  reopen, and the fourth read never starts. Animate save completion entering
+  later journal history rather than appearing inside its own already-written
+  payload. Pair $W_{\mathrm{fresh}}=\sum_{c\in C}S_c+D L_U$ with
+  $W_{\mathrm{resume}}(k)=I_k+L_k+S_k+\sum_{c\in C,\ c>k}S_c+D L_U$;
+  label componentwise capacity as a conservative schedule, not measured work
+  or retry authority. Source: agent automatic mathematics/state capture; CPU
+  source/actual tiny reader evidence only. No physical/pretrained/cross-host
+  guarantee or new media approval; rendering stays a separately approved Mac task.
+
+Native-RLVR extension to CAND-ANIM-019,2026-10-05: use Chapter13§13.7.1,
+Chapter14/answer33 and Day25 Exercise8. Freeze two applied updates in both
+lanes; move the pending lane's source/RNG cursor through the retained response
+IDs before the crash, then apply that exact pool without a new draw. The
+completed lane collects first. Show matching final native policy/reference/Adam
+histories alongside the two physical journals retaining later rejected reads
+and validation work. Label the manually measured one-boundary trace separately
+from source-derived $1+2U$, $1+2(U-k)$ and $2+2(U-k-1)$ publication counts.
+Source: automatic mathematical/state capture and the predeclared native reader
+lesson. Candidate only: no media, article publication or Mac replay commissioned.
+
+Measured native-recovery extension to the same **CAND-ANIM-019**, with the
+existing **CAND-ANIM-027** group-advantage lane,2026-10-05: use
+[the actual reasoning/RLVR report](../../experiments/reports/2026-10-05-native-reasoning-rlvr-evidence.md),
+Chapter13/answers22–24 and the focused Day23 artifact. Keep failed G4/01 visible
+beside accepted G4/02 and G8/01; all twelve recovery checks and final ten-component
+equality are measured, not quality evidence. Move numerical cursors to2 while
+physical histories retain four applications/three collections, then apply each
+saved pending pool without a new draw. Split G8's384 dense sampled slots,
+314 valid fresh actions and434 applied targets into separate counters. In a
+reward/KL inset, show all-zero task advantages beside the recorded tiny first
+gradients and nonzero later exact-KL/AdamW movement; do not claim task learning
+or a causal explanation of the historical cleanup timeout. Pair with the
+existing adjacent CPU zero-loss/gradient control, explicitly distinguishing its
+nonconstant advantages from these constant native reward groups. Preserve
+recovery cap16 versus pilot cap64 versus evaluation caps32/128, BF16/SDPA
+training versus BF16/eager generation, and full-support/stopping/mask boundaries.
+Actual G4 pilot01 subsequently reaches native16/export/exit0 but fails terminal
+writer acknowledgment: add a separate retention lane, not a fake rollback of
+sixteen spent applications or an accepted quality parent. Its1508 dense slots,
+1004 valid targets,33 saves and64 natural zero-reward responses are measured;
+G8 pilot/common20 were not started after that failed entry. Suggested X angle:
+“Zero rewards do not mean zero updates.” Mac Studio assigned production lane,
+candidate/suggestion only; no film, article draft, rendering, upload, publication
+or new model experiment commissioned.
+
+Story-work extension to CAND-ANIM-019,2026-10-05: use Chapter6's two-clock
+recovery explanation and worked answer20. Freeze nine successful target tiles,
+admit an eight-tile group, fail after computation starts, and restore the nine
+tiles without rewinding the work-journal cursor. Retry the same group: successful
+exposure becomes17 while admitted target places reach25. Animate the vector
+condition $\mathbf{W}_{\mathrm{reserved}}+\mathbf{c}_{\mathrm{next}}\le\mathbf{C}$
+componentwise; a remaining allowance in one dimension cannot pay for another.
+Show cap refusal returning the stream untouched, versus partial optimizer
+failure making the live session unusable. The [Day9 companion](../../experiments/reports/2026-10-05-story-work-lesson.md)
+now supplies actual native CPU counters and a freshly executed two-panel plot;
+cap24 refuses the retry with9 successful targets/17 reservations. Byte I/O, physical quota, story quality
+and Mac/Spark equality remain outside the claim. Reuse this candidate only;
+rendering/publication remains a separately approved Mac task.
+
+Watchdog extension to CAND-ANIM-019,2026-10-05: use Chapter14/answer34.
+Show a blocked model lane beside an advancing external clock. Then freeze the
+memory-observer and incident-log lanes separately; the controller must still
+advance to owned TERM/KILL/cleanup. Contrast a leader exit with its remaining
+worker and keep shutdown, sampled memory and durable-log receipts as separate
+status tiles. Use the native-profile source verification's actual inert outcomes
+when available, not a fabricated GPU success. This is an automatic state-flow
+capture for a later Mac storyboard; no rendering or publication is authorized.
 
 ### Interactive-learning design — 2026-09-09
 

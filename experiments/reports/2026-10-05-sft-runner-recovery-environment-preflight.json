@@ -1,0 +1,30 @@
+{
+  "scope": "Retained test-import setup failure during approved environment-contract hardening; no update executed",
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m", "unittest", "discover", "-s", "tests", "-p",
+    "test_sft_runner_recovery.py", "-v"
+  ],
+  "environment_flags": {
+    "PYTHONPATH": "src",
+    "CUDA_VISIBLE_DEVICES": "",
+    "HF_HUB_OFFLINE": "1",
+    "TRANSFORMERS_OFFLINE": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "actual_exit_code": 1,
+  "reported_loader_tests": 1,
+  "reported_test_seconds": 0.0,
+  "stdout": "",
+  "stderr": "test_sft_runner_recovery (unittest.loader._FailedTest.test_sft_runner_recovery) ... ERROR\n\n======================================================================\nERROR: test_sft_runner_recovery (unittest.loader._FailedTest.test_sft_runner_recovery)\n----------------------------------------------------------------------\nImportError: Failed to import test module: test_sft_runner_recovery\nTraceback (most recent call last):\n  File \"/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/lib/python3.12/unittest/loader.py\", line 396, in _find_test_path\n    module = self._get_module_from_name(name)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/lib/python3.12/unittest/loader.py\", line 339, in _get_module_from_name\n    __import__(name)\n  File \"/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_sft_runner_recovery.py\", line 429\n    contract=json.loads(args.contract.read_text());cfg=contract['config']\n                                                                         ^\nIndentationError: unindent does not match any outer indentation level\n\n\n----------------------------------------------------------------------\nRan 1 test in 0.000s\n\nFAILED (errors=1)\n",
+  "source_sha256_at_failure": {
+    "scripts/run_chapter09_spark_sft.py": "91a53ba4a7a85c2bd9adebfdca4671c909a151cc3899559ba65b8afc7010d8b8",
+    "tests/test_sft_runner_recovery.py": "be0894432242af4acb95c3be248bbcf22d5334b34f62845e0c5df8d4b6c3e70d",
+    "src/dongxi_llms/training_snapshot.py": "9cad2851b665b5fe5d640c1327710352396218ea80fab3b0c82f01925e1749a3",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "experiments/specs/2026-10-05-sft-runner-recovery.md": "2ec0c47b9889f4807750bc8461b0a21584281a41db5ff83ccd0fe6d2baa0613c"
+  },
+  "capture_boundary": "Exact terminal stderr and measured exit transcribed into this new immutable evidence file; no claim of an executed self-collector"
+}

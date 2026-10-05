@@ -1,0 +1,460 @@
+{
+  "beta": 0.02,
+  "cap_reward": 0.0,
+  "clip": 1.0,
+  "context_length": 32,
+  "device": {
+    "mode": "cpu",
+    "name": "CPU"
+  },
+  "dtype": "torch.float32",
+  "encoded_evaluation_sha256": "2772b2a5cafd25a8306339549308c806e75926a5eebc05e0874aee2fc5351b5d",
+  "encoded_train_sha256": "3c545fab78c945d06f710040ed3726c55518013979718f41a1324e209e82ec53",
+  "environment": {
+    "lock_sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "python": "3.12.14",
+    "torch": "2.14.1+cpu",
+    "transformers": "5.18.0"
+  },
+  "eos_id": 0,
+  "evaluation": [
+    {
+      "expected": 4,
+      "prompt": "Authored heldout 4",
+      "prompt_ids": [
+        1,
+        5,
+        2
+      ],
+      "source_id": "cpu-heldout-0"
+    }
+  ],
+  "group_size": 3,
+  "inputs": {
+    "authored-token-fixture": "cde6dff0ae74c9e623794e1c4e4b484dda505fed3ca68193e79e10a857f67c9d"
+  },
+  "interface": {
+    "encoding": "explicit original token sequences; no downloaded tokenizer",
+    "source": {
+      "tokenizer_id": "authored-integer-ID-alphabet",
+      "tokenizer_revision": "1111111111111111111111111111111111111111"
+    },
+    "stops": [
+      0,
+      7
+    ]
+  },
+  "likelihood_validation_atol": 1e-05,
+  "loop_contract": {
+    "attention_backend": "sdpa",
+    "beta": 0.02,
+    "context_length": 32,
+    "cuda_rng_count": 0,
+    "device": "cpu",
+    "eos_id": 0,
+    "group_size": 3,
+    "layout": {
+      "lm_head.weight": [
+        [
+          16,
+          16
+        ],
+        "torch.float32"
+      ],
+      "model.embed_tokens.weight": [
+        [
+          16,
+          16
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.input_layernorm.weight": [
+        [
+          16
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.mlp.down_proj.weight": [
+        [
+          16,
+          32
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.mlp.gate_proj.weight": [
+        [
+          32,
+          16
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.mlp.up_proj.weight": [
+        [
+          32,
+          16
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.post_attention_layernorm.weight": [
+        [
+          16
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.self_attn.k_norm.weight": [
+        [
+          8
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.self_attn.k_proj.weight": [
+        [
+          8,
+          16
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.self_attn.o_proj.weight": [
+        [
+          16,
+          16
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.self_attn.q_norm.weight": [
+        [
+          8
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.self_attn.q_proj.weight": [
+        [
+          16,
+          16
+        ],
+        "torch.float32"
+      ],
+      "model.layers.0.self_attn.v_proj.weight": [
+        [
+          8,
+          16
+        ],
+        "torch.float32"
+      ],
+      "model.norm.weight": [
+        [
+          16
+        ],
+        "torch.float32"
+      ]
+    },
+    "max_new_tokens": 4,
+    "model_class": "transformers.models.qwen3.modeling_qwen3.Qwen3ForCausalLM",
+    "model_config": {
+      "architectures": null,
+      "attention_bias": false,
+      "attention_dropout": 0.0,
+      "bos_token_id": 1,
+      "chunk_size_feed_forward": 0,
+      "dtype": null,
+      "eos_token_id": 0,
+      "head_dim": 8,
+      "hidden_act": "silu",
+      "hidden_size": 16,
+      "id2label": {
+        "0": "LABEL_0",
+        "1": "LABEL_1"
+      },
+      "initializer_range": 0.02,
+      "intermediate_size": 32,
+      "is_encoder_decoder": false,
+      "label2id": {
+        "LABEL_0": 0,
+        "LABEL_1": 1
+      },
+      "layer_types": [
+        "full_attention"
+      ],
+      "max_position_embeddings": 32,
+      "max_window_layers": 28,
+      "model_type": "qwen3",
+      "num_attention_heads": 2,
+      "num_hidden_layers": 1,
+      "num_key_value_heads": 1,
+      "output_attentions": false,
+      "output_hidden_states": false,
+      "pad_token_id": 0,
+      "problem_type": null,
+      "return_dict": true,
+      "rms_norm_eps": 1e-06,
+      "rope_parameters": {
+        "rope_theta": 10000.0,
+        "rope_type": "default"
+      },
+      "sliding_window": null,
+      "tie_word_embeddings": false,
+      "transformers_version": "5.18.0",
+      "use_cache": true,
+      "use_sliding_window": false,
+      "vocab_size": 16
+    },
+    "optimizer_groups": [
+      {
+        "amsgrad": false,
+        "betas": [
+          0.9,
+          0.999
+        ],
+        "capturable": false,
+        "decoupled_weight_decay": true,
+        "differentiable": false,
+        "eps": 1e-08,
+        "foreach": null,
+        "fused": null,
+        "lr": 0.008,
+        "maximize": false,
+        "weight_decay": 0.0
+      }
+    ],
+    "optimizer_names": [
+      [
+        "model.embed_tokens.weight",
+        "model.layers.0.self_attn.q_proj.weight",
+        "model.layers.0.self_attn.k_proj.weight",
+        "model.layers.0.self_attn.v_proj.weight",
+        "model.layers.0.self_attn.o_proj.weight",
+        "model.layers.0.self_attn.q_norm.weight",
+        "model.layers.0.self_attn.k_norm.weight",
+        "model.layers.0.mlp.gate_proj.weight",
+        "model.layers.0.mlp.up_proj.weight",
+        "model.layers.0.mlp.down_proj.weight",
+        "model.layers.0.input_layernorm.weight",
+        "model.layers.0.post_attention_layernorm.weight",
+        "model.norm.weight",
+        "lm_head.weight"
+      ]
+    ],
+    "parameter_aliases": [],
+    "reference_attention_backend": "sdpa",
+    "reference_class": "transformers.models.qwen3.modeling_qwen3.Qwen3ForCausalLM",
+    "reference_config": {
+      "architectures": null,
+      "attention_bias": false,
+      "attention_dropout": 0.0,
+      "bos_token_id": 1,
+      "chunk_size_feed_forward": 0,
+      "dtype": null,
+      "eos_token_id": 0,
+      "head_dim": 8,
+      "hidden_act": "silu",
+      "hidden_size": 16,
+      "id2label": {
+        "0": "LABEL_0",
+        "1": "LABEL_1"
+      },
+      "initializer_range": 0.02,
+      "intermediate_size": 32,
+      "is_encoder_decoder": false,
+      "label2id": {
+        "LABEL_0": 0,
+        "LABEL_1": 1
+      },
+      "layer_types": [
+        "full_attention"
+      ],
+      "max_position_embeddings": 32,
+      "max_window_layers": 28,
+      "model_type": "qwen3",
+      "num_attention_heads": 2,
+      "num_hidden_layers": 1,
+      "num_key_value_heads": 1,
+      "output_attentions": false,
+      "output_hidden_states": false,
+      "pad_token_id": 0,
+      "problem_type": null,
+      "return_dict": true,
+      "rms_norm_eps": 1e-06,
+      "rope_parameters": {
+        "rope_theta": 10000.0,
+        "rope_type": "default"
+      },
+      "sliding_window": null,
+      "tie_word_embeddings": false,
+      "transformers_version": "5.18.0",
+      "use_cache": true,
+      "use_sliding_window": false,
+      "vocab_size": 16
+    },
+    "rollout_rng_bytes": 5056,
+    "seed": 2323,
+    "stop_ids": [
+      0,
+      7
+    ],
+    "torch_rng_bytes": 5056,
+    "train_sha256": "3c545fab78c945d06f710040ed3726c55518013979718f41a1324e209e82ec53",
+    "updates": 4,
+    "work_budget": {
+      "limits": {
+        "collections": 100000,
+        "evaluation_calls": 100000,
+        "evaluation_examples": 100000,
+        "evaluation_positions": 100000,
+        "evaluation_tokens": 100000,
+        "generated_slots": 100000,
+        "generation_forward_calls": 100000,
+        "generation_forward_positions": 100000,
+        "multinomial_draws": 100000,
+        "old_policy_forward_calls": 100000,
+        "old_policy_forward_positions": 100000,
+        "policy_forward_calls": 100000,
+        "policy_forward_positions": 100000,
+        "recovery_multinomial_draws": 100000,
+        "recovery_validation_calls": 100000,
+        "recovery_validation_operations": 100000,
+        "recovery_validation_positions": 100000,
+        "reference_forward_calls": 100000,
+        "reference_forward_positions": 100000,
+        "response_targets": 100000,
+        "source_examples": 100000,
+        "train_updates": 100000,
+        "valid_response_tokens": 100000
+      },
+      "max_bytes": 1048576,
+      "reservations": "permanent conservative upper bounds before whole known operation",
+      "schema": "rlvr-logical-work-v1",
+      "scope": "logical calls/positions/actions/checks, not FLOPs/recompute/physical quotas"
+    }
+  },
+  "lr": 0.008,
+  "max_new_tokens": 4,
+  "objective": "response-mean clipped GRPO; population advantages; exact reference KL",
+  "parent_files": {
+    "authored-random-initial-policy": "ef81c380514b600e87b09ef2e8c4e90750e161704460c9aba226bb95ce639e73"
+  },
+  "reference_sha256": "ef81c380514b600e87b09ef2e8c4e90750e161704460c9aba226bb95ce639e73",
+  "schema": "rlvr-runner-recovery-v1",
+  "seed": 2323,
+  "snapshot_io_contract": {
+    "envelope": {
+      "max_payload_bytes": 16777216,
+      "max_primitive_bytes": 1048576,
+      "max_tensor_bytes": 8388608,
+      "max_tensor_elements": 1000000,
+      "max_tree_nodes": 100000
+    },
+    "limits": {
+      "snapshot_clone_bytes": 268435456,
+      "snapshot_hash_bytes": 1073741824,
+      "snapshot_inspect_operations": 0,
+      "snapshot_load_operations": 16,
+      "snapshot_primitive_bytes": 67108864,
+      "snapshot_save_operations": 32,
+      "snapshot_serialization_bytes": 536870912,
+      "snapshot_tensor_elements": 48000000,
+      "snapshot_tree_nodes": 6000000
+    },
+    "max_journal_bytes": 2097152,
+    "reservation": "whole operation, permanent/no refund",
+    "schema": "dongxi-snapshot-io-work-v1",
+    "scope": "shared payload hash/tree/finite/clone/serialization visits; not metadata/journal/caller/physical quota"
+  },
+  "sources": {
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-cpu-protocol.md": "a1cc8f7e850f164841f4afae21279aa6bd9335ef5a2a85aac26b4116f3341279",
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-preintegration/manifest.json": "5974f3044b245e92e24fa8b6c2e3b2389e237d01bd439a237ab44d4828d70c6a",
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-preintegration/qwen_rlvr_lab.py.txt": "819cd8bbfc1701416d050b14888cbc11d4128e143cb7c80266da9678b3f27df1",
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-preintegration/test_rlvr_runner_recovery.py.txt": "384b1eafb00bd47cb79cdfa1e91824e39e0b56103f36d9eff9242480fa575b92",
+    "experiments/reports/2026-10-05-rlvr-snapshot-io-preintegration/test_rlvr_work_budget.py.txt": "6407a1c2d73a2509a5b0170e3307d691e32e43b48eae700c36f8e9f813dbd91a",
+    "experiments/specs/2026-10-05-rlvr-reader-lesson.md": "e134966ef75758284a1919a934b9373a02d184085f69d05e68443ae8464130fd",
+    "experiments/specs/2026-10-05-rlvr-snapshot-io-admission.md": "4368f241ab504f7f8f7406847b91084b4c8073d36b436fa32b3f8fa7279242a5",
+    "pyproject.toml": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+    "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/qwen_rlvr_lab.py": "f32f41c77c7efe14b675d9a2e8371398e368e0ccdc1c376f787a40f5602636d7",
+    "src/dongxi_llms/rlvr_snapshot_io_lab.py": "f3dc22e7daa4713b9d09229bdfc040a6a8968d5e878d7da0ebd9fa61ceaa5592",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/snapshot_io_budget.py": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4",
+    "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "tests/snapshot_io_test_support.py": "4dd26b41faefa44c634ca76e52f4b9f8f98d8b6a8b5a06e8f8a18d524a561ccb",
+    "tests/test_rlvr_runner_recovery.py": "384b1eafb00bd47cb79cdfa1e91824e39e0b56103f36d9eff9242480fa575b92",
+    "tests/test_rlvr_snapshot_io.py": "bcc9e26fff274e86995c52b848b3910a43fb2e1ac486f169e1ff3fb0d9d4e84a",
+    "tests/test_rlvr_snapshot_io_lab.py": "e6fd0e2c8ea14428bb51c00a36b4fd34bcac1ad0dbafc27ef20640c8ed6cb0fd",
+    "tests/test_rlvr_work_budget.py": "c53e84c0abe2de8557c13a2bf32ee0e457280e9ae1684bf0532ee9e7a0b23ffd",
+    "tests/test_snapshot_io_budget.py": "e23d372f62d0d46eb454e615afe2527814957be0b5f89131ac028a0bd97e9fff",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "tests/test_training_snapshot_failure_paths.py": "845319a877e9bcef45989387859ab9d8b2da3b323131f0819a9984c8a721b261",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+  },
+  "stop_ids": [
+    0,
+    7
+  ],
+  "support": "full-support temperature1",
+  "train": [
+    {
+      "expected": 0,
+      "prompt": "Authored integer 0",
+      "prompt_ids": [
+        1,
+        2
+      ],
+      "source_id": "cpu-source-0"
+    },
+    {
+      "expected": 1,
+      "prompt": "Authored integer 1",
+      "prompt_ids": [
+        1,
+        3,
+        2
+      ],
+      "source_id": "cpu-source-1"
+    },
+    {
+      "expected": 2,
+      "prompt": "Authored integer 2",
+      "prompt_ids": [
+        1,
+        4,
+        3,
+        2
+      ],
+      "source_id": "cpu-source-2"
+    }
+  ],
+  "updates": 4,
+  "weight_decay": 0.0,
+  "work_budget": {
+    "limits": {
+      "collections": 100000,
+      "evaluation_calls": 100000,
+      "evaluation_examples": 100000,
+      "evaluation_positions": 100000,
+      "evaluation_tokens": 100000,
+      "generated_slots": 100000,
+      "generation_forward_calls": 100000,
+      "generation_forward_positions": 100000,
+      "multinomial_draws": 100000,
+      "old_policy_forward_calls": 100000,
+      "old_policy_forward_positions": 100000,
+      "policy_forward_calls": 100000,
+      "policy_forward_positions": 100000,
+      "recovery_multinomial_draws": 100000,
+      "recovery_validation_calls": 100000,
+      "recovery_validation_operations": 100000,
+      "recovery_validation_positions": 100000,
+      "reference_forward_calls": 100000,
+      "reference_forward_positions": 100000,
+      "response_targets": 100000,
+      "source_examples": 100000,
+      "train_updates": 100000,
+      "valid_response_tokens": 100000
+    },
+    "max_bytes": 1048576,
+    "reservations": "permanent conservative upper bounds before whole known operation",
+    "schema": "rlvr-logical-work-v1",
+    "scope": "logical calls/positions/actions/checks, not FLOPs/recompute/physical quotas"
+  }
+}

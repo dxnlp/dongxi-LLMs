@@ -1,0 +1,15 @@
+{
+  "scope": "Read-only platform observations for a source plan; no containment/quota/service exercise or authorization implied",
+  "observed_around_utc": "2026-10-04 23:05:49 UTC",
+  "local_date": "2026-10-05",
+  "cwd": "/home/dongxi/dongxi_ai/Dongxi_LLMs",
+  "commands": [
+    {"command": ["id", "-u"], "exit_code": 0, "output": "1000\n"},
+    {"command": ["systemctl", "show", "user@1000.service", "--property=Delegate", "--property=DelegateControllers", "--property=ActiveState", "--property=ControlGroup"], "exit_code": 0, "output": "ControlGroup=/user.slice/user-1000.slice/user@1000.service\nDelegate=yes\nDelegateControllers=cpu memory pids\nActiveState=active\n"},
+    {"command": ["findmnt", "-T", "/home/dongxi/dongxi_ai/Dongxi_LLMs", "-n", "-o", "FSTYPE,OPTIONS"], "exit_code": 0, "output": "ext4   rw,relatime,errors=remount-ro\n"},
+    {"command": ["rg", "^(0::|CapEff|CapPrm|MemAvailable)", "/proc/self/cgroup", "/proc/self/status", "/proc/meminfo"], "exit_code": 0, "output": "/proc/meminfo:MemAvailable:   123821184 kB\n/proc/self/cgroup:0::/user.slice/user-1000.slice/session-7.scope\n/proc/self/status:CapPrm:\t0000000000000000\n/proc/self/status:CapEff:\t0000000000000000\n"},
+    {"command": ["stat", "-c", "%u %a %n", "/sys/fs/cgroup/user.slice/user-1000.slice/session-7.scope", "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice", "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/cgroup.kill", "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/memory.max"], "exit_code": 0, "output": "0 755 /sys/fs/cgroup/user.slice/user-1000.slice/session-7.scope\n1000 755 /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice\n1000 200 /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/cgroup.kill\n1000 644 /sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/memory.max\n"}
+  ],
+  "memory_observation": {"available_bytes": 126792892416, "scope": "One Linux MemAvailable sample, not a continuous minimum"},
+  "not_executed": ["new private unit or cgroup", "existing group limit/kill modification", "quota provisioning", "container launch", "GPU probe or model load", "service/installation/Git changes"]
+}

@@ -1,0 +1,143 @@
+{
+  "actual_exit_code": -15,
+  "actual_native_profile_executed": false,
+  "child_command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "dongxi_llms.native_profile_supervisor",
+    "--inert-child",
+    "sleep"
+  ],
+  "child_pid": 251736,
+  "child_seconds": 0.107279671006836,
+  "cleanup_errors": [],
+  "failure": null,
+  "final_record_acknowledgment": "unknown-at-write; returned final_record_retained reports the separate observed writer ACK",
+  "helper_cleanup": [
+    {
+      "actual_exit_code": -15,
+      "cleanup_complete": true,
+      "errors": [],
+      "pid": 251733,
+      "started": true,
+      "still_alive": false
+    },
+    {
+      "actual_exit_code": 0,
+      "cleanup_complete": true,
+      "errors": [],
+      "pid": 251732,
+      "started": true,
+      "still_alive": false
+    }
+  ],
+  "in_memory_events": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "dongxi_llms.native_profile_supervisor",
+        "--inert-child",
+        "sleep"
+      ],
+      "elapsed_seconds": 0.0015708599821664393,
+      "event": "preflight",
+      "native_model_stage": false,
+      "operator_declaration": null,
+      "utc": "2026-10-05T06:33:07.011352+00:00"
+    },
+    {
+      "elapsed_seconds": 0.004337909980677068,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 27917287424,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 0,
+          "source": "injected-complete-clearance",
+          "unreadable": 0
+        },
+        "source": "injected-inert-CPU-control"
+      },
+      "utc": "2026-10-05T06:33:07.014137+00:00"
+    },
+    {
+      "child_pid": 251736,
+      "elapsed_seconds": 0.013351891015190631,
+      "event": "child-started",
+      "owned_session": 251736,
+      "utc": "2026-10-05T06:33:07.023151+00:00"
+    },
+    {
+      "child_pid": 251736,
+      "elapsed_seconds": 0.018488824018277228,
+      "event": "owned-signal",
+      "reason": "journal-failure",
+      "signal": 15,
+      "utc": "2026-10-05T06:33:07.028290+00:00"
+    },
+    {
+      "child_pid": 251736,
+      "elapsed_seconds": 0.11893012601649389,
+      "event": "owned-signal",
+      "reason": "journal-failure",
+      "signal": 9,
+      "utc": "2026-10-05T06:33:07.128718+00:00"
+    },
+    {
+      "actual_exit_code": -15,
+      "child_pid": 251736,
+      "cleanup_errors": [],
+      "elapsed_seconds": 0.12012501899152994,
+      "event": "actual-exit",
+      "failure": null,
+      "journal_error": {
+        "message": "authored logging failure",
+        "type": "OSError"
+      },
+      "stop_reason": "journal-failure",
+      "utc": "2026-10-05T06:33:07.129925+00:00"
+    }
+  ],
+  "journal_error": {
+    "message": "authored logging failure",
+    "type": "OSError"
+  },
+  "limits": {
+    "external_seconds": 1,
+    "logging_seconds": 0.25,
+    "probe_seconds": 0.25,
+    "reap_seconds": 0.5,
+    "reserve_bytes": 26843545600,
+    "term_seconds": 0.1
+  },
+  "minimum_sampled_available_bytes": 27917287424,
+  "native_model_stage": false,
+  "observations": [
+    {
+      "available_bytes": 27917287424,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 0,
+        "source": "injected-complete-clearance",
+        "unreadable": 0
+      },
+      "source": "injected-inert-CPU-control"
+    }
+  ],
+  "observed_owned_descendants": [],
+  "operator_declaration": null,
+  "operator_declaration_scope": "caller text is NOT authenticated authorization",
+  "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-watchdog-test-isolation/run-01/thread-contaminated/evidence/test_logging_failure_retained_and_child_stopped/control-1",
+  "resource_measurement": "labelled point samples, not continuous memory enforcement or GPU-idle proof",
+  "schema": "dongxi-native-profile-watchdog-result-v1",
+  "scope": "owned native/inert process only; no quota/cgroup/hostile-tree containment or model success inference",
+  "seconds": 0.12013449100777507,
+  "signal": 15,
+  "status": "failed",
+  "stop_reason": "journal-failure"
+}

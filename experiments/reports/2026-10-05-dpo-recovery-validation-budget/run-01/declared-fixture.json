@@ -1,0 +1,188 @@
+{
+  "limits": {
+    "evaluation_calls": 64,
+    "evaluation_positions": 512,
+    "generation_calls": 16,
+    "generation_position_upper_bound": 512,
+    "generation_tokens": 64,
+    "logical_sequence_tokens": 512,
+    "policy_forward_calls": 128,
+    "policy_forward_positions": 1024,
+    "recovery_history_rows": 4096,
+    "recovery_rng_states": 1024,
+    "recovery_sampler_draws": 4096,
+    "recovery_tensor_elements": 2000000,
+    "recovery_validation_operations": 128,
+    "reference_forward_calls": 96,
+    "reference_forward_positions": 1024,
+    "sampled_examples": 24,
+    "sampler_draws": 24,
+    "train_updates": 12,
+    "valid_targets": 160
+  },
+  "mode": "policy checkpointing ON; reference frozen/cache OFF",
+  "original": {
+    "accumulation": 2,
+    "beta": 0.2,
+    "checkpoint_every": 3,
+    "config": {
+      "attention_dropout": 0.0,
+      "bos_token_id": 7,
+      "eos_token_id": 1,
+      "head_dim": 8,
+      "hidden_size": 16,
+      "intermediate_size": 32,
+      "max_position_embeddings": 32,
+      "num_attention_heads": 2,
+      "num_hidden_layers": 1,
+      "num_key_value_heads": 1,
+      "pad_token_id": 1,
+      "vocab_size": 16
+    },
+    "encoded_train": [
+      [
+        [
+          [
+            7,
+            3,
+            9,
+            1
+          ],
+          [
+            false,
+            false,
+            true,
+            true
+          ]
+        ],
+        [
+          [
+            7,
+            3,
+            10,
+            11,
+            1
+          ],
+          [
+            false,
+            false,
+            true,
+            true,
+            true
+          ]
+        ]
+      ],
+      [
+        [
+          [
+            7,
+            4,
+            12,
+            9,
+            1
+          ],
+          [
+            false,
+            false,
+            true,
+            true,
+            true
+          ]
+        ],
+        [
+          [
+            7,
+            4,
+            10,
+            1
+          ],
+          [
+            false,
+            false,
+            true,
+            true
+          ]
+        ]
+      ],
+      [
+        [
+          [
+            7,
+            5,
+            9,
+            12,
+            1
+          ],
+          [
+            false,
+            false,
+            true,
+            true,
+            true
+          ]
+        ],
+        [
+          [
+            7,
+            5,
+            11,
+            10,
+            1
+          ],
+          [
+            false,
+            false,
+            true,
+            true,
+            true
+          ]
+        ]
+      ]
+    ],
+    "encoded_validation": [
+      [
+        [
+          [
+            7,
+            6,
+            9,
+            1
+          ],
+          [
+            false,
+            false,
+            true,
+            true
+          ]
+        ],
+        [
+          [
+            7,
+            6,
+            10,
+            1
+          ],
+          [
+            false,
+            false,
+            true,
+            true
+          ]
+        ]
+      ]
+    ],
+    "evaluation_prefixes": [
+      [
+        7,
+        8
+      ]
+    ],
+    "lr": 0.008,
+    "max_bytes": 16777216,
+    "pad_id": 1,
+    "schema": "dongxi-dpo-recovery-fixture-v1",
+    "seed": 1818,
+    "updates": 6
+  },
+  "recovery_units": "semantic verifier envelope, not generic loader/serialization/physical work"
+}

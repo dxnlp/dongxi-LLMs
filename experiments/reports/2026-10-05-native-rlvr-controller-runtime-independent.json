@@ -1,0 +1,119 @@
+{
+  "schema": "dongxi-independent-controller-runtime-review-v1",
+  "date_utc": "2026-10-05",
+  "reviewer": "/root/audit_reasoning",
+  "scope": "Read-only source/archive review and bounded authored CPU tests; no native model invocation, model download, weights-body rehash, GPU job, actual campaign assembly or acceptance/status mutation.",
+  "disposition": "clear-for-separately-declared-continuation-not-native-acceptance",
+  "command": "env PYTHONPATH=src:tests CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python -B -m unittest -q test_native_rlvr_stages test_native_rlvr_evaluation test_native_campaign_evidence",
+  "working_directory": "/home/dongxi/dongxi_ai/Dongxi_LLMs",
+  "actual_exit_code": 0,
+  "unittest_footer": {
+    "tests": 89,
+    "seconds": 11.009,
+    "status": "OK"
+  },
+  "source_sha256_before": {
+    "experiments/reports/2026-10-05-native-rlvr-lazy-import-continuation.json": {
+      "bytes": 6857,
+      "sha256": "415a4249afd0a5ed204f871b922768ca502182e6030390ee7de2b652baa363e0"
+    },
+    "scripts/assemble_native_campaign_evidence.py": {
+      "bytes": 52798,
+      "sha256": "2c0fac515619744ee71bb864bd9764a3ab1206bffeec2ac77f014b3825dd2fee"
+    },
+    "scripts/run_native_reasoning_baselines.py": {
+      "bytes": 22287,
+      "sha256": "249102e3dc4d6d81cf1c86ae71b65a9023dbb2f10c32698ad1eebf747cfa54e4"
+    },
+    "scripts/run_native_rlvr_evaluation.py": {
+      "bytes": 34901,
+      "sha256": "3992f39dc200388583de1400c5b873e5004a18cc3a61b159ceb907c22ec994d6"
+    },
+    "scripts/run_native_rlvr_stages.py": {
+      "bytes": 39893,
+      "sha256": "a17e6fe791d32bce3518507f29f2814f011197b3796162e6fafe269bc34ae508"
+    },
+    "src/dongxi_llms/native_profile_supervisor.py": {
+      "bytes": 36522,
+      "sha256": "88100a0fbe33fa8de34155838485e6c31fb5c3fd436d1dc27725fe720ad4f9b2"
+    },
+    "src/dongxi_llms/qwen_rlvr_lab.py": {
+      "bytes": 99265,
+      "sha256": "7c61253d4da3a3119342f66d4f40dc31e143e68d57be22ac7d71aac5d3ee1fb7"
+    },
+    "tests/test_native_campaign_evidence.py": {
+      "bytes": 51929,
+      "sha256": "9cd7c917e43a04f8ba6982a425a38ab4b5cfaf0423fbba2f0155e41df2907d61"
+    },
+    "tests/test_native_rlvr_evaluation.py": {
+      "bytes": 23764,
+      "sha256": "5dd67e7e2a574170e53be4879ed880bb3f84f3385cfd61587e547403bab0cc00"
+    },
+    "tests/test_native_rlvr_stages.py": {
+      "bytes": 26713,
+      "sha256": "c1beb9b80f4e2b445778738c012eefd85617bafe4dacb2a336caeb56ff8d6ba7"
+    }
+  },
+  "source_sha256_after": {
+    "experiments/reports/2026-10-05-native-rlvr-lazy-import-continuation.json": {
+      "bytes": 6857,
+      "sha256": "415a4249afd0a5ed204f871b922768ca502182e6030390ee7de2b652baa363e0"
+    },
+    "scripts/assemble_native_campaign_evidence.py": {
+      "bytes": 52798,
+      "sha256": "2c0fac515619744ee71bb864bd9764a3ab1206bffeec2ac77f014b3825dd2fee"
+    },
+    "scripts/run_native_reasoning_baselines.py": {
+      "bytes": 22287,
+      "sha256": "249102e3dc4d6d81cf1c86ae71b65a9023dbb2f10c32698ad1eebf747cfa54e4"
+    },
+    "scripts/run_native_rlvr_evaluation.py": {
+      "bytes": 34901,
+      "sha256": "3992f39dc200388583de1400c5b873e5004a18cc3a61b159ceb907c22ec994d6"
+    },
+    "scripts/run_native_rlvr_stages.py": {
+      "bytes": 39893,
+      "sha256": "a17e6fe791d32bce3518507f29f2814f011197b3796162e6fafe269bc34ae508"
+    },
+    "src/dongxi_llms/native_profile_supervisor.py": {
+      "bytes": 36522,
+      "sha256": "88100a0fbe33fa8de34155838485e6c31fb5c3fd436d1dc27725fe720ad4f9b2"
+    },
+    "src/dongxi_llms/qwen_rlvr_lab.py": {
+      "bytes": 99265,
+      "sha256": "7c61253d4da3a3119342f66d4f40dc31e143e68d57be22ac7d71aac5d3ee1fb7"
+    },
+    "tests/test_native_campaign_evidence.py": {
+      "bytes": 51929,
+      "sha256": "9cd7c917e43a04f8ba6982a425a38ab4b5cfaf0423fbba2f0155e41df2907d61"
+    },
+    "tests/test_native_rlvr_evaluation.py": {
+      "bytes": 23764,
+      "sha256": "5dd67e7e2a574170e53be4879ed880bb3f84f3385cfd61587e547403bab0cc00"
+    },
+    "tests/test_native_rlvr_stages.py": {
+      "bytes": 26713,
+      "sha256": "c1beb9b80f4e2b445778738c012eefd85617bafe4dacb2a336caeb56ff8d6ba7"
+    }
+  },
+  "source_closure_stable": true,
+  "retained_combined_tool_output": "----------------------------------------------------------------------\nRan 89 tests in 11.009s\n\nOK\n{\"status\": \"prepared-not-executed\", \"stage\": \"recovery\", \"group\": 4, \"evidence\": \"/tmp/dongxi-native-rlvr-controls-79965k0a/experiments/reports/native-rlvr-g4-recovery-20261005-run-01\"}\n{\"status\": \"passed\", \"group\": 4, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-_lt3tm0p/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-01\"}\n{\"status\": \"passed\", \"group\": 8, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-_lt3tm0p/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-01\"}\n{\"status\": \"compared\", \"budget\": 32, \"path\": \"/tmp/dongxi-rlvr-eval-authored-_lt3tm0p/experiments/reports/native-rlvr-common20-cap32-20261005-run-01.json\"}\n{\"status\": \"passed\", \"group\": 4, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-u24cvzwk/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-01\"}\n{\"status\": \"passed\", \"group\": 4, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-mabi9400/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-01\"}\n{\"status\": \"passed\", \"group\": 4, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-qiy43332/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-01\"}\n{\"status\": \"passed\", \"group\": 8, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-qiy43332/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-01\"}\n",
+  "checks": {
+    "real_fresh_controller_import_avoids_torch_transformers": true,
+    "actual_spawn_cleanup_ack_under_unchanged_half_second": true,
+    "authored_one_second_delay_remains_rejected": true,
+    "explicit_selector_no_fallback": true,
+    "selected_retry_requires_actual_current_source_recovery_acceptance": true,
+    "failed_original_retained_unselected": true,
+    "retry_maps_same_original_stage_ids": true,
+    "native_numerical_supervisor_and_baseline_sources_unchanged_vs_run01_preparation": true,
+    "all_original_recovery_checks_still_required": true
+  },
+  "boundaries": [
+    "89 includes original authored adapter/evaluation/archive controls; fixture status strings are not actual pretrained results.",
+    "Empty-descendant spawn target measures fresh controller import/ack pathway only; it does not retroactively prove run01's historical helper stack or cleanup.",
+    "Original G4run01 remains failed; final storage equality and native retry02 have not been run by this review.",
+    "Explicit retry selection is controller provenance, not a new objective, budget increase, safety-gate waiver or automatic retry.",
+    "All future native stages require their actual supervised/acceptance receipts; this review does not sign DXI03/17/18 or learner mastery."
+  ]
+}

@@ -13,6 +13,7 @@
 4. [`padding-masks-and-special-tokens.md`](padding-masks-and-special-tokens.md)
 5. [`unicode-normalization-pretokenization-and-chat-packaging.md`](unicode-normalization-pretokenization-and-chat-packaging.md)
 6. [`meteor-corpus-bpe-and-id-assignment.md`](meteor-corpus-bpe-and-id-assignment.md) — counted Chinese BPE animation follow-up; explicit ties and illustrative ID assignment.
+7. [`output-vocabulary-and-decoder-coverage.md`](output-vocabulary-and-decoder-coverage.md) — later actual Basechat32/128 decode failures; input byte coverage is distinct from model-output ID mapping.
 
 ## Current outcome
 
@@ -27,6 +28,12 @@ also verifies a deterministic BPE trace, grapheme counts, normalization behavior
 leading-space token identity, and raw-versus-chat packaging. Open edges are
 explicitly routed to later chapters or optional enrichment rather than required
 Day 2 work.
+
+Later evidence bridge,2026-10-05: both predeclared Basechat profiles selected
+configured output ID151768 without a decoder mapping at their24th action.
+The focused note preserves the40 observed/60 missing responses and failed
+native exits, not a repaired benchmark. It does not change historical Day2
+completion, assess this new question, or move the active learner from Day9.
 
 ## Public-production links
 

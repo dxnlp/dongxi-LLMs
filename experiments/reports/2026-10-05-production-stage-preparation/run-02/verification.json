@@ -1,0 +1,2903 @@
+{
+  "schema": "dongxi-production-stage-cpu-verification-v1",
+  "status": "pass",
+  "created_utc": "2026-10-04T23:38:10.348117+00:00",
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "tests/test_production_stage.py",
+    "--collect",
+    "experiments/reports/2026-10-05-production-stage-preparation/run-02"
+  ],
+  "python_argv": [
+    "tests/test_production_stage.py",
+    "--collect",
+    "experiments/reports/2026-10-05-production-stage-preparation/run-02"
+  ],
+  "environment": {
+    "python": "3.12.14",
+    "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "packages": {
+      "torch": "2.14.1+cpu",
+      "transformers": "5.18.0",
+      "tokenizers": "0.23.2",
+      "peft": "0.20.0"
+    },
+    "cuda_visible_devices": "",
+    "hf_offline": true
+  },
+  "commands": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_production_stage.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 4.911578200990334,
+      "raw_log": "experiments/reports/2026-10-05-production-stage-preparation/run-02/test_production_stage.py.log",
+      "raw_log_sha256": "3e15fc47e72115ee12d06f78db959d8db637b5015c3edade64c6edbd1416af0c"
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_staged_campaign.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 1.0048442030092701,
+      "raw_log": "experiments/reports/2026-10-05-production-stage-preparation/run-02/test_staged_campaign.py.log",
+      "raw_log_sha256": "f285a3a027202fbb4dfc5afb0e14c5bd33c3c92297d1982b1919a81a42d2460e"
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_production_preflight.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.05643091700039804,
+      "raw_log": "experiments/reports/2026-10-05-production-stage-preparation/run-02/test_production_preflight.py.log",
+      "raw_log_sha256": "ba354a18629dd53cbdafe8cabe0bc7061b8584a7aa5d70b4c0eaf4e3fc89d63c"
+    }
+  ],
+  "seconds": 7.711884590011323,
+  "source_sha256": {
+    "src/dongxi_llms/staged_campaign.py": "4391ed6bd73a07f16067ebd3eb7079ba3e5474414530e7efefbb312ff5d27953",
+    "src/dongxi_llms/campaign_supervisor.py": "d2959a7856bc0cc4fb6b6623387d45bbc0d7193607a52c29c59bb8823b97d253",
+    "src/dongxi_llms/owned_worker_guards.py": "0a5bcbd9957ad81595d09f28a2e39396153447dff60b8765fb0495d6e38c3fc8",
+    "src/dongxi_llms/training_snapshot.py": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+    "src/dongxi_llms/artifact_budget.py": "3d76f60d2014c8054326f1bca3f2e4948d421866f645ba4a4a067bc153bfeccc",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/evaluation_lab.py": "75ffea74bc308180f94a180a6e90afd3bfe69095c20b64fd8ed002a6f137dddd",
+    "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+    "src/dongxi_llms/production_stage.py": "96ea25d4051c44f93feec068b1bb85b800386d255bb422ba272607649bb2c153",
+    "src/dongxi_llms/production_preflight.py": "712e67a85f8baead0e2b91bb7d7beeeb286d3481855ee7bd614db6b2c5135386",
+    "tests/test_production_stage.py": "27a95a7a0fffd09340d9785afb02fd275f5b773e2ced87ebf5a1554c3495f481",
+    "tests/test_production_preflight.py": "8c6d0faff9f47f8324eb6277c98012cbe841009a8a68e3ab420b9831fdfac0b3",
+    "experiments/specs/2026-10-05-production-stage-preparation.md": "dbdb793724c922df9cbf4a76518b0299400c7b183cd0fa200e949febfece0eb5",
+    "tests/test_staged_campaign.py": "06ca1c9d2a256c5b363609501ce9ef87e49882d5cabcceb4da432b3817f5eb78",
+    "experiments/specs/2026-10-04-staged-spark-campaign.md": "821a1f5dddb4c974f017fbb5ede0ce91c624a6351d61ab9370008dcfe30ae118",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/stories_training.py": "84efb975690045c85f02f327887ffca7e044ebc60f89125d40de44a990b9fefa",
+    "src/dongxi_llms/stories_data.py": "12e43f24a092353b96e35cf3cb16414b22f9806b63423d0d57444e98a14730c8",
+    "scripts/launch_stories_learning.py": "e1097e247c3965d624e3fe4882304f177ed5a142f86bf4562f9baa43c6db3e0c",
+    "scripts/train_stories.py": "59774cb658a9f84c4723a9c9c019f6d3ee462f2db79e3cba4391443e559faa35",
+    "scripts/run_chapter09_spark_sft.py": "91a53ba4a7a85c2bd9adebfdca4671c909a151cc3899559ba65b8afc7010d8b8",
+    "scripts/run_chapter11_spark_dpo.py": "227e9ab352779d8bc3a08ec7d0d62d34933b8f0bf9bddf3b35a8d4594ab4d0a8",
+    "src/dongxi_llms/qwen_rlvr_lab.py": "c2d00a3eb8881291f04572645d2e0bf1b52cf2c17536887657b004ca27b6f3bf",
+    "src/dongxi_llms/reasoning_generation.py": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0",
+    "src/dongxi_llms/reasoning_evaluation.py": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da",
+    "fixtures/reasoning-controls/math_items.json": "d674db480cab4fdb3fa3487146a1f107913bf1a6e55d2a64e42659729ee707b8",
+    "fixtures/reasoning-controls/protocol.json": "338186ab059b4f9541c14aaa46242a224ad21981285602f023690a10d952e0d0",
+    "scripts/prepare_chapter09_instruction_fixture.py": "02b2096b2ecbd59011df3da5fe16d0c6c8bfc7051df37a87aa191e9b38494674",
+    "experiments/data/instruction_interface_v1.jinja": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+    "fixtures/chapter11/train.jsonl": "f245c41d3166fdaa6c571c90eec7f8b599babdfae48d70a20bfa78e231249757",
+    "fixtures/chapter11/validation.jsonl": "a843682fad861a8b0867ef8323750b5b594b9825e023d0337d4c02fa47617a18",
+    "fixtures/chapter11/evaluation.jsonl": "781aa3f47d315b2b6391698c7efa85a707d714334a1ee7be122087de66cbb788",
+    "experiments/reports/2026-09-14-tinystories-learning-result.json": "684d5096bf8f32ed6d4aa9dae6bf31906089d17cf01a05575001e69f90652a8e",
+    "pyproject.toml": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "src/dongxi_llms/checkpoint_merge.py": "8c4c1712aeeb2bd65e5e44e08668fa13c239afb1fcd117fc68c6b4fa383101ad"
+  },
+  "source_sha256_after": {
+    "src/dongxi_llms/staged_campaign.py": "4391ed6bd73a07f16067ebd3eb7079ba3e5474414530e7efefbb312ff5d27953",
+    "src/dongxi_llms/campaign_supervisor.py": "d2959a7856bc0cc4fb6b6623387d45bbc0d7193607a52c29c59bb8823b97d253",
+    "src/dongxi_llms/owned_worker_guards.py": "0a5bcbd9957ad81595d09f28a2e39396153447dff60b8765fb0495d6e38c3fc8",
+    "src/dongxi_llms/training_snapshot.py": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+    "src/dongxi_llms/artifact_budget.py": "3d76f60d2014c8054326f1bca3f2e4948d421866f645ba4a4a067bc153bfeccc",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/evaluation_lab.py": "75ffea74bc308180f94a180a6e90afd3bfe69095c20b64fd8ed002a6f137dddd",
+    "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+    "src/dongxi_llms/production_stage.py": "96ea25d4051c44f93feec068b1bb85b800386d255bb422ba272607649bb2c153",
+    "src/dongxi_llms/production_preflight.py": "712e67a85f8baead0e2b91bb7d7beeeb286d3481855ee7bd614db6b2c5135386",
+    "tests/test_production_stage.py": "27a95a7a0fffd09340d9785afb02fd275f5b773e2ced87ebf5a1554c3495f481",
+    "tests/test_production_preflight.py": "8c6d0faff9f47f8324eb6277c98012cbe841009a8a68e3ab420b9831fdfac0b3",
+    "experiments/specs/2026-10-05-production-stage-preparation.md": "dbdb793724c922df9cbf4a76518b0299400c7b183cd0fa200e949febfece0eb5",
+    "tests/test_staged_campaign.py": "06ca1c9d2a256c5b363609501ce9ef87e49882d5cabcceb4da432b3817f5eb78",
+    "experiments/specs/2026-10-04-staged-spark-campaign.md": "821a1f5dddb4c974f017fbb5ede0ce91c624a6351d61ab9370008dcfe30ae118",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/stories_training.py": "84efb975690045c85f02f327887ffca7e044ebc60f89125d40de44a990b9fefa",
+    "src/dongxi_llms/stories_data.py": "12e43f24a092353b96e35cf3cb16414b22f9806b63423d0d57444e98a14730c8",
+    "scripts/launch_stories_learning.py": "e1097e247c3965d624e3fe4882304f177ed5a142f86bf4562f9baa43c6db3e0c",
+    "scripts/train_stories.py": "59774cb658a9f84c4723a9c9c019f6d3ee462f2db79e3cba4391443e559faa35",
+    "scripts/run_chapter09_spark_sft.py": "91a53ba4a7a85c2bd9adebfdca4671c909a151cc3899559ba65b8afc7010d8b8",
+    "scripts/run_chapter11_spark_dpo.py": "227e9ab352779d8bc3a08ec7d0d62d34933b8f0bf9bddf3b35a8d4594ab4d0a8",
+    "src/dongxi_llms/qwen_rlvr_lab.py": "c2d00a3eb8881291f04572645d2e0bf1b52cf2c17536887657b004ca27b6f3bf",
+    "src/dongxi_llms/reasoning_generation.py": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0",
+    "src/dongxi_llms/reasoning_evaluation.py": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da",
+    "fixtures/reasoning-controls/math_items.json": "d674db480cab4fdb3fa3487146a1f107913bf1a6e55d2a64e42659729ee707b8",
+    "fixtures/reasoning-controls/protocol.json": "338186ab059b4f9541c14aaa46242a224ad21981285602f023690a10d952e0d0",
+    "scripts/prepare_chapter09_instruction_fixture.py": "02b2096b2ecbd59011df3da5fe16d0c6c8bfc7051df37a87aa191e9b38494674",
+    "experiments/data/instruction_interface_v1.jinja": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+    "fixtures/chapter11/train.jsonl": "f245c41d3166fdaa6c571c90eec7f8b599babdfae48d70a20bfa78e231249757",
+    "fixtures/chapter11/validation.jsonl": "a843682fad861a8b0867ef8323750b5b594b9825e023d0337d4c02fa47617a18",
+    "fixtures/chapter11/evaluation.jsonl": "781aa3f47d315b2b6391698c7efa85a707d714334a1ee7be122087de66cbb788",
+    "experiments/reports/2026-09-14-tinystories-learning-result.json": "684d5096bf8f32ed6d4aa9dae6bf31906089d17cf01a05575001e69f90652a8e",
+    "pyproject.toml": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "src/dongxi_llms/checkpoint_merge.py": "8c4c1712aeeb2bd65e5e44e08668fa13c239afb1fcd117fc68c6b4fa383101ad"
+  },
+  "sources_unchanged": true,
+  "catalog": [
+    {
+      "stage_id": "story-profile",
+      "preparation_sha256": "1065806a5a911169dc0f829455228b5e5de65faf51997dac060226f1cac701a7",
+      "runner": {
+        "source": "scripts/train_stories.py",
+        "operation": "profile",
+        "role": "fresh-story-training",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 655360,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 655360,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "story-control-smoke",
+      "preparation_sha256": "196e69b53f1bbcb82aa0a75a241bf5de3840ca02c0031eb89ac56435a3c3632f",
+      "runner": {
+        "source": "scripts/train_stories.py",
+        "operation": "smoke",
+        "role": "fresh-story-training",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 49152,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 49152,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "story-control-recovery",
+      "preparation_sha256": "662c861680eea0da7bce508ef00bb2c9559627c3a6b4909708d897b8354b5992",
+      "runner": {
+        "source": "scripts/train_stories.py",
+        "operation": "recovery",
+        "role": "fresh-story-training",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 49152,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 49152,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "story-control-pilot",
+      "preparation_sha256": "637c13aa38682a09c8bec3fcb2c8359a39b329d2d9e208d8ef943ba2b178de29",
+      "runner": {
+        "source": "scripts/train_stories.py",
+        "operation": "pilot",
+        "role": "fresh-story-training",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 229376000,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 229376000,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "story-half-lr-smoke",
+      "preparation_sha256": "5f610795717817862dbfffc8decc90e97b7dff9c87f71f0b53da9f038dc86043",
+      "runner": {
+        "source": "scripts/train_stories.py",
+        "operation": "smoke",
+        "role": "fresh-story-training",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 49152,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 49152,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "story-half-lr-recovery",
+      "preparation_sha256": "3610043097401a589f571c840f651a60055d5da3047b4c71a9ad98cf285e90a8",
+      "runner": {
+        "source": "scripts/train_stories.py",
+        "operation": "recovery",
+        "role": "fresh-story-training",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 49152,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 49152,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "story-half-lr-pilot",
+      "preparation_sha256": "5fe4fb8edc93e94d0d5ebc482bffdba7829bc85cad6777a1377686f11f6622e4",
+      "runner": {
+        "source": "scripts/train_stories.py",
+        "operation": "pilot",
+        "role": "fresh-story-training",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 229376000,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 229376000,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "story-paired-comparison",
+      "preparation_sha256": "aec340f3e31c035287de0b481e9074fcde3d2b61c7cd4790907dce2bc8b4dba7",
+      "runner": {
+        "source": "scripts/train_stories.py",
+        "operation": "frozen-evaluation",
+        "role": "fresh-story-training",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-profile-base06",
+      "preparation_sha256": "12d6724005aedd87794ce11028856ec09e544f421c53e0d17c956e3beca9f859",
+      "runner": {
+        "source": "scripts/run_chapter09_spark_sft.py",
+        "operation": "profile",
+        "role": "supervised-fine-tuning",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 20480,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 20480,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-frozen-base",
+      "preparation_sha256": "5b496deb43e76b7a6ade00c579a8a6c2d100d603a1e65019f6521cc5c938a22c",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "baseline",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-sft-full-smoke",
+      "preparation_sha256": "80c0e1fde4b4e2158eaff1cd14c4c92d4adfb2e988fd9c0b456f034d9cec7ed2",
+      "runner": {
+        "source": "scripts/run_chapter09_spark_sft.py",
+        "operation": "smoke",
+        "role": "supervised-fine-tuning",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 20480,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 20480,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-sft-full-recovery",
+      "preparation_sha256": "05f160eaba3ae7a063b6dc8eff4d30912ee5b966a16a5a6498d887223678abb3",
+      "runner": {
+        "source": "scripts/run_chapter09_spark_sft.py",
+        "operation": "recovery",
+        "role": "supervised-fine-tuning",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 20480,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 20480,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-sft-full-pilot",
+      "preparation_sha256": "d59764745aebd498c6dce72955c165165cba58e7ede3e56fed99fa564159448b",
+      "runner": {
+        "source": "scripts/run_chapter09_spark_sft.py",
+        "operation": "pilot",
+        "role": "supervised-fine-tuning",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 409600,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 409600,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-sft-full-evaluation",
+      "preparation_sha256": "e0572da57d777e3c89f0ed326d29ec69cb3c8c81eb650ffb0c9318708f27c66b",
+      "runner": {
+        "source": "scripts/run_chapter09_spark_sft.py",
+        "operation": "frozen-evaluation",
+        "role": "supervised-fine-tuning",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-sft-lora-smoke",
+      "preparation_sha256": "736e652b89d25161063f67599828d26832c0635c15b29910edf68f5f85443d65",
+      "runner": {
+        "source": "scripts/run_chapter09_spark_sft.py",
+        "operation": "smoke",
+        "role": "supervised-fine-tuning",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 20480,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 20480,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-sft-lora-recovery",
+      "preparation_sha256": "7f39f3b7253b6cbed99ee8f25cdabe62ddc2c7408e2e4b1e777897d84abc74c5",
+      "runner": {
+        "source": "scripts/run_chapter09_spark_sft.py",
+        "operation": "recovery",
+        "role": "supervised-fine-tuning",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 20480,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 20480,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-sft-lora-pilot",
+      "preparation_sha256": "33761eae11bf2fcc6b54ca5718dbc1ffb87c6a4f6f6298de162f3d259fbec953",
+      "runner": {
+        "source": "scripts/run_chapter09_spark_sft.py",
+        "operation": "pilot",
+        "role": "supervised-fine-tuning",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 409600,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 409600,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-lora-merge",
+      "preparation_sha256": "24903829b116ff342d68aa7934e2a4e9555141b94805b5b7ed50fd825c0cc3f0",
+      "runner": {
+        "source": "src/dongxi_llms/checkpoint_merge.py",
+        "operation": "derived-checkpoint",
+        "role": "explicit-lora-merge",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-sft-lora-evaluation",
+      "preparation_sha256": "96824a12a8bbde0c15d94a46743678f92636058873914e098bf24b96dcda2ddc",
+      "runner": {
+        "source": "scripts/run_chapter09_spark_sft.py",
+        "operation": "frozen-evaluation",
+        "role": "supervised-fine-tuning",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-selected-sft-parent",
+      "preparation_sha256": "bd0058a982358b64683f77314ce4badd20a2a857a263658c58a62e926833ff0f",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "predeclared-full-sft-parent",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-dpo-smoke",
+      "preparation_sha256": "91bcddd7c9a2eeb28258e93c88a769866d75d5f8daed083ed8e69030bddb27c8",
+      "runner": {
+        "source": "scripts/run_chapter11_spark_dpo.py",
+        "operation": "smoke",
+        "role": "direct-preference-optimization",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 4096,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 8176,
+        "reference_scored_positions": 8176,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-dpo-recovery",
+      "preparation_sha256": "99dc317825f3bb7f6e2c979446b04ec9f5bd99ae437bf2b1fe99005b44f6d34f",
+      "runner": {
+        "source": "scripts/run_chapter11_spark_dpo.py",
+        "operation": "recovery",
+        "role": "direct-preference-optimization",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 4096,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 8176,
+        "reference_scored_positions": 8176,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-dpo-pilot",
+      "preparation_sha256": "e7c1cfeb49ff9bc1aceaea53ff2dbea1ebcd68db72edba86e7013625b7e47fb5",
+      "runner": {
+        "source": "scripts/run_chapter11_spark_dpo.py",
+        "operation": "pilot",
+        "role": "direct-preference-optimization",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 204800,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 408800,
+        "reference_scored_positions": 408800,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-chosen-sft-smoke",
+      "preparation_sha256": "671450ed8ce11a6acec712c02a7a6c59de8ab40e218be7a41a97a567196e4f89",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "smoke",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 4096,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 4096,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-chosen-sft-recovery",
+      "preparation_sha256": "5cd3a65a88da52579992f31cc2a933e39b6b051f8bd243610808c6c5e7779ca3",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "recovery",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 4096,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 4096,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-chosen-sft-pilot",
+      "preparation_sha256": "63ce4182013451de1c12a2e877a42d15491247d4e1a82acd348902c6b6750aca",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "pilot",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": 204800,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": 204800,
+        "reference_scored_positions": 0,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-preference-comparison",
+      "preparation_sha256": "e8338a2079dd3320aa04adb1ab3bdac2247df05c15a5abb621a4a89db4223648",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "frozen-evaluation",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-dpo-chosen-nll-extension",
+      "preparation_sha256": "9e409469251a991590de687ce9bc2b917ca7f0c29b0c977a68b6673cd88a017b",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "optional-pilot",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-dpo-rehearsal-extension",
+      "preparation_sha256": "b58cfc547ede14b96e6d9e5f6207cbfac6791305cc2c12e5779c2bb058b96fd7",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "optional-pilot",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-profile-base",
+      "preparation_sha256": "b43198db05aeec5b733a39c99abb14b303348905b0c3407be6b61d216f4d5a3e",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "profile",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-profile-instruct",
+      "preparation_sha256": "07af17d8ae7ebceea699195d99bc5381534d3c0797a3d4f7831ab8acdc86e05d",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "profile",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-baseline-base-raw",
+      "preparation_sha256": "dcae0d6b559dc0586689f108a24ef735e318acf4575305a7e4a9ee6a3853609e",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "baseline",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-baseline-base-chat",
+      "preparation_sha256": "d14d6799c88d6a30dbfb9c307900985e523c81600e42092471b376784dbc080e",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "baseline",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-baseline-instruct-thinking-off",
+      "preparation_sha256": "dc525ac653a4266a044561c1be6b73254ac0e5ef554740a950d401a9c6f50fbc",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "baseline",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-baseline-instruct-thinking-on",
+      "preparation_sha256": "34806a0e0b1da8a0e9d7e554813095608ae35d43a0363d7154b8b71bf29c80ec",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "baseline",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-rlvr-g4-smoke",
+      "preparation_sha256": "c761d87eff1adb6cab74078efd794dc759bef9c7c0002b355cdd90503bf4dc6f",
+      "runner": {
+        "source": "src/dongxi_llms/qwen_rlvr_lab.py",
+        "operation": "smoke",
+        "role": "reasoning-rlvr",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": 128,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-rlvr-g4-recovery",
+      "preparation_sha256": "c6f17dd9f5e9459bdb6f883f17282d7e9bdf9d864b1361135dff66b899e63c10",
+      "runner": {
+        "source": "src/dongxi_llms/qwen_rlvr_lab.py",
+        "operation": "recovery",
+        "role": "reasoning-rlvr",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": 128,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-rlvr-g4-pilot",
+      "preparation_sha256": "3b10b4894a2b552c877d9ad5ad03c1cee387f0c22e1b5dd3058503f2d3248c9e",
+      "runner": {
+        "source": "src/dongxi_llms/qwen_rlvr_lab.py",
+        "operation": "pilot",
+        "role": "reasoning-rlvr",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": 4096,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-rlvr-g8-smoke",
+      "preparation_sha256": "19d9f11fd4e5d35d0e95cb8bf207536e85f53841cde6af70c702eef38e807b92",
+      "runner": {
+        "source": "src/dongxi_llms/qwen_rlvr_lab.py",
+        "operation": "smoke",
+        "role": "reasoning-rlvr",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": 256,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-rlvr-g8-recovery",
+      "preparation_sha256": "ee99b941a94caf3b0eef3f34f1c3cfad5449ee3e65426a79abcaf2ce4f0f596e",
+      "runner": {
+        "source": "src/dongxi_llms/qwen_rlvr_lab.py",
+        "operation": "recovery",
+        "role": "reasoning-rlvr",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": 256,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-rlvr-g8-pilot",
+      "preparation_sha256": "ae8158d70d2acb93d6114c6e286607a36164f8abc63d25b7721662f32e34cda0",
+      "runner": {
+        "source": "src/dongxi_llms/qwen_rlvr_lab.py",
+        "operation": "pilot",
+        "role": "reasoning-rlvr",
+        "adapter_status": "runner-source-exists-integration-pending",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": 8192,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-g4-g8-comparison",
+      "preparation_sha256": "b7b138f02e037d73a286563f4868a2ebfd5b8fe9e19d984442445041461cff2c",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "frozen-evaluation",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "assistant-1p7-confirmation",
+      "preparation_sha256": "57eef043c30d1d83e201f44ad5143804950f0800792116d75f60c2390572f97f",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "optional-confirmation",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "reasoning-multi-seed-confirmation",
+      "preparation_sha256": "8bc1cb941937aa45a7ec35627fb48e4b5efa542ac1d4c691d2d10414b9626468",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "optional-confirmation",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    },
+    {
+      "stage_id": "capstone-branch-comparison",
+      "preparation_sha256": "6c668439851b9abbf94782efb242a56a8919c5251784fad03e9ac269f8728e30",
+      "runner": {
+        "source": "src/dongxi_llms/reasoning_generation.py",
+        "operation": "frozen-evaluation",
+        "role": "stage-adapter-required",
+        "adapter_status": "stage-adapter-unimplemented",
+        "execution_api": null,
+        "argv": null,
+        "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+      },
+      "logical_work_envelope": {
+        "padded_geometry": null,
+        "valid_targets": "not inferred from padded geometry",
+        "policy_scored_positions": null,
+        "reference_scored_positions": null,
+        "response_slots": null,
+        "generation_prefix_positions": null,
+        "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+      },
+      "jobs_started": 0,
+      "launch_authorized": false
+    }
+  ],
+  "authored_fixture_preparations": [
+    {
+      "schema": "dongxi-compiled-preparation-v1",
+      "status": "validated-authored-fixture-preparation",
+      "preparation": {
+        "schema": "dongxi-stage-preparation-v1",
+        "stage_id": "story-profile",
+        "status": "prepared-not-launch-authorized",
+        "science": {
+          "id": "story-profile",
+          "branch": "story",
+          "stage": "profile",
+          "prerequisite_stage_ids": [],
+          "proposed_weight_start": "fresh-random-seed909-no-profile-transfer",
+          "evaluation_contract": "story-publication-v1",
+          "proposed_budget": {
+            "status": "proposed-unapproved-ceilings-profile-required",
+            "maximum_updates": 40,
+            "microbatch": 16,
+            "accumulation": 1,
+            "sequence_positions_per_example_max": 1024,
+            "valid_training_target_cap": null,
+            "maximum_padded_training_positions": 655360,
+            "external_seconds": 600,
+            "group_size": null,
+            "max_new_tokens": null,
+            "maximum_attempted_response_tokens": null,
+            "target_guard": "must resolve before pilot approval; null exposure is not inferred from padded geometry",
+            "memory": {
+              "minimum_host_available_bytes": 26843545600,
+              "cuda_peak": null,
+              "profile_measured": false
+            }
+          },
+          "intervention": null,
+          "optional": false,
+          "historical_model_recipe_declaration": {
+            "schema": 1,
+            "model": {
+              "vocab": 50257,
+              "width": 512,
+              "heads": 8,
+              "kv_heads": 8,
+              "head_dim": 64,
+              "layers": 12,
+              "hidden": 1536,
+              "max_length": 1024,
+              "modern": true,
+              "qk_norm": false,
+              "tied": true
+            },
+            "recipe": {
+              "total_updates": 14000,
+              "warmup": 200,
+              "peak_lr": 0.0003,
+              "floor_lr": 3e-05,
+              "microbatch": 16,
+              "accumulation": 1,
+              "weight_decay": 0.1,
+              "clip": 1,
+              "seed": 909,
+              "bf16": true,
+              "activation_checkpointing": true
+            },
+            "data": "6ca5b3de3bf5b90028b999e0aff76e86d2e691df44ee4c32732934f5e95efc1c",
+            "device": "cuda",
+            "torch": "2.13.0+cu130",
+            "attention": "pytorch-sdpa-auto-causal",
+            "implementation": {
+              "stories_training.py": "d14070e2c3678d243a0a65a1ecf38196c4ad0fa25729d63695688619e1c1e8e9",
+              "stories_data.py": "12e43f24a092353b96e35cf3cb16414b22f9806b63423d0d57444e98a14730c8",
+              "decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+              "pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197"
+            }
+          }
+        },
+        "evaluation": {
+          "id": "story-publication-v1",
+          "status": "logical-design-frozen-interface-pending",
+          "items": [
+            {
+              "id": "story-01",
+              "source_group": "original-opening-01",
+              "prompt": "Mara lent her blue umbrella to Ivo before the rain began."
+            },
+            {
+              "id": "story-02",
+              "source_group": "original-opening-02",
+              "prompt": "A small fox buried an apple beside the old stone gate."
+            },
+            {
+              "id": "story-03",
+              "source_group": "original-opening-03",
+              "prompt": "Nina saved two coins so she could repair her toy boat."
+            },
+            {
+              "id": "story-04",
+              "source_group": "original-opening-04",
+              "prompt": "When the bridge closed, Ben needed another way to visit Grandma."
+            },
+            {
+              "id": "story-05",
+              "source_group": "original-opening-05",
+              "prompt": "The farmer asked Ada to keep the tiny chick warm until morning."
+            },
+            {
+              "id": "story-06",
+              "source_group": "original-opening-06",
+              "prompt": "Oli left a red ribbon on the empty chair to remember his friend."
+            },
+            {
+              "id": "story-07",
+              "source_group": "original-opening-07",
+              "prompt": "A paper kite caught in a tree, and the children could not reach it."
+            },
+            {
+              "id": "story-08",
+              "source_group": "original-opening-08",
+              "prompt": "The baker gave Lila one loaf to carry safely across town."
+            },
+            {
+              "id": "story-09",
+              "source_group": "original-opening-09",
+              "prompt": "Sam promised to water the seed while his sister was away."
+            },
+            {
+              "id": "story-10",
+              "source_group": "original-opening-10",
+              "prompt": "A lost puppy followed the sound of a familiar little bell."
+            },
+            {
+              "id": "story-11",
+              "source_group": "original-opening-11",
+              "prompt": "Two mice disagreed about how to share the last piece of bread."
+            },
+            {
+              "id": "story-12",
+              "source_group": "original-opening-12",
+              "prompt": "After the snow melted, Eva found her missing mitten near the shed."
+            }
+          ],
+          "input_mode": "raw-story-prefix",
+          "template": null,
+          "thinking_mode": "not-applicable",
+          "tokenizer_declaration": {
+            "repository": "openai-community/gpt2",
+            "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+            "declared_eos_and_bos_id": 50256,
+            "observed_encoding_sha256": null
+          },
+          "decoding": [
+            {
+              "mode": "greedy",
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0,
+              "seed": null
+            },
+            {
+              "mode": "sample",
+              "temperature": 0.8,
+              "top_k": null,
+              "top_p": 1.0,
+              "seed": 909
+            },
+            {
+              "mode": "sample",
+              "temperature": 0.8,
+              "top_k": null,
+              "top_p": 1.0,
+              "seed": 1909
+            },
+            {
+              "mode": "sample",
+              "temperature": 0.8,
+              "top_k": null,
+              "top_p": 1.0,
+              "seed": 2909
+            }
+          ],
+          "context_window": 1024,
+          "max_new_tokens": 256,
+          "predetermined_updates": [
+            0,
+            400,
+            4000,
+            8000,
+            14000
+          ],
+          "rubric": {
+            "grammar": [
+              "frequent broken constructions",
+              "mostly readable with local errors",
+              "consistently readable"
+            ],
+            "entity_object_consistency": [
+              "contradicts tracked entities or objects",
+              "minor unclear reference",
+              "preserves identities and locations"
+            ],
+            "causal_continuity": [
+              "events contradict the setup",
+              "weak or partially unexplained links",
+              "events follow intelligibly"
+            ],
+            "repetition": [
+              "persistent looping obstructs the story",
+              "limited unnecessary repetition",
+              "no obstructive repetition"
+            ],
+            "ending": [
+              "no resolution or incoherent ending",
+              "partial resolution",
+              "clear resolution consistent with setup"
+            ]
+          },
+          "rubric_scores": [
+            0,
+            1,
+            2
+          ],
+          "raters": 2,
+          "blind_arm_checkpoint_labels": true,
+          "uncertainty_unit": "source opening; paired group resampling, not individual sampled responses",
+          "required_raw": [
+            "token_ids",
+            "text",
+            "selected_likelihoods",
+            "stop_reason",
+            "raw_ratings",
+            "rater_disagreement",
+            "all_attempt_costs"
+          ],
+          "stop_categories": [
+            "natural-eos",
+            "token-cap",
+            "context-cap",
+            "deadline",
+            "resource-stop",
+            "failure"
+          ],
+          "contamination_audit": "pending exact/near-duplicate review against actual training bytes before publication use",
+          "development_separation": "three historical inspected prompts excluded; publication never selects recipe/checkpoint/decoding",
+          "nll": "fixed validation and matched frozen-checkpoint train/dev targets; not online-batch mean or story-rubric score",
+          "logical_contract_sha256": "96155a17e1b1cfe065f005ae61b2c640b5b172509eba7162404bd7737119e659"
+        },
+        "runner": {
+          "source": "scripts/train_stories.py",
+          "operation": "profile",
+          "role": "fresh-story-training",
+          "adapter_status": "runner-source-exists-integration-pending",
+          "execution_api": null,
+          "argv": null,
+          "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+        },
+        "source_files": {
+          "src/dongxi_llms/staged_campaign.py": {
+            "path": "src/dongxi_llms/staged_campaign.py",
+            "sha256": "4391ed6bd73a07f16067ebd3eb7079ba3e5474414530e7efefbb312ff5d27953",
+            "bytes": 27393
+          },
+          "src/dongxi_llms/campaign_supervisor.py": {
+            "path": "src/dongxi_llms/campaign_supervisor.py",
+            "sha256": "d2959a7856bc0cc4fb6b6623387d45bbc0d7193607a52c29c59bb8823b97d253",
+            "bytes": 12667
+          },
+          "src/dongxi_llms/owned_worker_guards.py": {
+            "path": "src/dongxi_llms/owned_worker_guards.py",
+            "sha256": "0a5bcbd9957ad81595d09f28a2e39396153447dff60b8765fb0495d6e38c3fc8",
+            "bytes": 19800
+          },
+          "src/dongxi_llms/training_snapshot.py": {
+            "path": "src/dongxi_llms/training_snapshot.py",
+            "sha256": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+            "bytes": 15375
+          },
+          "src/dongxi_llms/artifact_budget.py": {
+            "path": "src/dongxi_llms/artifact_budget.py",
+            "sha256": "3d76f60d2014c8054326f1bca3f2e4948d421866f645ba4a4a067bc153bfeccc",
+            "bytes": 23391
+          },
+          "src/dongxi_llms/work_budget.py": {
+            "path": "src/dongxi_llms/work_budget.py",
+            "sha256": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+            "bytes": 19121
+          },
+          "src/dongxi_llms/decoder_lab.py": {
+            "path": "src/dongxi_llms/decoder_lab.py",
+            "sha256": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+            "bytes": 11374
+          },
+          "src/dongxi_llms/pretraining_lab.py": {
+            "path": "src/dongxi_llms/pretraining_lab.py",
+            "sha256": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+            "bytes": 12842
+          },
+          "src/dongxi_llms/dpo_lab.py": {
+            "path": "src/dongxi_llms/dpo_lab.py",
+            "sha256": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+            "bytes": 8119
+          },
+          "src/dongxi_llms/grpo_lab.py": {
+            "path": "src/dongxi_llms/grpo_lab.py",
+            "sha256": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+            "bytes": 11148
+          },
+          "src/dongxi_llms/batched_cache_lab.py": {
+            "path": "src/dongxi_llms/batched_cache_lab.py",
+            "sha256": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+            "bytes": 46712
+          },
+          "src/dongxi_llms/evaluation_lab.py": {
+            "path": "src/dongxi_llms/evaluation_lab.py",
+            "sha256": "75ffea74bc308180f94a180a6e90afd3bfe69095c20b64fd8ed002a6f137dddd",
+            "bytes": 3757
+          },
+          "src/dongxi_llms/sampling_likelihood_lab.py": {
+            "path": "src/dongxi_llms/sampling_likelihood_lab.py",
+            "sha256": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+            "bytes": 23223
+          },
+          "src/dongxi_llms/production_stage.py": {
+            "path": "src/dongxi_llms/production_stage.py",
+            "sha256": "96ea25d4051c44f93feec068b1bb85b800386d255bb422ba272607649bb2c153",
+            "bytes": 24989
+          },
+          "src/dongxi_llms/production_preflight.py": {
+            "path": "src/dongxi_llms/production_preflight.py",
+            "sha256": "712e67a85f8baead0e2b91bb7d7beeeb286d3481855ee7bd614db6b2c5135386",
+            "bytes": 13109
+          },
+          "tests/test_production_stage.py": {
+            "path": "tests/test_production_stage.py",
+            "sha256": "27a95a7a0fffd09340d9785afb02fd275f5b773e2ced87ebf5a1554c3495f481",
+            "bytes": 25173
+          },
+          "tests/test_production_preflight.py": {
+            "path": "tests/test_production_preflight.py",
+            "sha256": "8c6d0faff9f47f8324eb6277c98012cbe841009a8a68e3ab420b9831fdfac0b3",
+            "bytes": 9369
+          },
+          "experiments/specs/2026-10-05-production-stage-preparation.md": {
+            "path": "experiments/specs/2026-10-05-production-stage-preparation.md",
+            "sha256": "dbdb793724c922df9cbf4a76518b0299400c7b183cd0fa200e949febfece0eb5",
+            "bytes": 6195
+          },
+          "tests/test_staged_campaign.py": {
+            "path": "tests/test_staged_campaign.py",
+            "sha256": "06ca1c9d2a256c5b363609501ce9ef87e49882d5cabcceb4da432b3817f5eb78",
+            "bytes": 11087
+          },
+          "experiments/specs/2026-10-04-staged-spark-campaign.md": {
+            "path": "experiments/specs/2026-10-04-staged-spark-campaign.md",
+            "sha256": "821a1f5dddb4c974f017fbb5ede0ce91c624a6351d61ab9370008dcfe30ae118",
+            "bytes": 9939
+          },
+          "src/dongxi_llms/run_identity.py": {
+            "path": "src/dongxi_llms/run_identity.py",
+            "sha256": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+            "bytes": 20051
+          },
+          "src/dongxi_llms/stories_training.py": {
+            "path": "src/dongxi_llms/stories_training.py",
+            "sha256": "84efb975690045c85f02f327887ffca7e044ebc60f89125d40de44a990b9fefa",
+            "bytes": 24701
+          },
+          "src/dongxi_llms/stories_data.py": {
+            "path": "src/dongxi_llms/stories_data.py",
+            "sha256": "12e43f24a092353b96e35cf3cb16414b22f9806b63423d0d57444e98a14730c8",
+            "bytes": 10006
+          },
+          "scripts/launch_stories_learning.py": {
+            "path": "scripts/launch_stories_learning.py",
+            "sha256": "e1097e247c3965d624e3fe4882304f177ed5a142f86bf4562f9baa43c6db3e0c",
+            "bytes": 3929
+          },
+          "scripts/train_stories.py": {
+            "path": "scripts/train_stories.py",
+            "sha256": "59774cb658a9f84c4723a9c9c019f6d3ee462f2db79e3cba4391443e559faa35",
+            "bytes": 1777
+          },
+          "scripts/run_chapter09_spark_sft.py": {
+            "path": "scripts/run_chapter09_spark_sft.py",
+            "sha256": "91a53ba4a7a85c2bd9adebfdca4671c909a151cc3899559ba65b8afc7010d8b8",
+            "bytes": 41579
+          },
+          "scripts/run_chapter11_spark_dpo.py": {
+            "path": "scripts/run_chapter11_spark_dpo.py",
+            "sha256": "227e9ab352779d8bc3a08ec7d0d62d34933b8f0bf9bddf3b35a8d4594ab4d0a8",
+            "bytes": 62181
+          },
+          "src/dongxi_llms/qwen_rlvr_lab.py": {
+            "path": "src/dongxi_llms/qwen_rlvr_lab.py",
+            "sha256": "c2d00a3eb8881291f04572645d2e0bf1b52cf2c17536887657b004ca27b6f3bf",
+            "bytes": 64436
+          },
+          "src/dongxi_llms/reasoning_generation.py": {
+            "path": "src/dongxi_llms/reasoning_generation.py",
+            "sha256": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0",
+            "bytes": 28230
+          },
+          "src/dongxi_llms/reasoning_evaluation.py": {
+            "path": "src/dongxi_llms/reasoning_evaluation.py",
+            "sha256": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da",
+            "bytes": 30612
+          },
+          "fixtures/reasoning-controls/math_items.json": {
+            "path": "fixtures/reasoning-controls/math_items.json",
+            "sha256": "d674db480cab4fdb3fa3487146a1f107913bf1a6e55d2a64e42659729ee707b8",
+            "bytes": 9354
+          },
+          "fixtures/reasoning-controls/protocol.json": {
+            "path": "fixtures/reasoning-controls/protocol.json",
+            "sha256": "338186ab059b4f9541c14aaa46242a224ad21981285602f023690a10d952e0d0",
+            "bytes": 1640
+          },
+          "scripts/prepare_chapter09_instruction_fixture.py": {
+            "path": "scripts/prepare_chapter09_instruction_fixture.py",
+            "sha256": "02b2096b2ecbd59011df3da5fe16d0c6c8bfc7051df37a87aa191e9b38494674",
+            "bytes": 2735
+          },
+          "experiments/data/instruction_interface_v1.jinja": {
+            "path": "experiments/data/instruction_interface_v1.jinja",
+            "sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+            "bytes": 197
+          },
+          "fixtures/chapter11/train.jsonl": {
+            "path": "fixtures/chapter11/train.jsonl",
+            "sha256": "f245c41d3166fdaa6c571c90eec7f8b599babdfae48d70a20bfa78e231249757",
+            "bytes": 1617
+          },
+          "fixtures/chapter11/validation.jsonl": {
+            "path": "fixtures/chapter11/validation.jsonl",
+            "sha256": "a843682fad861a8b0867ef8323750b5b594b9825e023d0337d4c02fa47617a18",
+            "bytes": 820
+          },
+          "fixtures/chapter11/evaluation.jsonl": {
+            "path": "fixtures/chapter11/evaluation.jsonl",
+            "sha256": "781aa3f47d315b2b6391698c7efa85a707d714334a1ee7be122087de66cbb788",
+            "bytes": 725
+          },
+          "experiments/reports/2026-09-14-tinystories-learning-result.json": {
+            "path": "experiments/reports/2026-09-14-tinystories-learning-result.json",
+            "sha256": "684d5096bf8f32ed6d4aa9dae6bf31906089d17cf01a05575001e69f90652a8e",
+            "bytes": 28081
+          },
+          "pyproject.toml": {
+            "path": "pyproject.toml",
+            "sha256": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+            "bytes": 979
+          },
+          "uv.lock": {
+            "path": "uv.lock",
+            "sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+            "bytes": 567003
+          },
+          "src/dongxi_llms/checkpoint_merge.py": {
+            "path": "src/dongxi_llms/checkpoint_merge.py",
+            "sha256": "8c4c1712aeeb2bd65e5e44e08668fa13c239afb1fcd117fc68c6b4fa383101ad",
+            "bytes": 6860
+          }
+        },
+        "lock_sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+        "interpreter": {
+          "binary": {
+            "path": "python3.12",
+            "sha256": "0f1c0fc2c82cd4d382b9a2fc6f5ced5264709e1c1195e73a5f6a27fa74c2d0ed",
+            "bytes": 23323176
+          },
+          "python": "3.12.14",
+          "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+          "machine": "aarch64",
+          "packages": {
+            "torch": "2.14.1+cpu",
+            "transformers": "5.18.0",
+            "tokenizers": "0.23.2",
+            "peft": "0.20.0"
+          }
+        },
+        "bindings": {
+          "scope": "authored-local-fixture",
+          "files": {
+            "data": {
+              "path": "data.json",
+              "sha256": "45ec28173ae2b2d1fb55e57291d3a539d1afe440e3b28e821e8960dff3654cb8",
+              "bytes": 68
+            },
+            "interface": {
+              "path": "interface.json",
+              "sha256": "2001534e4afcfb456bd7f3db5588936d70a56f82d2a8d2d20bc6190ddb3a0633",
+              "bytes": 778
+            },
+            "parent": {
+              "path": "parent.json",
+              "sha256": "8f0e1dcc259d08a9c987c9dff5e47c1f7714edcea02fdb878aa48c2c732a4556",
+              "bytes": 213
+            }
+          },
+          "parent_slots": {
+            "fresh-random-seed909-no-profile-transfer": "parent"
+          },
+          "interface": {
+            "generation_stop_ids": [
+              2
+            ],
+            "implementation_class": "AuthoredFixtureNotTokenizer",
+            "interface_sha256": "6e6fc1a581347672ecd9867b65d73400eee77fc80355a7a7da3ba1c85f585a75",
+            "schema_version": 1,
+            "source": {
+              "tokenizer_id": "authored-three-token-interface-not-gpt2-or-qwen",
+              "tokenizer_revision": null
+            },
+            "template_sha256": null,
+            "tokenizer": {
+              "encoding_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+              "max_token_id": 2,
+              "special_ids": {
+                "additional_special_tokens_ids": null,
+                "bos_token_id": null,
+                "cls_token_id": null,
+                "eos_token_id": 2,
+                "mask_token_id": null,
+                "pad_token_id": null,
+                "sep_token_id": null,
+                "unk_token_id": null
+              },
+              "vocab_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+              "vocab_size": 3,
+              "wrapper_settings": {}
+            }
+          },
+          "limits": {
+            "external_seconds": 60,
+            "reserve_bytes": 26843545600,
+            "artifact_bytes": 16777216,
+            "artifact_entries": 32,
+            "per_file_bytes": 1048576,
+            "snapshot_max_bytes": 1048576,
+            "hard_memory_bytes": 2147483648,
+            "hard_pid_limit": 8,
+            "max_valid_training_targets": 50000000,
+            "max_padded_training_positions": 1000000000000,
+            "max_policy_forward_positions": 1000000000000,
+            "max_reference_forward_positions": 1000000000000,
+            "max_evaluation_forward_positions": 1000000000000,
+            "max_generation_forward_positions": 1000000000000,
+            "max_response_slots": 1000000000000,
+            "max_prompt_positions": 7,
+            "private_instance_id": "dongxi-stage-cccccccccccccccccccccccccccccccc",
+            "owner_uid": 1000
+          },
+          "checkpoint_genealogy": null,
+          "boundary": "Authored metadata/data only; no actual model checkpoint loaded or authenticated."
+        },
+        "logical_work_envelope": {
+          "padded_geometry": 655360,
+          "valid_targets": "not inferred from padded geometry",
+          "policy_scored_positions": 655360,
+          "reference_scored_positions": 0,
+          "response_slots": null,
+          "generation_prefix_positions": null,
+          "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+        },
+        "unresolved": [
+          "compiler-to-runner cumulative work-contract integration and remaining runner coverage",
+          "actual private containment/hard quota/backend",
+          "real stage authority/acquisition/profile/recovery/evaluation"
+        ],
+        "jobs_started": 0,
+        "launch_authorized": false,
+        "production_ready": false,
+        "launch_command": null,
+        "preparation_sha256": "cf6cc2a95a66cec0b6482e7842654c182bb57a9ad1037261e19404ab5b7e58e0"
+      },
+      "receipt_identities": {
+        "approval": {
+          "path": "approval.json",
+          "sha256": "af2f5ca6e5957f46dd0ada460718c7051d6beb63ac0845ce3736a7f6679e66f8",
+          "bytes": 448
+        },
+        "preflight": {
+          "path": "preflight.json",
+          "sha256": "5e2b1f0396014207e331fa2e3ee453684e65bec9313956dc172aed8105037015",
+          "bytes": 3844
+        },
+        "prerequisites": {}
+      },
+      "jobs_started": 0,
+      "launch_authorized": false,
+      "production_ready": false,
+      "launch_command": null,
+      "actual_external_result": null,
+      "boundary": "Pinned authored fixture assertions only; no real authority, platform readiness, model compatibility or checkpoint genealogy."
+    },
+    {
+      "schema": "dongxi-compiled-preparation-v1",
+      "status": "validated-authored-fixture-preparation",
+      "preparation": {
+        "schema": "dongxi-stage-preparation-v1",
+        "stage_id": "story-control-smoke",
+        "status": "prepared-not-launch-authorized",
+        "science": {
+          "id": "story-control-smoke",
+          "branch": "story",
+          "stage": "smoke",
+          "prerequisite_stage_ids": [
+            "story-profile"
+          ],
+          "proposed_weight_start": "fresh-random-seed909-no-profile-transfer",
+          "evaluation_contract": "story-publication-v1",
+          "proposed_budget": {
+            "status": "proposed-unapproved-ceilings-profile-required",
+            "maximum_updates": 3,
+            "microbatch": 16,
+            "accumulation": 1,
+            "sequence_positions_per_example_max": 1024,
+            "valid_training_target_cap": null,
+            "maximum_padded_training_positions": 49152,
+            "external_seconds": 600,
+            "group_size": null,
+            "max_new_tokens": null,
+            "maximum_attempted_response_tokens": null,
+            "target_guard": "must resolve before pilot approval; null exposure is not inferred from padded geometry",
+            "memory": {
+              "minimum_host_available_bytes": 26843545600,
+              "cuda_peak": null,
+              "profile_measured": false
+            }
+          },
+          "intervention": {
+            "peak_lr": 0.0003,
+            "floor_lr": 2.9999999999999997e-05,
+            "seed": 909,
+            "warmup": 1
+          },
+          "optional": false,
+          "historical_model_recipe_declaration": {
+            "schema": 1,
+            "model": {
+              "vocab": 50257,
+              "width": 512,
+              "heads": 8,
+              "kv_heads": 8,
+              "head_dim": 64,
+              "layers": 12,
+              "hidden": 1536,
+              "max_length": 1024,
+              "modern": true,
+              "qk_norm": false,
+              "tied": true
+            },
+            "recipe": {
+              "total_updates": 14000,
+              "warmup": 200,
+              "peak_lr": 0.0003,
+              "floor_lr": 3e-05,
+              "microbatch": 16,
+              "accumulation": 1,
+              "weight_decay": 0.1,
+              "clip": 1,
+              "seed": 909,
+              "bf16": true,
+              "activation_checkpointing": true
+            },
+            "data": "6ca5b3de3bf5b90028b999e0aff76e86d2e691df44ee4c32732934f5e95efc1c",
+            "device": "cuda",
+            "torch": "2.13.0+cu130",
+            "attention": "pytorch-sdpa-auto-causal",
+            "implementation": {
+              "stories_training.py": "d14070e2c3678d243a0a65a1ecf38196c4ad0fa25729d63695688619e1c1e8e9",
+              "stories_data.py": "12e43f24a092353b96e35cf3cb16414b22f9806b63423d0d57444e98a14730c8",
+              "decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+              "pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197"
+            }
+          }
+        },
+        "evaluation": {
+          "id": "story-publication-v1",
+          "status": "logical-design-frozen-interface-pending",
+          "items": [
+            {
+              "id": "story-01",
+              "source_group": "original-opening-01",
+              "prompt": "Mara lent her blue umbrella to Ivo before the rain began."
+            },
+            {
+              "id": "story-02",
+              "source_group": "original-opening-02",
+              "prompt": "A small fox buried an apple beside the old stone gate."
+            },
+            {
+              "id": "story-03",
+              "source_group": "original-opening-03",
+              "prompt": "Nina saved two coins so she could repair her toy boat."
+            },
+            {
+              "id": "story-04",
+              "source_group": "original-opening-04",
+              "prompt": "When the bridge closed, Ben needed another way to visit Grandma."
+            },
+            {
+              "id": "story-05",
+              "source_group": "original-opening-05",
+              "prompt": "The farmer asked Ada to keep the tiny chick warm until morning."
+            },
+            {
+              "id": "story-06",
+              "source_group": "original-opening-06",
+              "prompt": "Oli left a red ribbon on the empty chair to remember his friend."
+            },
+            {
+              "id": "story-07",
+              "source_group": "original-opening-07",
+              "prompt": "A paper kite caught in a tree, and the children could not reach it."
+            },
+            {
+              "id": "story-08",
+              "source_group": "original-opening-08",
+              "prompt": "The baker gave Lila one loaf to carry safely across town."
+            },
+            {
+              "id": "story-09",
+              "source_group": "original-opening-09",
+              "prompt": "Sam promised to water the seed while his sister was away."
+            },
+            {
+              "id": "story-10",
+              "source_group": "original-opening-10",
+              "prompt": "A lost puppy followed the sound of a familiar little bell."
+            },
+            {
+              "id": "story-11",
+              "source_group": "original-opening-11",
+              "prompt": "Two mice disagreed about how to share the last piece of bread."
+            },
+            {
+              "id": "story-12",
+              "source_group": "original-opening-12",
+              "prompt": "After the snow melted, Eva found her missing mitten near the shed."
+            }
+          ],
+          "input_mode": "raw-story-prefix",
+          "template": null,
+          "thinking_mode": "not-applicable",
+          "tokenizer_declaration": {
+            "repository": "openai-community/gpt2",
+            "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+            "declared_eos_and_bos_id": 50256,
+            "observed_encoding_sha256": null
+          },
+          "decoding": [
+            {
+              "mode": "greedy",
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0,
+              "seed": null
+            },
+            {
+              "mode": "sample",
+              "temperature": 0.8,
+              "top_k": null,
+              "top_p": 1.0,
+              "seed": 909
+            },
+            {
+              "mode": "sample",
+              "temperature": 0.8,
+              "top_k": null,
+              "top_p": 1.0,
+              "seed": 1909
+            },
+            {
+              "mode": "sample",
+              "temperature": 0.8,
+              "top_k": null,
+              "top_p": 1.0,
+              "seed": 2909
+            }
+          ],
+          "context_window": 1024,
+          "max_new_tokens": 256,
+          "predetermined_updates": [
+            0,
+            400,
+            4000,
+            8000,
+            14000
+          ],
+          "rubric": {
+            "grammar": [
+              "frequent broken constructions",
+              "mostly readable with local errors",
+              "consistently readable"
+            ],
+            "entity_object_consistency": [
+              "contradicts tracked entities or objects",
+              "minor unclear reference",
+              "preserves identities and locations"
+            ],
+            "causal_continuity": [
+              "events contradict the setup",
+              "weak or partially unexplained links",
+              "events follow intelligibly"
+            ],
+            "repetition": [
+              "persistent looping obstructs the story",
+              "limited unnecessary repetition",
+              "no obstructive repetition"
+            ],
+            "ending": [
+              "no resolution or incoherent ending",
+              "partial resolution",
+              "clear resolution consistent with setup"
+            ]
+          },
+          "rubric_scores": [
+            0,
+            1,
+            2
+          ],
+          "raters": 2,
+          "blind_arm_checkpoint_labels": true,
+          "uncertainty_unit": "source opening; paired group resampling, not individual sampled responses",
+          "required_raw": [
+            "token_ids",
+            "text",
+            "selected_likelihoods",
+            "stop_reason",
+            "raw_ratings",
+            "rater_disagreement",
+            "all_attempt_costs"
+          ],
+          "stop_categories": [
+            "natural-eos",
+            "token-cap",
+            "context-cap",
+            "deadline",
+            "resource-stop",
+            "failure"
+          ],
+          "contamination_audit": "pending exact/near-duplicate review against actual training bytes before publication use",
+          "development_separation": "three historical inspected prompts excluded; publication never selects recipe/checkpoint/decoding",
+          "nll": "fixed validation and matched frozen-checkpoint train/dev targets; not online-batch mean or story-rubric score",
+          "logical_contract_sha256": "96155a17e1b1cfe065f005ae61b2c640b5b172509eba7162404bd7737119e659"
+        },
+        "runner": {
+          "source": "scripts/train_stories.py",
+          "operation": "smoke",
+          "role": "fresh-story-training",
+          "adapter_status": "runner-source-exists-integration-pending",
+          "execution_api": null,
+          "argv": null,
+          "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+        },
+        "source_files": {
+          "src/dongxi_llms/staged_campaign.py": {
+            "path": "src/dongxi_llms/staged_campaign.py",
+            "sha256": "4391ed6bd73a07f16067ebd3eb7079ba3e5474414530e7efefbb312ff5d27953",
+            "bytes": 27393
+          },
+          "src/dongxi_llms/campaign_supervisor.py": {
+            "path": "src/dongxi_llms/campaign_supervisor.py",
+            "sha256": "d2959a7856bc0cc4fb6b6623387d45bbc0d7193607a52c29c59bb8823b97d253",
+            "bytes": 12667
+          },
+          "src/dongxi_llms/owned_worker_guards.py": {
+            "path": "src/dongxi_llms/owned_worker_guards.py",
+            "sha256": "0a5bcbd9957ad81595d09f28a2e39396153447dff60b8765fb0495d6e38c3fc8",
+            "bytes": 19800
+          },
+          "src/dongxi_llms/training_snapshot.py": {
+            "path": "src/dongxi_llms/training_snapshot.py",
+            "sha256": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+            "bytes": 15375
+          },
+          "src/dongxi_llms/artifact_budget.py": {
+            "path": "src/dongxi_llms/artifact_budget.py",
+            "sha256": "3d76f60d2014c8054326f1bca3f2e4948d421866f645ba4a4a067bc153bfeccc",
+            "bytes": 23391
+          },
+          "src/dongxi_llms/work_budget.py": {
+            "path": "src/dongxi_llms/work_budget.py",
+            "sha256": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+            "bytes": 19121
+          },
+          "src/dongxi_llms/decoder_lab.py": {
+            "path": "src/dongxi_llms/decoder_lab.py",
+            "sha256": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+            "bytes": 11374
+          },
+          "src/dongxi_llms/pretraining_lab.py": {
+            "path": "src/dongxi_llms/pretraining_lab.py",
+            "sha256": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+            "bytes": 12842
+          },
+          "src/dongxi_llms/dpo_lab.py": {
+            "path": "src/dongxi_llms/dpo_lab.py",
+            "sha256": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+            "bytes": 8119
+          },
+          "src/dongxi_llms/grpo_lab.py": {
+            "path": "src/dongxi_llms/grpo_lab.py",
+            "sha256": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+            "bytes": 11148
+          },
+          "src/dongxi_llms/batched_cache_lab.py": {
+            "path": "src/dongxi_llms/batched_cache_lab.py",
+            "sha256": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+            "bytes": 46712
+          },
+          "src/dongxi_llms/evaluation_lab.py": {
+            "path": "src/dongxi_llms/evaluation_lab.py",
+            "sha256": "75ffea74bc308180f94a180a6e90afd3bfe69095c20b64fd8ed002a6f137dddd",
+            "bytes": 3757
+          },
+          "src/dongxi_llms/sampling_likelihood_lab.py": {
+            "path": "src/dongxi_llms/sampling_likelihood_lab.py",
+            "sha256": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+            "bytes": 23223
+          },
+          "src/dongxi_llms/production_stage.py": {
+            "path": "src/dongxi_llms/production_stage.py",
+            "sha256": "96ea25d4051c44f93feec068b1bb85b800386d255bb422ba272607649bb2c153",
+            "bytes": 24989
+          },
+          "src/dongxi_llms/production_preflight.py": {
+            "path": "src/dongxi_llms/production_preflight.py",
+            "sha256": "712e67a85f8baead0e2b91bb7d7beeeb286d3481855ee7bd614db6b2c5135386",
+            "bytes": 13109
+          },
+          "tests/test_production_stage.py": {
+            "path": "tests/test_production_stage.py",
+            "sha256": "27a95a7a0fffd09340d9785afb02fd275f5b773e2ced87ebf5a1554c3495f481",
+            "bytes": 25173
+          },
+          "tests/test_production_preflight.py": {
+            "path": "tests/test_production_preflight.py",
+            "sha256": "8c6d0faff9f47f8324eb6277c98012cbe841009a8a68e3ab420b9831fdfac0b3",
+            "bytes": 9369
+          },
+          "experiments/specs/2026-10-05-production-stage-preparation.md": {
+            "path": "experiments/specs/2026-10-05-production-stage-preparation.md",
+            "sha256": "dbdb793724c922df9cbf4a76518b0299400c7b183cd0fa200e949febfece0eb5",
+            "bytes": 6195
+          },
+          "tests/test_staged_campaign.py": {
+            "path": "tests/test_staged_campaign.py",
+            "sha256": "06ca1c9d2a256c5b363609501ce9ef87e49882d5cabcceb4da432b3817f5eb78",
+            "bytes": 11087
+          },
+          "experiments/specs/2026-10-04-staged-spark-campaign.md": {
+            "path": "experiments/specs/2026-10-04-staged-spark-campaign.md",
+            "sha256": "821a1f5dddb4c974f017fbb5ede0ce91c624a6351d61ab9370008dcfe30ae118",
+            "bytes": 9939
+          },
+          "src/dongxi_llms/run_identity.py": {
+            "path": "src/dongxi_llms/run_identity.py",
+            "sha256": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+            "bytes": 20051
+          },
+          "src/dongxi_llms/stories_training.py": {
+            "path": "src/dongxi_llms/stories_training.py",
+            "sha256": "84efb975690045c85f02f327887ffca7e044ebc60f89125d40de44a990b9fefa",
+            "bytes": 24701
+          },
+          "src/dongxi_llms/stories_data.py": {
+            "path": "src/dongxi_llms/stories_data.py",
+            "sha256": "12e43f24a092353b96e35cf3cb16414b22f9806b63423d0d57444e98a14730c8",
+            "bytes": 10006
+          },
+          "scripts/launch_stories_learning.py": {
+            "path": "scripts/launch_stories_learning.py",
+            "sha256": "e1097e247c3965d624e3fe4882304f177ed5a142f86bf4562f9baa43c6db3e0c",
+            "bytes": 3929
+          },
+          "scripts/train_stories.py": {
+            "path": "scripts/train_stories.py",
+            "sha256": "59774cb658a9f84c4723a9c9c019f6d3ee462f2db79e3cba4391443e559faa35",
+            "bytes": 1777
+          },
+          "scripts/run_chapter09_spark_sft.py": {
+            "path": "scripts/run_chapter09_spark_sft.py",
+            "sha256": "91a53ba4a7a85c2bd9adebfdca4671c909a151cc3899559ba65b8afc7010d8b8",
+            "bytes": 41579
+          },
+          "scripts/run_chapter11_spark_dpo.py": {
+            "path": "scripts/run_chapter11_spark_dpo.py",
+            "sha256": "227e9ab352779d8bc3a08ec7d0d62d34933b8f0bf9bddf3b35a8d4594ab4d0a8",
+            "bytes": 62181
+          },
+          "src/dongxi_llms/qwen_rlvr_lab.py": {
+            "path": "src/dongxi_llms/qwen_rlvr_lab.py",
+            "sha256": "c2d00a3eb8881291f04572645d2e0bf1b52cf2c17536887657b004ca27b6f3bf",
+            "bytes": 64436
+          },
+          "src/dongxi_llms/reasoning_generation.py": {
+            "path": "src/dongxi_llms/reasoning_generation.py",
+            "sha256": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0",
+            "bytes": 28230
+          },
+          "src/dongxi_llms/reasoning_evaluation.py": {
+            "path": "src/dongxi_llms/reasoning_evaluation.py",
+            "sha256": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da",
+            "bytes": 30612
+          },
+          "fixtures/reasoning-controls/math_items.json": {
+            "path": "fixtures/reasoning-controls/math_items.json",
+            "sha256": "d674db480cab4fdb3fa3487146a1f107913bf1a6e55d2a64e42659729ee707b8",
+            "bytes": 9354
+          },
+          "fixtures/reasoning-controls/protocol.json": {
+            "path": "fixtures/reasoning-controls/protocol.json",
+            "sha256": "338186ab059b4f9541c14aaa46242a224ad21981285602f023690a10d952e0d0",
+            "bytes": 1640
+          },
+          "scripts/prepare_chapter09_instruction_fixture.py": {
+            "path": "scripts/prepare_chapter09_instruction_fixture.py",
+            "sha256": "02b2096b2ecbd59011df3da5fe16d0c6c8bfc7051df37a87aa191e9b38494674",
+            "bytes": 2735
+          },
+          "experiments/data/instruction_interface_v1.jinja": {
+            "path": "experiments/data/instruction_interface_v1.jinja",
+            "sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+            "bytes": 197
+          },
+          "fixtures/chapter11/train.jsonl": {
+            "path": "fixtures/chapter11/train.jsonl",
+            "sha256": "f245c41d3166fdaa6c571c90eec7f8b599babdfae48d70a20bfa78e231249757",
+            "bytes": 1617
+          },
+          "fixtures/chapter11/validation.jsonl": {
+            "path": "fixtures/chapter11/validation.jsonl",
+            "sha256": "a843682fad861a8b0867ef8323750b5b594b9825e023d0337d4c02fa47617a18",
+            "bytes": 820
+          },
+          "fixtures/chapter11/evaluation.jsonl": {
+            "path": "fixtures/chapter11/evaluation.jsonl",
+            "sha256": "781aa3f47d315b2b6391698c7efa85a707d714334a1ee7be122087de66cbb788",
+            "bytes": 725
+          },
+          "experiments/reports/2026-09-14-tinystories-learning-result.json": {
+            "path": "experiments/reports/2026-09-14-tinystories-learning-result.json",
+            "sha256": "684d5096bf8f32ed6d4aa9dae6bf31906089d17cf01a05575001e69f90652a8e",
+            "bytes": 28081
+          },
+          "pyproject.toml": {
+            "path": "pyproject.toml",
+            "sha256": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+            "bytes": 979
+          },
+          "uv.lock": {
+            "path": "uv.lock",
+            "sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+            "bytes": 567003
+          },
+          "src/dongxi_llms/checkpoint_merge.py": {
+            "path": "src/dongxi_llms/checkpoint_merge.py",
+            "sha256": "8c4c1712aeeb2bd65e5e44e08668fa13c239afb1fcd117fc68c6b4fa383101ad",
+            "bytes": 6860
+          }
+        },
+        "lock_sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+        "interpreter": {
+          "binary": {
+            "path": "python3.12",
+            "sha256": "0f1c0fc2c82cd4d382b9a2fc6f5ced5264709e1c1195e73a5f6a27fa74c2d0ed",
+            "bytes": 23323176
+          },
+          "python": "3.12.14",
+          "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+          "machine": "aarch64",
+          "packages": {
+            "torch": "2.14.1+cpu",
+            "transformers": "5.18.0",
+            "tokenizers": "0.23.2",
+            "peft": "0.20.0"
+          }
+        },
+        "bindings": {
+          "scope": "authored-local-fixture",
+          "files": {
+            "data": {
+              "path": "data.json",
+              "sha256": "45ec28173ae2b2d1fb55e57291d3a539d1afe440e3b28e821e8960dff3654cb8",
+              "bytes": 68
+            },
+            "interface": {
+              "path": "interface.json",
+              "sha256": "2001534e4afcfb456bd7f3db5588936d70a56f82d2a8d2d20bc6190ddb3a0633",
+              "bytes": 778
+            },
+            "parent": {
+              "path": "parent.json",
+              "sha256": "8f0e1dcc259d08a9c987c9dff5e47c1f7714edcea02fdb878aa48c2c732a4556",
+              "bytes": 213
+            }
+          },
+          "parent_slots": {
+            "fresh-random-seed909-no-profile-transfer": "parent"
+          },
+          "interface": {
+            "generation_stop_ids": [
+              2
+            ],
+            "implementation_class": "AuthoredFixtureNotTokenizer",
+            "interface_sha256": "6e6fc1a581347672ecd9867b65d73400eee77fc80355a7a7da3ba1c85f585a75",
+            "schema_version": 1,
+            "source": {
+              "tokenizer_id": "authored-three-token-interface-not-gpt2-or-qwen",
+              "tokenizer_revision": null
+            },
+            "template_sha256": null,
+            "tokenizer": {
+              "encoding_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+              "max_token_id": 2,
+              "special_ids": {
+                "additional_special_tokens_ids": null,
+                "bos_token_id": null,
+                "cls_token_id": null,
+                "eos_token_id": 2,
+                "mask_token_id": null,
+                "pad_token_id": null,
+                "sep_token_id": null,
+                "unk_token_id": null
+              },
+              "vocab_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+              "vocab_size": 3,
+              "wrapper_settings": {}
+            }
+          },
+          "limits": {
+            "external_seconds": 60,
+            "reserve_bytes": 26843545600,
+            "artifact_bytes": 16777216,
+            "artifact_entries": 32,
+            "per_file_bytes": 1048576,
+            "snapshot_max_bytes": 1048576,
+            "hard_memory_bytes": 2147483648,
+            "hard_pid_limit": 8,
+            "max_valid_training_targets": 50000000,
+            "max_padded_training_positions": 1000000000000,
+            "max_policy_forward_positions": 1000000000000,
+            "max_reference_forward_positions": 1000000000000,
+            "max_evaluation_forward_positions": 1000000000000,
+            "max_generation_forward_positions": 1000000000000,
+            "max_response_slots": 1000000000000,
+            "max_prompt_positions": 7,
+            "private_instance_id": "dongxi-stage-cccccccccccccccccccccccccccccccc",
+            "owner_uid": 1000
+          },
+          "checkpoint_genealogy": null,
+          "boundary": "Authored metadata/data only; no actual model checkpoint loaded or authenticated."
+        },
+        "logical_work_envelope": {
+          "padded_geometry": 49152,
+          "valid_targets": "not inferred from padded geometry",
+          "policy_scored_positions": 49152,
+          "reference_scored_positions": 0,
+          "response_slots": null,
+          "generation_prefix_positions": null,
+          "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+        },
+        "unresolved": [
+          "compiler-to-runner cumulative work-contract integration and remaining runner coverage",
+          "actual private containment/hard quota/backend",
+          "real stage authority/acquisition/profile/recovery/evaluation"
+        ],
+        "jobs_started": 0,
+        "launch_authorized": false,
+        "production_ready": false,
+        "launch_command": null,
+        "preparation_sha256": "381cbcad064f6ed0b2d30aa9614f3027811ff55ad68ec14708355d1577d3c6ed"
+      },
+      "receipt_identities": {
+        "approval": {
+          "path": "approval.json",
+          "sha256": "9646b5d7045fe0d1cc2a15dcd4a8c339dda28c85c7efe88743a5f84e4ca41aca",
+          "bytes": 537
+        },
+        "preflight": {
+          "path": "preflight.json",
+          "sha256": "e7b7e0f933be0c832758639e84f70f252b14ae35469e57f6830963521568b363",
+          "bytes": 3862
+        },
+        "prerequisites": {
+          "story-profile": {
+            "path": "prerequisite0.json",
+            "sha256": "dc5f291dafce7d93994d6ebcb6d4782bb9ef163e0d000e3c367999739ba30526",
+            "bytes": 405
+          }
+        }
+      },
+      "jobs_started": 0,
+      "launch_authorized": false,
+      "production_ready": false,
+      "launch_command": null,
+      "actual_external_result": null,
+      "boundary": "Pinned authored fixture assertions only; no real authority, platform readiness, model compatibility or checkpoint genealogy."
+    },
+    {
+      "schema": "dongxi-compiled-preparation-v1",
+      "status": "validated-authored-fixture-preparation",
+      "preparation": {
+        "schema": "dongxi-stage-preparation-v1",
+        "stage_id": "assistant-dpo-smoke",
+        "status": "prepared-not-launch-authorized",
+        "science": {
+          "id": "assistant-dpo-smoke",
+          "branch": "assistant",
+          "stage": "smoke",
+          "prerequisite_stage_ids": [
+            "assistant-selected-sft-parent"
+          ],
+          "proposed_weight_start": "assistant-selected-sft-parent",
+          "evaluation_contract": "preference-location-v1",
+          "proposed_budget": {
+            "status": "proposed-unapproved-ceilings-profile-required",
+            "maximum_updates": 2,
+            "microbatch": 1,
+            "accumulation": 4,
+            "sequence_positions_per_example_max": 512,
+            "valid_training_target_cap": null,
+            "maximum_padded_training_positions": 4096,
+            "external_seconds": 600,
+            "group_size": null,
+            "max_new_tokens": null,
+            "maximum_attempted_response_tokens": null,
+            "target_guard": "must resolve before pilot approval; null exposure is not inferred from padded geometry",
+            "memory": {
+              "minimum_host_available_bytes": 26843545600,
+              "cuda_peak": null,
+              "profile_measured": false
+            }
+          },
+          "intervention": {
+            "beta": 0.1,
+            "learning_rate": 5e-07,
+            "seed": 1818,
+            "objective": "dpo"
+          },
+          "optional": false
+        },
+        "evaluation": {
+          "id": "preference-location-v1",
+          "status": "logical-design-frozen-interface-pending",
+          "input_sha256": {
+            "fixtures/chapter11/train.jsonl": "f245c41d3166fdaa6c571c90eec7f8b599babdfae48d70a20bfa78e231249757",
+            "fixtures/chapter11/validation.jsonl": "a843682fad861a8b0867ef8323750b5b594b9825e023d0337d4c02fa47617a18",
+            "fixtures/chapter11/evaluation.jsonl": "781aa3f47d315b2b6391698c7efa85a707d714334a1ee7be122087de66cbb788"
+          },
+          "slices": [
+            "chosen/rejected absolute sequence likelihood",
+            "reference-relative margin",
+            "independent location extraction",
+            "unrelated assistant/reasoning retention"
+          ],
+          "scope": "small authored location fixture, not broad human preferences; source groups/template/masks must be audited before model use",
+          "reference": "exact selected SFT parent, frozen bytes; no substituting a differently templated assistant",
+          "generation": "same fixed initial/final greedy settings and publication source groups; no preference-margin selection",
+          "logical_contract_sha256": "c5698af1f04f730968306b81fb6dadf3676bc7dc3bfb2d5267348fb1d54f8e65"
+        },
+        "runner": {
+          "source": "scripts/run_chapter11_spark_dpo.py",
+          "operation": "smoke",
+          "role": "direct-preference-optimization",
+          "adapter_status": "runner-source-exists-integration-pending",
+          "execution_api": null,
+          "argv": null,
+          "boundary": "Source binding only; profile, recovery and supervisor protocols require actual separately approved integration."
+        },
+        "source_files": {
+          "src/dongxi_llms/staged_campaign.py": {
+            "path": "src/dongxi_llms/staged_campaign.py",
+            "sha256": "4391ed6bd73a07f16067ebd3eb7079ba3e5474414530e7efefbb312ff5d27953",
+            "bytes": 27393
+          },
+          "src/dongxi_llms/campaign_supervisor.py": {
+            "path": "src/dongxi_llms/campaign_supervisor.py",
+            "sha256": "d2959a7856bc0cc4fb6b6623387d45bbc0d7193607a52c29c59bb8823b97d253",
+            "bytes": 12667
+          },
+          "src/dongxi_llms/owned_worker_guards.py": {
+            "path": "src/dongxi_llms/owned_worker_guards.py",
+            "sha256": "0a5bcbd9957ad81595d09f28a2e39396153447dff60b8765fb0495d6e38c3fc8",
+            "bytes": 19800
+          },
+          "src/dongxi_llms/training_snapshot.py": {
+            "path": "src/dongxi_llms/training_snapshot.py",
+            "sha256": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+            "bytes": 15375
+          },
+          "src/dongxi_llms/artifact_budget.py": {
+            "path": "src/dongxi_llms/artifact_budget.py",
+            "sha256": "3d76f60d2014c8054326f1bca3f2e4948d421866f645ba4a4a067bc153bfeccc",
+            "bytes": 23391
+          },
+          "src/dongxi_llms/work_budget.py": {
+            "path": "src/dongxi_llms/work_budget.py",
+            "sha256": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+            "bytes": 19121
+          },
+          "src/dongxi_llms/decoder_lab.py": {
+            "path": "src/dongxi_llms/decoder_lab.py",
+            "sha256": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+            "bytes": 11374
+          },
+          "src/dongxi_llms/pretraining_lab.py": {
+            "path": "src/dongxi_llms/pretraining_lab.py",
+            "sha256": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+            "bytes": 12842
+          },
+          "src/dongxi_llms/dpo_lab.py": {
+            "path": "src/dongxi_llms/dpo_lab.py",
+            "sha256": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+            "bytes": 8119
+          },
+          "src/dongxi_llms/grpo_lab.py": {
+            "path": "src/dongxi_llms/grpo_lab.py",
+            "sha256": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+            "bytes": 11148
+          },
+          "src/dongxi_llms/batched_cache_lab.py": {
+            "path": "src/dongxi_llms/batched_cache_lab.py",
+            "sha256": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+            "bytes": 46712
+          },
+          "src/dongxi_llms/evaluation_lab.py": {
+            "path": "src/dongxi_llms/evaluation_lab.py",
+            "sha256": "75ffea74bc308180f94a180a6e90afd3bfe69095c20b64fd8ed002a6f137dddd",
+            "bytes": 3757
+          },
+          "src/dongxi_llms/sampling_likelihood_lab.py": {
+            "path": "src/dongxi_llms/sampling_likelihood_lab.py",
+            "sha256": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+            "bytes": 23223
+          },
+          "src/dongxi_llms/production_stage.py": {
+            "path": "src/dongxi_llms/production_stage.py",
+            "sha256": "96ea25d4051c44f93feec068b1bb85b800386d255bb422ba272607649bb2c153",
+            "bytes": 24989
+          },
+          "src/dongxi_llms/production_preflight.py": {
+            "path": "src/dongxi_llms/production_preflight.py",
+            "sha256": "712e67a85f8baead0e2b91bb7d7beeeb286d3481855ee7bd614db6b2c5135386",
+            "bytes": 13109
+          },
+          "tests/test_production_stage.py": {
+            "path": "tests/test_production_stage.py",
+            "sha256": "27a95a7a0fffd09340d9785afb02fd275f5b773e2ced87ebf5a1554c3495f481",
+            "bytes": 25173
+          },
+          "tests/test_production_preflight.py": {
+            "path": "tests/test_production_preflight.py",
+            "sha256": "8c6d0faff9f47f8324eb6277c98012cbe841009a8a68e3ab420b9831fdfac0b3",
+            "bytes": 9369
+          },
+          "experiments/specs/2026-10-05-production-stage-preparation.md": {
+            "path": "experiments/specs/2026-10-05-production-stage-preparation.md",
+            "sha256": "dbdb793724c922df9cbf4a76518b0299400c7b183cd0fa200e949febfece0eb5",
+            "bytes": 6195
+          },
+          "tests/test_staged_campaign.py": {
+            "path": "tests/test_staged_campaign.py",
+            "sha256": "06ca1c9d2a256c5b363609501ce9ef87e49882d5cabcceb4da432b3817f5eb78",
+            "bytes": 11087
+          },
+          "experiments/specs/2026-10-04-staged-spark-campaign.md": {
+            "path": "experiments/specs/2026-10-04-staged-spark-campaign.md",
+            "sha256": "821a1f5dddb4c974f017fbb5ede0ce91c624a6351d61ab9370008dcfe30ae118",
+            "bytes": 9939
+          },
+          "src/dongxi_llms/run_identity.py": {
+            "path": "src/dongxi_llms/run_identity.py",
+            "sha256": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+            "bytes": 20051
+          },
+          "src/dongxi_llms/stories_training.py": {
+            "path": "src/dongxi_llms/stories_training.py",
+            "sha256": "84efb975690045c85f02f327887ffca7e044ebc60f89125d40de44a990b9fefa",
+            "bytes": 24701
+          },
+          "src/dongxi_llms/stories_data.py": {
+            "path": "src/dongxi_llms/stories_data.py",
+            "sha256": "12e43f24a092353b96e35cf3cb16414b22f9806b63423d0d57444e98a14730c8",
+            "bytes": 10006
+          },
+          "scripts/launch_stories_learning.py": {
+            "path": "scripts/launch_stories_learning.py",
+            "sha256": "e1097e247c3965d624e3fe4882304f177ed5a142f86bf4562f9baa43c6db3e0c",
+            "bytes": 3929
+          },
+          "scripts/train_stories.py": {
+            "path": "scripts/train_stories.py",
+            "sha256": "59774cb658a9f84c4723a9c9c019f6d3ee462f2db79e3cba4391443e559faa35",
+            "bytes": 1777
+          },
+          "scripts/run_chapter09_spark_sft.py": {
+            "path": "scripts/run_chapter09_spark_sft.py",
+            "sha256": "91a53ba4a7a85c2bd9adebfdca4671c909a151cc3899559ba65b8afc7010d8b8",
+            "bytes": 41579
+          },
+          "scripts/run_chapter11_spark_dpo.py": {
+            "path": "scripts/run_chapter11_spark_dpo.py",
+            "sha256": "227e9ab352779d8bc3a08ec7d0d62d34933b8f0bf9bddf3b35a8d4594ab4d0a8",
+            "bytes": 62181
+          },
+          "src/dongxi_llms/qwen_rlvr_lab.py": {
+            "path": "src/dongxi_llms/qwen_rlvr_lab.py",
+            "sha256": "c2d00a3eb8881291f04572645d2e0bf1b52cf2c17536887657b004ca27b6f3bf",
+            "bytes": 64436
+          },
+          "src/dongxi_llms/reasoning_generation.py": {
+            "path": "src/dongxi_llms/reasoning_generation.py",
+            "sha256": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0",
+            "bytes": 28230
+          },
+          "src/dongxi_llms/reasoning_evaluation.py": {
+            "path": "src/dongxi_llms/reasoning_evaluation.py",
+            "sha256": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da",
+            "bytes": 30612
+          },
+          "fixtures/reasoning-controls/math_items.json": {
+            "path": "fixtures/reasoning-controls/math_items.json",
+            "sha256": "d674db480cab4fdb3fa3487146a1f107913bf1a6e55d2a64e42659729ee707b8",
+            "bytes": 9354
+          },
+          "fixtures/reasoning-controls/protocol.json": {
+            "path": "fixtures/reasoning-controls/protocol.json",
+            "sha256": "338186ab059b4f9541c14aaa46242a224ad21981285602f023690a10d952e0d0",
+            "bytes": 1640
+          },
+          "scripts/prepare_chapter09_instruction_fixture.py": {
+            "path": "scripts/prepare_chapter09_instruction_fixture.py",
+            "sha256": "02b2096b2ecbd59011df3da5fe16d0c6c8bfc7051df37a87aa191e9b38494674",
+            "bytes": 2735
+          },
+          "experiments/data/instruction_interface_v1.jinja": {
+            "path": "experiments/data/instruction_interface_v1.jinja",
+            "sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+            "bytes": 197
+          },
+          "fixtures/chapter11/train.jsonl": {
+            "path": "fixtures/chapter11/train.jsonl",
+            "sha256": "f245c41d3166fdaa6c571c90eec7f8b599babdfae48d70a20bfa78e231249757",
+            "bytes": 1617
+          },
+          "fixtures/chapter11/validation.jsonl": {
+            "path": "fixtures/chapter11/validation.jsonl",
+            "sha256": "a843682fad861a8b0867ef8323750b5b594b9825e023d0337d4c02fa47617a18",
+            "bytes": 820
+          },
+          "fixtures/chapter11/evaluation.jsonl": {
+            "path": "fixtures/chapter11/evaluation.jsonl",
+            "sha256": "781aa3f47d315b2b6391698c7efa85a707d714334a1ee7be122087de66cbb788",
+            "bytes": 725
+          },
+          "experiments/reports/2026-09-14-tinystories-learning-result.json": {
+            "path": "experiments/reports/2026-09-14-tinystories-learning-result.json",
+            "sha256": "684d5096bf8f32ed6d4aa9dae6bf31906089d17cf01a05575001e69f90652a8e",
+            "bytes": 28081
+          },
+          "pyproject.toml": {
+            "path": "pyproject.toml",
+            "sha256": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+            "bytes": 979
+          },
+          "uv.lock": {
+            "path": "uv.lock",
+            "sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+            "bytes": 567003
+          },
+          "src/dongxi_llms/checkpoint_merge.py": {
+            "path": "src/dongxi_llms/checkpoint_merge.py",
+            "sha256": "8c4c1712aeeb2bd65e5e44e08668fa13c239afb1fcd117fc68c6b4fa383101ad",
+            "bytes": 6860
+          }
+        },
+        "lock_sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+        "interpreter": {
+          "binary": {
+            "path": "python3.12",
+            "sha256": "0f1c0fc2c82cd4d382b9a2fc6f5ced5264709e1c1195e73a5f6a27fa74c2d0ed",
+            "bytes": 23323176
+          },
+          "python": "3.12.14",
+          "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+          "machine": "aarch64",
+          "packages": {
+            "torch": "2.14.1+cpu",
+            "transformers": "5.18.0",
+            "tokenizers": "0.23.2",
+            "peft": "0.20.0"
+          }
+        },
+        "bindings": {
+          "scope": "authored-local-fixture",
+          "files": {
+            "data": {
+              "path": "data.json",
+              "sha256": "45ec28173ae2b2d1fb55e57291d3a539d1afe440e3b28e821e8960dff3654cb8",
+              "bytes": 68
+            },
+            "interface": {
+              "path": "interface.json",
+              "sha256": "2001534e4afcfb456bd7f3db5588936d70a56f82d2a8d2d20bc6190ddb3a0633",
+              "bytes": 778
+            },
+            "parent": {
+              "path": "parent.json",
+              "sha256": "f43e86f4e15be0af58a3c04379c781087199ba2025257c7c8c6d3a50217a07fc",
+              "bytes": 202
+            }
+          },
+          "parent_slots": {
+            "assistant-selected-sft-parent": "parent"
+          },
+          "interface": {
+            "generation_stop_ids": [
+              2
+            ],
+            "implementation_class": "AuthoredFixtureNotTokenizer",
+            "interface_sha256": "6e6fc1a581347672ecd9867b65d73400eee77fc80355a7a7da3ba1c85f585a75",
+            "schema_version": 1,
+            "source": {
+              "tokenizer_id": "authored-three-token-interface-not-gpt2-or-qwen",
+              "tokenizer_revision": null
+            },
+            "template_sha256": null,
+            "tokenizer": {
+              "encoding_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+              "max_token_id": 2,
+              "special_ids": {
+                "additional_special_tokens_ids": null,
+                "bos_token_id": null,
+                "cls_token_id": null,
+                "eos_token_id": 2,
+                "mask_token_id": null,
+                "pad_token_id": null,
+                "sep_token_id": null,
+                "unk_token_id": null
+              },
+              "vocab_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+              "vocab_size": 3,
+              "wrapper_settings": {}
+            }
+          },
+          "limits": {
+            "external_seconds": 60,
+            "reserve_bytes": 26843545600,
+            "artifact_bytes": 16777216,
+            "artifact_entries": 32,
+            "per_file_bytes": 1048576,
+            "snapshot_max_bytes": 1048576,
+            "hard_memory_bytes": 2147483648,
+            "hard_pid_limit": 8,
+            "max_valid_training_targets": 50000000,
+            "max_padded_training_positions": 1000000000000,
+            "max_policy_forward_positions": 1000000000000,
+            "max_reference_forward_positions": 1000000000000,
+            "max_evaluation_forward_positions": 1000000000000,
+            "max_generation_forward_positions": 1000000000000,
+            "max_response_slots": 1000000000000,
+            "max_prompt_positions": 7,
+            "private_instance_id": "dongxi-stage-cccccccccccccccccccccccccccccccc",
+            "owner_uid": 1000
+          },
+          "checkpoint_genealogy": null,
+          "boundary": "Authored metadata/data only; no actual model checkpoint loaded or authenticated."
+        },
+        "logical_work_envelope": {
+          "padded_geometry": 4096,
+          "valid_targets": "not inferred from padded geometry",
+          "policy_scored_positions": 8176,
+          "reference_scored_positions": 8176,
+          "response_slots": null,
+          "generation_prefix_positions": null,
+          "scope": "logical maximum training inputs only; evaluation, retries and backward recomputation excluded"
+        },
+        "unresolved": [
+          "compiler-to-runner cumulative work-contract integration and remaining runner coverage",
+          "actual private containment/hard quota/backend",
+          "real stage authority/acquisition/profile/recovery/evaluation"
+        ],
+        "jobs_started": 0,
+        "launch_authorized": false,
+        "production_ready": false,
+        "launch_command": null,
+        "preparation_sha256": "04876c8dd09bcce6b26333d874940037f8ff9740059357ed9ee9b31c6232b890"
+      },
+      "receipt_identities": {
+        "approval": {
+          "path": "approval.json",
+          "sha256": "e41c0c5e62c40c3fdf653981b5ae6415180cec0f543b0b041ec9e278082c4b93",
+          "bytes": 553
+        },
+        "preflight": {
+          "path": "preflight.json",
+          "sha256": "35de34d62e68e87e95e48d21e08fa7d1a14a45ce1584f11a2b23647a43e9974c",
+          "bytes": 3862
+        },
+        "prerequisites": {
+          "assistant-selected-sft-parent": {
+            "path": "prerequisite0.json",
+            "sha256": "e1b9fd413ba424d8fa8964f698352593e876983cd4153cbd0161540352abcf49",
+            "bytes": 421
+          }
+        }
+      },
+      "jobs_started": 0,
+      "launch_authorized": false,
+      "production_ready": false,
+      "launch_command": null,
+      "actual_external_result": null,
+      "boundary": "Pinned authored fixture assertions only; no real authority, platform readiness, model compatibility or checkpoint genealogy."
+    }
+  ],
+  "retained_refusals": [
+    {
+      "control": "unknown-stage",
+      "status": "refused",
+      "exception": "ValueError",
+      "message": "Unknown fixed campaign stage ID",
+      "model_jobs_started": 0
+    },
+    {
+      "control": "self-approved",
+      "status": "refused",
+      "exception": "ValueError",
+      "message": "compile request fields must match the exact schema",
+      "model_jobs_started": 0
+    },
+    {
+      "control": "missing-approval",
+      "status": "refused",
+      "exception": "ValueError",
+      "message": "An independently retained ReceiptRef is required",
+      "model_jobs_started": 0
+    },
+    {
+      "control": "stale-observations",
+      "status": "refused",
+      "exception": "ValueError",
+      "message": "Observation is future-dated or stale",
+      "model_jobs_started": 0
+    }
+  ],
+  "model_jobs_started": 0,
+  "production_ready": false,
+  "launch_authorized": false,
+  "boundary": "Fixed CPU unittest children, original bounded self-owned leaf controls, and JSON fixture validation only; compiler starts no process and has no real backend/approval/model/checkpoint."
+}

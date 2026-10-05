@@ -1,0 +1,60 @@
+{
+  "actual_exit_code": 0,
+  "all_four_regressions_pass": true,
+  "diagnostics": [
+    {
+      "control": "save_tensor_byte_bound_before_finite",
+      "declared_tensor_bytes": 1,
+      "error": "WorkBudgetExceeded: Shared snapshot tensor bytes exceed envelope before finite scan/clone",
+      "finite_scan_bytes": [],
+      "pass_refusal_before_finite": true,
+      "tensor_bytes": 8
+    },
+    {
+      "control": "load_tensor_byte_bound_before_finite",
+      "declared_tensor_bytes": 8,
+      "error": "WorkBudgetExceeded: Shared snapshot tensor bytes exceed envelope before finite scan/clone",
+      "finite_scan_bytes": [],
+      "pass_refusal_before_finite": true,
+      "tensor_bytes": 16
+    },
+    {
+      "control": "mutated_receipt_bool_prefix",
+      "error": "ValueError: sequence must be a bounded nonnegative exact integer",
+      "mutated_sequence": false,
+      "pass_refusal_before_read": true,
+      "payload_or_marker_reads": []
+    },
+    {
+      "control": "header_v2_payload_v1_unaccounted_load",
+      "error": "ValueError: Snapshot header schema differs from explicit accounted/reference mode",
+      "pass_refusal_before_load": true,
+      "restricted_load_calls": []
+    }
+  ],
+  "duration_seconds": 1.9801766719901934,
+  "focused_tests": 58,
+  "schema": "dongxi-snapshot-io-independent-review-v1",
+  "scope": "shared trusted-local tiny CPU guards plus pure schedule; no actual runner model numerical continuation, CLI/GPU/physical authority claim",
+  "source_after": {
+    "experiments/specs/2026-10-05-snapshot-io-admission.md": "ad6547bec89399b2f3e29a0bfa15371205dfe8475d3ae7f848e144ff3d07c691",
+    "experiments/specs/2026-10-05-snapshot-io-schedule-node-bound.md": "535711c66372efbc4ff6f023e443286d58978ebe7c5d6366237deb2e3bf4d8d5",
+    "src/dongxi_llms/snapshot_io_budget.py": "9035101f4fb391c40c4efa00434b9849b51942e67003d18df6388ade024ff0c2",
+    "src/dongxi_llms/snapshot_io_schedule.py": "6a1988d02651673d96f31407d7a088546a1c9bd435a111b22fe138f7fd94f1f8",
+    "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+    "tests/test_snapshot_io_budget.py": "26446b1c2b7ef03782ced7ea700fae2bf0ed4332d1347250a699886267e45c68",
+    "tests/test_snapshot_io_schedule.py": "6f7fa649c5cec8b6f9c9307fb2d8e482abe1114f92ac609f86c81f1b61a0cfcc",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968"
+  },
+  "source_before": {
+    "experiments/specs/2026-10-05-snapshot-io-admission.md": "ad6547bec89399b2f3e29a0bfa15371205dfe8475d3ae7f848e144ff3d07c691",
+    "experiments/specs/2026-10-05-snapshot-io-schedule-node-bound.md": "535711c66372efbc4ff6f023e443286d58978ebe7c5d6366237deb2e3bf4d8d5",
+    "src/dongxi_llms/snapshot_io_budget.py": "9035101f4fb391c40c4efa00434b9849b51942e67003d18df6388ade024ff0c2",
+    "src/dongxi_llms/snapshot_io_schedule.py": "6a1988d02651673d96f31407d7a088546a1c9bd435a111b22fe138f7fd94f1f8",
+    "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+    "tests/test_snapshot_io_budget.py": "26446b1c2b7ef03782ced7ea700fae2bf0ed4332d1347250a699886267e45c68",
+    "tests/test_snapshot_io_schedule.py": "6f7fa649c5cec8b6f9c9307fb2d8e482abe1114f92ac609f86c81f1b61a0cfcc",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968"
+  },
+  "source_stable": true
+}

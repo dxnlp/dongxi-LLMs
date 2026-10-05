@@ -1,0 +1,12 @@
+{
+  "scope": "Root targeted compatibility diagnostic; offline one-thread Linux ARM64 CPU only",
+  "actual_exit_code": 1,
+  "tests_run": 17,
+  "unittest_seconds": 15.380,
+  "failures": 0,
+  "errors": 4,
+  "command": "env PYTHONPATH=src:tests CUDA_VISIBLE_DEVICES= HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python -m unittest test_sft_work_budget.SFTWorkBudgetTests.test_fresh_process_full_and_lora_retains_failed_spending test_sft_runner_recovery.SFTRecoveryTests.test_mocked_cuda_rng_rejected_before_any_state_application test_dpo_work_budget.DPOWorkBudgetTests.test_fresh_process_same_journal_retains_later_attempts_and_exact_model test_dpo_snapshot_artifacts -v",
+  "retained_error": "AttributeError: 'tuple' object has no attribute 'numel' at scripts/run_chapter09_spark_sft.py:426. Root's metadata-only CUDA fixture injected tuple(current.shape) instead of the observed torch.Size current.shape. Three malformed variants and the valid mocked variant reached this fixture-type error.",
+  "correction_plan": "Use current.shape as the fixture observation, matching actual runner construction. Do not change runner code, numerical caps, recipes or assertions. Rerun the same17 controls and retain a separate result.",
+  "scope_exclusions": ["actual CUDA", "pretrained loads", "hosted CI", "Git writes", "external jobs"]
+}

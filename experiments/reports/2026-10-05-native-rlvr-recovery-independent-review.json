@@ -1,0 +1,704 @@
+{
+  "schema": "dongxi-native-rlvr-recovery-independent-review-v1",
+  "date_utc": "2026-10-05",
+  "reviewer": "/root/audit_reasoning",
+  "scope": "Model-free source/actual metadata/receipt/journal review only. No model/tensor load, weights/snapshot storage-body rehash, forwards/fits/tests/new children, GPU operations or acceptance/source mutation.",
+  "disposition": "actual-g4-recovery02-accepted-at-retained-recovery-scope",
+  "gates": {
+    "source_completed_horizon": true,
+    "completed_completed_horizon": true,
+    "pending_completed_horizon": true,
+    "original_prompt_and_source_contract": true,
+    "exact_final_policy_reference_optimizer_rng_loop_history": true,
+    "exact_update2_metrics": true,
+    "pending_does_not_resample": true,
+    "cumulative_work_ledger_same_physical_journal": true,
+    "cumulative_work_ledger_retains_later_spending": true,
+    "cumulative_snapshot_io_ledger_same_physical_journal": true,
+    "cumulative_snapshot_io_ledger_retains_later_spending": true,
+    "no_open_or_failed_journal_tickets": true
+  },
+  "status": "passed",
+  "group": 4,
+  "stage": "recovery",
+  "preparation_self_hash_valid": true,
+  "preclosing_equal": {
+    "source_bindings": true,
+    "input_bindings": true,
+    "local_model_binding": true,
+    "prerequisite_bindings": true
+  },
+  "current_source_matches": {
+    "src/dongxi_llms/qwen_rlvr_lab.py": true,
+    "src/dongxi_llms/grpo_lab.py": true,
+    "src/dongxi_llms/run_identity.py": true,
+    "src/dongxi_llms/training_snapshot.py": true,
+    "src/dongxi_llms/batched_cache_lab.py": true,
+    "src/dongxi_llms/work_budget.py": true,
+    "src/dongxi_llms/snapshot_io_budget.py": true,
+    "src/dongxi_llms/snapshot_io_schedule.py": true,
+    "src/dongxi_llms/artifact_budget.py": true,
+    "src/dongxi_llms/native_profile_supervisor.py": true,
+    "src/dongxi_llms/campaign_supervisor.py": true,
+    "scripts/run_native_rlvr_stages.py": true,
+    "tests/test_native_rlvr_stages.py": true,
+    "scripts/run_native_reasoning_baselines.py": true
+  },
+  "current_nonmodel_inputs_match": {
+    "interpreter": true,
+    "environment_lock": true,
+    "work_caps": true,
+    "io_caps": true,
+    "geometry": true
+  },
+  "same_original_science_fields": {
+    "recipe": true,
+    "observed_geometry": true,
+    "allowances": true,
+    "local_model_binding": true
+  },
+  "roles": {
+    "source": {
+      "status": "completed",
+      "actual_exit_code": 0,
+      "child_pid": 303486,
+      "child_seconds": 176.87867476296378,
+      "seconds": 176.92320748697966,
+      "minimum_sampled_available_bytes": 109353230336,
+      "stop_reason": null,
+      "failure": null,
+      "cleanup_errors": [],
+      "observed_owned_descendants": [],
+      "helper_cleanup": [
+        {
+          "pid": 303483,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        },
+        {
+          "pid": 303482,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        }
+      ],
+      "queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "limits": {
+        "external_seconds": 600,
+        "reserve_bytes": 26843545600,
+        "probe_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "term_seconds": 0.1,
+        "reap_seconds": 0.5
+      },
+      "report_acceptance_exact": true,
+      "argv_exact": true,
+      "preparation_sha_exact": true,
+      "observed_model_file_map_exact": true,
+      "identity_self_hash_valid": true,
+      "minimum_recomputed_exact": true,
+      "row_count": 2,
+      "committed_updates": 2,
+      "invocation_id": "rlvr-24868fd78e3b47a88a96a0e5322c3a8f",
+      "per_record_metrics": [
+        {
+          "update": 1,
+          "reward": 0,
+          "gradient_norm": 5.811452865600586e-7,
+          "loss": 0,
+          "exact_kl_nats_before_update": 0,
+          "valid_response_tokens": 32,
+          "policy_sha256_after": "184d52c3328a3ed5eac57719aa80cafca8385169e1bd8cdeecd22b6400205709"
+        },
+        {
+          "update": 2,
+          "reward": 0,
+          "gradient_norm": 0.1796875,
+          "loss": 0.000021557978470809758,
+          "exact_kl_nats_before_update": 0.0010778990108519793,
+          "valid_response_tokens": 64,
+          "policy_sha256_after": "3cfea830ce683ddf4e8e21b7448a5c64f88014636c81d8a0a6e8a3f56611a73f"
+        }
+      ]
+    },
+    "completed": {
+      "status": "completed",
+      "actual_exit_code": 0,
+      "child_pid": 303790,
+      "child_seconds": 143.31851184100378,
+      "seconds": 143.3822326939553,
+      "minimum_sampled_available_bytes": 104016809984,
+      "stop_reason": null,
+      "failure": null,
+      "cleanup_errors": [],
+      "observed_owned_descendants": [
+        {
+          "pid": 303817,
+          "create_time": 1791205523.14
+        }
+      ],
+      "helper_cleanup": [
+        {
+          "pid": 303966,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        },
+        {
+          "pid": 303787,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        },
+        {
+          "pid": 303786,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        }
+      ],
+      "queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "limits": {
+        "external_seconds": 600,
+        "reserve_bytes": 26843545600,
+        "probe_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "term_seconds": 0.1,
+        "reap_seconds": 0.5
+      },
+      "report_acceptance_exact": true,
+      "argv_exact": true,
+      "preparation_sha_exact": true,
+      "observed_model_file_map_exact": true,
+      "identity_self_hash_valid": true,
+      "minimum_recomputed_exact": true,
+      "row_count": 1,
+      "committed_updates": 2,
+      "invocation_id": "rlvr-117bf4d547dc4da8a52a611c5b963050",
+      "per_record_metrics": [
+        {
+          "update": 2,
+          "reward": 0,
+          "gradient_norm": 0.1796875,
+          "loss": 0.000021557978470809758,
+          "exact_kl_nats_before_update": 0.0010778990108519793,
+          "valid_response_tokens": 64,
+          "policy_sha256_after": "3cfea830ce683ddf4e8e21b7448a5c64f88014636c81d8a0a6e8a3f56611a73f"
+        }
+      ]
+    },
+    "pending": {
+      "status": "completed",
+      "actual_exit_code": 0,
+      "child_pid": 303971,
+      "child_seconds": 109.66025628399802,
+      "seconds": 109.72791634697933,
+      "minimum_sampled_available_bytes": 103915323392,
+      "stop_reason": null,
+      "failure": null,
+      "cleanup_errors": [],
+      "observed_owned_descendants": [],
+      "helper_cleanup": [
+        {
+          "pid": 303968,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        },
+        {
+          "pid": 303967,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        }
+      ],
+      "queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "limits": {
+        "external_seconds": 600,
+        "reserve_bytes": 26843545600,
+        "probe_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "term_seconds": 0.1,
+        "reap_seconds": 0.5
+      },
+      "report_acceptance_exact": true,
+      "argv_exact": true,
+      "preparation_sha_exact": true,
+      "observed_model_file_map_exact": true,
+      "identity_self_hash_valid": true,
+      "minimum_recomputed_exact": true,
+      "row_count": 1,
+      "committed_updates": 2,
+      "invocation_id": "rlvr-d02824508f4f4ee7884e9bde3cee0193",
+      "per_record_metrics": [
+        {
+          "update": 2,
+          "reward": 0,
+          "gradient_norm": 0.1796875,
+          "loss": 0.000021557978470809758,
+          "exact_kl_nats_before_update": 0.0010778990108519793,
+          "valid_response_tokens": 64,
+          "policy_sha256_after": "3cfea830ce683ddf4e8e21b7448a5c64f88014636c81d8a0a6e8a3f56611a73f"
+        }
+      ]
+    }
+  },
+  "recorded_scientific_snapshots": {
+    "source": {
+      "phase": "completed",
+      "completed_updates": 2,
+      "scientific_state_sha256": "32c7e71b446895d564b0483737edf1adf924eb552313ee1ffa6f2fc522659f52",
+      "components": {
+        "policy": "a2f167162dbe5a44b016a8c6392c36439f60f43ba70b80a5f7a7ade8eb10d087",
+        "reference": "803a686b8cde3494557c8931e3dbf7341c01c200a68263e0650e2df77c6547d7",
+        "optimizer": "758839da0c3de792655c408cd265570518c4a2fb435cdf4ffa1d7c46481eaa59",
+        "loop_contract": "f2be52972ace35e09d278170a603ef27d95672cf261ec54a5e2af3ff5203d239",
+        "cursor": "63f9a351da0fb44256450f35b71bd2565c403150f2db319b3f95d33fbced0567",
+        "collection_work": "cb9d83e831af3e854594a4397f75e3714b03735a60a76bed61591c499de8c310",
+        "application_work": "1a21c8d51206159ba60a81f18902f8307d39d77ba81183ae5d4379e65300fccf",
+        "history": "bf0aa6f3f0482b1d0e7b73182ec9b9e71dd589d5f4452091df8f63ba01266f31",
+        "pending": "c8914a5205ced702f208f15b0ef09c15d23b98996e5434df65c61c8da397829a",
+        "rng": "b83a83639eab95ed74b4ecaa818c569103216fcea450b09008c4ff0a33f218a6"
+      },
+      "scope": "Exact streamed storage bytes and typed native science descriptors; excludes only physical work prefix and producer invocation"
+    },
+    "completed": {
+      "phase": "completed",
+      "completed_updates": 2,
+      "scientific_state_sha256": "32c7e71b446895d564b0483737edf1adf924eb552313ee1ffa6f2fc522659f52",
+      "components": {
+        "policy": "a2f167162dbe5a44b016a8c6392c36439f60f43ba70b80a5f7a7ade8eb10d087",
+        "reference": "803a686b8cde3494557c8931e3dbf7341c01c200a68263e0650e2df77c6547d7",
+        "optimizer": "758839da0c3de792655c408cd265570518c4a2fb435cdf4ffa1d7c46481eaa59",
+        "loop_contract": "f2be52972ace35e09d278170a603ef27d95672cf261ec54a5e2af3ff5203d239",
+        "cursor": "63f9a351da0fb44256450f35b71bd2565c403150f2db319b3f95d33fbced0567",
+        "collection_work": "cb9d83e831af3e854594a4397f75e3714b03735a60a76bed61591c499de8c310",
+        "application_work": "1a21c8d51206159ba60a81f18902f8307d39d77ba81183ae5d4379e65300fccf",
+        "history": "bf0aa6f3f0482b1d0e7b73182ec9b9e71dd589d5f4452091df8f63ba01266f31",
+        "pending": "c8914a5205ced702f208f15b0ef09c15d23b98996e5434df65c61c8da397829a",
+        "rng": "b83a83639eab95ed74b4ecaa818c569103216fcea450b09008c4ff0a33f218a6"
+      },
+      "scope": "Exact streamed storage bytes and typed native science descriptors; excludes only physical work prefix and producer invocation"
+    },
+    "pending": {
+      "phase": "completed",
+      "completed_updates": 2,
+      "scientific_state_sha256": "32c7e71b446895d564b0483737edf1adf924eb552313ee1ffa6f2fc522659f52",
+      "components": {
+        "policy": "a2f167162dbe5a44b016a8c6392c36439f60f43ba70b80a5f7a7ade8eb10d087",
+        "reference": "803a686b8cde3494557c8931e3dbf7341c01c200a68263e0650e2df77c6547d7",
+        "optimizer": "758839da0c3de792655c408cd265570518c4a2fb435cdf4ffa1d7c46481eaa59",
+        "loop_contract": "f2be52972ace35e09d278170a603ef27d95672cf261ec54a5e2af3ff5203d239",
+        "cursor": "63f9a351da0fb44256450f35b71bd2565c403150f2db319b3f95d33fbced0567",
+        "collection_work": "cb9d83e831af3e854594a4397f75e3714b03735a60a76bed61591c499de8c310",
+        "application_work": "1a21c8d51206159ba60a81f18902f8307d39d77ba81183ae5d4379e65300fccf",
+        "history": "bf0aa6f3f0482b1d0e7b73182ec9b9e71dd589d5f4452091df8f63ba01266f31",
+        "pending": "c8914a5205ced702f208f15b0ef09c15d23b98996e5434df65c61c8da397829a",
+        "rng": "b83a83639eab95ed74b4ecaa818c569103216fcea450b09008c4ff0a33f218a6"
+      },
+      "scope": "Exact streamed storage bytes and typed native science descriptors; excludes only physical work prefix and producer invocation"
+    }
+  },
+  "recorded_science_equal": true,
+  "journals": {
+    "work": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g4-recovery-20261005-run-02-journals/work.jsonl",
+      "bytes": 46147,
+      "sha256": "4f6de7e00e6173e98634cbf27d694b4cc9623c764e3251e22a529df484cf2f93",
+      "ledger_id": "9a7a15c94f8f4ce4b268fc6c86f9f96b",
+      "file_identity": [
+        66306,
+        5901456
+      ],
+      "actual_file_identity_matches": true,
+      "chain_valid": true,
+      "event_counts": {
+        "reserve": 25,
+        "complete": 25
+      },
+      "open_or_failed_tickets": 0,
+      "actual_totals": {
+        "collections": 3,
+        "evaluation_calls": 328,
+        "evaluation_examples": 24,
+        "evaluation_positions": 10108,
+        "evaluation_tokens": 328,
+        "generated_slots": 160,
+        "generation_forward_calls": 368,
+        "generation_forward_positions": 15020,
+        "multinomial_draws": 160,
+        "old_policy_forward_calls": 3,
+        "old_policy_forward_positions": 436,
+        "policy_forward_calls": 384,
+        "policy_forward_positions": 17388,
+        "recovery_multinomial_draws": 1024,
+        "recovery_validation_calls": 9,
+        "recovery_validation_operations": 16,
+        "recovery_validation_positions": 1340,
+        "reference_forward_calls": 4,
+        "reference_forward_positions": 592,
+        "response_targets": 224,
+        "source_examples": 3,
+        "train_updates": 4,
+        "valid_response_tokens": 160
+      },
+      "actual_by_invocation": {
+        "rlvr-24868fd78e3b47a88a96a0e5322c3a8f": {
+          "collections": 2,
+          "evaluation_calls": 104,
+          "evaluation_examples": 8,
+          "evaluation_positions": 3180,
+          "evaluation_tokens": 104,
+          "generated_slots": 96,
+          "generation_forward_calls": 128,
+          "generation_forward_positions": 6076,
+          "multinomial_draws": 96,
+          "old_policy_forward_calls": 2,
+          "old_policy_forward_positions": 280,
+          "policy_forward_calls": 136,
+          "policy_forward_positions": 7196,
+          "recovery_multinomial_draws": 352,
+          "recovery_validation_calls": 4,
+          "recovery_validation_operations": 7,
+          "recovery_validation_positions": 560,
+          "reference_forward_calls": 2,
+          "reference_forward_positions": 280,
+          "response_targets": 96,
+          "source_examples": 2,
+          "train_updates": 2,
+          "valid_response_tokens": 96
+        },
+        "rlvr-117bf4d547dc4da8a52a611c5b963050": {
+          "collections": 1,
+          "evaluation_calls": 112,
+          "evaluation_examples": 8,
+          "evaluation_positions": 3464,
+          "evaluation_tokens": 112,
+          "generated_slots": 64,
+          "generation_forward_calls": 128,
+          "generation_forward_positions": 5480,
+          "multinomial_draws": 64,
+          "old_policy_forward_calls": 1,
+          "old_policy_forward_positions": 156,
+          "policy_forward_calls": 132,
+          "policy_forward_positions": 6104,
+          "recovery_multinomial_draws": 320,
+          "recovery_validation_calls": 2,
+          "recovery_validation_operations": 5,
+          "recovery_validation_positions": 312,
+          "reference_forward_calls": 1,
+          "reference_forward_positions": 156,
+          "response_targets": 64,
+          "source_examples": 1,
+          "train_updates": 1,
+          "valid_response_tokens": 64
+        },
+        "rlvr-d02824508f4f4ee7884e9bde3cee0193": {
+          "collections": 0,
+          "evaluation_calls": 112,
+          "evaluation_examples": 8,
+          "evaluation_positions": 3464,
+          "evaluation_tokens": 112,
+          "generated_slots": 0,
+          "generation_forward_calls": 112,
+          "generation_forward_positions": 3464,
+          "multinomial_draws": 0,
+          "old_policy_forward_calls": 0,
+          "old_policy_forward_positions": 0,
+          "policy_forward_calls": 116,
+          "policy_forward_positions": 4088,
+          "recovery_multinomial_draws": 352,
+          "recovery_validation_calls": 3,
+          "recovery_validation_operations": 4,
+          "recovery_validation_positions": 468,
+          "reference_forward_calls": 1,
+          "reference_forward_positions": 156,
+          "response_targets": 64,
+          "source_examples": 0,
+          "train_updates": 1,
+          "valid_response_tokens": 0
+        }
+      },
+      "report_prefix_chains_valid": true,
+      "report_physical_id_equal": true,
+      "final_totals_report_exact": true
+    },
+    "io": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g4-recovery-20261005-run-02-journals/io.jsonl",
+      "bytes": 16906,
+      "sha256": "681c25cf009a4b9825a0cc3ec24b39edc4070b326f613dc920e6daa6e6e0b269",
+      "ledger_id": "38c591c5f52d498184ccc2c992ed21f6",
+      "file_identity": [
+        66306,
+        5901458
+      ],
+      "actual_file_identity_matches": true,
+      "chain_valid": true,
+      "event_counts": {
+        "reserve": 14,
+        "complete": 14
+      },
+      "open_or_failed_tickets": 0,
+      "actual_totals": {
+        "snapshot_clone_bytes": 49138965936,
+        "snapshot_hash_bytes": 70709741776,
+        "snapshot_inspect_operations": 2,
+        "snapshot_load_operations": 2,
+        "snapshot_primitive_bytes": 1674509,
+        "snapshot_save_operations": 10,
+        "snapshot_serialization_bytes": 49144402786,
+        "snapshot_tensor_elements": 29960243252,
+        "snapshot_tree_nodes": 96383
+      },
+      "actual_by_invocation": {
+        "rlvr-24868fd78e3b47a88a96a0e5322c3a8f": {
+          "snapshot_clone_bytes": 22185280648,
+          "snapshot_hash_bytes": 22187720453,
+          "snapshot_inspect_operations": 0,
+          "snapshot_load_operations": 0,
+          "snapshot_primitive_bytes": 612399,
+          "snapshot_save_operations": 5,
+          "snapshot_serialization_bytes": 22187720453,
+          "snapshot_tensor_elements": 11092650858,
+          "snapshot_tree_nodes": 34623
+        },
+        "rlvr-117bf4d547dc4da8a52a611c5b963050": {
+          "snapshot_clone_bytes": 16172210744,
+          "snapshot_hash_bytes": 26956673667,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 593602,
+          "snapshot_save_operations": 3,
+          "snapshot_serialization_bytes": 16174008025,
+          "snapshot_tensor_elements": 10781481152,
+          "snapshot_tree_nodes": 34569
+        },
+        "rlvr-d02824508f4f4ee7884e9bde3cee0193": {
+          "snapshot_clone_bytes": 10781474544,
+          "snapshot_hash_bytes": 21565347656,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 468508,
+          "snapshot_save_operations": 2,
+          "snapshot_serialization_bytes": 10782674308,
+          "snapshot_tensor_elements": 8086111242,
+          "snapshot_tree_nodes": 27191
+        }
+      },
+      "report_prefix_chains_valid": true,
+      "report_physical_id_equal": true,
+      "final_totals_report_exact": true
+    }
+  },
+  "update2_records_exact": true,
+  "reviewed_metadata_sha256": {
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/preparation.json": {
+      "bytes": 24938,
+      "sha256": "b35c5c42e87223192751993cd2a74dbd47a85e8a60287eb0a3959730285f27a1"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/acceptance.json": {
+      "bytes": 435960,
+      "sha256": "ea58c75e784fd8619bfd1f492fd9f361b0123419941c5c7cccb9a0cd8c141e7f"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/closing-bindings.json": {
+      "bytes": 16943,
+      "sha256": "9a8a7e7a15402300d3d1e0785528133a7ca5cb4e17ed1601eac9b1888c86a51e"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/launch-1.json": {
+      "bytes": 1828,
+      "sha256": "fdb6ed2667258d38eb7cf3364b6f64f7f483f376314772c45eb0b66f1c0208b6"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/launch-2.json": {
+      "bytes": 4188,
+      "sha256": "c8e1d77f72156cee38916f79c956f41bcd5b6b9ec3050e3d541838d19d91b498"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/launch-3.json": {
+      "bytes": 4168,
+      "sha256": "8b965f3b791cda5d00be0923867a33c975d70f84064fafdeb79a02c1dca8f342"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/returned-supervision-1.json": {
+      "bytes": 1459676,
+      "sha256": "ee03160812567436f10e4ff3d505820df755bd54eeeb653929f8618d4244107a"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/returned-supervision-2.json": {
+      "bytes": 1188994,
+      "sha256": "0386e6ed64d92cf6f6695f46363c4866fcfe22239d2431a294aa74134d8d46fa"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/returned-supervision-3.json": {
+      "bytes": 904739,
+      "sha256": "3f46df938e1e35e2c05035ecce2f3beab1d8bcd6ae68213f3e9dd78b5844ea9b"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/independent-resume-bindings.json": {
+      "bytes": 3547,
+      "sha256": "96aa9092cab953f0b71208eae01e8b3339d37641ea075dc988bf35dc88fc0352"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/retained-contract.json": {
+      "bytes": 72889,
+      "sha256": "bacaa982c44fe7bde7b35a1368ade4164bbc4dd2507962701861e2e959d5b1ab"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/retained-completed-receipt.json": {
+      "bytes": 8662,
+      "sha256": "581bffc5d8e51fb207aa8e1c6eb9c686747fedc7c1e604451c37cd027d2a9540"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/retained-pending-receipt.json": {
+      "bytes": 8671,
+      "sha256": "c0bf766e810a8fa2e38c8ddf4c18ce2c324b89e814c7d12d0f75de96d2c6df0b"
+    },
+    "experiments/reports/native-rlvr-g4-recovery-20261005-run-02/outer-launcher-observation.json": {
+      "bytes": 673,
+      "sha256": "4d1bc08039f5dcffb4ad5620cc14e3a30397e8e3db866ec1aca36de3a13641af"
+    }
+  },
+  "source_bindings": {
+    "src/dongxi_llms/qwen_rlvr_lab.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/qwen_rlvr_lab.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/qwen_rlvr_lab.py",
+      "bytes": 99265,
+      "sha256": "7c61253d4da3a3119342f66d4f40dc31e143e68d57be22ac7d71aac5d3ee1fb7"
+    },
+    "src/dongxi_llms/grpo_lab.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/grpo_lab.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/grpo_lab.py",
+      "bytes": 11148,
+      "sha256": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911"
+    },
+    "src/dongxi_llms/run_identity.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/run_identity.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/run_identity.py",
+      "bytes": 20051,
+      "sha256": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999"
+    },
+    "src/dongxi_llms/training_snapshot.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/training_snapshot.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/training_snapshot.py",
+      "bytes": 21296,
+      "sha256": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77"
+    },
+    "src/dongxi_llms/batched_cache_lab.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/batched_cache_lab.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/batched_cache_lab.py",
+      "bytes": 46712,
+      "sha256": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04"
+    },
+    "src/dongxi_llms/work_budget.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/work_budget.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/work_budget.py",
+      "bytes": 19121,
+      "sha256": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297"
+    },
+    "src/dongxi_llms/snapshot_io_budget.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_budget.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_budget.py",
+      "bytes": 15987,
+      "sha256": "464add774085ccd7ec3e9e2bc79a539748eea4ce244af2222c39d9d9c5d26e86"
+    },
+    "src/dongxi_llms/snapshot_io_schedule.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_schedule.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_schedule.py",
+      "bytes": 9193,
+      "sha256": "6a1988d02651673d96f31407d7a088546a1c9bd435a111b22fe138f7fd94f1f8"
+    },
+    "src/dongxi_llms/artifact_budget.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/artifact_budget.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/artifact_budget.py",
+      "bytes": 28366,
+      "sha256": "af1c1fcc4349393e50f5603e85017f851128c92c34dbcb82f75aa4694efdacc0"
+    },
+    "src/dongxi_llms/native_profile_supervisor.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/native_profile_supervisor.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/native_profile_supervisor.py",
+      "bytes": 36522,
+      "sha256": "88100a0fbe33fa8de34155838485e6c31fb5c3fd436d1dc27725fe720ad4f9b2"
+    },
+    "src/dongxi_llms/campaign_supervisor.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/campaign_supervisor.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/campaign_supervisor.py",
+      "bytes": 12667,
+      "sha256": "d2959a7856bc0cc4fb6b6623387d45bbc0d7193607a52c29c59bb8823b97d253"
+    },
+    "scripts/run_native_rlvr_stages.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_rlvr_stages.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_rlvr_stages.py",
+      "bytes": 39893,
+      "sha256": "a17e6fe791d32bce3518507f29f2814f011197b3796162e6fafe269bc34ae508"
+    },
+    "tests/test_native_rlvr_stages.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_native_rlvr_stages.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_native_rlvr_stages.py",
+      "bytes": 26713,
+      "sha256": "c1beb9b80f4e2b445778738c012eefd85617bafe4dacb2a336caeb56ff8d6ba7"
+    },
+    "scripts/run_native_reasoning_baselines.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_reasoning_baselines.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_reasoning_baselines.py",
+      "bytes": 22287,
+      "sha256": "249102e3dc4d6d81cf1c86ae71b65a9023dbb2f10c32698ad1eebf747cfa54e4"
+    }
+  },
+  "outer_observation": {
+    "schema": "dongxi-owner-console-observation-v1",
+    "recorded_date_utc": "2026-10-05",
+    "source": "Actual unified-exec session91701 stdout, transcribed after queue entry finished",
+    "queue_entry": "rlvr-recovery-g4-lazyimport-retry02",
+    "actual_outer_exit_code": 0,
+    "parent_monotonic_seconds": 482.61591269401833,
+    "stdout_sha256": null,
+    "boundary": "Outer adapter preparation/three native supervisors/inline CPU comparison/closure overlaps child time; not an extra model run",
+    "limitations": "Owner transcription, not a native or pre-launch-bound terminal archive; actual exit/recovery/resources are separately retained; failed01 spending remains separate"
+  },
+  "original_failure_remains": {
+    "status": "failed",
+    "acceptance_exists": false
+  },
+  "boundaries": [
+    "The twelve gates and exact ten-component scientific-storage maps are actual adapter results, independently joined to the retained actual receipts/current source; this reviewer did not recompute5.39GB storage bodies.",
+    "Exact update2 JSON and physical journal chains/counters/identity/prefixes were independently recomputed without a model.",
+    "The completed-resume role—not pending—retains one observed descendant and a third cleanup helper with no cleanup error; this actual positive path does not capture historical helper import timing or prove root cause.",
+    "Source/returned/acceptance/closing maps remain producer byte witnesses for original checkpoint files; reviewer did not rehash pretrained weight bodies while G8GPU runs.",
+    "Outer482.61591269401833 seconds is owner-console transcription after closure, overlapping all child/supervisor/preparation/inlinecomparison scopes and not an additional model run.",
+    "Original G4run01 remains failed with no acceptance and its own physical journals/receipts/spending; retry02 has separately identified physical journals, not a refund/reset of01.",
+    "This is two-update recovery evidence, not accepted pilot16, common20 quality improvement, fullgoal/Mac/hosted proof or learner advancement."
+  ]
+}

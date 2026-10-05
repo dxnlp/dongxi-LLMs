@@ -1,0 +1,208 @@
+{
+  "schema": "dongxi-explicit-controller-repair-continuation-v1",
+  "date_utc": "2026-10-05",
+  "status": "declared-not-launched",
+  "authority": "Existing user instruction to complete the agreed improvement goal without routine repeated approval; one bounded engineering continuation, not a new model/data acquisition or scientific sweep",
+  "failed_entry": {
+    "run": "native-rlvr-g4-recovery-20261005-run-01",
+    "outer_actual_exit_code": 1,
+    "outer_parent_monotonic_seconds": 456.23976223001955,
+    "native_actual_exit_codes": [
+      0,
+      0,
+      0
+    ],
+    "failed_gate": "Pending supervisor observed-descendant cleanup acknowledgment timeout; no acceptance/comparison"
+  },
+  "later_host_check": {
+    "date_utc": "2026-10-05 12:53:40 UTC",
+    "observed_owned_pids_absent": [
+      301672,
+      301696,
+      301848,
+      301669,
+      301668
+    ],
+    "gpu_compute_app_query_empty": true,
+    "boundary": "Later point observation, not retroactive cleanup acknowledgment or continuous GPU-idle proof"
+  },
+  "correction": {
+    "changed": "Controller qwen numerical imports deferred; explicitly sealed pilot recovery selector run-01/run-02; archive retains original failed01 plus selected02",
+    "unchanged": [
+      "native model and weight inputs",
+      "qwen_rlvr_lab numerical implementation",
+      "seeds, prompts, objective, cap, LR, beta, group sizes",
+      "supervisor implementation and original0.5second cleanup acknowledgment bound",
+      "600second recovery child and1800second pilot deadlines",
+      "23-dimensional work and9-dimensional snapshot I/O allowances",
+      "25GiB reserve and original baseline gates"
+    ],
+    "limits": "One separately declared G4 fresh retry02, no automatic fallback, source-bound CPU review required before launch"
+  },
+  "jobs": [
+    {
+      "name": "rlvr-recovery-g4-lazyimport-retry02",
+      "argv": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/run_native_rlvr_stages.py",
+        "--stage",
+        "recovery",
+        "--group-size",
+        "4",
+        "--run-id",
+        "run-02",
+        "--execute",
+        "--operator-declaration",
+        "Existing completion goal authorizes one fresh bounded G4 recovery retry after controller-only lazy-import correction; original failed01 spending retained, same source2/completed1-to2/pending1-to2 science,600each/23work9IO/25GiB/seed2323/nativeinterface; no automatic retry or sweep"
+      ],
+      "threads": "8"
+    },
+    {
+      "name": "rlvr-recovery-g8",
+      "argv": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/run_native_rlvr_stages.py",
+        "--stage",
+        "recovery",
+        "--group-size",
+        "8",
+        "--run-id",
+        "run-01",
+        "--execute",
+        "--operator-declaration",
+        "Existing goal authorized fixed nativeG8 source2/freshcompleted1-to2/pending1-to2 no-resample recovery; requestedOMP8CPUparallelism, original600each/23work9IO/samejournals/25GiB; no sweep"
+      ],
+      "threads": "8"
+    },
+    {
+      "name": "rlvr-pilot16-g4",
+      "argv": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/run_native_rlvr_stages.py",
+        "--stage",
+        "pilot",
+        "--group-size",
+        "4",
+        "--run-id",
+        "run-01",
+        "--execute",
+        "--operator-declaration",
+        "Existing goal authorizes original fresh G4 fixed16 pilot only after actually accepted source-bound explicitly selected recoveryrun02 and originalInstructoff32/128; priorfailed01 retained; unchanged1800/cap64/LR1e-6/beta.02/seed2323/25GiB",
+        "--recovery-run-id",
+        "run-02"
+      ],
+      "threads": "8"
+    },
+    {
+      "name": "rlvr-pilot16-g8",
+      "argv": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/run_native_rlvr_stages.py",
+        "--stage",
+        "pilot",
+        "--group-size",
+        "8",
+        "--run-id",
+        "run-01",
+        "--execute",
+        "--operator-declaration",
+        "Existing goal authorized fixed nativeG8 fresh16 onlyafteractualacceptedrecovery andinitial32/128baselines; requestedOMP8CPUparallelism, original1800seconds/cap64/LR1e-6/beta.02/seed2323/25GiB"
+      ],
+      "threads": "8"
+    },
+    {
+      "name": "rlvr-eval-g4-32",
+      "argv": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/run_native_rlvr_evaluation.py",
+        "--group-size",
+        "4",
+        "--budget",
+        "32",
+        "--run-id",
+        "run-01",
+        "--execute",
+        "--operator-declaration",
+        "Existing goal authorized fixed prerequisite-gated stage; original data, seeds, caps and25GiB reserve; no acquisition or sweep"
+      ],
+      "threads": "1"
+    },
+    {
+      "name": "rlvr-eval-g4-128",
+      "argv": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/run_native_rlvr_evaluation.py",
+        "--group-size",
+        "4",
+        "--budget",
+        "128",
+        "--run-id",
+        "run-01",
+        "--execute",
+        "--operator-declaration",
+        "Existing goal authorized fixed prerequisite-gated stage; original data, seeds, caps and25GiB reserve; no acquisition or sweep"
+      ],
+      "threads": "1"
+    },
+    {
+      "name": "rlvr-eval-g8-32",
+      "argv": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/run_native_rlvr_evaluation.py",
+        "--group-size",
+        "8",
+        "--budget",
+        "32",
+        "--run-id",
+        "run-01",
+        "--execute",
+        "--operator-declaration",
+        "Existing goal authorized fixed prerequisite-gated stage; original data, seeds, caps and25GiB reserve; no acquisition or sweep"
+      ],
+      "threads": "1"
+    },
+    {
+      "name": "rlvr-eval-g8-128",
+      "argv": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/run_native_rlvr_evaluation.py",
+        "--group-size",
+        "8",
+        "--budget",
+        "128",
+        "--run-id",
+        "run-01",
+        "--execute",
+        "--operator-declaration",
+        "Existing goal authorized fixed prerequisite-gated stage; original data, seeds, caps and25GiB reserve; no acquisition or sweep"
+      ],
+      "threads": "1"
+    },
+    {
+      "name": "rlvr-compare-32",
+      "argv": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/run_native_rlvr_evaluation.py",
+        "--compare",
+        "--budget",
+        "32",
+        "--run-id",
+        "run-01"
+      ],
+      "threads": "8"
+    },
+    {
+      "name": "rlvr-compare-128",
+      "argv": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/run_native_rlvr_evaluation.py",
+        "--compare",
+        "--budget",
+        "128",
+        "--run-id",
+        "run-01"
+      ],
+      "threads": "8"
+    }
+  ]
+}

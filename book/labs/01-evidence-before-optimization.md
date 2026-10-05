@@ -19,6 +19,15 @@ for every model/size/recipe. This saved case uses the completed TinyStories run
 as a forward-looking evidence exercise; Chapter1's original Qwen smoke remains
 a distinct historical report. This lab does not rerun either GPU experiment.
 
+Then inspect [checkpoint interfaces](../../notebooks/day-01/04_checkpoint_interface.ipynb).
+Predict why an eight-ID swap loads but is incompatible; keep the mapping unchanged
+and perturb normalization. Use actual local save/reload as a positive control.
+A controlled journal failure separates stable configuration from invocation
+metadata. This fourth notebook also needs Transformers/tokenizers, creates its
+tokenizer locally and downloads nothing. The
+[identity report](../../experiments/reports/2026-10-04-run-identity.md) records the
+independent tiny HF/PEFT checks and their limits.
+
 Deliver a run card: hypothesis, identity, controls, acceptance/failure criteria,
 actual observations, interpretations and what the experiment cannot prove.
 Implementation: [course_foundations.py](../../src/dongxi_llms/course_foundations.py).

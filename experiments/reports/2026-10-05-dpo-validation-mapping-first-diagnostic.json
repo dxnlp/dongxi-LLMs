@@ -1,0 +1,26 @@
+{
+  "schema": "dongxi-dpo-validation-mapping-development-diagnostic-v1",
+  "status": "fail",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "-m", "unittest", "discover", "-s", "tests", "-p", "test_dpo_stage_budget.py", "-v"],
+  "environment": {"PYTHONPATH": "src:tests", "CUDA_VISIBLE_DEVICES": "", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1", "OMP_NUM_THREADS": "1"},
+  "exit_code": 1,
+  "tests_run": 22,
+  "seconds_unittest": 8.383,
+  "failures": 1,
+  "source_sha256_observed_after_command": {
+    "src/dongxi_llms/dpo_stage_budget.py": "287d24bbcf1400fb783df97204717e240e684e8c46d50ac7fe0c5a253a145408",
+    "tests/test_dpo_stage_budget.py": "49ed95112f4fb7464f1e440a8ceb74610300cece720611a3f84f26d8fedb9d7c",
+    "scripts/run_chapter11_spark_dpo.py": "ff6fa719abedcda4335fb057dd5afcc628710967e276e8ae9660c046bc49808d",
+    "experiments/specs/2026-10-05-dpo-validation-stage-mapping.md": "722cae0ebb1857e50b7c4e7ad80f45515d096ddf781cc422935b4340c311ed84"
+  },
+  "failure": {
+    "test": "test_fresh_process_periodic_restore_keeps_later_failure_and_validation_charges",
+    "child_exit_code": 1,
+    "type": "ValueError",
+    "message": "Fresh actual encoding differs from retained fixture",
+    "location": "tests/test_dpo_stage_budget.py:236",
+    "interpretation": "The source compared tuple-bearing live encodings with JSON-loaded list encodings by Python container equality. The semantic token/mask observations require canonical JSON identity; this failure is retained before changing the test helper. No final acceptance follows from this diagnostic."
+  },
+  "production_ready": false,
+  "model_scale_jobs_started": 0
+}

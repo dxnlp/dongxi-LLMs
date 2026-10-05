@@ -1,0 +1,44 @@
+{
+  "fixture": "success",
+  "limits": {
+    "seconds": 2.0,
+    "reserve_bytes": 26843545600,
+    "sampling_seconds": 0.02,
+    "term_grace_seconds": 0.1,
+    "kill_reap_seconds": 1.0
+  },
+  "child_command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "dongxi_llms.campaign_supervisor",
+    "--fixture-child",
+    "success"
+  ],
+  "child_pid": null,
+  "actual_exit_code": null,
+  "status": "gate-rejected",
+  "resource_measurement": "sampled, not continuous",
+  "observations": [
+    {
+      "available_bytes": 25769803776,
+      "source": "injected-fixture-control-not-host-shortage",
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 404,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      }
+    }
+  ],
+  "scope": "self-spawned leaf CPU child only; no model job or descendant supervision",
+  "stop_reason": "host-reserve-below-threshold",
+  "failure": null,
+  "signal_journal_errors": [],
+  "minimum_sampled_available_bytes": 25769803776,
+  "journal": {
+    "path": "experiments/reports/2026-10-04-campaign-supervisor-fixtures/preflight-reserve/events.jsonl",
+    "sha256": "fe6d873e2f087fac870e6e65dd3c47eb85b7051674430f940e8dedf46fe251d0"
+  }
+}

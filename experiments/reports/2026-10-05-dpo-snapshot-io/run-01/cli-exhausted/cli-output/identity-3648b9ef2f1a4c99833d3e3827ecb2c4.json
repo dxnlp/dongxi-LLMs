@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "invocation_id": "3648b9ef2f1a4c99833d3e3827ecb2c4",
+  "status": "failed",
+  "stage": "resume-pre-model-byte-and-observable-contract-check",
+  "config": {
+    "checkpoint": "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/placeholder-parent",
+    "tokenizer": "authored-local-placeholder",
+    "tokenizer_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "train": "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/train.jsonl",
+    "validation": "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/validation.jsonl",
+    "evaluation": "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/evaluation.jsonl",
+    "output": "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/cli-output",
+    "updates": 6,
+    "accumulation": 2,
+    "beta": 0.2,
+    "lr": 0.008,
+    "max_length": 32,
+    "max_new_tokens": 4,
+    "seed": 1818,
+    "checkpoint_every": 3,
+    "snapshot_max_bytes": 16777216,
+    "resume": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/ledgers/artifacts/9c69cd78bccc4d13adb1c874140998a3-completed-000006.pt",
+    "resume_sha256": "b14362e352e7c74b4c28f04a66f8a9eb0d85a88a8b0e709071cc3a8ad2d12496",
+    "resume_bytes": 95435,
+    "resume_contract": "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/contract.json",
+    "work_limits": "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/limits.json",
+    "work_journal_max_bytes": 1048576,
+    "work_journal": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/ledgers/model.jsonl",
+    "snapshot_artifact_max_bytes": 67108864,
+    "snapshot_artifact_max_entries": 64,
+    "snapshot_artifact_journal_max_bytes": 1048576,
+    "snapshot_artifact_root": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/ledgers/artifacts",
+    "snapshot_artifact_receipt": "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/artifact-receipt.json",
+    "snapshot_io_limits": "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/io-limits.json",
+    "snapshot_io_ledger": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/ledgers/snapshot.jsonl",
+    "resume_io_receipt": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/ledgers/artifacts/9c69cd78bccc4d13adb1c874140998a3-completed-000006.pt.work.json",
+    "allow_download": false,
+    "environment_lock": "/home/dongxi/dongxi_ai/Dongxi_LLMs/uv.lock",
+    "allow_legacy_interface": false
+  },
+  "stages": [
+    {
+      "stage": "hardware_preflight",
+      "utc": "2026-10-05T01:17:29.726919+00:00"
+    },
+    {
+      "stage": "reading_data",
+      "utc": "2026-10-05T01:17:29.727422+00:00"
+    },
+    {
+      "stage": "checking_parent_interface",
+      "utc": "2026-10-05T01:17:29.727634+00:00"
+    },
+    {
+      "stage": "parent_interface_verified",
+      "utc": "2026-10-05T01:17:29.729236+00:00"
+    },
+    {
+      "stage": "resume-pre-model-byte-and-observable-contract-check",
+      "utc": "2026-10-05T01:17:29.732070+00:00"
+    }
+  ],
+  "identity": {
+    "source_sha256": {
+      "scripts/run_chapter11_spark_dpo.py": "a6e1ddf3d653e7a9ba09a6100207b929398868c15f50bbf6460d5b3e63ea7151",
+      "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+      "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+      "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+      "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+      "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+      "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+      "src/dongxi_llms/snapshot_io_budget.py": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4"
+    },
+    "input_sha256": {
+      "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/train.jsonl": "4d0f1d6e926fcec739cacdb6c4b45c1a7d7f212d0ad61184589465faa1a8d931",
+      "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/validation.jsonl": "c36db466b87625b72f6d3c0b35c39aa905444e3d4e3ebed722ed5e43b4089eb1",
+      "experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/evaluation.jsonl": "335f64d6f41b29d62367cacc88cb301c5c79aeb8dec4bb89f4fa8d7537885180"
+    },
+    "checkpoint_files": {},
+    "checkpoint_path": null,
+    "device": {
+      "mode": "cuda",
+      "name": "authored-mock-not-GPU",
+      "cuda_runtime": null
+    },
+    "gpu_driver": {
+      "status": "mocked"
+    },
+    "environment": {
+      "python_version": "3.12.14",
+      "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+      "machine": "aarch64",
+      "packages": {},
+      "environment_lock": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/uv.lock",
+        "sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+      }
+    },
+    "bounded_work_limits": {
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/limits.json": "a58a602306109dced5102eae25eca713b1da0edf146189296445de77a143b935"
+    },
+    "identity_sha256": "d1f6e94126ca0d70221b97c63b18e34b8d69b5107a57d83da8253a0deadaffe9",
+    "bounded_snapshot_metadata": {
+      "snapshot_io_limits": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/io-limits.json",
+        "sha256": "2a677eb39310b4d74f764781bc241383bd8b0643c6893e0236e4ae16f4e58992",
+        "bytes": 807,
+        "reader": "bounded-nonblocking-no-follow-regular"
+      },
+      "resume_contract": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/contract.json",
+        "sha256": "8984c213142b8697c6923abb6959ac927016c2167b2cb8e67158c6cb789fdbed",
+        "bytes": 15960,
+        "reader": "bounded-nonblocking-no-follow-regular"
+      },
+      "snapshot_artifact_receipt": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/artifact-receipt.json",
+        "sha256": "a6216c05efae6cd69205fd0e9354207503962da1500d39d3c8d62185746c5dcd",
+        "bytes": 477,
+        "reader": "bounded-nonblocking-no-follow-regular"
+      },
+      "resume_io_receipt": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/ledgers/artifacts/9c69cd78bccc4d13adb1c874140998a3-completed-000006.pt.work.json",
+        "sha256": "20a818cc23899b6bd253961f0ae5f2b839ced221c022244009fcc7cf1b5608d1",
+        "bytes": 6367,
+        "reader": "bounded-nonblocking-no-follow-regular"
+      }
+    },
+    "expected_resume_snapshot": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-dpo-snapshot-io/run-01/cli-exhausted/ledgers/artifacts/9c69cd78bccc4d13adb1c874140998a3-completed-000006.pt",
+      "payload_sha256": "b14362e352e7c74b4c28f04a66f8a9eb0d85a88a8b0e709071cc3a8ad2d12496",
+      "payload_bytes": 95435,
+      "boundary": "independently supplied expectation; not actual payload verification"
+    }
+  },
+  "elapsed_seconds": 0.020646412973292172,
+  "legacy_adoption": null,
+  "failure": {
+    "stage": "resume-pre-model-byte-and-observable-contract-check",
+    "type": "WorkBudgetExceeded",
+    "message": "Whole operation refused before work: snapshot_inspect_operations"
+  }
+}

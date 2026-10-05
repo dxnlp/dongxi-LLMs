@@ -1,0 +1,169 @@
+{
+  "fixture": "aggregate-file-growth",
+  "limits": {
+    "seconds": 2.0,
+    "reserve_bytes": 26843545600,
+    "sampling_seconds": 0.02,
+    "term_grace_seconds": 0.1,
+    "kill_reap_seconds": 1.0
+  },
+  "disk_limits": {
+    "per_file_bytes": 8192,
+    "aggregate_bytes": 49152,
+    "minimum_free_bytes": 16777216
+  },
+  "actual_leader_exit_code": -15,
+  "stop_reason": "sampled-artifact-byte-cap",
+  "failure": null,
+  "status": "failed",
+  "owned_final_states": [
+    {
+      "pid": 194204,
+      "create_time": 1791152250.56,
+      "observed_pgid": 194204,
+      "observed_sid": 194204,
+      "state": "gone",
+      "live": false
+    }
+  ],
+  "observations": [
+    {
+      "memory": {
+        "available_bytes": 126830915584,
+        "source": "actual-linux-MemAvailable"
+      },
+      "disk": {
+        "source": "actual-sampled-private-files-and-filesystem-free",
+        "artifact_bytes": 381,
+        "free_bytes": 3550707466240
+      },
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 403,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      },
+      "owned_workers": []
+    },
+    {
+      "memory": {
+        "available_bytes": 126826369024,
+        "source": "actual-linux-MemAvailable"
+      },
+      "disk": {
+        "source": "actual-sampled-private-files-and-filesystem-free",
+        "artifact_bytes": 1331,
+        "free_bytes": 3550707466240
+      },
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 403,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      },
+      "owned_workers": [
+        {
+          "pid": 194204,
+          "create_time": 1791152250.56,
+          "observed_pgid": 194204,
+          "observed_sid": 194204
+        }
+      ]
+    },
+    {
+      "memory": {
+        "available_bytes": 126817730560,
+        "source": "actual-linux-MemAvailable"
+      },
+      "disk": {
+        "source": "actual-sampled-private-files-and-filesystem-free",
+        "artifact_bytes": 14229,
+        "free_bytes": 3550707453952
+      },
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 403,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      },
+      "owned_workers": [
+        {
+          "pid": 194204,
+          "create_time": 1791152250.56,
+          "observed_pgid": 194204,
+          "observed_sid": 194204
+        }
+      ]
+    },
+    {
+      "memory": {
+        "available_bytes": 126817439744,
+        "source": "actual-linux-MemAvailable"
+      },
+      "disk": {
+        "source": "actual-sampled-private-files-and-filesystem-free",
+        "artifact_bytes": 43512,
+        "free_bytes": 3550707425280
+      },
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 403,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      },
+      "owned_workers": [
+        {
+          "pid": 194204,
+          "create_time": 1791152250.56,
+          "observed_pgid": 194204,
+          "observed_sid": 194204
+        }
+      ]
+    },
+    {
+      "memory": {
+        "available_bytes": 126817509376,
+        "source": "actual-linux-MemAvailable"
+      },
+      "disk": {
+        "source": "actual-sampled-private-files-and-filesystem-free",
+        "artifact_bytes": 72795,
+        "free_bytes": 3550707396608
+      },
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 403,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      },
+      "owned_workers": [
+        {
+          "pid": 194204,
+          "create_time": 1791152250.56,
+          "observed_pgid": 194204,
+          "observed_sid": 194204
+        }
+      ]
+    }
+  ],
+  "cleanup_errors": [],
+  "minimum_sampled_available_bytes": 126817439744,
+  "minimum_sampled_free_bytes": 3550707396608,
+  "maximum_sampled_artifact_bytes": 72795,
+  "elapsed_seconds": 0.17370793301961385,
+  "scope": "fixed CPU controls; sampled owned discovery/group cleanup; not cgroup or production containment",
+  "journal": {
+    "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-owned-worker-release/aggregate-file-growth/events.jsonl",
+    "sha256": "404cc67961df8c29393ca2000373a3de720d4420c7faa536e57c9ffab926681c"
+  }
+}

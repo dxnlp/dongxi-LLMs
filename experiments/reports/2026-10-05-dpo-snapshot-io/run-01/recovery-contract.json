@@ -1,0 +1,519 @@
+{
+  "accumulation": 2,
+  "beta": 0.2,
+  "checkpoint_interface": {
+    "eos": 1,
+    "pad": 1,
+    "stops": [
+      1
+    ],
+    "template_sha256": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+    "tokenizer_json_sha256": "1c78e030d31fb514fe0f7901d98bd02616d94ee103034bf6482ba1b620d33862"
+  },
+  "cuda_rng_bytes": [],
+  "cuda_rng_count": 0,
+  "device": {
+    "dtype": "float32",
+    "mode": "cpu"
+  },
+  "dropout": "disabled",
+  "encoded_train_sha256": "6eec918cfbb791934c2db39a3a36f2940a7425d556621e914b09d25e573d863d",
+  "encoded_valid_sha256": "765f12b4f4a9f0c605ff81f60cd91b0488da07fc2aa446bad1e6f6bc3da9e71c",
+  "environment": {
+    "lock_sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "python": "3.12.14 (main, Aug 25 2026, 13:59:30) [Clang 22.1.3 ]",
+    "torch": "2.14.1+cpu",
+    "transformers": "5.18.0"
+  },
+  "evaluation_prefix_sha256": "4c87f79e344ac4b9caef06137a37940520bdc4d29f830b1e3166a632997a5de2",
+  "input_hashes": {
+    "authored_fixture": "6ad96e86b3d7b571cb6f7cc4534cd29666e1f9358ed9f953f6f2ceb9d75e37e3"
+  },
+  "max_length": 32,
+  "max_new_tokens": 4,
+  "objective": "mean pairs; summed completion plus template endings; one causal shift",
+  "optimizer": {
+    "clip": 1.0,
+    "lr": 0.008,
+    "name": "AdamW",
+    "weight_decay": 0.01
+  },
+  "optimizer_group": {
+    "amsgrad": false,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "capturable": false,
+    "decoupled_weight_decay": true,
+    "differentiable": false,
+    "eps": 1e-08,
+    "foreach": null,
+    "fused": null,
+    "lr": 0.008,
+    "maximize": false,
+    "weight_decay": 0.01
+  },
+  "optimizer_parameter_names": [
+    "model.embed_tokens.weight",
+    "model.layers.0.self_attn.q_proj.weight",
+    "model.layers.0.self_attn.k_proj.weight",
+    "model.layers.0.self_attn.v_proj.weight",
+    "model.layers.0.self_attn.o_proj.weight",
+    "model.layers.0.self_attn.q_norm.weight",
+    "model.layers.0.self_attn.k_norm.weight",
+    "model.layers.0.mlp.gate_proj.weight",
+    "model.layers.0.mlp.up_proj.weight",
+    "model.layers.0.mlp.down_proj.weight",
+    "model.layers.0.input_layernorm.weight",
+    "model.layers.0.post_attention_layernorm.weight",
+    "model.norm.weight",
+    "lm_head.weight"
+  ],
+  "optimizer_shapes": [
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        16
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        16
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        8,
+        16
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        8,
+        16
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        16
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        8
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        32,
+        16
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        32,
+        16
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        32
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        16
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        16
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        16
+      ]
+    },
+    {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        16
+      ]
+    }
+  ],
+  "parent_files": {
+    "authored-random-parent": "e6e5ad005c7192007794bdbba6b8260fe7e420117638da7f70521445912d2f0a"
+  },
+  "policy_model": {
+    "attention_implementation": "sdpa",
+    "cache": "use_cache=False on each training/reference/evaluation call",
+    "config": {
+      "architectures": null,
+      "attention_bias": false,
+      "attention_dropout": 0.0,
+      "bos_token_id": 7,
+      "chunk_size_feed_forward": 0,
+      "dtype": null,
+      "eos_token_id": 1,
+      "head_dim": 8,
+      "hidden_act": "silu",
+      "hidden_size": 16,
+      "id2label": {
+        "0": "LABEL_0",
+        "1": "LABEL_1"
+      },
+      "initializer_range": 0.02,
+      "intermediate_size": 32,
+      "is_encoder_decoder": false,
+      "label2id": {
+        "LABEL_0": 0,
+        "LABEL_1": 1
+      },
+      "layer_types": [
+        "full_attention"
+      ],
+      "max_position_embeddings": 32,
+      "max_window_layers": 28,
+      "model_type": "qwen3",
+      "num_attention_heads": 2,
+      "num_hidden_layers": 1,
+      "num_key_value_heads": 1,
+      "output_attentions": false,
+      "output_hidden_states": false,
+      "pad_token_id": 1,
+      "problem_type": null,
+      "return_dict": true,
+      "rms_norm_eps": 1e-06,
+      "rope_parameters": {
+        "rope_theta": 10000.0,
+        "rope_type": "default"
+      },
+      "sliding_window": null,
+      "tie_word_embeddings": false,
+      "transformers_version": "5.18.0",
+      "use_cache": false,
+      "use_sliding_window": false,
+      "vocab_size": 16
+    },
+    "gradient_checkpointing": true,
+    "module_dropout": {
+      "model.layers.0.self_attn:attention_dropout": 0.0
+    },
+    "trainable_parameters": [
+      "model.embed_tokens.weight",
+      "model.layers.0.self_attn.q_proj.weight",
+      "model.layers.0.self_attn.k_proj.weight",
+      "model.layers.0.self_attn.v_proj.weight",
+      "model.layers.0.self_attn.o_proj.weight",
+      "model.layers.0.self_attn.q_norm.weight",
+      "model.layers.0.self_attn.k_norm.weight",
+      "model.layers.0.mlp.gate_proj.weight",
+      "model.layers.0.mlp.up_proj.weight",
+      "model.layers.0.mlp.down_proj.weight",
+      "model.layers.0.input_layernorm.weight",
+      "model.layers.0.post_attention_layernorm.weight",
+      "model.norm.weight",
+      "lm_head.weight"
+    ]
+  },
+  "policy_shapes": {
+    "lm_head.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        16
+      ]
+    },
+    "model.embed_tokens.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        16
+      ]
+    },
+    "model.layers.0.input_layernorm.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        16
+      ]
+    },
+    "model.layers.0.mlp.down_proj.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        32
+      ]
+    },
+    "model.layers.0.mlp.gate_proj.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        32,
+        16
+      ]
+    },
+    "model.layers.0.mlp.up_proj.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        32,
+        16
+      ]
+    },
+    "model.layers.0.post_attention_layernorm.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        16
+      ]
+    },
+    "model.layers.0.self_attn.k_norm.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        8
+      ]
+    },
+    "model.layers.0.self_attn.k_proj.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        8,
+        16
+      ]
+    },
+    "model.layers.0.self_attn.o_proj.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        16
+      ]
+    },
+    "model.layers.0.self_attn.q_norm.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        8
+      ]
+    },
+    "model.layers.0.self_attn.q_proj.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        16,
+        16
+      ]
+    },
+    "model.layers.0.self_attn.v_proj.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        8,
+        16
+      ]
+    },
+    "model.norm.weight": {
+      "dtype": "torch.float32",
+      "shape": [
+        16
+      ]
+    }
+  },
+  "reference": "original parent; fixed and detached",
+  "reference_model": {
+    "attention_implementation": "sdpa",
+    "cache": "use_cache=False on each training/reference/evaluation call",
+    "config": {
+      "architectures": null,
+      "attention_bias": false,
+      "attention_dropout": 0.0,
+      "bos_token_id": 7,
+      "chunk_size_feed_forward": 0,
+      "dtype": null,
+      "eos_token_id": 1,
+      "head_dim": 8,
+      "hidden_act": "silu",
+      "hidden_size": 16,
+      "id2label": {
+        "0": "LABEL_0",
+        "1": "LABEL_1"
+      },
+      "initializer_range": 0.02,
+      "intermediate_size": 32,
+      "is_encoder_decoder": false,
+      "label2id": {
+        "LABEL_0": 0,
+        "LABEL_1": 1
+      },
+      "layer_types": [
+        "full_attention"
+      ],
+      "max_position_embeddings": 32,
+      "max_window_layers": 28,
+      "model_type": "qwen3",
+      "num_attention_heads": 2,
+      "num_hidden_layers": 1,
+      "num_key_value_heads": 1,
+      "output_attentions": false,
+      "output_hidden_states": false,
+      "pad_token_id": 1,
+      "problem_type": null,
+      "return_dict": true,
+      "rms_norm_eps": 1e-06,
+      "rope_parameters": {
+        "rope_theta": 10000.0,
+        "rope_type": "default"
+      },
+      "sliding_window": null,
+      "tie_word_embeddings": false,
+      "transformers_version": "5.18.0",
+      "use_cache": false,
+      "use_sliding_window": false,
+      "vocab_size": 16
+    },
+    "gradient_checkpointing": false,
+    "module_dropout": {
+      "model.layers.0.self_attn:attention_dropout": 0.0
+    },
+    "trainable_parameters": []
+  },
+  "reference_sha256": "e6e5ad005c7192007794bdbba6b8260fe7e420117638da7f70521445912d2f0a",
+  "sample_work": [
+    {
+      "chosen_targets": 2,
+      "logical_sequence_tokens": 9,
+      "policy_forward_calls": 2,
+      "policy_forward_positions": 7,
+      "reference_forward_calls": 2,
+      "reference_forward_positions": 7,
+      "rejected_targets": 3,
+      "sampled_pairs": 1,
+      "sampler_draws": 1
+    },
+    {
+      "chosen_targets": 3,
+      "logical_sequence_tokens": 9,
+      "policy_forward_calls": 2,
+      "policy_forward_positions": 7,
+      "reference_forward_calls": 2,
+      "reference_forward_positions": 7,
+      "rejected_targets": 2,
+      "sampled_pairs": 1,
+      "sampler_draws": 1
+    },
+    {
+      "chosen_targets": 3,
+      "logical_sequence_tokens": 10,
+      "policy_forward_calls": 2,
+      "policy_forward_positions": 8,
+      "reference_forward_calls": 2,
+      "reference_forward_positions": 8,
+      "rejected_targets": 3,
+      "sampled_pairs": 1,
+      "sampler_draws": 1
+    }
+  ],
+  "schema": "dongxi-dpo-completed-v1",
+  "seed": 1818,
+  "snapshot_io_budget": {
+    "envelope": {
+      "max_payload_bytes": 16777216,
+      "max_primitive_bytes": 200000,
+      "max_tensor_bytes": 2000000,
+      "max_tensor_elements": 50000,
+      "max_tree_nodes": 10000
+    },
+    "limits": {
+      "snapshot_clone_bytes": 40000000,
+      "snapshot_hash_bytes": 1073741824,
+      "snapshot_inspect_operations": 12,
+      "snapshot_load_operations": 24,
+      "snapshot_primitive_bytes": 11200000,
+      "snapshot_save_operations": 20,
+      "snapshot_serialization_bytes": 335544320,
+      "snapshot_tensor_elements": 2000000,
+      "snapshot_tree_nodes": 560000
+    },
+    "max_journal_bytes": 1048576,
+    "reservation": "whole operation, permanent/no refund",
+    "schema": "dongxi-snapshot-io-work-v1",
+    "scope": "shared payload hash/tree/finite/clone/serialization visits; not metadata/journal/caller/physical quota"
+  },
+  "source_hashes": {
+    "experiments/specs/2026-10-05-dpo-recovery-validation-budget.md": "403973fbd77072b9cb922bcb1c70ecd61a6de99f0d3016016489e147531b0e4e",
+    "experiments/specs/2026-10-05-dpo-snapshot-io.md": "7a0a6225b825840487fc63a0c7a6a923e66238842c4c23f2cb7c6c256de71766",
+    "experiments/specs/2026-10-05-snapshot-io-admission.md": "ad6547bec89399b2f3e29a0bfa15371205dfe8475d3ae7f848e144ff3d07c691",
+    "experiments/specs/2026-10-05-snapshot-io-cli-fixture-compatibility.md": "b776599af0fca28c463e76484344a6cb9d87ea6c9403ce40ee5be591876bed33",
+    "experiments/specs/2026-10-05-validation-budget-fixture-compatibility.md": "d8f1c340fd477a2d6d64de080518c6bb61b8f6ca95480681d0dd8ce799fe8454",
+    "pyproject.toml": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+    "scripts/run_chapter11_spark_dpo.py": "a6e1ddf3d653e7a9ba09a6100207b929398868c15f50bbf6460d5b3e63ea7151",
+    "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+    "src/dongxi_llms/snapshot_io_budget.py": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4",
+    "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "tests/snapshot_io_test_support.py": "4dd26b41faefa44c634ca76e52f4b9f8f98d8b6a8b5a06e8f8a18d524a561ccb",
+    "tests/test_dpo_checkpoint_mode.py": "4179311168ceff0c9b0d0c3d15df4df1ab48f25b0336c182bf6446a7385459e4",
+    "tests/test_dpo_runner_recovery.py": "cf31bef76b2b8e7b47d405ccfa03337fe3a6e064afad661eedd02e577506eb35",
+    "tests/test_dpo_snapshot_artifacts.py": "fae1f5c2069dc3101e3128a446032c90d8296a842d6d23bf90015ac555134df4",
+    "tests/test_dpo_snapshot_io.py": "2eee058af4d09d48723c68aa18f9ecbf8c6058bbf67f47c41b7c9ebfd83c79fe",
+    "tests/test_dpo_validation_budget.py": "c611f51f8edd1b0603f02ab94946342502f255b716b69bab2202b8a9b0fa62d5",
+    "tests/test_dpo_work_budget.py": "8b3d3e0202d8c2d0b4be3509e07e28c10d0758088e3266c19c815237b689d7d2",
+    "tests/test_snapshot_artifact_budget.py": "fcc068f84e2b2268037ea42e141d223160083879a538376a5b2944d0ac2c3207",
+    "tests/test_snapshot_io_budget.py": "e23d372f62d0d46eb454e615afe2527814957be0b5f89131ac028a0bd97e9fff",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "tests/test_training_snapshot_failure_paths.py": "845319a877e9bcef45989387859ab9d8b2da3b323131f0819a9984c8a721b261",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+  },
+  "torch_rng_bytes": 5056,
+  "updates": 6,
+  "work_budget": {
+    "limits": {
+      "evaluation_calls": 64,
+      "evaluation_positions": 512,
+      "generation_calls": 16,
+      "generation_position_upper_bound": 512,
+      "generation_tokens": 64,
+      "logical_sequence_tokens": 512,
+      "policy_forward_calls": 128,
+      "policy_forward_positions": 1024,
+      "recovery_history_rows": 4096,
+      "recovery_rng_states": 1024,
+      "recovery_sampler_draws": 4096,
+      "recovery_tensor_elements": 2000000,
+      "recovery_validation_operations": 128,
+      "reference_forward_calls": 96,
+      "reference_forward_positions": 1024,
+      "sampled_examples": 24,
+      "sampler_draws": 24,
+      "train_updates": 12,
+      "valid_targets": 160
+    },
+    "max_bytes": 1048576,
+    "reservations": "permanent conservative upper bounds before whole known operation",
+    "schema": "dongxi-dpo-logical-work-v2",
+    "scope": "logical model positions/calls and semantic recovery verification units; not generic loader/serialization, FLOPs/backward recomputation or physical quotas"
+  }
+}

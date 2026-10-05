@@ -1,0 +1,144 @@
+{
+  "actual_exit_code": -15,
+  "actual_native_profile_executed": false,
+  "child_command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "dongxi_llms.native_profile_supervisor",
+    "--inert-child",
+    "sleep"
+  ],
+  "child_pid": 251582,
+  "child_seconds": 0.10787741799140349,
+  "cleanup_errors": [],
+  "failure": {
+    "message": "Expecting value: line 1 column 12 (char 11)",
+    "type": "JSONDecodeError"
+  },
+  "final_record_acknowledgment": "unknown-at-write; returned final_record_retained reports the separate observed writer ACK",
+  "helper_cleanup": [
+    {
+      "actual_exit_code": -15,
+      "cleanup_complete": true,
+      "errors": [],
+      "pid": 251579,
+      "started": true,
+      "still_alive": false
+    }
+  ],
+  "in_memory_events": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "dongxi_llms.native_profile_supervisor",
+        "--inert-child",
+        "sleep"
+      ],
+      "elapsed_seconds": 0.0017592919757589698,
+      "event": "preflight",
+      "native_model_stage": false,
+      "operator_declaration": null,
+      "utc": "2026-10-05T06:32:58.096409+00:00"
+    },
+    {
+      "elapsed_seconds": 0.004637733974959701,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 27917287424,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 0,
+          "source": "injected-complete-clearance",
+          "unreadable": 0
+        },
+        "source": "injected-inert-CPU-control"
+      },
+      "utc": "2026-10-05T06:32:58.099311+00:00"
+    },
+    {
+      "child_pid": 251582,
+      "elapsed_seconds": 0.013964881945867091,
+      "event": "child-started",
+      "owned_session": 251582,
+      "utc": "2026-10-05T06:32:58.108639+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01914035895606503,
+      "event": "controller-error",
+      "failure": {
+        "message": "Expecting value: line 1 column 12 (char 11)",
+        "type": "JSONDecodeError"
+      },
+      "utc": "2026-10-05T06:32:58.113816+00:00"
+    },
+    {
+      "child_pid": 251582,
+      "elapsed_seconds": 0.019151030981447548,
+      "event": "owned-signal",
+      "reason": "controller-failure",
+      "signal": 15,
+      "utc": "2026-10-05T06:32:58.113827+00:00"
+    },
+    {
+      "child_pid": 251582,
+      "elapsed_seconds": 0.11955009598750621,
+      "event": "owned-signal",
+      "reason": "controller-failure",
+      "signal": 9,
+      "utc": "2026-10-05T06:32:58.214207+00:00"
+    },
+    {
+      "actual_exit_code": -15,
+      "child_pid": 251582,
+      "cleanup_errors": [],
+      "elapsed_seconds": 0.12112479697680101,
+      "event": "actual-exit",
+      "failure": {
+        "message": "Expecting value: line 1 column 12 (char 11)",
+        "type": "JSONDecodeError"
+      },
+      "journal_error": null,
+      "stop_reason": "controller-failure",
+      "utc": "2026-10-05T06:32:58.215800+00:00"
+    }
+  ],
+  "journal_error": null,
+  "limits": {
+    "external_seconds": 0.5,
+    "logging_seconds": 0.25,
+    "probe_seconds": 0.25,
+    "reap_seconds": 0.5,
+    "reserve_bytes": 26843545600,
+    "term_seconds": 0.1
+  },
+  "minimum_sampled_available_bytes": 27917287424,
+  "native_model_stage": false,
+  "observations": [
+    {
+      "available_bytes": 27917287424,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 0,
+        "source": "injected-complete-clearance",
+        "unreadable": 0
+      },
+      "source": "injected-inert-CPU-control"
+    }
+  ],
+  "observed_owned_descendants": [],
+  "operator_declaration": null,
+  "operator_declaration_scope": "caller text is NOT authenticated authorization",
+  "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-watchdog-test-isolation/run-01/isolated/evidence/test_atomic_truncated_observer_datagram_refuses_and_reaps/control-1",
+  "resource_measurement": "labelled point samples, not continuous memory enforcement or GPU-idle proof",
+  "schema": "dongxi-native-profile-watchdog-result-v1",
+  "scope": "owned native/inert process only; no quota/cgroup/hostile-tree containment or model success inference",
+  "seconds": 0.12114258896326646,
+  "signal": 15,
+  "status": "failed",
+  "stop_reason": "controller-failure"
+}

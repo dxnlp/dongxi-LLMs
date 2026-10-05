@@ -21,3 +21,36 @@ Before any GPU run, inspect the first/last examples and every task family. Asser
 Packing is explored in the notebook but is not enabled in the real-model runner. Its production path uses independent right-padded conversations with attention masks and answer labels. Do not infer a packed backend from a visibility diagram.
 
 Acceptance evidence consists of role validation, target counts, end-marker preservation, boundary inspection, hashes and the card's limits. Correct serialization alone cannot establish that demonstration answers are semantically correct.
+
+## Audit a teacher before teaching from its answers
+
+The fourth [Day11 session](../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb)
+adds a transparent programmatic teacher, resumable attempt journal, format-only
+filter, frozen candidate pool and actual tiny sequence SFT comparison. It keeps
+well-formed wrong candidates so top and random selection remain distinct. The
+trace is provenance; only final-answer/END tokens are supervised.
+
+Inspect the stored original
+[journal](../../fixtures/teacher-data/reference-journal/attempts.jsonl), then
+predict which failures can share several rejection reasons. Compare all selected
+IDs, prompt coverage and assistant-token budgets before viewing student results.
+The [specification](../../experiments/specs/2026-10-04-teacher-data.md) precedes
+collection, and the [report](../../experiments/reports/2026-10-04-teacher-data.md)
+retains the failed transfers and cost boundaries.
+
+```bash
+CUDA_VISIBLE_DEVICES= PYTHONPATH=src python -m unittest discover -s tests -p test_teacher_data_lab.py -v
+CUDA_VISIBLE_DEVICES= PYTHONPATH=src OMP_NUM_THREADS=1 python -m dongxi_llms.teacher_data_lab --report /tmp/NEW-teacher-data.json --journal /tmp/NEW-teacher-journal
+```
+
+Use unused paths for a new measurement. Ordinary journal resumption skips
+committed records, rejects changed contracts, and never reruns a committed
+attempt. Explicit partial-tail recovery through `collect(..., recover_tail=True)`
+first preserves corrupt bytes and a reason. It cannot repair complete corrupt
+records or promise exactly-once physical execution. The journal supports one
+writer; no teacher API, model download, GPU or server is involved.
+
+The primary comparison controls samples/prompts, not all token exposure. Its
+length-random sensitivity controls target counts where eligible alternatives
+exist. Global coverage is a separate audit, and tiny held-out scores cannot
+establish a universal ranking of selection methods.

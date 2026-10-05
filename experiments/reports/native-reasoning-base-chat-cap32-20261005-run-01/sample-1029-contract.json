@@ -1,0 +1,82 @@
+{
+  "schema_version": "dongxi-response-record-v1",
+  "parser_version": "bounded-rational-set-interval-v1",
+  "rubric_version": "explicit-marker-fixture-v1",
+  "suite_sha256": "13a44f0451f14b9c0c7e30e49d3c541da57d755d18e99c64cc7b7983aa451794",
+  "settings": {
+    "template_id": "reasoning-panel-v1/base-chat",
+    "thinking_mode": "template-default",
+    "decoding": {
+      "mode": "sample",
+      "seed": 1029,
+      "temperature": 1.0,
+      "top_k": null,
+      "top_p": 1.0
+    },
+    "stopping": {
+      "eos_token_ids": [
+        151643
+      ],
+      "turn_stop_token_ids": [
+        151645
+      ],
+      "pad_token_id": 151643
+    },
+    "max_new_tokens": 32,
+    "generation": {
+      "input_mode": "chat",
+      "template": "{% for message in messages %}{{ '<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>\\n' }}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\\n' }}{% endif %}\n",
+      "context_window": 512,
+      "samples": 1,
+      "device": "cuda",
+      "dtype": "bfloat16",
+      "add_special_tokens": false,
+      "max_run_seconds": 900,
+      "scoring_text": "decode_without_terminal_stop",
+      "interface": {
+        "schema_version": 1,
+        "tokenizer": {
+          "vocab_sha256": "6e949d8fec10c504f4207a43cdeac7d7961f7fd9894d256f14a8153bb5479b63",
+          "encoding_sha256": "54c6b212118b62395ff290c0fe82ef0f84b465d4a71333035f43ffd847f46c94",
+          "special_ids": {
+            "bos_token_id": null,
+            "eos_token_id": 151643,
+            "pad_token_id": 151643,
+            "unk_token_id": null,
+            "sep_token_id": null,
+            "cls_token_id": null,
+            "mask_token_id": null,
+            "additional_special_tokens_ids": null
+          },
+          "vocab_size": 151669,
+          "max_token_id": 151668,
+          "wrapper_settings": {
+            "add_bos_token": false,
+            "add_eos_token": false,
+            "split_special_tokens": false,
+            "clean_up_tokenization_spaces": false,
+            "spaces_between_special_tokens": null
+          }
+        },
+        "template_sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+        "generation_stop_ids": [
+          151643,
+          151645
+        ],
+        "source": {
+          "tokenizer_id": null,
+          "tokenizer_revision": null
+        },
+        "implementation_class": "Qwen2Tokenizer",
+        "interface_sha256": "e869c7e93ad366530f30cb62e78122577d84f0f95fe2dad5a0e0923d4d031f63"
+      }
+    }
+  },
+  "identity": "3e9eae2ce825c8c97d35c4d8c60f28e36f15fc695359576e97ea3cb05686dd50",
+  "panel_binding": {
+    "logical_contract_sha256": "d5556d79358cf2cd7e961f94d525d512e8e5a9cce18bed23b51be7d7db9bc5be",
+    "original_items_sha256": "d674db480cab4fdb3fa3487146a1f107913bf1a6e55d2a64e42659729ee707b8",
+    "row": "base-chat",
+    "prompt_policy": "Original prompt text unchanged; chat adds only the declared serialization"
+  }
+}

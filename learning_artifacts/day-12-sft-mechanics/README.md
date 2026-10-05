@@ -4,6 +4,10 @@ Status: complete course material and CPU reference route prepared; learner maste
 
 Study focus: answer NLL, gradient paths, weighted accumulation and restart.
 
+[Durable training boundaries](durable-training-boundaries.md) adds a
+course-production bridge to DPO/RLVR recovery, committed metrics and the
+existing checkpoint-animation proposal. It does not record new learner mastery.
+
 The canonical material is [Chapter 9](../../book/chapters/09-supervised-fine-tuning.md), with [worked answers](../../book/solutions/09-supervised-fine-tuning.md) and the [notebook route](../../notebooks/day-12/README.md). The [CPU evidence report](../../experiments/reports/2026-10-04-evaluation-and-sft-course.md) distinguishes verified implementation mechanics from capability claims.
 
 A durable discussion should record the learner's initial explanation, corrected mechanism, prediction, tested intervention and remaining gap. No new learner answers have been inferred from authored course text.

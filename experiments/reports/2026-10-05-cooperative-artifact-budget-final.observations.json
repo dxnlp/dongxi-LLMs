@@ -1,0 +1,165 @@
+[
+  {
+    "control": "stream-overflow-retained8-and-reserved16",
+    "usage": {
+      "actual_pathname_bytes": 917,
+      "actual_entries": 2,
+      "reserved_pathname_bytes": 16400,
+      "reserved_entries": 2
+    }
+  },
+  {
+    "control": "exact24-byte-bundle-and-refused25th",
+    "usage": {
+      "actual_pathname_bytes": 1729,
+      "actual_entries": 3,
+      "reserved_pathname_bytes": 16408,
+      "reserved_entries": 3
+    }
+  },
+  {
+    "control": "hardlinked-header-pathname-coexistence",
+    "peak": {
+      "actual_pathname_bytes": 1768,
+      "actual_entries": 3,
+      "reserved_pathname_bytes": 16400,
+      "reserved_entries": 3
+    },
+    "ending": {
+      "actual_pathname_bytes": 2195,
+      "actual_entries": 2,
+      "reserved_pathname_bytes": 16392,
+      "reserved_entries": 2
+    }
+  },
+  {
+    "control": "visible-journal-fsync-failure-reservation-retained",
+    "usage": {
+      "actual_pathname_bytes": 702,
+      "actual_entries": 1,
+      "reserved_pathname_bytes": 16400,
+      "reserved_entries": 2
+    },
+    "limitation": "visible bytes after failure do not prove crash durability"
+  },
+  {
+    "control": "prefix-restore-retains-later32-reservation",
+    "usage": {
+      "actual_pathname_bytes": 1951,
+      "actual_entries": 3,
+      "reserved_pathname_bytes": 16440,
+      "reserved_entries": 4
+    },
+    "retained": {
+      "identity": {
+        "schema": "cooperative-artifact-budget-v1",
+        "campaign_id": "original-cpu-artifacts",
+        "ledger_id": "67f79c47bb9245b09b7af0150d582250",
+        "root_device": 66306,
+        "root_inode": 2237939,
+        "max_bytes": 16448,
+        "max_entries": 8,
+        "journal_max_bytes": 16384
+      },
+      "sequence": 3,
+      "head_sha256": "094a518dba76dc247caf253281fffbd3e6d0048fec8e279837529594b88c2096",
+      "journal_bytes": 1194
+    }
+  },
+  {
+    "control": "actual-snapshot-exact-envelope",
+    "header": {
+      "schema_version": 1,
+      "payload_sha256": "838ec8b87b2d820f2cdf0d8811263def3f63a9e12e65d7ba2b5701764dd7b3f7",
+      "payload_bytes": 1833,
+      "contract_sha256": "6f9b6cd6f372fd92e0f64dc7149d29ce6a3f44a308337a409d1f4ba95cb7d1ed",
+      "phase": "completed",
+      "completed_updates": 1
+    },
+    "usage": {
+      "actual_pathname_bytes": 5190,
+      "actual_entries": 3,
+      "reserved_pathname_bytes": 34865,
+      "reserved_entries": 3
+    }
+  },
+  {
+    "control": "fresh-process-prefix-and-actual-snapshot",
+    "command": [
+      "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_snapshot_artifact_budget.py",
+      "--restore-child",
+      "/tmp/dongxi-snapshot-budget-zodv0s8j/owned",
+      "--receipt",
+      "/tmp/dongxi-snapshot-budget-zodv0s8j/independently-retained.json"
+    ],
+    "actual_exit_code": 0,
+    "stdout": "{\"identity\": {\"schema\": \"cooperative-artifact-budget-v1\", \"campaign_id\": \"fixed-snapshot-cpu\", \"ledger_id\": \"ace89f827aaa4bdba915ed392209722e\", \"root_device\": 66306, \"root_inode\": 2237939, \"max_bytes\": 200000, \"max_entries\": 16, \"journal_max_bytes\": 32768}, \"retained_partial_capacity\": 256, \"retained_partial_actual_bytes\": 8, \"completed_updates\": 1, \"tensor_exact\": true, \"usage\": {\"actual_pathname_bytes\": 10556, \"actual_entries\": 6, \"reserved_pathname_bytes\": 37218, \"reserved_entries\": 6}}\n",
+    "stderr": "",
+    "observation": {
+      "identity": {
+        "schema": "cooperative-artifact-budget-v1",
+        "campaign_id": "fixed-snapshot-cpu",
+        "ledger_id": "ace89f827aaa4bdba915ed392209722e",
+        "root_device": 66306,
+        "root_inode": 2237939,
+        "max_bytes": 200000,
+        "max_entries": 16,
+        "journal_max_bytes": 32768
+      },
+      "retained_partial_capacity": 256,
+      "retained_partial_actual_bytes": 8,
+      "completed_updates": 1,
+      "tensor_exact": true,
+      "usage": {
+        "actual_pathname_bytes": 10556,
+        "actual_entries": 6,
+        "reserved_pathname_bytes": 37218,
+        "reserved_entries": 6
+      }
+    }
+  },
+  {
+    "control": "header-publication-failure-retained",
+    "usage": {
+      "actual_pathname_bytes": 9090,
+      "actual_entries": 5,
+      "reserved_pathname_bytes": 102498,
+      "reserved_entries": 6
+    },
+    "stage_name": "failed-link.pt.commit-85479f487ea54150bd12df167601fc72"
+  },
+  {
+    "control": "snapshot-bundle-before-serializer-refusal",
+    "required_peak_bytes": 167936,
+    "byte_cap": 167935,
+    "required_entries": 4,
+    "entry_cap": 3
+  },
+  {
+    "control": "failed-snapshot-partial-and-whole-reservation-retained",
+    "usage": {
+      "actual_pathname_bytes": 5758,
+      "actual_entries": 4,
+      "reserved_pathname_bytes": 170033,
+      "reserved_entries": 6
+    },
+    "partial_bytes": 16,
+    "new_output_refused": true
+  },
+  {
+    "control": "old-new-staging-snapshot-peak",
+    "peak": {
+      "actual_pathname_bytes": 5509,
+      "actual_entries": 3,
+      "reserved_pathname_bytes": 170033,
+      "reserved_entries": 6
+    },
+    "ending": {
+      "actual_pathname_bytes": 9853,
+      "actual_entries": 5,
+      "reserved_pathname_bytes": 36962,
+      "reserved_entries": 5
+    }
+  }
+]

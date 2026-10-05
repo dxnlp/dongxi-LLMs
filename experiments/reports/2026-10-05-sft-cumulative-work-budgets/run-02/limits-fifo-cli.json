@@ -1,0 +1,31 @@
+{
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py",
+    "--revision",
+    "1111111111111111111111111111111111111111",
+    "--tokenizer-revision",
+    "1111111111111111111111111111111111111111",
+    "--template",
+    "unused",
+    "--train",
+    "unused",
+    "--dev",
+    "unused",
+    "--output",
+    "/tmp/dongxi-sft-fifo-ql804ovd/never-created",
+    "--environment-lock",
+    "uv.lock",
+    "--work-limits",
+    "/tmp/dongxi-sft-fifo-ql804ovd/fifo",
+    "--work-journal-max-bytes",
+    "1048576"
+  ],
+  "declared_timeout_seconds": 10,
+  "exit_code": 1,
+  "fifo_retained_before_owned_temporary_cleanup": true,
+  "output_created": false,
+  "seconds": 0.6616343400091864,
+  "stderr": "Traceback (most recent call last):\n  File \"/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py\", line 944, in <module>\n    main()\n  File \"/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py\", line 933, in main\n    return _main(argv)\n           ^^^^^^^^^^^\n  File \"/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py\", line 714, in _main\n    raw_limits=read_work_limits_file(args.work_limits)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py\", line 57, in read_work_limits_file\n    if not stat.S_ISREG(before.st_mode):raise ValueError('SFT work limits require a regular no-follow file')\n                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: SFT work limits require a regular no-follow file\n",
+  "stdout": ""
+}

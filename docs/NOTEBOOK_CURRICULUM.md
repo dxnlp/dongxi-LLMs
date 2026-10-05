@@ -37,6 +37,73 @@ analyses, not a new controlled training comparison or independently studied work
 
 ## Chapter contract
 
+Reference-audit extension plan,2026-10-04: proposed sessions in
+[DXI-01 through18](COURSE_IMPROVEMENT_PLAN.md) add checkpoint-interface,
+math-grading, judge-bias, text-reward/process-label, critic/GAE,
+sampling-support, GRPO-denominator, selection/control, response-distillation,
+batching/recovery and refinement microscopes. They deepen existing chapters;
+no additional mandatory day or empty notebook placeholder is created here.
+The accepted inventory is76 notebooks. Fifteen verified extensions are:
+
+- [Day1 checkpoint interface](../notebooks/day-01/04_checkpoint_interface.ipynb):
+  five code cells/one mapping figure; actual local save/reload and controlled failure.
+- [Day10 mathematical grading](../notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb):
+  six cells/four figures; original authored response replay, not live model evaluation.
+- [Day15 preference/judge audit](../notebooks/day-15/03_preference_collection_and_judges.ipynb):
+  eight cells/three figures; authored references and simulated judges, not human feedback.
+- [Day20 probability accounting](../notebooks/day-20/03_behavior_probabilities_and_support.ipynb):
+  seven cells/four figures; exact finite support/importance/KL and response masks.
+- [Day16 text reward and process labels](../notebooks/day-16/03_text_reward_and_process_labels.ipynb):
+  twelve cells/eight figures; preserved word-token failures, encoding-disjoint
+  character intervention, calibration-only scaling and persistent held-out failures.
+- [Day23 sampled reasoning controls](../notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb):
+  eight cells/five figures; actual shared decoder/EOS learning across three
+  fixed seeds, constant baselines and held-out failures, not English reasoning.
+- [Day18 DPO retention controls](../notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb):
+  eight cells/five figures; actual48-fit shared-decoder comparison, absolute
+  likelihoods, noisy/long winners, extra rehearsal and weak held-out generation.
+- [Day20 learned critics and frozen rewards](../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb):
+  seven cells/five figures; actual short actor/critic updates, TD/GAE and terminal
+  versus cap boundaries; learned proxy and independent quality can disagree.
+- [Day22 matched objective and filtering controls](../notebooks/day-22/03_objective_weighting_and_filtering.ipynb):
+  six cells/five figures; exact coefficients and actual shared-parameter gradients,
+  labeled clipping fixture and all rejected-attempt costs, not trained method gains.
+- [Day10 actual candidate selection](../notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb):
+  seven cells/five figures;864 real tiny-decoder candidates, gold-blind decisions,
+  correlated error controls and measured generation/rescoring work.
+- [Day11 teacher attempts and rejection SFT](../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb):
+  eight cells/six figures; original programmatic teacher journal, actual sequence
+  students and coverage/exposure controls with held-out failures.
+- [Day25 ragged KV and exact recovery](../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb):
+  seven cells/five figures; actual compact KV/positions/stops, tiny DPO/RLVR
+  pending/completed resume and explicit typed-state identity migration.
+- [Day26 actual response distillation](../notebooks/day-26/03_response_level_distillation.ipynb):
+  nine cells/six figures; actual larger-tiny teacher and same-parent complete/
+  answer-only students, printed-step versus final-answer contradictions.
+- [Day26 critique/revision](../notebooks/day-26/04_critique_revision_and_acceptance.ipynb):
+  eight cells/six figures; programmatic state transitions, retained actual source
+  candidates, harmful ties, natural-stop hardening and serialized-budget boundaries.
+- [Day26 student prefix/context](../notebooks/day-26/05_student_prefix_and_teacher_context.ipynb):
+  nine cells/seven figures; actual neural students, finite authored teacher,
+  independent prefix/KL/context factors, strict-positive tail detail and cohort gates.
+
+The [manifest](course_manifest.json) is authoritative for machine-readable
+routes and dependencies:60core, one optional recurrence and fifteen accepted
+extensions. Registration by itself still cannot establish acceptance.
+The [isolated CPU acceptance route](../book/appendices/d-reproduction-and-environments.md)
+checks a declared subset with real kernel identities. Separately, the
+[current checkpoint](../experiments/reports/2026-10-04-course-upgrade-checkpoint.md)
+records all76 fresh CPU references across two batches,530 executed cells and206
+figures, preserving four unfinished learner cells. This new evidence does not
+rewrite the historical full61-session check or imply a Mac/hosted/model-scale pass.
+
+Reports are indexed in [the evidence matrix](EXPERIMENT_MATRIX.md). New sessions
+need fresh execution, adjacent solutions, original plots and links before entering
+the count. A direct-conversation visual pilot is a separate DXI-18
+deliverable, not something static notebook figures already satisfy. The
+[selection pilot](../visuals/interactive/README.md) now passes local CPU-browser
+control/state tests; actual inline-host and learner assessment are not inferred.
+
 Each chapter normally contains three focused notebook sessions:
 
 1. **Mechanism microscope** — derive and implement the smallest transparent

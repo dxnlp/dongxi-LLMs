@@ -1,0 +1,1283 @@
+{
+  "schema_version": 1,
+  "scope": "actual SFT loop; locally constructed random tiny HF CPU only",
+  "actual_argv": [
+    "tests/test_sft_runner_recovery.py",
+    "--reference",
+    "experiments/reports/2026-10-05-sft-runner-recovery-reference.json"
+  ],
+  "runnable_invocation": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "tests/test_sft_runner_recovery.py",
+    "--reference",
+    "experiments/reports/2026-10-05-sft-runner-recovery-reference.json"
+  ],
+  "python": "3.12.14 (main, Aug 25 2026, 13:59:30) [Clang 22.1.3 ]",
+  "torch": "2.14.1+cpu",
+  "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+  "cuda_available": false,
+  "torch_threads": 1,
+  "evidence_directory": "/tmp/dongxi-sft-recovery-reference.n1fi6x_d",
+  "source_sha256_before": {
+    "scripts/run_chapter09_spark_sft.py": "ac5d1b5ea816d3169e2c109216309f1f1718610f95084cce47d1096ca6ce0586",
+    "src/dongxi_llms/training_snapshot.py": "9cad2851b665b5fe5d640c1327710352396218ea80fab3b0c82f01925e1749a3",
+    "tests/test_sft_runner_recovery.py": "169047617a3022d1384c725e85c5176cc2c81234270ccdb392010deab2a54e93",
+    "tests/test_spark_sft_contract.py": "a69fcff3d7fe0d2eb7e5dee1b84d4b34f8f70cb507dc4908f7a179ce61d401c9",
+    "experiments/specs/2026-10-05-sft-runner-recovery.md": "f77b1cf1ec71914262f71a7202e74d1a0ea7efc26c061c5a820b039db4fa48ad",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+  },
+  "source_sha256_after": {
+    "scripts/run_chapter09_spark_sft.py": "ac5d1b5ea816d3169e2c109216309f1f1718610f95084cce47d1096ca6ce0586",
+    "src/dongxi_llms/training_snapshot.py": "9cad2851b665b5fe5d640c1327710352396218ea80fab3b0c82f01925e1749a3",
+    "tests/test_sft_runner_recovery.py": "169047617a3022d1384c725e85c5176cc2c81234270ccdb392010deab2a54e93",
+    "tests/test_spark_sft_contract.py": "a69fcff3d7fe0d2eb7e5dee1b84d4b34f8f70cb507dc4908f7a179ce61d401c9",
+    "experiments/specs/2026-10-05-sft-runner-recovery.md": "f77b1cf1ec71914262f71a7202e74d1a0ea7efc26c061c5a820b039db4fa48ad",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+  },
+  "sources_unchanged": true,
+  "seconds": 9.89168393300497,
+  "fixed_recipe": {
+    "seeds": [
+      1212,
+      1213
+    ],
+    "modes": [
+      "full",
+      "lora"
+    ],
+    "updates": 4,
+    "resume_after": 2,
+    "microbatch": 1,
+    "accumulation": 2,
+    "learning_rate": 0.003,
+    "weight_decay": 0.0,
+    "clip_norm": 1.0,
+    "lora_rank": 2,
+    "lora_alpha": 2,
+    "lora_dropout": 0.0,
+    "snapshot_max_bytes": 16777216,
+    "model": {
+      "vocabulary": 32,
+      "width": 16,
+      "intermediate_width": 32,
+      "layers": 1,
+      "attention_heads": 2,
+      "kv_heads": 2,
+      "head_dimension": 8,
+      "context": 64,
+      "attention_dropout": 0.1
+    }
+  },
+  "arms": [
+    {
+      "seed": 1212,
+      "mode": "full",
+      "initial_state_sha256": "ec940343ffc929e89a319227c4c4460b4d8d00ddca50815fc898c8ca9258a5a9",
+      "total_parameters": 3136,
+      "trainable_parameters": 3136,
+      "snapshot": {
+        "path": "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1212-full.pt",
+        "header": {
+          "schema_version": 1,
+          "payload_sha256": "c4b6a1ab890d8d2a83163efbb90188142775ceb4cce310368062c3bf48c3a749",
+          "payload_bytes": 69825,
+          "contract_sha256": "a27421ed2d62357add4aba7758b6e6c27259e7ad69dd582820a52e11d5d76067",
+          "phase": "completed",
+          "completed_updates": 2
+        },
+        "contract_sha256": "a27421ed2d62357add4aba7758b6e6c27259e7ad69dd582820a52e11d5d76067",
+        "loop_contract": {
+          "encoded_records_sha256": "cb4b6b9d1133b18ee493f3d6a673489ae6b9223b0c3b458c06e6ce27589edf0a",
+          "pad_id": 3,
+          "microbatch": 1,
+          "accumulation": 2,
+          "seed": 1212,
+          "device": "cpu",
+          "total_updates": 4,
+          "autocast_dtype": "None",
+          "model_class": "Qwen3ForCausalLM",
+          "model_config_sha256": "c91450707a4865234fcb094fb75b7218b16bf147a1f751bd663121f5c398a4af",
+          "model_layout": {
+            "model.embed_tokens.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.q_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.k_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.v_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.o_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.q_norm.weight": [
+              [
+                8
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.k_norm.weight": [
+              [
+                8
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.mlp.gate_proj.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.mlp.up_proj.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.mlp.down_proj.weight": [
+              [
+                16,
+                32
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.input_layernorm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.post_attention_layernorm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.norm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "lm_head.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ]
+          },
+          "parameter_names": [
+            "model.embed_tokens.weight",
+            "model.layers.0.self_attn.q_proj.weight",
+            "model.layers.0.self_attn.k_proj.weight",
+            "model.layers.0.self_attn.v_proj.weight",
+            "model.layers.0.self_attn.o_proj.weight",
+            "model.layers.0.self_attn.q_norm.weight",
+            "model.layers.0.self_attn.k_norm.weight",
+            "model.layers.0.mlp.gate_proj.weight",
+            "model.layers.0.mlp.up_proj.weight",
+            "model.layers.0.mlp.down_proj.weight",
+            "model.layers.0.input_layernorm.weight",
+            "model.layers.0.post_attention_layernorm.weight",
+            "model.norm.weight"
+          ],
+          "optimizer_parameter_names": [
+            [
+              "model.embed_tokens.weight",
+              "model.layers.0.self_attn.q_proj.weight",
+              "model.layers.0.self_attn.k_proj.weight",
+              "model.layers.0.self_attn.v_proj.weight",
+              "model.layers.0.self_attn.o_proj.weight",
+              "model.layers.0.self_attn.q_norm.weight",
+              "model.layers.0.self_attn.k_norm.weight",
+              "model.layers.0.mlp.gate_proj.weight",
+              "model.layers.0.mlp.up_proj.weight",
+              "model.layers.0.mlp.down_proj.weight",
+              "model.layers.0.input_layernorm.weight",
+              "model.layers.0.post_attention_layernorm.weight",
+              "model.norm.weight"
+            ]
+          ]
+        }
+      },
+      "uninterrupted_metrics": [
+        {
+          "update": 1,
+          "answer_nll": 3.5055054255894254,
+          "targets": 7,
+          "gradient_norm": 2.1732852458953857,
+          "cursor": 2,
+          "cumulative_supervised_targets": 7,
+          "processed_positions": 32,
+          "cumulative_processed_positions": 32
+        },
+        {
+          "update": 2,
+          "answer_nll": 3.459346580505371,
+          "targets": 5,
+          "gradient_norm": 2.0040063858032227,
+          "cursor": 4,
+          "cumulative_supervised_targets": 12,
+          "processed_positions": 24,
+          "cumulative_processed_positions": 56
+        },
+        {
+          "update": 3,
+          "answer_nll": 3.392563819885254,
+          "targets": 8,
+          "gradient_norm": 1.9046995639801025,
+          "cursor": 6,
+          "cumulative_supervised_targets": 20,
+          "processed_positions": 30,
+          "cumulative_processed_positions": 86
+        },
+        {
+          "update": 4,
+          "answer_nll": 3.2813594000680104,
+          "targets": 7,
+          "gradient_norm": 2.577972888946533,
+          "cursor": 8,
+          "cumulative_supervised_targets": 27,
+          "processed_positions": 32,
+          "cumulative_processed_positions": 118
+        }
+      ],
+      "resumed_metrics": [
+        {
+          "update": 3,
+          "answer_nll": 3.392563819885254,
+          "targets": 8,
+          "gradient_norm": 1.9046995639801025,
+          "cursor": 6,
+          "cumulative_supervised_targets": 20,
+          "processed_positions": 30,
+          "cumulative_processed_positions": 86
+        },
+        {
+          "update": 4,
+          "answer_nll": 3.2813594000680104,
+          "targets": 7,
+          "gradient_norm": 2.577972888946533,
+          "cursor": 8,
+          "cumulative_supervised_targets": 27,
+          "processed_positions": 32,
+          "cumulative_processed_positions": 118
+        }
+      ],
+      "uninterrupted_final_state_sha256": "424d0647356fc829a182f729be8927c101eeb52c4086423a88dd9ece5b82b421",
+      "resumed_final_state_sha256": "424d0647356fc829a182f729be8927c101eeb52c4086423a88dd9ece5b82b421",
+      "cumulative_supervised_targets": 27,
+      "cumulative_processed_positions": 118,
+      "encoded_record_lengths": [
+        13,
+        11,
+        19
+      ],
+      "shifted_target_counts": [
+        2,
+        3,
+        5
+      ],
+      "fresh_process": {
+        "command": [
+          "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_sft_runner_recovery.py",
+          "--child-replay",
+          "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1212-full.pt",
+          "--contract",
+          "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1212-full-contract.json",
+          "--sha256",
+          "c4b6a1ab890d8d2a83163efbb90188142775ceb4cce310368062c3bf48c3a749",
+          "--bytes",
+          "69825"
+        ],
+        "actual_exit_code": 0,
+        "stdout": "{\"metrics\": [{\"update\": 3, \"answer_nll\": 3.392563819885254, \"targets\": 8, \"gradient_norm\": 1.9046995639801025, \"cursor\": 6, \"cumulative_supervised_targets\": 20, \"processed_positions\": 30, \"cumulative_processed_positions\": 86}, {\"update\": 4, \"answer_nll\": 3.2813594000680104, \"targets\": 7, \"gradient_norm\": 2.577972888946533, \"cursor\": 8, \"cumulative_supervised_targets\": 27, \"processed_positions\": 32, \"cumulative_processed_positions\": 118}], \"final_state_sha256\": \"424d0647356fc829a182f729be8927c101eeb52c4086423a88dd9ece5b82b421\"}\n",
+        "stderr": "",
+        "seconds": 2.063113220996456,
+        "result": {
+          "metrics": [
+            {
+              "update": 3,
+              "answer_nll": 3.392563819885254,
+              "targets": 8,
+              "gradient_norm": 1.9046995639801025,
+              "cursor": 6,
+              "cumulative_supervised_targets": 20,
+              "processed_positions": 30,
+              "cumulative_processed_positions": 86
+            },
+            {
+              "update": 4,
+              "answer_nll": 3.2813594000680104,
+              "targets": 7,
+              "gradient_norm": 2.577972888946533,
+              "cursor": 8,
+              "cumulative_supervised_targets": 27,
+              "processed_positions": 32,
+              "cumulative_processed_positions": 118
+            }
+          ],
+          "final_state_sha256": "424d0647356fc829a182f729be8927c101eeb52c4086423a88dd9ece5b82b421"
+        }
+      },
+      "checks": {
+        "same_process_metrics_exact": true,
+        "same_process_full_state_exact": true,
+        "fresh_process_exit_zero": true,
+        "fresh_process_metrics_exact": true,
+        "fresh_process_full_state_exact": true,
+        "committed_history_exact": true,
+        "last_metric_exact": true
+      }
+    },
+    {
+      "seed": 1212,
+      "mode": "lora",
+      "initial_state_sha256": "a99eecfe71b400ac7dfecf4333d41ce70a4f8beb335032b68d965e342bf6c429",
+      "total_parameters": 3264,
+      "trainable_parameters": 128,
+      "snapshot": {
+        "path": "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1212-lora.pt",
+        "header": {
+          "schema_version": 1,
+          "payload_sha256": "211761f350eef724b09e6f6ae18086fc185fc20b0f3fb2835fcde5b747983d81",
+          "payload_bytes": 41030,
+          "contract_sha256": "4bf396a1e8df0a5be67d888be5d71bd6c96ad7d24ec2bf584505ed9e8330ddee",
+          "phase": "completed",
+          "completed_updates": 2
+        },
+        "contract_sha256": "4bf396a1e8df0a5be67d888be5d71bd6c96ad7d24ec2bf584505ed9e8330ddee",
+        "loop_contract": {
+          "encoded_records_sha256": "cb4b6b9d1133b18ee493f3d6a673489ae6b9223b0c3b458c06e6ce27589edf0a",
+          "pad_id": 3,
+          "microbatch": 1,
+          "accumulation": 2,
+          "seed": 1212,
+          "device": "cpu",
+          "total_updates": 4,
+          "autocast_dtype": "None",
+          "model_class": "PeftModelForCausalLM",
+          "model_config_sha256": "c91450707a4865234fcb094fb75b7218b16bf147a1f751bd663121f5c398a4af",
+          "model_layout": {
+            "base_model.model.model.embed_tokens.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.q_proj.base_layer.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight": [
+              [
+                2,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight": [
+              [
+                16,
+                2
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.k_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.v_proj.base_layer.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.v_proj.lora_A.default.weight": [
+              [
+                2,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.v_proj.lora_B.default.weight": [
+              [
+                16,
+                2
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.o_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.q_norm.weight": [
+              [
+                8
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.k_norm.weight": [
+              [
+                8
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.mlp.gate_proj.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.mlp.up_proj.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.mlp.down_proj.weight": [
+              [
+                16,
+                32
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.input_layernorm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.post_attention_layernorm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.norm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.lm_head.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ]
+          },
+          "parameter_names": [
+            "base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight",
+            "base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight",
+            "base_model.model.model.layers.0.self_attn.v_proj.lora_A.default.weight",
+            "base_model.model.model.layers.0.self_attn.v_proj.lora_B.default.weight"
+          ],
+          "optimizer_parameter_names": [
+            [
+              "base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight",
+              "base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight",
+              "base_model.model.model.layers.0.self_attn.v_proj.lora_A.default.weight",
+              "base_model.model.model.layers.0.self_attn.v_proj.lora_B.default.weight"
+            ]
+          ]
+        }
+      },
+      "uninterrupted_metrics": [
+        {
+          "update": 1,
+          "answer_nll": 3.5079494203839983,
+          "targets": 7,
+          "gradient_norm": 0.033698949962854385,
+          "cursor": 2,
+          "cumulative_supervised_targets": 7,
+          "processed_positions": 32,
+          "cumulative_processed_positions": 32
+        },
+        {
+          "update": 2,
+          "answer_nll": 3.477080535888672,
+          "targets": 5,
+          "gradient_norm": 0.038432005792856216,
+          "cursor": 4,
+          "cumulative_supervised_targets": 12,
+          "processed_positions": 24,
+          "cumulative_processed_positions": 56
+        },
+        {
+          "update": 3,
+          "answer_nll": 3.4884703159332275,
+          "targets": 8,
+          "gradient_norm": 0.027209123596549034,
+          "cursor": 6,
+          "cumulative_supervised_targets": 20,
+          "processed_positions": 30,
+          "cumulative_processed_positions": 86
+        },
+        {
+          "update": 4,
+          "answer_nll": 3.5055575370788574,
+          "targets": 7,
+          "gradient_norm": 0.03269375488162041,
+          "cursor": 8,
+          "cumulative_supervised_targets": 27,
+          "processed_positions": 32,
+          "cumulative_processed_positions": 118
+        }
+      ],
+      "resumed_metrics": [
+        {
+          "update": 3,
+          "answer_nll": 3.4884703159332275,
+          "targets": 8,
+          "gradient_norm": 0.027209123596549034,
+          "cursor": 6,
+          "cumulative_supervised_targets": 20,
+          "processed_positions": 30,
+          "cumulative_processed_positions": 86
+        },
+        {
+          "update": 4,
+          "answer_nll": 3.5055575370788574,
+          "targets": 7,
+          "gradient_norm": 0.03269375488162041,
+          "cursor": 8,
+          "cumulative_supervised_targets": 27,
+          "processed_positions": 32,
+          "cumulative_processed_positions": 118
+        }
+      ],
+      "uninterrupted_final_state_sha256": "fd5dad95fe923b466fcea5da16279daaed2e0a3beb888a2e8647b4e90de218f0",
+      "resumed_final_state_sha256": "fd5dad95fe923b466fcea5da16279daaed2e0a3beb888a2e8647b4e90de218f0",
+      "cumulative_supervised_targets": 27,
+      "cumulative_processed_positions": 118,
+      "encoded_record_lengths": [
+        13,
+        11,
+        19
+      ],
+      "shifted_target_counts": [
+        2,
+        3,
+        5
+      ],
+      "fresh_process": {
+        "command": [
+          "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_sft_runner_recovery.py",
+          "--child-replay",
+          "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1212-lora.pt",
+          "--contract",
+          "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1212-lora-contract.json",
+          "--sha256",
+          "211761f350eef724b09e6f6ae18086fc185fc20b0f3fb2835fcde5b747983d81",
+          "--bytes",
+          "41030"
+        ],
+        "actual_exit_code": 0,
+        "stdout": "{\"metrics\": [{\"update\": 3, \"answer_nll\": 3.4884703159332275, \"targets\": 8, \"gradient_norm\": 0.027209123596549034, \"cursor\": 6, \"cumulative_supervised_targets\": 20, \"processed_positions\": 30, \"cumulative_processed_positions\": 86}, {\"update\": 4, \"answer_nll\": 3.5055575370788574, \"targets\": 7, \"gradient_norm\": 0.03269375488162041, \"cursor\": 8, \"cumulative_supervised_targets\": 27, \"processed_positions\": 32, \"cumulative_processed_positions\": 118}], \"final_state_sha256\": \"fd5dad95fe923b466fcea5da16279daaed2e0a3beb888a2e8647b4e90de218f0\"}\n",
+        "stderr": "",
+        "seconds": 2.1852512389887124,
+        "result": {
+          "metrics": [
+            {
+              "update": 3,
+              "answer_nll": 3.4884703159332275,
+              "targets": 8,
+              "gradient_norm": 0.027209123596549034,
+              "cursor": 6,
+              "cumulative_supervised_targets": 20,
+              "processed_positions": 30,
+              "cumulative_processed_positions": 86
+            },
+            {
+              "update": 4,
+              "answer_nll": 3.5055575370788574,
+              "targets": 7,
+              "gradient_norm": 0.03269375488162041,
+              "cursor": 8,
+              "cumulative_supervised_targets": 27,
+              "processed_positions": 32,
+              "cumulative_processed_positions": 118
+            }
+          ],
+          "final_state_sha256": "fd5dad95fe923b466fcea5da16279daaed2e0a3beb888a2e8647b4e90de218f0"
+        }
+      },
+      "checks": {
+        "same_process_metrics_exact": true,
+        "same_process_full_state_exact": true,
+        "fresh_process_exit_zero": true,
+        "fresh_process_metrics_exact": true,
+        "fresh_process_full_state_exact": true,
+        "committed_history_exact": true,
+        "last_metric_exact": true
+      }
+    },
+    {
+      "seed": 1213,
+      "mode": "full",
+      "initial_state_sha256": "3b7178d1392adf05f2b1db4fb679d7635ee3911022e1f26f4e741d9bf97ece88",
+      "total_parameters": 3136,
+      "trainable_parameters": 3136,
+      "snapshot": {
+        "path": "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1213-full.pt",
+        "header": {
+          "schema_version": 1,
+          "payload_sha256": "14886bb85864838be5e37b64a73b3081fa539de0cf80ba0ff9a1a24f6d7ad879",
+          "payload_bytes": 69889,
+          "contract_sha256": "3a5bccda35ac4c35bab31df494ce8f72c58db597ead2a5e497ea4f4d2ca92c20",
+          "phase": "completed",
+          "completed_updates": 2
+        },
+        "contract_sha256": "3a5bccda35ac4c35bab31df494ce8f72c58db597ead2a5e497ea4f4d2ca92c20",
+        "loop_contract": {
+          "encoded_records_sha256": "cb4b6b9d1133b18ee493f3d6a673489ae6b9223b0c3b458c06e6ce27589edf0a",
+          "pad_id": 3,
+          "microbatch": 1,
+          "accumulation": 2,
+          "seed": 1213,
+          "device": "cpu",
+          "total_updates": 4,
+          "autocast_dtype": "None",
+          "model_class": "Qwen3ForCausalLM",
+          "model_config_sha256": "c91450707a4865234fcb094fb75b7218b16bf147a1f751bd663121f5c398a4af",
+          "model_layout": {
+            "model.embed_tokens.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.q_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.k_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.v_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.o_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.q_norm.weight": [
+              [
+                8
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.self_attn.k_norm.weight": [
+              [
+                8
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.mlp.gate_proj.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.mlp.up_proj.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.mlp.down_proj.weight": [
+              [
+                16,
+                32
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.input_layernorm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.layers.0.post_attention_layernorm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "model.norm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "lm_head.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ]
+          },
+          "parameter_names": [
+            "model.embed_tokens.weight",
+            "model.layers.0.self_attn.q_proj.weight",
+            "model.layers.0.self_attn.k_proj.weight",
+            "model.layers.0.self_attn.v_proj.weight",
+            "model.layers.0.self_attn.o_proj.weight",
+            "model.layers.0.self_attn.q_norm.weight",
+            "model.layers.0.self_attn.k_norm.weight",
+            "model.layers.0.mlp.gate_proj.weight",
+            "model.layers.0.mlp.up_proj.weight",
+            "model.layers.0.mlp.down_proj.weight",
+            "model.layers.0.input_layernorm.weight",
+            "model.layers.0.post_attention_layernorm.weight",
+            "model.norm.weight"
+          ],
+          "optimizer_parameter_names": [
+            [
+              "model.embed_tokens.weight",
+              "model.layers.0.self_attn.q_proj.weight",
+              "model.layers.0.self_attn.k_proj.weight",
+              "model.layers.0.self_attn.v_proj.weight",
+              "model.layers.0.self_attn.o_proj.weight",
+              "model.layers.0.self_attn.q_norm.weight",
+              "model.layers.0.self_attn.k_norm.weight",
+              "model.layers.0.mlp.gate_proj.weight",
+              "model.layers.0.mlp.up_proj.weight",
+              "model.layers.0.mlp.down_proj.weight",
+              "model.layers.0.input_layernorm.weight",
+              "model.layers.0.post_attention_layernorm.weight",
+              "model.norm.weight"
+            ]
+          ]
+        }
+      },
+      "uninterrupted_metrics": [
+        {
+          "update": 1,
+          "answer_nll": 3.454464340209961,
+          "targets": 5,
+          "gradient_norm": 2.3682539463043213,
+          "cursor": 2,
+          "cumulative_supervised_targets": 5,
+          "processed_positions": 24,
+          "cumulative_processed_positions": 24
+        },
+        {
+          "update": 2,
+          "answer_nll": 3.4293513979230608,
+          "targets": 7,
+          "gradient_norm": 2.2766010761260986,
+          "cursor": 4,
+          "cumulative_supervised_targets": 12,
+          "processed_positions": 32,
+          "cumulative_processed_positions": 56
+        },
+        {
+          "update": 3,
+          "answer_nll": 3.3738348484039307,
+          "targets": 8,
+          "gradient_norm": 2.0271310806274414,
+          "cursor": 6,
+          "cumulative_supervised_targets": 20,
+          "processed_positions": 30,
+          "cumulative_processed_positions": 86
+        },
+        {
+          "update": 4,
+          "answer_nll": 3.266178607940674,
+          "targets": 5,
+          "gradient_norm": 2.1274919509887695,
+          "cursor": 8,
+          "cumulative_supervised_targets": 25,
+          "processed_positions": 24,
+          "cumulative_processed_positions": 110
+        }
+      ],
+      "resumed_metrics": [
+        {
+          "update": 3,
+          "answer_nll": 3.3738348484039307,
+          "targets": 8,
+          "gradient_norm": 2.0271310806274414,
+          "cursor": 6,
+          "cumulative_supervised_targets": 20,
+          "processed_positions": 30,
+          "cumulative_processed_positions": 86
+        },
+        {
+          "update": 4,
+          "answer_nll": 3.266178607940674,
+          "targets": 5,
+          "gradient_norm": 2.1274919509887695,
+          "cursor": 8,
+          "cumulative_supervised_targets": 25,
+          "processed_positions": 24,
+          "cumulative_processed_positions": 110
+        }
+      ],
+      "uninterrupted_final_state_sha256": "b404220045de576b383b53606c5fcf7d1c58342a22ef296f4cc8c63a60e87c9f",
+      "resumed_final_state_sha256": "b404220045de576b383b53606c5fcf7d1c58342a22ef296f4cc8c63a60e87c9f",
+      "cumulative_supervised_targets": 25,
+      "cumulative_processed_positions": 110,
+      "encoded_record_lengths": [
+        13,
+        11,
+        19
+      ],
+      "shifted_target_counts": [
+        2,
+        3,
+        5
+      ],
+      "fresh_process": {
+        "command": [
+          "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_sft_runner_recovery.py",
+          "--child-replay",
+          "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1213-full.pt",
+          "--contract",
+          "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1213-full-contract.json",
+          "--sha256",
+          "14886bb85864838be5e37b64a73b3081fa539de0cf80ba0ff9a1a24f6d7ad879",
+          "--bytes",
+          "69889"
+        ],
+        "actual_exit_code": 0,
+        "stdout": "{\"metrics\": [{\"update\": 3, \"answer_nll\": 3.3738348484039307, \"targets\": 8, \"gradient_norm\": 2.0271310806274414, \"cursor\": 6, \"cumulative_supervised_targets\": 20, \"processed_positions\": 30, \"cumulative_processed_positions\": 86}, {\"update\": 4, \"answer_nll\": 3.266178607940674, \"targets\": 5, \"gradient_norm\": 2.1274919509887695, \"cursor\": 8, \"cumulative_supervised_targets\": 25, \"processed_positions\": 24, \"cumulative_processed_positions\": 110}], \"final_state_sha256\": \"b404220045de576b383b53606c5fcf7d1c58342a22ef296f4cc8c63a60e87c9f\"}\n",
+        "stderr": "",
+        "seconds": 1.956040649994975,
+        "result": {
+          "metrics": [
+            {
+              "update": 3,
+              "answer_nll": 3.3738348484039307,
+              "targets": 8,
+              "gradient_norm": 2.0271310806274414,
+              "cursor": 6,
+              "cumulative_supervised_targets": 20,
+              "processed_positions": 30,
+              "cumulative_processed_positions": 86
+            },
+            {
+              "update": 4,
+              "answer_nll": 3.266178607940674,
+              "targets": 5,
+              "gradient_norm": 2.1274919509887695,
+              "cursor": 8,
+              "cumulative_supervised_targets": 25,
+              "processed_positions": 24,
+              "cumulative_processed_positions": 110
+            }
+          ],
+          "final_state_sha256": "b404220045de576b383b53606c5fcf7d1c58342a22ef296f4cc8c63a60e87c9f"
+        }
+      },
+      "checks": {
+        "same_process_metrics_exact": true,
+        "same_process_full_state_exact": true,
+        "fresh_process_exit_zero": true,
+        "fresh_process_metrics_exact": true,
+        "fresh_process_full_state_exact": true,
+        "committed_history_exact": true,
+        "last_metric_exact": true
+      }
+    },
+    {
+      "seed": 1213,
+      "mode": "lora",
+      "initial_state_sha256": "e211cd1d7107d441e5ef1a06ae9244451841bd9c947f891671fbb12e986311d4",
+      "total_parameters": 3264,
+      "trainable_parameters": 128,
+      "snapshot": {
+        "path": "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1213-lora.pt",
+        "header": {
+          "schema_version": 1,
+          "payload_sha256": "39372d7d24ed0db3a9c27cb872cdcbfadb90eb753ce08fe1dc3293eaf71c1c5c",
+          "payload_bytes": 41094,
+          "contract_sha256": "7f6bb6a626c0efd4fd744943c2a99c35297714c697eaaf816cc5606b65d58d32",
+          "phase": "completed",
+          "completed_updates": 2
+        },
+        "contract_sha256": "7f6bb6a626c0efd4fd744943c2a99c35297714c697eaaf816cc5606b65d58d32",
+        "loop_contract": {
+          "encoded_records_sha256": "cb4b6b9d1133b18ee493f3d6a673489ae6b9223b0c3b458c06e6ce27589edf0a",
+          "pad_id": 3,
+          "microbatch": 1,
+          "accumulation": 2,
+          "seed": 1213,
+          "device": "cpu",
+          "total_updates": 4,
+          "autocast_dtype": "None",
+          "model_class": "PeftModelForCausalLM",
+          "model_config_sha256": "c91450707a4865234fcb094fb75b7218b16bf147a1f751bd663121f5c398a4af",
+          "model_layout": {
+            "base_model.model.model.embed_tokens.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.q_proj.base_layer.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight": [
+              [
+                2,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight": [
+              [
+                16,
+                2
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.k_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.v_proj.base_layer.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.v_proj.lora_A.default.weight": [
+              [
+                2,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.v_proj.lora_B.default.weight": [
+              [
+                16,
+                2
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.o_proj.weight": [
+              [
+                16,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.q_norm.weight": [
+              [
+                8
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.self_attn.k_norm.weight": [
+              [
+                8
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.mlp.gate_proj.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.mlp.up_proj.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.mlp.down_proj.weight": [
+              [
+                16,
+                32
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.input_layernorm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.layers.0.post_attention_layernorm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.model.norm.weight": [
+              [
+                16
+              ],
+              "torch.float32"
+            ],
+            "base_model.model.lm_head.weight": [
+              [
+                32,
+                16
+              ],
+              "torch.float32"
+            ]
+          },
+          "parameter_names": [
+            "base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight",
+            "base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight",
+            "base_model.model.model.layers.0.self_attn.v_proj.lora_A.default.weight",
+            "base_model.model.model.layers.0.self_attn.v_proj.lora_B.default.weight"
+          ],
+          "optimizer_parameter_names": [
+            [
+              "base_model.model.model.layers.0.self_attn.q_proj.lora_A.default.weight",
+              "base_model.model.model.layers.0.self_attn.q_proj.lora_B.default.weight",
+              "base_model.model.model.layers.0.self_attn.v_proj.lora_A.default.weight",
+              "base_model.model.model.layers.0.self_attn.v_proj.lora_B.default.weight"
+            ]
+          ]
+        }
+      },
+      "uninterrupted_metrics": [
+        {
+          "update": 1,
+          "answer_nll": 3.4522400856018067,
+          "targets": 5,
+          "gradient_norm": 0.034205980598926544,
+          "cursor": 2,
+          "cumulative_supervised_targets": 5,
+          "processed_positions": 24,
+          "cumulative_processed_positions": 24
+        },
+        {
+          "update": 2,
+          "answer_nll": 3.468397549220494,
+          "targets": 7,
+          "gradient_norm": 0.041272036731243134,
+          "cursor": 4,
+          "cumulative_supervised_targets": 12,
+          "processed_positions": 32,
+          "cumulative_processed_positions": 56
+        },
+        {
+          "update": 3,
+          "answer_nll": 3.460675835609436,
+          "targets": 8,
+          "gradient_norm": 0.0349770225584507,
+          "cursor": 6,
+          "cumulative_supervised_targets": 20,
+          "processed_positions": 30,
+          "cumulative_processed_positions": 86
+        },
+        {
+          "update": 4,
+          "answer_nll": 3.4526118278503417,
+          "targets": 5,
+          "gradient_norm": 0.043063897639513016,
+          "cursor": 8,
+          "cumulative_supervised_targets": 25,
+          "processed_positions": 24,
+          "cumulative_processed_positions": 110
+        }
+      ],
+      "resumed_metrics": [
+        {
+          "update": 3,
+          "answer_nll": 3.460675835609436,
+          "targets": 8,
+          "gradient_norm": 0.0349770225584507,
+          "cursor": 6,
+          "cumulative_supervised_targets": 20,
+          "processed_positions": 30,
+          "cumulative_processed_positions": 86
+        },
+        {
+          "update": 4,
+          "answer_nll": 3.4526118278503417,
+          "targets": 5,
+          "gradient_norm": 0.043063897639513016,
+          "cursor": 8,
+          "cumulative_supervised_targets": 25,
+          "processed_positions": 24,
+          "cumulative_processed_positions": 110
+        }
+      ],
+      "uninterrupted_final_state_sha256": "76757809c54c5692b21c3d9a1b2d2a039838504003c5aa78276de05a73d5a133",
+      "resumed_final_state_sha256": "76757809c54c5692b21c3d9a1b2d2a039838504003c5aa78276de05a73d5a133",
+      "cumulative_supervised_targets": 25,
+      "cumulative_processed_positions": 110,
+      "encoded_record_lengths": [
+        13,
+        11,
+        19
+      ],
+      "shifted_target_counts": [
+        2,
+        3,
+        5
+      ],
+      "fresh_process": {
+        "command": [
+          "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_sft_runner_recovery.py",
+          "--child-replay",
+          "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1213-lora.pt",
+          "--contract",
+          "/tmp/dongxi-sft-recovery-reference.n1fi6x_d/1213-lora-contract.json",
+          "--sha256",
+          "39372d7d24ed0db3a9c27cb872cdcbfadb90eb753ce08fe1dc3293eaf71c1c5c",
+          "--bytes",
+          "41094"
+        ],
+        "actual_exit_code": 0,
+        "stdout": "{\"metrics\": [{\"update\": 3, \"answer_nll\": 3.460675835609436, \"targets\": 8, \"gradient_norm\": 0.0349770225584507, \"cursor\": 6, \"cumulative_supervised_targets\": 20, \"processed_positions\": 30, \"cumulative_processed_positions\": 86}, {\"update\": 4, \"answer_nll\": 3.4526118278503417, \"targets\": 5, \"gradient_norm\": 0.043063897639513016, \"cursor\": 8, \"cumulative_supervised_targets\": 25, \"processed_positions\": 24, \"cumulative_processed_positions\": 110}], \"final_state_sha256\": \"76757809c54c5692b21c3d9a1b2d2a039838504003c5aa78276de05a73d5a133\"}\n",
+        "stderr": "",
+        "seconds": 2.159195466985693,
+        "result": {
+          "metrics": [
+            {
+              "update": 3,
+              "answer_nll": 3.460675835609436,
+              "targets": 8,
+              "gradient_norm": 0.0349770225584507,
+              "cursor": 6,
+              "cumulative_supervised_targets": 20,
+              "processed_positions": 30,
+              "cumulative_processed_positions": 86
+            },
+            {
+              "update": 4,
+              "answer_nll": 3.4526118278503417,
+              "targets": 5,
+              "gradient_norm": 0.043063897639513016,
+              "cursor": 8,
+              "cumulative_supervised_targets": 25,
+              "processed_positions": 24,
+              "cumulative_processed_positions": 110
+            }
+          ],
+          "final_state_sha256": "76757809c54c5692b21c3d9a1b2d2a039838504003c5aa78276de05a73d5a133"
+        }
+      },
+      "checks": {
+        "same_process_metrics_exact": true,
+        "same_process_full_state_exact": true,
+        "fresh_process_exit_zero": true,
+        "fresh_process_metrics_exact": true,
+        "fresh_process_full_state_exact": true,
+        "committed_history_exact": true,
+        "last_metric_exact": true
+      }
+    }
+  ],
+  "original_equation_parity": {
+    "extracted_metric": {
+      "update": 1,
+      "answer_nll": 3.5055054255894254,
+      "targets": 7,
+      "gradient_norm": 2.1732852458953857,
+      "cursor": 2,
+      "cumulative_supervised_targets": 7,
+      "processed_positions": 32,
+      "cumulative_processed_positions": 32
+    },
+    "original_metric": {
+      "update": 1,
+      "answer_nll": 3.5055054255894254,
+      "targets": 7,
+      "gradient_norm": 2.1732852458953857,
+      "cursor": 2,
+      "cumulative_supervised_targets": 7,
+      "processed_positions": 32,
+      "cumulative_processed_positions": 32
+    },
+    "extracted_state_sha256": "f7a1c73ac26a34547292b9ee630fc7f7d7ee23d75399137d24eb196d84556802",
+    "original_state_sha256": "f7a1c73ac26a34547292b9ee630fc7f7d7ee23d75399137d24eb196d84556802",
+    "metric_exact": true,
+    "full_state_exact": true
+  },
+  "observed_reference_updates": {
+    "unique_recipe_updates": 16,
+    "same_process_replayed_updates": 8,
+    "fresh_process_replayed_updates": 8,
+    "parity_updates": 2
+  },
+  "limitations": [
+    "No pretrained/model-scale/CUDA/BF16/Flash replay was executed.",
+    "Repeated recovery trajectories are not additional unique learning updates.",
+    "CUDA malformed-state rejection is mocked metadata testing, not GPU validation."
+  ],
+  "all_checks": true
+}

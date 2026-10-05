@@ -1,0 +1,4413 @@
+{
+  "schema": "dongxi-matched-chosen-sft-observations-v1",
+  "origin": "Original existing location literals, actual random local HF checkpoints, no pretrained weights",
+  "environment": {
+    "python_version": "3.12.14",
+    "interpreter": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "machine": "aarch64",
+    "packages": {
+      "torch": "2.14.1+cpu",
+      "transformers": "5.18.0",
+      "tokenizers": "0.23.2",
+      "peft": "0.20.0",
+      "numpy": "2.5.3",
+      "matplotlib": "3.10.8",
+      "nbformat": "5.11.1",
+      "nbclient": "0.11.0",
+      "huggingface-hub": "1.33.0"
+    },
+    "environment_lock": {
+      "status": "hashed",
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/uv.lock",
+      "sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+      "boundary": "byte identity, not proof all installed versions resolved from this lock"
+    }
+  },
+  "parameter_count": 6592,
+  "runs": [
+    {
+      "seed": 1818,
+      "arms": {
+        "unchanged": {
+          "schema": "dongxi-matched-chosen-sft-v1",
+          "arm": "unchanged",
+          "recipe": {
+            "seed": 1818,
+            "updates": 6,
+            "accumulation": 2,
+            "learning_rate": 0.008,
+            "beta": 0.2,
+            "weight_decay": 0.01,
+            "clip_norm": 1.0,
+            "max_length": 64,
+            "max_new_tokens": 8,
+            "decoding": "greedy-uncached"
+          },
+          "dataset": {
+            "rows_sha256": "193b9d8f7981e31f4edb2cc0f336d0bb53f1b2319e298b96eed739b9716c65e7",
+            "encoded_sha256": "d928c692d44788308ee21f1d2546504e9bad7ba03f449db152e1e1187da6bdd4",
+            "chosen_sha256": "cf54e7037d0cb6e9cd101e755d4ef61c5efaa3d5dae58acdfe978c4bea60c882",
+            "interface_sha256": "1968fffa6cde876418456cb0033b4f6b6013c34cf3d0e895939fbbee7afab638",
+            "train_ids": [
+              "pref-train-001",
+              "pref-train-002",
+              "pref-train-003",
+              "pref-train-004",
+              "pref-train-005",
+              "pref-train-006",
+              "pref-train-007",
+              "pref-train-008"
+            ],
+            "train_groups": [
+              "lily-ball-red-box",
+              "tom-key-blue-bag",
+              "mia-book-wooden-table",
+              "sam-cup-kitchen-cabinet",
+              "noor-toy-small-bed",
+              "leo-pen-black-case",
+              "ava-apple-wicker-basket",
+              "ben-scarf-front-door"
+            ],
+            "validation_ids": [
+              "pref-valid-001",
+              "pref-valid-002",
+              "pref-valid-003",
+              "pref-valid-004"
+            ],
+            "evaluation_ids": [
+              "pref-test-001",
+              "pref-test-002",
+              "pref-test-003",
+              "pref-test-004"
+            ]
+          },
+          "objective": "none",
+          "parent_sha256": "614bd791c109463dd88183af3c4f04d0b2e36acfe10e837b3be58da2f3afbb37",
+          "initial_policy_sha256": "614bd791c109463dd88183af3c4f04d0b2e36acfe10e837b3be58da2f3afbb37",
+          "final_policy_sha256": "614bd791c109463dd88183af3c4f04d0b2e36acfe10e837b3be58da2f3afbb37",
+          "reference_sha256": "614bd791c109463dd88183af3c4f04d0b2e36acfe10e837b3be58da2f3afbb37",
+          "sampler_sha256": "108bbde234fa15202a2db6411ece25c4bf77bbcbac538b5ff07dcdc7c7165210",
+          "history": [],
+          "attempts": [],
+          "training_work": {
+            "sampled_pairs": 0,
+            "sampler_draws": 0,
+            "chosen_targets": 0,
+            "rejected_targets": 0,
+            "logical_sequence_tokens": 0,
+            "policy_forward_calls": 0,
+            "reference_forward_calls": 0,
+            "policy_forward_positions": 0,
+            "reference_forward_positions": 0
+          },
+          "validation": [
+            {
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "chosen_logp": -19.727436065673828,
+              "chosen_targets": 4,
+              "rejected_logp": -14.6621675491333,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "chosen_logp": -19.536540985107422,
+              "chosen_targets": 4,
+              "rejected_logp": -14.664678573608398,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "chosen_logp": -19.718486785888672,
+              "chosen_targets": 4,
+              "rejected_logp": -14.544443130493164,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "chosen_logp": -19.62354278564453,
+              "chosen_targets": 4,
+              "rejected_logp": -14.601472854614258,
+              "rejected_targets": 3
+            }
+          ],
+          "publication": [
+            {
+              "id": "pref-test-001",
+              "generated": "Zia her toy yellow Ravi shoe apple? Elin",
+              "raw_text": "Zia her toy yellow Ravi shoe apple? Elin",
+              "generated_ids": [
+                21,
+                76,
+                118,
+                131,
+                17,
+                104,
+                23,
+                7
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.0048646010109223425,
+              "error": null
+            },
+            {
+              "id": "pref-test-002",
+              "generated": "Zia her toy yellow fridge garden in key",
+              "raw_text": "Zia her toy yellow fridge garden in key",
+              "generated_ids": [
+                21,
+                76,
+                118,
+                131,
+                69,
+                72,
+                77,
+                81
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003648425976280123,
+              "error": null
+            },
+            {
+              "id": "pref-test-003",
+              "generated": "Zia her toy yellow fridge left her toy",
+              "raw_text": "Zia her toy yellow fridge left her toy",
+              "generated_ids": [
+                21,
+                76,
+                118,
+                131,
+                69,
+                84,
+                76,
+                118
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003564363985788077,
+              "error": null
+            },
+            {
+              "id": "pref-test-004",
+              "generated": "Zia her toy yellow Ravi shoe set doll?",
+              "raw_text": "Zia her toy yellow Ravi shoe set doll?",
+              "generated_ids": [
+                21,
+                76,
+                118,
+                131,
+                17,
+                104,
+                102,
+                63
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003532891976647079,
+              "error": null
+            }
+          ],
+          "independent_exact_match": 0.0,
+          "scope": "Original location fixture and local model only; no equal-compute, pretrained quality or accounted recovery claim",
+          "parent_artifacts": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "3f05772a845ca2cbfe5a4aad8d3b4a0d3bfc189b6e5e438c4da971bc1b198301",
+            "course-genealogy.json": "3fc3b6521e83616d25d0a8ea89dfca39fa96aff21c4b4587fe961994027cd176",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "2a43163b243f744ec087546441f7112f20eb1b4fe5c64f54d9de4c348545d353",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "553e2fc30666cb9f51b75b40a9b13e6f5f3855734e0b7ca5b005fa987db14efb"
+          },
+          "events": [
+            {
+              "arm": "unchanged",
+              "phase": "publication-generation",
+              "id": "pref-test-001",
+              "generated": "Zia her toy yellow Ravi shoe apple? Elin",
+              "raw_text": "Zia her toy yellow Ravi shoe apple? Elin",
+              "generated_ids": [
+                21,
+                76,
+                118,
+                131,
+                17,
+                104,
+                23,
+                7
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.0048646010109223425,
+              "error": null
+            },
+            {
+              "arm": "unchanged",
+              "phase": "publication-generation",
+              "id": "pref-test-002",
+              "generated": "Zia her toy yellow fridge garden in key",
+              "raw_text": "Zia her toy yellow fridge garden in key",
+              "generated_ids": [
+                21,
+                76,
+                118,
+                131,
+                69,
+                72,
+                77,
+                81
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003648425976280123,
+              "error": null
+            },
+            {
+              "arm": "unchanged",
+              "phase": "publication-generation",
+              "id": "pref-test-003",
+              "generated": "Zia her toy yellow fridge left her toy",
+              "raw_text": "Zia her toy yellow fridge left her toy",
+              "generated_ids": [
+                21,
+                76,
+                118,
+                131,
+                69,
+                84,
+                76,
+                118
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003564363985788077,
+              "error": null
+            },
+            {
+              "arm": "unchanged",
+              "phase": "publication-generation",
+              "id": "pref-test-004",
+              "generated": "Zia her toy yellow Ravi shoe set doll?",
+              "raw_text": "Zia her toy yellow Ravi shoe set doll?",
+              "generated_ids": [
+                21,
+                76,
+                118,
+                131,
+                17,
+                104,
+                102,
+                63
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003532891976647079,
+              "error": null
+            }
+          ],
+          "final_export": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "9af918e2005076f7491ffe1dce91ae9ffb21ca6493ac35816d0543412e194fea",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "2a43163b243f744ec087546441f7112f20eb1b4fe5c64f54d9de4c348545d353",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "88b46b540a3153a5d185740d0c2ef8b1a3e5a8de7a7c9bcd9a16dc943f0ed664"
+          }
+        },
+        "chosen-sft": {
+          "schema": "dongxi-matched-chosen-sft-v1",
+          "arm": "chosen-sft",
+          "recipe": {
+            "seed": 1818,
+            "updates": 6,
+            "accumulation": 2,
+            "learning_rate": 0.008,
+            "beta": 0.2,
+            "weight_decay": 0.01,
+            "clip_norm": 1.0,
+            "max_length": 64,
+            "max_new_tokens": 8,
+            "decoding": "greedy-uncached"
+          },
+          "dataset": {
+            "rows_sha256": "193b9d8f7981e31f4edb2cc0f336d0bb53f1b2319e298b96eed739b9716c65e7",
+            "encoded_sha256": "d928c692d44788308ee21f1d2546504e9bad7ba03f449db152e1e1187da6bdd4",
+            "chosen_sha256": "cf54e7037d0cb6e9cd101e755d4ef61c5efaa3d5dae58acdfe978c4bea60c882",
+            "interface_sha256": "1968fffa6cde876418456cb0033b4f6b6013c34cf3d0e895939fbbee7afab638",
+            "train_ids": [
+              "pref-train-001",
+              "pref-train-002",
+              "pref-train-003",
+              "pref-train-004",
+              "pref-train-005",
+              "pref-train-006",
+              "pref-train-007",
+              "pref-train-008"
+            ],
+            "train_groups": [
+              "lily-ball-red-box",
+              "tom-key-blue-bag",
+              "mia-book-wooden-table",
+              "sam-cup-kitchen-cabinet",
+              "noor-toy-small-bed",
+              "leo-pen-black-case",
+              "ava-apple-wicker-basket",
+              "ben-scarf-front-door"
+            ],
+            "validation_ids": [
+              "pref-valid-001",
+              "pref-valid-002",
+              "pref-valid-003",
+              "pref-valid-004"
+            ],
+            "evaluation_ids": [
+              "pref-test-001",
+              "pref-test-002",
+              "pref-test-003",
+              "pref-test-004"
+            ]
+          },
+          "objective": "mean valid chosen tokens per update",
+          "parent_sha256": "614bd791c109463dd88183af3c4f04d0b2e36acfe10e837b3be58da2f3afbb37",
+          "initial_policy_sha256": "614bd791c109463dd88183af3c4f04d0b2e36acfe10e837b3be58da2f3afbb37",
+          "final_policy_sha256": "baa2037914e3a6fca773495544f1f55d31bed5c1268be769956c7b60250faf27",
+          "reference_sha256": "614bd791c109463dd88183af3c4f04d0b2e36acfe10e837b3be58da2f3afbb37",
+          "sampler_sha256": "c12b08884da7570920c84ff908312b84b33831ac58909f225634ca6155e3de9d",
+          "history": [
+            {
+              "update": 1,
+              "loss": 4.893645763397217,
+              "gradient_norm": 2.0819270610809326,
+              "indices": [
+                7,
+                2
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "update": 2,
+              "loss": 4.900923728942871,
+              "gradient_norm": 2.627985715866089,
+              "indices": [
+                5,
+                5
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "update": 3,
+              "loss": 4.731400489807129,
+              "gradient_norm": 2.145002603530884,
+              "indices": [
+                0,
+                4
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "update": 4,
+              "loss": 4.513456583023071,
+              "gradient_norm": 1.957683801651001,
+              "indices": [
+                4,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "update": 5,
+              "loss": 4.488970994949341,
+              "gradient_norm": 2.013101577758789,
+              "indices": [
+                6,
+                2
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "update": 6,
+              "loss": 4.341065883636475,
+              "gradient_norm": 1.9091371297836304,
+              "indices": [
+                1,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            }
+          ],
+          "attempts": [
+            {
+              "update": 1,
+              "indices": [
+                7,
+                2
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            },
+            {
+              "update": 2,
+              "indices": [
+                5,
+                5
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            },
+            {
+              "update": 3,
+              "indices": [
+                0,
+                4
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            },
+            {
+              "update": 4,
+              "indices": [
+                4,
+                7
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            },
+            {
+              "update": 5,
+              "indices": [
+                6,
+                2
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            },
+            {
+              "update": 6,
+              "indices": [
+                1,
+                7
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            }
+          ],
+          "training_work": {
+            "sampled_pairs": 12,
+            "sampler_draws": 12,
+            "chosen_targets": 48,
+            "rejected_targets": 0,
+            "logical_sequence_tokens": 288,
+            "policy_forward_calls": 12,
+            "reference_forward_calls": 0,
+            "policy_forward_positions": 288,
+            "reference_forward_positions": 0
+          },
+          "validation": [
+            {
+              "loss": 0.7242481112480164,
+              "margin": -0.06126365810632706,
+              "chosen_logp": -18.20639419555664,
+              "chosen_targets": 4,
+              "rejected_logp": -12.834807395935059,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6864981055259705,
+              "margin": 0.013342666439712048,
+              "chosen_logp": -17.902912139892578,
+              "chosen_targets": 4,
+              "rejected_logp": -13.097763061523438,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.669102132320404,
+              "margin": 0.048682596534490585,
+              "chosen_logp": -17.81137466430664,
+              "chosen_targets": 4,
+              "rejected_logp": -12.880743980407715,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.7082872986793518,
+              "margin": -0.030054474249482155,
+              "chosen_logp": -18.029998779296875,
+              "chosen_targets": 4,
+              "rejected_logp": -12.857656478881836,
+              "rejected_targets": 3
+            }
+          ],
+          "publication": [
+            {
+              "id": "pref-test-001",
+              "generated": "the front door",
+              "raw_text": "the front door <END>",
+              "generated_ids": [
+                113,
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 4,
+              "elapsed_seconds": 0.002395229006651789,
+              "error": null
+            },
+            {
+              "id": "pref-test-002",
+              "generated": "the front door",
+              "raw_text": "the front door <END>",
+              "generated_ids": [
+                113,
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 4,
+              "elapsed_seconds": 0.002138832991477102,
+              "error": null
+            },
+            {
+              "id": "pref-test-003",
+              "generated": "the front door",
+              "raw_text": "the front door <END>",
+              "generated_ids": [
+                113,
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 4,
+              "elapsed_seconds": 0.0021042570006102324,
+              "error": null
+            },
+            {
+              "id": "pref-test-004",
+              "generated": "the front door",
+              "raw_text": "the front door <END>",
+              "generated_ids": [
+                113,
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 4,
+              "elapsed_seconds": 0.002112913003657013,
+              "error": null
+            }
+          ],
+          "independent_exact_match": 0.0,
+          "scope": "Original location fixture and local model only; no equal-compute, pretrained quality or accounted recovery claim",
+          "parent_artifacts": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "3f05772a845ca2cbfe5a4aad8d3b4a0d3bfc189b6e5e438c4da971bc1b198301",
+            "course-genealogy.json": "3fc3b6521e83616d25d0a8ea89dfca39fa96aff21c4b4587fe961994027cd176",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "2a43163b243f744ec087546441f7112f20eb1b4fe5c64f54d9de4c348545d353",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "553e2fc30666cb9f51b75b40a9b13e6f5f3855734e0b7ca5b005fa987db14efb"
+          },
+          "events": [
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 1,
+              "loss": 4.893645763397217,
+              "gradient_norm": 2.0819270610809326,
+              "indices": [
+                7,
+                2
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 2,
+              "loss": 4.900923728942871,
+              "gradient_norm": 2.627985715866089,
+              "indices": [
+                5,
+                5
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 3,
+              "loss": 4.731400489807129,
+              "gradient_norm": 2.145002603530884,
+              "indices": [
+                0,
+                4
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 4,
+              "loss": 4.513456583023071,
+              "gradient_norm": 1.957683801651001,
+              "indices": [
+                4,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 5,
+              "loss": 4.488970994949341,
+              "gradient_norm": 2.013101577758789,
+              "indices": [
+                6,
+                2
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 6,
+              "loss": 4.341065883636475,
+              "gradient_norm": 1.9091371297836304,
+              "indices": [
+                1,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "publication-generation",
+              "id": "pref-test-001",
+              "generated": "the front door",
+              "raw_text": "the front door <END>",
+              "generated_ids": [
+                113,
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 4,
+              "elapsed_seconds": 0.002395229006651789,
+              "error": null
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "publication-generation",
+              "id": "pref-test-002",
+              "generated": "the front door",
+              "raw_text": "the front door <END>",
+              "generated_ids": [
+                113,
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 4,
+              "elapsed_seconds": 0.002138832991477102,
+              "error": null
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "publication-generation",
+              "id": "pref-test-003",
+              "generated": "the front door",
+              "raw_text": "the front door <END>",
+              "generated_ids": [
+                113,
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 4,
+              "elapsed_seconds": 0.0021042570006102324,
+              "error": null
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "publication-generation",
+              "id": "pref-test-004",
+              "generated": "the front door",
+              "raw_text": "the front door <END>",
+              "generated_ids": [
+                113,
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 4,
+              "elapsed_seconds": 0.002112913003657013,
+              "error": null
+            }
+          ],
+          "final_export": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "9af918e2005076f7491ffe1dce91ae9ffb21ca6493ac35816d0543412e194fea",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "c92441a60acf59b5f1829b0039ef1e5d5dffc2c107463c8771be0066b8b05f25",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "88b46b540a3153a5d185740d0c2ef8b1a3e5a8de7a7c9bcd9a16dc943f0ed664"
+          }
+        },
+        "dpo": {
+          "schema": "dongxi-matched-chosen-sft-v1",
+          "arm": "dpo",
+          "recipe": {
+            "seed": 1818,
+            "updates": 6,
+            "accumulation": 2,
+            "learning_rate": 0.008,
+            "beta": 0.2,
+            "weight_decay": 0.01,
+            "clip_norm": 1.0,
+            "max_length": 64,
+            "max_new_tokens": 8,
+            "decoding": "greedy-uncached"
+          },
+          "dataset": {
+            "rows_sha256": "193b9d8f7981e31f4edb2cc0f336d0bb53f1b2319e298b96eed739b9716c65e7",
+            "encoded_sha256": "d928c692d44788308ee21f1d2546504e9bad7ba03f449db152e1e1187da6bdd4",
+            "chosen_sha256": "cf54e7037d0cb6e9cd101e755d4ef61c5efaa3d5dae58acdfe978c4bea60c882",
+            "interface_sha256": "1968fffa6cde876418456cb0033b4f6b6013c34cf3d0e895939fbbee7afab638",
+            "train_ids": [
+              "pref-train-001",
+              "pref-train-002",
+              "pref-train-003",
+              "pref-train-004",
+              "pref-train-005",
+              "pref-train-006",
+              "pref-train-007",
+              "pref-train-008"
+            ],
+            "train_groups": [
+              "lily-ball-red-box",
+              "tom-key-blue-bag",
+              "mia-book-wooden-table",
+              "sam-cup-kitchen-cabinet",
+              "noor-toy-small-bed",
+              "leo-pen-black-case",
+              "ava-apple-wicker-basket",
+              "ben-scarf-front-door"
+            ],
+            "validation_ids": [
+              "pref-valid-001",
+              "pref-valid-002",
+              "pref-valid-003",
+              "pref-valid-004"
+            ],
+            "evaluation_ids": [
+              "pref-test-001",
+              "pref-test-002",
+              "pref-test-003",
+              "pref-test-004"
+            ]
+          },
+          "objective": "native mean pairs; summed completion log probabilities",
+          "parent_sha256": "614bd791c109463dd88183af3c4f04d0b2e36acfe10e837b3be58da2f3afbb37",
+          "initial_policy_sha256": "614bd791c109463dd88183af3c4f04d0b2e36acfe10e837b3be58da2f3afbb37",
+          "final_policy_sha256": "add97fc1ee20d89ab72839826d30afcc53438e33dacc66e3698556018900fe0a",
+          "reference_sha256": "614bd791c109463dd88183af3c4f04d0b2e36acfe10e837b3be58da2f3afbb37",
+          "sampler_sha256": "c12b08884da7570920c84ff908312b84b33831ac58909f225634ca6155e3de9d",
+          "history": [
+            {
+              "update": 1,
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "gradient_norm": 0.8795870542526245,
+              "indices": [
+                7,
+                2
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 2,
+              "loss": 0.7123473286628723,
+              "margin": -0.03803863748908043,
+              "gradient_norm": 1.4659253358840942,
+              "indices": [
+                5,
+                5
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 3,
+              "loss": 0.708469033241272,
+              "margin": -0.03039083443582058,
+              "gradient_norm": 0.9099040031433105,
+              "indices": [
+                0,
+                4
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 4,
+              "loss": 0.6162537634372711,
+              "margin": 0.1618908904492855,
+              "gradient_norm": 0.822331964969635,
+              "indices": [
+                4,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 5,
+              "loss": 0.6123208999633789,
+              "margin": 0.17189360409975052,
+              "gradient_norm": 0.8888050317764282,
+              "indices": [
+                6,
+                2
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 6,
+              "loss": 0.6280742883682251,
+              "margin": 0.15401945263147354,
+              "gradient_norm": 1.018823504447937,
+              "indices": [
+                1,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            }
+          ],
+          "attempts": [
+            {
+              "update": 1,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 2,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 3,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 4,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 5,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 6,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            }
+          ],
+          "training_work": {
+            "sampled_pairs": 12,
+            "sampler_draws": 12,
+            "chosen_targets": 48,
+            "rejected_targets": 36,
+            "logical_sequence_tokens": 564,
+            "policy_forward_calls": 24,
+            "reference_forward_calls": 24,
+            "policy_forward_positions": 540,
+            "reference_forward_positions": 540
+          },
+          "validation": [
+            {
+              "loss": 0.7349663972854614,
+              "margin": -0.08195953816175461,
+              "chosen_logp": -19.8509521484375,
+              "chosen_targets": 4,
+              "rejected_logp": -14.375885963439941,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6510777473449707,
+              "margin": 0.08598671108484268,
+              "chosen_logp": -19.158288955688477,
+              "chosen_targets": 4,
+              "rejected_logp": -14.716360092163086,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6884015798568726,
+              "margin": 0.00951385498046875,
+              "chosen_logp": -19.779359817504883,
+              "chosen_targets": 4,
+              "rejected_logp": -14.652885437011719,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6544250249862671,
+              "margin": 0.07900428771972656,
+              "chosen_logp": -19.562610626220703,
+              "chosen_targets": 4,
+              "rejected_logp": -14.935562133789062,
+              "rejected_targets": 3
+            }
+          ],
+          "publication": [
+            {
+              "id": "pref-test-001",
+              "generated": "front door",
+              "raw_text": "front door <END>",
+              "generated_ids": [
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 3,
+              "elapsed_seconds": 0.0020155709935352206,
+              "error": null
+            },
+            {
+              "id": "pref-test-002",
+              "generated": "front door",
+              "raw_text": "front door <END>",
+              "generated_ids": [
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 3,
+              "elapsed_seconds": 0.0017984210280701518,
+              "error": null
+            },
+            {
+              "id": "pref-test-003",
+              "generated": "front door",
+              "raw_text": "front door <END>",
+              "generated_ids": [
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 3,
+              "elapsed_seconds": 0.0017494619823992252,
+              "error": null
+            },
+            {
+              "id": "pref-test-004",
+              "generated": "front door",
+              "raw_text": "front door <END>",
+              "generated_ids": [
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 3,
+              "elapsed_seconds": 0.0017472549807280302,
+              "error": null
+            }
+          ],
+          "independent_exact_match": 0.0,
+          "scope": "Original location fixture and local model only; no equal-compute, pretrained quality or accounted recovery claim",
+          "parent_artifacts": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "3f05772a845ca2cbfe5a4aad8d3b4a0d3bfc189b6e5e438c4da971bc1b198301",
+            "course-genealogy.json": "3fc3b6521e83616d25d0a8ea89dfca39fa96aff21c4b4587fe961994027cd176",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "2a43163b243f744ec087546441f7112f20eb1b4fe5c64f54d9de4c348545d353",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "553e2fc30666cb9f51b75b40a9b13e6f5f3855734e0b7ca5b005fa987db14efb"
+          },
+          "events": [
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 1,
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "gradient_norm": 0.8795870542526245,
+              "indices": [
+                7,
+                2
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 2,
+              "loss": 0.7123473286628723,
+              "margin": -0.03803863748908043,
+              "gradient_norm": 1.4659253358840942,
+              "indices": [
+                5,
+                5
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 3,
+              "loss": 0.708469033241272,
+              "margin": -0.03039083443582058,
+              "gradient_norm": 0.9099040031433105,
+              "indices": [
+                0,
+                4
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 4,
+              "loss": 0.6162537634372711,
+              "margin": 0.1618908904492855,
+              "gradient_norm": 0.822331964969635,
+              "indices": [
+                4,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 5,
+              "loss": 0.6123208999633789,
+              "margin": 0.17189360409975052,
+              "gradient_norm": 0.8888050317764282,
+              "indices": [
+                6,
+                2
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 6,
+              "loss": 0.6280742883682251,
+              "margin": 0.15401945263147354,
+              "gradient_norm": 1.018823504447937,
+              "indices": [
+                1,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "publication-generation",
+              "id": "pref-test-001",
+              "generated": "front door",
+              "raw_text": "front door <END>",
+              "generated_ids": [
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 3,
+              "elapsed_seconds": 0.0020155709935352206,
+              "error": null
+            },
+            {
+              "arm": "dpo",
+              "phase": "publication-generation",
+              "id": "pref-test-002",
+              "generated": "front door",
+              "raw_text": "front door <END>",
+              "generated_ids": [
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 3,
+              "elapsed_seconds": 0.0017984210280701518,
+              "error": null
+            },
+            {
+              "arm": "dpo",
+              "phase": "publication-generation",
+              "id": "pref-test-003",
+              "generated": "front door",
+              "raw_text": "front door <END>",
+              "generated_ids": [
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 3,
+              "elapsed_seconds": 0.0017494619823992252,
+              "error": null
+            },
+            {
+              "arm": "dpo",
+              "phase": "publication-generation",
+              "id": "pref-test-004",
+              "generated": "front door",
+              "raw_text": "front door <END>",
+              "generated_ids": [
+                70,
+                64,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 3,
+              "elapsed_seconds": 0.0017472549807280302,
+              "error": null
+            }
+          ],
+          "final_export": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "9af918e2005076f7491ffe1dce91ae9ffb21ca6493ac35816d0543412e194fea",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "1411afdbb07f28e05ea26db7789d8bba581da28a99a24acd1c49ef35139bf68d",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "88b46b540a3153a5d185740d0c2ef8b1a3e5a8de7a7c9bcd9a16dc943f0ed664"
+          }
+        }
+      },
+      "comparison": {
+        "matching": "same actual parent, replacement draws, chosen targets, updates and recipe",
+        "unmatched": "rejected supervision, objective reduction, reference work, policy input geometry and compute",
+        "independent_exact_match": {
+          "unchanged": 0.0,
+          "chosen-sft": 0.0,
+          "dpo": 0.0
+        },
+        "training_work": {
+          "unchanged": {
+            "sampled_pairs": 0,
+            "sampler_draws": 0,
+            "chosen_targets": 0,
+            "rejected_targets": 0,
+            "logical_sequence_tokens": 0,
+            "policy_forward_calls": 0,
+            "reference_forward_calls": 0,
+            "policy_forward_positions": 0,
+            "reference_forward_positions": 0
+          },
+          "chosen-sft": {
+            "sampled_pairs": 12,
+            "sampler_draws": 12,
+            "chosen_targets": 48,
+            "rejected_targets": 0,
+            "logical_sequence_tokens": 288,
+            "policy_forward_calls": 12,
+            "reference_forward_calls": 0,
+            "policy_forward_positions": 288,
+            "reference_forward_positions": 0
+          },
+          "dpo": {
+            "sampled_pairs": 12,
+            "sampler_draws": 12,
+            "chosen_targets": 48,
+            "rejected_targets": 36,
+            "logical_sequence_tokens": 564,
+            "policy_forward_calls": 24,
+            "reference_forward_calls": 24,
+            "policy_forward_positions": 540,
+            "reference_forward_positions": 540
+          }
+        }
+      }
+    },
+    {
+      "seed": 1819,
+      "arms": {
+        "unchanged": {
+          "schema": "dongxi-matched-chosen-sft-v1",
+          "arm": "unchanged",
+          "recipe": {
+            "seed": 1819,
+            "updates": 6,
+            "accumulation": 2,
+            "learning_rate": 0.008,
+            "beta": 0.2,
+            "weight_decay": 0.01,
+            "clip_norm": 1.0,
+            "max_length": 64,
+            "max_new_tokens": 8,
+            "decoding": "greedy-uncached"
+          },
+          "dataset": {
+            "rows_sha256": "193b9d8f7981e31f4edb2cc0f336d0bb53f1b2319e298b96eed739b9716c65e7",
+            "encoded_sha256": "d928c692d44788308ee21f1d2546504e9bad7ba03f449db152e1e1187da6bdd4",
+            "chosen_sha256": "cf54e7037d0cb6e9cd101e755d4ef61c5efaa3d5dae58acdfe978c4bea60c882",
+            "interface_sha256": "1968fffa6cde876418456cb0033b4f6b6013c34cf3d0e895939fbbee7afab638",
+            "train_ids": [
+              "pref-train-001",
+              "pref-train-002",
+              "pref-train-003",
+              "pref-train-004",
+              "pref-train-005",
+              "pref-train-006",
+              "pref-train-007",
+              "pref-train-008"
+            ],
+            "train_groups": [
+              "lily-ball-red-box",
+              "tom-key-blue-bag",
+              "mia-book-wooden-table",
+              "sam-cup-kitchen-cabinet",
+              "noor-toy-small-bed",
+              "leo-pen-black-case",
+              "ava-apple-wicker-basket",
+              "ben-scarf-front-door"
+            ],
+            "validation_ids": [
+              "pref-valid-001",
+              "pref-valid-002",
+              "pref-valid-003",
+              "pref-valid-004"
+            ],
+            "evaluation_ids": [
+              "pref-test-001",
+              "pref-test-002",
+              "pref-test-003",
+              "pref-test-004"
+            ]
+          },
+          "objective": "none",
+          "parent_sha256": "f4e9e17763eaf592787fbd2bfee679b65a0ce5cd3a2ee95486b9cf9cf2816dc4",
+          "initial_policy_sha256": "f4e9e17763eaf592787fbd2bfee679b65a0ce5cd3a2ee95486b9cf9cf2816dc4",
+          "final_policy_sha256": "f4e9e17763eaf592787fbd2bfee679b65a0ce5cd3a2ee95486b9cf9cf2816dc4",
+          "reference_sha256": "f4e9e17763eaf592787fbd2bfee679b65a0ce5cd3a2ee95486b9cf9cf2816dc4",
+          "sampler_sha256": "c38f3f05e6b0af5130abd9946f44b6ec851ea4a4c13e1a4614e5e0c888316861",
+          "history": [],
+          "attempts": [],
+          "training_work": {
+            "sampled_pairs": 0,
+            "sampler_draws": 0,
+            "chosen_targets": 0,
+            "rejected_targets": 0,
+            "logical_sequence_tokens": 0,
+            "policy_forward_calls": 0,
+            "reference_forward_calls": 0,
+            "policy_forward_positions": 0,
+            "reference_forward_positions": 0
+          },
+          "validation": [
+            {
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "chosen_logp": -19.58292007446289,
+              "chosen_targets": 4,
+              "rejected_logp": -14.512514114379883,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "chosen_logp": -19.291868209838867,
+              "chosen_targets": 4,
+              "rejected_logp": -14.406106948852539,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "chosen_logp": -19.589622497558594,
+              "chosen_targets": 4,
+              "rejected_logp": -14.73385238647461,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "chosen_logp": -19.633790969848633,
+              "chosen_targets": 4,
+              "rejected_logp": -14.596969604492188,
+              "rejected_targets": 3
+            }
+          ],
+          "publication": [
+            {
+              "id": "pref-test-001",
+              "generated": "toy? scarf? wicker narrow cup front ball basket.",
+              "raw_text": "toy? scarf? wicker narrow cup front ball basket.",
+              "generated_ids": [
+                119,
+                101,
+                127,
+                86,
+                57,
+                70,
+                29,
+                32
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.0038684240425936878,
+              "error": null
+            },
+            {
+              "id": "pref-test-002",
+              "generated": "toy? vase Sam bed. key bag Ravi bed",
+              "raw_text": "toy? vase Sam bed. key bag Ravi bed",
+              "generated_ids": [
+                119,
+                123,
+                18,
+                34,
+                81,
+                26,
+                17,
+                33
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003606250975281,
+              "error": null
+            },
+            {
+              "id": "pref-test-003",
+              "generated": "toy? scarf? wicker narrow cup front placed blue",
+              "raw_text": "toy? scarf? wicker narrow cup front placed blue",
+              "generated_ids": [
+                119,
+                101,
+                127,
+                86,
+                57,
+                70,
+                92,
+                40
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.0035196440294384956,
+              "error": null
+            },
+            {
+              "id": "pref-test-004",
+              "generated": "toy? vase shoe? bag Ravi bed key bag",
+              "raw_text": "toy? vase shoe? bag Ravi bed key bag",
+              "generated_ids": [
+                119,
+                123,
+                105,
+                26,
+                17,
+                33,
+                81,
+                26
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003528411965817213,
+              "error": null
+            }
+          ],
+          "independent_exact_match": 0.0,
+          "scope": "Original location fixture and local model only; no equal-compute, pretrained quality or accounted recovery claim",
+          "parent_artifacts": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "3f05772a845ca2cbfe5a4aad8d3b4a0d3bfc189b6e5e438c4da971bc1b198301",
+            "course-genealogy.json": "3fc3b6521e83616d25d0a8ea89dfca39fa96aff21c4b4587fe961994027cd176",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "c6e7876e73fc480c9b0a77c9931fbadc4dbd410ee2807526049ceaec81e20b68",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "553e2fc30666cb9f51b75b40a9b13e6f5f3855734e0b7ca5b005fa987db14efb"
+          },
+          "events": [
+            {
+              "arm": "unchanged",
+              "phase": "publication-generation",
+              "id": "pref-test-001",
+              "generated": "toy? scarf? wicker narrow cup front ball basket.",
+              "raw_text": "toy? scarf? wicker narrow cup front ball basket.",
+              "generated_ids": [
+                119,
+                101,
+                127,
+                86,
+                57,
+                70,
+                29,
+                32
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.0038684240425936878,
+              "error": null
+            },
+            {
+              "arm": "unchanged",
+              "phase": "publication-generation",
+              "id": "pref-test-002",
+              "generated": "toy? vase Sam bed. key bag Ravi bed",
+              "raw_text": "toy? vase Sam bed. key bag Ravi bed",
+              "generated_ids": [
+                119,
+                123,
+                18,
+                34,
+                81,
+                26,
+                17,
+                33
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003606250975281,
+              "error": null
+            },
+            {
+              "arm": "unchanged",
+              "phase": "publication-generation",
+              "id": "pref-test-003",
+              "generated": "toy? scarf? wicker narrow cup front placed blue",
+              "raw_text": "toy? scarf? wicker narrow cup front placed blue",
+              "generated_ids": [
+                119,
+                101,
+                127,
+                86,
+                57,
+                70,
+                92,
+                40
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.0035196440294384956,
+              "error": null
+            },
+            {
+              "arm": "unchanged",
+              "phase": "publication-generation",
+              "id": "pref-test-004",
+              "generated": "toy? vase shoe? bag Ravi bed key bag",
+              "raw_text": "toy? vase shoe? bag Ravi bed key bag",
+              "generated_ids": [
+                119,
+                123,
+                105,
+                26,
+                17,
+                33,
+                81,
+                26
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003528411965817213,
+              "error": null
+            }
+          ],
+          "final_export": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "9af918e2005076f7491ffe1dce91ae9ffb21ca6493ac35816d0543412e194fea",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "c6e7876e73fc480c9b0a77c9931fbadc4dbd410ee2807526049ceaec81e20b68",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "88b46b540a3153a5d185740d0c2ef8b1a3e5a8de7a7c9bcd9a16dc943f0ed664"
+          }
+        },
+        "chosen-sft": {
+          "schema": "dongxi-matched-chosen-sft-v1",
+          "arm": "chosen-sft",
+          "recipe": {
+            "seed": 1819,
+            "updates": 6,
+            "accumulation": 2,
+            "learning_rate": 0.008,
+            "beta": 0.2,
+            "weight_decay": 0.01,
+            "clip_norm": 1.0,
+            "max_length": 64,
+            "max_new_tokens": 8,
+            "decoding": "greedy-uncached"
+          },
+          "dataset": {
+            "rows_sha256": "193b9d8f7981e31f4edb2cc0f336d0bb53f1b2319e298b96eed739b9716c65e7",
+            "encoded_sha256": "d928c692d44788308ee21f1d2546504e9bad7ba03f449db152e1e1187da6bdd4",
+            "chosen_sha256": "cf54e7037d0cb6e9cd101e755d4ef61c5efaa3d5dae58acdfe978c4bea60c882",
+            "interface_sha256": "1968fffa6cde876418456cb0033b4f6b6013c34cf3d0e895939fbbee7afab638",
+            "train_ids": [
+              "pref-train-001",
+              "pref-train-002",
+              "pref-train-003",
+              "pref-train-004",
+              "pref-train-005",
+              "pref-train-006",
+              "pref-train-007",
+              "pref-train-008"
+            ],
+            "train_groups": [
+              "lily-ball-red-box",
+              "tom-key-blue-bag",
+              "mia-book-wooden-table",
+              "sam-cup-kitchen-cabinet",
+              "noor-toy-small-bed",
+              "leo-pen-black-case",
+              "ava-apple-wicker-basket",
+              "ben-scarf-front-door"
+            ],
+            "validation_ids": [
+              "pref-valid-001",
+              "pref-valid-002",
+              "pref-valid-003",
+              "pref-valid-004"
+            ],
+            "evaluation_ids": [
+              "pref-test-001",
+              "pref-test-002",
+              "pref-test-003",
+              "pref-test-004"
+            ]
+          },
+          "objective": "mean valid chosen tokens per update",
+          "parent_sha256": "f4e9e17763eaf592787fbd2bfee679b65a0ce5cd3a2ee95486b9cf9cf2816dc4",
+          "initial_policy_sha256": "f4e9e17763eaf592787fbd2bfee679b65a0ce5cd3a2ee95486b9cf9cf2816dc4",
+          "final_policy_sha256": "2d330f3f7ebd36e2864f385fc6b98101555397312bb3db672ae7391727192577",
+          "reference_sha256": "f4e9e17763eaf592787fbd2bfee679b65a0ce5cd3a2ee95486b9cf9cf2816dc4",
+          "sampler_sha256": "b11122d089d89bff0e28dae53c4d6d14ba480129921b742098655eb310a7907f",
+          "history": [
+            {
+              "update": 1,
+              "loss": 4.856936693191528,
+              "gradient_norm": 2.0226762294769287,
+              "indices": [
+                4,
+                3
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "update": 2,
+              "loss": 4.7974371910095215,
+              "gradient_norm": 2.126734495162964,
+              "indices": [
+                2,
+                0
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "update": 3,
+              "loss": 4.507372617721558,
+              "gradient_norm": 1.915229082107544,
+              "indices": [
+                2,
+                4
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "update": 4,
+              "loss": 4.6205973625183105,
+              "gradient_norm": 2.0956242084503174,
+              "indices": [
+                6,
+                1
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "update": 5,
+              "loss": 4.459501028060913,
+              "gradient_norm": 3.2357406616210938,
+              "indices": [
+                0,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "update": 6,
+              "loss": 4.33446741104126,
+              "gradient_norm": 2.0203912258148193,
+              "indices": [
+                5,
+                0
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            }
+          ],
+          "attempts": [
+            {
+              "update": 1,
+              "indices": [
+                4,
+                3
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            },
+            {
+              "update": 2,
+              "indices": [
+                2,
+                0
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            },
+            {
+              "update": 3,
+              "indices": [
+                2,
+                4
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            },
+            {
+              "update": 4,
+              "indices": [
+                6,
+                1
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            },
+            {
+              "update": 5,
+              "indices": [
+                0,
+                7
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            },
+            {
+              "update": 6,
+              "indices": [
+                5,
+                0
+              ],
+              "policy_forward_calls_entered": 2,
+              "policy_forward_calls_completed": 2,
+              "policy_forward_positions_entered": 48,
+              "policy_forward_positions_completed": 48,
+              "completed": true,
+              "error": null
+            }
+          ],
+          "training_work": {
+            "sampled_pairs": 12,
+            "sampler_draws": 12,
+            "chosen_targets": 48,
+            "rejected_targets": 0,
+            "logical_sequence_tokens": 288,
+            "policy_forward_calls": 12,
+            "reference_forward_calls": 0,
+            "policy_forward_positions": 288,
+            "reference_forward_positions": 0
+          },
+          "validation": [
+            {
+              "loss": 0.6908115148544312,
+              "margin": 0.00467681884765625,
+              "chosen_logp": -17.67335319519043,
+              "chosen_targets": 4,
+              "rejected_logp": -12.626331329345703,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6850742101669312,
+              "margin": 0.016211701557040215,
+              "chosen_logp": -17.336578369140625,
+              "chosen_targets": 4,
+              "rejected_logp": -12.531875610351562,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.720147967338562,
+              "margin": -0.05329170450568199,
+              "chosen_logp": -17.777008056640625,
+              "chosen_targets": 4,
+              "rejected_logp": -12.654779434204102,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6921946406364441,
+              "margin": 0.0019060134654864669,
+              "chosen_logp": -17.607738494873047,
+              "chosen_targets": 4,
+              "rejected_logp": -12.58044719696045,
+              "rejected_targets": 3
+            }
+          ],
+          "publication": [
+            {
+              "id": "pref-test-001",
+              "generated": "the",
+              "raw_text": "the <END>",
+              "generated_ids": [
+                113,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 2,
+              "elapsed_seconds": 0.001656040025409311,
+              "error": null
+            },
+            {
+              "id": "pref-test-002",
+              "generated": "the",
+              "raw_text": "the <END>",
+              "generated_ids": [
+                113,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 2,
+              "elapsed_seconds": 0.0014428750146180391,
+              "error": null
+            },
+            {
+              "id": "pref-test-003",
+              "generated": "the",
+              "raw_text": "the <END>",
+              "generated_ids": [
+                113,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 2,
+              "elapsed_seconds": 0.0013963470119051635,
+              "error": null
+            },
+            {
+              "id": "pref-test-004",
+              "generated": "the",
+              "raw_text": "the <END>",
+              "generated_ids": [
+                113,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 2,
+              "elapsed_seconds": 0.0014039149973541498,
+              "error": null
+            }
+          ],
+          "independent_exact_match": 0.0,
+          "scope": "Original location fixture and local model only; no equal-compute, pretrained quality or accounted recovery claim",
+          "parent_artifacts": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "3f05772a845ca2cbfe5a4aad8d3b4a0d3bfc189b6e5e438c4da971bc1b198301",
+            "course-genealogy.json": "3fc3b6521e83616d25d0a8ea89dfca39fa96aff21c4b4587fe961994027cd176",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "c6e7876e73fc480c9b0a77c9931fbadc4dbd410ee2807526049ceaec81e20b68",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "553e2fc30666cb9f51b75b40a9b13e6f5f3855734e0b7ca5b005fa987db14efb"
+          },
+          "events": [
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 1,
+              "loss": 4.856936693191528,
+              "gradient_norm": 2.0226762294769287,
+              "indices": [
+                4,
+                3
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 2,
+              "loss": 4.7974371910095215,
+              "gradient_norm": 2.126734495162964,
+              "indices": [
+                2,
+                0
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 3,
+              "loss": 4.507372617721558,
+              "gradient_norm": 1.915229082107544,
+              "indices": [
+                2,
+                4
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 4,
+              "loss": 4.6205973625183105,
+              "gradient_norm": 2.0956242084503174,
+              "indices": [
+                6,
+                1
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 5,
+              "loss": 4.459501028060913,
+              "gradient_norm": 3.2357406616210938,
+              "indices": [
+                0,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "completed-update",
+              "update": 6,
+              "loss": 4.33446741104126,
+              "gradient_norm": 2.0203912258148193,
+              "indices": [
+                5,
+                0
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 0,
+                "logical_sequence_tokens": 48,
+                "policy_forward_calls": 2,
+                "reference_forward_calls": 0,
+                "policy_forward_positions": 48,
+                "reference_forward_positions": 0
+              }
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "publication-generation",
+              "id": "pref-test-001",
+              "generated": "the",
+              "raw_text": "the <END>",
+              "generated_ids": [
+                113,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 2,
+              "elapsed_seconds": 0.001656040025409311,
+              "error": null
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "publication-generation",
+              "id": "pref-test-002",
+              "generated": "the",
+              "raw_text": "the <END>",
+              "generated_ids": [
+                113,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 2,
+              "elapsed_seconds": 0.0014428750146180391,
+              "error": null
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "publication-generation",
+              "id": "pref-test-003",
+              "generated": "the",
+              "raw_text": "the <END>",
+              "generated_ids": [
+                113,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 2,
+              "elapsed_seconds": 0.0013963470119051635,
+              "error": null
+            },
+            {
+              "arm": "chosen-sft",
+              "phase": "publication-generation",
+              "id": "pref-test-004",
+              "generated": "the",
+              "raw_text": "the <END>",
+              "generated_ids": [
+                113,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 2,
+              "elapsed_seconds": 0.0014039149973541498,
+              "error": null
+            }
+          ],
+          "final_export": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "9af918e2005076f7491ffe1dce91ae9ffb21ca6493ac35816d0543412e194fea",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "37954f70657e34659cb037c90c9971849dc7f42fe351cc85b31fd6b742888fd7",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "88b46b540a3153a5d185740d0c2ef8b1a3e5a8de7a7c9bcd9a16dc943f0ed664"
+          }
+        },
+        "dpo": {
+          "schema": "dongxi-matched-chosen-sft-v1",
+          "arm": "dpo",
+          "recipe": {
+            "seed": 1819,
+            "updates": 6,
+            "accumulation": 2,
+            "learning_rate": 0.008,
+            "beta": 0.2,
+            "weight_decay": 0.01,
+            "clip_norm": 1.0,
+            "max_length": 64,
+            "max_new_tokens": 8,
+            "decoding": "greedy-uncached"
+          },
+          "dataset": {
+            "rows_sha256": "193b9d8f7981e31f4edb2cc0f336d0bb53f1b2319e298b96eed739b9716c65e7",
+            "encoded_sha256": "d928c692d44788308ee21f1d2546504e9bad7ba03f449db152e1e1187da6bdd4",
+            "chosen_sha256": "cf54e7037d0cb6e9cd101e755d4ef61c5efaa3d5dae58acdfe978c4bea60c882",
+            "interface_sha256": "1968fffa6cde876418456cb0033b4f6b6013c34cf3d0e895939fbbee7afab638",
+            "train_ids": [
+              "pref-train-001",
+              "pref-train-002",
+              "pref-train-003",
+              "pref-train-004",
+              "pref-train-005",
+              "pref-train-006",
+              "pref-train-007",
+              "pref-train-008"
+            ],
+            "train_groups": [
+              "lily-ball-red-box",
+              "tom-key-blue-bag",
+              "mia-book-wooden-table",
+              "sam-cup-kitchen-cabinet",
+              "noor-toy-small-bed",
+              "leo-pen-black-case",
+              "ava-apple-wicker-basket",
+              "ben-scarf-front-door"
+            ],
+            "validation_ids": [
+              "pref-valid-001",
+              "pref-valid-002",
+              "pref-valid-003",
+              "pref-valid-004"
+            ],
+            "evaluation_ids": [
+              "pref-test-001",
+              "pref-test-002",
+              "pref-test-003",
+              "pref-test-004"
+            ]
+          },
+          "objective": "native mean pairs; summed completion log probabilities",
+          "parent_sha256": "f4e9e17763eaf592787fbd2bfee679b65a0ce5cd3a2ee95486b9cf9cf2816dc4",
+          "initial_policy_sha256": "f4e9e17763eaf592787fbd2bfee679b65a0ce5cd3a2ee95486b9cf9cf2816dc4",
+          "final_policy_sha256": "6cc2c95d049c541b45de66e2e809422373e5d72d4556de37ad81258d9b175a79",
+          "reference_sha256": "f4e9e17763eaf592787fbd2bfee679b65a0ce5cd3a2ee95486b9cf9cf2816dc4",
+          "sampler_sha256": "b11122d089d89bff0e28dae53c4d6d14ba480129921b742098655eb310a7907f",
+          "history": [
+            {
+              "update": 1,
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "gradient_norm": 0.8528223037719727,
+              "indices": [
+                4,
+                3
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 2,
+              "loss": 0.6755905747413635,
+              "margin": 0.035499381832778454,
+              "gradient_norm": 0.9179891347885132,
+              "indices": [
+                2,
+                0
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 3,
+              "loss": 0.575154572725296,
+              "margin": 0.25181790441274643,
+              "gradient_norm": 0.8469870090484619,
+              "indices": [
+                2,
+                4
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 4,
+              "loss": 0.6759233474731445,
+              "margin": 0.03500480798538774,
+              "gradient_norm": 1.7293241024017334,
+              "indices": [
+                6,
+                1
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 5,
+              "loss": 0.6721073985099792,
+              "margin": 0.06842222064733505,
+              "gradient_norm": 0.9456313252449036,
+              "indices": [
+                0,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 6,
+              "loss": 0.5771989524364471,
+              "margin": 0.2632885044440627,
+              "gradient_norm": 3.22224497795105,
+              "indices": [
+                5,
+                0
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            }
+          ],
+          "attempts": [
+            {
+              "update": 1,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 2,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 3,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 4,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 5,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "update": 6,
+              "completed": true,
+              "attempted_work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            }
+          ],
+          "training_work": {
+            "sampled_pairs": 12,
+            "sampler_draws": 12,
+            "chosen_targets": 48,
+            "rejected_targets": 36,
+            "logical_sequence_tokens": 564,
+            "policy_forward_calls": 24,
+            "reference_forward_calls": 24,
+            "policy_forward_positions": 540,
+            "reference_forward_positions": 540
+          },
+          "validation": [
+            {
+              "loss": 0.6884797215461731,
+              "margin": 0.009356880560517311,
+              "chosen_logp": -20.33843994140625,
+              "chosen_targets": 4,
+              "rejected_logp": -15.314818382263184,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.7161072492599487,
+              "margin": -0.045404817909002304,
+              "chosen_logp": -18.95248031616211,
+              "chosen_targets": 4,
+              "rejected_logp": -13.83969497680664,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.5814942717552185,
+              "margin": 0.23735752701759338,
+              "chosen_logp": -18.939193725585938,
+              "chosen_targets": 4,
+              "rejected_logp": -15.270211219787598,
+              "rejected_targets": 3
+            },
+            {
+              "loss": 0.6878697872161865,
+              "margin": 0.01058273296803236,
+              "chosen_logp": -20.01009750366211,
+              "chosen_targets": 4,
+              "rejected_logp": -15.026189804077148,
+              "rejected_targets": 3
+            }
+          ],
+          "publication": [
+            {
+              "id": "pref-test-001",
+              "generated": "window back table",
+              "raw_text": "window back table <END>",
+              "generated_ids": [
+                128,
+                25,
+                110,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 4,
+              "elapsed_seconds": 0.002371261012740433,
+              "error": null
+            },
+            {
+              "id": "pref-test-002",
+              "generated": "attic attic attic attic attic attic attic attic",
+              "raw_text": "attic attic attic attic attic attic attic attic",
+              "generated_ids": [
+                24,
+                24,
+                24,
+                24,
+                24,
+                24,
+                24,
+                24
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003599611984100193,
+              "error": null
+            },
+            {
+              "id": "pref-test-003",
+              "generated": "attic attic attic attic attic attic attic attic",
+              "raw_text": "attic attic attic attic attic attic attic attic",
+              "generated_ids": [
+                24,
+                24,
+                24,
+                24,
+                24,
+                24,
+                24,
+                24
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.0034968610270880163,
+              "error": null
+            },
+            {
+              "id": "pref-test-004",
+              "generated": "window fridge attic attic attic attic attic attic",
+              "raw_text": "window fridge attic attic attic attic attic attic",
+              "generated_ids": [
+                128,
+                69,
+                24,
+                24,
+                24,
+                24,
+                24,
+                24
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.0034916289732791483,
+              "error": null
+            }
+          ],
+          "independent_exact_match": 0.0,
+          "scope": "Original location fixture and local model only; no equal-compute, pretrained quality or accounted recovery claim",
+          "parent_artifacts": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "3f05772a845ca2cbfe5a4aad8d3b4a0d3bfc189b6e5e438c4da971bc1b198301",
+            "course-genealogy.json": "3fc3b6521e83616d25d0a8ea89dfca39fa96aff21c4b4587fe961994027cd176",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "c6e7876e73fc480c9b0a77c9931fbadc4dbd410ee2807526049ceaec81e20b68",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "553e2fc30666cb9f51b75b40a9b13e6f5f3855734e0b7ca5b005fa987db14efb"
+          },
+          "events": [
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 1,
+              "loss": 0.6931471824645996,
+              "margin": 0.0,
+              "gradient_norm": 0.8528223037719727,
+              "indices": [
+                4,
+                3
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 2,
+              "loss": 0.6755905747413635,
+              "margin": 0.035499381832778454,
+              "gradient_norm": 0.9179891347885132,
+              "indices": [
+                2,
+                0
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 3,
+              "loss": 0.575154572725296,
+              "margin": 0.25181790441274643,
+              "gradient_norm": 0.8469870090484619,
+              "indices": [
+                2,
+                4
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 4,
+              "loss": 0.6759233474731445,
+              "margin": 0.03500480798538774,
+              "gradient_norm": 1.7293241024017334,
+              "indices": [
+                6,
+                1
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 5,
+              "loss": 0.6721073985099792,
+              "margin": 0.06842222064733505,
+              "gradient_norm": 0.9456313252449036,
+              "indices": [
+                0,
+                7
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "completed-update",
+              "update": 6,
+              "loss": 0.5771989524364471,
+              "margin": 0.2632885044440627,
+              "gradient_norm": 3.22224497795105,
+              "indices": [
+                5,
+                0
+              ],
+              "work": {
+                "sampled_pairs": 2,
+                "sampler_draws": 2,
+                "chosen_targets": 8,
+                "rejected_targets": 6,
+                "logical_sequence_tokens": 94,
+                "policy_forward_calls": 4,
+                "reference_forward_calls": 4,
+                "policy_forward_positions": 90,
+                "reference_forward_positions": 90
+              }
+            },
+            {
+              "arm": "dpo",
+              "phase": "publication-generation",
+              "id": "pref-test-001",
+              "generated": "window back table",
+              "raw_text": "window back table <END>",
+              "generated_ids": [
+                128,
+                25,
+                110,
+                1
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                10,
+                96,
+                113,
+                98,
+                77,
+                113,
+                95,
+                94,
+                20,
+                79,
+                113,
+                99,
+                1,
+                3
+              ],
+              "expected": "the purple pouch",
+              "exact_match": false,
+              "stop_reason": "declared-stop",
+              "final_stop_id": 1,
+              "truncated": false,
+              "prompt_tokens": 20,
+              "generated_tokens": 4,
+              "elapsed_seconds": 0.002371261012740433,
+              "error": null
+            },
+            {
+              "arm": "dpo",
+              "phase": "publication-generation",
+              "id": "pref-test-002",
+              "generated": "attic attic attic attic attic attic attic attic",
+              "raw_text": "attic attic attic attic attic attic attic attic",
+              "generated_ids": [
+                24,
+                24,
+                24,
+                24,
+                24,
+                24,
+                24,
+                24
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                11,
+                84,
+                113,
+                45,
+                77,
+                113,
+                112,
+                124,
+                20,
+                79,
+                113,
+                46,
+                1,
+                3
+              ],
+              "expected": "the tall vase",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.003599611984100193,
+              "error": null
+            },
+            {
+              "arm": "dpo",
+              "phase": "publication-generation",
+              "id": "pref-test-003",
+              "generated": "attic attic attic attic attic attic attic attic",
+              "raw_text": "attic attic attic attic attic attic attic attic",
+              "generated_ids": [
+                24,
+                24,
+                24,
+                24,
+                24,
+                24,
+                24,
+                24
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                7,
+                92,
+                113,
+                114,
+                77,
+                113,
+                75,
+                68,
+                20,
+                79,
+                113,
+                115,
+                1,
+                3
+              ],
+              "expected": "the green folder",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.0034968610270880163,
+              "error": null
+            },
+            {
+              "arm": "dpo",
+              "phase": "publication-generation",
+              "id": "pref-test-004",
+              "generated": "window fridge attic attic attic attic attic attic",
+              "raw_text": "window fridge attic attic attic attic attic attic",
+              "generated_ids": [
+                128,
+                69,
+                24,
+                24,
+                24,
+                24,
+                24,
+                24
+              ],
+              "prompt_ids": [
+                2,
+                4,
+                129,
+                113,
+                85,
+                88,
+                9,
+                80,
+                113,
+                55,
+                77,
+                113,
+                89,
+                117,
+                20,
+                79,
+                113,
+                56,
+                1,
+                3
+              ],
+              "expected": "the orange tin",
+              "exact_match": false,
+              "stop_reason": "max_new_tokens",
+              "final_stop_id": null,
+              "truncated": true,
+              "prompt_tokens": 20,
+              "generated_tokens": 8,
+              "elapsed_seconds": 0.0034916289732791483,
+              "error": null
+            }
+          ],
+          "final_export": {
+            "chat_template.jinja": "d2fcf87124bc860bc321a40713f3d7c5ed4efc75d12c08d2944b9dadde5e5099",
+            "config.json": "9af918e2005076f7491ffe1dce91ae9ffb21ca6493ac35816d0543412e194fea",
+            "generation_config.json": "4b8132a587b986417b2bb9ee346877ee74bdf5d273ad5d95b50cd005f3d7b656",
+            "model.safetensors": "4ce07011b0fe1ea6d8055847dcc3ba94d35ce0939c87816b5d410ac933a294a8",
+            "tokenizer.json": "13d62cf2cb9b447c63076ccb03b7e8c236f57c204f31cd4a564773807177fd30",
+            "tokenizer_config.json": "88b46b540a3153a5d185740d0c2ef8b1a3e5a8de7a7c9bcd9a16dc943f0ed664"
+          }
+        }
+      },
+      "comparison": {
+        "matching": "same actual parent, replacement draws, chosen targets, updates and recipe",
+        "unmatched": "rejected supervision, objective reduction, reference work, policy input geometry and compute",
+        "independent_exact_match": {
+          "unchanged": 0.0,
+          "chosen-sft": 0.0,
+          "dpo": 0.0
+        },
+        "training_work": {
+          "unchanged": {
+            "sampled_pairs": 0,
+            "sampler_draws": 0,
+            "chosen_targets": 0,
+            "rejected_targets": 0,
+            "logical_sequence_tokens": 0,
+            "policy_forward_calls": 0,
+            "reference_forward_calls": 0,
+            "policy_forward_positions": 0,
+            "reference_forward_positions": 0
+          },
+          "chosen-sft": {
+            "sampled_pairs": 12,
+            "sampler_draws": 12,
+            "chosen_targets": 48,
+            "rejected_targets": 0,
+            "logical_sequence_tokens": 288,
+            "policy_forward_calls": 12,
+            "reference_forward_calls": 0,
+            "policy_forward_positions": 288,
+            "reference_forward_positions": 0
+          },
+          "dpo": {
+            "sampled_pairs": 12,
+            "sampler_draws": 12,
+            "chosen_targets": 48,
+            "rejected_targets": 36,
+            "logical_sequence_tokens": 564,
+            "policy_forward_calls": 24,
+            "reference_forward_calls": 24,
+            "policy_forward_positions": 540,
+            "reference_forward_positions": 540
+          }
+        }
+      }
+    }
+  ],
+  "scope": "Two fixed seeds/all three arms; no retuning or model-scale stage execution"
+}

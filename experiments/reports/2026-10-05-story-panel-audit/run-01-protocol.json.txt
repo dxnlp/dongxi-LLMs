@@ -1,0 +1,46 @@
+{
+  "schema": "dongxi-story-panel-audit-protocol-v1",
+  "mode": "bounded-read-only-local-corpus-audit",
+  "declared_before_collection": true,
+  "panel_source": "experiments/reports/2026-10-04-staged-campaign-preparation.json",
+  "panel_contract": "story-publication-v1",
+  "development_source": "outputs/day09-learning-01/initial.json",
+  "prepared_manifest": "data/cache/day09-full-v2/manifest.json",
+  "dataset_revision": "f54c09fd23315a6f9c86f9dc80f725de7d8f9c64",
+  "raw_cache_snapshot": "/home/dongxi/.cache/huggingface/hub/datasets--roneneldan--TinyStories/snapshots/f54c09fd23315a6f9c86f9dc80f725de7d8f9c64",
+  "limits": {
+    "wall_seconds": 600,
+    "address_space_bytes": 536870912,
+    "maximum_document_utf8_bytes": 1048576,
+    "maximum_raw_documents_per_split": 2500000,
+    "maximum_validation_hashes_in_memory": 100000,
+    "maximum_sqlite_bytes": 268435456,
+    "minimum_sampled_host_available_bytes": 26843545600,
+    "maximum_examples_per_metric": 2
+  },
+  "normalization": "Exact existing preparation definition: space-join of casefolded whitespace-separated text. Punctuation is retained. SHA256 is an operational digest, not mathematical proof against hash collisions.",
+  "source_reconstruction": "Stream validation first; deduplicate normalized full-story digests within each split. Exclude train normalized full-story hashes present in retained validation. Recompute framed retained raw-text SHA256 (8-byte little-endian UTF8 length plus text) and compare document/duplicate/overlap counts with actual pinned prepared manifest. Confirm raw identities before accepting reconstructed results, including undelimited final documents.",
+  "exact_metrics": {
+    "whole_story_equal": "Entire normalized story equals normalized opening. This is not the same as a prefix hit.",
+    "prefix_equal": "Entire normalized opening is the character prefix of normalized story. The story can be longer.",
+    "substring_equal": "Entire normalized opening appears anywhere in normalized story. No paraphrase inference."
+  },
+  "near_metric": {
+    "name": "opening-length-word-trigram-jaccard-v1",
+    "word_pattern": "\\w+(?:'\\w+)?",
+    "definition": "Casefold then regex words. For each prompt of n words, compare its set of consecutive 3-word tuples with the same set in the first n words of every raw corpus story. Intersection/union is the score, with score 0 for empty union. No edits, synonym matching or semantic embeddings.",
+    "threshold": 0.4,
+    "candidate_filter": "Inverted index of prompt trigrams against the first maximum-prompt-length words of each document. Any nonzero score necessarily shares a trigram, so missing candidates have exactly zero under this defined metric. No all-pairs story/story near search.",
+    "report": "Maximum, threshold count, positive-candidate count and up to two deterministic nearest examples per prompt/split/status. Raw document ordinals, full normalized story hashes and short first-n-word prefixes permit inspection without redistributing full stories."
+  },
+  "development_separation": "Verify current source literal12 matches original frozen12. Read the actual three historical prompts from stored generation JSON and compare their normalized equality, prefix/substring relationships and opening trigram similarity with publication items. Keep development results separate, never replace a panel item based on corpus hits.",
+  "non_claims": [
+    "No model inference, training, download, service, GPU, Git or remote mutation.",
+    "The frozen panel and all existing source/data/report bytes remain untouched.",
+    "A negative exact/defined-near audit does not establish global contamination absence, semantic novelty or train/validation paraphrase separation.",
+    "Exact prefix overlap does not establish full-story identity or model memorization.",
+    "Publication openings are original authored items; lack of equality with development strings is not proof of zero human/agent development exposure.",
+    "Raw/prepared file identities and reconstruction bind the actual historical corpus, but cannot independently certify its upstream generative provenance or privacy.",
+    "This resolves a bounded audit subgate only, not DXI-03's trained comparison or DXI-17/18."
+  ]
+}

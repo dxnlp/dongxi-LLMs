@@ -1,0 +1,9 @@
+{
+  "schema": "dongxi-integrity-collector-failure-v1",
+  "command": ["python3", "experiments/reports/2026-10-05-goal-continuation/verify_current_records.py"],
+  "actual_exit_code": 1,
+  "failed_collector_sha256": "13b55218dc484e5f0d307583a7603f9fec8ad4a7bba3747a49a1aa4ab5710bfc",
+  "failure": "KeyError: 'pending_checks' at line44; historical DXI-04 record has no pending_checks key",
+  "resolution": "Read an absent historical pending array as empty via get(...,[]), while retaining exact acceptance/dependency checks and every existing original pending string. The historical baseline is not changed.",
+  "measurement_boundary": "Collector-schema failure before output creation, not a test-suite, model, corpus-audit or platform failure. No model job started; all existing raw results remain unchanged."
+}

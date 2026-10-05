@@ -1,0 +1,31 @@
+[
+  {
+    "control": "save_tensor_byte_bound_before_finite",
+    "declared_tensor_bytes": 1,
+    "error": "WorkBudgetExceeded: Shared snapshot tensor bytes exceed envelope before finite scan/clone",
+    "finite_scan_bytes": [],
+    "pass_refusal_before_finite": true,
+    "tensor_bytes": 8
+  },
+  {
+    "control": "load_tensor_byte_bound_before_finite",
+    "declared_tensor_bytes": 8,
+    "error": "WorkBudgetExceeded: Shared snapshot tensor bytes exceed envelope before finite scan/clone",
+    "finite_scan_bytes": [],
+    "pass_refusal_before_finite": true,
+    "tensor_bytes": 16
+  },
+  {
+    "control": "mutated_receipt_bool_prefix",
+    "error": "ValueError: sequence must be a bounded nonnegative exact integer",
+    "mutated_sequence": false,
+    "pass_refusal_before_read": true,
+    "payload_or_marker_reads": []
+  },
+  {
+    "control": "header_v2_payload_v1_unaccounted_load",
+    "error": "ValueError: Snapshot header schema differs from explicit accounted/reference mode",
+    "pass_refusal_before_load": true,
+    "restricted_load_calls": []
+  }
+]

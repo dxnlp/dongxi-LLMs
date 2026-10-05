@@ -1,0 +1,367 @@
+{
+  "schema": "dongxi-response-distillation-fixture-v1",
+  "items": [
+    {
+      "id": "distill-train-00",
+      "source_group": "distill-parity-0-0",
+      "split": "train",
+      "slice": "train",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "direct",
+      "problem": {
+        "a": 0,
+        "b": 0
+      },
+      "prompt": "Is 0+0 odd? Return0or1.",
+      "kind": "math",
+      "reference": "0",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-train-01",
+      "source_group": "distill-parity-0-1",
+      "split": "train",
+      "slice": "train",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "direct",
+      "problem": {
+        "a": 0,
+        "b": 1
+      },
+      "prompt": "Is 0+1 odd? Return0or1.",
+      "kind": "math",
+      "reference": "1",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-train-10",
+      "source_group": "distill-parity-1-0",
+      "split": "train",
+      "slice": "train",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "direct",
+      "problem": {
+        "a": 1,
+        "b": 0
+      },
+      "prompt": "Is 1+0 odd? Return0or1.",
+      "kind": "math",
+      "reference": "1",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-train-11",
+      "source_group": "distill-parity-1-1",
+      "split": "train",
+      "slice": "train",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "direct",
+      "problem": {
+        "a": 1,
+        "b": 1
+      },
+      "prompt": "Is 1+1 odd? Return0or1.",
+      "kind": "math",
+      "reference": "0",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-train-02",
+      "source_group": "distill-parity-0-2",
+      "split": "train",
+      "slice": "train",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "direct",
+      "problem": {
+        "a": 0,
+        "b": 2
+      },
+      "prompt": "Is 0+2 odd? Return0or1.",
+      "kind": "math",
+      "reference": "0",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-train-12",
+      "source_group": "distill-parity-1-2",
+      "split": "train",
+      "slice": "train",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "direct",
+      "problem": {
+        "a": 1,
+        "b": 2
+      },
+      "prompt": "Is 1+2 odd? Return0or1.",
+      "kind": "math",
+      "reference": "1",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-test-20",
+      "source_group": "distill-parity-2-0",
+      "split": "test",
+      "slice": "heldout-source",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "direct",
+      "problem": {
+        "a": 2,
+        "b": 0
+      },
+      "prompt": "Is 2+0 odd? Return0or1.",
+      "kind": "math",
+      "reference": "0",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-test-21",
+      "source_group": "distill-parity-2-1",
+      "split": "test",
+      "slice": "heldout-source",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "direct",
+      "problem": {
+        "a": 2,
+        "b": 1
+      },
+      "prompt": "Is 2+1 odd? Return0or1.",
+      "kind": "math",
+      "reference": "1",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-test-22",
+      "source_group": "distill-parity-2-2",
+      "split": "test",
+      "slice": "heldout-source",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "direct",
+      "problem": {
+        "a": 2,
+        "b": 2
+      },
+      "prompt": "Is 2+2 odd? Return0or1.",
+      "kind": "math",
+      "reference": "0",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-test-23",
+      "source_group": "distill-parity-2-3",
+      "split": "test",
+      "slice": "heldout-source",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "direct",
+      "problem": {
+        "a": 2,
+        "b": 3
+      },
+      "prompt": "Is 2+3 odd? Return0or1.",
+      "kind": "math",
+      "reference": "1",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-alias-20",
+      "source_group": "distill-parity-2-0",
+      "split": "test",
+      "slice": "heldout-template",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "alias",
+      "problem": {
+        "a": 2,
+        "b": 0
+      },
+      "prompt": "State the oddness bit for the total of 2 and 0.",
+      "kind": "math",
+      "reference": "0",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-alias-21",
+      "source_group": "distill-parity-2-1",
+      "split": "test",
+      "slice": "heldout-template",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "alias",
+      "problem": {
+        "a": 2,
+        "b": 1
+      },
+      "prompt": "State the oddness bit for the total of 2 and 1.",
+      "kind": "math",
+      "reference": "1",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-alias-22",
+      "source_group": "distill-parity-2-2",
+      "split": "test",
+      "slice": "heldout-template",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "alias",
+      "problem": {
+        "a": 2,
+        "b": 2
+      },
+      "prompt": "State the oddness bit for the total of 2 and 2.",
+      "kind": "math",
+      "reference": "0",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-alias-23",
+      "source_group": "distill-parity-2-3",
+      "split": "test",
+      "slice": "heldout-template",
+      "task": "printed-parity",
+      "family": "parity",
+      "template_id": "alias",
+      "problem": {
+        "a": 2,
+        "b": 3
+      },
+      "prompt": "State the oddness bit for the total of 2 and 3.",
+      "kind": "math",
+      "reference": "1",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-family-00",
+      "source_group": "distill-sum-positive-0-0",
+      "split": "test",
+      "slice": "heldout-family",
+      "task": "printed-sum-positive",
+      "family": "sum-positive",
+      "template_id": "direct",
+      "problem": {
+        "a": 0,
+        "b": 0
+      },
+      "prompt": "Is 0+0 greater than0? Return0or1.",
+      "kind": "math",
+      "reference": "0",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-family-01",
+      "source_group": "distill-sum-positive-0-1",
+      "split": "test",
+      "slice": "heldout-family",
+      "task": "printed-sum-positive",
+      "family": "sum-positive",
+      "template_id": "direct",
+      "problem": {
+        "a": 0,
+        "b": 1
+      },
+      "prompt": "Is 0+1 greater than0? Return0or1.",
+      "kind": "math",
+      "reference": "1",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-family-10",
+      "source_group": "distill-sum-positive-1-0",
+      "split": "test",
+      "slice": "heldout-family",
+      "task": "printed-sum-positive",
+      "family": "sum-positive",
+      "template_id": "direct",
+      "problem": {
+        "a": 1,
+        "b": 0
+      },
+      "prompt": "Is 1+0 greater than0? Return0or1.",
+      "kind": "math",
+      "reference": "1",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    },
+    {
+      "id": "distill-family-11",
+      "source_group": "distill-sum-positive-1-1",
+      "split": "test",
+      "slice": "heldout-family",
+      "task": "printed-sum-positive",
+      "family": "sum-positive",
+      "template_id": "direct",
+      "problem": {
+        "a": 1,
+        "b": 1
+      },
+      "prompt": "Is 1+1 greater than0? Return0or1.",
+      "kind": "math",
+      "reference": "1",
+      "format_policy": "single_integer",
+      "extraction": "whole"
+    }
+  ],
+  "authored_probes": [
+    {
+      "id": "both-valid",
+      "a": 1,
+      "b": 1,
+      "step_total": 2,
+      "final_answer": 0,
+      "printed_step_valid": true,
+      "answer_correct": true
+    },
+    {
+      "id": "wrong-step-right-answer",
+      "a": 1,
+      "b": 1,
+      "step_total": 3,
+      "final_answer": 0,
+      "printed_step_valid": false,
+      "answer_correct": true
+    },
+    {
+      "id": "valid-step-wrong-answer",
+      "a": 1,
+      "b": 1,
+      "step_total": 2,
+      "final_answer": 1,
+      "printed_step_valid": true,
+      "answer_correct": false
+    },
+    {
+      "id": "both-wrong",
+      "a": 1,
+      "b": 1,
+      "step_total": 3,
+      "final_answer": 1,
+      "printed_step_valid": false,
+      "answer_correct": false
+    }
+  ]
+}

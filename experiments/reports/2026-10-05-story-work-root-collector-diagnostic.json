@@ -1,0 +1,11 @@
+{
+  "scope": "Read-only acceptance collector diagnostic, not a numerical experiment failure",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "experiments/reports/collect_story_work_root_acceptance.py", "--output", "experiments/reports/2026-10-05-story-work-root-acceptance.json"],
+  "actual_exit_code": 1,
+  "error": "KeyError: 'issues'",
+  "cause": "The retained successful integrity result uses problems: [], not an issues field. The root collector assumed the wrong result schema.",
+  "correction": "Read the actual problems array and require it empty; additionally refuse any issues field if present. Re-run read-only against the same retained evidence.",
+  "source_equations_changed": false,
+  "retained_scientific_evidence_changed": false,
+  "acceptance_file_written_by_failed_attempt": false
+}

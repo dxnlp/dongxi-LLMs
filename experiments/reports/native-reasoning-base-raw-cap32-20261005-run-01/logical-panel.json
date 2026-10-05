@@ -1,0 +1,445 @@
+{
+  "id": "reasoning-panel-v1",
+  "status": "logical-design-frozen-interface-pending",
+  "items": [
+    {
+      "id": "math-1",
+      "source_group": "arithmetic-{\"a\":1,\"b\":2,\"operation\":\"add\"}",
+      "split": "train",
+      "task": "arithmetic",
+      "family": "arithmetic",
+      "template_id": "arithmetic-symbolic",
+      "problem": {
+        "a": 1,
+        "b": 2,
+        "operation": "add"
+      },
+      "prompt": "Compute 1 + 2.",
+      "kind": "math",
+      "reference": "3",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "development-or-seen-diagnostic"
+    },
+    {
+      "id": "math-2",
+      "source_group": "arithmetic-{\"a\":2,\"b\":3,\"operation\":\"add\"}",
+      "split": "train",
+      "task": "arithmetic",
+      "family": "arithmetic",
+      "template_id": "arithmetic-symbolic",
+      "problem": {
+        "a": 2,
+        "b": 3,
+        "operation": "add"
+      },
+      "prompt": "Compute 2 + 3.",
+      "kind": "math",
+      "reference": "5",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": true,
+      "campaign_role": "development-or-seen-diagnostic"
+    },
+    {
+      "id": "math-3",
+      "source_group": "arithmetic-{\"a\":3,\"b\":4,\"operation\":\"add\"}",
+      "split": "train",
+      "task": "arithmetic",
+      "family": "arithmetic",
+      "template_id": "arithmetic-symbolic",
+      "problem": {
+        "a": 3,
+        "b": 4,
+        "operation": "add"
+      },
+      "prompt": "Compute 3 + 4.",
+      "kind": "math",
+      "reference": "7",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "development-or-seen-diagnostic"
+    },
+    {
+      "id": "math-4",
+      "source_group": "arithmetic-{\"a\":1,\"b\":4,\"operation\":\"add\"}",
+      "split": "train",
+      "task": "arithmetic",
+      "family": "arithmetic",
+      "template_id": "arithmetic-symbolic",
+      "problem": {
+        "a": 1,
+        "b": 4,
+        "operation": "add"
+      },
+      "prompt": "Compute 1 + 4.",
+      "kind": "math",
+      "reference": "5",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "development-or-seen-diagnostic"
+    },
+    {
+      "id": "math-5",
+      "source_group": "linear-algebra-{\"a\":2,\"b\":1,\"c\":7}",
+      "split": "train",
+      "task": "linear-algebra",
+      "family": "linear-algebra",
+      "template_id": "equation-symbolic",
+      "problem": {
+        "a": 2,
+        "b": 1,
+        "c": 7
+      },
+      "prompt": "Solve 2 x + 1 = 7 for x.",
+      "kind": "math",
+      "reference": "3",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "development-or-seen-diagnostic"
+    },
+    {
+      "id": "math-6",
+      "source_group": "linear-algebra-{\"a\":3,\"b\":2,\"c\":14}",
+      "split": "train",
+      "task": "linear-algebra",
+      "family": "linear-algebra",
+      "template_id": "equation-symbolic",
+      "problem": {
+        "a": 3,
+        "b": 2,
+        "c": 14
+      },
+      "prompt": "Solve 3 x + 2 = 14 for x.",
+      "kind": "math",
+      "reference": "4",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "development-or-seen-diagnostic"
+    },
+    {
+      "id": "math-7",
+      "source_group": "linear-algebra-{\"a\":2,\"b\":3,\"c\":1}",
+      "split": "train",
+      "task": "linear-algebra",
+      "family": "linear-algebra",
+      "template_id": "equation-symbolic",
+      "problem": {
+        "a": 2,
+        "b": 3,
+        "c": 1
+      },
+      "prompt": "Solve 2 x + 3 = 1 for x.",
+      "kind": "math",
+      "reference": "-1",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "development-or-seen-diagnostic"
+    },
+    {
+      "id": "math-8",
+      "source_group": "linear-algebra-{\"a\":4,\"b\":1,\"c\":7}",
+      "split": "train",
+      "task": "linear-algebra",
+      "family": "linear-algebra",
+      "template_id": "equation-symbolic",
+      "problem": {
+        "a": 4,
+        "b": 1,
+        "c": 7
+      },
+      "prompt": "Solve 4 x + 1 = 7 for x.",
+      "kind": "math",
+      "reference": "1.5",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "development-or-seen-diagnostic"
+    },
+    {
+      "id": "math-9",
+      "source_group": "arithmetic-{\"a\":4,\"b\":5,\"operation\":\"add\"}",
+      "split": "heldout-source",
+      "task": "arithmetic",
+      "family": "arithmetic",
+      "template_id": "arithmetic-symbolic",
+      "problem": {
+        "a": 4,
+        "b": 5,
+        "operation": "add"
+      },
+      "prompt": "Compute 4 + 5.",
+      "kind": "math",
+      "reference": "9",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": true,
+      "campaign_role": "development-or-seen-diagnostic"
+    },
+    {
+      "id": "math-10",
+      "source_group": "arithmetic-{\"a\":5,\"b\":6,\"operation\":\"add\"}",
+      "split": "heldout-source",
+      "task": "arithmetic",
+      "family": "arithmetic",
+      "template_id": "arithmetic-symbolic",
+      "problem": {
+        "a": 5,
+        "b": 6,
+        "operation": "add"
+      },
+      "prompt": "Compute 5 + 6.",
+      "kind": "math",
+      "reference": "11",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    },
+    {
+      "id": "math-11",
+      "source_group": "linear-algebra-{\"a\":5,\"b\":1,\"c\":16}",
+      "split": "heldout-source",
+      "task": "linear-algebra",
+      "family": "linear-algebra",
+      "template_id": "equation-symbolic",
+      "problem": {
+        "a": 5,
+        "b": 1,
+        "c": 16
+      },
+      "prompt": "Solve 5 x + 1 = 16 for x.",
+      "kind": "math",
+      "reference": "3",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    },
+    {
+      "id": "math-12",
+      "source_group": "linear-algebra-{\"a\":3,\"b\":4,\"c\":1}",
+      "split": "heldout-source",
+      "task": "linear-algebra",
+      "family": "linear-algebra",
+      "template_id": "equation-symbolic",
+      "problem": {
+        "a": 3,
+        "b": 4,
+        "c": 1
+      },
+      "prompt": "Solve 3 x + 4 = 1 for x.",
+      "kind": "math",
+      "reference": "-1",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    },
+    {
+      "id": "math-13",
+      "source_group": "arithmetic-{\"a\":6,\"b\":7,\"operation\":\"add\"}",
+      "split": "heldout-template",
+      "task": "arithmetic",
+      "family": "arithmetic",
+      "template_id": "arithmetic-worded",
+      "problem": {
+        "a": 6,
+        "b": 7,
+        "operation": "add"
+      },
+      "prompt": "A jar holds 6 beads. Put in 7 more. How many beads?",
+      "kind": "math",
+      "reference": "13",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    },
+    {
+      "id": "math-14",
+      "source_group": "arithmetic-{\"a\":7,\"b\":8,\"operation\":\"add\"}",
+      "split": "heldout-template",
+      "task": "arithmetic",
+      "family": "arithmetic",
+      "template_id": "arithmetic-worded",
+      "problem": {
+        "a": 7,
+        "b": 8,
+        "operation": "add"
+      },
+      "prompt": "A jar holds 7 beads. Put in 8 more. How many beads?",
+      "kind": "math",
+      "reference": "15",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    },
+    {
+      "id": "math-15",
+      "source_group": "linear-algebra-{\"a\":6,\"b\":2,\"c\":20}",
+      "split": "heldout-template",
+      "task": "linear-algebra",
+      "family": "linear-algebra",
+      "template_id": "equation-worded",
+      "problem": {
+        "a": 6,
+        "b": 2,
+        "c": 20
+      },
+      "prompt": "Multiply a number by 6, then add 2, obtaining 20. Find the number.",
+      "kind": "math",
+      "reference": "3",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    },
+    {
+      "id": "math-16",
+      "source_group": "linear-algebra-{\"a\":4,\"b\":3,\"c\":5}",
+      "split": "heldout-template",
+      "task": "linear-algebra",
+      "family": "linear-algebra",
+      "template_id": "equation-worded",
+      "problem": {
+        "a": 4,
+        "b": 3,
+        "c": 5
+      },
+      "prompt": "Multiply a number by 4, then add 3, obtaining 5. Find the number.",
+      "kind": "math",
+      "reference": "0.5",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    },
+    {
+      "id": "math-17",
+      "source_group": "multi-step-{\"start\":2,\"receive\":4,\"groups\":3}",
+      "split": "heldout-family",
+      "task": "multi-step",
+      "family": "multi-step",
+      "template_id": "quantity-two-step",
+      "problem": {
+        "start": 2,
+        "receive": 4,
+        "groups": 3
+      },
+      "prompt": "Start with 2 liters, receive 4 liters, then divide the total equally among 3 bottles. How many liters per bottle?",
+      "kind": "math",
+      "reference": "2",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    },
+    {
+      "id": "math-18",
+      "source_group": "multi-step-{\"start\":5,\"receive\":3,\"groups\":4}",
+      "split": "heldout-family",
+      "task": "multi-step",
+      "family": "multi-step",
+      "template_id": "quantity-two-step",
+      "problem": {
+        "start": 5,
+        "receive": 3,
+        "groups": 4
+      },
+      "prompt": "Start with 5 liters, receive 3 liters, then divide the total equally among 4 bottles. How many liters per bottle?",
+      "kind": "math",
+      "reference": "2",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    },
+    {
+      "id": "math-19",
+      "source_group": "multi-step-{\"start\":1,\"receive\":5,\"groups\":4}",
+      "split": "heldout-family",
+      "task": "multi-step",
+      "family": "multi-step",
+      "template_id": "quantity-two-step",
+      "problem": {
+        "start": 1,
+        "receive": 5,
+        "groups": 4
+      },
+      "prompt": "Start with 1 liters, receive 5 liters, then divide the total equally among 4 bottles. How many liters per bottle?",
+      "kind": "math",
+      "reference": "1.5",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    },
+    {
+      "id": "math-20",
+      "source_group": "multi-step-{\"start\":3,\"receive\":6,\"groups\":3}",
+      "split": "heldout-family",
+      "task": "multi-step",
+      "family": "multi-step",
+      "template_id": "quantity-two-step",
+      "problem": {
+        "start": 3,
+        "receive": 6,
+        "groups": 3
+      },
+      "prompt": "Start with 3 liters, receive 6 liters, then divide the total equally among 3 bottles. How many liters per bottle?",
+      "kind": "math",
+      "reference": "3",
+      "extraction": "boxed_or_final",
+      "format_policy": "any",
+      "rlvr_train_problem_overlap": false,
+      "campaign_role": "heldout-controlled-slice"
+    }
+  ],
+  "items_sha256": "d674db480cab4fdb3fa3487146a1f107913bf1a6e55d2a64e42659729ee707b8",
+  "slices": [
+    "arithmetic",
+    "algebra",
+    "multi-step",
+    "heldout-source",
+    "heldout-template",
+    "heldout-family"
+  ],
+  "parser": "bounded-rational-set-interval-v1; explicit extraction; INVALID/UNSUPPORTED/AMBIGUOUS retained",
+  "decoding": {
+    "mode": "sample",
+    "temperature": 1.0,
+    "top_k": null,
+    "top_p": 1.0,
+    "seeds": [
+      1009,
+      1019,
+      1029,
+      1039
+    ]
+  },
+  "budgets": {
+    "answer-only": 32,
+    "short-work": 128
+  },
+  "greedy_diagnostic": true,
+  "input_rows": [
+    "base/raw",
+    "base/explicit-chat",
+    "instruct/chat/thinking-disabled",
+    "same-instruct/chat/thinking-enabled"
+  ],
+  "stop": "bind observed EOS/turn-stop/pad IDs before weights; natural-stop versus cap and unfinished work separately",
+  "rlvr_reward": "existing strict whole-integer plus emitted EOS; training four pairs is distinct from this evaluation",
+  "no_tuning": "publication/source-family slices never choose reward, budget, coefficients or checkpoints",
+  "limits": "known train-problem overlaps excluded from heldout headline; common templates remain; final answer does not verify rationale faithfulness",
+  "observed_checkpoint_interface": null,
+  "logical_contract_sha256": "d5556d79358cf2cd7e961f94d525d512e8e5a9cce18bed23b51be7d7db9bc5be"
+}

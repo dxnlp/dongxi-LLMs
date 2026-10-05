@@ -19,6 +19,43 @@ a fresh run name for reproduction. Data/checkpoints stay in ignored directories;
 tracked reports retain manifests, source hashes, metrics and representative text.
 Do not publish downloaded corpus text without reviewing its data terms.
 
+### Persistent model work is a separate source mode
+
+The2026-10-05 [story-work protocol](../experiments/specs/2026-10-05-story-persistent-work.md)
+adds optional `--work-limits` and `--work-journal` arguments. Supply both or
+neither. The limits file is the full strict21-dimensional
+`dongxi-story-logical-work-v1` contract, including its explicit journal byte bound.
+It is not a scalar token cap and has no inferred production values. The journal
+must live in a privately owned directory and cannot be copied or replaced to
+reset capacity. The scientific binding includes the actual source, original
+recipe/data/environment and any active successful-target cap.
+
+Accounted recovery additionally requires `--resume-work-receipt`, the bounded
+independent receipt published beside the selected checkpoint by default as
+`CHECKPOINT.pt.work.json`. Open and bind the same retained journal before model
+allocation or payload reading. Restore numerical state from its completed
+boundary while retaining later successful, failed and uncertain reservations.
+The accounted run saves completed0 before its first observation, so an initial
+observer failure does not leave only an unbounded opportunity to start over.
+
+The historical commands below omit these flags and remain explicitly
+**unaccounted** teaching paths. They do not establish current-source production
+admission. Historical checkpoints are not automatically adopted into a new
+accounted journal. The new source counts declared model calls/positions,
+backward/optimizer attempts, validation, generation, activation panels and
+save/restore attempts. It does not bound byte reads, cloning, serialization,
+data/permutation work, checkpoint backward recomputation, all outputs, memory or
+disk. This legacy-layout story receipt is not the later shared snapshot/I/O9
+format. Physical containment and a fresh approved Spark replay/profile remain
+separate gates; these instructions do not launch them.
+
+The native CPU companion is in the existing
+[Day9 clocks notebook](../notebooks/day-09/01_read_training_clocks.ipynb).
+It distinguishes successful targets from admitted attempts without loading the
+historical corpus or weights. Its [actual lesson evidence](../experiments/reports/2026-10-05-story-work-lesson.md)
+checks17 successful targets/25 reservations and the cap24 refusal; complete
+source compatibility and fresh-process evidence are recorded separately.
+
 ## 1. Prepare the bounded fixture
 
 ```bash
@@ -88,7 +125,7 @@ validation and prompt completions, per-layer activation RMS/maxima, atomic
 checkpoint files and sampled host/CUDA/cgroup memory summaries. Sampling uses
 fixed prompts, greedy and temperature.8 modes, no top-k/p, and local seed909.
 Generation recomputes the prefix; this simple correctness path is not a cached
-serving benchmark. Validation uses the first `--valid-windows` windows and labels
+serving benchmark. Partial validation uses the fixed seed909 selection and labels
 whether the complete prepared split was evaluated. Three updates and two windows
 do not establish language competence or representative held-out performance.
 

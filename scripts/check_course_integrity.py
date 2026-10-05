@@ -4,6 +4,10 @@ import argparse
 import json
 from pathlib import Path
 import re
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+from dongxi_llms.course_manifest import validate_manifest
 
 
 def link_problems(root, path, text):
@@ -25,6 +29,14 @@ def main():
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     problems = []
+    try:
+        registry = json.loads((root/'docs/course_manifest.json').read_text())
+        problems.extend(validate_manifest(registry, root))
+        if not isinstance(registry, dict):
+            registry = {'days': [], 'notebooks': []}
+    except (OSError, ValueError) as error:
+        registry = {'days': [], 'notebooks': []}
+        problems.append(f'Cannot read routing contract: {error}')
     chapters = sorted((root/'book/chapters').glob('*.md'))
     solutions = sorted((root/'book/solutions').glob('*.md'))
     for i in range(1,16):
@@ -49,15 +61,18 @@ def main():
             problems.append(f'Day{day} has no session index')
         days.append({'day':day,'notebooks':[str(p.relative_to(root)) for p in files]})
     for path in notebooks:
-        nb = json.loads(path.read_text())
-        code = [c for c in nb['cells'] if c['cell_type']=='code']
-        text = '\n'.join(''.join(c['source']) if isinstance(c['source'],list)
-                         else c['source'] for c in nb['cells'] if c['cell_type']=='markdown')
-        if not code or not text.strip():
-            problems.append(f'Empty notebook: {path.relative_to(root)}')
-        if not re.search(r'!\[[^\]]*\]\(',text):
-            problems.append(f'No saved explanatory preview: {path.relative_to(root)}')
-        problems.extend(link_problems(root,path,text))
+        try:
+            nb = json.loads(path.read_text())
+            code = [c for c in nb['cells'] if c['cell_type']=='code']
+            text = '\n'.join(''.join(c['source']) if isinstance(c['source'],list)
+                             else c['source'] for c in nb['cells'] if c['cell_type']=='markdown')
+            if not code or not text.strip():
+                problems.append(f'Empty notebook: {path.relative_to(root)}')
+            if not re.search(r'!\[[^\]]*\]\(',text):
+                problems.append(f'No saved explanatory preview: {path.relative_to(root)}')
+            problems.extend(link_problems(root,path,text))
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            problems.append(f'Invalid notebook {path.relative_to(root)}: {error}')
     prose = list((root/'book').rglob('*.md'))
     prose += [root/'docs/COURSE_SEQUENCE.md',root/'docs/COURSE_BLUEPRINT.md',
               root/'docs/NOTEBOOK_CURRICULUM.md',root/'docs/EXPERIMENT_MATRIX.md',
@@ -69,8 +84,13 @@ def main():
         if not path.exists():
             problems.append(f'Missing route file: {path.relative_to(root)}'); continue
         problems.extend(link_problems(root,path,path.read_text()))
+    registered = registry.get('notebooks', [])
+    registered = [row for row in registered if isinstance(row,dict)] if isinstance(registered,list) else []
     result = {'chapters':len(chapters),'solutions':len(solutions),
               'appendices':len(list((root/'book/appendices').glob('*.md'))),
+              'registered_notebooks': len(registered),
+              'notebook_lanes': {lane:sum(row.get('lane')==lane for row in registered)
+                                 for lane in ['core','optional','extension']},
               'notebooks':len(notebooks),'days':days,'problems':problems,
               'chapter_words':{p.name:len(p.read_text().split()) for p in chapters}}
     print(json.dumps(result,indent=2) if args.json else

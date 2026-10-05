@@ -1,0 +1,297 @@
+{
+  "schema": "dongxi-course-mechanism-checkpoint-v1",
+  "date_utc": "2026-10-04T21:12:20Z",
+  "base_commit": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4",
+  "scope": "Third audit-improvement mechanism checkpoint; package completion is bounded CPU evidence, not learner mastery or pretrained/model-scale validation.",
+  "closed_packages": [
+    "DXI-07",
+    "DXI-10",
+    "DXI-11",
+    "DXI-12"
+  ],
+  "goal_status": "active",
+  "summary": {
+    "complete": 7,
+    "in_progress": 6,
+    "planned": 5,
+    "verified_notebook_inventory": 70,
+    "learner_day": 9
+  },
+  "actual_integrated_checks": [
+    {
+      "command": "env OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 PYTHONPATH=src /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python -m unittest discover -s tests -v",
+      "exit_code": 0,
+      "tests": 366,
+      "seconds": 9.002,
+      "boundary": "Time-scoped shared suite; next packages are still being built. Full retained366-test child log also appears in the DPO-retention final report."
+    },
+    {
+      "command": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python scripts/check_book_math.py",
+      "exit_code": 0,
+      "markdown_files": 54,
+      "math_expressions": 1169,
+      "issues": 0,
+      "boundary": "Source convention check, not a live GitHub render."
+    },
+    {
+      "command": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python scripts/check_course_integrity.py --json",
+      "exit_code": 0,
+      "chapters": 15,
+      "solutions": 15,
+      "appendices": 4,
+      "registered_notebooks": 70,
+      "lanes": {
+        "core": 60,
+        "optional": 1,
+        "extension": 9
+      },
+      "issues": 0
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "verified_report_source_maps": {
+    "experiments/reports/2026-10-04-text-reward-character-verification.json": {
+      "count": 22,
+      "mismatches": []
+    },
+    "experiments/reports/2026-10-04-critic-policy-acceptance.json": {
+      "count": 21,
+      "mismatches": []
+    },
+    "experiments/reports/2026-10-04-dpo-retention-verification.json": {
+      "count": 15,
+      "mismatches": []
+    },
+    "experiments/reports/2026-10-04-grpo-objective-controls-closing-verification.json": {
+      "count": 7,
+      "mismatches": []
+    }
+  },
+  "closing_source_sha256": {
+    "docs/course_manifest.json": "632af6b71990bd079425b6a3b52a353c60b7506f8c8786b17532651f1ccb70c5",
+    "docs/course_improvements.json": "a5c5948d34c6f23db018aa23f5aeedf1905cd457c85d527011ecfedfc7a5469f",
+    "docs/COURSE_IMPROVEMENT_PLAN.md": "418b0fdcd6afc5d9cf83537c9ef3f771a3e063bb4c3e72ce00214ddcb084cfdc",
+    "book/chapters/14-when-optimization-goes-wrong.md": "5e0d3c1a65f8cfd3be0493b4a7d060ae8b445c3152ad078e9861d35a248e19d6",
+    "book/solutions/14-when-optimization-goes-wrong.md": "7b1f0e121220d4523f1a3877630ef4942802f76209fd248cb3ff7b0c20951563",
+    "book/labs/14-when-optimization-goes-wrong.md": "818f420d82bdf84cfbafe0c0d599cd864a17f143ce4f11f2c8c1635463aa7814",
+    "visuals/animations/PROPOSALS.md": "5eb04b2f69528086cb71d9b642d1fdf3e3277919b29b4a43a3bdcc70508511f4",
+    "experiments/reports/2026-10-04-text-reward-character-verification.json": "8b069fc4e1c237d6fc234467ea748e28b6f9b23da5e474c73d88282e3d0e73ad",
+    "experiments/reports/2026-10-04-critic-policy-acceptance.json": "fa1620b058eb9fa7f2607413d85236ec3aaf2ef148ace2273a71b072a7bfc8d5",
+    "experiments/reports/2026-10-04-dpo-retention-verification.json": "e94a8296a552a36d2def40e25bf99f5da20400780b10fe9522d3c9676733149d",
+    "experiments/reports/2026-10-04-grpo-objective-controls-closing-verification.json": "6e056c98f7313a73383da581dbf3577fbdeef0f5a1725936d843f1e75d4d627d"
+  },
+  "ledger_counts": {
+    "in_progress": 6,
+    "planned": 5,
+    "complete": 7
+  },
+  "missing_evidence_paths": [],
+  "fresh_targeted_panel": {
+    "notebooks": [
+      {
+        "manifest_path": "/tmp/dongxi-course-check-f2rvj8n_/manifest.json",
+        "manifest_sha256": "d9f11fef10584fe29416bc68c42efa5008f105c58c1eac2e0a2329330dc19541",
+        "path": "notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+        "source_sha256": "ef2a00e131fd228ee0a66f466c102c6adee553417ccd4e4321a379e4dc47b0c8",
+        "current_source_matches": true,
+        "code_cells": 12,
+        "executed_code_cells": 12,
+        "images": 8,
+        "skipped": [],
+        "kernel_identity": {
+          "cuda_available": false,
+          "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "packages": {
+            "ipykernel": "7.4.0",
+            "matplotlib": "3.10.8",
+            "nbclient": "0.11.0",
+            "nbformat": "5.11.1",
+            "numpy": "2.5.3",
+            "peft": "0.20.0",
+            "tokenizers": "0.23.2",
+            "torch": "2.14.1+cpu",
+            "transformers": "5.18.0"
+          },
+          "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+          "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+          "python": "3.12.14",
+          "torch_cuda_build": null
+        },
+        "failures": []
+      },
+      {
+        "manifest_path": "/tmp/dongxi-course-check-w91bozid/manifest.json",
+        "manifest_sha256": "dca2ff985e78c464b7a363e878f8b553e15db23ebffdd0a843d478ff4e9d4aec",
+        "path": "notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb",
+        "source_sha256": "a623348fc2f5ab358dfa948f382a8c83da2aa78c86b1b118b66ab8a212333eb7",
+        "current_source_matches": true,
+        "code_cells": 8,
+        "executed_code_cells": 8,
+        "images": 5,
+        "skipped": [],
+        "kernel_identity": {
+          "cuda_available": false,
+          "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "packages": {
+            "ipykernel": "7.4.0",
+            "matplotlib": "3.10.8",
+            "nbclient": "0.11.0",
+            "nbformat": "5.11.1",
+            "numpy": "2.5.3",
+            "peft": "0.20.0",
+            "tokenizers": "0.23.2",
+            "torch": "2.14.1+cpu",
+            "transformers": "5.18.0"
+          },
+          "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+          "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+          "python": "3.12.14",
+          "torch_cuda_build": null
+        },
+        "failures": []
+      },
+      {
+        "manifest_path": "/tmp/dongxi-course-check-zduf82j3/manifest.json",
+        "manifest_sha256": "f4f2f293f7f2c8e5012b553196749e0c33b5ddfe6a204b31eefc5bf39220c6f9",
+        "path": "notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb",
+        "source_sha256": "dc405313504c8797de83a9d42589f6244b9091cbb1c88323cff1ee1f43b547e5",
+        "current_source_matches": true,
+        "code_cells": 7,
+        "executed_code_cells": 7,
+        "images": 5,
+        "skipped": [],
+        "kernel_identity": {
+          "cuda_available": false,
+          "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "packages": {
+            "ipykernel": "7.4.0",
+            "matplotlib": "3.10.8",
+            "nbclient": "0.11.0",
+            "nbformat": "5.11.1",
+            "numpy": "2.5.3",
+            "peft": "0.20.0",
+            "tokenizers": "0.23.2",
+            "torch": "2.14.1+cpu",
+            "transformers": "5.18.0"
+          },
+          "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+          "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+          "python": "3.12.14",
+          "torch_cuda_build": null
+        },
+        "failures": []
+      },
+      {
+        "manifest_path": "/tmp/dongxi-course-check-g4d8hhvf/manifest.json",
+        "manifest_sha256": "92fd2fa884fbec296500aee454d286f60655866911d6d8f25c60423239d5da6a",
+        "path": "notebooks/day-22/03_objective_weighting_and_filtering.ipynb",
+        "source_sha256": "b8ee2852901bab19aa9b666332f39b70c808a842fbc75b5a5d91377f7c5d03e7",
+        "current_source_matches": true,
+        "code_cells": 6,
+        "executed_code_cells": 6,
+        "images": 5,
+        "skipped": [],
+        "kernel_identity": {
+          "cuda_available": false,
+          "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+          "packages": {
+            "ipykernel": "7.4.0",
+            "matplotlib": "3.10.8",
+            "nbclient": "0.11.0",
+            "nbformat": "5.11.1",
+            "numpy": "2.5.3",
+            "peft": "0.20.0",
+            "tokenizers": "0.23.2",
+            "torch": "2.14.1+cpu",
+            "transformers": "5.18.0"
+          },
+          "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+          "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+          "python": "3.12.14",
+          "torch_cuda_build": null
+        },
+        "failures": []
+      }
+    ],
+    "executed_reference_cells": 33,
+    "images": 23,
+    "unfinished_skipped": 0,
+    "not_all_70_notebooks_rerun": true,
+    "all_current_notebook_source_hashes_match": true
+  },
+  "independent_reviews": [
+    {
+      "package": "DXI-07",
+      "reviewer": "/root",
+      "focused_tests": 25,
+      "three_seed_replay_exact": true,
+      "encoding_audit_exact": true,
+      "seconds": 3.9359,
+      "boundary": "Eight numerical fit/calibration/test/trace fields per seed; original word evidence remains."
+    },
+    {
+      "package": "DXI-10",
+      "reviewer": "/root/audit_reasoning",
+      "focused_tests": 16,
+      "full_twelve_arm_replay_exact_except_wall_time": true,
+      "seconds": 8.253,
+      "raw_training_paths_gae_recomputed": 15360,
+      "max_closed_sum_gae_error": 8.88e-16,
+      "all_21_current_hashes_match": true,
+      "boundary": "Tiny conditional actor/separate critic and saved text rewards; no production PPO."
+    },
+    {
+      "package": "DXI-11",
+      "reviewer": "/root",
+      "actual_full_replay_exit_code": 0,
+      "full_fits": 48,
+      "warmups": 3,
+      "all_non_timing_result_fields_exact": true,
+      "excluded_field_names": [
+        "seconds",
+        "wall_seconds"
+      ],
+      "seconds": 12.448545033985283,
+      "boundary": "An initial exact-object comparison failed because it included generation wall_seconds; the successful replay excludes timing only, not numerical failures."
+    },
+    {
+      "package": "DXI-12",
+      "reviewer": "/root/build_preference_audit",
+      "focused_tests": 18,
+      "three_seed_replay_exact_except_wall_time": true,
+      "seconds": 0.06837,
+      "all_six_current_raw_bound_source_hashes_match": true,
+      "all_five_figures_inspected": true
+    }
+  ],
+  "preserved_failures": [
+    "Original word-token reward collisions and negative held-out outcomes",
+    "Character reward's poor held-out ranking/process/outcome results",
+    "First character notebook cross-version retraining-equality failure and measured diagnosis",
+    "Critic constant answers, cap/style loops and weak independent quality",
+    "DPO initial shared-suite sibling-test failure, imperfect warm parity, noisy-label and held-out failures",
+    "Rejected rollout groups and their attempted token costs"
+  ],
+  "next_safe_work": [
+    "DXI-05 actual candidates and answer selection",
+    "DXI-09 teacher attempt audit and matched rejection SFT",
+    "DXI-14 batched cache/stopping/recovery",
+    "DXI-15 response-level distillation"
+  ],
+  "remaining_gates": [
+    "Approved pretrained/Spark compatibility and capability evaluation",
+    "DXI-03 separately approved empirical campaign",
+    "Actual Mac and hosted CI verification",
+    "DXI-06/16 selected enrichment and DXI-18 synthesis/live-visual acceptance"
+  ],
+  "no_new_actions": [
+    "No model/data acquisition or API use",
+    "No CUDA/heavy jobs or services",
+    "No shared Spark environment changes",
+    "No Git commit/push or publishing",
+    "No media production"
+  ]
+}

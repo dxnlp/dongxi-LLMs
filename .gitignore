@@ -28,6 +28,10 @@ wandb/
 .cache/
 data/raw/
 data/cache/
+# Bounded story-audit scratch index; small hash/metric receipts remain versionable.
+experiments/reports/2026-10-05-story-panel-audit/run-*/training-normalized-hashes.sqlite*
+# Keep the exclusive raw archive local; its gzip and closing receipts stay versionable.
+/experiments/reports/native-campaign-evidence-*/snapshot.json
 
 # Generated media and build output
 *.mp4
@@ -46,3 +50,7 @@ dist/
 *.log
 *.tmp
 *.swp
+
+# Isolated teaching environments/kernels are machine-local, not course artifacts.
+.venv-course/
+.course-kernel/

@@ -1,0 +1,15 @@
+{
+  "schema": "dongxi-independent-review-collection-failure-v1",
+  "status": "retained-collector-failure",
+  "command": "python3 experiments/reports/2026-10-05-native-acceptance-criteria-collector.py",
+  "actual_exit_code": 1,
+  "failed_collector_sha256": "3f732d22a2a213b52b18775ccb87c02404be9f16300cc2b161bd88428382457a",
+  "type": "AssertionError",
+  "location": "main line58",
+  "original_assertion": "assert interface['interface_sha256'] == canonical({key: value for key, value in interface.items() if key != 'interface_sha256'})",
+  "cause": "The review collector included descriptive source/class fields, whereas the documented interface fingerprint intentionally hashes schema/tokenizer/template/stops only.",
+  "repair": "Independently reproduce the existing four-field semantic digest specified by run_identity._interface_digest; continue checking declared ancestry against actual local Base bytes separately.",
+  "main_native_acceptance_review_status": "already passed; separate supplemental collection only",
+  "output_created": false,
+  "model_loaded": false
+}

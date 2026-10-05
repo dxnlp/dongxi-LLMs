@@ -1,0 +1,47 @@
+{
+  "fixture": "ignore-term",
+  "limits": {
+    "seconds": 2.0,
+    "reserve_bytes": 26843545600,
+    "sampling_seconds": 0.02,
+    "term_grace_seconds": 0.1,
+    "kill_reap_seconds": 1.0
+  },
+  "child_command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "dongxi_llms.campaign_supervisor",
+    "--fixture-child",
+    "ignore-term"
+  ],
+  "child_pid": 188677,
+  "actual_exit_code": -15,
+  "status": "failed",
+  "resource_measurement": "sampled, not continuous",
+  "observations": [
+    {
+      "available_bytes": 126750175232,
+      "source": "actual-linux-MemAvailable",
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 402,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      }
+    }
+  ],
+  "scope": "self-spawned leaf CPU child only; no model job or descendant supervision",
+  "stop_reason": "supervisor-failure",
+  "failure": {
+    "type": "OSError",
+    "message": "deliberate injected observer failure"
+  },
+  "signal_journal_errors": [],
+  "minimum_sampled_available_bytes": 126750175232,
+  "journal": {
+    "path": "experiments/reports/2026-10-04-campaign-supervisor-fixtures/observer-failure/events.jsonl",
+    "sha256": "6d0004073522479b0d024a5e2fccea70f2af388a4581c46e87e687b02857b3dc"
+  }
+}

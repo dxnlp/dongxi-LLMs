@@ -1,0 +1,807 @@
+{
+  "collected_at_utc": "2026-10-05T05:23:18.333288+00:00",
+  "independent_source_review": {
+    "finding": "No remaining blocking defect in bounded source scope; worker checks mean gone/zombie, not universal reaping or hostile containment",
+    "kind": "Read-only separate agent review, not independent model-behavior review",
+    "reviewed_module_sha256": "f84e68594f2c37a4b196647c4abf76bb26ff83fdd4e8bf7f25b10cae1d481706"
+  },
+  "inert_outcome_counts": {
+    "completed": 2,
+    "failed": 11,
+    "refused": 5
+  },
+  "inert_outcomes": [
+    {
+      "actual_exit_code": -15,
+      "cleanup_errors": [],
+      "failure": {
+        "message": "Expecting value: line 1 column 12 (char 11)",
+        "type": "JSONDecodeError"
+      },
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.5,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "sleep",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_atomic_truncated_observer_datagram_refuses_and_reaps/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": "controller-failure",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_atomic_truncated_observer_datagram_refuses_and_reaps"
+    },
+    {
+      "actual_exit_code": -15,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": {
+        "message": "Owned journal/fsync worker timed out",
+        "type": "TimeoutError"
+      },
+      "limits": {
+        "external_seconds": 0.15,
+        "logging_seconds": 1,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "sleep",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_blocking_fsync_callback_cannot_stall_deadline/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": "external-deadline",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_blocking_fsync_callback_cannot_stall_deadline"
+    },
+    {
+      "actual_exit_code": -15,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.15,
+        "logging_seconds": 0.25,
+        "probe_seconds": 1,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "sleep",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_blocking_observer_cannot_stall_deadline/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": "external-deadline",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_blocking_observer_cannot_stall_deadline"
+    },
+    {
+      "actual_exit_code": -9,
+      "cleanup_errors": [
+        "TERM: PermissionError"
+      ],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.2,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.05
+      },
+      "mode": "sleep",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_denied_term_does_not_skip_kill_reap_or_helper_cleanup/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": "external-deadline",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_denied_term_does_not_skip_kill_reap_or_helper_cleanup"
+    },
+    {
+      "actual_exit_code": -9,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.5,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.05
+      },
+      "mode": "ignore-term",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_external_deadline_reaps_term_ignoring_child/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": "external-deadline",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_external_deadline_reaps_term_ignoring_child"
+    },
+    {
+      "actual_exit_code": -15,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": {
+        "message": "authored logging failure",
+        "type": "OSError"
+      },
+      "limits": {
+        "external_seconds": 1,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "sleep",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_logging_failure_retained_and_child_stopped/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": "journal-failure",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_logging_failure_retained_and_child_stopped"
+    },
+    {
+      "actual_exit_code": null,
+      "cleanup_errors": [],
+      "failure": {
+        "message": "Exact bounded integer required: available_bytes",
+        "type": "ValueError"
+      },
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "success",
+      "native_profile_executed": false,
+      "observation_sources": [],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_malformed_or_missing_measurement_refuses/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "refused",
+      "stop_reason": "observer-failure",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_malformed_or_missing_measurement_refuses"
+    },
+    {
+      "actual_exit_code": 0,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.5,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.05
+      },
+      "mode": "exit-with-worker",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_natural_exit_and_term_cooperative_leader_drain_ignoring_workers/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "completed",
+      "stop_reason": null,
+      "test": "test_native_profile_supervisor.WatchdogTests.test_natural_exit_and_term_cooperative_leader_drain_ignoring_workers"
+    },
+    {
+      "actual_exit_code": -15,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.5,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.05
+      },
+      "mode": "term-with-worker",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_natural_exit_and_term_cooperative_leader_drain_ignoring_workers/control-2",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": "external-deadline",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_natural_exit_and_term_cooperative_leader_drain_ignoring_workers"
+    },
+    {
+      "actual_exit_code": -15,
+      "cleanup_errors": [],
+      "failure": {
+        "message": "authored observer failure",
+        "type": "RuntimeError"
+      },
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 1,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "sleep",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_observer_error_and_interruption_retained_after_spawn/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": "observer-failure",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_observer_error_and_interruption_retained_after_spawn"
+    },
+    {
+      "actual_exit_code": -15,
+      "cleanup_errors": [],
+      "failure": {
+        "message": "authored observer interruption",
+        "type": "KeyboardInterrupt"
+      },
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 1,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "sleep",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_observer_error_and_interruption_retained_after_spawn/control-2",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": "observer-interrupted",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_observer_error_and_interruption_retained_after_spawn"
+    },
+    {
+      "actual_exit_code": null,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "success",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_preflight_low_conflict_and_incomplete_refuse_without_signalling_conflicts/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "refused",
+      "stop_reason": "host-reserve-below-threshold",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_preflight_low_conflict_and_incomplete_refuse_without_signalling_conflicts"
+    },
+    {
+      "actual_exit_code": null,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "success",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_preflight_low_conflict_and_incomplete_refuse_without_signalling_conflicts/control-2",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "refused",
+      "stop_reason": "conflicting-process",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_preflight_low_conflict_and_incomplete_refuse_without_signalling_conflicts"
+    },
+    {
+      "actual_exit_code": null,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "success",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_preflight_low_conflict_and_incomplete_refuse_without_signalling_conflicts/control-3",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "refused",
+      "stop_reason": "incomplete-clearance",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_preflight_low_conflict_and_incomplete_refuse_without_signalling_conflicts"
+    },
+    {
+      "actual_exit_code": null,
+      "cleanup_errors": [],
+      "failure": {
+        "message": "authored second-start failure",
+        "type": "OSError"
+      },
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "success",
+      "native_profile_executed": false,
+      "observation_sources": [],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_second_helper_start_failure_cleans_first/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "refused",
+      "stop_reason": "controller-failure",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_second_helper_start_failure_cleans_first"
+    },
+    {
+      "actual_exit_code": -15,
+      "cleanup_errors": [],
+      "failure": {
+        "message": "Owned observer timed out",
+        "type": "TimeoutError"
+      },
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 1,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.1,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "sleep",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_stale_observer_stops_before_longer_deadline/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": "observer-timeout",
+      "test": "test_native_profile_supervisor.WatchdogTests.test_stale_observer_stops_before_longer_deadline"
+    },
+    {
+      "actual_exit_code": 0,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 1,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "success",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_success_and_nonzero_actual_exits/control-1",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "completed",
+      "stop_reason": null,
+      "test": "test_native_profile_supervisor.WatchdogTests.test_success_and_nonzero_actual_exits"
+    },
+    {
+      "actual_exit_code": 7,
+      "cleanup_errors": [],
+      "failure": null,
+      "final_record_retained": true,
+      "journal_error": null,
+      "limits": {
+        "external_seconds": 1,
+        "logging_seconds": 0.25,
+        "probe_seconds": 0.25,
+        "reap_seconds": 0.5,
+        "reserve_bytes": 26843545600,
+        "term_seconds": 0.1
+      },
+      "mode": "exit7",
+      "native_profile_executed": false,
+      "observation_sources": [
+        "injected-inert-CPU-control"
+      ],
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_success_and_nonzero_actual_exits/control-2",
+      "returned_queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "status": "failed",
+      "stop_reason": null,
+      "test": "test_native_profile_supervisor.WatchdogTests.test_success_and_nonzero_actual_exits"
+    }
+  ],
+  "original_acceptance_scope": {
+    "actual_fields": 945,
+    "actual_genealogy": [],
+    "all_actual_null": true,
+    "jobs_started": 0,
+    "rows": 45
+  },
+  "references": {
+    "builder_final": {
+      "bytes": 1762,
+      "path": "experiments/reports/2026-10-05-native-profile-inspection/builder-attempt-02/verification.json",
+      "sha256": "d26dda440793c0bb19655113df4e3c89ca0140ddb1a365d46ae77b3685fdb31d"
+    },
+    "builder_warning": {
+      "bytes": 1734,
+      "path": "experiments/reports/2026-10-05-native-profile-inspection/builder-attempt-01/verification.json",
+      "sha256": "ddbeafb49bb7214d619aa4c00feb04a2c24798f0612b2c4e3663df24fb44ffff"
+    },
+    "portable_story": {
+      "bytes": 403867,
+      "path": "experiments/reports/2026-10-05-native-profile-inspection/portable-story-verification.json",
+      "sha256": "c668ef05363c5883cf809be0aa341db4900376b1f1b40c5373c6e13e352bf919"
+    },
+    "root_focused": {
+      "bytes": 224698,
+      "path": "experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/verification.json",
+      "sha256": "4494834e4f18e465aa9c90f7adf2cd658c409340a76cb6df228e7e5d485cdf37"
+    },
+    "scope_baseline": {
+      "bytes": 4320,
+      "path": "experiments/reports/2026-10-05-native-profile-inspection/scope-baseline.json",
+      "sha256": "eda47f45a9f5f52d7846cfc6f88bcb7f4619e7d650423fbb36befa67189f3a08"
+    }
+  },
+  "root_panels": {
+    "story": {
+      "actual_exit_code": 0,
+      "process_seconds": 16.498867404996417,
+      "source_bindings_stable": true,
+      "tests": 37,
+      "unittest_seconds": 15.616871814010665
+    },
+    "watchdog_and_regressions": {
+      "actual_exit_code": 0,
+      "process_seconds": 6.776411318045575,
+      "source_bindings_stable": true,
+      "tests": 46,
+      "unittest_seconds": 6.684410237008706
+    }
+  },
+  "schema": "dongxi-native-profile-source-verification-v1",
+  "scope": "Bounded Linux CPU source readiness only; no native/pretrained/tokenizer/GPU load or actual Mac/hosted execution",
+  "source_sha256": {
+    "experiments/specs/2026-10-05-native-profile-watchdog.md": "359c24fa8823ed387e46b0e146810b2f862cbe6bb147dbd692bb16624f52e9b8",
+    "scripts/prepare_native_sft_profile.py": "c6f56b7029316b8e063e29e136fc17b11c329ac883601ff8e7f6156d564459fe",
+    "scripts/run_chapter09_spark_sft.py": "f8b51cda52e205c457cef34001e3165ec9f7ad381cb84d8e76a4dd1467357c40",
+    "scripts/run_cpu_verification.py": "eb0d506700840f8fd8cd5620a1d53c724435c9c8b946ee83cbc852e48a59a7d4",
+    "scripts/train_stories.py": "36f1b5c06cfd40761af09f0e04b0b9357504fb0bb606659b5e98e5bb29008155",
+    "src/dongxi_llms/campaign_supervisor.py": "d2959a7856bc0cc4fb6b6623387d45bbc0d7193607a52c29c59bb8823b97d253",
+    "src/dongxi_llms/native_profile_supervisor.py": "f84e68594f2c37a4b196647c4abf76bb26ff83fdd4e8bf7f25b10cae1d481706",
+    "src/dongxi_llms/production_stage.py": "96ea25d4051c44f93feec068b1bb85b800386d255bb422ba272607649bb2c153",
+    "src/dongxi_llms/staged_campaign.py": "9bf79d509467c697c94f44f6d5d34248b39ece5d723636bfef2cbee47c9c89b1",
+    "src/dongxi_llms/stories_training.py": "199169d994b2faa35a5dc69226c9c83dca4573c04210c0d65bdf86b96e3e5ef5",
+    "src/dongxi_llms/stories_work_lab.py": "cc4c35f3ef5ea9d9fc241c416762ba7024b903ee754217e6db0d3b9b7ccd7990",
+    "tests/test_cpu_reproduction.py": "84e6f8d00392bda1fb749afeb466dae83fba42a758a69615802ea28f3f511790",
+    "tests/test_native_profile_supervisor.py": "9ea0a42755c943a2fd1ce7c79a4ed62c1a2bb12e45ce6022d7fc230a890461b9",
+    "tests/test_stories_work_budget.py": "a49f5a21b1c2b178579ff256b80a307b435a3984e0a587dffa77f421105af434"
+  },
+  "specification": "experiments/specs/2026-10-05-native-profile-watchdog.md",
+  "story_arms": [
+    {
+      "actual_exit_code": 0,
+      "checkpointing": false,
+      "child_pid": 239071,
+      "exact_fresh_replay": true,
+      "failed_tickets": [
+        9
+      ],
+      "resource_observation": {
+        "cleared": true,
+        "failure": null,
+        "measurement_boundary": "Single pre-child available-memory point sample; not a continuous minimum or production clearance",
+        "observed_available_bytes": 126334914560,
+        "policy": "tiny-cpu-teaching2",
+        "required_available_bytes": 2147483648,
+        "source": "actual-psutil-available-point-sample"
+      },
+      "seed": 909,
+      "state_sha256": "4720283554a8f56533419a72d5481440af67eb62870735940cc27240bffeddf6"
+    },
+    {
+      "actual_exit_code": 0,
+      "checkpointing": true,
+      "child_pid": 239093,
+      "exact_fresh_replay": true,
+      "failed_tickets": [
+        9
+      ],
+      "resource_observation": {
+        "cleared": true,
+        "failure": null,
+        "measurement_boundary": "Single pre-child available-memory point sample; not a continuous minimum or production clearance",
+        "observed_available_bytes": 126126899200,
+        "policy": "tiny-cpu-teaching2",
+        "required_available_bytes": 2147483648,
+        "source": "actual-psutil-available-point-sample"
+      },
+      "seed": 909,
+      "state_sha256": "4720283554a8f56533419a72d5481440af67eb62870735940cc27240bffeddf6"
+    },
+    {
+      "actual_exit_code": 0,
+      "checkpointing": false,
+      "child_pid": 239094,
+      "exact_fresh_replay": true,
+      "failed_tickets": [
+        9
+      ],
+      "resource_observation": {
+        "cleared": true,
+        "failure": null,
+        "measurement_boundary": "Single pre-child available-memory point sample; not a continuous minimum or production clearance",
+        "observed_available_bytes": 125884715008,
+        "policy": "tiny-cpu-teaching2",
+        "required_available_bytes": 2147483648,
+        "source": "actual-psutil-available-point-sample"
+      },
+      "seed": 910,
+      "state_sha256": "fa48dfef14df087985bda2ac8629cc8e12e2d985cc3404c076521fa05dd11cf4"
+    },
+    {
+      "actual_exit_code": 0,
+      "checkpointing": true,
+      "child_pid": 239095,
+      "exact_fresh_replay": true,
+      "failed_tickets": [
+        9
+      ],
+      "resource_observation": {
+        "cleared": true,
+        "failure": null,
+        "measurement_boundary": "Single pre-child available-memory point sample; not a continuous minimum or production clearance",
+        "observed_available_bytes": 125876142080,
+        "policy": "tiny-cpu-teaching2",
+        "required_available_bytes": 2147483648,
+        "source": "actual-psutil-available-point-sample"
+      },
+      "seed": 910,
+      "state_sha256": "fa48dfef14df087985bda2ac8629cc8e12e2d985cc3404c076521fa05dd11cf4"
+    }
+  ],
+  "unexecuted": [
+    "pinned Base acquisition/tokenizer sizing",
+    "native CUDA/BF16 profile",
+    "pretrained inference or learning campaign",
+    "Mac/hosted verification",
+    "Git/publication/service/quota/cgroup/media changes"
+  ]
+}

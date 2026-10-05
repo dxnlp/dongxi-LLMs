@@ -1,0 +1,38 @@
+{
+  "schema": "dongxi-matched-chosen-sft-fixture-v1",
+  "origin": "Original existing Chapter11 location literals; new authored scenario groups and random local model only",
+  "inputs": {
+    "train": "fixtures/chapter11/train.jsonl",
+    "validation": "fixtures/chapter11/validation.jsonl",
+    "evaluation": "fixtures/chapter11/evaluation.jsonl"
+  },
+  "groups": {
+    "pref-train-001": "lily-ball-red-box",
+    "pref-train-002": "tom-key-blue-bag",
+    "pref-train-003": "mia-book-wooden-table",
+    "pref-train-004": "sam-cup-kitchen-cabinet",
+    "pref-train-005": "noor-toy-small-bed",
+    "pref-train-006": "leo-pen-black-case",
+    "pref-train-007": "ava-apple-wicker-basket",
+    "pref-train-008": "ben-scarf-front-door",
+    "pref-valid-001": "zia-doll-silver-trunk",
+    "pref-valid-002": "ravi-watch-narrow-desk",
+    "pref-valid-003": "erin-blanket-yellow-chest",
+    "pref-valid-004": "omar-shoe-back-gate",
+    "pref-test-001": "inez-ring-purple-pouch",
+    "pref-test-002": "jun-brush-tall-vase",
+    "pref-test-003": "elin-ticket-green-folder",
+    "pref-test-004": "felix-coin-orange-tin"
+  },
+  "recipe": {
+    "seeds": [1818, 1819], "updates": 6, "accumulation": 2,
+    "learning_rate": 0.008, "weight_decay": 0.01, "clip_norm": 1.0,
+    "beta": 0.2, "max_length": 64, "max_new_tokens": 8,
+    "device": "cpu", "dtype": "float32", "decoding": "greedy-uncached"
+  },
+  "model": {
+    "hidden_size": 16, "intermediate_size": 32, "num_hidden_layers": 1,
+    "num_attention_heads": 2, "num_key_value_heads": 1,
+    "head_dim": 8, "max_position_embeddings": 64, "attention_dropout": 0.0
+  }
+}

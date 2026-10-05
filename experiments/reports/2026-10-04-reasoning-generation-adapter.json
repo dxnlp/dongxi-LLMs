@@ -1,0 +1,3334 @@
+{
+  "schema_version": 1,
+  "package": "DXI-02",
+  "component": "local-hf-response-v1",
+  "status": "passed bounded CPU random-checkpoint adapter",
+  "date_utc": "2026-10-04T20:25:28.681602+00:00",
+  "mode": "Actual local randomly initialized HF CPU forwards; no pretrained/model acquisition",
+  "base_commit": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4",
+  "dirty_state": [
+    " M .gitignore",
+    " M AGENTS.md",
+    " M BOOK.md",
+    " M LEARNING_MEMORY.md",
+    " M PROGRESS.md",
+    " M README.md",
+    " M ROADMAP.md",
+    " M book/appendices/d-reproduction-and-environments.md",
+    " M book/chapters/01-evidence-before-optimization.md",
+    " M book/chapters/07-evaluation-is-a-contract.md",
+    " M book/chapters/10-preferences-and-reward-models.md",
+    " M book/chapters/12-language-generation-as-a-policy.md",
+    " M book/chapters/13-group-relative-policy-optimization.md",
+    " M book/chapters/14-when-optimization-goes-wrong.md",
+    " M book/chapters/15-distill-evaluate-and-defend.md",
+    " M book/labs/01-evidence-before-optimization.md",
+    " M book/labs/07-evaluation-is-a-contract.md",
+    " M book/labs/09-supervised-fine-tuning.md",
+    " M book/labs/10-preferences-and-reward-models.md",
+    " M book/labs/11-direct-preference-optimization.md",
+    " M book/labs/13-group-relative-policy-optimization.md",
+    " M book/labs/14-when-optimization-goes-wrong.md",
+    " M book/solutions/01-evidence-before-optimization.md",
+    " M book/solutions/07-evaluation-is-a-contract.md",
+    " M book/solutions/10-preferences-and-reward-models.md",
+    " M book/solutions/13-group-relative-policy-optimization.md",
+    " M book/solutions/14-when-optimization-goes-wrong.md",
+    " M docs/EXPERIMENT_MATRIX.md",
+    " M docs/NOTEBOOK_CURRICULUM.md",
+    " M docs/handoffs/CURRENT.md",
+    " M experiments/specs/day-23-qwen-rlvr.md",
+    " M notebooks/README.md",
+    " M notebooks/day-01/README.md",
+    " M notebooks/day-10/README.md",
+    " M notebooks/day-15/README.md",
+    " M notebooks/day-16/README.md",
+    " M notebooks/day-20/README.md",
+    " M notebooks/day-23/README.md",
+    " M notebooks/requirements-course.txt",
+    " M pyproject.toml",
+    " M scripts/check_course_integrity.py",
+    " M scripts/run_chapter09_spark_sft.py",
+    " M scripts/run_chapter11_spark_dpo.py",
+    " M scripts/verify_course_notebooks.py",
+    " M src/dongxi_llms/qwen_rlvr_lab.py",
+    " M tests/test_course_verification.py",
+    " M tests/test_dpo_checkpoint_interface.py",
+    " M tests/test_spark_sft_contract.py",
+    " M visuals/animations/PROPOSALS.md",
+    "?? .github/",
+    "?? docs/COURSE_IMPROVEMENT_PLAN.md",
+    "?? docs/REFERENCE_REPOSITORY_AUDIT.md",
+    "?? docs/course_improvements.json",
+    "?? docs/course_manifest.json",
+    "?? experiments/reports/2026-10-04-preference-audit-hardening.json",
+    "?? experiments/reports/2026-10-04-preference-audit-hardening.md",
+    "?? experiments/reports/2026-10-04-preference-audit-verification.json",
+    "?? experiments/reports/2026-10-04-preference-audit.json",
+    "?? experiments/reports/2026-10-04-preference-audit.md",
+    "?? experiments/reports/2026-10-04-reasoning-evaluation.json",
+    "?? experiments/reports/2026-10-04-reasoning-evaluation.md",
+    "?? experiments/reports/2026-10-04-run-identity.json",
+    "?? experiments/reports/2026-10-04-run-identity.md",
+    "?? experiments/reports/2026-10-04-sampling-support-hardening.json",
+    "?? experiments/reports/2026-10-04-sampling-support-hardening.md",
+    "?? experiments/reports/2026-10-04-sampling-support.json",
+    "?? experiments/reports/2026-10-04-sampling-support.md",
+    "?? experiments/reports/2026-10-04-text-reward.json",
+    "?? experiments/specs/2026-10-04-course-reproduction.md",
+    "?? experiments/specs/2026-10-04-preference-audit.md",
+    "?? experiments/specs/2026-10-04-reasoning-controls.md",
+    "?? experiments/specs/2026-10-04-reasoning-evaluation.md",
+    "?? experiments/specs/2026-10-04-reasoning-generation-adapter.md",
+    "?? experiments/specs/2026-10-04-run-identity.md",
+    "?? experiments/specs/2026-10-04-sampling-support.md",
+    "?? experiments/specs/2026-10-04-text-reward.md",
+    "?? fixtures/preference-audit/",
+    "?? fixtures/reasoning-controls/",
+    "?? fixtures/reasoning-evaluation/",
+    "?? fixtures/text-reward/",
+    "?? notebooks/day-01/04_checkpoint_interface.ipynb",
+    "?? notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+    "?? notebooks/day-15/03_preference_collection_and_judges.ipynb",
+    "?? notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+    "?? notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+    "?? notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb",
+    "?? notebooks/figures/chapter-01/day-01-04_checkpoint_interface-01.png",
+    "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-01.png",
+    "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-02.png",
+    "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-03.png",
+    "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-04.png",
+    "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-01.png",
+    "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-02.png",
+    "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-03.png",
+    "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-01.png",
+    "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-02.png",
+    "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-03.png",
+    "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-04.png",
+    "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-05.png",
+    "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-01.png",
+    "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-02.png",
+    "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-03.png",
+    "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-04.png",
+    "?? scripts/evaluate_reasoning_records.py",
+    "?? scripts/generate_reasoning_records.py",
+    "?? scripts/merge_course_adapter.py",
+    "?? scripts/run_cpu_verification.py",
+    "?? scripts/verify_reasoning_generation.py",
+    "?? src/dongxi_llms.egg-info/",
+    "?? src/dongxi_llms/checkpoint_merge.py",
+    "?? src/dongxi_llms/course_manifest.py",
+    "?? src/dongxi_llms/preference_audit.py",
+    "?? src/dongxi_llms/reasoning_controls.py",
+    "?? src/dongxi_llms/reasoning_evaluation.py",
+    "?? src/dongxi_llms/reasoning_generation.py",
+    "?? src/dongxi_llms/run_identity.py",
+    "?? src/dongxi_llms/sampling_likelihood_lab.py",
+    "?? src/dongxi_llms/text_reward_lab.py",
+    "?? tests/test_course_manifest.py",
+    "?? tests/test_cpu_reproduction.py",
+    "?? tests/test_preference_audit.py",
+    "?? tests/test_reasoning_controls.py",
+    "?? tests/test_reasoning_evaluation.py",
+    "?? tests/test_reasoning_generation.py",
+    "?? tests/test_run_identity.py",
+    "?? tests/test_sampling_likelihood_lab.py",
+    "?? tests/test_text_reward_lab.py",
+    "?? uv.lock"
+  ],
+  "environment": {
+    "python_version": "3.12.14",
+    "interpreter": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "machine": "aarch64",
+    "packages": {
+      "torch": "2.13.0+cu130",
+      "transformers": "5.16.1",
+      "tokenizers": "0.23.1",
+      "peft": "0.20.0",
+      "numpy": "2.5.2",
+      "matplotlib": "3.10.8",
+      "nbformat": "5.11.1",
+      "nbclient": "0.11.0",
+      "huggingface-hub": "1.28.0"
+    },
+    "environment_lock": {
+      "status": "not_supplied",
+      "path": null,
+      "sha256": null
+    }
+  },
+  "device": "cpu",
+  "dtype": "float32",
+  "random_model": {
+    "class": "GPT2LMHeadModel",
+    "seed": 1004,
+    "parameters": 4080,
+    "config": {
+      "transformers_version": "5.16.1",
+      "architectures": [
+        "GPT2LMHeadModel"
+      ],
+      "output_hidden_states": false,
+      "return_dict": true,
+      "dtype": "float32",
+      "chunk_size_feed_forward": 0,
+      "is_encoder_decoder": false,
+      "id2label": {
+        "0": "LABEL_0",
+        "1": "LABEL_1"
+      },
+      "label2id": {
+        "LABEL_0": 0,
+        "LABEL_1": 1
+      },
+      "problem_type": null,
+      "vocab_size": 16,
+      "n_positions": 32,
+      "n_embd": 16,
+      "n_layer": 1,
+      "n_head": 2,
+      "n_inner": null,
+      "activation_function": "gelu_new",
+      "resid_pdrop": 0.0,
+      "embd_pdrop": 0.0,
+      "attn_pdrop": 0.0,
+      "layer_norm_epsilon": 1e-05,
+      "initializer_range": 0.02,
+      "summary_type": "cls_index",
+      "summary_use_proj": true,
+      "summary_activation": null,
+      "summary_proj_to_labels": true,
+      "summary_first_dropout": 0.1,
+      "scale_attn_weights": true,
+      "use_cache": true,
+      "bos_token_id": 2,
+      "eos_token_id": 1,
+      "pad_token_id": 1,
+      "scale_attn_by_inverse_layer_idx": false,
+      "reorder_and_upcast_attn": false,
+      "add_cross_attention": false,
+      "tie_word_embeddings": true,
+      "_name_or_path": "",
+      "n_ctx": 32,
+      "model_type": "gpt2",
+      "output_attentions": false
+    },
+    "checkpoint_sha256": {
+      "chat_template.jinja": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+      "config.json": "59f3de4a3bf49c57b57d3dbaa0ed04c08cfa1385cc02d06a84ed1799dbed2941",
+      "generation_config.json": "2179bfff1642b04e82736f7914d2308c25acd7cc02482afde5904291c4375558",
+      "model.safetensors": "cb6a5148a39b8ec51ee009da34c52132b9ccb3d4c28b129003490878ae52f39c",
+      "tokenizer.json": "17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf",
+      "tokenizer_config.json": "b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d"
+    }
+  },
+  "fixture_items": [
+    {
+      "id": "arithmetic-a",
+      "source_group": "original-arithmetic",
+      "split": "dev",
+      "task": "arithmetic",
+      "prompt": "2 + 2 ?",
+      "kind": "math",
+      "reference": "4",
+      "extraction": "whole",
+      "format_policy": "single_integer"
+    },
+    {
+      "id": "greeting-a",
+      "source_group": "original-greeting",
+      "split": "dev",
+      "task": "greeting",
+      "prompt": "hello world",
+      "kind": "text",
+      "reference": "hello",
+      "extraction": "whole",
+      "format_policy": "any"
+    }
+  ],
+  "fixture_origin": "Original course-authored tokenizer, suite and random weights; not upstream data/results",
+  "reference_workspace": "/tmp/dongxi-generation-reference-ke9mj9ge",
+  "commands": [
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/generate_reasoning_records.py",
+        "--items",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/items.json",
+        "--checkpoint",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/random-hf",
+        "--settings",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/raw-settings.json",
+        "--freeze-contract",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"contract\": \"/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json\", \"identity\": \"9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa\", \"mode\": \"tokenizer-only contract freeze; no model weights loaded\"}\n",
+      "stderr": "",
+      "seconds": 1.844707455020398
+    },
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/generate_reasoning_records.py",
+        "--items",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/items.json",
+        "--checkpoint",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/random-hf",
+        "--contract",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json",
+        "--output",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/raw-run"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"status\": \"completed\", \"adapter_version\": \"local-hf-response-v1\", \"checkpoint_id\": \"local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba\", \"contract_id\": \"9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa\", \"identity_sha256\": \"b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656\", \"record_count\": 4, \"elapsed_seconds\": 1.9284567489812616, \"inputs_unchanged\": true, \"limitations\": [\"Local generation events, not a pretrained capability or human review claim\", \"Full-prefix loop without KV caching; measured times are not optimized inference benchmarks\", \"Deadline checked at forward boundaries, not an external hard-kill supervisor\", \"New invocation only; saved partial events are not an exact-resume guarantee\"]}\n",
+      "stderr": "\nLoading weights:   0%|          | 0/16 [00:00<?, ?it/s]\nLoading weights: 100%|██████████| 16/16 [00:00<00:00, 8599.29it/s]\n",
+      "seconds": 2.3382426780008245
+    },
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/evaluate_reasoning_records.py",
+        "--items",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/items.json",
+        "--contract",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json",
+        "--records",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/raw-run/responses.jsonl"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"contract\": {\n    \"schema_version\": \"dongxi-response-record-v1\",\n    \"parser_version\": \"bounded-rational-set-interval-v1\",\n    \"rubric_version\": \"explicit-marker-fixture-v1\",\n    \"suite_sha256\": \"bee487ff7bb64c1e599234278d8d4b83ed50285632a893773c758bc41bb07df7\",\n    \"settings\": {\n      \"template_id\": \"original-tiny-raw-v1\",\n      \"thinking_mode\": \"not-applicable\",\n      \"decoding\": {\n        \"mode\": \"sample\",\n        \"seed\": 1004,\n        \"temperature\": 1.0,\n        \"top_k\": null,\n        \"top_p\": 1.0\n      },\n      \"stopping\": {\n        \"eos_token_ids\": [\n          1\n        ],\n        \"turn_stop_token_ids\": [\n          3\n        ],\n        \"pad_token_id\": 1\n      },\n      \"max_new_tokens\": 4,\n      \"generation\": {\n        \"input_mode\": \"raw\",\n        \"template\": null,\n        \"context_window\": 24,\n        \"samples\": 2,\n        \"device\": \"cpu\",\n        \"dtype\": \"float32\",\n        \"add_special_tokens\": false,\n        \"max_run_seconds\": 30,\n        \"scoring_text\": \"decode_without_terminal_stop\",\n        \"interface\": {\n          \"schema_version\": 1,\n          \"tokenizer\": {\n            \"vocab_sha256\": \"37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46\",\n            \"encoding_sha256\": \"1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f\",\n            \"special_ids\": {\n              \"bos_token_id\": 2,\n              \"eos_token_id\": 1,\n              \"pad_token_id\": 1,\n              \"unk_token_id\": 0,\n              \"sep_token_id\": null,\n              \"cls_token_id\": null,\n              \"mask_token_id\": null,\n              \"additional_special_tokens_ids\": null\n            },\n            \"vocab_size\": 16,\n            \"max_token_id\": 15,\n            \"wrapper_settings\": {\n              \"add_bos_token\": false,\n              \"add_eos_token\": false,\n              \"split_special_tokens\": false,\n              \"clean_up_tokenization_spaces\": false,\n              \"spaces_between_special_tokens\": null\n            }\n          },\n          \"template_sha256\": null,\n          \"generation_stop_ids\": [\n            1,\n            3\n          ],\n          \"source\": {\n            \"tokenizer_id\": null,\n            \"tokenizer_revision\": null\n          },\n          \"implementation_class\": \"TokenizersBackend\",\n          \"interface_sha256\": \"6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21\"\n        }\n      }\n    },\n    \"identity\": \"9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa\",\n    \"preparation_inputs\": {\n      \"settings_sha256\": \"ab1cd32a542081ae651c52d471b38fbf68d460da3020227454f19f2795df8b74\",\n      \"items_sha256\": \"6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc\",\n      \"tokenizer_files\": {\n        \"chat_template.jinja\": \"3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9\",\n        \"tokenizer.json\": \"17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf\",\n        \"tokenizer_config.json\": \"b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d\"\n      }\n    }\n  },\n  \"mode\": \"offline saved-response replay\",\n  \"rows\": [\n    {\n      \"schema_version\": \"dongxi-response-record-v1\",\n      \"adapter_version\": \"local-hf-response-v1\",\n      \"contract_id\": \"9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa\",\n      \"checkpoint_id\": \"local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba\",\n      \"sample_id\": \"sample-0-seed-994313480670987209\",\n      \"item_id\": \"arithmetic-a\",\n      \"source_group\": \"original-arithmetic\",\n      \"task\": \"arithmetic\",\n      \"split\": \"dev\",\n      \"raw_response\": \"THINK [EOS]\",\n      \"response_text\": \"THINK\",\n      \"token_ids\": [\n        4,\n        1\n      ],\n      \"prompt_tokens\": 4,\n      \"generated_tokens\": 2,\n      \"stop_reason\": \"eos\",\n      \"truncated\": false,\n      \"error\": null,\n      \"error_stage\": null,\n      \"serialized_prompt\": \"2 + 2 ?\",\n      \"prompt_token_ids\": [\n        10,\n        11,\n        10,\n        12\n      ],\n      \"attempt_seed\": 994313480670987209,\n      \"sample_index\": 0,\n      \"selected_behavior_log_probabilities\": [\n        -2.7958206260136844,\n        -2.7263765910607205\n      ],\n      \"selected_raw_log_probabilities\": [\n        -2.7958206260136844,\n        -2.7263765910607205\n      ],\n      \"retained_support_sizes\": [\n        16,\n        16\n      ],\n      \"stop_token_id\": 1,\n      \"checkpoint_interface_sha256\": \"6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21\",\n      \"input_identity_sha256\": \"b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656\",\n      \"input_sha256\": {\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/items.json\": \"6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc\",\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json\": \"c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274\"\n      },\n      \"settings_sha256\": \"d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c\",\n      \"decoding\": {\n        \"mode\": \"sample\",\n        \"seed\": 1004,\n        \"temperature\": 1.0,\n        \"top_k\": null,\n        \"top_p\": 1.0\n      },\n      \"thinking_mode\": \"not-applicable\",\n      \"cost\": {\n        \"wall_seconds\": 0.04048455698648468,\n        \"generation_tokens\": 2,\n        \"scoring_tokens\": 0,\n        \"model_forward_tokens\": 9,\n        \"attempted_forward_tokens\": 9,\n        \"forward_calls\": 2,\n        \"attempted_forward_calls\": 2,\n        \"forward_seconds\": 0.02767598902573809,\n        \"prefill_seconds\": 0.027181016019312665,\n        \"decode_seconds\": 0.0004949730064254254\n      },\n      \"cost_boundary\": \"Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring\",\n      \"timing_boundary\": \"CPU host wall time\",\n      \"interrupted\": false,\n      \"raw_response_sha256\": \"793e2412330e562f3c96ba1063160ca07f2ecefce8fa53377520506c50fb79c9\",\n      \"response_text_sha256\": \"94c1f856fc08fb446e6ae3aeb2dcd7c536c21113b6db1c5a6a8ce417561a0105\",\n      \"extraction\": {\n        \"status\": \"EXTRACTED\",\n        \"answer\": \"THINK\",\n        \"mechanism\": \"whole\"\n      },\n      \"format_valid\": false,\n      \"task_success\": false,\n      \"natural_termination\": true,\n      \"correct\": false,\n      \"canonicalization\": {\n        \"status\": \"UNSUPPORTED\",\n        \"reason\": \"outside exact rational grammar\"\n      },\n      \"status\": \"UNSUPPORTED\",\n      \"reason\": \"outside exact rational grammar\"\n    },\n    {\n      \"schema_version\": \"dongxi-response-record-v1\",\n      \"adapter_version\": \"local-hf-response-v1\",\n      \"contract_id\": \"9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa\",\n      \"checkpoint_id\": \"local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba\",\n      \"sample_id\": \"sample-1-seed-624892899481925806\",\n      \"item_id\": \"arithmetic-a\",\n      \"source_group\": \"original-arithmetic\",\n      \"task\": \"arithmetic\",\n      \"split\": \"dev\",\n      \"raw_response\": \"+ [BOS] [EOS]\",\n      \"response_text\": \"+ [BOS]\",\n      \"token_ids\": [\n        11,\n        2,\n        1\n      ],\n      \"prompt_tokens\": 4,\n      \"generated_tokens\": 3,\n      \"stop_reason\": \"eos\",\n      \"truncated\": false,\n      \"error\": null,\n      \"error_stage\": null,\n      \"serialized_prompt\": \"2 + 2 ?\",\n      \"prompt_token_ids\": [\n        10,\n        11,\n        10,\n        12\n      ],\n      \"attempt_seed\": 624892899481925806,\n      \"sample_index\": 1,\n      \"selected_behavior_log_probabilities\": [\n        -2.833788374662637,\n        -2.765521694236846,\n        -2.810298106884865\n      ],\n      \"selected_raw_log_probabilities\": [\n        -2.833788374662637,\n        -2.765521694236846,\n        -2.810298106884865\n      ],\n      \"retained_support_sizes\": [\n        16,\n        16,\n        16\n      ],\n      \"stop_token_id\": 1,\n      \"checkpoint_interface_sha256\": \"6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21\",\n      \"input_identity_sha256\": \"b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656\",\n      \"input_sha256\": {\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/items.json\": \"6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc\",\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json\": \"c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274\"\n      },\n      \"settings_sha256\": \"d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c\",\n      \"decoding\": {\n        \"mode\": \"sample\",\n        \"seed\": 1004,\n        \"temperature\": 1.0,\n        \"top_k\": null,\n        \"top_p\": 1.0\n      },\n      \"thinking_mode\": \"not-applicable\",\n      \"cost\": {\n        \"wall_seconds\": 0.022640395996859297,\n        \"generation_tokens\": 3,\n        \"scoring_tokens\": 0,\n        \"model_forward_tokens\": 15,\n        \"attempted_forward_tokens\": 15,\n        \"forward_calls\": 3,\n        \"attempted_forward_calls\": 3,\n        \"forward_seconds\": 0.0021908219787292182,\n        \"prefill_seconds\": 0.0006972929986659437,\n        \"decode_seconds\": 0.0014935289800632745\n      },\n      \"cost_boundary\": \"Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring\",\n      \"timing_boundary\": \"CPU host wall time\",\n      \"interrupted\": false,\n      \"raw_response_sha256\": \"6e408fafe5e86f7a91b6e329ac237e9acdb00d06d0bf7fa93f5b5420b2677fa9\",\n      \"response_text_sha256\": \"6f49fa30e83e278d0241dbe66902fe3cb3f777407e02a43d42185cf49e3e41d4\",\n      \"extraction\": {\n        \"status\": \"EXTRACTED\",\n        \"answer\": \"+ [BOS]\",\n        \"mechanism\": \"whole\"\n      },\n      \"format_valid\": false,\n      \"task_success\": false,\n      \"natural_termination\": true,\n      \"correct\": false,\n      \"canonicalization\": {\n        \"status\": \"UNSUPPORTED\",\n        \"reason\": \"outside exact rational grammar\"\n      },\n      \"status\": \"UNSUPPORTED\",\n      \"reason\": \"outside exact rational grammar\"\n    },\n    {\n      \"schema_version\": \"dongxi-response-record-v1\",\n      \"adapter_version\": \"local-hf-response-v1\",\n      \"contract_id\": \"9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa\",\n      \"checkpoint_id\": \"local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba\",\n      \"sample_id\": \"sample-0-seed-7899095024623998496\",\n      \"item_id\": \"greeting-a\",\n      \"source_group\": \"original-greeting\",\n      \"task\": \"greeting\",\n      \"split\": \"dev\",\n      \"raw_response\": \"user 4 [TURN]\",\n      \"response_text\": \"user 4\",\n      \"token_ids\": [\n        6,\n        9,\n        3\n      ],\n      \"prompt_tokens\": 2,\n      \"generated_tokens\": 3,\n      \"stop_reason\": \"turn_stop\",\n      \"truncated\": false,\n      \"error\": null,\n      \"error_stage\": null,\n      \"serialized_prompt\": \"hello world\",\n      \"prompt_token_ids\": [\n        8,\n        15\n      ],\n      \"attempt_seed\": 7899095024623998496,\n      \"sample_index\": 0,\n      \"selected_behavior_log_probabilities\": [\n        -2.7591943116348787,\n        -2.8705030058103507,\n        -2.7760627099860646\n      ],\n      \"selected_raw_log_probabilities\": [\n        -2.7591943116348787,\n        -2.8705030058103507,\n        -2.7760627099860646\n      ],\n      \"retained_support_sizes\": [\n        16,\n        16,\n        16\n      ],\n      \"stop_token_id\": 3,\n      \"checkpoint_interface_sha256\": \"6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21\",\n      \"input_identity_sha256\": \"b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656\",\n      \"input_sha256\": {\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/items.json\": \"6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc\",\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json\": \"c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274\"\n      },\n      \"settings_sha256\": \"d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c\",\n      \"decoding\": {\n        \"mode\": \"sample\",\n        \"seed\": 1004,\n        \"temperature\": 1.0,\n        \"top_k\": null,\n        \"top_p\": 1.0\n      },\n      \"thinking_mode\": \"not-applicable\",\n      \"cost\": {\n        \"wall_seconds\": 0.01958757801912725,\n        \"generation_tokens\": 3,\n        \"scoring_tokens\": 0,\n        \"model_forward_tokens\": 9,\n        \"attempted_forward_tokens\": 9,\n        \"forward_calls\": 3,\n        \"attempted_forward_calls\": 3,\n        \"forward_seconds\": 0.0022206450230441988,\n        \"prefill_seconds\": 0.0007271000067703426,\n        \"decode_seconds\": 0.0014935450162738562\n      },\n      \"cost_boundary\": \"Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring\",\n      \"timing_boundary\": \"CPU host wall time\",\n      \"interrupted\": false,\n      \"raw_response_sha256\": \"314f1f7ab329473283d20a7b3b102ecc2a0515853d7ab0f6c7077f9de4d38586\",\n      \"response_text_sha256\": \"dc1231d918f7a31ad66fc08d00dab965d48d309a504a5a1b8f516a319167a629\",\n      \"extraction\": {\n        \"status\": \"EXTRACTED\",\n        \"answer\": \"user 4\",\n        \"mechanism\": \"whole\"\n      },\n      \"format_valid\": true,\n      \"task_success\": false,\n      \"natural_termination\": true,\n      \"correct\": false,\n      \"status\": \"INCORRECT\"\n    },\n    {\n      \"schema_version\": \"dongxi-response-record-v1\",\n      \"adapter_version\": \"local-hf-response-v1\",\n      \"contract_id\": \"9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa\",\n      \"checkpoint_id\": \"local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba\",\n      \"sample_id\": \"sample-1-seed-7639654792088161233\",\n      \"item_id\": \"greeting-a\",\n      \"source_group\": \"original-greeting\",\n      \"task\": \"greeting\",\n      \"split\": \"dev\",\n      \"raw_response\": \"NO_THINK blue [BOS] [TURN]\",\n      \"response_text\": \"NO_THINK blue [BOS]\",\n      \"token_ids\": [\n        5,\n        13,\n        2,\n        3\n      ],\n      \"prompt_tokens\": 2,\n      \"generated_tokens\": 4,\n      \"stop_reason\": \"turn_stop\",\n      \"truncated\": false,\n      \"error\": null,\n      \"error_stage\": null,\n      \"serialized_prompt\": \"hello world\",\n      \"prompt_token_ids\": [\n        8,\n        15\n      ],\n      \"attempt_seed\": 7639654792088161233,\n      \"sample_index\": 1,\n      \"selected_behavior_log_probabilities\": [\n        -2.798219221593122,\n        -2.7827136763253315,\n        -2.7995564425668538,\n        -2.7615008963138488\n      ],\n      \"selected_raw_log_probabilities\": [\n        -2.798219221593122,\n        -2.7827136763253315,\n        -2.7995564425668538,\n        -2.7615008963138488\n      ],\n      \"retained_support_sizes\": [\n        16,\n        16,\n        16,\n        16\n      ],\n      \"stop_token_id\": 3,\n      \"checkpoint_interface_sha256\": \"6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21\",\n      \"input_identity_sha256\": \"b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656\",\n      \"input_sha256\": {\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/items.json\": \"6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc\",\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json\": \"c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274\"\n      },\n      \"settings_sha256\": \"d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c\",\n      \"decoding\": {\n        \"mode\": \"sample\",\n        \"seed\": 1004,\n        \"temperature\": 1.0,\n        \"top_k\": null,\n        \"top_p\": 1.0\n      },\n      \"thinking_mode\": \"not-applicable\",\n      \"cost\": {\n        \"wall_seconds\": 0.0221760289859958,\n        \"generation_tokens\": 4,\n        \"scoring_tokens\": 0,\n        \"model_forward_tokens\": 14,\n        \"attempted_forward_tokens\": 14,\n        \"forward_calls\": 4,\n        \"attempted_forward_calls\": 4,\n        \"forward_seconds\": 0.0019118620257358998,\n        \"prefill_seconds\": 0.0006629250128753483,\n        \"decode_seconds\": 0.0012489370128605515\n      },\n      \"cost_boundary\": \"Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring\",\n      \"timing_boundary\": \"CPU host wall time\",\n      \"interrupted\": false,\n      \"raw_response_sha256\": \"1316601546df9671fc5a0606d26c89a2af0415ae446b0195cc7edb1201d0a261\",\n      \"response_text_sha256\": \"145722dbbb6bca7f64b685aee344bf15bafc237b47a11d8f18c1214de9a1f02a\",\n      \"extraction\": {\n        \"status\": \"EXTRACTED\",\n        \"answer\": \"NO_THINK blue [BOS]\",\n        \"mechanism\": \"whole\"\n      },\n      \"format_valid\": true,\n      \"task_success\": false,\n      \"natural_termination\": true,\n      \"correct\": false,\n      \"status\": \"INCORRECT\"\n    }\n  ],\n  \"checkpoints\": {\n    \"local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba\": {\n      \"summary\": {\n        \"n\": 4,\n        \"accuracy\": 0.0,\n        \"task_success\": 0.0,\n        \"format_valid\": 0.5,\n        \"natural_termination\": 1.0,\n        \"truncation\": 0.0,\n        \"stop_reasons\": {\n          \"eos\": 2,\n          \"turn_stop\": 2\n        },\n        \"statuses\": {\n          \"UNSUPPORTED\": 2,\n          \"INCORRECT\": 2\n        },\n        \"cost\": {\n          \"wall_seconds\": {\n            \"known_total\": 0.10488855998846702,\n            \"unknown_rows\": 0\n          },\n          \"generation_tokens\": {\n            \"known_total\": 12,\n            \"unknown_rows\": 0\n          },\n          \"scoring_tokens\": {\n            \"known_total\": 0,\n            \"unknown_rows\": 0\n          }\n        }\n      },\n      \"slices\": {\n        \"task\": {\n          \"arithmetic\": {\n            \"n\": 2,\n            \"accuracy\": 0.0,\n            \"task_success\": 0.0,\n            \"format_valid\": 0.0,\n            \"natural_termination\": 1.0,\n            \"truncation\": 0.0,\n            \"stop_reasons\": {\n              \"eos\": 2\n            },\n            \"statuses\": {\n              \"UNSUPPORTED\": 2\n            },\n            \"cost\": {\n              \"wall_seconds\": {\n                \"known_total\": 0.06312495298334397,\n                \"unknown_rows\": 0\n              },\n              \"generation_tokens\": {\n                \"known_total\": 5,\n                \"unknown_rows\": 0\n              },\n              \"scoring_tokens\": {\n                \"known_total\": 0,\n                \"unknown_rows\": 0\n              }\n            }\n          },\n          \"greeting\": {\n            \"n\": 2,\n            \"accuracy\": 0.0,\n            \"task_success\": 0.0,\n            \"format_valid\": 1.0,\n            \"natural_termination\": 1.0,\n            \"truncation\": 0.0,\n            \"stop_reasons\": {\n              \"turn_stop\": 2\n            },\n            \"statuses\": {\n              \"INCORRECT\": 2\n            },\n            \"cost\": {\n              \"wall_seconds\": {\n                \"known_total\": 0.04176360700512305,\n                \"unknown_rows\": 0\n              },\n              \"generation_tokens\": {\n                \"known_total\": 7,\n                \"unknown_rows\": 0\n              },\n              \"scoring_tokens\": {\n                \"known_total\": 0,\n                \"unknown_rows\": 0\n              }\n            }\n          }\n        },\n        \"source_group\": {\n          \"original-arithmetic\": {\n            \"n\": 2,\n            \"accuracy\": 0.0,\n            \"task_success\": 0.0,\n            \"format_valid\": 0.0,\n            \"natural_termination\": 1.0,\n            \"truncation\": 0.0,\n            \"stop_reasons\": {\n              \"eos\": 2\n            },\n            \"statuses\": {\n              \"UNSUPPORTED\": 2\n            },\n            \"cost\": {\n              \"wall_seconds\": {\n                \"known_total\": 0.06312495298334397,\n                \"unknown_rows\": 0\n              },\n              \"generation_tokens\": {\n                \"known_total\": 5,\n                \"unknown_rows\": 0\n              },\n              \"scoring_tokens\": {\n                \"known_total\": 0,\n                \"unknown_rows\": 0\n              }\n            }\n          },\n          \"original-greeting\": {\n            \"n\": 2,\n            \"accuracy\": 0.0,\n            \"task_success\": 0.0,\n            \"format_valid\": 1.0,\n            \"natural_termination\": 1.0,\n            \"truncation\": 0.0,\n            \"stop_reasons\": {\n              \"turn_stop\": 2\n            },\n            \"statuses\": {\n              \"INCORRECT\": 2\n            },\n            \"cost\": {\n              \"wall_seconds\": {\n                \"known_total\": 0.04176360700512305,\n                \"unknown_rows\": 0\n              },\n              \"generation_tokens\": {\n                \"known_total\": 7,\n                \"unknown_rows\": 0\n              },\n              \"scoring_tokens\": {\n                \"known_total\": 0,\n                \"unknown_rows\": 0\n              }\n            }\n          }\n        },\n        \"split\": {\n          \"dev\": {\n            \"n\": 4,\n            \"accuracy\": 0.0,\n            \"task_success\": 0.0,\n            \"format_valid\": 0.5,\n            \"natural_termination\": 1.0,\n            \"truncation\": 0.0,\n            \"stop_reasons\": {\n              \"eos\": 2,\n              \"turn_stop\": 2\n            },\n            \"statuses\": {\n              \"UNSUPPORTED\": 2,\n              \"INCORRECT\": 2\n            },\n            \"cost\": {\n              \"wall_seconds\": {\n                \"known_total\": 0.10488855998846702,\n                \"unknown_rows\": 0\n              },\n              \"generation_tokens\": {\n                \"known_total\": 12,\n                \"unknown_rows\": 0\n              },\n              \"scoring_tokens\": {\n                \"known_total\": 0,\n                \"unknown_rows\": 0\n              }\n            }\n          }\n        }\n      },\n      \"missing_item_ids\": []\n    }\n  },\n  \"limits\": \"Authored fixtures or supplied records; no generation or broad safety/capability result.\"\n}\n",
+      "stderr": "",
+      "seconds": 0.05564336900715716
+    },
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/generate_reasoning_records.py",
+        "--items",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/items.json",
+        "--checkpoint",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/random-hf",
+        "--settings",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/chat-settings.json",
+        "--freeze-contract",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"contract\": \"/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json\", \"identity\": \"033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0\", \"mode\": \"tokenizer-only contract freeze; no model weights loaded\"}\n",
+      "stderr": "",
+      "seconds": 1.868706551991636
+    },
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/generate_reasoning_records.py",
+        "--items",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/items.json",
+        "--checkpoint",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/random-hf",
+        "--contract",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json",
+        "--output",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/chat-run"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"status\": \"completed\", \"adapter_version\": \"local-hf-response-v1\", \"checkpoint_id\": \"local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c\", \"contract_id\": \"033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0\", \"identity_sha256\": \"9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83\", \"record_count\": 4, \"elapsed_seconds\": 1.8784464310156181, \"inputs_unchanged\": true, \"limitations\": [\"Local generation events, not a pretrained capability or human review claim\", \"Full-prefix loop without KV caching; measured times are not optimized inference benchmarks\", \"Deadline checked at forward boundaries, not an external hard-kill supervisor\", \"New invocation only; saved partial events are not an exact-resume guarantee\"]}\n",
+      "stderr": "\nLoading weights:   0%|          | 0/16 [00:00<?, ?it/s]\nLoading weights: 100%|██████████| 16/16 [00:00<00:00, 57211.31it/s]\n",
+      "seconds": 2.2604692190070637
+    },
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/evaluate_reasoning_records.py",
+        "--items",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/items.json",
+        "--contract",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json",
+        "--records",
+        "/tmp/dongxi-generation-reference-ke9mj9ge/chat-run/responses.jsonl"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"contract\": {\n    \"schema_version\": \"dongxi-response-record-v1\",\n    \"parser_version\": \"bounded-rational-set-interval-v1\",\n    \"rubric_version\": \"explicit-marker-fixture-v1\",\n    \"suite_sha256\": \"bee487ff7bb64c1e599234278d8d4b83ed50285632a893773c758bc41bb07df7\",\n    \"settings\": {\n      \"template_id\": \"original-tiny-chat-v1\",\n      \"thinking_mode\": \"disabled\",\n      \"decoding\": {\n        \"mode\": \"sample\",\n        \"seed\": 1004,\n        \"temperature\": 1.0,\n        \"top_k\": null,\n        \"top_p\": 1.0\n      },\n      \"stopping\": {\n        \"eos_token_ids\": [\n          1\n        ],\n        \"turn_stop_token_ids\": [\n          3\n        ],\n        \"pad_token_id\": 1\n      },\n      \"max_new_tokens\": 4,\n      \"generation\": {\n        \"input_mode\": \"chat\",\n        \"template\": \"{% for m in messages %}{{ m['role'] }} {{ m['content'] }} {% endfor %}{% if enable_thinking %}THINK {% else %}NO_THINK {% endif %}assistant \",\n        \"context_window\": 24,\n        \"samples\": 2,\n        \"device\": \"cpu\",\n        \"dtype\": \"float32\",\n        \"add_special_tokens\": false,\n        \"max_run_seconds\": 30,\n        \"scoring_text\": \"decode_without_terminal_stop\",\n        \"interface\": {\n          \"schema_version\": 1,\n          \"tokenizer\": {\n            \"vocab_sha256\": \"37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46\",\n            \"encoding_sha256\": \"1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f\",\n            \"special_ids\": {\n              \"bos_token_id\": 2,\n              \"eos_token_id\": 1,\n              \"pad_token_id\": 1,\n              \"unk_token_id\": 0,\n              \"sep_token_id\": null,\n              \"cls_token_id\": null,\n              \"mask_token_id\": null,\n              \"additional_special_tokens_ids\": null\n            },\n            \"vocab_size\": 16,\n            \"max_token_id\": 15,\n            \"wrapper_settings\": {\n              \"add_bos_token\": false,\n              \"add_eos_token\": false,\n              \"split_special_tokens\": false,\n              \"clean_up_tokenization_spaces\": false,\n              \"spaces_between_special_tokens\": null\n            }\n          },\n          \"template_sha256\": \"3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9\",\n          \"generation_stop_ids\": [\n            1,\n            3\n          ],\n          \"source\": {\n            \"tokenizer_id\": null,\n            \"tokenizer_revision\": null\n          },\n          \"implementation_class\": \"TokenizersBackend\",\n          \"interface_sha256\": \"465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26\"\n        }\n      }\n    },\n    \"identity\": \"033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0\",\n    \"preparation_inputs\": {\n      \"settings_sha256\": \"32ca3285749ed293e71c66c86aeb1cb94b59356325bb4cc11c459e1b33ceb357\",\n      \"items_sha256\": \"6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc\",\n      \"tokenizer_files\": {\n        \"chat_template.jinja\": \"3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9\",\n        \"tokenizer.json\": \"17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf\",\n        \"tokenizer_config.json\": \"b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d\"\n      }\n    }\n  },\n  \"mode\": \"offline saved-response replay\",\n  \"rows\": [\n    {\n      \"schema_version\": \"dongxi-response-record-v1\",\n      \"adapter_version\": \"local-hf-response-v1\",\n      \"contract_id\": \"033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0\",\n      \"checkpoint_id\": \"local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c\",\n      \"sample_id\": \"sample-0-seed-994313480670987209\",\n      \"item_id\": \"arithmetic-a\",\n      \"source_group\": \"original-arithmetic\",\n      \"task\": \"arithmetic\",\n      \"split\": \"dev\",\n      \"raw_response\": \"THINK [EOS]\",\n      \"response_text\": \"THINK\",\n      \"token_ids\": [\n        4,\n        1\n      ],\n      \"prompt_tokens\": 7,\n      \"generated_tokens\": 2,\n      \"stop_reason\": \"eos\",\n      \"truncated\": false,\n      \"error\": null,\n      \"error_stage\": null,\n      \"serialized_prompt\": \"user 2 + 2 ? NO_THINK assistant \",\n      \"prompt_token_ids\": [\n        6,\n        10,\n        11,\n        10,\n        12,\n        5,\n        7\n      ],\n      \"attempt_seed\": 994313480670987209,\n      \"sample_index\": 0,\n      \"selected_behavior_log_probabilities\": [\n        -2.7876425046122058,\n        -2.8212549989012334\n      ],\n      \"selected_raw_log_probabilities\": [\n        -2.7876425046122058,\n        -2.8212549989012334\n      ],\n      \"retained_support_sizes\": [\n        16,\n        16\n      ],\n      \"stop_token_id\": 1,\n      \"checkpoint_interface_sha256\": \"465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26\",\n      \"input_identity_sha256\": \"9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83\",\n      \"input_sha256\": {\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/items.json\": \"6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc\",\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json\": \"b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60\"\n      },\n      \"settings_sha256\": \"e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe\",\n      \"decoding\": {\n        \"mode\": \"sample\",\n        \"seed\": 1004,\n        \"temperature\": 1.0,\n        \"top_k\": null,\n        \"top_p\": 1.0\n      },\n      \"thinking_mode\": \"disabled\",\n      \"cost\": {\n        \"wall_seconds\": 0.037696296989452094,\n        \"generation_tokens\": 2,\n        \"scoring_tokens\": 0,\n        \"model_forward_tokens\": 15,\n        \"attempted_forward_tokens\": 15,\n        \"forward_calls\": 2,\n        \"attempted_forward_calls\": 2,\n        \"forward_seconds\": 0.02803147499798797,\n        \"prefill_seconds\": 0.02747063001152128,\n        \"decode_seconds\": 0.0005608449864666909\n      },\n      \"cost_boundary\": \"Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring\",\n      \"timing_boundary\": \"CPU host wall time\",\n      \"interrupted\": false,\n      \"raw_response_sha256\": \"793e2412330e562f3c96ba1063160ca07f2ecefce8fa53377520506c50fb79c9\",\n      \"response_text_sha256\": \"94c1f856fc08fb446e6ae3aeb2dcd7c536c21113b6db1c5a6a8ce417561a0105\",\n      \"extraction\": {\n        \"status\": \"EXTRACTED\",\n        \"answer\": \"THINK\",\n        \"mechanism\": \"whole\"\n      },\n      \"format_valid\": false,\n      \"task_success\": false,\n      \"natural_termination\": true,\n      \"correct\": false,\n      \"canonicalization\": {\n        \"status\": \"UNSUPPORTED\",\n        \"reason\": \"outside exact rational grammar\"\n      },\n      \"status\": \"UNSUPPORTED\",\n      \"reason\": \"outside exact rational grammar\"\n    },\n    {\n      \"schema_version\": \"dongxi-response-record-v1\",\n      \"adapter_version\": \"local-hf-response-v1\",\n      \"contract_id\": \"033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0\",\n      \"checkpoint_id\": \"local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c\",\n      \"sample_id\": \"sample-1-seed-624892899481925806\",\n      \"item_id\": \"arithmetic-a\",\n      \"source_group\": \"original-arithmetic\",\n      \"task\": \"arithmetic\",\n      \"split\": \"dev\",\n      \"raw_response\": \"+ [BOS] [EOS]\",\n      \"response_text\": \"+ [BOS]\",\n      \"token_ids\": [\n        11,\n        2,\n        1\n      ],\n      \"prompt_tokens\": 7,\n      \"generated_tokens\": 3,\n      \"stop_reason\": \"eos\",\n      \"truncated\": false,\n      \"error\": null,\n      \"error_stage\": null,\n      \"serialized_prompt\": \"user 2 + 2 ? NO_THINK assistant \",\n      \"prompt_token_ids\": [\n        6,\n        10,\n        11,\n        10,\n        12,\n        5,\n        7\n      ],\n      \"attempt_seed\": 624892899481925806,\n      \"sample_index\": 1,\n      \"selected_behavior_log_probabilities\": [\n        -2.805006857553719,\n        -2.7920903001503636,\n        -2.8515531717350813\n      ],\n      \"selected_raw_log_probabilities\": [\n        -2.805006857553719,\n        -2.7920903001503636,\n        -2.8515531717350813\n      ],\n      \"retained_support_sizes\": [\n        16,\n        16,\n        16\n      ],\n      \"stop_token_id\": 1,\n      \"checkpoint_interface_sha256\": \"465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26\",\n      \"input_identity_sha256\": \"9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83\",\n      \"input_sha256\": {\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/items.json\": \"6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc\",\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json\": \"b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60\"\n      },\n      \"settings_sha256\": \"e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe\",\n      \"decoding\": {\n        \"mode\": \"sample\",\n        \"seed\": 1004,\n        \"temperature\": 1.0,\n        \"top_k\": null,\n        \"top_p\": 1.0\n      },\n      \"thinking_mode\": \"disabled\",\n      \"cost\": {\n        \"wall_seconds\": 0.01196266699116677,\n        \"generation_tokens\": 3,\n        \"scoring_tokens\": 0,\n        \"model_forward_tokens\": 24,\n        \"attempted_forward_tokens\": 24,\n        \"forward_calls\": 3,\n        \"attempted_forward_calls\": 3,\n        \"forward_seconds\": 0.0011069219908677042,\n        \"prefill_seconds\": 0.0003501900064293295,\n        \"decode_seconds\": 0.0007567319844383746\n      },\n      \"cost_boundary\": \"Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring\",\n      \"timing_boundary\": \"CPU host wall time\",\n      \"interrupted\": false,\n      \"raw_response_sha256\": \"6e408fafe5e86f7a91b6e329ac237e9acdb00d06d0bf7fa93f5b5420b2677fa9\",\n      \"response_text_sha256\": \"6f49fa30e83e278d0241dbe66902fe3cb3f777407e02a43d42185cf49e3e41d4\",\n      \"extraction\": {\n        \"status\": \"EXTRACTED\",\n        \"answer\": \"+ [BOS]\",\n        \"mechanism\": \"whole\"\n      },\n      \"format_valid\": false,\n      \"task_success\": false,\n      \"natural_termination\": true,\n      \"correct\": false,\n      \"canonicalization\": {\n        \"status\": \"UNSUPPORTED\",\n        \"reason\": \"outside exact rational grammar\"\n      },\n      \"status\": \"UNSUPPORTED\",\n      \"reason\": \"outside exact rational grammar\"\n    },\n    {\n      \"schema_version\": \"dongxi-response-record-v1\",\n      \"adapter_version\": \"local-hf-response-v1\",\n      \"contract_id\": \"033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0\",\n      \"checkpoint_id\": \"local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c\",\n      \"sample_id\": \"sample-0-seed-7899095024623998496\",\n      \"item_id\": \"greeting-a\",\n      \"source_group\": \"original-greeting\",\n      \"task\": \"greeting\",\n      \"split\": \"dev\",\n      \"raw_response\": \"user 4 [TURN]\",\n      \"response_text\": \"user 4\",\n      \"token_ids\": [\n        6,\n        9,\n        3\n      ],\n      \"prompt_tokens\": 5,\n      \"generated_tokens\": 3,\n      \"stop_reason\": \"turn_stop\",\n      \"truncated\": false,\n      \"error\": null,\n      \"error_stage\": null,\n      \"serialized_prompt\": \"user hello world NO_THINK assistant \",\n      \"prompt_token_ids\": [\n        6,\n        8,\n        15,\n        5,\n        7\n      ],\n      \"attempt_seed\": 7899095024623998496,\n      \"sample_index\": 0,\n      \"selected_behavior_log_probabilities\": [\n        -2.8473955408869225,\n        -2.71184601554451,\n        -2.70184047980863\n      ],\n      \"selected_raw_log_probabilities\": [\n        -2.8473955408869225,\n        -2.71184601554451,\n        -2.70184047980863\n      ],\n      \"retained_support_sizes\": [\n        16,\n        16,\n        16\n      ],\n      \"stop_token_id\": 3,\n      \"checkpoint_interface_sha256\": \"465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26\",\n      \"input_identity_sha256\": \"9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83\",\n      \"input_sha256\": {\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/items.json\": \"6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc\",\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json\": \"b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60\"\n      },\n      \"settings_sha256\": \"e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe\",\n      \"decoding\": {\n        \"mode\": \"sample\",\n        \"seed\": 1004,\n        \"temperature\": 1.0,\n        \"top_k\": null,\n        \"top_p\": 1.0\n      },\n      \"thinking_mode\": \"disabled\",\n      \"cost\": {\n        \"wall_seconds\": 0.01825091100181453,\n        \"generation_tokens\": 3,\n        \"scoring_tokens\": 0,\n        \"model_forward_tokens\": 18,\n        \"attempted_forward_tokens\": 18,\n        \"forward_calls\": 3,\n        \"attempted_forward_calls\": 3,\n        \"forward_seconds\": 0.001967991003766656,\n        \"prefill_seconds\": 0.0007502369990106672,\n        \"decode_seconds\": 0.0012177540047559887\n      },\n      \"cost_boundary\": \"Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring\",\n      \"timing_boundary\": \"CPU host wall time\",\n      \"interrupted\": false,\n      \"raw_response_sha256\": \"314f1f7ab329473283d20a7b3b102ecc2a0515853d7ab0f6c7077f9de4d38586\",\n      \"response_text_sha256\": \"dc1231d918f7a31ad66fc08d00dab965d48d309a504a5a1b8f516a319167a629\",\n      \"extraction\": {\n        \"status\": \"EXTRACTED\",\n        \"answer\": \"user 4\",\n        \"mechanism\": \"whole\"\n      },\n      \"format_valid\": true,\n      \"task_success\": false,\n      \"natural_termination\": true,\n      \"correct\": false,\n      \"status\": \"INCORRECT\"\n    },\n    {\n      \"schema_version\": \"dongxi-response-record-v1\",\n      \"adapter_version\": \"local-hf-response-v1\",\n      \"contract_id\": \"033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0\",\n      \"checkpoint_id\": \"local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c\",\n      \"sample_id\": \"sample-1-seed-7639654792088161233\",\n      \"item_id\": \"greeting-a\",\n      \"source_group\": \"original-greeting\",\n      \"task\": \"greeting\",\n      \"split\": \"dev\",\n      \"raw_response\": \"NO_THINK blue [BOS] [TURN]\",\n      \"response_text\": \"NO_THINK blue [BOS]\",\n      \"token_ids\": [\n        5,\n        13,\n        2,\n        3\n      ],\n      \"prompt_tokens\": 5,\n      \"generated_tokens\": 4,\n      \"stop_reason\": \"turn_stop\",\n      \"truncated\": false,\n      \"error\": null,\n      \"error_stage\": null,\n      \"serialized_prompt\": \"user hello world NO_THINK assistant \",\n      \"prompt_token_ids\": [\n        6,\n        8,\n        15,\n        5,\n        7\n      ],\n      \"attempt_seed\": 7639654792088161233,\n      \"sample_index\": 1,\n      \"selected_behavior_log_probabilities\": [\n        -2.749022280537887,\n        -2.654658635591965,\n        -2.796857444481259,\n        -2.804744967129307\n      ],\n      \"selected_raw_log_probabilities\": [\n        -2.749022280537887,\n        -2.654658635591965,\n        -2.796857444481259,\n        -2.804744967129307\n      ],\n      \"retained_support_sizes\": [\n        16,\n        16,\n        16,\n        16\n      ],\n      \"stop_token_id\": 3,\n      \"checkpoint_interface_sha256\": \"465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26\",\n      \"input_identity_sha256\": \"9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83\",\n      \"input_sha256\": {\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/items.json\": \"6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc\",\n        \"/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json\": \"b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60\"\n      },\n      \"settings_sha256\": \"e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe\",\n      \"decoding\": {\n        \"mode\": \"sample\",\n        \"seed\": 1004,\n        \"temperature\": 1.0,\n        \"top_k\": null,\n        \"top_p\": 1.0\n      },\n      \"thinking_mode\": \"disabled\",\n      \"cost\": {\n        \"wall_seconds\": 0.02478220997727476,\n        \"generation_tokens\": 4,\n        \"scoring_tokens\": 0,\n        \"model_forward_tokens\": 26,\n        \"attempted_forward_tokens\": 26,\n        \"forward_calls\": 4,\n        \"attempted_forward_calls\": 4,\n        \"forward_seconds\": 0.003140162007184699,\n        \"prefill_seconds\": 0.0006593409925699234,\n        \"decode_seconds\": 0.0024808210146147758\n      },\n      \"cost_boundary\": \"Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring\",\n      \"timing_boundary\": \"CPU host wall time\",\n      \"interrupted\": false,\n      \"raw_response_sha256\": \"1316601546df9671fc5a0606d26c89a2af0415ae446b0195cc7edb1201d0a261\",\n      \"response_text_sha256\": \"145722dbbb6bca7f64b685aee344bf15bafc237b47a11d8f18c1214de9a1f02a\",\n      \"extraction\": {\n        \"status\": \"EXTRACTED\",\n        \"answer\": \"NO_THINK blue [BOS]\",\n        \"mechanism\": \"whole\"\n      },\n      \"format_valid\": true,\n      \"task_success\": false,\n      \"natural_termination\": true,\n      \"correct\": false,\n      \"status\": \"INCORRECT\"\n    }\n  ],\n  \"checkpoints\": {\n    \"local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c\": {\n      \"summary\": {\n        \"n\": 4,\n        \"accuracy\": 0.0,\n        \"task_success\": 0.0,\n        \"format_valid\": 0.5,\n        \"natural_termination\": 1.0,\n        \"truncation\": 0.0,\n        \"stop_reasons\": {\n          \"eos\": 2,\n          \"turn_stop\": 2\n        },\n        \"statuses\": {\n          \"UNSUPPORTED\": 2,\n          \"INCORRECT\": 2\n        },\n        \"cost\": {\n          \"wall_seconds\": {\n            \"known_total\": 0.09269208495970815,\n            \"unknown_rows\": 0\n          },\n          \"generation_tokens\": {\n            \"known_total\": 12,\n            \"unknown_rows\": 0\n          },\n          \"scoring_tokens\": {\n            \"known_total\": 0,\n            \"unknown_rows\": 0\n          }\n        }\n      },\n      \"slices\": {\n        \"task\": {\n          \"arithmetic\": {\n            \"n\": 2,\n            \"accuracy\": 0.0,\n            \"task_success\": 0.0,\n            \"format_valid\": 0.0,\n            \"natural_termination\": 1.0,\n            \"truncation\": 0.0,\n            \"stop_reasons\": {\n              \"eos\": 2\n            },\n            \"statuses\": {\n              \"UNSUPPORTED\": 2\n            },\n            \"cost\": {\n              \"wall_seconds\": {\n                \"known_total\": 0.049658963980618864,\n                \"unknown_rows\": 0\n              },\n              \"generation_tokens\": {\n                \"known_total\": 5,\n                \"unknown_rows\": 0\n              },\n              \"scoring_tokens\": {\n                \"known_total\": 0,\n                \"unknown_rows\": 0\n              }\n            }\n          },\n          \"greeting\": {\n            \"n\": 2,\n            \"accuracy\": 0.0,\n            \"task_success\": 0.0,\n            \"format_valid\": 1.0,\n            \"natural_termination\": 1.0,\n            \"truncation\": 0.0,\n            \"stop_reasons\": {\n              \"turn_stop\": 2\n            },\n            \"statuses\": {\n              \"INCORRECT\": 2\n            },\n            \"cost\": {\n              \"wall_seconds\": {\n                \"known_total\": 0.04303312097908929,\n                \"unknown_rows\": 0\n              },\n              \"generation_tokens\": {\n                \"known_total\": 7,\n                \"unknown_rows\": 0\n              },\n              \"scoring_tokens\": {\n                \"known_total\": 0,\n                \"unknown_rows\": 0\n              }\n            }\n          }\n        },\n        \"source_group\": {\n          \"original-arithmetic\": {\n            \"n\": 2,\n            \"accuracy\": 0.0,\n            \"task_success\": 0.0,\n            \"format_valid\": 0.0,\n            \"natural_termination\": 1.0,\n            \"truncation\": 0.0,\n            \"stop_reasons\": {\n              \"eos\": 2\n            },\n            \"statuses\": {\n              \"UNSUPPORTED\": 2\n            },\n            \"cost\": {\n              \"wall_seconds\": {\n                \"known_total\": 0.049658963980618864,\n                \"unknown_rows\": 0\n              },\n              \"generation_tokens\": {\n                \"known_total\": 5,\n                \"unknown_rows\": 0\n              },\n              \"scoring_tokens\": {\n                \"known_total\": 0,\n                \"unknown_rows\": 0\n              }\n            }\n          },\n          \"original-greeting\": {\n            \"n\": 2,\n            \"accuracy\": 0.0,\n            \"task_success\": 0.0,\n            \"format_valid\": 1.0,\n            \"natural_termination\": 1.0,\n            \"truncation\": 0.0,\n            \"stop_reasons\": {\n              \"turn_stop\": 2\n            },\n            \"statuses\": {\n              \"INCORRECT\": 2\n            },\n            \"cost\": {\n              \"wall_seconds\": {\n                \"known_total\": 0.04303312097908929,\n                \"unknown_rows\": 0\n              },\n              \"generation_tokens\": {\n                \"known_total\": 7,\n                \"unknown_rows\": 0\n              },\n              \"scoring_tokens\": {\n                \"known_total\": 0,\n                \"unknown_rows\": 0\n              }\n            }\n          }\n        },\n        \"split\": {\n          \"dev\": {\n            \"n\": 4,\n            \"accuracy\": 0.0,\n            \"task_success\": 0.0,\n            \"format_valid\": 0.5,\n            \"natural_termination\": 1.0,\n            \"truncation\": 0.0,\n            \"stop_reasons\": {\n              \"eos\": 2,\n              \"turn_stop\": 2\n            },\n            \"statuses\": {\n              \"UNSUPPORTED\": 2,\n              \"INCORRECT\": 2\n            },\n            \"cost\": {\n              \"wall_seconds\": {\n                \"known_total\": 0.09269208495970815,\n                \"unknown_rows\": 0\n              },\n              \"generation_tokens\": {\n                \"known_total\": 12,\n                \"unknown_rows\": 0\n              },\n              \"scoring_tokens\": {\n                \"known_total\": 0,\n                \"unknown_rows\": 0\n              }\n            }\n          }\n        }\n      },\n      \"missing_item_ids\": []\n    }\n  },\n  \"limits\": \"Authored fixtures or supplied records; no generation or broad safety/capability result.\"\n}\n",
+      "stderr": "",
+      "seconds": 0.05186274700099602
+    },
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_reasoning_generation.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"contract\": \"/tmp/tmp9l5_orwv/contract.json\", \"identity\": \"d99a988d21c7d85f62149fd601af13d7150733aa4f88373f3d79b28bf22556e1\", \"mode\": \"tokenizer-only contract freeze; no model weights loaded\"}\n",
+      "stderr": "\nWriting model shards:   0%|          | 0/1 [00:00<?, ?it/s]\nWriting model shards: 100%|██████████| 1/1 [00:00<00:00, 1175.53it/s]\ntest_actual_local_cli_pipeline_new_only_and_offline_replay (test_reasoning_generation.GenerationTests.test_actual_local_cli_pipeline_new_only_and_offline_replay) ... \nLoading weights:   0%|          | 0/16 [00:00<?, ?it/s]\nLoading weights: 100%|██████████| 16/16 [00:00<00:00, 4489.79it/s]\nok\ntest_attempt_seeds_do_not_depend_on_item_iteration_order (test_reasoning_generation.GenerationTests.test_attempt_seeds_do_not_depend_on_item_iteration_order) ... ok\ntest_cli_freeze_is_tokenizer_only_and_existing_contract_is_protected (test_reasoning_generation.GenerationTests.test_cli_freeze_is_tokenizer_only_and_existing_contract_is_protected) ... ok\ntest_deadline_and_record_tampering_do_not_become_valid_evidence (test_reasoning_generation.GenerationTests.test_deadline_and_record_tampering_do_not_become_valid_evidence) ... ok\ntest_greedy_ties_and_behavior_transformations_match_contract (test_reasoning_generation.GenerationTests.test_greedy_ties_and_behavior_transformations_match_contract) ... ok\ntest_input_mutation_and_declared_model_context_are_rejected (test_reasoning_generation.GenerationTests.test_input_mutation_and_declared_model_context_are_rejected) ... \nLoading weights:   0%|          | 0/16 [00:00<?, ?it/s]\nLoading weights: 100%|██████████| 16/16 [00:00<00:00, 7865.55it/s]\n\nLoading weights:   0%|          | 0/16 [00:00<?, ?it/s]\nLoading weights: 100%|██████████| 16/16 [00:00<00:00, 12920.46it/s]\nok\ntest_load_failure_and_interrupt_journal_keep_actual_stages_and_partial_rows (test_reasoning_generation.GenerationTests.test_load_failure_and_interrupt_journal_keep_actual_stages_and_partial_rows) ... ok\ntest_oversized_raw_output_is_kept_but_grader_is_bounded (test_reasoning_generation.GenerationTests.test_oversized_raw_output_is_kept_but_grader_is_bounded) ... ok\ntest_partial_failure_interrupt_and_nonfinite_logits_are_retained (test_reasoning_generation.GenerationTests.test_partial_failure_interrupt_and_nonfinite_logits_are_retained) ... ok\ntest_prompt_eos_padding_and_context_cap_do_not_fabricate_stopping (test_reasoning_generation.GenerationTests.test_prompt_eos_padding_and_context_cap_do_not_fabricate_stopping) ... ok\ntest_raw_chat_and_thinking_are_explicit_no_gold_in_prompt (test_reasoning_generation.GenerationTests.test_raw_chat_and_thinking_are_explicit_no_gold_in_prompt) ... ok\ntest_real_random_hf_forward_and_save_reload_replay (test_reasoning_generation.GenerationTests.test_real_random_hf_forward_and_save_reload_replay) ... ok\ntest_same_size_tokenizer_permutation_and_template_mismatch_before_weight_load (test_reasoning_generation.GenerationTests.test_same_size_tokenizer_permutation_and_template_mismatch_before_weight_load) ... \nWriting model shards:   0%|          | 0/1 [00:00<?, ?it/s]\nWriting model shards: 100%|██████████| 1/1 [00:00<00:00, 3708.49it/s]\nok\ntest_stop_action_retained_but_only_terminal_stop_excluded_from_scoring (test_reasoning_generation.GenerationTests.test_stop_action_retained_but_only_terminal_stop_excluded_from_scoring) ... ok\ntest_unknown_invalid_and_silently_ignored_settings_rejected (test_reasoning_generation.GenerationTests.test_unknown_invalid_and_silently_ignored_settings_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 15 tests in 1.932s\n\nOK\n",
+      "seconds": 2.86345447198255
+    },
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_reasoning_evaluation.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_changed_frozen_bytes_and_duplicate_record_rejected (test_reasoning_evaluation.FrozenReplayTests.test_changed_frozen_bytes_and_duplicate_record_rejected) ... ok\ntest_contract_is_canonical_and_changes_with_settings (test_reasoning_evaluation.FrozenReplayTests.test_contract_is_canonical_and_changes_with_settings) ... ok\ntest_format_is_independent_of_unsupported_or_ambiguous_answer (test_reasoning_evaluation.FrozenReplayTests.test_format_is_independent_of_unsupported_or_ambiguous_answer) ... ok\ntest_grouped_pairing_reproducible_and_wrong_coverage_rejected (test_reasoning_evaluation.FrozenReplayTests.test_grouped_pairing_reproducible_and_wrong_coverage_rejected) ... ok\ntest_item_identity_and_cross_split_group (test_reasoning_evaluation.FrozenReplayTests.test_item_identity_and_cross_split_group) ... ok\ntest_json_duplicate_keys_and_boolean_are_not_answer_four (test_reasoning_evaluation.FrozenReplayTests.test_json_duplicate_keys_and_boolean_are_not_answer_four) ... ok\ntest_non_oracle_candidate_view_excludes_even_injected_gold (test_reasoning_evaluation.FrozenReplayTests.test_non_oracle_candidate_view_excludes_even_injected_gold) ... ok\ntest_replay_retains_errors_unknown_costs_and_regressions (test_reasoning_evaluation.FrozenReplayTests.test_replay_retains_errors_unknown_costs_and_regressions) ... ok\ntest_response_schema_count_stop_and_cost_invariants (test_reasoning_evaluation.FrozenReplayTests.test_response_schema_count_stop_and_cost_invariants) ... ok\ntest_balanced_nested_box_and_ambiguity (test_reasoning_evaluation.MathGrammarTests.test_balanced_nested_box_and_ambiguity) ... ok\ntest_existing_strict_integer_contract_unchanged (test_reasoning_evaluation.MathGrammarTests.test_existing_strict_integer_contract_unchanged) ... ok\ntest_resource_bounds_and_no_last_number_rescue (test_reasoning_evaluation.MathGrammarTests.test_resource_bounds_and_no_last_number_rescue) ... ok\ntest_reviewed_adversarial_cases (test_reasoning_evaluation.MathGrammarTests.test_reviewed_adversarial_cases) ... ok\ntest_units_and_interval_boundaries_are_not_erased (test_reasoning_evaluation.MathGrammarTests.test_units_and_interval_boundaries_are_not_erased) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.006s\n\nOK\n",
+      "seconds": 0.7140569819894154
+    },
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/check_book_math.py"
+      ],
+      "exit_code": 0,
+      "stdout": "54 Markdown files, 1114 math expressions, 0 issues\n",
+      "stderr": "",
+      "seconds": 0.06993817098555155
+    }
+  ],
+  "invocations": {
+    "raw": {
+      "summary": {
+        "status": "completed",
+        "adapter_version": "local-hf-response-v1",
+        "checkpoint_id": "local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba",
+        "contract_id": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+        "identity_sha256": "b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656",
+        "record_count": 4,
+        "elapsed_seconds": 1.9284567489812616,
+        "inputs_unchanged": true,
+        "limitations": [
+          "Local generation events, not a pretrained capability or human review claim",
+          "Full-prefix loop without KV caching; measured times are not optimized inference benchmarks",
+          "Deadline checked at forward boundaries, not an external hard-kill supervisor",
+          "New invocation only; saved partial events are not an exact-resume guarantee"
+        ]
+      },
+      "identity": {
+        "schema_version": 1,
+        "created_utc": "2026-10-04T20:25:18.530852+00:00",
+        "git": {
+          "commit": {
+            "status": "measured",
+            "value": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4"
+          },
+          "dirty": true,
+          "status_sha256": "62663ee710a08eb563009bba57164b9b45c9b5abc163f78df58b55481bc7a527",
+          "changed_paths": [
+            "M .gitignore",
+            " M AGENTS.md",
+            " M BOOK.md",
+            " M LEARNING_MEMORY.md",
+            " M PROGRESS.md",
+            " M README.md",
+            " M ROADMAP.md",
+            " M book/appendices/d-reproduction-and-environments.md",
+            " M book/chapters/01-evidence-before-optimization.md",
+            " M book/chapters/07-evaluation-is-a-contract.md",
+            " M book/chapters/10-preferences-and-reward-models.md",
+            " M book/chapters/12-language-generation-as-a-policy.md",
+            " M book/chapters/13-group-relative-policy-optimization.md",
+            " M book/chapters/14-when-optimization-goes-wrong.md",
+            " M book/chapters/15-distill-evaluate-and-defend.md",
+            " M book/labs/01-evidence-before-optimization.md",
+            " M book/labs/07-evaluation-is-a-contract.md",
+            " M book/labs/09-supervised-fine-tuning.md",
+            " M book/labs/10-preferences-and-reward-models.md",
+            " M book/labs/11-direct-preference-optimization.md",
+            " M book/labs/13-group-relative-policy-optimization.md",
+            " M book/labs/14-when-optimization-goes-wrong.md",
+            " M book/solutions/01-evidence-before-optimization.md",
+            " M book/solutions/07-evaluation-is-a-contract.md",
+            " M book/solutions/10-preferences-and-reward-models.md",
+            " M book/solutions/13-group-relative-policy-optimization.md",
+            " M book/solutions/14-when-optimization-goes-wrong.md",
+            " M docs/EXPERIMENT_MATRIX.md",
+            " M docs/NOTEBOOK_CURRICULUM.md",
+            " M docs/handoffs/CURRENT.md",
+            " M experiments/specs/day-23-qwen-rlvr.md",
+            " M notebooks/README.md",
+            " M notebooks/day-01/README.md",
+            " M notebooks/day-10/README.md",
+            " M notebooks/day-15/README.md",
+            " M notebooks/day-16/README.md",
+            " M notebooks/day-20/README.md",
+            " M notebooks/day-23/README.md",
+            " M notebooks/requirements-course.txt",
+            " M pyproject.toml",
+            " M scripts/check_course_integrity.py",
+            " M scripts/run_chapter09_spark_sft.py",
+            " M scripts/run_chapter11_spark_dpo.py",
+            " M scripts/verify_course_notebooks.py",
+            " M src/dongxi_llms/qwen_rlvr_lab.py",
+            " M tests/test_course_verification.py",
+            " M tests/test_dpo_checkpoint_interface.py",
+            " M tests/test_spark_sft_contract.py",
+            " M visuals/animations/PROPOSALS.md",
+            "?? .github/",
+            "?? docs/COURSE_IMPROVEMENT_PLAN.md",
+            "?? docs/REFERENCE_REPOSITORY_AUDIT.md",
+            "?? docs/course_improvements.json",
+            "?? docs/course_manifest.json",
+            "?? experiments/reports/2026-10-04-preference-audit-hardening.json",
+            "?? experiments/reports/2026-10-04-preference-audit-hardening.md",
+            "?? experiments/reports/2026-10-04-preference-audit-verification.json",
+            "?? experiments/reports/2026-10-04-preference-audit.json",
+            "?? experiments/reports/2026-10-04-preference-audit.md",
+            "?? experiments/reports/2026-10-04-reasoning-evaluation.json",
+            "?? experiments/reports/2026-10-04-reasoning-evaluation.md",
+            "?? experiments/reports/2026-10-04-run-identity.json",
+            "?? experiments/reports/2026-10-04-run-identity.md",
+            "?? experiments/reports/2026-10-04-sampling-support-hardening.json",
+            "?? experiments/reports/2026-10-04-sampling-support-hardening.md",
+            "?? experiments/reports/2026-10-04-sampling-support.json",
+            "?? experiments/reports/2026-10-04-sampling-support.md",
+            "?? experiments/reports/2026-10-04-text-reward.json",
+            "?? experiments/specs/2026-10-04-course-reproduction.md",
+            "?? experiments/specs/2026-10-04-preference-audit.md",
+            "?? experiments/specs/2026-10-04-reasoning-controls.md",
+            "?? experiments/specs/2026-10-04-reasoning-evaluation.md",
+            "?? experiments/specs/2026-10-04-reasoning-generation-adapter.md",
+            "?? experiments/specs/2026-10-04-run-identity.md",
+            "?? experiments/specs/2026-10-04-sampling-support.md",
+            "?? experiments/specs/2026-10-04-text-reward.md",
+            "?? fixtures/preference-audit/",
+            "?? fixtures/reasoning-controls/",
+            "?? fixtures/reasoning-evaluation/",
+            "?? fixtures/text-reward/",
+            "?? notebooks/day-01/04_checkpoint_interface.ipynb",
+            "?? notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+            "?? notebooks/day-15/03_preference_collection_and_judges.ipynb",
+            "?? notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+            "?? notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+            "?? notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb",
+            "?? notebooks/figures/chapter-01/day-01-04_checkpoint_interface-01.png",
+            "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-01.png",
+            "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-02.png",
+            "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-03.png",
+            "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-04.png",
+            "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-01.png",
+            "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-02.png",
+            "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-03.png",
+            "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-01.png",
+            "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-02.png",
+            "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-03.png",
+            "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-04.png",
+            "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-05.png",
+            "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-01.png",
+            "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-02.png",
+            "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-03.png",
+            "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-04.png",
+            "?? scripts/evaluate_reasoning_records.py",
+            "?? scripts/generate_reasoning_records.py",
+            "?? scripts/merge_course_adapter.py",
+            "?? scripts/run_cpu_verification.py",
+            "?? scripts/verify_reasoning_generation.py",
+            "?? src/dongxi_llms.egg-info/",
+            "?? src/dongxi_llms/checkpoint_merge.py",
+            "?? src/dongxi_llms/course_manifest.py",
+            "?? src/dongxi_llms/preference_audit.py",
+            "?? src/dongxi_llms/reasoning_controls.py",
+            "?? src/dongxi_llms/reasoning_evaluation.py",
+            "?? src/dongxi_llms/reasoning_generation.py",
+            "?? src/dongxi_llms/run_identity.py",
+            "?? src/dongxi_llms/sampling_likelihood_lab.py",
+            "?? src/dongxi_llms/text_reward_lab.py",
+            "?? tests/test_course_manifest.py",
+            "?? tests/test_cpu_reproduction.py",
+            "?? tests/test_preference_audit.py",
+            "?? tests/test_reasoning_controls.py",
+            "?? tests/test_reasoning_evaluation.py",
+            "?? tests/test_reasoning_generation.py",
+            "?? tests/test_run_identity.py",
+            "?? tests/test_sampling_likelihood_lab.py",
+            "?? tests/test_text_reward_lab.py",
+            "?? uv.lock"
+          ]
+        },
+        "source_sha256": {
+          "src/dongxi_llms/reasoning_generation.py": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0",
+          "src/dongxi_llms/reasoning_evaluation.py": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da",
+          "src/dongxi_llms/run_identity.py": "6eb0cc124d1eef6929177d4cfd0a187bdd1a0dae586472012c253833628bad29",
+          "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+          "scripts/generate_reasoning_records.py": "ec39622c883bcb3affc8d033b28f0a986eacc0e25ddce4f418b499135a61ab3b"
+        },
+        "input_sha256": {
+          "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+          "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json": "c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274"
+        },
+        "checkpoint_files": {
+          "chat_template.jinja": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+          "config.json": "59f3de4a3bf49c57b57d3dbaa0ed04c08cfa1385cc02d06a84ed1799dbed2941",
+          "generation_config.json": "2179bfff1642b04e82736f7914d2308c25acd7cc02482afde5904291c4375558",
+          "model.safetensors": "cb6a5148a39b8ec51ee009da34c52132b9ccb3d4c28b129003490878ae52f39c",
+          "tokenizer.json": "17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf",
+          "tokenizer_config.json": "b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d"
+        },
+        "checkpoint_path": "/tmp/dongxi-generation-reference-ke9mj9ge/random-hf",
+        "environment": {
+          "python_version": "3.12.14",
+          "interpreter": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+          "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+          "machine": "aarch64",
+          "packages": {
+            "torch": "2.13.0+cu130",
+            "transformers": "5.16.1",
+            "tokenizers": "0.23.1",
+            "peft": "0.20.0",
+            "numpy": "2.5.2",
+            "matplotlib": "3.10.8",
+            "nbformat": "5.11.1",
+            "nbclient": "0.11.0",
+            "huggingface-hub": "1.28.0"
+          },
+          "environment_lock": {
+            "status": "not_supplied",
+            "path": null,
+            "sha256": null
+          }
+        },
+        "device": {
+          "mode": "cpu"
+        },
+        "gpu_driver": {
+          "status": "not_requested",
+          "value": null
+        },
+        "command": [
+          "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+          "scripts/generate_reasoning_records.py",
+          "--items",
+          "/tmp/dongxi-generation-reference-ke9mj9ge/items.json",
+          "--checkpoint",
+          "/tmp/dongxi-generation-reference-ke9mj9ge/random-hf",
+          "--contract",
+          "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json",
+          "--output",
+          "/tmp/dongxi-generation-reference-ke9mj9ge/raw-run"
+        ],
+        "config": {
+          "template_id": "original-tiny-raw-v1",
+          "thinking_mode": "not-applicable",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "stopping": {
+            "eos_token_ids": [
+              1
+            ],
+            "turn_stop_token_ids": [
+              3
+            ],
+            "pad_token_id": 1
+          },
+          "max_new_tokens": 4,
+          "generation": {
+            "input_mode": "raw",
+            "template": null,
+            "context_window": 24,
+            "samples": 2,
+            "device": "cpu",
+            "dtype": "float32",
+            "add_special_tokens": false,
+            "max_run_seconds": 30,
+            "scoring_text": "decode_without_terminal_stop",
+            "interface": {
+              "schema_version": 1,
+              "tokenizer": {
+                "vocab_sha256": "37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46",
+                "encoding_sha256": "1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f",
+                "special_ids": {
+                  "bos_token_id": 2,
+                  "eos_token_id": 1,
+                  "pad_token_id": 1,
+                  "unk_token_id": 0,
+                  "sep_token_id": null,
+                  "cls_token_id": null,
+                  "mask_token_id": null,
+                  "additional_special_tokens_ids": null
+                },
+                "vocab_size": 16,
+                "max_token_id": 15,
+                "wrapper_settings": {
+                  "add_bos_token": false,
+                  "add_eos_token": false,
+                  "split_special_tokens": false,
+                  "clean_up_tokenization_spaces": false,
+                  "spaces_between_special_tokens": null
+                }
+              },
+              "template_sha256": null,
+              "generation_stop_ids": [
+                1,
+                3
+              ],
+              "source": {
+                "tokenizer_id": null,
+                "tokenizer_revision": null
+              },
+              "implementation_class": "TokenizersBackend",
+              "interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21"
+            }
+          }
+        },
+        "checkpoint_interface": {
+          "schema_version": 1,
+          "tokenizer": {
+            "vocab_sha256": "37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46",
+            "encoding_sha256": "1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f",
+            "special_ids": {
+              "bos_token_id": 2,
+              "eos_token_id": 1,
+              "pad_token_id": 1,
+              "unk_token_id": 0,
+              "sep_token_id": null,
+              "cls_token_id": null,
+              "mask_token_id": null,
+              "additional_special_tokens_ids": null
+            },
+            "vocab_size": 16,
+            "max_token_id": 15,
+            "wrapper_settings": {
+              "add_bos_token": false,
+              "add_eos_token": false,
+              "split_special_tokens": false,
+              "clean_up_tokenization_spaces": false,
+              "spaces_between_special_tokens": null
+            }
+          },
+          "template_sha256": null,
+          "generation_stop_ids": [
+            1,
+            3
+          ],
+          "source": {
+            "tokenizer_id": null,
+            "tokenizer_revision": null
+          },
+          "implementation_class": "TokenizersBackend",
+          "interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21"
+        },
+        "revision_evidence": "declared metadata and actual local-file hashes are distinct",
+        "identity_sha256": "b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656",
+        "selected_tokenizer_files": {
+          "chat_template.jinja": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+          "tokenizer.json": "17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf",
+          "tokenizer_config.json": "b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d"
+        },
+        "selected_tokenizer_path": "/tmp/dongxi-generation-reference-ke9mj9ge/random-hf",
+        "interface_evidence": "Frozen declaration; completed validation writes observed-interface.json before model loading"
+      },
+      "interface": {
+        "schema_version": 1,
+        "tokenizer": {
+          "vocab_sha256": "37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46",
+          "encoding_sha256": "1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f",
+          "special_ids": {
+            "bos_token_id": 2,
+            "eos_token_id": 1,
+            "pad_token_id": 1,
+            "unk_token_id": 0,
+            "sep_token_id": null,
+            "cls_token_id": null,
+            "mask_token_id": null,
+            "additional_special_tokens_ids": null
+          },
+          "vocab_size": 16,
+          "max_token_id": 15,
+          "wrapper_settings": {
+            "add_bos_token": false,
+            "add_eos_token": false,
+            "split_special_tokens": false,
+            "clean_up_tokenization_spaces": false,
+            "spaces_between_special_tokens": null
+          }
+        },
+        "template_sha256": null,
+        "generation_stop_ids": [
+          1,
+          3
+        ],
+        "source": {
+          "tokenizer_id": null,
+          "tokenizer_revision": null
+        },
+        "implementation_class": "TokenizersBackend",
+        "interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21"
+      },
+      "contract": {
+        "schema_version": "dongxi-response-record-v1",
+        "parser_version": "bounded-rational-set-interval-v1",
+        "rubric_version": "explicit-marker-fixture-v1",
+        "suite_sha256": "bee487ff7bb64c1e599234278d8d4b83ed50285632a893773c758bc41bb07df7",
+        "settings": {
+          "template_id": "original-tiny-raw-v1",
+          "thinking_mode": "not-applicable",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "stopping": {
+            "eos_token_ids": [
+              1
+            ],
+            "turn_stop_token_ids": [
+              3
+            ],
+            "pad_token_id": 1
+          },
+          "max_new_tokens": 4,
+          "generation": {
+            "input_mode": "raw",
+            "template": null,
+            "context_window": 24,
+            "samples": 2,
+            "device": "cpu",
+            "dtype": "float32",
+            "add_special_tokens": false,
+            "max_run_seconds": 30,
+            "scoring_text": "decode_without_terminal_stop",
+            "interface": {
+              "schema_version": 1,
+              "tokenizer": {
+                "vocab_sha256": "37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46",
+                "encoding_sha256": "1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f",
+                "special_ids": {
+                  "bos_token_id": 2,
+                  "eos_token_id": 1,
+                  "pad_token_id": 1,
+                  "unk_token_id": 0,
+                  "sep_token_id": null,
+                  "cls_token_id": null,
+                  "mask_token_id": null,
+                  "additional_special_tokens_ids": null
+                },
+                "vocab_size": 16,
+                "max_token_id": 15,
+                "wrapper_settings": {
+                  "add_bos_token": false,
+                  "add_eos_token": false,
+                  "split_special_tokens": false,
+                  "clean_up_tokenization_spaces": false,
+                  "spaces_between_special_tokens": null
+                }
+              },
+              "template_sha256": null,
+              "generation_stop_ids": [
+                1,
+                3
+              ],
+              "source": {
+                "tokenizer_id": null,
+                "tokenizer_revision": null
+              },
+              "implementation_class": "TokenizersBackend",
+              "interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21"
+            }
+          }
+        },
+        "identity": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+        "preparation_inputs": {
+          "settings_sha256": "ab1cd32a542081ae651c52d471b38fbf68d460da3020227454f19f2795df8b74",
+          "items_sha256": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+          "tokenizer_files": {
+            "chat_template.jinja": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+            "tokenizer.json": "17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf",
+            "tokenizer_config.json": "b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d"
+          }
+        }
+      },
+      "evaluation": {
+        "contract": {
+          "schema_version": "dongxi-response-record-v1",
+          "parser_version": "bounded-rational-set-interval-v1",
+          "rubric_version": "explicit-marker-fixture-v1",
+          "suite_sha256": "bee487ff7bb64c1e599234278d8d4b83ed50285632a893773c758bc41bb07df7",
+          "settings": {
+            "template_id": "original-tiny-raw-v1",
+            "thinking_mode": "not-applicable",
+            "decoding": {
+              "mode": "sample",
+              "seed": 1004,
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0
+            },
+            "stopping": {
+              "eos_token_ids": [
+                1
+              ],
+              "turn_stop_token_ids": [
+                3
+              ],
+              "pad_token_id": 1
+            },
+            "max_new_tokens": 4,
+            "generation": {
+              "input_mode": "raw",
+              "template": null,
+              "context_window": 24,
+              "samples": 2,
+              "device": "cpu",
+              "dtype": "float32",
+              "add_special_tokens": false,
+              "max_run_seconds": 30,
+              "scoring_text": "decode_without_terminal_stop",
+              "interface": {
+                "schema_version": 1,
+                "tokenizer": {
+                  "vocab_sha256": "37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46",
+                  "encoding_sha256": "1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f",
+                  "special_ids": {
+                    "bos_token_id": 2,
+                    "eos_token_id": 1,
+                    "pad_token_id": 1,
+                    "unk_token_id": 0,
+                    "sep_token_id": null,
+                    "cls_token_id": null,
+                    "mask_token_id": null,
+                    "additional_special_tokens_ids": null
+                  },
+                  "vocab_size": 16,
+                  "max_token_id": 15,
+                  "wrapper_settings": {
+                    "add_bos_token": false,
+                    "add_eos_token": false,
+                    "split_special_tokens": false,
+                    "clean_up_tokenization_spaces": false,
+                    "spaces_between_special_tokens": null
+                  }
+                },
+                "template_sha256": null,
+                "generation_stop_ids": [
+                  1,
+                  3
+                ],
+                "source": {
+                  "tokenizer_id": null,
+                  "tokenizer_revision": null
+                },
+                "implementation_class": "TokenizersBackend",
+                "interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21"
+              }
+            }
+          },
+          "identity": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+          "preparation_inputs": {
+            "settings_sha256": "ab1cd32a542081ae651c52d471b38fbf68d460da3020227454f19f2795df8b74",
+            "items_sha256": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+            "tokenizer_files": {
+              "chat_template.jinja": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+              "tokenizer.json": "17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf",
+              "tokenizer_config.json": "b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d"
+            }
+          }
+        },
+        "mode": "offline saved-response replay",
+        "rows": [
+          {
+            "schema_version": "dongxi-response-record-v1",
+            "adapter_version": "local-hf-response-v1",
+            "contract_id": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+            "checkpoint_id": "local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba",
+            "sample_id": "sample-0-seed-994313480670987209",
+            "item_id": "arithmetic-a",
+            "source_group": "original-arithmetic",
+            "task": "arithmetic",
+            "split": "dev",
+            "raw_response": "THINK [EOS]",
+            "response_text": "THINK",
+            "token_ids": [
+              4,
+              1
+            ],
+            "prompt_tokens": 4,
+            "generated_tokens": 2,
+            "stop_reason": "eos",
+            "truncated": false,
+            "error": null,
+            "error_stage": null,
+            "serialized_prompt": "2 + 2 ?",
+            "prompt_token_ids": [
+              10,
+              11,
+              10,
+              12
+            ],
+            "attempt_seed": 994313480670987209,
+            "sample_index": 0,
+            "selected_behavior_log_probabilities": [
+              -2.7958206260136844,
+              -2.7263765910607205
+            ],
+            "selected_raw_log_probabilities": [
+              -2.7958206260136844,
+              -2.7263765910607205
+            ],
+            "retained_support_sizes": [
+              16,
+              16
+            ],
+            "stop_token_id": 1,
+            "checkpoint_interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21",
+            "input_identity_sha256": "b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656",
+            "input_sha256": {
+              "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+              "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json": "c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274"
+            },
+            "settings_sha256": "d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c",
+            "decoding": {
+              "mode": "sample",
+              "seed": 1004,
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0
+            },
+            "thinking_mode": "not-applicable",
+            "cost": {
+              "wall_seconds": 0.04048455698648468,
+              "generation_tokens": 2,
+              "scoring_tokens": 0,
+              "model_forward_tokens": 9,
+              "attempted_forward_tokens": 9,
+              "forward_calls": 2,
+              "attempted_forward_calls": 2,
+              "forward_seconds": 0.02767598902573809,
+              "prefill_seconds": 0.027181016019312665,
+              "decode_seconds": 0.0004949730064254254
+            },
+            "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+            "timing_boundary": "CPU host wall time",
+            "interrupted": false,
+            "raw_response_sha256": "793e2412330e562f3c96ba1063160ca07f2ecefce8fa53377520506c50fb79c9",
+            "response_text_sha256": "94c1f856fc08fb446e6ae3aeb2dcd7c536c21113b6db1c5a6a8ce417561a0105",
+            "extraction": {
+              "status": "EXTRACTED",
+              "answer": "THINK",
+              "mechanism": "whole"
+            },
+            "format_valid": false,
+            "task_success": false,
+            "natural_termination": true,
+            "correct": false,
+            "canonicalization": {
+              "status": "UNSUPPORTED",
+              "reason": "outside exact rational grammar"
+            },
+            "status": "UNSUPPORTED",
+            "reason": "outside exact rational grammar"
+          },
+          {
+            "schema_version": "dongxi-response-record-v1",
+            "adapter_version": "local-hf-response-v1",
+            "contract_id": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+            "checkpoint_id": "local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba",
+            "sample_id": "sample-1-seed-624892899481925806",
+            "item_id": "arithmetic-a",
+            "source_group": "original-arithmetic",
+            "task": "arithmetic",
+            "split": "dev",
+            "raw_response": "+ [BOS] [EOS]",
+            "response_text": "+ [BOS]",
+            "token_ids": [
+              11,
+              2,
+              1
+            ],
+            "prompt_tokens": 4,
+            "generated_tokens": 3,
+            "stop_reason": "eos",
+            "truncated": false,
+            "error": null,
+            "error_stage": null,
+            "serialized_prompt": "2 + 2 ?",
+            "prompt_token_ids": [
+              10,
+              11,
+              10,
+              12
+            ],
+            "attempt_seed": 624892899481925806,
+            "sample_index": 1,
+            "selected_behavior_log_probabilities": [
+              -2.833788374662637,
+              -2.765521694236846,
+              -2.810298106884865
+            ],
+            "selected_raw_log_probabilities": [
+              -2.833788374662637,
+              -2.765521694236846,
+              -2.810298106884865
+            ],
+            "retained_support_sizes": [
+              16,
+              16,
+              16
+            ],
+            "stop_token_id": 1,
+            "checkpoint_interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21",
+            "input_identity_sha256": "b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656",
+            "input_sha256": {
+              "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+              "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json": "c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274"
+            },
+            "settings_sha256": "d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c",
+            "decoding": {
+              "mode": "sample",
+              "seed": 1004,
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0
+            },
+            "thinking_mode": "not-applicable",
+            "cost": {
+              "wall_seconds": 0.022640395996859297,
+              "generation_tokens": 3,
+              "scoring_tokens": 0,
+              "model_forward_tokens": 15,
+              "attempted_forward_tokens": 15,
+              "forward_calls": 3,
+              "attempted_forward_calls": 3,
+              "forward_seconds": 0.0021908219787292182,
+              "prefill_seconds": 0.0006972929986659437,
+              "decode_seconds": 0.0014935289800632745
+            },
+            "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+            "timing_boundary": "CPU host wall time",
+            "interrupted": false,
+            "raw_response_sha256": "6e408fafe5e86f7a91b6e329ac237e9acdb00d06d0bf7fa93f5b5420b2677fa9",
+            "response_text_sha256": "6f49fa30e83e278d0241dbe66902fe3cb3f777407e02a43d42185cf49e3e41d4",
+            "extraction": {
+              "status": "EXTRACTED",
+              "answer": "+ [BOS]",
+              "mechanism": "whole"
+            },
+            "format_valid": false,
+            "task_success": false,
+            "natural_termination": true,
+            "correct": false,
+            "canonicalization": {
+              "status": "UNSUPPORTED",
+              "reason": "outside exact rational grammar"
+            },
+            "status": "UNSUPPORTED",
+            "reason": "outside exact rational grammar"
+          },
+          {
+            "schema_version": "dongxi-response-record-v1",
+            "adapter_version": "local-hf-response-v1",
+            "contract_id": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+            "checkpoint_id": "local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba",
+            "sample_id": "sample-0-seed-7899095024623998496",
+            "item_id": "greeting-a",
+            "source_group": "original-greeting",
+            "task": "greeting",
+            "split": "dev",
+            "raw_response": "user 4 [TURN]",
+            "response_text": "user 4",
+            "token_ids": [
+              6,
+              9,
+              3
+            ],
+            "prompt_tokens": 2,
+            "generated_tokens": 3,
+            "stop_reason": "turn_stop",
+            "truncated": false,
+            "error": null,
+            "error_stage": null,
+            "serialized_prompt": "hello world",
+            "prompt_token_ids": [
+              8,
+              15
+            ],
+            "attempt_seed": 7899095024623998496,
+            "sample_index": 0,
+            "selected_behavior_log_probabilities": [
+              -2.7591943116348787,
+              -2.8705030058103507,
+              -2.7760627099860646
+            ],
+            "selected_raw_log_probabilities": [
+              -2.7591943116348787,
+              -2.8705030058103507,
+              -2.7760627099860646
+            ],
+            "retained_support_sizes": [
+              16,
+              16,
+              16
+            ],
+            "stop_token_id": 3,
+            "checkpoint_interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21",
+            "input_identity_sha256": "b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656",
+            "input_sha256": {
+              "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+              "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json": "c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274"
+            },
+            "settings_sha256": "d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c",
+            "decoding": {
+              "mode": "sample",
+              "seed": 1004,
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0
+            },
+            "thinking_mode": "not-applicable",
+            "cost": {
+              "wall_seconds": 0.01958757801912725,
+              "generation_tokens": 3,
+              "scoring_tokens": 0,
+              "model_forward_tokens": 9,
+              "attempted_forward_tokens": 9,
+              "forward_calls": 3,
+              "attempted_forward_calls": 3,
+              "forward_seconds": 0.0022206450230441988,
+              "prefill_seconds": 0.0007271000067703426,
+              "decode_seconds": 0.0014935450162738562
+            },
+            "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+            "timing_boundary": "CPU host wall time",
+            "interrupted": false,
+            "raw_response_sha256": "314f1f7ab329473283d20a7b3b102ecc2a0515853d7ab0f6c7077f9de4d38586",
+            "response_text_sha256": "dc1231d918f7a31ad66fc08d00dab965d48d309a504a5a1b8f516a319167a629",
+            "extraction": {
+              "status": "EXTRACTED",
+              "answer": "user 4",
+              "mechanism": "whole"
+            },
+            "format_valid": true,
+            "task_success": false,
+            "natural_termination": true,
+            "correct": false,
+            "status": "INCORRECT"
+          },
+          {
+            "schema_version": "dongxi-response-record-v1",
+            "adapter_version": "local-hf-response-v1",
+            "contract_id": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+            "checkpoint_id": "local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba",
+            "sample_id": "sample-1-seed-7639654792088161233",
+            "item_id": "greeting-a",
+            "source_group": "original-greeting",
+            "task": "greeting",
+            "split": "dev",
+            "raw_response": "NO_THINK blue [BOS] [TURN]",
+            "response_text": "NO_THINK blue [BOS]",
+            "token_ids": [
+              5,
+              13,
+              2,
+              3
+            ],
+            "prompt_tokens": 2,
+            "generated_tokens": 4,
+            "stop_reason": "turn_stop",
+            "truncated": false,
+            "error": null,
+            "error_stage": null,
+            "serialized_prompt": "hello world",
+            "prompt_token_ids": [
+              8,
+              15
+            ],
+            "attempt_seed": 7639654792088161233,
+            "sample_index": 1,
+            "selected_behavior_log_probabilities": [
+              -2.798219221593122,
+              -2.7827136763253315,
+              -2.7995564425668538,
+              -2.7615008963138488
+            ],
+            "selected_raw_log_probabilities": [
+              -2.798219221593122,
+              -2.7827136763253315,
+              -2.7995564425668538,
+              -2.7615008963138488
+            ],
+            "retained_support_sizes": [
+              16,
+              16,
+              16,
+              16
+            ],
+            "stop_token_id": 3,
+            "checkpoint_interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21",
+            "input_identity_sha256": "b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656",
+            "input_sha256": {
+              "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+              "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json": "c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274"
+            },
+            "settings_sha256": "d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c",
+            "decoding": {
+              "mode": "sample",
+              "seed": 1004,
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0
+            },
+            "thinking_mode": "not-applicable",
+            "cost": {
+              "wall_seconds": 0.0221760289859958,
+              "generation_tokens": 4,
+              "scoring_tokens": 0,
+              "model_forward_tokens": 14,
+              "attempted_forward_tokens": 14,
+              "forward_calls": 4,
+              "attempted_forward_calls": 4,
+              "forward_seconds": 0.0019118620257358998,
+              "prefill_seconds": 0.0006629250128753483,
+              "decode_seconds": 0.0012489370128605515
+            },
+            "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+            "timing_boundary": "CPU host wall time",
+            "interrupted": false,
+            "raw_response_sha256": "1316601546df9671fc5a0606d26c89a2af0415ae446b0195cc7edb1201d0a261",
+            "response_text_sha256": "145722dbbb6bca7f64b685aee344bf15bafc237b47a11d8f18c1214de9a1f02a",
+            "extraction": {
+              "status": "EXTRACTED",
+              "answer": "NO_THINK blue [BOS]",
+              "mechanism": "whole"
+            },
+            "format_valid": true,
+            "task_success": false,
+            "natural_termination": true,
+            "correct": false,
+            "status": "INCORRECT"
+          }
+        ],
+        "checkpoints": {
+          "local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba": {
+            "summary": {
+              "n": 4,
+              "accuracy": 0.0,
+              "task_success": 0.0,
+              "format_valid": 0.5,
+              "natural_termination": 1.0,
+              "truncation": 0.0,
+              "stop_reasons": {
+                "eos": 2,
+                "turn_stop": 2
+              },
+              "statuses": {
+                "UNSUPPORTED": 2,
+                "INCORRECT": 2
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0.10488855998846702,
+                  "unknown_rows": 0
+                },
+                "generation_tokens": {
+                  "known_total": 12,
+                  "unknown_rows": 0
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 0
+                }
+              }
+            },
+            "slices": {
+              "task": {
+                "arithmetic": {
+                  "n": 2,
+                  "accuracy": 0.0,
+                  "task_success": 0.0,
+                  "format_valid": 0.0,
+                  "natural_termination": 1.0,
+                  "truncation": 0.0,
+                  "stop_reasons": {
+                    "eos": 2
+                  },
+                  "statuses": {
+                    "UNSUPPORTED": 2
+                  },
+                  "cost": {
+                    "wall_seconds": {
+                      "known_total": 0.06312495298334397,
+                      "unknown_rows": 0
+                    },
+                    "generation_tokens": {
+                      "known_total": 5,
+                      "unknown_rows": 0
+                    },
+                    "scoring_tokens": {
+                      "known_total": 0,
+                      "unknown_rows": 0
+                    }
+                  }
+                },
+                "greeting": {
+                  "n": 2,
+                  "accuracy": 0.0,
+                  "task_success": 0.0,
+                  "format_valid": 1.0,
+                  "natural_termination": 1.0,
+                  "truncation": 0.0,
+                  "stop_reasons": {
+                    "turn_stop": 2
+                  },
+                  "statuses": {
+                    "INCORRECT": 2
+                  },
+                  "cost": {
+                    "wall_seconds": {
+                      "known_total": 0.04176360700512305,
+                      "unknown_rows": 0
+                    },
+                    "generation_tokens": {
+                      "known_total": 7,
+                      "unknown_rows": 0
+                    },
+                    "scoring_tokens": {
+                      "known_total": 0,
+                      "unknown_rows": 0
+                    }
+                  }
+                }
+              },
+              "source_group": {
+                "original-arithmetic": {
+                  "n": 2,
+                  "accuracy": 0.0,
+                  "task_success": 0.0,
+                  "format_valid": 0.0,
+                  "natural_termination": 1.0,
+                  "truncation": 0.0,
+                  "stop_reasons": {
+                    "eos": 2
+                  },
+                  "statuses": {
+                    "UNSUPPORTED": 2
+                  },
+                  "cost": {
+                    "wall_seconds": {
+                      "known_total": 0.06312495298334397,
+                      "unknown_rows": 0
+                    },
+                    "generation_tokens": {
+                      "known_total": 5,
+                      "unknown_rows": 0
+                    },
+                    "scoring_tokens": {
+                      "known_total": 0,
+                      "unknown_rows": 0
+                    }
+                  }
+                },
+                "original-greeting": {
+                  "n": 2,
+                  "accuracy": 0.0,
+                  "task_success": 0.0,
+                  "format_valid": 1.0,
+                  "natural_termination": 1.0,
+                  "truncation": 0.0,
+                  "stop_reasons": {
+                    "turn_stop": 2
+                  },
+                  "statuses": {
+                    "INCORRECT": 2
+                  },
+                  "cost": {
+                    "wall_seconds": {
+                      "known_total": 0.04176360700512305,
+                      "unknown_rows": 0
+                    },
+                    "generation_tokens": {
+                      "known_total": 7,
+                      "unknown_rows": 0
+                    },
+                    "scoring_tokens": {
+                      "known_total": 0,
+                      "unknown_rows": 0
+                    }
+                  }
+                }
+              },
+              "split": {
+                "dev": {
+                  "n": 4,
+                  "accuracy": 0.0,
+                  "task_success": 0.0,
+                  "format_valid": 0.5,
+                  "natural_termination": 1.0,
+                  "truncation": 0.0,
+                  "stop_reasons": {
+                    "eos": 2,
+                    "turn_stop": 2
+                  },
+                  "statuses": {
+                    "UNSUPPORTED": 2,
+                    "INCORRECT": 2
+                  },
+                  "cost": {
+                    "wall_seconds": {
+                      "known_total": 0.10488855998846702,
+                      "unknown_rows": 0
+                    },
+                    "generation_tokens": {
+                      "known_total": 12,
+                      "unknown_rows": 0
+                    },
+                    "scoring_tokens": {
+                      "known_total": 0,
+                      "unknown_rows": 0
+                    }
+                  }
+                }
+              }
+            },
+            "missing_item_ids": []
+          }
+        },
+        "limits": "Authored fixtures or supplied records; no generation or broad safety/capability result."
+      },
+      "raw_records": [
+        {
+          "schema_version": "dongxi-response-record-v1",
+          "adapter_version": "local-hf-response-v1",
+          "contract_id": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+          "checkpoint_id": "local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba",
+          "sample_id": "sample-0-seed-994313480670987209",
+          "item_id": "arithmetic-a",
+          "source_group": "original-arithmetic",
+          "task": "arithmetic",
+          "split": "dev",
+          "raw_response": "THINK [EOS]",
+          "response_text": "THINK",
+          "token_ids": [
+            4,
+            1
+          ],
+          "prompt_tokens": 4,
+          "generated_tokens": 2,
+          "stop_reason": "eos",
+          "truncated": false,
+          "error": null,
+          "error_stage": null,
+          "serialized_prompt": "2 + 2 ?",
+          "prompt_token_ids": [
+            10,
+            11,
+            10,
+            12
+          ],
+          "attempt_seed": 994313480670987209,
+          "sample_index": 0,
+          "selected_behavior_log_probabilities": [
+            -2.7958206260136844,
+            -2.7263765910607205
+          ],
+          "selected_raw_log_probabilities": [
+            -2.7958206260136844,
+            -2.7263765910607205
+          ],
+          "retained_support_sizes": [
+            16,
+            16
+          ],
+          "stop_token_id": 1,
+          "checkpoint_interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21",
+          "input_identity_sha256": "b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656",
+          "input_sha256": {
+            "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+            "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json": "c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274"
+          },
+          "settings_sha256": "d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "thinking_mode": "not-applicable",
+          "cost": {
+            "wall_seconds": 0.04048455698648468,
+            "generation_tokens": 2,
+            "scoring_tokens": 0,
+            "model_forward_tokens": 9,
+            "attempted_forward_tokens": 9,
+            "forward_calls": 2,
+            "attempted_forward_calls": 2,
+            "forward_seconds": 0.02767598902573809,
+            "prefill_seconds": 0.027181016019312665,
+            "decode_seconds": 0.0004949730064254254
+          },
+          "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+          "timing_boundary": "CPU host wall time",
+          "interrupted": false,
+          "raw_response_sha256": "793e2412330e562f3c96ba1063160ca07f2ecefce8fa53377520506c50fb79c9",
+          "response_text_sha256": "94c1f856fc08fb446e6ae3aeb2dcd7c536c21113b6db1c5a6a8ce417561a0105"
+        },
+        {
+          "schema_version": "dongxi-response-record-v1",
+          "adapter_version": "local-hf-response-v1",
+          "contract_id": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+          "checkpoint_id": "local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba",
+          "sample_id": "sample-1-seed-624892899481925806",
+          "item_id": "arithmetic-a",
+          "source_group": "original-arithmetic",
+          "task": "arithmetic",
+          "split": "dev",
+          "raw_response": "+ [BOS] [EOS]",
+          "response_text": "+ [BOS]",
+          "token_ids": [
+            11,
+            2,
+            1
+          ],
+          "prompt_tokens": 4,
+          "generated_tokens": 3,
+          "stop_reason": "eos",
+          "truncated": false,
+          "error": null,
+          "error_stage": null,
+          "serialized_prompt": "2 + 2 ?",
+          "prompt_token_ids": [
+            10,
+            11,
+            10,
+            12
+          ],
+          "attempt_seed": 624892899481925806,
+          "sample_index": 1,
+          "selected_behavior_log_probabilities": [
+            -2.833788374662637,
+            -2.765521694236846,
+            -2.810298106884865
+          ],
+          "selected_raw_log_probabilities": [
+            -2.833788374662637,
+            -2.765521694236846,
+            -2.810298106884865
+          ],
+          "retained_support_sizes": [
+            16,
+            16,
+            16
+          ],
+          "stop_token_id": 1,
+          "checkpoint_interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21",
+          "input_identity_sha256": "b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656",
+          "input_sha256": {
+            "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+            "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json": "c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274"
+          },
+          "settings_sha256": "d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "thinking_mode": "not-applicable",
+          "cost": {
+            "wall_seconds": 0.022640395996859297,
+            "generation_tokens": 3,
+            "scoring_tokens": 0,
+            "model_forward_tokens": 15,
+            "attempted_forward_tokens": 15,
+            "forward_calls": 3,
+            "attempted_forward_calls": 3,
+            "forward_seconds": 0.0021908219787292182,
+            "prefill_seconds": 0.0006972929986659437,
+            "decode_seconds": 0.0014935289800632745
+          },
+          "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+          "timing_boundary": "CPU host wall time",
+          "interrupted": false,
+          "raw_response_sha256": "6e408fafe5e86f7a91b6e329ac237e9acdb00d06d0bf7fa93f5b5420b2677fa9",
+          "response_text_sha256": "6f49fa30e83e278d0241dbe66902fe3cb3f777407e02a43d42185cf49e3e41d4"
+        },
+        {
+          "schema_version": "dongxi-response-record-v1",
+          "adapter_version": "local-hf-response-v1",
+          "contract_id": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+          "checkpoint_id": "local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba",
+          "sample_id": "sample-0-seed-7899095024623998496",
+          "item_id": "greeting-a",
+          "source_group": "original-greeting",
+          "task": "greeting",
+          "split": "dev",
+          "raw_response": "user 4 [TURN]",
+          "response_text": "user 4",
+          "token_ids": [
+            6,
+            9,
+            3
+          ],
+          "prompt_tokens": 2,
+          "generated_tokens": 3,
+          "stop_reason": "turn_stop",
+          "truncated": false,
+          "error": null,
+          "error_stage": null,
+          "serialized_prompt": "hello world",
+          "prompt_token_ids": [
+            8,
+            15
+          ],
+          "attempt_seed": 7899095024623998496,
+          "sample_index": 0,
+          "selected_behavior_log_probabilities": [
+            -2.7591943116348787,
+            -2.8705030058103507,
+            -2.7760627099860646
+          ],
+          "selected_raw_log_probabilities": [
+            -2.7591943116348787,
+            -2.8705030058103507,
+            -2.7760627099860646
+          ],
+          "retained_support_sizes": [
+            16,
+            16,
+            16
+          ],
+          "stop_token_id": 3,
+          "checkpoint_interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21",
+          "input_identity_sha256": "b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656",
+          "input_sha256": {
+            "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+            "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json": "c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274"
+          },
+          "settings_sha256": "d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "thinking_mode": "not-applicable",
+          "cost": {
+            "wall_seconds": 0.01958757801912725,
+            "generation_tokens": 3,
+            "scoring_tokens": 0,
+            "model_forward_tokens": 9,
+            "attempted_forward_tokens": 9,
+            "forward_calls": 3,
+            "attempted_forward_calls": 3,
+            "forward_seconds": 0.0022206450230441988,
+            "prefill_seconds": 0.0007271000067703426,
+            "decode_seconds": 0.0014935450162738562
+          },
+          "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+          "timing_boundary": "CPU host wall time",
+          "interrupted": false,
+          "raw_response_sha256": "314f1f7ab329473283d20a7b3b102ecc2a0515853d7ab0f6c7077f9de4d38586",
+          "response_text_sha256": "dc1231d918f7a31ad66fc08d00dab965d48d309a504a5a1b8f516a319167a629"
+        },
+        {
+          "schema_version": "dongxi-response-record-v1",
+          "adapter_version": "local-hf-response-v1",
+          "contract_id": "9e5fcf43889dac5b47962d6f27bcff6101c6b6cfee89afc35a6311676df5ecfa",
+          "checkpoint_id": "local-hf-sha256:64d2e46b6332ee1cc58a5fa6c5427e7441ed4dc11c1495c1a23af107605a55ba",
+          "sample_id": "sample-1-seed-7639654792088161233",
+          "item_id": "greeting-a",
+          "source_group": "original-greeting",
+          "task": "greeting",
+          "split": "dev",
+          "raw_response": "NO_THINK blue [BOS] [TURN]",
+          "response_text": "NO_THINK blue [BOS]",
+          "token_ids": [
+            5,
+            13,
+            2,
+            3
+          ],
+          "prompt_tokens": 2,
+          "generated_tokens": 4,
+          "stop_reason": "turn_stop",
+          "truncated": false,
+          "error": null,
+          "error_stage": null,
+          "serialized_prompt": "hello world",
+          "prompt_token_ids": [
+            8,
+            15
+          ],
+          "attempt_seed": 7639654792088161233,
+          "sample_index": 1,
+          "selected_behavior_log_probabilities": [
+            -2.798219221593122,
+            -2.7827136763253315,
+            -2.7995564425668538,
+            -2.7615008963138488
+          ],
+          "selected_raw_log_probabilities": [
+            -2.798219221593122,
+            -2.7827136763253315,
+            -2.7995564425668538,
+            -2.7615008963138488
+          ],
+          "retained_support_sizes": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "stop_token_id": 3,
+          "checkpoint_interface_sha256": "6e39257f27d2d073fae38746dde5dcdefa9a5db45f45e7db369d6c54889e3c21",
+          "input_identity_sha256": "b52c2ef8270eb4088c0396566b1ebd6b47d70e1f436dae9ae56a02c39534f656",
+          "input_sha256": {
+            "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+            "/tmp/dongxi-generation-reference-ke9mj9ge/raw-contract.json": "c9ab1744b73bcc1e47aa27dda273cab56535913ff399ea629d79cd2c876c7274"
+          },
+          "settings_sha256": "d0ceefbd592e64d32d39ab3c23ba0c986bb2047617de2be4de7527dfa000212c",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "thinking_mode": "not-applicable",
+          "cost": {
+            "wall_seconds": 0.0221760289859958,
+            "generation_tokens": 4,
+            "scoring_tokens": 0,
+            "model_forward_tokens": 14,
+            "attempted_forward_tokens": 14,
+            "forward_calls": 4,
+            "attempted_forward_calls": 4,
+            "forward_seconds": 0.0019118620257358998,
+            "prefill_seconds": 0.0006629250128753483,
+            "decode_seconds": 0.0012489370128605515
+          },
+          "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+          "timing_boundary": "CPU host wall time",
+          "interrupted": false,
+          "raw_response_sha256": "1316601546df9671fc5a0606d26c89a2af0415ae446b0195cc7edb1201d0a261",
+          "response_text_sha256": "145722dbbb6bca7f64b685aee344bf15bafc237b47a11d8f18c1214de9a1f02a"
+        }
+      ],
+      "events_sha256": "50847612ce1c80ddfcc2460e0c65270ab1224ec0f510c41ff26fba988969904b",
+      "files_sha256": {
+        "summary.json": "d6283f420f903b69ad0b50b86d32242d6dde98e73b1b38a75e64283188088d0e",
+        "observed-interface.json": "f3b165b57d7d1d7bd46d05f2401f1fd071343eda93620f90507123e87c1d7c29",
+        "evaluation.json": "1820eb5ed149c8724e70f2c5f8cbbcd69d5cc01520a3a26669e966990a4703a5",
+        "events.jsonl": "50847612ce1c80ddfcc2460e0c65270ab1224ec0f510c41ff26fba988969904b",
+        "responses.jsonl": "0cb8c574384e41020a41e9174230d440b3e7c992413458912571621e063ea57d",
+        "contract.json": "48b05a96cb7916ff4b7265b9205672f00ee311aad1842c0a1d57831eca68b106",
+        "input-identity.json": "15bf30fe15b9f52d19f1d344523dd1ddf7a095bfd7a40abb58939d7a67b2a0a1"
+      }
+    },
+    "chat": {
+      "summary": {
+        "status": "completed",
+        "adapter_version": "local-hf-response-v1",
+        "checkpoint_id": "local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c",
+        "contract_id": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+        "identity_sha256": "9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83",
+        "record_count": 4,
+        "elapsed_seconds": 1.8784464310156181,
+        "inputs_unchanged": true,
+        "limitations": [
+          "Local generation events, not a pretrained capability or human review claim",
+          "Full-prefix loop without KV caching; measured times are not optimized inference benchmarks",
+          "Deadline checked at forward boundaries, not an external hard-kill supervisor",
+          "New invocation only; saved partial events are not an exact-resume guarantee"
+        ]
+      },
+      "identity": {
+        "schema_version": 1,
+        "created_utc": "2026-10-04T20:25:22.795738+00:00",
+        "git": {
+          "commit": {
+            "status": "measured",
+            "value": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4"
+          },
+          "dirty": true,
+          "status_sha256": "62663ee710a08eb563009bba57164b9b45c9b5abc163f78df58b55481bc7a527",
+          "changed_paths": [
+            "M .gitignore",
+            " M AGENTS.md",
+            " M BOOK.md",
+            " M LEARNING_MEMORY.md",
+            " M PROGRESS.md",
+            " M README.md",
+            " M ROADMAP.md",
+            " M book/appendices/d-reproduction-and-environments.md",
+            " M book/chapters/01-evidence-before-optimization.md",
+            " M book/chapters/07-evaluation-is-a-contract.md",
+            " M book/chapters/10-preferences-and-reward-models.md",
+            " M book/chapters/12-language-generation-as-a-policy.md",
+            " M book/chapters/13-group-relative-policy-optimization.md",
+            " M book/chapters/14-when-optimization-goes-wrong.md",
+            " M book/chapters/15-distill-evaluate-and-defend.md",
+            " M book/labs/01-evidence-before-optimization.md",
+            " M book/labs/07-evaluation-is-a-contract.md",
+            " M book/labs/09-supervised-fine-tuning.md",
+            " M book/labs/10-preferences-and-reward-models.md",
+            " M book/labs/11-direct-preference-optimization.md",
+            " M book/labs/13-group-relative-policy-optimization.md",
+            " M book/labs/14-when-optimization-goes-wrong.md",
+            " M book/solutions/01-evidence-before-optimization.md",
+            " M book/solutions/07-evaluation-is-a-contract.md",
+            " M book/solutions/10-preferences-and-reward-models.md",
+            " M book/solutions/13-group-relative-policy-optimization.md",
+            " M book/solutions/14-when-optimization-goes-wrong.md",
+            " M docs/EXPERIMENT_MATRIX.md",
+            " M docs/NOTEBOOK_CURRICULUM.md",
+            " M docs/handoffs/CURRENT.md",
+            " M experiments/specs/day-23-qwen-rlvr.md",
+            " M notebooks/README.md",
+            " M notebooks/day-01/README.md",
+            " M notebooks/day-10/README.md",
+            " M notebooks/day-15/README.md",
+            " M notebooks/day-16/README.md",
+            " M notebooks/day-20/README.md",
+            " M notebooks/day-23/README.md",
+            " M notebooks/requirements-course.txt",
+            " M pyproject.toml",
+            " M scripts/check_course_integrity.py",
+            " M scripts/run_chapter09_spark_sft.py",
+            " M scripts/run_chapter11_spark_dpo.py",
+            " M scripts/verify_course_notebooks.py",
+            " M src/dongxi_llms/qwen_rlvr_lab.py",
+            " M tests/test_course_verification.py",
+            " M tests/test_dpo_checkpoint_interface.py",
+            " M tests/test_spark_sft_contract.py",
+            " M visuals/animations/PROPOSALS.md",
+            "?? .github/",
+            "?? docs/COURSE_IMPROVEMENT_PLAN.md",
+            "?? docs/REFERENCE_REPOSITORY_AUDIT.md",
+            "?? docs/course_improvements.json",
+            "?? docs/course_manifest.json",
+            "?? experiments/reports/2026-10-04-preference-audit-hardening.json",
+            "?? experiments/reports/2026-10-04-preference-audit-hardening.md",
+            "?? experiments/reports/2026-10-04-preference-audit-verification.json",
+            "?? experiments/reports/2026-10-04-preference-audit.json",
+            "?? experiments/reports/2026-10-04-preference-audit.md",
+            "?? experiments/reports/2026-10-04-reasoning-evaluation.json",
+            "?? experiments/reports/2026-10-04-reasoning-evaluation.md",
+            "?? experiments/reports/2026-10-04-run-identity.json",
+            "?? experiments/reports/2026-10-04-run-identity.md",
+            "?? experiments/reports/2026-10-04-sampling-support-hardening.json",
+            "?? experiments/reports/2026-10-04-sampling-support-hardening.md",
+            "?? experiments/reports/2026-10-04-sampling-support.json",
+            "?? experiments/reports/2026-10-04-sampling-support.md",
+            "?? experiments/reports/2026-10-04-text-reward.json",
+            "?? experiments/specs/2026-10-04-course-reproduction.md",
+            "?? experiments/specs/2026-10-04-preference-audit.md",
+            "?? experiments/specs/2026-10-04-reasoning-controls.md",
+            "?? experiments/specs/2026-10-04-reasoning-evaluation.md",
+            "?? experiments/specs/2026-10-04-reasoning-generation-adapter.md",
+            "?? experiments/specs/2026-10-04-run-identity.md",
+            "?? experiments/specs/2026-10-04-sampling-support.md",
+            "?? experiments/specs/2026-10-04-text-reward.md",
+            "?? fixtures/preference-audit/",
+            "?? fixtures/reasoning-controls/",
+            "?? fixtures/reasoning-evaluation/",
+            "?? fixtures/text-reward/",
+            "?? notebooks/day-01/04_checkpoint_interface.ipynb",
+            "?? notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+            "?? notebooks/day-15/03_preference_collection_and_judges.ipynb",
+            "?? notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+            "?? notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+            "?? notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb",
+            "?? notebooks/figures/chapter-01/day-01-04_checkpoint_interface-01.png",
+            "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-01.png",
+            "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-02.png",
+            "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-03.png",
+            "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-04.png",
+            "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-01.png",
+            "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-02.png",
+            "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-03.png",
+            "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-01.png",
+            "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-02.png",
+            "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-03.png",
+            "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-04.png",
+            "?? notebooks/figures/chapter-10/day-16-03_text_reward_and_process_labels-05.png",
+            "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-01.png",
+            "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-02.png",
+            "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-03.png",
+            "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-04.png",
+            "?? scripts/evaluate_reasoning_records.py",
+            "?? scripts/generate_reasoning_records.py",
+            "?? scripts/merge_course_adapter.py",
+            "?? scripts/run_cpu_verification.py",
+            "?? scripts/verify_reasoning_generation.py",
+            "?? src/dongxi_llms.egg-info/",
+            "?? src/dongxi_llms/checkpoint_merge.py",
+            "?? src/dongxi_llms/course_manifest.py",
+            "?? src/dongxi_llms/preference_audit.py",
+            "?? src/dongxi_llms/reasoning_controls.py",
+            "?? src/dongxi_llms/reasoning_evaluation.py",
+            "?? src/dongxi_llms/reasoning_generation.py",
+            "?? src/dongxi_llms/run_identity.py",
+            "?? src/dongxi_llms/sampling_likelihood_lab.py",
+            "?? src/dongxi_llms/text_reward_lab.py",
+            "?? tests/test_course_manifest.py",
+            "?? tests/test_cpu_reproduction.py",
+            "?? tests/test_preference_audit.py",
+            "?? tests/test_reasoning_controls.py",
+            "?? tests/test_reasoning_evaluation.py",
+            "?? tests/test_reasoning_generation.py",
+            "?? tests/test_run_identity.py",
+            "?? tests/test_sampling_likelihood_lab.py",
+            "?? tests/test_text_reward_lab.py",
+            "?? uv.lock"
+          ]
+        },
+        "source_sha256": {
+          "src/dongxi_llms/reasoning_generation.py": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0",
+          "src/dongxi_llms/reasoning_evaluation.py": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da",
+          "src/dongxi_llms/run_identity.py": "6eb0cc124d1eef6929177d4cfd0a187bdd1a0dae586472012c253833628bad29",
+          "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+          "scripts/generate_reasoning_records.py": "ec39622c883bcb3affc8d033b28f0a986eacc0e25ddce4f418b499135a61ab3b"
+        },
+        "input_sha256": {
+          "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+          "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json": "b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60"
+        },
+        "checkpoint_files": {
+          "chat_template.jinja": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+          "config.json": "59f3de4a3bf49c57b57d3dbaa0ed04c08cfa1385cc02d06a84ed1799dbed2941",
+          "generation_config.json": "2179bfff1642b04e82736f7914d2308c25acd7cc02482afde5904291c4375558",
+          "model.safetensors": "cb6a5148a39b8ec51ee009da34c52132b9ccb3d4c28b129003490878ae52f39c",
+          "tokenizer.json": "17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf",
+          "tokenizer_config.json": "b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d"
+        },
+        "checkpoint_path": "/tmp/dongxi-generation-reference-ke9mj9ge/random-hf",
+        "environment": {
+          "python_version": "3.12.14",
+          "interpreter": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+          "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+          "machine": "aarch64",
+          "packages": {
+            "torch": "2.13.0+cu130",
+            "transformers": "5.16.1",
+            "tokenizers": "0.23.1",
+            "peft": "0.20.0",
+            "numpy": "2.5.2",
+            "matplotlib": "3.10.8",
+            "nbformat": "5.11.1",
+            "nbclient": "0.11.0",
+            "huggingface-hub": "1.28.0"
+          },
+          "environment_lock": {
+            "status": "not_supplied",
+            "path": null,
+            "sha256": null
+          }
+        },
+        "device": {
+          "mode": "cpu"
+        },
+        "gpu_driver": {
+          "status": "not_requested",
+          "value": null
+        },
+        "command": [
+          "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+          "scripts/generate_reasoning_records.py",
+          "--items",
+          "/tmp/dongxi-generation-reference-ke9mj9ge/items.json",
+          "--checkpoint",
+          "/tmp/dongxi-generation-reference-ke9mj9ge/random-hf",
+          "--contract",
+          "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json",
+          "--output",
+          "/tmp/dongxi-generation-reference-ke9mj9ge/chat-run"
+        ],
+        "config": {
+          "template_id": "original-tiny-chat-v1",
+          "thinking_mode": "disabled",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "stopping": {
+            "eos_token_ids": [
+              1
+            ],
+            "turn_stop_token_ids": [
+              3
+            ],
+            "pad_token_id": 1
+          },
+          "max_new_tokens": 4,
+          "generation": {
+            "input_mode": "chat",
+            "template": "{% for m in messages %}{{ m['role'] }} {{ m['content'] }} {% endfor %}{% if enable_thinking %}THINK {% else %}NO_THINK {% endif %}assistant ",
+            "context_window": 24,
+            "samples": 2,
+            "device": "cpu",
+            "dtype": "float32",
+            "add_special_tokens": false,
+            "max_run_seconds": 30,
+            "scoring_text": "decode_without_terminal_stop",
+            "interface": {
+              "schema_version": 1,
+              "tokenizer": {
+                "vocab_sha256": "37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46",
+                "encoding_sha256": "1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f",
+                "special_ids": {
+                  "bos_token_id": 2,
+                  "eos_token_id": 1,
+                  "pad_token_id": 1,
+                  "unk_token_id": 0,
+                  "sep_token_id": null,
+                  "cls_token_id": null,
+                  "mask_token_id": null,
+                  "additional_special_tokens_ids": null
+                },
+                "vocab_size": 16,
+                "max_token_id": 15,
+                "wrapper_settings": {
+                  "add_bos_token": false,
+                  "add_eos_token": false,
+                  "split_special_tokens": false,
+                  "clean_up_tokenization_spaces": false,
+                  "spaces_between_special_tokens": null
+                }
+              },
+              "template_sha256": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+              "generation_stop_ids": [
+                1,
+                3
+              ],
+              "source": {
+                "tokenizer_id": null,
+                "tokenizer_revision": null
+              },
+              "implementation_class": "TokenizersBackend",
+              "interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26"
+            }
+          }
+        },
+        "checkpoint_interface": {
+          "schema_version": 1,
+          "tokenizer": {
+            "vocab_sha256": "37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46",
+            "encoding_sha256": "1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f",
+            "special_ids": {
+              "bos_token_id": 2,
+              "eos_token_id": 1,
+              "pad_token_id": 1,
+              "unk_token_id": 0,
+              "sep_token_id": null,
+              "cls_token_id": null,
+              "mask_token_id": null,
+              "additional_special_tokens_ids": null
+            },
+            "vocab_size": 16,
+            "max_token_id": 15,
+            "wrapper_settings": {
+              "add_bos_token": false,
+              "add_eos_token": false,
+              "split_special_tokens": false,
+              "clean_up_tokenization_spaces": false,
+              "spaces_between_special_tokens": null
+            }
+          },
+          "template_sha256": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+          "generation_stop_ids": [
+            1,
+            3
+          ],
+          "source": {
+            "tokenizer_id": null,
+            "tokenizer_revision": null
+          },
+          "implementation_class": "TokenizersBackend",
+          "interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26"
+        },
+        "revision_evidence": "declared metadata and actual local-file hashes are distinct",
+        "identity_sha256": "9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83",
+        "selected_tokenizer_files": {
+          "chat_template.jinja": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+          "tokenizer.json": "17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf",
+          "tokenizer_config.json": "b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d"
+        },
+        "selected_tokenizer_path": "/tmp/dongxi-generation-reference-ke9mj9ge/random-hf",
+        "interface_evidence": "Frozen declaration; completed validation writes observed-interface.json before model loading"
+      },
+      "interface": {
+        "schema_version": 1,
+        "tokenizer": {
+          "vocab_sha256": "37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46",
+          "encoding_sha256": "1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f",
+          "special_ids": {
+            "bos_token_id": 2,
+            "eos_token_id": 1,
+            "pad_token_id": 1,
+            "unk_token_id": 0,
+            "sep_token_id": null,
+            "cls_token_id": null,
+            "mask_token_id": null,
+            "additional_special_tokens_ids": null
+          },
+          "vocab_size": 16,
+          "max_token_id": 15,
+          "wrapper_settings": {
+            "add_bos_token": false,
+            "add_eos_token": false,
+            "split_special_tokens": false,
+            "clean_up_tokenization_spaces": false,
+            "spaces_between_special_tokens": null
+          }
+        },
+        "template_sha256": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+        "generation_stop_ids": [
+          1,
+          3
+        ],
+        "source": {
+          "tokenizer_id": null,
+          "tokenizer_revision": null
+        },
+        "implementation_class": "TokenizersBackend",
+        "interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26"
+      },
+      "contract": {
+        "schema_version": "dongxi-response-record-v1",
+        "parser_version": "bounded-rational-set-interval-v1",
+        "rubric_version": "explicit-marker-fixture-v1",
+        "suite_sha256": "bee487ff7bb64c1e599234278d8d4b83ed50285632a893773c758bc41bb07df7",
+        "settings": {
+          "template_id": "original-tiny-chat-v1",
+          "thinking_mode": "disabled",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "stopping": {
+            "eos_token_ids": [
+              1
+            ],
+            "turn_stop_token_ids": [
+              3
+            ],
+            "pad_token_id": 1
+          },
+          "max_new_tokens": 4,
+          "generation": {
+            "input_mode": "chat",
+            "template": "{% for m in messages %}{{ m['role'] }} {{ m['content'] }} {% endfor %}{% if enable_thinking %}THINK {% else %}NO_THINK {% endif %}assistant ",
+            "context_window": 24,
+            "samples": 2,
+            "device": "cpu",
+            "dtype": "float32",
+            "add_special_tokens": false,
+            "max_run_seconds": 30,
+            "scoring_text": "decode_without_terminal_stop",
+            "interface": {
+              "schema_version": 1,
+              "tokenizer": {
+                "vocab_sha256": "37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46",
+                "encoding_sha256": "1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f",
+                "special_ids": {
+                  "bos_token_id": 2,
+                  "eos_token_id": 1,
+                  "pad_token_id": 1,
+                  "unk_token_id": 0,
+                  "sep_token_id": null,
+                  "cls_token_id": null,
+                  "mask_token_id": null,
+                  "additional_special_tokens_ids": null
+                },
+                "vocab_size": 16,
+                "max_token_id": 15,
+                "wrapper_settings": {
+                  "add_bos_token": false,
+                  "add_eos_token": false,
+                  "split_special_tokens": false,
+                  "clean_up_tokenization_spaces": false,
+                  "spaces_between_special_tokens": null
+                }
+              },
+              "template_sha256": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+              "generation_stop_ids": [
+                1,
+                3
+              ],
+              "source": {
+                "tokenizer_id": null,
+                "tokenizer_revision": null
+              },
+              "implementation_class": "TokenizersBackend",
+              "interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26"
+            }
+          }
+        },
+        "identity": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+        "preparation_inputs": {
+          "settings_sha256": "32ca3285749ed293e71c66c86aeb1cb94b59356325bb4cc11c459e1b33ceb357",
+          "items_sha256": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+          "tokenizer_files": {
+            "chat_template.jinja": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+            "tokenizer.json": "17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf",
+            "tokenizer_config.json": "b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d"
+          }
+        }
+      },
+      "evaluation": {
+        "contract": {
+          "schema_version": "dongxi-response-record-v1",
+          "parser_version": "bounded-rational-set-interval-v1",
+          "rubric_version": "explicit-marker-fixture-v1",
+          "suite_sha256": "bee487ff7bb64c1e599234278d8d4b83ed50285632a893773c758bc41bb07df7",
+          "settings": {
+            "template_id": "original-tiny-chat-v1",
+            "thinking_mode": "disabled",
+            "decoding": {
+              "mode": "sample",
+              "seed": 1004,
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0
+            },
+            "stopping": {
+              "eos_token_ids": [
+                1
+              ],
+              "turn_stop_token_ids": [
+                3
+              ],
+              "pad_token_id": 1
+            },
+            "max_new_tokens": 4,
+            "generation": {
+              "input_mode": "chat",
+              "template": "{% for m in messages %}{{ m['role'] }} {{ m['content'] }} {% endfor %}{% if enable_thinking %}THINK {% else %}NO_THINK {% endif %}assistant ",
+              "context_window": 24,
+              "samples": 2,
+              "device": "cpu",
+              "dtype": "float32",
+              "add_special_tokens": false,
+              "max_run_seconds": 30,
+              "scoring_text": "decode_without_terminal_stop",
+              "interface": {
+                "schema_version": 1,
+                "tokenizer": {
+                  "vocab_sha256": "37c6f49c0c711774a5c5021d3fce2d5490541d1658fddd0ce14f9d514f033d46",
+                  "encoding_sha256": "1c5004cf619279e1d1459b1562ad5b3bb70b3b1fac0d5ecf6cf9707c2a02104f",
+                  "special_ids": {
+                    "bos_token_id": 2,
+                    "eos_token_id": 1,
+                    "pad_token_id": 1,
+                    "unk_token_id": 0,
+                    "sep_token_id": null,
+                    "cls_token_id": null,
+                    "mask_token_id": null,
+                    "additional_special_tokens_ids": null
+                  },
+                  "vocab_size": 16,
+                  "max_token_id": 15,
+                  "wrapper_settings": {
+                    "add_bos_token": false,
+                    "add_eos_token": false,
+                    "split_special_tokens": false,
+                    "clean_up_tokenization_spaces": false,
+                    "spaces_between_special_tokens": null
+                  }
+                },
+                "template_sha256": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+                "generation_stop_ids": [
+                  1,
+                  3
+                ],
+                "source": {
+                  "tokenizer_id": null,
+                  "tokenizer_revision": null
+                },
+                "implementation_class": "TokenizersBackend",
+                "interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26"
+              }
+            }
+          },
+          "identity": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+          "preparation_inputs": {
+            "settings_sha256": "32ca3285749ed293e71c66c86aeb1cb94b59356325bb4cc11c459e1b33ceb357",
+            "items_sha256": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+            "tokenizer_files": {
+              "chat_template.jinja": "3dbf3b376cfdc2a28d35c0c1545b099e9983143720e6c19d09e234431c00c0e9",
+              "tokenizer.json": "17f1de67c27f06ae528f26185b6d3501e6eb7aa0c2c8ca46628748a667c35aaf",
+              "tokenizer_config.json": "b0e70f27c667278dd275e1d38df7f0307e11f6f59811735e43e22296d77e9d1d"
+            }
+          }
+        },
+        "mode": "offline saved-response replay",
+        "rows": [
+          {
+            "schema_version": "dongxi-response-record-v1",
+            "adapter_version": "local-hf-response-v1",
+            "contract_id": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+            "checkpoint_id": "local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c",
+            "sample_id": "sample-0-seed-994313480670987209",
+            "item_id": "arithmetic-a",
+            "source_group": "original-arithmetic",
+            "task": "arithmetic",
+            "split": "dev",
+            "raw_response": "THINK [EOS]",
+            "response_text": "THINK",
+            "token_ids": [
+              4,
+              1
+            ],
+            "prompt_tokens": 7,
+            "generated_tokens": 2,
+            "stop_reason": "eos",
+            "truncated": false,
+            "error": null,
+            "error_stage": null,
+            "serialized_prompt": "user 2 + 2 ? NO_THINK assistant ",
+            "prompt_token_ids": [
+              6,
+              10,
+              11,
+              10,
+              12,
+              5,
+              7
+            ],
+            "attempt_seed": 994313480670987209,
+            "sample_index": 0,
+            "selected_behavior_log_probabilities": [
+              -2.7876425046122058,
+              -2.8212549989012334
+            ],
+            "selected_raw_log_probabilities": [
+              -2.7876425046122058,
+              -2.8212549989012334
+            ],
+            "retained_support_sizes": [
+              16,
+              16
+            ],
+            "stop_token_id": 1,
+            "checkpoint_interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26",
+            "input_identity_sha256": "9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83",
+            "input_sha256": {
+              "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+              "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json": "b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60"
+            },
+            "settings_sha256": "e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe",
+            "decoding": {
+              "mode": "sample",
+              "seed": 1004,
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0
+            },
+            "thinking_mode": "disabled",
+            "cost": {
+              "wall_seconds": 0.037696296989452094,
+              "generation_tokens": 2,
+              "scoring_tokens": 0,
+              "model_forward_tokens": 15,
+              "attempted_forward_tokens": 15,
+              "forward_calls": 2,
+              "attempted_forward_calls": 2,
+              "forward_seconds": 0.02803147499798797,
+              "prefill_seconds": 0.02747063001152128,
+              "decode_seconds": 0.0005608449864666909
+            },
+            "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+            "timing_boundary": "CPU host wall time",
+            "interrupted": false,
+            "raw_response_sha256": "793e2412330e562f3c96ba1063160ca07f2ecefce8fa53377520506c50fb79c9",
+            "response_text_sha256": "94c1f856fc08fb446e6ae3aeb2dcd7c536c21113b6db1c5a6a8ce417561a0105",
+            "extraction": {
+              "status": "EXTRACTED",
+              "answer": "THINK",
+              "mechanism": "whole"
+            },
+            "format_valid": false,
+            "task_success": false,
+            "natural_termination": true,
+            "correct": false,
+            "canonicalization": {
+              "status": "UNSUPPORTED",
+              "reason": "outside exact rational grammar"
+            },
+            "status": "UNSUPPORTED",
+            "reason": "outside exact rational grammar"
+          },
+          {
+            "schema_version": "dongxi-response-record-v1",
+            "adapter_version": "local-hf-response-v1",
+            "contract_id": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+            "checkpoint_id": "local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c",
+            "sample_id": "sample-1-seed-624892899481925806",
+            "item_id": "arithmetic-a",
+            "source_group": "original-arithmetic",
+            "task": "arithmetic",
+            "split": "dev",
+            "raw_response": "+ [BOS] [EOS]",
+            "response_text": "+ [BOS]",
+            "token_ids": [
+              11,
+              2,
+              1
+            ],
+            "prompt_tokens": 7,
+            "generated_tokens": 3,
+            "stop_reason": "eos",
+            "truncated": false,
+            "error": null,
+            "error_stage": null,
+            "serialized_prompt": "user 2 + 2 ? NO_THINK assistant ",
+            "prompt_token_ids": [
+              6,
+              10,
+              11,
+              10,
+              12,
+              5,
+              7
+            ],
+            "attempt_seed": 624892899481925806,
+            "sample_index": 1,
+            "selected_behavior_log_probabilities": [
+              -2.805006857553719,
+              -2.7920903001503636,
+              -2.8515531717350813
+            ],
+            "selected_raw_log_probabilities": [
+              -2.805006857553719,
+              -2.7920903001503636,
+              -2.8515531717350813
+            ],
+            "retained_support_sizes": [
+              16,
+              16,
+              16
+            ],
+            "stop_token_id": 1,
+            "checkpoint_interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26",
+            "input_identity_sha256": "9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83",
+            "input_sha256": {
+              "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+              "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json": "b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60"
+            },
+            "settings_sha256": "e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe",
+            "decoding": {
+              "mode": "sample",
+              "seed": 1004,
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0
+            },
+            "thinking_mode": "disabled",
+            "cost": {
+              "wall_seconds": 0.01196266699116677,
+              "generation_tokens": 3,
+              "scoring_tokens": 0,
+              "model_forward_tokens": 24,
+              "attempted_forward_tokens": 24,
+              "forward_calls": 3,
+              "attempted_forward_calls": 3,
+              "forward_seconds": 0.0011069219908677042,
+              "prefill_seconds": 0.0003501900064293295,
+              "decode_seconds": 0.0007567319844383746
+            },
+            "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+            "timing_boundary": "CPU host wall time",
+            "interrupted": false,
+            "raw_response_sha256": "6e408fafe5e86f7a91b6e329ac237e9acdb00d06d0bf7fa93f5b5420b2677fa9",
+            "response_text_sha256": "6f49fa30e83e278d0241dbe66902fe3cb3f777407e02a43d42185cf49e3e41d4",
+            "extraction": {
+              "status": "EXTRACTED",
+              "answer": "+ [BOS]",
+              "mechanism": "whole"
+            },
+            "format_valid": false,
+            "task_success": false,
+            "natural_termination": true,
+            "correct": false,
+            "canonicalization": {
+              "status": "UNSUPPORTED",
+              "reason": "outside exact rational grammar"
+            },
+            "status": "UNSUPPORTED",
+            "reason": "outside exact rational grammar"
+          },
+          {
+            "schema_version": "dongxi-response-record-v1",
+            "adapter_version": "local-hf-response-v1",
+            "contract_id": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+            "checkpoint_id": "local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c",
+            "sample_id": "sample-0-seed-7899095024623998496",
+            "item_id": "greeting-a",
+            "source_group": "original-greeting",
+            "task": "greeting",
+            "split": "dev",
+            "raw_response": "user 4 [TURN]",
+            "response_text": "user 4",
+            "token_ids": [
+              6,
+              9,
+              3
+            ],
+            "prompt_tokens": 5,
+            "generated_tokens": 3,
+            "stop_reason": "turn_stop",
+            "truncated": false,
+            "error": null,
+            "error_stage": null,
+            "serialized_prompt": "user hello world NO_THINK assistant ",
+            "prompt_token_ids": [
+              6,
+              8,
+              15,
+              5,
+              7
+            ],
+            "attempt_seed": 7899095024623998496,
+            "sample_index": 0,
+            "selected_behavior_log_probabilities": [
+              -2.8473955408869225,
+              -2.71184601554451,
+              -2.70184047980863
+            ],
+            "selected_raw_log_probabilities": [
+              -2.8473955408869225,
+              -2.71184601554451,
+              -2.70184047980863
+            ],
+            "retained_support_sizes": [
+              16,
+              16,
+              16
+            ],
+            "stop_token_id": 3,
+            "checkpoint_interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26",
+            "input_identity_sha256": "9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83",
+            "input_sha256": {
+              "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+              "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json": "b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60"
+            },
+            "settings_sha256": "e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe",
+            "decoding": {
+              "mode": "sample",
+              "seed": 1004,
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0
+            },
+            "thinking_mode": "disabled",
+            "cost": {
+              "wall_seconds": 0.01825091100181453,
+              "generation_tokens": 3,
+              "scoring_tokens": 0,
+              "model_forward_tokens": 18,
+              "attempted_forward_tokens": 18,
+              "forward_calls": 3,
+              "attempted_forward_calls": 3,
+              "forward_seconds": 0.001967991003766656,
+              "prefill_seconds": 0.0007502369990106672,
+              "decode_seconds": 0.0012177540047559887
+            },
+            "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+            "timing_boundary": "CPU host wall time",
+            "interrupted": false,
+            "raw_response_sha256": "314f1f7ab329473283d20a7b3b102ecc2a0515853d7ab0f6c7077f9de4d38586",
+            "response_text_sha256": "dc1231d918f7a31ad66fc08d00dab965d48d309a504a5a1b8f516a319167a629",
+            "extraction": {
+              "status": "EXTRACTED",
+              "answer": "user 4",
+              "mechanism": "whole"
+            },
+            "format_valid": true,
+            "task_success": false,
+            "natural_termination": true,
+            "correct": false,
+            "status": "INCORRECT"
+          },
+          {
+            "schema_version": "dongxi-response-record-v1",
+            "adapter_version": "local-hf-response-v1",
+            "contract_id": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+            "checkpoint_id": "local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c",
+            "sample_id": "sample-1-seed-7639654792088161233",
+            "item_id": "greeting-a",
+            "source_group": "original-greeting",
+            "task": "greeting",
+            "split": "dev",
+            "raw_response": "NO_THINK blue [BOS] [TURN]",
+            "response_text": "NO_THINK blue [BOS]",
+            "token_ids": [
+              5,
+              13,
+              2,
+              3
+            ],
+            "prompt_tokens": 5,
+            "generated_tokens": 4,
+            "stop_reason": "turn_stop",
+            "truncated": false,
+            "error": null,
+            "error_stage": null,
+            "serialized_prompt": "user hello world NO_THINK assistant ",
+            "prompt_token_ids": [
+              6,
+              8,
+              15,
+              5,
+              7
+            ],
+            "attempt_seed": 7639654792088161233,
+            "sample_index": 1,
+            "selected_behavior_log_probabilities": [
+              -2.749022280537887,
+              -2.654658635591965,
+              -2.796857444481259,
+              -2.804744967129307
+            ],
+            "selected_raw_log_probabilities": [
+              -2.749022280537887,
+              -2.654658635591965,
+              -2.796857444481259,
+              -2.804744967129307
+            ],
+            "retained_support_sizes": [
+              16,
+              16,
+              16,
+              16
+            ],
+            "stop_token_id": 3,
+            "checkpoint_interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26",
+            "input_identity_sha256": "9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83",
+            "input_sha256": {
+              "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+              "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json": "b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60"
+            },
+            "settings_sha256": "e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe",
+            "decoding": {
+              "mode": "sample",
+              "seed": 1004,
+              "temperature": 1.0,
+              "top_k": null,
+              "top_p": 1.0
+            },
+            "thinking_mode": "disabled",
+            "cost": {
+              "wall_seconds": 0.02478220997727476,
+              "generation_tokens": 4,
+              "scoring_tokens": 0,
+              "model_forward_tokens": 26,
+              "attempted_forward_tokens": 26,
+              "forward_calls": 4,
+              "attempted_forward_calls": 4,
+              "forward_seconds": 0.003140162007184699,
+              "prefill_seconds": 0.0006593409925699234,
+              "decode_seconds": 0.0024808210146147758
+            },
+            "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+            "timing_boundary": "CPU host wall time",
+            "interrupted": false,
+            "raw_response_sha256": "1316601546df9671fc5a0606d26c89a2af0415ae446b0195cc7edb1201d0a261",
+            "response_text_sha256": "145722dbbb6bca7f64b685aee344bf15bafc237b47a11d8f18c1214de9a1f02a",
+            "extraction": {
+              "status": "EXTRACTED",
+              "answer": "NO_THINK blue [BOS]",
+              "mechanism": "whole"
+            },
+            "format_valid": true,
+            "task_success": false,
+            "natural_termination": true,
+            "correct": false,
+            "status": "INCORRECT"
+          }
+        ],
+        "checkpoints": {
+          "local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c": {
+            "summary": {
+              "n": 4,
+              "accuracy": 0.0,
+              "task_success": 0.0,
+              "format_valid": 0.5,
+              "natural_termination": 1.0,
+              "truncation": 0.0,
+              "stop_reasons": {
+                "eos": 2,
+                "turn_stop": 2
+              },
+              "statuses": {
+                "UNSUPPORTED": 2,
+                "INCORRECT": 2
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0.09269208495970815,
+                  "unknown_rows": 0
+                },
+                "generation_tokens": {
+                  "known_total": 12,
+                  "unknown_rows": 0
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 0
+                }
+              }
+            },
+            "slices": {
+              "task": {
+                "arithmetic": {
+                  "n": 2,
+                  "accuracy": 0.0,
+                  "task_success": 0.0,
+                  "format_valid": 0.0,
+                  "natural_termination": 1.0,
+                  "truncation": 0.0,
+                  "stop_reasons": {
+                    "eos": 2
+                  },
+                  "statuses": {
+                    "UNSUPPORTED": 2
+                  },
+                  "cost": {
+                    "wall_seconds": {
+                      "known_total": 0.049658963980618864,
+                      "unknown_rows": 0
+                    },
+                    "generation_tokens": {
+                      "known_total": 5,
+                      "unknown_rows": 0
+                    },
+                    "scoring_tokens": {
+                      "known_total": 0,
+                      "unknown_rows": 0
+                    }
+                  }
+                },
+                "greeting": {
+                  "n": 2,
+                  "accuracy": 0.0,
+                  "task_success": 0.0,
+                  "format_valid": 1.0,
+                  "natural_termination": 1.0,
+                  "truncation": 0.0,
+                  "stop_reasons": {
+                    "turn_stop": 2
+                  },
+                  "statuses": {
+                    "INCORRECT": 2
+                  },
+                  "cost": {
+                    "wall_seconds": {
+                      "known_total": 0.04303312097908929,
+                      "unknown_rows": 0
+                    },
+                    "generation_tokens": {
+                      "known_total": 7,
+                      "unknown_rows": 0
+                    },
+                    "scoring_tokens": {
+                      "known_total": 0,
+                      "unknown_rows": 0
+                    }
+                  }
+                }
+              },
+              "source_group": {
+                "original-arithmetic": {
+                  "n": 2,
+                  "accuracy": 0.0,
+                  "task_success": 0.0,
+                  "format_valid": 0.0,
+                  "natural_termination": 1.0,
+                  "truncation": 0.0,
+                  "stop_reasons": {
+                    "eos": 2
+                  },
+                  "statuses": {
+                    "UNSUPPORTED": 2
+                  },
+                  "cost": {
+                    "wall_seconds": {
+                      "known_total": 0.049658963980618864,
+                      "unknown_rows": 0
+                    },
+                    "generation_tokens": {
+                      "known_total": 5,
+                      "unknown_rows": 0
+                    },
+                    "scoring_tokens": {
+                      "known_total": 0,
+                      "unknown_rows": 0
+                    }
+                  }
+                },
+                "original-greeting": {
+                  "n": 2,
+                  "accuracy": 0.0,
+                  "task_success": 0.0,
+                  "format_valid": 1.0,
+                  "natural_termination": 1.0,
+                  "truncation": 0.0,
+                  "stop_reasons": {
+                    "turn_stop": 2
+                  },
+                  "statuses": {
+                    "INCORRECT": 2
+                  },
+                  "cost": {
+                    "wall_seconds": {
+                      "known_total": 0.04303312097908929,
+                      "unknown_rows": 0
+                    },
+                    "generation_tokens": {
+                      "known_total": 7,
+                      "unknown_rows": 0
+                    },
+                    "scoring_tokens": {
+                      "known_total": 0,
+                      "unknown_rows": 0
+                    }
+                  }
+                }
+              },
+              "split": {
+                "dev": {
+                  "n": 4,
+                  "accuracy": 0.0,
+                  "task_success": 0.0,
+                  "format_valid": 0.5,
+                  "natural_termination": 1.0,
+                  "truncation": 0.0,
+                  "stop_reasons": {
+                    "eos": 2,
+                    "turn_stop": 2
+                  },
+                  "statuses": {
+                    "UNSUPPORTED": 2,
+                    "INCORRECT": 2
+                  },
+                  "cost": {
+                    "wall_seconds": {
+                      "known_total": 0.09269208495970815,
+                      "unknown_rows": 0
+                    },
+                    "generation_tokens": {
+                      "known_total": 12,
+                      "unknown_rows": 0
+                    },
+                    "scoring_tokens": {
+                      "known_total": 0,
+                      "unknown_rows": 0
+                    }
+                  }
+                }
+              }
+            },
+            "missing_item_ids": []
+          }
+        },
+        "limits": "Authored fixtures or supplied records; no generation or broad safety/capability result."
+      },
+      "raw_records": [
+        {
+          "schema_version": "dongxi-response-record-v1",
+          "adapter_version": "local-hf-response-v1",
+          "contract_id": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+          "checkpoint_id": "local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c",
+          "sample_id": "sample-0-seed-994313480670987209",
+          "item_id": "arithmetic-a",
+          "source_group": "original-arithmetic",
+          "task": "arithmetic",
+          "split": "dev",
+          "raw_response": "THINK [EOS]",
+          "response_text": "THINK",
+          "token_ids": [
+            4,
+            1
+          ],
+          "prompt_tokens": 7,
+          "generated_tokens": 2,
+          "stop_reason": "eos",
+          "truncated": false,
+          "error": null,
+          "error_stage": null,
+          "serialized_prompt": "user 2 + 2 ? NO_THINK assistant ",
+          "prompt_token_ids": [
+            6,
+            10,
+            11,
+            10,
+            12,
+            5,
+            7
+          ],
+          "attempt_seed": 994313480670987209,
+          "sample_index": 0,
+          "selected_behavior_log_probabilities": [
+            -2.7876425046122058,
+            -2.8212549989012334
+          ],
+          "selected_raw_log_probabilities": [
+            -2.7876425046122058,
+            -2.8212549989012334
+          ],
+          "retained_support_sizes": [
+            16,
+            16
+          ],
+          "stop_token_id": 1,
+          "checkpoint_interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26",
+          "input_identity_sha256": "9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83",
+          "input_sha256": {
+            "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+            "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json": "b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60"
+          },
+          "settings_sha256": "e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "thinking_mode": "disabled",
+          "cost": {
+            "wall_seconds": 0.037696296989452094,
+            "generation_tokens": 2,
+            "scoring_tokens": 0,
+            "model_forward_tokens": 15,
+            "attempted_forward_tokens": 15,
+            "forward_calls": 2,
+            "attempted_forward_calls": 2,
+            "forward_seconds": 0.02803147499798797,
+            "prefill_seconds": 0.02747063001152128,
+            "decode_seconds": 0.0005608449864666909
+          },
+          "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+          "timing_boundary": "CPU host wall time",
+          "interrupted": false,
+          "raw_response_sha256": "793e2412330e562f3c96ba1063160ca07f2ecefce8fa53377520506c50fb79c9",
+          "response_text_sha256": "94c1f856fc08fb446e6ae3aeb2dcd7c536c21113b6db1c5a6a8ce417561a0105"
+        },
+        {
+          "schema_version": "dongxi-response-record-v1",
+          "adapter_version": "local-hf-response-v1",
+          "contract_id": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+          "checkpoint_id": "local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c",
+          "sample_id": "sample-1-seed-624892899481925806",
+          "item_id": "arithmetic-a",
+          "source_group": "original-arithmetic",
+          "task": "arithmetic",
+          "split": "dev",
+          "raw_response": "+ [BOS] [EOS]",
+          "response_text": "+ [BOS]",
+          "token_ids": [
+            11,
+            2,
+            1
+          ],
+          "prompt_tokens": 7,
+          "generated_tokens": 3,
+          "stop_reason": "eos",
+          "truncated": false,
+          "error": null,
+          "error_stage": null,
+          "serialized_prompt": "user 2 + 2 ? NO_THINK assistant ",
+          "prompt_token_ids": [
+            6,
+            10,
+            11,
+            10,
+            12,
+            5,
+            7
+          ],
+          "attempt_seed": 624892899481925806,
+          "sample_index": 1,
+          "selected_behavior_log_probabilities": [
+            -2.805006857553719,
+            -2.7920903001503636,
+            -2.8515531717350813
+          ],
+          "selected_raw_log_probabilities": [
+            -2.805006857553719,
+            -2.7920903001503636,
+            -2.8515531717350813
+          ],
+          "retained_support_sizes": [
+            16,
+            16,
+            16
+          ],
+          "stop_token_id": 1,
+          "checkpoint_interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26",
+          "input_identity_sha256": "9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83",
+          "input_sha256": {
+            "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+            "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json": "b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60"
+          },
+          "settings_sha256": "e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "thinking_mode": "disabled",
+          "cost": {
+            "wall_seconds": 0.01196266699116677,
+            "generation_tokens": 3,
+            "scoring_tokens": 0,
+            "model_forward_tokens": 24,
+            "attempted_forward_tokens": 24,
+            "forward_calls": 3,
+            "attempted_forward_calls": 3,
+            "forward_seconds": 0.0011069219908677042,
+            "prefill_seconds": 0.0003501900064293295,
+            "decode_seconds": 0.0007567319844383746
+          },
+          "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+          "timing_boundary": "CPU host wall time",
+          "interrupted": false,
+          "raw_response_sha256": "6e408fafe5e86f7a91b6e329ac237e9acdb00d06d0bf7fa93f5b5420b2677fa9",
+          "response_text_sha256": "6f49fa30e83e278d0241dbe66902fe3cb3f777407e02a43d42185cf49e3e41d4"
+        },
+        {
+          "schema_version": "dongxi-response-record-v1",
+          "adapter_version": "local-hf-response-v1",
+          "contract_id": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+          "checkpoint_id": "local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c",
+          "sample_id": "sample-0-seed-7899095024623998496",
+          "item_id": "greeting-a",
+          "source_group": "original-greeting",
+          "task": "greeting",
+          "split": "dev",
+          "raw_response": "user 4 [TURN]",
+          "response_text": "user 4",
+          "token_ids": [
+            6,
+            9,
+            3
+          ],
+          "prompt_tokens": 5,
+          "generated_tokens": 3,
+          "stop_reason": "turn_stop",
+          "truncated": false,
+          "error": null,
+          "error_stage": null,
+          "serialized_prompt": "user hello world NO_THINK assistant ",
+          "prompt_token_ids": [
+            6,
+            8,
+            15,
+            5,
+            7
+          ],
+          "attempt_seed": 7899095024623998496,
+          "sample_index": 0,
+          "selected_behavior_log_probabilities": [
+            -2.8473955408869225,
+            -2.71184601554451,
+            -2.70184047980863
+          ],
+          "selected_raw_log_probabilities": [
+            -2.8473955408869225,
+            -2.71184601554451,
+            -2.70184047980863
+          ],
+          "retained_support_sizes": [
+            16,
+            16,
+            16
+          ],
+          "stop_token_id": 3,
+          "checkpoint_interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26",
+          "input_identity_sha256": "9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83",
+          "input_sha256": {
+            "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+            "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json": "b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60"
+          },
+          "settings_sha256": "e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "thinking_mode": "disabled",
+          "cost": {
+            "wall_seconds": 0.01825091100181453,
+            "generation_tokens": 3,
+            "scoring_tokens": 0,
+            "model_forward_tokens": 18,
+            "attempted_forward_tokens": 18,
+            "forward_calls": 3,
+            "attempted_forward_calls": 3,
+            "forward_seconds": 0.001967991003766656,
+            "prefill_seconds": 0.0007502369990106672,
+            "decode_seconds": 0.0012177540047559887
+          },
+          "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+          "timing_boundary": "CPU host wall time",
+          "interrupted": false,
+          "raw_response_sha256": "314f1f7ab329473283d20a7b3b102ecc2a0515853d7ab0f6c7077f9de4d38586",
+          "response_text_sha256": "dc1231d918f7a31ad66fc08d00dab965d48d309a504a5a1b8f516a319167a629"
+        },
+        {
+          "schema_version": "dongxi-response-record-v1",
+          "adapter_version": "local-hf-response-v1",
+          "contract_id": "033aaab85f703e2271597419373e214f7eb845f342c2628428caf64d347e4ff0",
+          "checkpoint_id": "local-hf-sha256:02dfa13be2e4223e00beec686707ba1f6724d7533a028c568804cf7a84b7a13c",
+          "sample_id": "sample-1-seed-7639654792088161233",
+          "item_id": "greeting-a",
+          "source_group": "original-greeting",
+          "task": "greeting",
+          "split": "dev",
+          "raw_response": "NO_THINK blue [BOS] [TURN]",
+          "response_text": "NO_THINK blue [BOS]",
+          "token_ids": [
+            5,
+            13,
+            2,
+            3
+          ],
+          "prompt_tokens": 5,
+          "generated_tokens": 4,
+          "stop_reason": "turn_stop",
+          "truncated": false,
+          "error": null,
+          "error_stage": null,
+          "serialized_prompt": "user hello world NO_THINK assistant ",
+          "prompt_token_ids": [
+            6,
+            8,
+            15,
+            5,
+            7
+          ],
+          "attempt_seed": 7639654792088161233,
+          "sample_index": 1,
+          "selected_behavior_log_probabilities": [
+            -2.749022280537887,
+            -2.654658635591965,
+            -2.796857444481259,
+            -2.804744967129307
+          ],
+          "selected_raw_log_probabilities": [
+            -2.749022280537887,
+            -2.654658635591965,
+            -2.796857444481259,
+            -2.804744967129307
+          ],
+          "retained_support_sizes": [
+            16,
+            16,
+            16,
+            16
+          ],
+          "stop_token_id": 3,
+          "checkpoint_interface_sha256": "465be6601c1c4f9631e6ce61db4991b617968873a8d7ec63b7de03b0eeda9d26",
+          "input_identity_sha256": "9cc067efab48011dfc8f1f05ba20ff513a0b0a40afdaf0ce2688aff96e357d83",
+          "input_sha256": {
+            "/tmp/dongxi-generation-reference-ke9mj9ge/items.json": "6945d147457f6712bbc3c620be1dbdd12b22166523dead1a32555f9bab8e65dc",
+            "/tmp/dongxi-generation-reference-ke9mj9ge/chat-contract.json": "b53a2f10315009f76bf39784b576252759b3ab6bc89461397c9a0775567c1b60"
+          },
+          "settings_sha256": "e5da097465b17b30cb51dc662560dbf0cfbc36b1e5712582ba904116b48b8dfe",
+          "decoding": {
+            "mode": "sample",
+            "seed": 1004,
+            "temperature": 1.0,
+            "top_k": null,
+            "top_p": 1.0
+          },
+          "thinking_mode": "disabled",
+          "cost": {
+            "wall_seconds": 0.02478220997727476,
+            "generation_tokens": 4,
+            "scoring_tokens": 0,
+            "model_forward_tokens": 26,
+            "attempted_forward_tokens": 26,
+            "forward_calls": 4,
+            "attempted_forward_calls": 4,
+            "forward_seconds": 0.003140162007184699,
+            "prefill_seconds": 0.0006593409925699234,
+            "decode_seconds": 0.0024808210146147758
+          },
+          "cost_boundary": "Single-sequence full-prefix HF forwards; positions are not FLOPs/billing; no model scoring",
+          "timing_boundary": "CPU host wall time",
+          "interrupted": false,
+          "raw_response_sha256": "1316601546df9671fc5a0606d26c89a2af0415ae446b0195cc7edb1201d0a261",
+          "response_text_sha256": "145722dbbb6bca7f64b685aee344bf15bafc237b47a11d8f18c1214de9a1f02a"
+        }
+      ],
+      "events_sha256": "59e65dad3fde069803351d7601c4e173be5a6c0bea8fbf391d42c6d2ed96c788",
+      "files_sha256": {
+        "summary.json": "9c59c4236e64be2c9647d6d81a72df66a54e10e0c4cb78743fbedd96d383e4a0",
+        "observed-interface.json": "b51b2c10c560ffa1e29e696e696303b87b08564cd90817246b0332a8581df3ce",
+        "evaluation.json": "c14e1a3463c795252af99855cd64d5804a3e7f69d7437c992473b354b533b33f",
+        "events.jsonl": "59e65dad3fde069803351d7601c4e173be5a6c0bea8fbf391d42c6d2ed96c788",
+        "responses.jsonl": "437929a1d38fb3bc1ec228ca9d88990afc8d1470bd56c10d5959d88e20c514fa",
+        "contract.json": "cd587e512acc0375781a1ce0c2e4a1e46728ba7ed52af235b042ed1c0469d402",
+        "input-identity.json": "e917e4ffc0d8801054224e5ecc6d2d2206c66dd68c3efa01e3ea161abd0abddc"
+      }
+    }
+  },
+  "source_sha256": {
+    "src/dongxi_llms/reasoning_generation.py": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0",
+    "src/dongxi_llms/reasoning_evaluation.py": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da",
+    "src/dongxi_llms/run_identity.py": "6eb0cc124d1eef6929177d4cfd0a187bdd1a0dae586472012c253833628bad29",
+    "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+    "scripts/generate_reasoning_records.py": "ec39622c883bcb3affc8d033b28f0a986eacc0e25ddce4f418b499135a61ab3b",
+    "scripts/evaluate_reasoning_records.py": "3e31087a0b194980f22976d6dfe5751c155829840493009ad57133ac8b2ccd48",
+    "scripts/verify_reasoning_generation.py": "9c01322d7defbcb30fba6d4162e349973d8a290aceac3f34e86b2967aef7b0a9",
+    "tests/test_reasoning_generation.py": "724727ed8f02f92b4b8a1fe1c035fd33e935403498b17d0608a4b0310a4f0d90",
+    "tests/test_reasoning_evaluation.py": "b7965ddee34ae072b4d7001b7a3d64ae3996d59a56ce402267322a89129c083c",
+    "book/chapters/07-evaluation-is-a-contract.md": "bfbb228b1ff97c78fc1ccc7b4369b7a0fe1912a2285f848290bd9f2125e9ce22",
+    "book/solutions/07-evaluation-is-a-contract.md": "b63133ca8c4350027c07a3a0d920064b9f289d9407bf8a8696a61e3236cfa5cc",
+    "book/labs/07-evaluation-is-a-contract.md": "aa696d30c80572ee7bb4ad63b2a61592f1d66fba27a52a20d17538401d767207",
+    "experiments/specs/2026-10-04-reasoning-generation-adapter.md": "41e167ce140030f0bb160bbe40368baa5d86a3105a93d76ff00d26e95cd8f26b"
+  },
+  "elapsed_seconds": 13.235213216015836,
+  "maximum_report_process_rss_kib": 711372,
+  "rss_boundary": "Linux report-process RSS; excludes subprocess peaks and any continuous system/GPU maximum",
+  "development_failures": [
+    "Initial chat direct-tokenization check compared a Transformers BatchEncoding to IDs; explicit return_dict=False fixed it; one of initial13 tests failed"
+  ],
+  "pending": [
+    "Approved genuine pretrained checkpoint evaluation",
+    "Independent behavioral review",
+    "CUDA/Spark model-scale profile and supervision",
+    "Mac execution"
+  ],
+  "limits": [
+    "Eight raw records on two authored development items are instrument evidence, not capability estimates",
+    "Scripted stop/error controls in tests are separate from unforced real random-model CLI outputs",
+    "Full-prefix no-cache loop is not an optimized inference benchmark",
+    "A forward-boundary deadline is not a hard external supervisor; no exact-resume implementation",
+    "No installs, downloads, APIs, servers, GPU jobs, Git mutations or animation rendering"
+  ]
+}

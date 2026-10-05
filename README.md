@@ -6,29 +6,65 @@
 
 ## Current status
 
-- Release target: `v0.1` public beta
-- Schedule: 28 consecutive learning days
-- Complete teaching draft: [15 chapters and worked solutions](book/README.md),
-  [61 focused visual notebooks](notebooks/README.md), original bounded CPU
-  experiments, and executable Spark SFT/DPO/RLVR protocols. The
-  [28-day route](docs/COURSE_SEQUENCE.md) links every day's companions;
-  [course design](docs/COURSE_BLUEPRINT.md) explains the prerequisites and depth.
-  Prepared future material does not imply new pretrained-model results or
-  completed learner practice. Public release remains a separate decision.
-  [Build verification](experiments/reports/2026-10-04-complete-course-build.md)
-  records fresh-kernel execution, test results, source identity and limitations.
-- Current position: Day 9 on Spark. The [TinyStories pipeline](docs/TINYSTORIES_PIPELINE.md)
-  is built and [bounded GPU smoke/recovery verified](experiments/reports/2026-09-13-tinystories-pipeline-smoke.md).
-  The [first story-learning run is complete](experiments/reports/2026-09-14-tinystories-learning-result.md):
-  14,000 updates, 48.84M valid target presentations, fixed-development NLL1.6743.
-  Reliable coherence and a controlled trained comparison remain unestablished.
-  [Chapter 6](book/chapters/06-pretraining-as-a-controlled-system.md) and its
-  Days8–9 visual notebooks and [evidence-reading lab](book/labs/06-reading-a-pretraining-run.md)
-  are companions; earlier practice gaps are review
-  items, not a forced rewind or evidence of independently assessed mastery.
-- Default learning/visual/media machine: Mac Studio; learner currently chooses Spark
-- GPU experiment machine: NVIDIA DGX Spark
-- Primary model family: Qwen3
+The teaching draft covers **15 chapters, 28 days and 76 visual notebooks**, with
+worked solutions, original bounded CPU experiments and optional Spark
+SFT/DPO/RLVR runners. Start with the [reader's guide](book/README.md) and
+[day-by-day route](docs/COURSE_SEQUENCE.md). Prepared material is not completed
+learner practice or proof of pretrained-model performance.
+
+The bounded reference-audit campaign and final Linux verification have completed.
+The [signed original-criteria review](experiments/reports/2026-10-05-final-original-criteria-signoff.md)
+closes **18 of 18 packages against all86 unchanged criteria and their dependencies**.
+This is bounded course-production acceptance, not learner mastery. The
+[pinned repository audit](docs/REFERENCE_REPOSITORY_AUDIT.md),
+[improvement plan](docs/COURSE_IMPROVEMENT_PLAN.md) and
+[acceptance review](docs/UPGRADE_ACCEPTANCE_REVIEW.md) distinguish implemented
+mechanisms from scoped model and platform evidence.
+The [JSON ledger](docs/course_improvements.json) is the cross-session record.
+The [current empirical defense](experiments/reports/2026-10-05-final-native-campaign-defense.md)
+now joins the actual first400 story, assistant400 and preference100 comparisons,
+including432 common preference responses and680/800 initial reasoning responses.
+Both RLVR groups have exact recovery and completed16 policies; four fresh
+post-evaluations and both matched32/128 comparisons are complete. G4's failed
+supervision is retained separately from its explicit export-consistency closure.
+Held-out cap128 sampled correct counts are13/44,11/44,13/44 for unchanged
+Instruct/G4/G8, with greedy7/11 unchanged—not a general method ranking.
+Missing responses and failed attempts remain visible rather than becoming zero
+scores or successful runs.
+
+Final [current-source Linux verification](experiments/reports/2026-10-05-final-course-verification.md) passes
+[1,533 CPU tests](experiments/reports/2026-10-05-final-goal-cpu/run-01/tests.log)
+and [all76 fresh notebook references](experiments/reports/2026-10-05-final-goal-notebooks/run-01/manifest.json):
+539 code cells,535 executed references,210 images and four preserved unfinished
+learner exercises. The [campaign archive closing receipt](experiments/reports/native-campaign-evidence-20261005-run-01/closing-bindings.json)
+binds45 original stage rows and74 retained model-directed terminal receipts, including
+failures. It is a model-free evidence archive, not portable weights or a raw
+corpus; its preclosure15/18 status documents remain immutable.
+The [native recovery report](experiments/reports/2026-10-05-native-sft-replay.md)
+and [actual response replay](experiments/reports/2026-10-05-pretrained-evaluation-replay.md)
+keep exact recovery separate from negative answering/stopping behavior.
+Historical source revisions and failed
+checks remain in [the progress ledger](PROGRESS.md) and
+[experiment matrix](docs/EXPERIMENT_MATRIX.md). Mac execution, hosted CI and actual
+inline-host learner delivery remain unobserved; none is inferred from Linux or
+local browser tests. Original platform criteria require these distinctions,
+not added mandatory successful Mac/hosted runs. Apply the learner's current-gap
+rule before further engineering: check upstream fixes and the installed stack,
+reuse adequate solutions, and do not revive resolved memory-hang monitoring work.
+
+The learner is on **Day 9 on Spark**. The
+[first TinyStories run](experiments/reports/2026-09-14-tinystories-learning-result.md)
+completed 14,000 updates and 48.84M valid target presentations, reaching
+fixed-development NLL 1.6743 without establishing reliable coherence. The new
+paired first400 comparison is separate; its later14k-schedule/publication cells
+remain unrun. [Chapter 6](book/chapters/06-pretraining-as-a-controlled-system.md)
+and its [evidence-reading lab](book/labs/06-reading-a-pretraining-run.md) are
+the current companions; earlier practice is a review backlog, not a forced rewind.
+
+The release target is a `v0.1` public beta; publication is a separate decision.
+Mac Studio is the default live-learning, visual and media machine; DGX Spark
+handles approved GPU experiments. The learner currently chooses Spark.
+The primary pretrained model family is Qwen3.
 
 ## Start here
 

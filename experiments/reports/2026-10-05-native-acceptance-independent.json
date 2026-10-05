@@ -1,0 +1,978 @@
+{
+  "collector": {
+    "bytes": 17532,
+    "path": "experiments/reports/2026-10-05-native-acceptance-independent-collector.py",
+    "sha256": "ffca6df65ed34155eddf2a9a28e0c0add55aba1c9b10a550a658d39d8fad0285"
+  },
+  "elapsed_seconds": 20.43136687099468,
+  "full_and_lora": {
+    "full": {
+      "accepted_binding": {
+        "bytes": 408377,
+        "path": "experiments/reports/2026-10-05-native-sft-full-replay/acceptance-retry02.json",
+        "sha256": "db6fe8f1b3e51e0bd9fb4583aa6bd9306c8645ebf689aa29e6217600cfb2cc01"
+      },
+      "cumulative_final_model_targets": 455,
+      "cumulative_likelihood_work_targets": 2124,
+      "exact_final_generated_records": true,
+      "exact_ten_update_tail": true,
+      "exact_tensor_entries": true,
+      "external_invocations": [
+        {
+          "binding": {
+            "bytes": 606233,
+            "path": "experiments/reports/2026-10-05-native-sft-full-replay/returned-supervision-1.json",
+            "sha256": "ab9415f27aebcfa3310ad42b2b4bb4fa209cdc409c20d073fb95d6c9a71daee2"
+          },
+          "child_seconds": 73.49462986801518,
+          "exit_code": 0,
+          "helpers_and_feeders_clean": true,
+          "minimum_sampled_available_bytes": 110980108288,
+          "returned_final_ack": true,
+          "samples": 711,
+          "status": "completed",
+          "stop_reason": null
+        },
+        {
+          "binding": {
+            "bytes": 45954,
+            "path": "experiments/reports/2026-10-05-native-sft-full-replay/returned-supervision-2.json",
+            "sha256": "fd6456284bddc4afb4c50a9e23b548de479979e6d4db0f4404d995feb84eab1f"
+          },
+          "child_seconds": 4.549661485012621,
+          "exit_code": -15,
+          "helpers_and_feeders_clean": true,
+          "minimum_sampled_available_bytes": 124411965440,
+          "returned_final_ack": true,
+          "samples": 44,
+          "status": "failed",
+          "stop_reason": "conflicting-process"
+        },
+        {
+          "binding": {
+            "bytes": 673676,
+            "path": "experiments/reports/2026-10-05-native-sft-full-replay/returned-supervision-retry02.json",
+            "sha256": "94388d99d7240e3e936cc83e663a74fe87c31cfc568dc22a6d871702b1b02d6e"
+          },
+          "child_seconds": 81.30420428002253,
+          "exit_code": 0,
+          "helpers_and_feeders_clean": true,
+          "minimum_sampled_available_bytes": 108326555648,
+          "returned_final_ack": true,
+          "samples": 790,
+          "status": "completed",
+          "stop_reason": null
+        }
+      ],
+      "input_bindings": {
+        "dev": {
+          "bytes": 21500,
+          "path": "outputs/course-sft-interface-v1/dev.jsonl",
+          "sha256": "7e615ca255e9d026534a47cddf82ff34fff5a9021c5132b6b536cf27080ac62e"
+        },
+        "environment-lock": {
+          "bytes": 254439,
+          "path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+          "sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261"
+        },
+        "interpreter": {
+          "bytes": 23323176,
+          "path": "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/bin/python3.12",
+          "sha256": "0f1c0fc2c82cd4d382b9a2fc6f5ced5264709e1c1195e73a5f6a27fa74c2d0ed"
+        },
+        "snapshot-io-limits": {
+          "bytes": 825,
+          "path": "experiments/reports/2026-10-05-native-sft-full-replay/io-caps.json",
+          "sha256": "6aad630a4206a94b295e3622a3a2c81c401bd1964d11738ad06a7a2562b801b9"
+        },
+        "template": {
+          "bytes": 197,
+          "path": "experiments/data/instruction_interface_v1.jinja",
+          "sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d"
+        },
+        "train": {
+          "bytes": 86810,
+          "path": "outputs/course-sft-interface-v1/train.jsonl",
+          "sha256": "50e0375220c97ee3a75509148f5024c3f3120185af3b5878ca5b8e8f7e01d234"
+        },
+        "work-limits": {
+          "bytes": 514,
+          "path": "experiments/reports/2026-10-05-native-sft-full-replay/work-caps.json",
+          "sha256": "d3488836af100a7c1a6b4467748ea8ff3ecf2c13045f786fadc4bd849d5fd75a"
+        }
+      },
+      "journals": [
+        {
+          "bytes": 61546,
+          "path": "experiments/reports/2026-10-05-native-acceptance-independent/full-work.jsonl",
+          "sha256": "d760c8928a866001bd30ad4471b4745885e0c94a99e45a8552c64a3c9d19733d"
+        },
+        {
+          "bytes": 8623,
+          "path": "experiments/reports/2026-10-05-native-acceptance-independent/full-io.jsonl",
+          "sha256": "ed4e46ee97dbbecc25bd8fcf3b9afc7b1d14d997a0e418407d2f22a4e6d4ede1"
+        }
+      ],
+      "original_training_targets": 455,
+      "panels": [
+        {
+          "generated_tokens": 512,
+          "invocation": "original",
+          "message_end_stops": 0,
+          "nll": 4.0619653966691756,
+          "reported_exact": 0,
+          "stage": "baseline",
+          "targets": 360,
+          "truncated": 8
+        },
+        {
+          "generated_tokens": 512,
+          "invocation": "original",
+          "message_end_stops": 0,
+          "nll": 1.10018933084276,
+          "reported_exact": 0,
+          "stage": "final",
+          "targets": 360,
+          "truncated": 8
+        },
+        {
+          "generated_tokens": 512,
+          "invocation": "resumed",
+          "message_end_stops": 0,
+          "nll": 1.2932118733723958,
+          "reported_exact": 0,
+          "stage": "baseline",
+          "targets": 360,
+          "truncated": 8
+        },
+        {
+          "generated_tokens": 512,
+          "invocation": "resumed",
+          "message_end_stops": 0,
+          "nll": 1.10018933084276,
+          "reported_exact": 0,
+          "stage": "final",
+          "targets": 360,
+          "truncated": 8
+        }
+      ],
+      "replay_training_targets": 229,
+      "snapshot_io": {
+        "attempted_upper": {
+          "snapshot_clone_bytes": 17053152880,
+          "snapshot_hash_bytes": 24830815477,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 510725,
+          "snapshot_save_operations": 5,
+          "snapshot_serialization_bytes": 17055024893,
+          "snapshot_tensor_elements": 10470325486,
+          "snapshot_tree_nodes": 30222
+        },
+        "chain_sha256": "aa7931784e24a5de996538ec2b8989cd5dab579ebe4a29effc8b00b276aa6aea",
+        "completed": {
+          "snapshot_clone_bytes": 17053152880,
+          "snapshot_hash_bytes": 24830815477,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 510725,
+          "snapshot_save_operations": 5,
+          "snapshot_serialization_bytes": 17055024893,
+          "snapshot_tensor_elements": 10470325486,
+          "snapshot_tree_nodes": 30222
+        },
+        "contract_sha256": "01a8cb72268c62aa23b4f7e82db7bf186e5ef3e75b4d656eaa0f8a607da24939",
+        "failed_tickets": [],
+        "file_identity": [
+          66306,
+          5780865
+        ],
+        "known_partial": {
+          "snapshot_clone_bytes": 0,
+          "snapshot_hash_bytes": 0,
+          "snapshot_inspect_operations": 0,
+          "snapshot_load_operations": 0,
+          "snapshot_primitive_bytes": 0,
+          "snapshot_save_operations": 0,
+          "snapshot_serialization_bytes": 0,
+          "snapshot_tensor_elements": 0,
+          "snapshot_tree_nodes": 0
+        },
+        "ledger_id": "6f4574a650cf4255b21e788dee3cfd2e",
+        "limits": {
+          "snapshot_clone_bytes": 30064771072,
+          "snapshot_hash_bytes": 37580963840,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 7340032,
+          "snapshot_save_operations": 5,
+          "snapshot_serialization_bytes": 26843545600,
+          "snapshot_tensor_elements": 14000000000,
+          "snapshot_tree_nodes": 350000
+        },
+        "max_bytes": 4194304,
+        "open_tickets": [],
+        "reserved": {
+          "snapshot_clone_bytes": 21474836480,
+          "snapshot_hash_bytes": 34619336184,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 7340032,
+          "snapshot_save_operations": 5,
+          "snapshot_serialization_bytes": 26843545600,
+          "snapshot_tensor_elements": 12000000000,
+          "snapshot_tree_nodes": 350000
+        },
+        "schema": "dongxi-work-ledger-v1",
+        "sequence": 14,
+        "uncertain_upper": {
+          "snapshot_clone_bytes": 0,
+          "snapshot_hash_bytes": 0,
+          "snapshot_inspect_operations": 0,
+          "snapshot_load_operations": 0,
+          "snapshot_primitive_bytes": 0,
+          "snapshot_save_operations": 0,
+          "snapshot_serialization_bytes": 0,
+          "snapshot_tensor_elements": 0,
+          "snapshot_tree_nodes": 0
+        }
+      },
+      "snapshots": [
+        {
+          "bytes": 1503441805,
+          "path": "outputs/native-sft-full-replay-20261005-original/checkpoint-000000.pt",
+          "sha256": "ffdc1e84a533cba8c1d7afa65d092fabf3892f22fec864db5d414410036ad0d4"
+        },
+        {
+          "bytes": 3887895292,
+          "path": "outputs/native-sft-full-replay-20261005-original/checkpoint-000010.pt",
+          "sha256": "5b1a4fe6087102d733b5b463f3364e40e261b070b3eb4705004ce9aba5efeb80"
+        },
+        {
+          "bytes": 3887896124,
+          "path": "outputs/native-sft-full-replay-20261005-original/checkpoint-000020.pt",
+          "sha256": "ef7fa8208f4b0c443b08725d705c757c58a33d45aa95652dddd1cbdb3c65eba8"
+        },
+        {
+          "bytes": 3887895356,
+          "path": "outputs/native-sft-full-replay-20261005-resumed02/checkpoint-000010.pt",
+          "sha256": "0e83a440814a89f0520f697ddba327fd472987331e0de049b782c3c9d5d97ee2"
+        },
+        {
+          "bytes": 3887896316,
+          "path": "outputs/native-sft-full-replay-20261005-resumed02/checkpoint-000020.pt",
+          "sha256": "9106126633f18ed2c01135dbb7553a21147b2301caa6bd654a25b09dcbf349c4"
+        }
+      ],
+      "source_bindings": {
+        "experiments/specs/2026-10-05-native-sft-replay.md": {
+          "bytes": 2511,
+          "path": "experiments/specs/2026-10-05-native-sft-replay.md",
+          "sha256": "164d5203fa139a0581ee26fd72566a49f0036a0e1d7430903f2969fb5530698f"
+        },
+        "scripts/prepare_chapter09_instruction_fixture.py": {
+          "bytes": 2735,
+          "path": "scripts/prepare_chapter09_instruction_fixture.py",
+          "sha256": "02b2096b2ecbd59011df3da5fe16d0c6c8bfc7051df37a87aa191e9b38494674"
+        },
+        "scripts/run_chapter09_spark_sft.py": {
+          "bytes": 73759,
+          "path": "scripts/run_chapter09_spark_sft.py",
+          "sha256": "f8b51cda52e205c457cef34001e3165ec9f7ad381cb84d8e76a4dd1467357c40"
+        },
+        "scripts/run_native_sft_replay_acceptance.py": {
+          "bytes": 11942,
+          "path": "scripts/run_native_sft_replay_acceptance.py",
+          "sha256": "b3ca307d9a8367b313ca853ab2e472dacfa922ad1d50856d034ce69bcda0fef1"
+        },
+        "src/dongxi_llms/native_profile_supervisor.py": {
+          "bytes": 36072,
+          "path": "src/dongxi_llms/native_profile_supervisor.py",
+          "sha256": "f84e68594f2c37a4b196647c4abf76bb26ff83fdd4e8bf7f25b10cae1d481706"
+        },
+        "src/dongxi_llms/run_identity.py": {
+          "bytes": 20051,
+          "path": "src/dongxi_llms/run_identity.py",
+          "sha256": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999"
+        },
+        "src/dongxi_llms/snapshot_io_budget.py": {
+          "bytes": 15832,
+          "path": "src/dongxi_llms/snapshot_io_budget.py",
+          "sha256": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4"
+        },
+        "src/dongxi_llms/training_snapshot.py": {
+          "bytes": 21296,
+          "path": "src/dongxi_llms/training_snapshot.py",
+          "sha256": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77"
+        },
+        "src/dongxi_llms/work_budget.py": {
+          "bytes": 19121,
+          "path": "src/dongxi_llms/work_budget.py",
+          "sha256": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297"
+        }
+      },
+      "status": "passed",
+      "tensor_entry_count": 1243,
+      "tensor_entry_map_sha256": "954ca29f15a4e34720a043565573bf23c89aea3f10f2b58a8738409a78c2504d",
+      "work": {
+        "attempted_upper": {
+          "evaluation_calls": 2288,
+          "evaluation_positions": 12692,
+          "generation_calls": 32,
+          "generation_position_upper_bound": 3092,
+          "generation_tokens": 2048,
+          "logical_sequence_tokens": 17457,
+          "policy_forward_calls": 2408,
+          "policy_forward_positions": 17425,
+          "recovery_history_rows": 70,
+          "recovery_rng_states": 18,
+          "recovery_tensor_elements": 10470325486,
+          "recovery_validation_operations": 6,
+          "sampled_examples": 120,
+          "selector_steps": 120,
+          "train_updates": 30,
+          "valid_targets": 2124
+        },
+        "chain_sha256": "61027d79ab3ac02034c4f55a781e76bb331f8452cfc60c44700a8993575598d5",
+        "completed": {
+          "evaluation_calls": 2288,
+          "evaluation_positions": 12692,
+          "generation_calls": 32,
+          "generation_position_upper_bound": 3092,
+          "generation_tokens": 2048,
+          "logical_sequence_tokens": 17457,
+          "policy_forward_calls": 2408,
+          "policy_forward_positions": 17425,
+          "recovery_history_rows": 70,
+          "recovery_rng_states": 18,
+          "recovery_tensor_elements": 10470325486,
+          "recovery_validation_operations": 6,
+          "sampled_examples": 120,
+          "selector_steps": 120,
+          "train_updates": 30,
+          "valid_targets": 2124
+        },
+        "contract_sha256": "86beabb6659fac23c3bc5b17d7badbce91e91dd9ee237c47a13d03bb97e7f18a",
+        "failed_tickets": [],
+        "file_identity": [
+          66306,
+          5780864
+        ],
+        "known_partial": {
+          "evaluation_calls": 0,
+          "evaluation_positions": 0,
+          "generation_calls": 0,
+          "generation_position_upper_bound": 0,
+          "generation_tokens": 0,
+          "logical_sequence_tokens": 0,
+          "policy_forward_calls": 0,
+          "policy_forward_positions": 0,
+          "recovery_history_rows": 0,
+          "recovery_rng_states": 0,
+          "recovery_tensor_elements": 0,
+          "recovery_validation_operations": 0,
+          "sampled_examples": 0,
+          "selector_steps": 0,
+          "train_updates": 0,
+          "valid_targets": 0
+        },
+        "ledger_id": "9b2d5162b95447e2931e9a8d698f261a",
+        "limits": {
+          "evaluation_calls": 2288,
+          "evaluation_positions": 142976,
+          "generation_calls": 32,
+          "generation_position_upper_bound": 133376,
+          "generation_tokens": 2048,
+          "logical_sequence_tokens": 19032,
+          "policy_forward_calls": 2448,
+          "policy_forward_positions": 149284,
+          "recovery_history_rows": 120,
+          "recovery_rng_states": 24,
+          "recovery_tensor_elements": 16000000000,
+          "recovery_validation_operations": 8,
+          "sampled_examples": 160,
+          "selector_steps": 160,
+          "train_updates": 40,
+          "valid_targets": 2350
+        },
+        "max_bytes": 4194304,
+        "open_tickets": [],
+        "reserved": {
+          "evaluation_calls": 2288,
+          "evaluation_positions": 142976,
+          "generation_calls": 32,
+          "generation_position_upper_bound": 133376,
+          "generation_tokens": 2048,
+          "logical_sequence_tokens": 17457,
+          "policy_forward_calls": 2408,
+          "policy_forward_positions": 147709,
+          "recovery_history_rows": 70,
+          "recovery_rng_states": 18,
+          "recovery_tensor_elements": 10470325486,
+          "recovery_validation_operations": 6,
+          "sampled_examples": 120,
+          "selector_steps": 120,
+          "train_updates": 30,
+          "valid_targets": 2124
+        },
+        "schema": "dongxi-work-ledger-v1",
+        "sequence": 88,
+        "uncertain_upper": {
+          "evaluation_calls": 0,
+          "evaluation_positions": 0,
+          "generation_calls": 0,
+          "generation_position_upper_bound": 0,
+          "generation_tokens": 0,
+          "logical_sequence_tokens": 0,
+          "policy_forward_calls": 0,
+          "policy_forward_positions": 0,
+          "recovery_history_rows": 0,
+          "recovery_rng_states": 0,
+          "recovery_tensor_elements": 0,
+          "recovery_validation_operations": 0,
+          "sampled_examples": 0,
+          "selector_steps": 0,
+          "train_updates": 0,
+          "valid_targets": 0
+        }
+      }
+    },
+    "lora": {
+      "accepted_binding": {
+        "bytes": 281442,
+        "path": "experiments/reports/2026-10-05-native-sft-lora-replay/acceptance.json",
+        "sha256": "878722b40aa6f4cb1af5afeb39bd1a2e3aab8675c62bd1faa3533dc64b4344cd"
+      },
+      "cumulative_final_model_targets": 455,
+      "cumulative_likelihood_work_targets": 2124,
+      "exact_final_generated_records": true,
+      "exact_ten_update_tail": true,
+      "exact_tensor_entries": true,
+      "external_invocations": [
+        {
+          "binding": {
+            "bytes": 508464,
+            "path": "experiments/reports/2026-10-05-native-sft-lora-replay/returned-supervision-1.json",
+            "sha256": "e3f6f6ed12ae867fe70cb12817a5b38304543ebeb5e33727e46ac27c3462b8bd"
+          },
+          "child_seconds": 61.429518789984286,
+          "exit_code": 0,
+          "helpers_and_feeders_clean": true,
+          "minimum_sampled_available_bytes": 119668772864,
+          "returned_final_ack": true,
+          "samples": 595,
+          "status": "completed",
+          "stop_reason": null
+        },
+        {
+          "binding": {
+            "bytes": 485408,
+            "path": "experiments/reports/2026-10-05-native-sft-lora-replay/returned-supervision-2.json",
+            "sha256": "379492670a5f71d4b8994601df85f0376ca4b4d78715748fda978b851c17d842"
+          },
+          "child_seconds": 58.601126022986136,
+          "exit_code": 0,
+          "helpers_and_feeders_clean": true,
+          "minimum_sampled_available_bytes": 117935267840,
+          "returned_final_ack": true,
+          "samples": 566,
+          "status": "completed",
+          "stop_reason": null
+        }
+      ],
+      "input_bindings": {
+        "dev": {
+          "bytes": 21500,
+          "path": "outputs/course-sft-interface-v1/dev.jsonl",
+          "sha256": "7e615ca255e9d026534a47cddf82ff34fff5a9021c5132b6b536cf27080ac62e"
+        },
+        "environment-lock": {
+          "bytes": 254439,
+          "path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+          "sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261"
+        },
+        "interpreter": {
+          "bytes": 23323176,
+          "path": "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/bin/python3.12",
+          "sha256": "0f1c0fc2c82cd4d382b9a2fc6f5ced5264709e1c1195e73a5f6a27fa74c2d0ed"
+        },
+        "snapshot-io-limits": {
+          "bytes": 825,
+          "path": "experiments/reports/2026-10-05-native-sft-lora-replay/io-caps.json",
+          "sha256": "6aad630a4206a94b295e3622a3a2c81c401bd1964d11738ad06a7a2562b801b9"
+        },
+        "template": {
+          "bytes": 197,
+          "path": "experiments/data/instruction_interface_v1.jinja",
+          "sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d"
+        },
+        "train": {
+          "bytes": 86810,
+          "path": "outputs/course-sft-interface-v1/train.jsonl",
+          "sha256": "50e0375220c97ee3a75509148f5024c3f3120185af3b5878ca5b8e8f7e01d234"
+        },
+        "work-limits": {
+          "bytes": 514,
+          "path": "experiments/reports/2026-10-05-native-sft-lora-replay/work-caps.json",
+          "sha256": "d3488836af100a7c1a6b4467748ea8ff3ecf2c13045f786fadc4bd849d5fd75a"
+        }
+      },
+      "journals": [
+        {
+          "bytes": 61536,
+          "path": "experiments/reports/2026-10-05-native-acceptance-independent/lora-work.jsonl",
+          "sha256": "6bcafbe3b78ff00c6148e2b92beaa00a924190c056c77b5dea2a3a40b70a8c51"
+        },
+        {
+          "bytes": 8623,
+          "path": "experiments/reports/2026-10-05-native-acceptance-independent/lora-io.jsonl",
+          "sha256": "82957323861732624fa2d563a7e3f2a2c4565ee0aa31830869a0be8323fd13b0"
+        }
+      ],
+      "original_training_targets": 455,
+      "panels": [
+        {
+          "generated_tokens": 512,
+          "invocation": "original",
+          "message_end_stops": 0,
+          "nll": 4.0619653966691756,
+          "reported_exact": 0,
+          "stage": "baseline",
+          "targets": 360,
+          "truncated": 8
+        },
+        {
+          "generated_tokens": 427,
+          "invocation": "original",
+          "message_end_stops": 0,
+          "nll": 3.691563532087538,
+          "reported_exact": 0,
+          "stage": "final",
+          "targets": 360,
+          "truncated": 6
+        },
+        {
+          "generated_tokens": 470,
+          "invocation": "resumed",
+          "message_end_stops": 0,
+          "nll": 3.943035962846544,
+          "reported_exact": 0,
+          "stage": "baseline",
+          "targets": 360,
+          "truncated": 7
+        },
+        {
+          "generated_tokens": 427,
+          "invocation": "resumed",
+          "message_end_stops": 0,
+          "nll": 3.691563532087538,
+          "reported_exact": 0,
+          "stage": "final",
+          "targets": 360,
+          "truncated": 6
+        }
+      ],
+      "replay_training_targets": 229,
+      "snapshot_io": {
+        "attempted_upper": {
+          "snapshot_clone_bytes": 7575988752,
+          "snapshot_hash_bytes": 10612176763,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 610763,
+          "snapshot_save_operations": 5,
+          "snapshot_serialization_bytes": 7577479137,
+          "snapshot_tensor_elements": 4528175376,
+          "snapshot_tree_nodes": 26730
+        },
+        "chain_sha256": "b606e876b6459e2daa6d9a777db6290b54c6f0e42408a31d738dda02df3be657",
+        "completed": {
+          "snapshot_clone_bytes": 7575988752,
+          "snapshot_hash_bytes": 10612176763,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 610763,
+          "snapshot_save_operations": 5,
+          "snapshot_serialization_bytes": 7577479137,
+          "snapshot_tensor_elements": 4528175376,
+          "snapshot_tree_nodes": 26730
+        },
+        "contract_sha256": "b27e9fe2effa7da22960f430a0b6994eb6b5b793a4ff2448eda5d94e3b5e12da",
+        "failed_tickets": [],
+        "file_identity": [
+          66306,
+          5898255
+        ],
+        "known_partial": {
+          "snapshot_clone_bytes": 0,
+          "snapshot_hash_bytes": 0,
+          "snapshot_inspect_operations": 0,
+          "snapshot_load_operations": 0,
+          "snapshot_primitive_bytes": 0,
+          "snapshot_save_operations": 0,
+          "snapshot_serialization_bytes": 0,
+          "snapshot_tensor_elements": 0,
+          "snapshot_tree_nodes": 0
+        },
+        "ledger_id": "5dc9f30044bf49cc984031523e40d4a1",
+        "limits": {
+          "snapshot_clone_bytes": 30064771072,
+          "snapshot_hash_bytes": 37580963840,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 7340032,
+          "snapshot_save_operations": 5,
+          "snapshot_serialization_bytes": 26843545600,
+          "snapshot_tensor_elements": 14000000000,
+          "snapshot_tree_nodes": 350000
+        },
+        "max_bytes": 4194304,
+        "open_tickets": [],
+        "reserved": {
+          "snapshot_clone_bytes": 21474836480,
+          "snapshot_hash_bytes": 29878243226,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 7340032,
+          "snapshot_save_operations": 5,
+          "snapshot_serialization_bytes": 26843545600,
+          "snapshot_tensor_elements": 12000000000,
+          "snapshot_tree_nodes": 350000
+        },
+        "schema": "dongxi-work-ledger-v1",
+        "sequence": 14,
+        "uncertain_upper": {
+          "snapshot_clone_bytes": 0,
+          "snapshot_hash_bytes": 0,
+          "snapshot_inspect_operations": 0,
+          "snapshot_load_operations": 0,
+          "snapshot_primitive_bytes": 0,
+          "snapshot_save_operations": 0,
+          "snapshot_serialization_bytes": 0,
+          "snapshot_tensor_elements": 0,
+          "snapshot_tree_nodes": 0
+        }
+      },
+      "snapshots": [
+        {
+          "bytes": 1508081965,
+          "path": "outputs/native-sft-lora-replay-20261005-original/checkpoint-000000.pt",
+          "sha256": "8904ef385b559a71e3708e0139a2266546c75b9445f5791c936073d9610aea4b"
+        },
+        {
+          "bytes": 1517348813,
+          "path": "outputs/native-sft-lora-replay-20261005-original/checkpoint-000010.pt",
+          "sha256": "07388047fdaf4df5e32a9558053404e86a2fcb2db2aed8dd6953fa9f4df0755c"
+        },
+        {
+          "bytes": 1517349645,
+          "path": "outputs/native-sft-lora-replay-20261005-original/checkpoint-000020.pt",
+          "sha256": "cc267391c7f937344c052fc0a2c56791901377fc81df26a4bb79c5402866a879"
+        },
+        {
+          "bytes": 1517348877,
+          "path": "outputs/native-sft-lora-replay-20261005-resumed/checkpoint-000010.pt",
+          "sha256": "cbcbdfc41cd6e80be2d2c3cc84be9b2a0363f2e24e4ed47f5c168d6040e7265c"
+        },
+        {
+          "bytes": 1517349837,
+          "path": "outputs/native-sft-lora-replay-20261005-resumed/checkpoint-000020.pt",
+          "sha256": "d843d8a7343162241667e0b375ee9188aeb700e072e22afebf15501d11ffded3"
+        }
+      ],
+      "source_bindings": {
+        "experiments/specs/2026-10-05-native-sft-replay.md": {
+          "bytes": 2511,
+          "path": "experiments/specs/2026-10-05-native-sft-replay.md",
+          "sha256": "164d5203fa139a0581ee26fd72566a49f0036a0e1d7430903f2969fb5530698f"
+        },
+        "scripts/prepare_chapter09_instruction_fixture.py": {
+          "bytes": 2735,
+          "path": "scripts/prepare_chapter09_instruction_fixture.py",
+          "sha256": "02b2096b2ecbd59011df3da5fe16d0c6c8bfc7051df37a87aa191e9b38494674"
+        },
+        "scripts/run_chapter09_spark_sft.py": {
+          "bytes": 73759,
+          "path": "scripts/run_chapter09_spark_sft.py",
+          "sha256": "f8b51cda52e205c457cef34001e3165ec9f7ad381cb84d8e76a4dd1467357c40"
+        },
+        "scripts/run_native_sft_replay_acceptance.py": {
+          "bytes": 11942,
+          "path": "scripts/run_native_sft_replay_acceptance.py",
+          "sha256": "b3ca307d9a8367b313ca853ab2e472dacfa922ad1d50856d034ce69bcda0fef1"
+        },
+        "src/dongxi_llms/native_profile_supervisor.py": {
+          "bytes": 36072,
+          "path": "src/dongxi_llms/native_profile_supervisor.py",
+          "sha256": "f84e68594f2c37a4b196647c4abf76bb26ff83fdd4e8bf7f25b10cae1d481706"
+        },
+        "src/dongxi_llms/run_identity.py": {
+          "bytes": 20051,
+          "path": "src/dongxi_llms/run_identity.py",
+          "sha256": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999"
+        },
+        "src/dongxi_llms/snapshot_io_budget.py": {
+          "bytes": 15832,
+          "path": "src/dongxi_llms/snapshot_io_budget.py",
+          "sha256": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4"
+        },
+        "src/dongxi_llms/training_snapshot.py": {
+          "bytes": 21296,
+          "path": "src/dongxi_llms/training_snapshot.py",
+          "sha256": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77"
+        },
+        "src/dongxi_llms/work_budget.py": {
+          "bytes": 19121,
+          "path": "src/dongxi_llms/work_budget.py",
+          "sha256": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297"
+        }
+      },
+      "status": "passed",
+      "tensor_entry_count": 761,
+      "tensor_entry_map_sha256": "e61e29680795cee0f88c15809d2e3e0d0e42814805d95725d10a628939627de1",
+      "work": {
+        "attempted_upper": {
+          "evaluation_calls": 2076,
+          "evaluation_positions": 12480,
+          "generation_calls": 32,
+          "generation_position_upper_bound": 2880,
+          "generation_tokens": 1836,
+          "logical_sequence_tokens": 17245,
+          "policy_forward_calls": 2196,
+          "policy_forward_positions": 17213,
+          "recovery_history_rows": 70,
+          "recovery_rng_states": 18,
+          "recovery_tensor_elements": 4528175376,
+          "recovery_validation_operations": 6,
+          "sampled_examples": 120,
+          "selector_steps": 120,
+          "train_updates": 30,
+          "valid_targets": 2124
+        },
+        "chain_sha256": "44ddcf65221192531fd5a29b79ad9ac88b3577a42cfee2a2b7b6b2064e58e27d",
+        "completed": {
+          "evaluation_calls": 2076,
+          "evaluation_positions": 12480,
+          "generation_calls": 32,
+          "generation_position_upper_bound": 2880,
+          "generation_tokens": 1836,
+          "logical_sequence_tokens": 17245,
+          "policy_forward_calls": 2196,
+          "policy_forward_positions": 17213,
+          "recovery_history_rows": 70,
+          "recovery_rng_states": 18,
+          "recovery_tensor_elements": 4528175376,
+          "recovery_validation_operations": 6,
+          "sampled_examples": 120,
+          "selector_steps": 120,
+          "train_updates": 30,
+          "valid_targets": 2124
+        },
+        "contract_sha256": "767e86b862ef03caf0fc5dae9bfd29f90eae01841592fc5f49e818d218e5dabd",
+        "failed_tickets": [],
+        "file_identity": [
+          66306,
+          5898254
+        ],
+        "known_partial": {
+          "evaluation_calls": 0,
+          "evaluation_positions": 0,
+          "generation_calls": 0,
+          "generation_position_upper_bound": 0,
+          "generation_tokens": 0,
+          "logical_sequence_tokens": 0,
+          "policy_forward_calls": 0,
+          "policy_forward_positions": 0,
+          "recovery_history_rows": 0,
+          "recovery_rng_states": 0,
+          "recovery_tensor_elements": 0,
+          "recovery_validation_operations": 0,
+          "sampled_examples": 0,
+          "selector_steps": 0,
+          "train_updates": 0,
+          "valid_targets": 0
+        },
+        "ledger_id": "4869d794157648d482efd91a488be746",
+        "limits": {
+          "evaluation_calls": 2288,
+          "evaluation_positions": 142976,
+          "generation_calls": 32,
+          "generation_position_upper_bound": 133376,
+          "generation_tokens": 2048,
+          "logical_sequence_tokens": 19032,
+          "policy_forward_calls": 2448,
+          "policy_forward_positions": 149284,
+          "recovery_history_rows": 120,
+          "recovery_rng_states": 24,
+          "recovery_tensor_elements": 16000000000,
+          "recovery_validation_operations": 8,
+          "sampled_examples": 160,
+          "selector_steps": 160,
+          "train_updates": 40,
+          "valid_targets": 2350
+        },
+        "max_bytes": 4194304,
+        "open_tickets": [],
+        "reserved": {
+          "evaluation_calls": 2288,
+          "evaluation_positions": 142976,
+          "generation_calls": 32,
+          "generation_position_upper_bound": 133376,
+          "generation_tokens": 2048,
+          "logical_sequence_tokens": 17457,
+          "policy_forward_calls": 2408,
+          "policy_forward_positions": 147709,
+          "recovery_history_rows": 70,
+          "recovery_rng_states": 18,
+          "recovery_tensor_elements": 4528175376,
+          "recovery_validation_operations": 6,
+          "sampled_examples": 120,
+          "selector_steps": 120,
+          "train_updates": 30,
+          "valid_targets": 2124
+        },
+        "schema": "dongxi-work-ledger-v1",
+        "sequence": 88,
+        "uncertain_upper": {
+          "evaluation_calls": 0,
+          "evaluation_positions": 0,
+          "generation_calls": 0,
+          "generation_position_upper_bound": 0,
+          "generation_tokens": 0,
+          "logical_sequence_tokens": 0,
+          "policy_forward_calls": 0,
+          "policy_forward_positions": 0,
+          "recovery_history_rows": 0,
+          "recovery_rng_states": 0,
+          "recovery_tensor_elements": 0,
+          "recovery_validation_operations": 0,
+          "sampled_examples": 0,
+          "selector_steps": 0,
+          "train_updates": 0,
+          "valid_targets": 0
+        }
+      }
+    }
+  },
+  "journal_reviewer": {
+    "bytes": 16042,
+    "path": "experiments/reports/2026-10-05-native-base-profile/independent-review-01.py",
+    "sha256": "abdd089032a35d6aafb33ed506b484c0e922560fcdb6b6429cfb26306dd9174d"
+  },
+  "limitations": [
+    "Identical serialized tensor entry bytes do not establish arbitrary pickle metadata/Python RNG equivalence or cross-machine replay.",
+    "BF16 merge failure remains failed. FP32 is a separately predeclared numerical representation, not BF16 policy equivalence.",
+    "Merge numeric maxima/argmax/exact reload are checks of recorded original measurements; this review did not rerun model forwards.",
+    "Returned watchdog ACK/helper/feeder fields are observed separately from stored records unknown-at-write. Memory remains sampled.",
+    "No400-update pilot, selected downstream parent, DPO/RLVR campaign, publication behavioral claim, Mac/CI or learner advancement follows."
+  ],
+  "merge": {
+    "BF16": {
+      "atol": 0.125,
+      "external": {
+        "binding": {
+          "bytes": 122488,
+          "path": "experiments/reports/2026-10-05-native-lora-merge-reload/returned-supervision.json",
+          "sha256": "76a9271765f47cf0aaf5850e8c04edafb6604bf1932fa2994bc8676d938f8a1d"
+        },
+        "child_seconds": 14.336322746006772,
+        "exit_code": 1,
+        "helpers_and_feeders_clean": true,
+        "minimum_sampled_available_bytes": 123047858176,
+        "returned_final_ack": true,
+        "samples": 141,
+        "status": "failed",
+        "stop_reason": null
+      },
+      "failure_binding": {
+        "bytes": 369,
+        "path": "experiments/reports/2026-10-05-native-lora-merge-reload/failure.json",
+        "sha256": "af228160e02ecdfffa1b61925457da29bd47475275726b83aa5154516126a1cd"
+      },
+      "first_prefix_absolute_discrepancy": 0.67578125,
+      "identity_binding": {
+        "bytes": 53369,
+        "path": "experiments/reports/2026-10-05-native-lora-merge-reload/input-identity.json",
+        "sha256": "4cb1976be1b79f112a58d9ba4dbd9ee7db734ba832dff777b1f09fe27cab0f01"
+      },
+      "rtol": 0.015625,
+      "status": "retained-failure"
+    },
+    "FP32": {
+      "actual_merged_inventory": [
+        {
+          "bytes": 197,
+          "path": "outputs/native-lora20-fp32-merged-20261005/chat_template.jinja",
+          "sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d"
+        },
+        {
+          "bytes": 1416,
+          "path": "outputs/native-lora20-fp32-merged-20261005/config.json",
+          "sha256": "8b2c2abd8436cee7e8dd1db6141b1b3e97e42dd513b5560a4ecdcb1574a8a935"
+        },
+        {
+          "bytes": 2791,
+          "path": "outputs/native-lora20-fp32-merged-20261005/course-genealogy.json",
+          "sha256": "3876eed7cdea2189b6b534f482633ce4e786586a67b7d528c50b82ea83ebdae3"
+        },
+        {
+          "bytes": 139,
+          "path": "outputs/native-lora20-fp32-merged-20261005/generation_config.json",
+          "sha256": "a2ac0d07aac37502207a212b122abe32bd9564266594a317c0ff490ebce1f226"
+        },
+        {
+          "bytes": 2384234968,
+          "path": "outputs/native-lora20-fp32-merged-20261005/model.safetensors",
+          "sha256": "fe09c2d32e3ce6b136d1b8b1cedec787ff198feb9e6835017ec4bad7ad65c8b7"
+        },
+        {
+          "bytes": 11422650,
+          "path": "outputs/native-lora20-fp32-merged-20261005/tokenizer.json",
+          "sha256": "be75606093db2094d7cd20f3c2f385c212750648bd6ea4fb2bf507a6a4c55506"
+        },
+        {
+          "bytes": 695,
+          "path": "outputs/native-lora20-fp32-merged-20261005/tokenizer_config.json",
+          "sha256": "cbea7bca9904d56693d2226b00fd564e3be053609d1e50f8f1885510f0f6e790"
+        }
+      ],
+      "atol": 0.002,
+      "diagnostic_forwards": 24,
+      "external": {
+        "binding": {
+          "bytes": 345049,
+          "path": "experiments/reports/2026-10-05-native-lora-fp32-merge-reload/returned-supervision.json",
+          "sha256": "e8c01b7c892ba55dfddfbf55a60568467fca65a5cf18236b2d14e8a8bdb91274"
+        },
+        "child_seconds": 41.63692397298291,
+        "exit_code": 0,
+        "helpers_and_feeders_clean": true,
+        "minimum_sampled_available_bytes": 117331619840,
+        "returned_final_ack": true,
+        "samples": 405,
+        "status": "completed",
+        "stop_reason": null
+      },
+      "full_prefix_positions": 807,
+      "identity_binding": {
+        "bytes": 53579,
+        "path": "experiments/reports/2026-10-05-native-lora-fp32-merge-reload/input-identity.json",
+        "sha256": "1b6189e590d740f5e84548cb9dea2f923d38c618f5ad4acfc001c0806f76446c"
+      },
+      "interface_verified": true,
+      "reported_argmax_agreement": 8,
+      "reported_exact_reload_logits": true,
+      "reported_max_absolute_discrepancy": 5.364418029785156e-05,
+      "rtol": 0.001,
+      "scope": "Independent byte/receipt verification, not a new numerical-model rerun.",
+      "status": "passed-recorded-measurements"
+    }
+  },
+  "model_loaded": false,
+  "original_dxi01_review": "Original byte/interface/full checkpoint/explicit FP32 merge-reload identity criteria now have realistic bounded evidence. Retain precision limitations; campaign chain and later broad containment work must not silently redefine the original identity criteria.",
+  "reviewed_at_utc": "2026-10-05T06:44:24.577283+00:00",
+  "schema": "dongxi-independent-native-acceptance-review-v1",
+  "scope": "Independent streamed checkpoint/ZIP-entry hashing, raw JSONL replay, source/input identity and journal/returned watchdog review. No tensor/pickle/model deserialization, inference, GPU work or shared-source edits.",
+  "status": "passed",
+  "torch_imported": false
+}

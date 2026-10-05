@@ -1,0 +1,754 @@
+{
+  "actual_native_identities": [
+    {
+      "actual_local_base_files_verified": true,
+      "binding": {
+        "bytes": 69891,
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-original/identity-cc54c07e86f94a7095edbf73a5d3131d.json",
+        "sha256": "35624de8cf63133bcde246509beec11669744503b798b694c64992d788437daa"
+      },
+      "canonical_identity_sha256": "b9acb4256ada43b1608276179b9c62be1c21c57587ddbc7c79ab9f322ad0a440",
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py",
+        "--model",
+        "Qwen/Qwen3-0.6B-Base",
+        "--revision",
+        "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+        "--tokenizer-revision",
+        "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+        "--template",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/data/instruction_interface_v1.jinja",
+        "--train",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/train.jsonl",
+        "--dev",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/dev.jsonl",
+        "--mode",
+        "full",
+        "--rank",
+        "8",
+        "--updates",
+        "20",
+        "--microbatch",
+        "1",
+        "--accumulation",
+        "4",
+        "--max-length",
+        "256",
+        "--learning-rate",
+        "2e-05",
+        "--runtime-seconds",
+        "900",
+        "--reserve-gib",
+        "25.0",
+        "--seed",
+        "1212",
+        "--checkpoint-every",
+        "10",
+        "--snapshot-max-bytes",
+        "5368709120",
+        "--work-limits",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-full-replay/work-caps.json",
+        "--work-journal-max-bytes",
+        "4194304",
+        "--work-journal",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-journals/work.jsonl",
+        "--snapshot-io-limits",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-full-replay/io-caps.json",
+        "--snapshot-io-ledger",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-journals/io.jsonl",
+        "--environment-lock",
+        "/home/dongxi/dgx-spark-dongxi/uv.lock",
+        "--output",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-original"
+      ],
+      "declared_upstream_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+      "dtype": "BF16 weights/autocast; FP32 cross entropy",
+      "genealogy": {
+        "bytes": 2349,
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-original/policy/course-genealogy.json",
+        "sha256": "80247093e1cbace706987d53950476b73ec18786cf469cb9b6717eb149d227ac"
+      },
+      "interface": {
+        "generation_stop_ids": [
+          151643,
+          151645
+        ],
+        "implementation_class": "Qwen2Tokenizer",
+        "interface_sha256": "e869c7e93ad366530f30cb62e78122577d84f0f95fe2dad5a0e0923d4d031f63",
+        "schema_version": 1,
+        "source": {
+          "tokenizer_id": "Qwen/Qwen3-0.6B-Base",
+          "tokenizer_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd"
+        },
+        "template_sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+        "tokenizer": {
+          "encoding_sha256": "54c6b212118b62395ff290c0fe82ef0f84b465d4a71333035f43ffd847f46c94",
+          "max_token_id": 151668,
+          "special_ids": {
+            "additional_special_tokens_ids": null,
+            "bos_token_id": null,
+            "cls_token_id": null,
+            "eos_token_id": 151643,
+            "mask_token_id": null,
+            "pad_token_id": 151643,
+            "sep_token_id": null,
+            "unk_token_id": null
+          },
+          "vocab_sha256": "6e949d8fec10c504f4207a43cdeac7d7961f7fd9894d256f14a8153bb5479b63",
+          "vocab_size": 151669,
+          "wrapper_settings": {
+            "add_bos_token": false,
+            "add_eos_token": false,
+            "clean_up_tokenization_spaces": false,
+            "spaces_between_special_tokens": null,
+            "split_special_tokens": false
+          }
+        }
+      },
+      "invocation": "original",
+      "loss_policy": "assistant body + template end tokens; one explicit shift",
+      "mode": "full",
+      "objective_configuration_sha256": "f69c6df1f4705a1a8db1eed31c2658a1b9e4810019505e0dbe177201e24ab22f",
+      "recorded_device": {
+        "cuda_runtime": "13.0",
+        "mode": "cuda",
+        "name": "NVIDIA GB10"
+      },
+      "recorded_dirty": true,
+      "recorded_dirty_status_sha256": "54e71fdab1cf38af1c42ddfeefca7413bf82d2a4d3950a69af0fc76d93f51ac9",
+      "recorded_driver": {
+        "status": "measured",
+        "value": "NVIDIA GB10, 580.173.02"
+      },
+      "recorded_environment": {
+        "environment_lock": {
+          "boundary": "byte identity, not proof all installed versions resolved from this lock",
+          "path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+          "sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261",
+          "status": "hashed"
+        },
+        "interpreter": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "machine": "aarch64",
+        "packages": {
+          "huggingface-hub": "1.28.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.2",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.1",
+          "torch": "2.13.0+cu130",
+          "transformers": "5.16.1"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "python_version": "3.12.14"
+      },
+      "recorded_git_commit": {
+        "status": "measured",
+        "value": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4"
+      },
+      "sources_and_inputs_current_bytes_verified": true
+    },
+    {
+      "actual_local_base_files_verified": true,
+      "binding": {
+        "bytes": 73824,
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-resumed02/identity-b4472422fe4a435b822480aa4034a511.json",
+        "sha256": "b3c5c110389b924f002f3e530593dea1e2ad7c4fa0663f58fc04ca014bd2a575"
+      },
+      "canonical_identity_sha256": "cba6c63ab087e4fddc7c9a20e09bcd25773113cbead0f7b7c97d91c80a320c08",
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py",
+        "--model",
+        "Qwen/Qwen3-0.6B-Base",
+        "--revision",
+        "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+        "--tokenizer-revision",
+        "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+        "--template",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/data/instruction_interface_v1.jinja",
+        "--train",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/train.jsonl",
+        "--dev",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/dev.jsonl",
+        "--mode",
+        "full",
+        "--rank",
+        "8",
+        "--updates",
+        "20",
+        "--microbatch",
+        "1",
+        "--accumulation",
+        "4",
+        "--max-length",
+        "256",
+        "--learning-rate",
+        "2e-05",
+        "--runtime-seconds",
+        "900",
+        "--reserve-gib",
+        "25.0",
+        "--seed",
+        "1212",
+        "--checkpoint-every",
+        "10",
+        "--snapshot-max-bytes",
+        "5368709120",
+        "--work-limits",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-full-replay/work-caps.json",
+        "--work-journal-max-bytes",
+        "4194304",
+        "--work-journal",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-journals/work.jsonl",
+        "--snapshot-io-limits",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-full-replay/io-caps.json",
+        "--snapshot-io-ledger",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-journals/io.jsonl",
+        "--environment-lock",
+        "/home/dongxi/dgx-spark-dongxi/uv.lock",
+        "--output",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-resumed02",
+        "--resume",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-original/checkpoint-000010.pt",
+        "--resume-contract",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-full-replay/retained-contract.json",
+        "--resume-io-receipt",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-full-replay/retained-receipt.json",
+        "--resume-sha256",
+        "5b1a4fe6087102d733b5b463f3364e40e261b070b3eb4705004ce9aba5efeb80",
+        "--resume-bytes",
+        "3887895292"
+      ],
+      "declared_upstream_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+      "dtype": "BF16 weights/autocast; FP32 cross entropy",
+      "genealogy": {
+        "bytes": 2349,
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-full-replay-20261005-resumed02/policy/course-genealogy.json",
+        "sha256": "7bce5e6715816e81011bb0ca0f2a9b731801126e79b87488f826d7f4b2527709"
+      },
+      "interface": {
+        "generation_stop_ids": [
+          151643,
+          151645
+        ],
+        "implementation_class": "Qwen2Tokenizer",
+        "interface_sha256": "e869c7e93ad366530f30cb62e78122577d84f0f95fe2dad5a0e0923d4d031f63",
+        "schema_version": 1,
+        "source": {
+          "tokenizer_id": "Qwen/Qwen3-0.6B-Base",
+          "tokenizer_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd"
+        },
+        "template_sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+        "tokenizer": {
+          "encoding_sha256": "54c6b212118b62395ff290c0fe82ef0f84b465d4a71333035f43ffd847f46c94",
+          "max_token_id": 151668,
+          "special_ids": {
+            "additional_special_tokens_ids": null,
+            "bos_token_id": null,
+            "cls_token_id": null,
+            "eos_token_id": 151643,
+            "mask_token_id": null,
+            "pad_token_id": 151643,
+            "sep_token_id": null,
+            "unk_token_id": null
+          },
+          "vocab_sha256": "6e949d8fec10c504f4207a43cdeac7d7961f7fd9894d256f14a8153bb5479b63",
+          "vocab_size": 151669,
+          "wrapper_settings": {
+            "add_bos_token": false,
+            "add_eos_token": false,
+            "clean_up_tokenization_spaces": false,
+            "spaces_between_special_tokens": null,
+            "split_special_tokens": false
+          }
+        }
+      },
+      "invocation": "resumed02",
+      "loss_policy": "assistant body + template end tokens; one explicit shift",
+      "mode": "full",
+      "objective_configuration_sha256": "746e429d1be976affc4bf0af3909c73c911b87a031db7cbefa5c9b45d5dedfe1",
+      "recorded_device": {
+        "cuda_runtime": "13.0",
+        "mode": "cuda",
+        "name": "NVIDIA GB10"
+      },
+      "recorded_dirty": true,
+      "recorded_dirty_status_sha256": "ef607e389964fd1e9c5727d9420dd66cca74b535267d788727015a39b5c230d6",
+      "recorded_driver": {
+        "status": "measured",
+        "value": "NVIDIA GB10, 580.173.02"
+      },
+      "recorded_environment": {
+        "environment_lock": {
+          "boundary": "byte identity, not proof all installed versions resolved from this lock",
+          "path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+          "sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261",
+          "status": "hashed"
+        },
+        "interpreter": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "machine": "aarch64",
+        "packages": {
+          "huggingface-hub": "1.28.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.2",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.1",
+          "torch": "2.13.0+cu130",
+          "transformers": "5.16.1"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "python_version": "3.12.14"
+      },
+      "recorded_git_commit": {
+        "status": "measured",
+        "value": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4"
+      },
+      "sources_and_inputs_current_bytes_verified": true
+    },
+    {
+      "actual_local_base_files_verified": true,
+      "binding": {
+        "bytes": 70399,
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-original/identity-09c076be702744e6a552dcca5f305f89.json",
+        "sha256": "c7e1c67ac8d6487c2053a756acb9c32bd6b11379445c59ec8163426f540a0961"
+      },
+      "canonical_identity_sha256": "0a0e61534b3656e659465b29a85f876af9dab15339a3f2556f4b860066af5c9f",
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py",
+        "--model",
+        "Qwen/Qwen3-0.6B-Base",
+        "--revision",
+        "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+        "--tokenizer-revision",
+        "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+        "--template",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/data/instruction_interface_v1.jinja",
+        "--train",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/train.jsonl",
+        "--dev",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/dev.jsonl",
+        "--mode",
+        "lora",
+        "--rank",
+        "8",
+        "--updates",
+        "20",
+        "--microbatch",
+        "1",
+        "--accumulation",
+        "4",
+        "--max-length",
+        "256",
+        "--learning-rate",
+        "2e-05",
+        "--runtime-seconds",
+        "900",
+        "--reserve-gib",
+        "25.0",
+        "--seed",
+        "1212",
+        "--checkpoint-every",
+        "10",
+        "--snapshot-max-bytes",
+        "5368709120",
+        "--work-limits",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-lora-replay/work-caps.json",
+        "--work-journal-max-bytes",
+        "4194304",
+        "--work-journal",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-journals/work.jsonl",
+        "--snapshot-io-limits",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-lora-replay/io-caps.json",
+        "--snapshot-io-ledger",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-journals/io.jsonl",
+        "--environment-lock",
+        "/home/dongxi/dgx-spark-dongxi/uv.lock",
+        "--output",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-original"
+      ],
+      "declared_upstream_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+      "dtype": "BF16 weights/autocast; FP32 cross entropy",
+      "genealogy": {
+        "bytes": 2369,
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-original/policy/course-genealogy.json",
+        "sha256": "610f81507065d77171d566ade0d34af78f7f5edd2d81ca5e610568dd86cc6d7e"
+      },
+      "interface": {
+        "generation_stop_ids": [
+          151643,
+          151645
+        ],
+        "implementation_class": "Qwen2Tokenizer",
+        "interface_sha256": "e869c7e93ad366530f30cb62e78122577d84f0f95fe2dad5a0e0923d4d031f63",
+        "schema_version": 1,
+        "source": {
+          "tokenizer_id": "Qwen/Qwen3-0.6B-Base",
+          "tokenizer_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd"
+        },
+        "template_sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+        "tokenizer": {
+          "encoding_sha256": "54c6b212118b62395ff290c0fe82ef0f84b465d4a71333035f43ffd847f46c94",
+          "max_token_id": 151668,
+          "special_ids": {
+            "additional_special_tokens_ids": null,
+            "bos_token_id": null,
+            "cls_token_id": null,
+            "eos_token_id": 151643,
+            "mask_token_id": null,
+            "pad_token_id": 151643,
+            "sep_token_id": null,
+            "unk_token_id": null
+          },
+          "vocab_sha256": "6e949d8fec10c504f4207a43cdeac7d7961f7fd9894d256f14a8153bb5479b63",
+          "vocab_size": 151669,
+          "wrapper_settings": {
+            "add_bos_token": false,
+            "add_eos_token": false,
+            "clean_up_tokenization_spaces": false,
+            "spaces_between_special_tokens": null,
+            "split_special_tokens": false
+          }
+        }
+      },
+      "invocation": "original",
+      "loss_policy": "assistant body + template end tokens; one explicit shift",
+      "mode": "lora",
+      "objective_configuration_sha256": "d004fb24d2e13e746cbac2b0cd4a3b261b7ee9a6fe89fa0fdd8fe99abd3915f5",
+      "recorded_device": {
+        "cuda_runtime": "13.0",
+        "mode": "cuda",
+        "name": "NVIDIA GB10"
+      },
+      "recorded_dirty": true,
+      "recorded_dirty_status_sha256": "dbf129a0fe3f5d2c702666aca96e4ac388ea2ee2556d31f1016e0f6f3d1e0140",
+      "recorded_driver": {
+        "status": "measured",
+        "value": "NVIDIA GB10, 580.173.02"
+      },
+      "recorded_environment": {
+        "environment_lock": {
+          "boundary": "byte identity, not proof all installed versions resolved from this lock",
+          "path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+          "sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261",
+          "status": "hashed"
+        },
+        "interpreter": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "machine": "aarch64",
+        "packages": {
+          "huggingface-hub": "1.28.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.2",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.1",
+          "torch": "2.13.0+cu130",
+          "transformers": "5.16.1"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "python_version": "3.12.14"
+      },
+      "recorded_git_commit": {
+        "status": "measured",
+        "value": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4"
+      },
+      "sources_and_inputs_current_bytes_verified": true
+    },
+    {
+      "actual_local_base_files_verified": true,
+      "binding": {
+        "bytes": 74114,
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-resumed/identity-270467cc344d4e3a9596dbfe03da2584.json",
+        "sha256": "aab4ed8bb8e08da5ecd23d686d06a68595532668637f6c98d6d2a36ded909060"
+      },
+      "canonical_identity_sha256": "538da35aa204589bb0478aa88baa90cbe76376ea4a1d0a95c3d004f975947d75",
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py",
+        "--model",
+        "Qwen/Qwen3-0.6B-Base",
+        "--revision",
+        "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+        "--tokenizer-revision",
+        "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+        "--template",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/data/instruction_interface_v1.jinja",
+        "--train",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/train.jsonl",
+        "--dev",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/dev.jsonl",
+        "--mode",
+        "lora",
+        "--rank",
+        "8",
+        "--updates",
+        "20",
+        "--microbatch",
+        "1",
+        "--accumulation",
+        "4",
+        "--max-length",
+        "256",
+        "--learning-rate",
+        "2e-05",
+        "--runtime-seconds",
+        "900",
+        "--reserve-gib",
+        "25.0",
+        "--seed",
+        "1212",
+        "--checkpoint-every",
+        "10",
+        "--snapshot-max-bytes",
+        "5368709120",
+        "--work-limits",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-lora-replay/work-caps.json",
+        "--work-journal-max-bytes",
+        "4194304",
+        "--work-journal",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-journals/work.jsonl",
+        "--snapshot-io-limits",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-lora-replay/io-caps.json",
+        "--snapshot-io-ledger",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-journals/io.jsonl",
+        "--environment-lock",
+        "/home/dongxi/dgx-spark-dongxi/uv.lock",
+        "--output",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-resumed",
+        "--resume",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-original/checkpoint-000010.pt",
+        "--resume-contract",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-lora-replay/retained-contract.json",
+        "--resume-io-receipt",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-sft-lora-replay/retained-receipt.json",
+        "--resume-sha256",
+        "07388047fdaf4df5e32a9558053404e86a2fcb2db2aed8dd6953fa9f4df0755c",
+        "--resume-bytes",
+        "1517348813"
+      ],
+      "declared_upstream_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+      "dtype": "BF16 weights/autocast; FP32 cross entropy",
+      "genealogy": {
+        "bytes": 2369,
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-sft-lora-replay-20261005-resumed/policy/course-genealogy.json",
+        "sha256": "a5f7ea6f43dbc945b66eb23c7bdc3e4c555cdbadf23887d219b4c87754700244"
+      },
+      "interface": {
+        "generation_stop_ids": [
+          151643,
+          151645
+        ],
+        "implementation_class": "Qwen2Tokenizer",
+        "interface_sha256": "e869c7e93ad366530f30cb62e78122577d84f0f95fe2dad5a0e0923d4d031f63",
+        "schema_version": 1,
+        "source": {
+          "tokenizer_id": "Qwen/Qwen3-0.6B-Base",
+          "tokenizer_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd"
+        },
+        "template_sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d",
+        "tokenizer": {
+          "encoding_sha256": "54c6b212118b62395ff290c0fe82ef0f84b465d4a71333035f43ffd847f46c94",
+          "max_token_id": 151668,
+          "special_ids": {
+            "additional_special_tokens_ids": null,
+            "bos_token_id": null,
+            "cls_token_id": null,
+            "eos_token_id": 151643,
+            "mask_token_id": null,
+            "pad_token_id": 151643,
+            "sep_token_id": null,
+            "unk_token_id": null
+          },
+          "vocab_sha256": "6e949d8fec10c504f4207a43cdeac7d7961f7fd9894d256f14a8153bb5479b63",
+          "vocab_size": 151669,
+          "wrapper_settings": {
+            "add_bos_token": false,
+            "add_eos_token": false,
+            "clean_up_tokenization_spaces": false,
+            "spaces_between_special_tokens": null,
+            "split_special_tokens": false
+          }
+        }
+      },
+      "invocation": "resumed",
+      "loss_policy": "assistant body + template end tokens; one explicit shift",
+      "mode": "lora",
+      "objective_configuration_sha256": "be724eb102340d37732ed27a8edd611f056535799c5d2c06c99bb69dd5346c1c",
+      "recorded_device": {
+        "cuda_runtime": "13.0",
+        "mode": "cuda",
+        "name": "NVIDIA GB10"
+      },
+      "recorded_dirty": true,
+      "recorded_dirty_status_sha256": "508ad9b5dbd4bac915a03477dc6aede853d3e0d99dc32ae5bb8b642cb18b3eb2",
+      "recorded_driver": {
+        "status": "measured",
+        "value": "NVIDIA GB10, 580.173.02"
+      },
+      "recorded_environment": {
+        "environment_lock": {
+          "boundary": "byte identity, not proof all installed versions resolved from this lock",
+          "path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+          "sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261",
+          "status": "hashed"
+        },
+        "interpreter": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "machine": "aarch64",
+        "packages": {
+          "huggingface-hub": "1.28.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.2",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.1",
+          "torch": "2.13.0+cu130",
+          "transformers": "5.16.1"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "python_version": "3.12.14"
+      },
+      "recorded_git_commit": {
+        "status": "measured",
+        "value": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4"
+      },
+      "sources_and_inputs_current_bytes_verified": true
+    }
+  ],
+  "collector": {
+    "bytes": 7706,
+    "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-acceptance-criteria-collector.py",
+    "sha256": "19ea6213a7c69b23e872ac36a9cff16c84c6232924e6c87a877a50d6479d45e6"
+  },
+  "criterion_mapping": [
+    {
+      "conclusion": "Actual four native SFT identity records independently verified; Git/dirty/source/input/command/environment/driver/device/objective/interface recorded. Full/LoRA parent Base ancestry is byte-bound; merge input ancestry separately verified.",
+      "criterion": 1
+    },
+    {
+      "conclusion": "Historical actual CPU refusal/save-reload/explicit legacy-adoption checks retained; current unchanged tests/source inspected, not newly rerun here. Actual native interface retained through full/LoRA replay and explicit FP32 merged export.",
+      "criterion": 2
+    },
+    {
+      "conclusion": "Declared upstream revision is separate from independently hashed local Base/tokenizer/adapter bytes. Historical partial-failure journaling checks and actual conflict/BF16 failures retained. Abrupt conflict child identity remains partial/running; returned external failure receipt is authoritative, not an invented completed child journal.",
+      "criterion": 3
+    },
+    {
+      "conclusion": "Actual pinned native full checkpoint and rank8 Q/V LoRA exact fresh10-to20 recovery established. Explicit separately predeclared FP32 LoRA merge/reload has actual saved byte/interface proof and recorded eight-prefix numerical checks. Original BF16 merge fails; FP32 is not BF16 policy equivalence.",
+      "criterion": 4
+    }
+  ],
+  "historical_cpu_identity_checks": {
+    "book_math": {
+      "expressions": 1099,
+      "files": 54,
+      "issues": 0
+    },
+    "final_integration_suite": {
+      "boundary": "later integration after DXI08/13 hardening; earlier212-test measurement retained above",
+      "command": "env CUDA_VISIBLE_DEVICES= HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python -m unittest discover -s tests -q",
+      "errors": 0,
+      "exit_code": 0,
+      "failures": 0,
+      "seconds": 9.313,
+      "tests": 218
+    },
+    "focused_contracts": {
+      "dpo": 4,
+      "identity": 12,
+      "sft": 8
+    },
+    "fresh_notebook": {
+      "day1_code_cells": 14,
+      "day1_figures": 4,
+      "failures": 0,
+      "new_code_cells": 5,
+      "new_figures": 1,
+      "preview_visually_inspected": true,
+      "source_preserved": true
+    },
+    "independent_source_review": "Five findings repaired and checked: resume overwrite, missing resume hash, pre-load byte identity, interruption journal, SFT paired-base tokenizer semantics.",
+    "unit_suite": {
+      "command": "env CUDA_VISIBLE_DEVICES= HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python -m unittest discover -s tests -q",
+      "errors": 0,
+      "exit_code": 0,
+      "failures": 0,
+      "seconds": 8.616,
+      "tests": 212
+    }
+  },
+  "historical_cpu_identity_report": {
+    "bytes": 9801,
+    "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-04-run-identity.json",
+    "sha256": "c041a7358390391587349d64387be934d7b654a2e6de76d529e6dcbdc79964f9"
+  },
+  "historical_cpu_identity_scope": "original local tokenizer and tiny random CPU HF/PEFT fixtures; no model acquisition or GPU training",
+  "independently_hashed_base_inventory": [
+    {
+      "bytes": 727,
+      "path": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B-Base/snapshots/da87bfb608c14b7cf20ba1ce41287e8de496c0cd/config.json",
+      "sha256": "504a6b58c4271583724e66584b6b7698aea18450209df6b2f7582df0e89cee59"
+    },
+    {
+      "bytes": 138,
+      "path": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B-Base/snapshots/da87bfb608c14b7cf20ba1ce41287e8de496c0cd/generation_config.json",
+      "sha256": "8c970692323e3ea0e9b8b0a4dca79388d31226e41f83c9fd6014804280ebf6e8"
+    },
+    {
+      "bytes": 1671853,
+      "path": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B-Base/snapshots/da87bfb608c14b7cf20ba1ce41287e8de496c0cd/merges.txt",
+      "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+    },
+    {
+      "bytes": 1192135096,
+      "path": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B-Base/snapshots/da87bfb608c14b7cf20ba1ce41287e8de496c0cd/model.safetensors",
+      "sha256": "cd2a512003e2f9f3cd3c32a9c3573f820bb28c940f73c57b1ddaa983d9223eba"
+    },
+    {
+      "bytes": 7031645,
+      "path": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B-Base/snapshots/da87bfb608c14b7cf20ba1ce41287e8de496c0cd/tokenizer.json",
+      "sha256": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539"
+    },
+    {
+      "bytes": 9678,
+      "path": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B-Base/snapshots/da87bfb608c14b7cf20ba1ce41287e8de496c0cd/tokenizer_config.json",
+      "sha256": "3c04ed3ca964ea2f6b2b5faf0dc4d31aec1cb1e8b4bcf63f402d295046b422b5"
+    },
+    {
+      "bytes": 2776833,
+      "path": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B-Base/snapshots/da87bfb608c14b7cf20ba1ce41287e8de496c0cd/vocab.json",
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  ],
+  "model_loaded": false,
+  "native_acceptance_binding": {
+    "bytes": 38558,
+    "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-acceptance-independent.json",
+    "sha256": "963625149084c11c5cfd00e9515a9bc14bced407f9598453dc475cd45c5ef0d5"
+  },
+  "not_established": [
+    "400-update pilot or selected downstream parent",
+    "actual DPO/RLVR pretrained chain",
+    "Mac/hosted CI",
+    "whole-job physical hard quota",
+    "general model quality or safety",
+    "cross-machine or arbitrary pickle metadata equivalence"
+  ],
+  "recommendation": "Complete DXI-01 only against its four unchanged original acceptance criteria. Preserve all historical pending strings; scope-route campaign/model-quality and broader containment work to DXI-03/readiness rather than deleting or claiming it completed.",
+  "recorded_at_utc": "2026-10-05T06:48:13.354104+00:00",
+  "schema": "dongxi-original-dxi01-criteria-independent-v1",
+  "status": "passed-original-scope-review",
+  "torch_imported": false,
+  "unchanged_acceptance": [
+    "Record Git revision/dirty state, source hashes, Python/packages/lock identity, command, driver/device, actual input-file hashes, parent, template, token mapping/special IDs, stops and objective settings.",
+    "Reject an equal-size permuted vocabulary, changed stop/template interface and incompatible parent before training; support legitimate save/load and explicitly migrated legacy identity.",
+    "Distinguish declared upstream revision from proof of actual local input bytes; journal partial identity and failure stage.",
+    "Test full checkpoint and explicit LoRA merge/reload compatibility; no shape-only substitute for token identity."
+  ]
+}

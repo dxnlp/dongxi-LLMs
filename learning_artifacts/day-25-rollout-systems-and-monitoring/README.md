@@ -10,6 +10,11 @@ claim that the learner has studied or mastered the chapter.
 [worked solutions](../../book/solutions/14-when-optimization-goes-wrong.md),
 [notebook route](../../notebooks/day-25/README.md).
 
+Production extension: [whole-job boundaries](whole-job-boundaries.md) records
+the numerical/work clocks, DPO branch costs, peak artifact coexistence and mock
+backend versus platform evidence. Canonical Chapter14 and worked answers21–24
+carry the explanation; this is prepared material, not a new live study result.
+
 ## Learning arc
 
 Reject unintended stale rollouts and changed token/verifier identities; identify the dominant projected update cost.
@@ -41,6 +46,16 @@ policies are measured; selection draws are labeled simulations and system timing
 budgets are projections. No Qwen/CUDA result is inferred.
 
 ## Article and animation opportunities
+
+The native RLVR reader lesson in Exercise8 and Chapter14 answer33 adds a
+completed/pending comparison at the same applied-update cursor. Its retained
+actions and first-step collection/RNG changes are actual tiny-CPU quantities.
+The full lifecycle's $1+2U$ fresh save count and distinct resumed schedules
+are source-derived algebra, not measured values from the manually published
+microscope. Carry that distinction into CAND-ANIM-019; keep both physical
+journals' later rejected/validation work visible beside the restored state.
+The [predeclared lesson protocol](../../experiments/specs/2026-10-05-rlvr-reader-lesson.md)
+does not advance learner status or authorize external execution or production.
 
 policy-version timeline and queue bottleneck; illustrative timing must stay labeled projected.
 

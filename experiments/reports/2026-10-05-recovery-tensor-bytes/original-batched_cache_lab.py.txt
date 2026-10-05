@@ -1,0 +1,681 @@
+"""Original ragged real-KV decoding and tiny completed/pending-update recovery.
+
+CPU float64, explicit left padding/positions, no dropout or upstream checkpoint.
+These isolated interfaces do not add resume to the optional Spark runners.
+"""
+from __future__ import annotations
+
+from copy import deepcopy
+from dataclasses import asdict
+import hashlib
+import io
+import json
+import math
+import os
+from pathlib import Path
+import platform
+import subprocess
+import sys
+import time
+
+import torch
+
+from .decoder_lab import DecoderConfig, TinyDecoder
+from .dpo_lab import dpo_loss, sequence_logps
+from .grpo_lab import clipped_objective, group_advantages
+from .pretraining_lab import WindowStream
+from .run_identity import canonical_hash, file_digest
+
+ROOT = Path(__file__).resolve().parents[2]
+EOS = PAD = 0
+PROMPTS = {"short": [1,3], "medium": [1,4,5,6], "long": [1,7,8,9,10,11]}
+CONFIG = DecoderConfig(vocab=12,width=16,heads=4,kv_heads=2,head_dim=4,
+                       layers=2,hidden=32,max_length=24,modern=True,tied=False)
+INTERFACE = {"tokens":list(range(12)),"template":"original-integer-prefix-v1",
+    "position":"left-pad-mask-cumsum-minus-one; dummy0; per-row-RoPE-v1",
+    "stop_ids":[EOS],"pad_id":PAD,"dtype":"cpu-float64","temperature":1.}
+IDENTITY_ALGORITHM = "dongxi-typed-length-framed-sha256-v2"
+
+
+def digest(value):
+    """Unambiguous typed identity with container counts and byte-length frames.
+
+    The initial v1 teaching digest omitted dictionary boundaries. Preserve its
+    historical evidence, but never use that ambiguous encoding for new states.
+    """
+    h=hashlib.sha256()
+    def frame(value):h.update(len(value).to_bytes(8,"big"));h.update(value)
+    def scalar(x):
+        if type(x) not in (str,int,float,bool,type(None)):raise TypeError("Supported primitive or tensor/container required")
+        return json.dumps([type(x).__name__,x],sort_keys=True,allow_nan=False,separators=(",",":")).encode()
+    def visit(x):
+        if isinstance(x,torch.Tensor):
+            frame(b"tensor");frame(json.dumps([str(x.dtype),list(x.shape)],separators=(",",":")).encode())
+            frame(x.detach().cpu().contiguous().numpy().tobytes())
+        elif isinstance(x,dict):
+            frame(b"dict");h.update(len(x).to_bytes(8,"big"))
+            for key in sorted(x,key=scalar):visit(key);visit(x[key])
+        elif isinstance(x,(tuple,list)):
+            frame(type(x).__name__.encode());h.update(len(x).to_bytes(8,"big"))
+            for item in x:visit(item)
+        else:frame(b"scalar");frame(scalar(x))
+    visit(value)
+    return h.hexdigest()
+
+
+def legacy_flat_parameter_hash(model):
+    """Migration diagnostic ONLY: reproduce v1 hash of a flat tensor state.
+
+    Not a general legacy deserializer, checksum validator or snapshot identity.
+    Actual tensor-byte comparisons below provide the independent state bridge.
+    """
+    h=hashlib.sha256()
+    for name,value in sorted(model.state_dict().items()):
+        h.update(json.dumps(name,sort_keys=True,allow_nan=False).encode()+b"\0")
+        h.update(str((str(value.dtype),tuple(value.shape))).encode())
+        h.update(value.detach().cpu().contiguous().numpy().tobytes())
+    return h.hexdigest()
+
+
+def model_hash(model):return digest(model.state_dict())
+
+
+def make_model(seed=2501):
+    with torch.random.fork_rng(devices=[]):
+        torch.manual_seed(seed)
+        return TinyDecoder(CONFIG).double().eval()
+
+
+def left_pad(rows):
+    if not rows or any(not row for row in rows):raise ValueError("Nonempty rows required")
+    if any(type(t) is not int or not 0<=t<CONFIG.vocab for row in rows for t in row):
+        raise ValueError("Original vocabulary integer IDs required")
+    ids=torch.full((len(rows),max(map(len,rows))),PAD,dtype=torch.long)
+    mask=torch.zeros_like(ids,dtype=torch.bool)
+    for k,row in enumerate(rows):ids[k,-len(row):]=torch.tensor(row);mask[k,-len(row):]=True
+    positions=(mask.long().cumsum(-1)-1).clamp_min(0)
+    return ids,mask,positions
+
+
+def rotate(x,positions):
+    """The course adjacent-pair RoPE convention, extended to [B,T] positions."""
+    inv=10000.**(-torch.arange(0,x.shape[-1],2,dtype=x.dtype)/x.shape[-1])
+    angles=positions.to(x.dtype)[:,None,:,None]*inv
+    even,odd=x[...,::2],x[...,1::2]
+    return torch.stack((even*angles.cos()-odd*angles.sin(),even*angles.sin()+odd*angles.cos()),-1).flatten(-2)
+
+
+def forward(model,ids,mask,positions,*,cache=None,key_mask=None):
+    """Reuse the actual learned decoder blocks with ragged position/key masks.
+
+    KV [B,Hkv,S,d] stays compact. Padding-query fallback is never visible to a
+    valid query; it avoids all-minus-infinity dummy softmax rows only.
+    """
+    if ids.ndim!=2 or ids.shape!=mask.shape or positions.shape!=ids.shape or mask.dtype!=torch.bool:
+        raise ValueError("Aligned integer IDs, boolean masks and per-row positions required")
+    if ids.dtype!=torch.long or positions.dtype!=torch.long or len(ids)==0 or ids.shape[1]==0:
+        raise ValueError("Nonempty integer batch required")
+    if not bool(mask.any(-1).all()) or ((ids<0)|(ids>=model.cfg.vocab)).any():raise ValueError("Invalid input rows")
+    if ((positions[mask]<0)|(positions[mask]>=model.cfg.max_length)).any():raise ValueError("Position exceeds context")
+    if not model.cfg.modern or any(p.device.type!="cpu" or p.dtype!=torch.float64 for p in model.parameters()):
+        raise ValueError("This microscope requires modern float64 CPU modules")
+    past=0 if cache is None else cache[0][0].shape[-2]
+    if past+ids.shape[1]>model.cfg.max_length:raise ValueError("Physical cache capacity exceeded")
+    if cache is not None:
+        if len(cache)!=model.cfg.layers or key_mask is None or key_mask.shape!=(len(ids),past):raise ValueError("Cache/mask geometry")
+        expected=(len(ids),model.cfg.kv_heads,past,model.cfg.head_dim)
+        if any(k.shape!=expected or v.shape!=expected or k.dtype!=torch.float64 or v.dtype!=torch.float64 for k,v in cache):
+            raise ValueError("Compact per-layer cache geometry")
+    full_mask=mask if cache is None else torch.cat((key_mask,mask),-1)
+    if full_mask.dtype!=torch.bool:raise ValueError("Boolean cache mask required")
+    causal=torch.arange(past+ids.shape[1])[None,:]<=torch.arange(past,past+ids.shape[1])[:,None]
+    legal=full_mask[:,None,:]&causal[None,:,:]
+    legal|=(~mask)[:,:,None]&(torch.arange(past+ids.shape[1])[None,None,:]==0)
+    x=model.token(ids);updated=[]
+    for index,block in enumerate(model.blocks):
+        attention=block.attn;state=block.norm1(x);b,t,_=state.shape
+        def project(layer,heads):return layer(state).reshape(b,t,heads,model.cfg.head_dim).transpose(1,2)
+        q=rotate(attention.q_norm(project(attention.q,model.cfg.heads)),positions)
+        k=rotate(attention.k_norm(project(attention.k,model.cfg.kv_heads)),positions)
+        v=project(attention.v,model.cfg.kv_heads)
+        if cache is not None:k=torch.cat((cache[index][0],k),-2);v=torch.cat((cache[index][1],v),-2)
+        groups=model.cfg.heads//model.cfg.kv_heads
+        scores=q@k.repeat_interleave(groups,1).transpose(-1,-2)/math.sqrt(model.cfg.head_dim)
+        weights=scores.masked_fill(~legal[:,None],-torch.inf).softmax(-1)
+        mixed=(weights@v.repeat_interleave(groups,1)).transpose(1,2).contiguous().reshape(b,t,-1)
+        x=x+attention.out(mixed);x=x+block.mlp(block.norm2(x));updated.append((k,v))
+    return model.lm_head(model.final_norm(x)),updated,full_mask
+
+
+def payload(cache):return sum(x.numel()*x.element_size() for pair in (cache or []) for x in pair)
+
+
+def environment():
+    return {"python":platform.python_version(),"torch":str(torch.__version__),"platform":platform.platform(),
+            "threads":torch.get_num_threads(),"precision":"cpu-float64","executable":sys.executable}
+
+
+class Generation:
+    """Per-row sampler cursor and physical active-row cache; EOS is also PAD."""
+    def __init__(self,model,prompts=None,*,cached=True,greedy=True,seed=2510,cap=4,
+                 support="full",version=0,interface=None):
+        self.model=model;self.prompts=deepcopy(PROMPTS if prompts is None else prompts)
+        if not self.prompts or any(not isinstance(k,str) or not k for k in self.prompts):raise ValueError("Named prompts required")
+        if cap<1 or cap>6 or max(map(len,self.prompts.values()))+cap>model.cfg.max_length:raise ValueError("Declared bounded context/cap")
+        if support not in ("full","forced-stop","rlvr"):raise ValueError("Unknown support")
+        if support=="forced-stop" and set(self.prompts)!=set(PROMPTS):raise ValueError("Stopping control uses all three named rows")
+        self.interface=deepcopy(INTERFACE if interface is None else interface)
+        if self.interface!=INTERFACE:raise ValueError("Declared token/template/position interface required")
+        self.cached=cached;self.greedy=greedy;self.seed=seed;self.cap=cap;self.support=support;self.version=version
+        self.weight_hash=model_hash(model);self.active=list(self.prompts);self.step=0
+        self.records={k:[] for k in self.prompts};self.stop={};self.cursor={k:0 for k in self.prompts}
+        self.generators={k:torch.Generator().manual_seed(int(canonical_hash({"seed":seed,"row":k})[:15],16)) for k in self.prompts}
+        self.cache=None;self.key_mask=None;self.logits=None
+        self.work={"prefill_calls":0,"decode_calls":0,"full_prefix_calls":0,"rebuild_calls":0,
+            "forwarded_positions":0,"valid_input_positions":0,"padding_positions":0,
+            "useful_generated_tokens":0,"peak_kv_payload_bytes":0,"events":[]}
+        self.binding_sha256=digest(self.contract())
+        self._refresh(prefill=True)
+
+    def contract(self):
+        return {"schema":"ragged-generation-v2","identity_algorithm":IDENTITY_ALGORITHM,
+            "model":asdict(self.model.cfg),"model_sha256":self.weight_hash,
+            "version":self.version,"prompts":self.prompts,"row_order":list(self.prompts),"interface":self.interface,
+            "cached":self.cached,"greedy":self.greedy,"seed":self.seed,"cap":self.cap,"support":self.support,
+            "environment":environment()}
+
+    def _prefix(self,k):return self.prompts[k]+[r["token"] for r in self.records[k]]
+
+    def _check(self):
+        if model_hash(self.model)!=self.weight_hash:raise ValueError("Stale policy weights invalidate cache and old likelihoods")
+        if self.interface!=INTERFACE:raise ValueError("Changed template/token/position interface")
+        if digest(self.contract())!=self.binding_sha256:raise ValueError("Changed bound policy version/prefix/support/environment")
+        if any(self.cursor[k]!=len(self.records[k]) for k in self.prompts):raise ValueError("Sampler cursor differs from retained records")
+        if self.cached and self.active:
+            if self.key_mask is None or self.key_mask.sum(-1).tolist()!=[len(self._prefix(k)) for k in self.active]:
+                raise ValueError("Cache prefix and validity identity differs")
+            expected=(len(self.active),self.model.cfg.kv_heads,self.key_mask.shape[1],self.model.cfg.head_dim)
+            if len(self.cache)!=self.model.cfg.layers or any(k.shape!=expected or v.shape!=expected for k,v in self.cache):
+                raise ValueError("Cache tensor geometry changed")
+            if self.cache_sha256!=digest((self.cache,self.key_mask,self.logits,self.active,[self._prefix(k) for k in self.active])):
+                raise ValueError("Cache tensor/prefix content identity changed")
+
+    def _account(self,ids,mask,kind):
+        positions=ids.numel();valid=int(mask.sum());size=payload(self.cache)
+        self.work[kind+"_calls"]+=1;self.work["forwarded_positions"]+=positions
+        self.work["valid_input_positions"]+=valid;self.work["padding_positions"]+=positions-valid
+        self.work["peak_kv_payload_bytes"]=max(size,self.work["peak_kv_payload_bytes"])
+        self.work["events"].append({"kind":kind,"active_rows":list(self.active),"input_shape":list(ids.shape),
+            "positions":self.last_positions.tolist(),"mask":mask.tolist(),"valid":valid,"forwarded":positions,
+            "kv_payload_bytes":size,"cache_shapes":[list(k.shape) for k,v in (self.cache or [])]})
+
+    @torch.no_grad()
+    def _refresh(self,*,prefill=False,rebuild=False):
+        if not self.active:self.cache=None;self.key_mask=None;self.logits=None;return
+        if self.cached and self.cache is not None and not rebuild:
+            ids=torch.tensor([[self.records[k][-1]["token"]] for k in self.active])
+            mask=torch.ones_like(ids,dtype=torch.bool);positions=self.key_mask.sum(-1)[:,None]
+            logits,self.cache,self.key_mask=forward(self.model,ids,mask,positions,cache=self.cache,key_mask=self.key_mask)
+            kind="decode"
+        else:
+            ids,mask,positions=left_pad([self._prefix(k) for k in self.active])
+            logits,cache,keymask=forward(self.model,ids,mask,positions)
+            self.cache=cache if self.cached else None;self.key_mask=keymask if self.cached else None
+            kind="rebuild" if rebuild else "prefill" if prefill else "full_prefix"
+        self.logits=logits[:,-1];self.last_positions=positions;self._account(ids,mask,kind)
+        self.cache_sha256=digest((self.cache,self.key_mask,self.logits,self.active,[self._prefix(k) for k in self.active]))
+
+    def allowed(self,k):
+        if self.support=="full":return list(range(self.model.cfg.vocab))
+        if self.support=="rlvr":return [EOS,3,4]
+        if k=="short":return [EOS]
+        if k=="medium":return [3,4]
+        return [3] if not self.records[k] else [EOS]
+
+    @torch.no_grad()
+    def draw(self):
+        self._check()
+        if not self.active:return []
+        old_active=list(self.active);keep=[];new=[]
+        for index,k in enumerate(old_active):
+            raw=self.logits[index].log_softmax(-1);support=self.allowed(k)
+            behavior=self.logits[index,support].log_softmax(-1)
+            pick=int(behavior.argmax()) if self.greedy else int(torch.multinomial(behavior.exp(),1,generator=self.generators[k]))
+            token=support[pick];self.cursor[k]+=1
+            row={"row":k,"draw":self.cursor[k],"token":token,"raw_logp":float(raw[token]),
+                "behavior_logp":float(behavior[pick]),"support":support,"policy_version":self.version,
+                "model_sha256":self.weight_hash,"position":len(self._prefix(k))-1}
+            self.records[k].append(row);new.append(row);self.work["useful_generated_tokens"]+=1
+            if token==EOS:self.stop[k]="eos"
+            elif len(self.records[k])==self.cap:self.stop[k]="cap"
+            else:keep.append(index)
+        self.active=[old_active[i] for i in keep];self.step+=1
+        if self.cached and self.cache is not None:
+            self.cache=[(k[keep].clone(),v[keep].clone()) for k,v in self.cache];self.key_mask=self.key_mask[keep].clone()
+        self._refresh()
+        return new
+
+    def finish(self):
+        while self.active:self.draw()
+        return {"records":deepcopy(self.records),"stops":dict(self.stop),"work":deepcopy(self.work),
+            "contract":self.contract(),"record_sha256":digest(self.records)}
+
+    def snapshot(self):
+        self._check()
+        state={"kind":"generation","contract":self.contract(),"records":deepcopy(self.records),"stop":dict(self.stop),
+            "cursor":dict(self.cursor),"active":list(self.active),"step":self.step,"work":deepcopy(self.work),
+            "cache":deepcopy(self.cache),"key_mask":deepcopy(self.key_mask),"logits":deepcopy(self.logits),
+            "rng":{k:g.get_state().clone() for k,g in self.generators.items()}}
+        state["state_sha256"]=digest(state);return state
+
+    @classmethod
+    def restore(cls,model,state,*,expected_contract,rebuild=False):
+        state=deepcopy(state);expected=state.pop("state_sha256",None)
+        if digest(state)!=expected:raise ValueError("Snapshot content digest changed")
+        c=state["contract"]
+        if c.get("schema")!="ragged-generation-v2" or c.get("identity_algorithm")!=IDENTITY_ALGORITHM:
+            raise ValueError("Unsupported or obsolete snapshot identity encoding")
+        if c!=expected_contract or c["environment"]!=environment() or model_hash(model)!=c["model_sha256"] or asdict(model.cfg)!=c["model"]:
+            raise ValueError("Snapshot model/interface/precision/environment contract changed")
+        if state["kind"]!="generation":raise ValueError("Wrong state type")
+        obj=cls.__new__(cls);obj.model=model
+        for key in ("prompts","cached","greedy","seed","cap","support","version","interface"):setattr(obj,key,deepcopy(c[key]))
+        obj.weight_hash=c["model_sha256"]
+        for key in ("records","stop","cursor","active","step","work","cache","key_mask","logits"):setattr(obj,key,state[key])
+        obj.generators={k:torch.Generator() for k in obj.prompts}
+        if set(state["rng"])!=set(obj.prompts):raise ValueError("Missing row RNG")
+        for k,g in obj.generators.items():g.set_state(state["rng"][k])
+        obj.binding_sha256=digest(c)
+        obj.cache_sha256=digest((obj.cache,obj.key_mask,obj.logits,obj.active,[obj._prefix(k) for k in obj.active]))
+        if obj.active!=[k for k in obj.prompts if k not in obj.stop] or obj.step!=max(obj.cursor.values()):raise ValueError("Active/cursor order mismatch")
+        obj._check()
+        if rebuild:obj._refresh(rebuild=True)
+        return obj
+
+
+def save_state(state,path):
+    """Exclusive data-only local file plus digest/contract header; never overwrite."""
+    path=Path(path)
+    if path.exists() or path.with_suffix(path.suffix+".json").exists():raise FileExistsError("New state path required")
+    path.parent.mkdir(parents=True,exist_ok=True)
+    content=io.BytesIO();torch.save(state,content)
+    with path.open("xb") as handle:handle.write(content.getvalue())
+    header={"file_sha256":file_digest(path),"contract_sha256":digest(state["contract"]),"bytes":path.stat().st_size}
+    with path.with_suffix(path.suffix+".json").open("x") as handle:handle.write(json.dumps(header,indent=2)+"\n")
+    return {"path":str(path),**header}
+
+
+def load_state(path,*,expected_file_sha256,expected_contract):
+    """Validate external expected bytes and interface BEFORE safe tensor loading.
+
+    This is for our trusted bounded local states, not arbitrary external input.
+    weights_only blocks arbitrary Python objects; file bounds are not a complete
+    adversarial tensor-allocation sandbox.
+    """
+    path=Path(path)
+    if expected_contract.get("identity_algorithm")!=IDENTITY_ALGORITHM:
+        raise ValueError("Unsupported or obsolete snapshot identity encoding before load")
+    if path.stat().st_size>2_000_000:raise ValueError("Bounded local snapshot file too large")
+    header=json.loads(path.with_suffix(path.suffix+".json").read_text())
+    if expected_contract.get("environment")!=environment():raise ValueError("Pre-load precision/environment mismatch")
+    if header["contract_sha256"]!=digest(expected_contract):raise ValueError("Pre-load contract mismatch")
+    actual=file_digest(path)
+    if actual!=expected_file_sha256 or actual!=header["file_sha256"] or header["bytes"]!=path.stat().st_size:
+        raise ValueError("Pre-load external file identity mismatch")
+    state=torch.load(path,map_location="cpu",weights_only=True)
+    if state["contract"]!=expected_contract:raise ValueError("Loaded contract differs from independently expected state")
+    return state
+
+
+def branch(prompts,answer):
+    answers=[answer]*len(prompts) if isinstance(answer,int) else answer
+    if len(answers)!=len(prompts):raise ValueError("One original answer per row required")
+    rows=[p+[a,EOS] for p,a in zip(prompts,answers)];width=max(map(len,rows))
+    ids=torch.full((len(rows),width),PAD,dtype=torch.long);mask=torch.zeros_like(ids,dtype=torch.bool)
+    completion=torch.zeros_like(mask)
+    for k,(row,p) in enumerate(zip(rows,prompts)):
+        ids[k,:len(row)]=torch.tensor(row);mask[k,:len(row)]=True;completion[k,len(p):len(row)]=True
+    return ids,mask,completion
+
+
+def score_branch(model,b):
+    ids,mask,completion=b
+    return sequence_logps(model(ids[:,:-1]),ids[:,1:],(mask&completion)[:,1:])
+
+
+class PolicySession:
+    """Actual tiny DPO/GRPO updates with completed OR pending-collection recovery."""
+    def __init__(self,objective,seed=2521):
+        if objective not in ("dpo","rlvr"):raise ValueError("DPO or RLVR required")
+        self.objective=objective;self.seed=seed;self.model=make_model(seed)
+        self.reference=deepcopy(self.model).requires_grad_(False)
+        self.optimizer=torch.optim.AdamW(self.model.parameters(),lr=.008,weight_decay=0,foreach=False)
+        self.stream=WindowStream(3,seed+10);self.rng=torch.Generator().manual_seed(seed+20)
+        self.step=0;self.history=[];self.pending=None;self.rows=list(PROMPTS);self.targets=[3,4,3]
+        self.contract={"schema":"tiny-policy-recovery-v2","identity_algorithm":IDENTITY_ALGORITHM,
+            "objective":objective,"seed":seed,
+            "model":asdict(CONFIG),"initial_policy_sha256":model_hash(self.model),"reference_sha256":model_hash(self.reference),
+            "data":deepcopy(PROMPTS),"targets":list(self.targets),"interface":deepcopy(INTERFACE),"environment":environment(),
+            "updates":6,"optimizer":"AdamW lr.008 decay0 foreachFalse clip1",
+            "DPO":"sum-completion including EOS; beta.5","RLVR":"support0,3,4 T1 cap3 G4 group-popstd response-mean clip.2 KL.02",
+            "reward":"correct first atom and second emitted EOS"}
+
+    def _check(self):
+        if (self.contract.get("schema")!="tiny-policy-recovery-v2" or self.contract.get("identity_algorithm")!=IDENTITY_ALGORITHM
+                or self.contract["objective"]!=self.objective or self.contract["model"]!=asdict(self.model.cfg)
+                or self.contract["data"]!=PROMPTS or self.contract["targets"]!=self.targets
+                or self.contract["environment"]!=environment() or self.step!=len(self.history)
+                or model_hash(self.reference)!=self.contract["reference_sha256"]):
+            raise ValueError("Changed bound training/data/reference/interface contract")
+
+    def collect(self):
+        self._check()
+        if self.pending is not None:raise ValueError("Apply retained pending collection before another draw")
+        if self.step>=6:raise ValueError("Predeclared six-update budget exhausted")
+        indices=self.stream.take(2 if self.objective=="dpo" else 1)
+        pending={"version":self.step,"policy_sha256":model_hash(self.model),"indices":indices,
+                 "cursor_after_collection":self.stream.cursor}
+        if self.objective=="rlvr":
+            k=indices[0];draw_seed=int(torch.randint(0,2**31-1,(1,),generator=self.rng))
+            prompts={f"sample-{i}":PROMPTS[self.rows[k]] for i in range(4)}
+            sample=Generation(self.model,prompts,cached=True,greedy=False,seed=draw_seed,cap=3,support="rlvr",version=self.step).finish()
+            pending.update(draw_seed=draw_seed,rollout=sample)
+        self.pending=pending
+        return deepcopy(pending)
+
+    def update(self,*,interrupt_after_collection=False):
+        self._check()
+        if self.pending is None:self.collect()
+        if interrupt_after_collection:raise InterruptedError("Declared post-collection interruption; pending batch retained")
+        p=self.pending
+        if p["version"]!=self.step or p["policy_sha256"]!=model_hash(self.model) or p["cursor_after_collection"]!=self.stream.cursor:
+            raise ValueError("Stale rollout/version/data cursor")
+        indices=p["indices"]
+        if self.objective=="dpo":
+            prompts=[PROMPTS[self.rows[k]] for k in indices];answers=[self.targets[k] for k in indices]
+            chosen=branch(prompts,answers);rejected=branch(prompts,[7-a for a in answers])
+            pc,pr=score_branch(self.model,chosen),score_branch(self.model,rejected)
+            with torch.no_grad():rc,rr=score_branch(self.reference,chosen),score_branch(self.reference,rejected)
+            loss,margin=dpo_loss(pc,pr,rc,rr,beta=.5)
+            record={"margin":margin.detach().tolist(),"chosen_logp":pc.detach().tolist(),"rejected_logp":pr.detach().tolist()}
+        else:
+            prompt=PROMPTS[self.rows[indices[0]]];records=list(p["rollout"]["records"].values())
+            mask=torch.zeros(4,3,dtype=torch.bool);old=torch.zeros(4,3,dtype=torch.float64)
+            logps=[];kls=[];rewards=[];support=[EOS,3,4]
+            for k,rows in enumerate(records):
+                prefix=list(prompt);l=[];kl=[]
+                for t,row in enumerate(rows):
+                    if row["policy_version"]!=self.step or row["model_sha256"]!=p["policy_sha256"]:raise ValueError("Mixed old-policy rollout version")
+                    ids=torch.tensor([prefix]);current=self.model(ids)[0,-1,support].log_softmax(-1)
+                    with torch.no_grad():ref=self.reference(ids)[0,-1,support].log_softmax(-1)
+                    l.append(current[support.index(row["token"])]);kl.append((current.exp()*(current-ref)).sum())
+                    mask[k,t]=True;old[k,t]=row["behavior_logp"];prefix.append(row["token"])
+                logps.append(torch.stack(l+[l[-1]*0]*(3-len(l))));kls.append(torch.stack(kl+[kl[-1]*0]*(3-len(kl))))
+                tokens=[r["token"] for r in rows]
+                rewards.append(float(tokens==[self.targets[indices[0]],EOS]))
+            logp=torch.stack(logps);kl=torch.stack(kls);r=torch.tensor([rewards],dtype=torch.float64)
+            a=group_advantages(r).flatten()
+            alignment=float((logp.detach()-old)[mask].abs().max())
+            if alignment>1e-10:raise ValueError("Collection/scoring conditional likelihood mismatch")
+            loss=clipped_objective(logp,old,a,mask,kl=kl,beta=.02)
+            record={"reward":rewards,"advantages":a.tolist(),"rollout":p["rollout"],"alignment_error":alignment}
+        self.optimizer.zero_grad(set_to_none=True);loss.backward()
+        norm=float(torch.nn.utils.clip_grad_norm_(self.model.parameters(),1.,error_if_nonfinite=True))
+        if not torch.isfinite(loss):raise ValueError("Nonfinite update")
+        self.optimizer.step();self.step+=1
+        record.update(update=self.step,behavior_version=self.step-1,policy_version=self.step,indices=indices,
+            loss=float(loss.detach()),gradient_norm=norm,state_sha256=model_hash(self.model),pending_sha256=digest(p))
+        self.history.append(record);self.pending=None
+        return deepcopy(record)
+
+    def snapshot(self):
+        self._check()
+        state=deepcopy({"kind":"policy","contract":self.contract,"policy":self.model.state_dict(),
+            "reference":self.reference.state_dict(),"optimizer":self.optimizer.state_dict(),"stream":self.stream.state_dict(),
+            "rollout_rng":self.rng.get_state(),"torch_rng":torch.get_rng_state(),"step":self.step,
+            "history":self.history,"pending":self.pending})
+        state["state_sha256"]=digest(state);return state
+
+    def restore(self,state,*,omit=None):
+        state=deepcopy(state);expected=state.pop("state_sha256",None)
+        if digest(state)!=expected:raise ValueError("Snapshot content digest changed")
+        if state["kind"]!="policy" or state["contract"]!=self.contract:raise ValueError("Changed training/data/interface contract")
+        if state["step"]!=len(state["history"]) or not 0<=state["step"]<=6:raise ValueError("Completed update cursor mismatch")
+        if digest(state["reference"])!=self.contract["reference_sha256"]:raise ValueError("Frozen reference state changed")
+        if state["pending"] is not None and (state["pending"]["version"]!=state["step"] or state["pending"]["policy_sha256"]!=digest(state["policy"])
+                or state["pending"]["cursor_after_collection"]!=state["stream"]["cursor"]):
+            raise ValueError("Pending rollout version/weight mismatch")
+        if omit not in (None,"optimizer","cursor","rng"):raise ValueError("Unknown deliberately broken omission")
+        self.model.load_state_dict(state["policy"]);self.reference.load_state_dict(state["reference"])
+        if omit!="optimizer":self.optimizer.load_state_dict(state["optimizer"])
+        if omit!="cursor":self.stream.load_state_dict(state["stream"])
+        if omit!="rng":self.rng.set_state(state["rollout_rng"])
+        torch.set_rng_state(state["torch_rng"])
+        self.step=state["step"];self.history=state["history"];self.pending=state["pending"]
+
+
+def compare(a,b):
+    ids=all([r["token"] for r in a["records"][k]]==[r["token"] for r in b["records"][k]] for k in a["records"])
+    errors=[abs(x[field]-y[field]) for k in a["records"] for x,y in zip(a["records"][k],b["records"][k]) for field in ("raw_logp","behavior_logp")]
+    return {"ids_equal":ids,"stops_equal":a["stops"]==b["stops"],"selected_logp_max_error":max(errors,default=0.),
+            "bitwise_records":a["records"]==b["records"]}
+
+
+def single_run(model,**kwargs):
+    rows={};stops={};works=[]
+    for k,p in PROMPTS.items():
+        r=Generation(model,{k:p},**kwargs).finish();rows.update(r["records"]);stops.update(r["stops"]);works.append(r["work"])
+    totals={k:sum(w[k] for w in works) for k in works[0] if k not in ("events","peak_kv_payload_bytes")}
+    totals["peak_kv_payload_bytes"]=max(w["peak_kv_payload_bytes"] for w in works)
+    totals["events"]=[e for w in works for e in w["events"]]
+    return {"records":rows,"stops":stops,"work":totals}
+
+
+def numeric_tree(value):
+    """Explicit migration projection; never treats changed identities as equal.
+
+    Compare actions, likelihoods, masks, counters, losses, gradients, versions and
+    cursors while validating the separately frozen recipe/state below.
+    """
+    if isinstance(value,dict):
+        return {k:numeric_tree(v) for k,v in value.items() if "sha256" not in k and k!="contract"}
+    if isinstance(value,list):return [numeric_tree(v) for v in value]
+    return value
+
+
+def tensor_tree_equal(a,b):
+    if isinstance(a,torch.Tensor):
+        return (isinstance(b,torch.Tensor) and a.dtype==b.dtype and a.shape==b.shape
+                and a.detach().contiguous().numpy().tobytes()==b.detach().contiguous().numpy().tobytes())
+    if isinstance(a,dict):return isinstance(b,dict) and a.keys()==b.keys() and all(tensor_tree_equal(a[k],b[k]) for k in a)
+    if isinstance(a,(list,tuple)):return type(a)==type(b) and len(a)==len(b) and all(tensor_tree_equal(x,y) for x,y in zip(a,b))
+    return type(a)==type(b) and a==b
+
+
+def migration_audit(result,historical_path):
+    """Bridge externally byte-verified historical tensors without v1 acceptance.
+
+    Only this diagnostic reads known project fixture files after their expected
+    external SHA/size checks. Public resume interfaces continue to require v2.
+    """
+    historical_path=Path(historical_path);old=json.loads(historical_path.read_text())["results"]
+    def trusted_state(record):
+        path=(ROOT/record["path"]).resolve()
+        allowed_roots=[ROOT/"fixtures/batched-cache-recovery",ROOT/"fixtures/batched-cache-recovery-verification",ROOT/"fixtures/batched-cache-recovery-hardening"]
+        if not any(path.is_relative_to(p.resolve()) for p in allowed_roots):raise ValueError("Historical diagnostic only reads known owned fixture roots")
+        if path.stat().st_size>2_000_000 or path.stat().st_size!=record["bytes"] or file_digest(path)!=record["file_sha256"]:
+            raise ValueError("Historical external snapshot size/byte identity mismatch before loading")
+        return torch.load(path,map_location="cpu",weights_only=True)
+    comparisons=[]
+    for current,previous in zip(result["training"],old["training"]):
+        c,p=current["contract"],previous["contract"]
+        check={"objective":current["objective"],"seed":current["seed"],
+            "coordinates_equal":(current["objective"],current["seed"])==(previous["objective"],previous["seed"]),
+            "frozen_recipe_equal":all(c[k]==p[k] for k in ("objective","seed","model","data","targets","interface","environment","updates","optimizer","DPO","RLVR","reward")),
+            "all_numerical_action_history_equal":numeric_tree(current["history"])==numeric_tree(previous["history"]),
+            "legacy_flat_final_diagnostic_matches":current["legacy_flat_final_sha256_for_migration_only"]==previous["final_sha256"],
+            "snapshot_tensor_comparisons":{}}
+        for boundary in ("completed_snapshot","pending_snapshot"):
+            now=trusted_state(current[boundary]);before=trusted_state(previous[boundary])
+            check["snapshot_tensor_comparisons"][boundary]={k:tensor_tree_equal(now[k],before[k]) for k in ("policy","reference","optimizer","stream")}
+            check["snapshot_tensor_comparisons"][boundary]["rollout_rng"]=torch.equal(now["rollout_rng"],before["rollout_rng"])
+            check["snapshot_tensor_comparisons"][boundary]["pending_numerical_actions_equal"]=numeric_tree(now["pending"])==numeric_tree(before["pending"])
+        comparisons.append(check)
+    generation_fields=("generations","sampled","forced_stopping_control","generation_interruption")
+    generations={k:numeric_tree(result[k])==numeric_tree(old[k]) for k in generation_fields}
+    ok=(len(comparisons)==len(result["training"])==len(old["training"])==4 and all(generations.values())
+        and all(all(check[k] for k in ("coordinates_equal","frozen_recipe_equal","all_numerical_action_history_equal","legacy_flat_final_diagnostic_matches"))
+            and all(all(v.values()) for v in check["snapshot_tensor_comparisons"].values()) for check in comparisons))
+    return {"status":"passed" if ok else "failed","historical_path":str(historical_path),"historical_file_sha256":file_digest(historical_path),
+        "new_identity_algorithm":IDENTITY_ALGORITHM,"boundary":"Identity strings/schema changed; no historical artifacts rewritten; v1 is not a supported resume format",
+        "generation_numeric_action_work_comparisons":generations,"policy_comparisons":comparisons,
+        "global_rng_boundary":"Global Torch RNG is saved/restored within each run but freshly initialized process RNG states are not asserted equal across separate collections"}
+
+
+def run_reference(workspace):
+    workspace=Path(workspace);workspace.mkdir(parents=True,exist_ok=False)
+    previous=torch.get_num_threads();torch.set_num_threads(1)
+    try:
+        model=make_model();generations={};timings={}
+        for cached in (False,True):
+            for batched in (False,True):
+                name=("batch" if batched else "single")+("/cached" if cached else "/uncached")
+                measured=[]
+                for repetition in range(5):
+                    start=time.perf_counter();r=Generation(model,cached=cached).finish() if batched else single_run(model,cached=cached)
+                    measured.append(time.perf_counter()-start)
+                    if repetition==0:generations[name]=r
+                timings[name]=measured
+        comparisons={k:compare(generations["single/uncached"],v) for k,v in generations.items()}
+        sampled=Generation(model,greedy=False).finish();single_sample=single_run(model,greedy=False,cached=False)
+        reordered=Generation(model,dict(reversed(list(PROMPTS.items()))),greedy=False).finish()
+        forced=Generation(model,support="forced-stop").finish()
+        engine=Generation(model,greedy=False);engine.draw();engine.draw();state=engine.snapshot()
+        interrupted={"status":"interrupted-after-two-global-draws","active":list(engine.active),"cursor":dict(engine.cursor),
+                     "records":deepcopy(engine.records),"cache_payload_bytes":payload(engine.cache)}
+        saved=save_state(state,workspace/"generation.pt");contract=engine.contract();expected=engine.finish()
+        loaded=load_state(saved["path"],expected_file_sha256=saved["file_sha256"],expected_contract=contract)
+        restored=Generation.restore(model,loaded,expected_contract=contract).finish()
+        rebuilt=Generation.restore(model,loaded,expected_contract=contract,rebuild=True).finish()
+        failures=[]
+        stale=deepcopy(model)
+        with torch.no_grad():stale.token.weight[1,0]+=.01
+        for label,call in (("stale-weights",lambda:Generation.restore(stale,loaded,expected_contract=contract)),
+                ("changed-template",lambda:load_state(saved["path"],expected_file_sha256=saved["file_sha256"],expected_contract=dict(contract,interface={}))),
+                ("wrong-byte-digest",lambda:load_state(saved["path"],expected_file_sha256="0"*64,expected_contract=contract))):
+            try:call();failures.append({"control":label,"rejected":False})
+            except ValueError as error:failures.append({"control":label,"rejected":True,"error":str(error)})
+        for field in ("cursor","rng"):
+            changed=deepcopy(loaded)
+            if field=="cursor":changed[field]["medium"]+=1
+            else:changed[field]["medium"][0]^=1
+            try:Generation.restore(model,changed,expected_contract=contract);failures.append({"control":field,"rejected":False})
+            except ValueError as error:failures.append({"control":field,"rejected":True,"error":str(error)})
+        training=[]
+        for objective in ("dpo","rlvr"):
+            for seed in (2521,2522):
+                original=PolicySession(objective,seed)
+                for _ in range(3):original.update()
+                completed=original.snapshot();completed_saved=save_state(completed,workspace/f"{objective}-{seed}-completed.pt")
+                try:original.update(interrupt_after_collection=True)
+                except InterruptedError as error:interruption=str(error)
+                pending=original.snapshot();pending_saved=save_state(pending,workspace/f"{objective}-{seed}-pending.pt")
+                tail=[original.update() for _ in range(3)]
+                checks={};negative={}
+                for name,snapshot,saved_file in (("completed",completed,completed_saved),("pending",pending,pending_saved)):
+                    replay=PolicySession(objective,seed)
+                    replay.restore(load_state(saved_file["path"],expected_file_sha256=saved_file["file_sha256"],expected_contract=replay.contract))
+                    actual_tail=[replay.update() for _ in range(3)]
+                    checks[name]={"history_equal":actual_tail==tail,"parameter_bytes_equal":model_hash(replay.model)==model_hash(original.model),
+                        "optimizer_equal":digest(replay.optimizer.state_dict())==digest(original.optimizer.state_dict()),
+                        "cursor_equal":digest(replay.stream.state_dict())==digest(original.stream.state_dict()),
+                        "rng_equal":torch.equal(replay.rng.get_state(),original.rng.get_state())}
+                for omit in ("optimizer","cursor","rng"):
+                    broken=PolicySession(objective,seed);broken.restore(completed,omit=omit)
+                    broken_tail=[broken.update() for _ in range(3)]
+                    negative[omit]={"history_equal":broken_tail==tail,"parameter_bytes_equal":model_hash(broken.model)==model_hash(original.model),
+                        "batches_equal":[r["indices"] for r in broken_tail]==[r["indices"] for r in tail],
+                        "rollouts_equal":([r.get("rollout") for r in broken_tail]==[r.get("rollout") for r in tail]),
+                        "history":broken_tail,"final_sha256":model_hash(broken.model),
+                        "applicable":omit!="rng" or objective=="rlvr","illustrative_broken_branch":True}
+                final_saved=save_state(original.snapshot(),workspace/f"{objective}-{seed}-final.pt")
+                training.append({"objective":objective,"seed":seed,"contract":original.contract,"history":original.history,
+                    "initial_sha256":original.contract["initial_policy_sha256"],"final_sha256":model_hash(original.model),
+                    "legacy_flat_final_sha256_for_migration_only":legacy_flat_parameter_hash(original.model),
+                    "final_snapshot":final_saved,
+                    "completed_snapshot":completed_saved,"pending_snapshot":pending_saved,"pending_collection":pending["pending"],
+                    "interruption":interruption,"exact_recovery":checks,"omitted_state_controls":negative})
+        return {"generations":generations,"generation_comparisons":comparisons,"runtime_samples_seconds":timings,
+            "sampled":sampled,"sampled_single_comparison":compare(sampled,single_sample),
+            "reordered_comparison":compare(sampled,reordered),"forced_stopping_control":forced,
+            "generation_interruption":interrupted,"generation_snapshot":saved,"saved_cache_replay":compare(expected,restored),
+            "cache_rebuild_comparison":compare(expected,rebuilt),"rejected_controls":failures,"training":training,
+            "actual_work":{"primary_optimizer_updates":24,"exact_replay_optimizer_updates":24,
+                "deliberately_broken_optimizer_updates":36,"total_optimizer_updates":84,
+                "runtime_generation_repetitions_per_path":5},
+            "environment":environment(),"scope":"Tiny CPU ragged cache and DPO/RLVR recovery; no pretrained/Spark/vLLM performance or runner-resume claim"}
+    finally:torch.set_num_threads(previous)
+
+
+def main():
+    import argparse
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument("--report",type=Path,required=True)
+    parser.add_argument("--workspace",type=Path,required=True)
+    parser.add_argument("--notebook-manifest",type=Path);parser.add_argument("--export-previews",action="store_true")
+    parser.add_argument("--historical-reference",type=Path,help="Byte-verified v1 migration diagnostic; never rewrites historical identities")
+    args=parser.parse_args()
+    if args.report.exists() or args.workspace.exists():parser.error("New report and snapshot workspace required")
+    sources=["src/dongxi_llms/batched_cache_lab.py","tests/test_batched_cache_lab.py","src/dongxi_llms/decoder_lab.py",
+        "src/dongxi_llms/dpo_lab.py","src/dongxi_llms/grpo_lab.py","src/dongxi_llms/pretraining_lab.py",
+        "src/dongxi_llms/run_identity.py","experiments/specs/2026-10-04-batched-cache-recovery.md","pyproject.toml","uv.lock"]
+    notebook="notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb"
+    if args.notebook_manifest:
+        sources += [notebook,"notebooks/day-25/README.md","book/chapters/05-building-a-modern-decoder.md",
+                    "book/solutions/05-decoder-notebook-solutions.md","book/labs/05-building-a-modern-decoder.md",
+                    "experiments/reports/2026-10-04-batched-cache-recovery.json"]
+        sources += [f"notebooks/figures/chapter-14/day-25-02_ragged_kv_cache_and_exact_recovery-{i:02d}.png" for i in range(1,6)]
+        manifest=json.loads(args.notebook_manifest.read_text())
+        row=next((r for r in manifest["notebooks"] if r["path"]==notebook),None)
+        if manifest["failures"] or row is None or row["sha256"]!=file_digest(ROOT/notebook) or row["images"]!=5:
+            parser.error("Matching passed fresh notebook with five figures required")
+        if args.export_previews:
+            # Save only images from the already-executed copy, not learner cells.
+            import base64
+            executed=json.loads(Path(row["output"]).read_text());outputs=[]
+            for cell in executed["cells"]:
+                for output in cell.get("outputs",[]):
+                    if "image/png" in output.get("data",{}):outputs.append(output["data"]["image/png"])
+            if len(outputs)!=5:parser.error("Exactly five executed figures required")
+            for i,value in enumerate(outputs,1):
+                path=ROOT/f"notebooks/figures/chapter-14/day-25-02_ragged_kv_cache_and_exact_recovery-{i:02d}.png"
+                path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(base64.b64decode("".join(value) if isinstance(value,list) else value))
+    elif args.export_previews:parser.error("Preview export requires fresh notebook manifest")
+    if args.historical_reference and str(args.historical_reference) not in sources:sources.append(str(args.historical_reference))
+    before={p:file_digest(ROOT/p) for p in sources};start=time.perf_counter();result=run_reference(args.workspace)
+    migration=migration_audit(result,args.historical_reference) if args.historical_reference else None
+    after={p:file_digest(ROOT/p) for p in sources}
+    checks=[]
+    if args.notebook_manifest:
+        env=dict(os.environ,PYTHONPATH=str(ROOT/"src"),CUDA_VISIBLE_DEVICES="",OMP_NUM_THREADS="1",OPENBLAS_NUM_THREADS="1",MKL_NUM_THREADS="1")
+        for command in ([sys.executable,"-m","unittest","discover","-s","tests","-p","test_batched_cache_lab.py","-v"],
+                        [sys.executable,"scripts/check_book_math.py"]):
+            completed=subprocess.run(command,cwd=ROOT,env=env,capture_output=True,text=True,timeout=60)
+            checks.append({"command":command,"exit_code":completed.returncode,"stdout":completed.stdout,"stderr":completed.stderr})
+        after={p:file_digest(ROOT/p) for p in sources}
+    comparisons=[*result["generation_comparisons"].values(),result["sampled_single_comparison"],result["reordered_comparison"],result["cache_rebuild_comparison"]]
+    ok=(before==after and all(c["ids_equal"] and c["stops_equal"] and c["selected_logp_max_error"]<=1e-10 for c in comparisons)
+        and result["saved_cache_replay"]["bitwise_records"] and all(c["rejected"] for c in result["rejected_controls"])
+        and all(all(check.values()) for r in result["training"] for check in r["exact_recovery"].values())
+        and all(c["exit_code"]==0 for c in checks))
+    if migration is not None:ok=ok and migration["status"]=="passed"
+    report={"package":"DXI-14","status":"passed" if ok else "failed","command":list(sys.orig_argv),"python_argv":list(sys.argv),
+        "source_sha256":before,"source_changes":[p for p in before if before[p]!=after[p]],"seconds":time.perf_counter()-start,"results":result,"checks":checks}
+    if args.notebook_manifest:report.update(notebook_verification=row,notebook_manifest_sha256=file_digest(args.notebook_manifest))
+    if migration is not None:report["identity_migration"]=migration
+    args.report.parent.mkdir(parents=True,exist_ok=True)
+    with args.report.open("x") as handle:handle.write(json.dumps(report,indent=2,allow_nan=False)+"\n")
+    print(json.dumps({"report":str(args.report),"status":report["status"],"seconds":report["seconds"]}))
+    if not ok:raise SystemExit(1)
+
+
+if __name__=="__main__":main()

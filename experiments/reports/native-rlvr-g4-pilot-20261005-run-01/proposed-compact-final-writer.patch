@@ -1,0 +1,96 @@
+--- a/src/dongxi_llms/native_profile_supervisor.py
++++ b/src/dongxi_llms/native_profile_supervisor.py
+@@ -316,7 +316,9 @@
+                 os.fsync(handle.fileno())
+             else:
+                 with (Path(output)/'result.json').open('x', encoding='utf-8') as result:
+-                    result.write(json.dumps(value, sort_keys=True, indent=2, allow_nan=False)+'\n')
++                    # Compact encoding retains every value and uses the C encoder
++                    # inside the unchanged final-record acknowledgment window.
++                    result.write(json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False)+'\n')
+                     result.flush(); os.fsync(result.fileno())
+             results.send(('ack', identifier))
+     except BaseException as error:
+@@ -604,7 +606,7 @@
+ def _final_writer(output, value, result):
+     try:
+         with (Path(output)/'result.json').open('x') as handle:
+-            handle.write(json.dumps(value, indent=2, sort_keys=True, allow_nan=False)+'\n')
++            handle.write(json.dumps(value, sort_keys=True, separators=(',', ':'), allow_nan=False)+'\n')
+             handle.flush(); os.fsync(handle.fileno())
+         result.send(('done',))
+     except BaseException as error:
+--- a/tests/test_native_profile_supervisor.py
++++ b/tests/test_native_profile_supervisor.py
+@@ -358,6 +358,70 @@
+         bad = self.run_control('exit7', seconds=1)
+         self.assertEqual(bad['status'], 'failed'); self.assertEqual(bad['actual_exit_code'], 7)
+ 
++    def test_large_compact_final_record_preserves_values_and_ack_bound(self):
++        # Authored shape, not a replay/acceptance of any native run. Each resource
++        # event shares its observation exactly as the live result does.
++        observations = [dict(lab.injected_cpu_clearance(()), sample_index=index)
++                        for index in range(12451)]
++        value = dict(schema='authored-large-final-json-control', status='failed',
++            observations=observations, in_memory_events=[dict(event='resource-sample',
++                elapsed_seconds=index/10, observation=row)
++                for index, row in enumerate(observations)],
++            failure=None, cleanup_errors=[], unicode='模型/é/🙂', signed_zero=-0.0,
++            final_record_acknowledgment='unknown-at-write')
++        output = self.root/'large-final'; output.mkdir()
++        ctx = mp.get_context('fork'); requests = ctx.Queue(maxsize=2)
++        requests.cancel_join_thread(); received, sent = lab._channel_pair()
++        writer = ctx.Process(target=lab._logger_worker,
++            args=(requests, sent, str(output), None), daemon=True)
++        try:
++            writer.start()
++            self.assertTrue(received.poll(.25)); self.assertEqual(received.recv(), ['ready'])
++            started = time.monotonic(); requests.put(('result', 1, value))
++            self.assertTrue(received.poll(.25), 'Original .25-second final writer ACK bound')
++            self.assertEqual(received.recv(), ['ack', 1])
++            self.assertLess(time.monotonic()-started, .25)
++            raw = (output/'result.json').read_text()
++            self.assertEqual(json.loads(raw), value)
++            self.assertEqual(raw, json.dumps(value, sort_keys=True,
++                separators=(',', ':'), allow_nan=False)+'\n')
++            self.assertEqual(len(json.loads(raw)['observations']), 12451)
++        finally:
++            cleanup = lab._finish_helper(writer)
++            requests.close(); received.close(); sent.close()
++        self.assertTrue(cleanup['cleanup_complete'])
++
++    def test_compact_fallback_writer_fsync_precedes_ack(self):
++        output = self.root/'fallback-final'; output.mkdir()
++        value = dict(observations=[dict(index=1, measured=None)],
++            in_memory_events=[dict(event='authored')], unicode='模型', status='failed')
++        order = []; real_fsync = os.fsync
++        class Reply:
++            def send(self, message): order.append(message)
++        def fsync(descriptor):
++            real_fsync(descriptor); order.append('fsync-complete')
++        with patch.object(lab.os, 'fsync', side_effect=fsync):
++            lab._final_writer(str(output), value, Reply())
++        self.assertEqual(order, ['fsync-complete', ('done',)])
++        self.assertEqual(json.loads((output/'result.json').read_text()), value)
++
++    def test_delayed_final_fsync_does_not_ack_inside_original_bound(self):
++        output = self.root/'delayed-final'; output.mkdir()
++        ctx = mp.get_context('fork'); requests = ctx.Queue(maxsize=2)
++        requests.cancel_join_thread(); received, sent = lab._channel_pair()
++        writer = ctx.Process(target=lab._logger_worker,
++            args=(requests, sent, str(output), None), daemon=True)
++        def delayed_fsync(descriptor): time.sleep(1)
++        try:
++            with patch.object(lab.os, 'fsync', side_effect=delayed_fsync): writer.start()
++            self.assertTrue(received.poll(.25)); self.assertEqual(received.recv(), ['ready'])
++            requests.put(('result', 1, dict(status='authored-not-accepted')))
++            self.assertFalse(received.poll(.25))
++        finally:
++            cleanup = lab._finish_helper(writer)
++            requests.close(); received.close(); sent.close()
++        self.assertTrue(cleanup['cleanup_complete'])
++
+     def test_external_deadline_reaps_term_ignoring_child(self):
+         value = self.run_control('ignore-term', seconds=.5, term_seconds=.05)
+         self.assertEqual(value['stop_reason'], 'external-deadline')
+

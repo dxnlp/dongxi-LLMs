@@ -1,0 +1,85 @@
+<div id="dxi-selection-budget">
+  <h3>A correct answer can lose the vote</h3>
+  <div class="text-small">Recorded tiny decoder · train-11 · seed 10052 · correct answer: 0</div>
+  <div class="viz-controls">
+    <label class="form-label" for="dxi-count">Candidates: <output id="dxi-count-value" class="tabular-nums">8</output>
+      <input class="form-range" id="dxi-count" type="range" min="1" max="8" step="1" value="8">
+    </label>
+    <label class="form-label" for="dxi-rule">Selection
+      <select class="form-select" id="dxi-rule">
+        <option value="majority">Majority · earliest-answer tie</option>
+        <option value="first">First answer</option>
+        <option value="mean_logp">Highest mean log probability</option>
+      </select>
+    </label>
+  </div>
+  <ol class="dxi-candidates" aria-label="Ordered generated answers"></ol>
+  <div class="viz-row text-small">Answer 0: series 1 · Answer 1: series 2 · Dimmed: not attempted in this prefix</div>
+  <div class="viz-grid" aria-live="polite">
+    <div class="card viz-stat"><div>Correct answer available</div><div id="dxi-available" class="viz-stat-value">Yes</div></div>
+    <div class="card viz-stat"><div>Selected answer</div><div id="dxi-selected" class="viz-stat-value">1 · wrong</div></div>
+    <div class="card viz-stat"><div>Generated + rescored tokens</div><div id="dxi-cost" class="viz-stat-value tabular-nums">16 + 16</div></div>
+  </div>
+  <div id="dxi-votes" class="text-small tabular-nums">Votes: 0 → 3 · 1 → 5</div>
+</div>
+<style>
+#dxi-selection-budget .dxi-candidates {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:0;list-style:none;margin:12px 0;}
+#dxi-selection-budget .dxi-candidates li {padding:12px;text-align:center;color:var(--foreground);background:color-mix(in srgb,var(--viz-series-2) 13%,transparent);}
+#dxi-selection-budget .dxi-candidates li[data-answer="0"] {background:color-mix(in srgb,var(--viz-series-1) 13%,transparent);}
+#dxi-selection-budget .dxi-candidates li[data-active="false"] {opacity:0.3;}
+</style>
+<script>
+(() => {
+  const root = document.getElementById('dxi-selection-budget');
+  const rows = [
+    {id:'train-11-candidate-0',answer:'1',tokens:2,rescored:2,meanLogp:-0.32941815520838497},
+    {id:'train-11-candidate-1',answer:'0',tokens:2,rescored:2,meanLogp:-0.36467811667299516},
+    {id:'train-11-candidate-2',answer:'0',tokens:2,rescored:2,meanLogp:-0.36467811667299516},
+    {id:'train-11-candidate-3',answer:'1',tokens:2,rescored:2,meanLogp:-0.32941815520838497},
+    {id:'train-11-candidate-4',answer:'1',tokens:2,rescored:2,meanLogp:-0.32941815520838497},
+    {id:'train-11-candidate-5',answer:'1',tokens:2,rescored:2,meanLogp:-0.32941815520838497},
+    {id:'train-11-candidate-6',answer:'1',tokens:2,rescored:2,meanLogp:-0.32941815520838497},
+    {id:'train-11-candidate-7',answer:'0',tokens:2,rescored:2,meanLogp:-0.36467811667299516}
+  ];
+  const count = root.querySelector('#dxi-count');
+  const rule = root.querySelector('#dxi-rule');
+  const tiles = root.querySelector('.dxi-candidates');
+  rows.forEach((row,i) => {
+    const tile = document.createElement('li');
+    tile.dataset.answer = row.answer;
+    tile.textContent = `${i+1}: ${row.answer}`;
+    tile.setAttribute('aria-label',`Candidate ${i+1}, answer ${row.answer}, two generated tokens including EOS`);
+    tiles.appendChild(tile);
+  });
+  // Selectors receive no correct answer, gold field or evaluation function.
+  function select(pool, method) {
+    if (method === 'first') return pool[0].answer;
+    if (method === 'mean_logp') return pool.reduce((best,row) => row.meanLogp > best.meanLogp ? row : best).answer;
+    const counts = new Map();
+    pool.forEach(row => counts.set(row.answer,(counts.get(row.answer)||0)+1));
+    return [...counts.keys()].reduce((best,answer) => counts.get(answer) > counts.get(best) ? answer : best);
+  }
+  function apply(state) {
+    const n = state && Number.isInteger(state.n) && state.n >= 1 && state.n <= 8 ? state.n : 8;
+    count.value = n;
+    rule.value = state && ['majority','first','mean_logp'].includes(state.rule) ? state.rule : 'majority';
+    draw(false);
+  }
+  function draw(save) {
+    const n = Number(count.value), pool = rows.slice(0,n), answer = select(pool,rule.value);
+    root.querySelector('#dxi-count-value').textContent = n;
+    root.querySelector('#dxi-available').textContent = pool.some(row => row.answer === '0') ? 'Yes' : 'No';
+    root.querySelector('#dxi-selected').textContent = answer + (answer === '0' ? ' · correct' : ' · wrong');
+    root.querySelector('#dxi-cost').textContent = `${pool.reduce((s,r)=>s+r.tokens,0)} + ${pool.reduce((s,r)=>s+r.rescored,0)}`;
+    root.querySelector('#dxi-votes').textContent = `Votes: 0 → ${pool.filter(r=>r.answer==='0').length} · 1 → ${pool.filter(r=>r.answer==='1').length}`;
+    [...tiles.children].forEach((tile,i) => {tile.dataset.active = String(i<n);});
+    if (save && window.openai && window.openai.setWidgetState) {
+      window.openai.setWidgetState({modelContent:{pilot:'DXI-18 candidate selection',n,rule:rule.value,item:'train-11',seed:10052,selected:answer},privateContent:null}).catch(()=>{});
+    }
+  }
+  count.addEventListener('input',()=>draw(true));
+  rule.addEventListener('change',()=>draw(true));
+  window.addEventListener('openai:set_globals',event=>apply(event.detail?.globals?.widgetState?.modelContent));
+  apply(window.openai?.widgetState?.modelContent);
+})();
+</script>

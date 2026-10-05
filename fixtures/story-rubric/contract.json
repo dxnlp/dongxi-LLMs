@@ -1,0 +1,170 @@
+{
+  "id": "story-publication-v1",
+  "status": "logical-design-frozen-interface-pending",
+  "items": [
+    {
+      "id": "story-01",
+      "source_group": "original-opening-01",
+      "prompt": "Mara lent her blue umbrella to Ivo before the rain began."
+    },
+    {
+      "id": "story-02",
+      "source_group": "original-opening-02",
+      "prompt": "A small fox buried an apple beside the old stone gate."
+    },
+    {
+      "id": "story-03",
+      "source_group": "original-opening-03",
+      "prompt": "Nina saved two coins so she could repair her toy boat."
+    },
+    {
+      "id": "story-04",
+      "source_group": "original-opening-04",
+      "prompt": "When the bridge closed, Ben needed another way to visit Grandma."
+    },
+    {
+      "id": "story-05",
+      "source_group": "original-opening-05",
+      "prompt": "The farmer asked Ada to keep the tiny chick warm until morning."
+    },
+    {
+      "id": "story-06",
+      "source_group": "original-opening-06",
+      "prompt": "Oli left a red ribbon on the empty chair to remember his friend."
+    },
+    {
+      "id": "story-07",
+      "source_group": "original-opening-07",
+      "prompt": "A paper kite caught in a tree, and the children could not reach it."
+    },
+    {
+      "id": "story-08",
+      "source_group": "original-opening-08",
+      "prompt": "The baker gave Lila one loaf to carry safely across town."
+    },
+    {
+      "id": "story-09",
+      "source_group": "original-opening-09",
+      "prompt": "Sam promised to water the seed while his sister was away."
+    },
+    {
+      "id": "story-10",
+      "source_group": "original-opening-10",
+      "prompt": "A lost puppy followed the sound of a familiar little bell."
+    },
+    {
+      "id": "story-11",
+      "source_group": "original-opening-11",
+      "prompt": "Two mice disagreed about how to share the last piece of bread."
+    },
+    {
+      "id": "story-12",
+      "source_group": "original-opening-12",
+      "prompt": "After the snow melted, Eva found her missing mitten near the shed."
+    }
+  ],
+  "input_mode": "raw-story-prefix",
+  "template": null,
+  "thinking_mode": "not-applicable",
+  "tokenizer_declaration": {
+    "repository": "openai-community/gpt2",
+    "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+    "declared_eos_and_bos_id": 50256,
+    "observed_encoding_sha256": null
+  },
+  "decoding": [
+    {
+      "mode": "greedy",
+      "temperature": 1.0,
+      "top_k": null,
+      "top_p": 1.0,
+      "seed": null
+    },
+    {
+      "mode": "sample",
+      "temperature": 0.8,
+      "top_k": null,
+      "top_p": 1.0,
+      "seed": 909
+    },
+    {
+      "mode": "sample",
+      "temperature": 0.8,
+      "top_k": null,
+      "top_p": 1.0,
+      "seed": 1909
+    },
+    {
+      "mode": "sample",
+      "temperature": 0.8,
+      "top_k": null,
+      "top_p": 1.0,
+      "seed": 2909
+    }
+  ],
+  "context_window": 1024,
+  "max_new_tokens": 256,
+  "predetermined_updates": [
+    0,
+    400,
+    4000,
+    8000,
+    14000
+  ],
+  "rubric": {
+    "grammar": [
+      "frequent broken constructions",
+      "mostly readable with local errors",
+      "consistently readable"
+    ],
+    "entity_object_consistency": [
+      "contradicts tracked entities or objects",
+      "minor unclear reference",
+      "preserves identities and locations"
+    ],
+    "causal_continuity": [
+      "events contradict the setup",
+      "weak or partially unexplained links",
+      "events follow intelligibly"
+    ],
+    "repetition": [
+      "persistent looping obstructs the story",
+      "limited unnecessary repetition",
+      "no obstructive repetition"
+    ],
+    "ending": [
+      "no resolution or incoherent ending",
+      "partial resolution",
+      "clear resolution consistent with setup"
+    ]
+  },
+  "rubric_scores": [
+    0,
+    1,
+    2
+  ],
+  "raters": 2,
+  "blind_arm_checkpoint_labels": true,
+  "uncertainty_unit": "source opening; paired group resampling, not individual sampled responses",
+  "required_raw": [
+    "token_ids",
+    "text",
+    "selected_likelihoods",
+    "stop_reason",
+    "raw_ratings",
+    "rater_disagreement",
+    "all_attempt_costs"
+  ],
+  "stop_categories": [
+    "natural-eos",
+    "token-cap",
+    "context-cap",
+    "deadline",
+    "resource-stop",
+    "failure"
+  ],
+  "contamination_audit": "pending exact/near-duplicate review against actual training bytes before publication use",
+  "development_separation": "three historical inspected prompts excluded; publication never selects recipe/checkpoint/decoding",
+  "nll": "fixed validation and matched frozen-checkpoint train/dev targets; not online-batch mean or story-rubric score",
+  "logical_contract_sha256": "96155a17e1b1cfe065f005ae61b2c640b5b172509eba7162404bd7737119e659"
+}

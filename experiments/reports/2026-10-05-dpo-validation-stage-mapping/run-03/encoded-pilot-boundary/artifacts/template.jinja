@@ -1,0 +1,1 @@
+{% for m in messages %}{{ '<USER> ' if m['role']=='user' else '<ASSISTANT> ' }}{{ m['content'] }}{{ ' <END> ' }}{% endfor %}{% if add_generation_prompt %}{{ '<ASSISTANT> ' }}{% endif %}

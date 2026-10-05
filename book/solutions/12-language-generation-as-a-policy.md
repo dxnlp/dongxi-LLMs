@@ -1,7 +1,8 @@
 # Chapter 12 — Worked Solutions
 
 Companion to [Language Generation as a Policy](../chapters/12-language-generation-as-a-policy.md).
-The [lab guide](../labs/12-language-generation-as-a-policy.md) links four visual sessions.
+The [lab guide](../labs/12-language-generation-as-a-policy.md) links the original
+finite-policy sessions and probability-accounting/learned-critic extensions.
 
 ## 1. Score-function identity
 
@@ -107,3 +108,45 @@ entropy, masks, and sample/old-policy identities. A learning-rate change can
 hide instability but cannot repair a verifier rewarding the wrong behavior.
 Retain paired examples and an untouched checkpoint control. Only after these
 checks should a new controlled optimization comparison be proposed.
+
+## 13. Lambda endpoints with a cap
+
+At lambda zero, $\hat A_t=\delta_t$ and $\hat G_t=r_t+\gamma c_tV(s_{t+1})$.
+At lambda one, intermediate values cancel, leaving observed discounted rewards
+plus the final value after a nonterminal cap. Two zero-reward actions, gamma0.9
+and bootstrap1.2 give returns0.972/1.08. Fully observed Monte Carlo targets
+require true termination; a cap does not supply future experience.
+
+## 14. EOS is an event and padding is not
+
+Generated EOS zeros continuation even if a nonzero following value was supplied.
+A cap leaves continuation alive in the declared task. Post-EOS padding gets no
+residual, advantage or loss. Do not count a cap-four forced syntax endpoint as
+EOS within cap-three delivery. Breaking the mask changes the return without
+changing the observed token prefix.
+
+## 15. Separate learning objectives
+
+Actor gradients reach current likelihoods, not detached advantages or critic
+parameters. Critic gradients reach its representation/scalar head, not detached
+targets. Reward weights are frozen after verified reload; sampling IDs is not
+differentiated. Shared features would receive both losses and let critic
+updates move policy representations indirectly. Separate backbones isolate it.
+
+## 16. Pair fitting does not constrain every generated completion
+
+Training pairs used plain/fancy styles. Bare colors and repeated markers visit
+text outside those comparisons. Tiny pair loss establishes fit on records,
+not reliable extrapolation. Balanced oracle rows chose constant blue and
+achieved only0.5 quality. Oracle values do not repair a reward or shortcut.
+
+## 17. Compare quantities with their clocks
+
+All arms match sampled paths and actor steps. Learned arms also train a critic;
+oracle/noisy arms enumerate futures. Neither makes compute equal. Distinguish
+terminal rewards, bootstraps and diagnostic prefix scores. Inspect every seed,
+scheduled checkpoint and truncated/withheld row. Independent quality is not
+reward or tuning criterion; finite controls do not rank pretrained PPO stacks.
+
+The [new notebook](../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb)
+supplies adjacent runnable answers, saved reward identities and measured plots.

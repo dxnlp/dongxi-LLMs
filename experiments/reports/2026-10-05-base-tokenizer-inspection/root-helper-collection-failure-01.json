@@ -1,0 +1,10 @@
+{
+  "status": "collection-failed",
+  "actual_collector_process_exit_code": 1,
+  "error_type": "KeyError",
+  "field": "pending_checks",
+  "cause": "The read-only ledger projection assumed every completed package carried this optional field. No ledger or model state was changed.",
+  "retained_test_log": "root-helper-tests-01.log",
+  "test_subprocess_result": "Seven helper tests passed before the record-construction error; this is not a completed verification receipt.",
+  "correction": "Preserve whether the optional field exists and its actual value, rather than indexing it unconditionally; collect a new exclusive second attempt."
+}

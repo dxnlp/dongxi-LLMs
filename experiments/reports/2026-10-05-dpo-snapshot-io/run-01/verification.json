@@ -1,0 +1,244 @@
+{
+  "checkpoint_off_on_parity": {
+    "atol": 1e-06,
+    "discrete_work_and_rng_exact": true,
+    "max_absolute_difference": {
+      "adam": 0.0,
+      "gradient_norm": 0.0,
+      "loss": 0.0,
+      "margin": 0.0,
+      "policy": 0.0,
+      "reference": 0.0
+    },
+    "rtol": 1e-06,
+    "scope": "measured CPU FP32 parity; tolerance test is not a bitwise claim",
+    "tolerance_pass": true
+  },
+  "cli_ordering_controls": [
+    {
+      "exhausted": true,
+      "measured_payload_verification": false,
+      "model_backend_calls": 0,
+      "scope": "mocked platform/interface ordering; actual journals/shared inspection; no real GPU/model allocation"
+    },
+    {
+      "exhausted": false,
+      "measured_payload_verification": true,
+      "model_backend_calls": 1,
+      "scope": "mocked platform/interface ordering; actual journals/shared inspection; no real GPU/model allocation"
+    }
+  ],
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "tests/test_dpo_snapshot_io.py",
+    "--collect",
+    "experiments/reports/2026-10-05-dpo-snapshot-io/run-01"
+  ],
+  "commands": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "test_dpo_snapshot_io",
+        "-v"
+      ],
+      "deadline_seconds": 100,
+      "exit_code": 0,
+      "raw_log": {
+        "bytes": 2855,
+        "path": "new-focused.log",
+        "sha256": "5e122a32dad762c93fa8ab8ae3d6ea3654def2e6d3a6b0de702a4021e3006ea7"
+      },
+      "seconds": 11.26978162897285,
+      "tests_ran": 16,
+      "unittest_seconds": 9.214
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "test_dpo_runner_recovery",
+        "test_dpo_checkpoint_mode",
+        "test_dpo_work_budget",
+        "test_dpo_snapshot_artifacts",
+        "test_dpo_validation_budget",
+        "test_training_snapshot",
+        "test_training_snapshot_failure_paths",
+        "test_snapshot_artifact_budget",
+        "test_snapshot_io_budget",
+        "-v"
+      ],
+      "deadline_seconds": 100,
+      "exit_code": 0,
+      "raw_log": {
+        "bytes": 31098,
+        "path": "existing-regressions.log",
+        "sha256": "861b9c64dff71d8af438e419193ee6989aada9788241c4291538f38f326712d7"
+      },
+      "seconds": 32.26054882403696,
+      "tests_ran": 150,
+      "unittest_seconds": 30.291
+    }
+  ],
+  "created_utc": "2026-10-05T01:16:41.254605+00:00",
+  "environment": {
+    "cuda_visible_devices": "",
+    "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "hf_offline": true,
+    "machine": "aarch64",
+    "omp_num_threads": 1,
+    "packages": {
+      "peft": "0.20.0",
+      "tokenizers": "0.23.2",
+      "torch": "2.14.1+cpu",
+      "transformers": "5.18.0"
+    },
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "python": "3.12.14"
+  },
+  "fresh_process_replay": {
+    "actual_exit_code": 0,
+    "actual_sha256": "7ed7c945c62c1fd26ae2edee889eb41362468bbeee9ae26e0061883999aff255",
+    "checkpointing": true,
+    "completed_updates": 6,
+    "deadline_seconds": 40,
+    "exact": true,
+    "expected_sha256": "7ed7c945c62c1fd26ae2edee889eb41362468bbeee9ae26e0061883999aff255",
+    "final_io_reserved": {
+      "snapshot_clone_bytes": 8000000,
+      "snapshot_hash_bytes": 67586615,
+      "snapshot_inspect_operations": 1,
+      "snapshot_load_operations": 4,
+      "snapshot_primitive_bytes": 1800000,
+      "snapshot_save_operations": 4,
+      "snapshot_serialization_bytes": 67108864,
+      "snapshot_tensor_elements": 400000,
+      "snapshot_tree_nodes": 90000
+    },
+    "final_model_reserved": {
+      "evaluation_calls": 0,
+      "evaluation_positions": 0,
+      "generation_calls": 0,
+      "generation_position_upper_bound": 0,
+      "generation_tokens": 0,
+      "logical_sequence_tokens": 120,
+      "policy_forward_calls": 24,
+      "policy_forward_positions": 96,
+      "recovery_history_rows": 30,
+      "recovery_rng_states": 18,
+      "recovery_sampler_draws": 60,
+      "recovery_tensor_elements": 329008,
+      "recovery_validation_operations": 9,
+      "reference_forward_calls": 24,
+      "reference_forward_positions": 96,
+      "sampled_examples": 12,
+      "sampler_draws": 12,
+      "train_updates": 6,
+      "valid_targets": 72
+    },
+    "next_history_row_exact": true,
+    "partial_bytes": 8,
+    "partial_charge": 256,
+    "restored_update": 3,
+    "retained_io_failures": [
+      5
+    ],
+    "retained_model_failures": [
+      13
+    ]
+  },
+  "hooked_unhooked_parity": {
+    "actual_sha256": "7ed7c945c62c1fd26ae2edee889eb41362468bbeee9ae26e0061883999aff255",
+    "checkpointing": true,
+    "completed_updates": 6,
+    "exact": true,
+    "expected_sha256": "7ed7c945c62c1fd26ae2edee889eb41362468bbeee9ae26e0061883999aff255"
+  },
+  "launch_authorized": false,
+  "limitations": {
+    "all45_external_outcomes": "null",
+    "artifact_inventory_and_caller_capture": "postadmission, explicitly excluded from shared snapshot dimensions",
+    "cli_ordering": "mocked platform/interface observers, actual bound journals/shared inspection; not real Spark acceptance",
+    "learner_day": 9,
+    "metadata_journal_source_parent_input_identity": "excluded; bounded metadata/anchored journals still enforced",
+    "production_pretrained_gpu_mac_hosted": "not executed",
+    "units": "declared shared visits/bytes, not CPU instructions, time or physical quota"
+  },
+  "model_scale_jobs_started": 0,
+  "production_ready": false,
+  "python_argv": [
+    "tests/test_dpo_snapshot_io.py",
+    "--collect",
+    "experiments/reports/2026-10-05-dpo-snapshot-io/run-01"
+  ],
+  "schema": "dongxi-dpo-snapshot-io-reference-v1",
+  "seconds": 49.15981049800757,
+  "source_sha256": {
+    "experiments/specs/2026-10-05-dpo-recovery-validation-budget.md": "403973fbd77072b9cb922bcb1c70ecd61a6de99f0d3016016489e147531b0e4e",
+    "experiments/specs/2026-10-05-dpo-snapshot-io.md": "7a0a6225b825840487fc63a0c7a6a923e66238842c4c23f2cb7c6c256de71766",
+    "experiments/specs/2026-10-05-snapshot-io-admission.md": "ad6547bec89399b2f3e29a0bfa15371205dfe8475d3ae7f848e144ff3d07c691",
+    "experiments/specs/2026-10-05-snapshot-io-cli-fixture-compatibility.md": "b776599af0fca28c463e76484344a6cb9d87ea6c9403ce40ee5be591876bed33",
+    "experiments/specs/2026-10-05-validation-budget-fixture-compatibility.md": "d8f1c340fd477a2d6d64de080518c6bb61b8f6ca95480681d0dd8ce799fe8454",
+    "pyproject.toml": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+    "scripts/run_chapter11_spark_dpo.py": "a6e1ddf3d653e7a9ba09a6100207b929398868c15f50bbf6460d5b3e63ea7151",
+    "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+    "src/dongxi_llms/snapshot_io_budget.py": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4",
+    "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "tests/snapshot_io_test_support.py": "4dd26b41faefa44c634ca76e52f4b9f8f98d8b6a8b5a06e8f8a18d524a561ccb",
+    "tests/test_dpo_checkpoint_mode.py": "4179311168ceff0c9b0d0c3d15df4df1ab48f25b0336c182bf6446a7385459e4",
+    "tests/test_dpo_runner_recovery.py": "cf31bef76b2b8e7b47d405ccfa03337fe3a6e064afad661eedd02e577506eb35",
+    "tests/test_dpo_snapshot_artifacts.py": "fae1f5c2069dc3101e3128a446032c90d8296a842d6d23bf90015ac555134df4",
+    "tests/test_dpo_snapshot_io.py": "2eee058af4d09d48723c68aa18f9ecbf8c6058bbf67f47c41b7c9ebfd83c79fe",
+    "tests/test_dpo_validation_budget.py": "c611f51f8edd1b0603f02ab94946342502f255b716b69bab2202b8a9b0fa62d5",
+    "tests/test_dpo_work_budget.py": "8b3d3e0202d8c2d0b4be3509e07e28c10d0758088e3266c19c815237b689d7d2",
+    "tests/test_snapshot_artifact_budget.py": "fcc068f84e2b2268037ea42e141d223160083879a538376a5b2944d0ac2c3207",
+    "tests/test_snapshot_io_budget.py": "e23d372f62d0d46eb454e615afe2527814957be0b5f89131ac028a0bd97e9fff",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "tests/test_training_snapshot_failure_paths.py": "845319a877e9bcef45989387859ab9d8b2da3b323131f0819a9984c8a721b261",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+  },
+  "source_sha256_after": {
+    "experiments/specs/2026-10-05-dpo-recovery-validation-budget.md": "403973fbd77072b9cb922bcb1c70ecd61a6de99f0d3016016489e147531b0e4e",
+    "experiments/specs/2026-10-05-dpo-snapshot-io.md": "7a0a6225b825840487fc63a0c7a6a923e66238842c4c23f2cb7c6c256de71766",
+    "experiments/specs/2026-10-05-snapshot-io-admission.md": "ad6547bec89399b2f3e29a0bfa15371205dfe8475d3ae7f848e144ff3d07c691",
+    "experiments/specs/2026-10-05-snapshot-io-cli-fixture-compatibility.md": "b776599af0fca28c463e76484344a6cb9d87ea6c9403ce40ee5be591876bed33",
+    "experiments/specs/2026-10-05-validation-budget-fixture-compatibility.md": "d8f1c340fd477a2d6d64de080518c6bb61b8f6ca95480681d0dd8ce799fe8454",
+    "pyproject.toml": "33298b327bab6799ffcb5b4823f152581780a42e706224c72faf8c4acc641415",
+    "scripts/run_chapter11_spark_dpo.py": "a6e1ddf3d653e7a9ba09a6100207b929398868c15f50bbf6460d5b3e63ea7151",
+    "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+    "src/dongxi_llms/snapshot_io_budget.py": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4",
+    "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "tests/snapshot_io_test_support.py": "4dd26b41faefa44c634ca76e52f4b9f8f98d8b6a8b5a06e8f8a18d524a561ccb",
+    "tests/test_dpo_checkpoint_mode.py": "4179311168ceff0c9b0d0c3d15df4df1ab48f25b0336c182bf6446a7385459e4",
+    "tests/test_dpo_runner_recovery.py": "cf31bef76b2b8e7b47d405ccfa03337fe3a6e064afad661eedd02e577506eb35",
+    "tests/test_dpo_snapshot_artifacts.py": "fae1f5c2069dc3101e3128a446032c90d8296a842d6d23bf90015ac555134df4",
+    "tests/test_dpo_snapshot_io.py": "2eee058af4d09d48723c68aa18f9ecbf8c6058bbf67f47c41b7c9ebfd83c79fe",
+    "tests/test_dpo_validation_budget.py": "c611f51f8edd1b0603f02ab94946342502f255b716b69bab2202b8a9b0fa62d5",
+    "tests/test_dpo_work_budget.py": "8b3d3e0202d8c2d0b4be3509e07e28c10d0758088e3266c19c815237b689d7d2",
+    "tests/test_snapshot_artifact_budget.py": "fcc068f84e2b2268037ea42e141d223160083879a538376a5b2944d0ac2c3207",
+    "tests/test_snapshot_io_budget.py": "e23d372f62d0d46eb454e615afe2527814957be0b5f89131ac028a0bd97e9fff",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968",
+    "tests/test_training_snapshot_failure_paths.py": "845319a877e9bcef45989387859ab9d8b2da3b323131f0819a9984c8a721b261",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+  },
+  "sources_unchanged": true,
+  "status": "pass"
+}

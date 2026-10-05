@@ -1,0 +1,10 @@
+{
+  "schema_version": "dongxi-diagnostic-v1",
+  "status": "failed-test-selection",
+  "command": "env PYTHONPATH=src:tests CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python -m unittest test_sft_validation_budget.Tests.test_sparse_model_layout_refused_before_elementwise_scan -v",
+  "actual_exit_code": 1,
+  "tests_run": 1,
+  "errors": 1,
+  "exception": "AttributeError: module 'test_sft_validation_budget' has no attribute 'Tests'",
+  "scope": "Test-selector typo before numerical execution; the real class is SFTValidationBudgetTests. No source or numerical recipe changed as a consequence."
+}

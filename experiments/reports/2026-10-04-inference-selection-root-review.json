@@ -1,0 +1,45 @@
+{
+  "schema": "dongxi-inference-selection-root-review-v1",
+  "date_utc": "2026-10-04 21:31:31 UTC",
+  "reviewer": "/root",
+  "scope": "Independent bounded CPU source/test/specification review and full actual-candidate replay; not pretrained reasoning or serving performance.",
+  "reference": "experiments/reports/2026-10-04-inference-selection/results.json",
+  "reference_sha256": "cde24eef386f5bb8363bc86c5c546b6219e77a0535b3a319124ca90106aa3a5e",
+  "verification": "experiments/reports/2026-10-04-inference-selection-verification.json",
+  "source_map_paths_checked": 20,
+  "source_map_mismatches": [],
+  "focused_tests": 20,
+  "focused_tests_exit_code": 0,
+  "replay": {
+    "seeds": [
+      10051,
+      10052,
+      10053
+    ],
+    "policies": 6,
+    "training_updates": 240,
+    "candidates": 864,
+    "generated_actions": 1736,
+    "rescored_actions": 1736,
+    "seconds": 1.4411520879948512,
+    "exit_code": 0,
+    "exact_non_timing_runs_match": true,
+    "excluded_comparison_keys": "Only keys ending in seconds, recursively within runs; top-level environment/memory/provenance fields were not compared."
+  },
+  "fresh_notebook": {
+    "manifest": "/tmp/dongxi-course-check-hafnj3kj/manifest.json",
+    "manifest_sha256": "490b9cffb6a26170a985f930df1594268c5e398cbc2b2f1e9a299d333229049f",
+    "code_cells": 7,
+    "images": 5,
+    "skipped": [],
+    "boundary": "Final agent fresh kernel; root inspected source/spec/tests and selected error-correlation/held-out figures. All five previews separately inspected by builder."
+  },
+  "retained_negative_controls": [
+    "Wrong majority despite a correct answer in the pool",
+    "Weak held-out generalization",
+    "Longest selector has no eligible length contrast",
+    "Whole-attempt overshoot charged but not selectable",
+    "All selectors pay measurement rescoring"
+  ],
+  "authorization_boundary": "No Git commit/push, external service, shared-environment changes, model acquisition, Spark GPU or Mac execution."
+}

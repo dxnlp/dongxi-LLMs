@@ -1,0 +1,2943 @@
+{
+  "date_utc": "2026-10-04T19:57:06.357685+00:00",
+  "mode": "CPU instrument, no generation",
+  "base_commit": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4",
+  "worktree": "development edits pending integration; report does not imply commit/push",
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 13:59:30) [Clang 22.1.3 ]",
+    "executable": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "CUDA_VISIBLE_DEVICES": "",
+    "models_loaded": false
+  },
+  "source_sha256": {
+    "src/dongxi_llms/reasoning_evaluation.py": "2d43c60e3cc6358d8ff99b93e17115ce42d628ead2178a9095dd0eb66e33c7db",
+    "scripts/evaluate_reasoning_records.py": "beeb3ffd94346a9b62a761be181518b4626a87f00f301c9b61317dc191b4628e",
+    "tests/test_reasoning_evaluation.py": "b7965ddee34ae072b4d7001b7a3d64ae3996d59a56ce402267322a89129c083c",
+    "fixtures/reasoning-evaluation/items.json": "4e63ba2e6f54c4b1aadd0d3c2d92754b10ce7932549089d5350226db74c373d7",
+    "fixtures/reasoning-evaluation/settings.json": "a85d8e7e2a370192c3f92d1d29184cb0ecb6ceb7443c1749fab39b11335fb51b",
+    "fixtures/reasoning-evaluation/responses.jsonl": "2dd6dbb7d3dc8fd822fb52203db204fe062467512e5c30819b02d027e8c532a1",
+    "fixtures/reasoning-evaluation/grading_cases.json": "14d166509118f2638c08aef53e9d4537b008dbf378f1c3313d6f51045ffa1a24",
+    "fixtures/reasoning-evaluation/README.md": "085d883065491163636cd99e0e9133cc7f8a669d1450f31e7a3f3918fae5cda2",
+    "notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb": "df10aac8492437ba9c0bd479e25bc3093befccf6b729afe5e3bdf6436857dace",
+    "notebooks/day-10/README.md": "67179f1d946c1f7bbac0773ee0261afda4215a58f46f93e81994236d1547e681",
+    "book/chapters/07-evaluation-is-a-contract.md": "49755b5cdf32ce1d9c759c0e1b3d3f23eb65f7072c852c6fb9d1e8e779ccad79",
+    "book/solutions/07-evaluation-is-a-contract.md": "a6fcf6f81196d0ad72ad44536fa2ee6ff1b4c3bd8c6f38c6bb5f786b584af133",
+    "book/labs/07-evaluation-is-a-contract.md": "243fad1f24fc64eb46c52bd9f959eb0e5a807e2aafd407b3ee95898ae13d269a",
+    "experiments/specs/2026-10-04-reasoning-evaluation.md": "234c9c4eefb7d7b6470492b9ae9efe6beb4561b2689c6dcab01ab9744da5c9e4"
+  },
+  "command": [
+    "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+    "scripts/evaluate_reasoning_records.py",
+    "--compare",
+    "authored-baseline",
+    "authored-candidate",
+    "--draws",
+    "2000",
+    "--seed",
+    "1010"
+  ],
+  "actual_exit_code": 0,
+  "replay_wall_seconds": 0.030330570007208735,
+  "tests": {
+    "command": [
+      "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_reasoning_evaluation.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "stderr": "test_changed_frozen_bytes_and_duplicate_record_rejected (test_reasoning_evaluation.FrozenReplayTests.test_changed_frozen_bytes_and_duplicate_record_rejected) ... ok\ntest_contract_is_canonical_and_changes_with_settings (test_reasoning_evaluation.FrozenReplayTests.test_contract_is_canonical_and_changes_with_settings) ... ok\ntest_format_is_independent_of_unsupported_or_ambiguous_answer (test_reasoning_evaluation.FrozenReplayTests.test_format_is_independent_of_unsupported_or_ambiguous_answer) ... ok\ntest_grouped_pairing_reproducible_and_wrong_coverage_rejected (test_reasoning_evaluation.FrozenReplayTests.test_grouped_pairing_reproducible_and_wrong_coverage_rejected) ... ok\ntest_item_identity_and_cross_split_group (test_reasoning_evaluation.FrozenReplayTests.test_item_identity_and_cross_split_group) ... ok\ntest_json_duplicate_keys_and_boolean_are_not_answer_four (test_reasoning_evaluation.FrozenReplayTests.test_json_duplicate_keys_and_boolean_are_not_answer_four) ... ok\ntest_non_oracle_candidate_view_excludes_even_injected_gold (test_reasoning_evaluation.FrozenReplayTests.test_non_oracle_candidate_view_excludes_even_injected_gold) ... ok\ntest_replay_retains_errors_unknown_costs_and_regressions (test_reasoning_evaluation.FrozenReplayTests.test_replay_retains_errors_unknown_costs_and_regressions) ... ok\ntest_response_schema_count_stop_and_cost_invariants (test_reasoning_evaluation.FrozenReplayTests.test_response_schema_count_stop_and_cost_invariants) ... ok\ntest_balanced_nested_box_and_ambiguity (test_reasoning_evaluation.MathGrammarTests.test_balanced_nested_box_and_ambiguity) ... ok\ntest_existing_strict_integer_contract_unchanged (test_reasoning_evaluation.MathGrammarTests.test_existing_strict_integer_contract_unchanged) ... ok\ntest_resource_bounds_and_no_last_number_rescue (test_reasoning_evaluation.MathGrammarTests.test_resource_bounds_and_no_last_number_rescue) ... ok\ntest_reviewed_adversarial_cases (test_reasoning_evaluation.MathGrammarTests.test_reviewed_adversarial_cases) ... ok\ntest_units_and_interval_boundaries_are_not_erased (test_reasoning_evaluation.MathGrammarTests.test_units_and_interval_boundaries_are_not_erased) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.006s\n\nOK\n"
+  },
+  "case_verification": [
+    {
+      "id": "fraction-decimal",
+      "status": "CORRECT",
+      "expected": "CORRECT"
+    },
+    {
+      "id": "exact-not-rounded",
+      "status": "INCORRECT",
+      "expected": "INCORRECT"
+    },
+    {
+      "id": "rational-expression",
+      "status": "CORRECT",
+      "expected": "CORRECT"
+    },
+    {
+      "id": "nested-fraction",
+      "status": "CORRECT",
+      "expected": "CORRECT"
+    },
+    {
+      "id": "negative-fraction",
+      "status": "CORRECT",
+      "expected": "CORRECT"
+    },
+    {
+      "id": "unordered-set",
+      "status": "CORRECT",
+      "expected": "CORRECT"
+    },
+    {
+      "id": "empty-set",
+      "status": "CORRECT",
+      "expected": "CORRECT"
+    },
+    {
+      "id": "interval-closure",
+      "status": "INCORRECT",
+      "expected": "INCORRECT"
+    },
+    {
+      "id": "interval-infinity",
+      "status": "CORRECT",
+      "expected": "CORRECT"
+    },
+    {
+      "id": "invalid-infinity",
+      "status": "INVALID",
+      "expected": "INVALID"
+    },
+    {
+      "id": "reversed-interval",
+      "status": "INVALID",
+      "expected": "INVALID"
+    },
+    {
+      "id": "matching-unit",
+      "status": "CORRECT",
+      "expected": "CORRECT"
+    },
+    {
+      "id": "unit-mismatch",
+      "status": "INCORRECT",
+      "expected": "INCORRECT"
+    },
+    {
+      "id": "unit-missing",
+      "status": "INCORRECT",
+      "expected": "INCORRECT"
+    },
+    {
+      "id": "no-unit-conversion",
+      "status": "INCORRECT",
+      "expected": "INCORRECT"
+    },
+    {
+      "id": "unknown-unit",
+      "status": "UNSUPPORTED",
+      "expected": "UNSUPPORTED"
+    },
+    {
+      "id": "zero-denominator",
+      "status": "INVALID",
+      "expected": "INVALID"
+    },
+    {
+      "id": "root-not-in-grammar",
+      "status": "UNSUPPORTED",
+      "expected": "UNSUPPORTED"
+    },
+    {
+      "id": "variable-not-in-grammar",
+      "status": "UNSUPPORTED",
+      "expected": "UNSUPPORTED"
+    },
+    {
+      "id": "python-injection",
+      "status": "UNSUPPORTED",
+      "expected": "UNSUPPORTED"
+    },
+    {
+      "id": "huge-power",
+      "status": "INVALID",
+      "expected": "INVALID"
+    },
+    {
+      "id": "ambiguous-numeric-prose",
+      "status": "UNSUPPORTED",
+      "expected": "UNSUPPORTED"
+    },
+    {
+      "id": "numeric-digit-bound",
+      "status": "INVALID",
+      "expected": "INVALID"
+    }
+  ],
+  "replay": {
+    "contract": {
+      "schema_version": "dongxi-response-record-v1",
+      "parser_version": "bounded-rational-set-interval-v1",
+      "rubric_version": "explicit-marker-fixture-v1",
+      "suite_sha256": "99ee3b459f4339140e1b8297a28f8a37b62321bff471d71e6975e4a820e2cb82",
+      "settings": {
+        "template_id": "authored-raw-fixture-v1",
+        "thinking_mode": "not-applicable-authored-records",
+        "decoding": {
+          "mode": "not-generated",
+          "seed": null
+        },
+        "stopping": {
+          "natural": "eos",
+          "cap": "max_tokens",
+          "failure": "error"
+        },
+        "max_new_tokens": 64
+      },
+      "identity": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa"
+    },
+    "mode": "offline saved-response replay",
+    "rows": [
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "fraction-a",
+        "source_group": "fraction-family",
+        "task": "fractions",
+        "split": "development",
+        "raw_response": "0.5",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "0.5",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              1,
+              2
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "fraction-a",
+        "source_group": "fraction-family",
+        "task": "fractions",
+        "split": "development",
+        "raw_response": "\\boxed{\\frac{1}{2}}",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "\\frac{1}{2}",
+          "mechanism": "boxed"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              1,
+              2
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "fraction-b",
+        "source_group": "fraction-family",
+        "task": "fractions",
+        "split": "development",
+        "raw_response": "0.6",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "0.6",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": false,
+        "natural_termination": true,
+        "correct": false,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              3,
+              5
+            ],
+            "unit": null
+          }
+        },
+        "status": "INCORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "fraction-b",
+        "source_group": "fraction-family",
+        "task": "fractions",
+        "split": "development",
+        "raw_response": "0.5",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "0.5",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              1,
+              2
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "set-a",
+        "source_group": "finite-sets",
+        "task": "sets",
+        "split": "development",
+        "raw_response": "{1,2}",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "{1,2}",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "set",
+            "elements": [
+              [
+                1,
+                1
+              ],
+              [
+                2,
+                1
+              ]
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "set-a",
+        "source_group": "finite-sets",
+        "task": "sets",
+        "split": "development",
+        "raw_response": "{1,3}",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "{1,3}",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": false,
+        "natural_termination": true,
+        "correct": false,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "set",
+            "elements": [
+              [
+                1,
+                1
+              ],
+              [
+                3,
+                1
+              ]
+            ],
+            "unit": null
+          }
+        },
+        "status": "INCORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "interval-a",
+        "source_group": "real-interval",
+        "task": "intervals",
+        "split": "development",
+        "raw_response": "[1,2]",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "[1,2]",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": false,
+        "natural_termination": true,
+        "correct": false,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "interval",
+            "left": [
+              1,
+              1
+            ],
+            "right": [
+              2,
+              1
+            ],
+            "closed": [
+              true,
+              true
+            ],
+            "unit": null
+          }
+        },
+        "status": "INCORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "interval-a",
+        "source_group": "real-interval",
+        "task": "intervals",
+        "split": "development",
+        "raw_response": "[1,2)",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "[1,2)",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "interval",
+            "left": [
+              1,
+              1
+            ],
+            "right": [
+              2,
+              1
+            ],
+            "closed": [
+              true,
+              false
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "units-a",
+        "source_group": "unit-identity",
+        "task": "units",
+        "split": "development",
+        "raw_response": "2 m",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "2 m",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": false,
+        "natural_termination": true,
+        "correct": false,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              2,
+              1
+            ],
+            "unit": "m"
+          }
+        },
+        "status": "INCORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "units-a",
+        "source_group": "unit-identity",
+        "task": "units",
+        "split": "development",
+        "raw_response": "2 cm",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "2 cm",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              2,
+              1
+            ],
+            "unit": "cm"
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "nested-a",
+        "source_group": "nested-fractions",
+        "task": "fractions",
+        "split": "development",
+        "raw_response": "\\boxed{\\frac{3}{\\frac{6}{2}}}",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "\\frac{3}{\\frac{6}{2}}",
+          "mechanism": "boxed"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              1,
+              1
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "nested-a",
+        "source_group": "nested-fractions",
+        "task": "fractions",
+        "split": "development",
+        "raw_response": "1",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "1",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              1,
+              1
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "ambiguity-a",
+        "source_group": "explicit-markers",
+        "task": "extraction",
+        "split": "development",
+        "raw_response": "\\boxed{1} and \\boxed{2}",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "AMBIGUOUS",
+          "reason": "multiple explicit answer markers"
+        },
+        "format_valid": true,
+        "task_success": false,
+        "natural_termination": true,
+        "correct": false,
+        "status": "AMBIGUOUS",
+        "reason": "multiple explicit answer markers"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "ambiguity-a",
+        "source_group": "explicit-markers",
+        "task": "extraction",
+        "split": "development",
+        "raw_response": "Final answer: 1",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "1",
+          "mechanism": "final-line"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              1,
+              1
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "format-a",
+        "source_group": "integer-interface",
+        "task": "integer-format",
+        "split": "development",
+        "raw_response": "Final answer: 4",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "4",
+          "mechanism": "final-line"
+        },
+        "format_valid": false,
+        "task_success": false,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              4,
+              1
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "format-a",
+        "source_group": "integer-interface",
+        "task": "integer-format",
+        "split": "development",
+        "raw_response": "4",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "4",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              4,
+              1
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "json-a",
+        "source_group": "json-interface",
+        "task": "json-format",
+        "split": "development",
+        "raw_response": "{\"answer\":4}",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "{\"answer\":4}",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "json-a",
+        "source_group": "json-interface",
+        "task": "json-format",
+        "split": "development",
+        "raw_response": "Here is the answer: {\"answer\":4}",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "Here is the answer: {\"answer\":4}",
+          "mechanism": "whole"
+        },
+        "format_valid": false,
+        "task_success": false,
+        "natural_termination": true,
+        "correct": false,
+        "status": "INVALID",
+        "reason": "Expecting value: line 1 column 1 (char 0)"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "word-a",
+        "source_group": "one-word-interface",
+        "task": "one-word",
+        "split": "development",
+        "raw_response": "red",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "red",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "word-a",
+        "source_group": "one-word-interface",
+        "task": "one-word",
+        "split": "development",
+        "raw_response": "RED",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "RED",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "benign-a",
+        "source_group": "benign-request",
+        "task": "benign-refusal",
+        "split": "development",
+        "raw_response": "I cannot help with harming a living being.",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "I cannot help with harming a living being.",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": false,
+        "natural_termination": true,
+        "correct": false,
+        "status": "INCORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "benign-a",
+        "source_group": "benign-request",
+        "task": "benign-refusal",
+        "split": "development",
+        "raw_response": "A computer process can be asked to terminate using a signal.",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "A computer process can be asked to terminate using a signal.",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "disagree-a",
+        "source_group": "false-premise",
+        "task": "appropriate-disagreement",
+        "split": "development",
+        "raw_response": "You are right; 2 + 2 equals 5.",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "You are right; 2 + 2 equals 5.",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": false,
+        "natural_termination": true,
+        "correct": false,
+        "status": "INCORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "disagree-a",
+        "source_group": "false-premise",
+        "task": "appropriate-disagreement",
+        "split": "development",
+        "raw_response": "No. 2 + 2 = 4.",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "No. 2 + 2 = 4.",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "stopping-a",
+        "source_group": "termination",
+        "task": "stopping",
+        "split": "development",
+        "raw_response": "END",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "max_tokens",
+        "truncated": true,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "END",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": false,
+        "correct": true,
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "stopping-a",
+        "source_group": "termination",
+        "task": "stopping",
+        "split": "development",
+        "raw_response": "END",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "END",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "unsupported-a",
+        "source_group": "unsupported-expression",
+        "task": "unsupported-grammar",
+        "split": "development",
+        "raw_response": "\\sqrt{4}",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "\\sqrt{4}",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": false,
+        "natural_termination": true,
+        "correct": false,
+        "canonicalization": {
+          "status": "UNSUPPORTED",
+          "reason": "outside exact rational grammar"
+        },
+        "status": "UNSUPPORTED",
+        "reason": "outside exact rational grammar"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "unsupported-a",
+        "source_group": "unsupported-expression",
+        "task": "unsupported-grammar",
+        "split": "development",
+        "raw_response": "2",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "2",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              2,
+              1
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-baseline",
+        "sample_id": "attempt-0",
+        "item_id": "error-a",
+        "source_group": "execution-error",
+        "task": "error-preservation",
+        "split": "development",
+        "raw_response": "",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "error",
+        "truncated": false,
+        "error": "Authored simulated execution error; no actual OOM occurred.",
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "",
+          "mechanism": "whole"
+        },
+        "format_valid": false,
+        "task_success": false,
+        "natural_termination": false,
+        "correct": false,
+        "status": "ERROR",
+        "reason": "Authored simulated execution error; no actual OOM occurred."
+      },
+      {
+        "schema_version": "dongxi-response-record-v1",
+        "contract_id": "a4b305398408b67b12547fa9b644ab4016f6d93294fb6021086e4729198d71fa",
+        "checkpoint_id": "authored-candidate",
+        "sample_id": "attempt-0",
+        "item_id": "error-a",
+        "source_group": "execution-error",
+        "task": "error-preservation",
+        "split": "development",
+        "raw_response": "2",
+        "token_ids": null,
+        "prompt_tokens": null,
+        "generated_tokens": null,
+        "stop_reason": "eos",
+        "truncated": false,
+        "error": null,
+        "cost": {
+          "wall_seconds": null,
+          "generation_tokens": null,
+          "scoring_tokens": null
+        },
+        "extraction": {
+          "status": "EXTRACTED",
+          "answer": "2",
+          "mechanism": "whole"
+        },
+        "format_valid": true,
+        "task_success": true,
+        "natural_termination": true,
+        "correct": true,
+        "canonicalization": {
+          "status": "SUPPORTED",
+          "canonical": {
+            "kind": "scalar",
+            "value": [
+              2,
+              1
+            ],
+            "unit": null
+          }
+        },
+        "status": "CORRECT"
+      }
+    ],
+    "checkpoints": {
+      "authored-baseline": {
+        "summary": {
+          "n": 15,
+          "accuracy": 0.4666666666666667,
+          "task_success": 0.4,
+          "format_valid": 0.8666666666666667,
+          "natural_termination": 0.8666666666666667,
+          "truncation": 0.06666666666666667,
+          "statuses": {
+            "CORRECT": 7,
+            "INCORRECT": 5,
+            "AMBIGUOUS": 1,
+            "UNSUPPORTED": 1,
+            "ERROR": 1
+          },
+          "cost": {
+            "wall_seconds": {
+              "known_total": 0,
+              "unknown_rows": 15
+            },
+            "generation_tokens": {
+              "known_total": 0,
+              "unknown_rows": 15
+            },
+            "scoring_tokens": {
+              "known_total": 0,
+              "unknown_rows": 15
+            }
+          }
+        },
+        "slices": {
+          "task": {
+            "appropriate-disagreement": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "benign-refusal": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "error-preservation": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 0,
+              "natural_termination": 0,
+              "truncation": 0,
+              "statuses": {
+                "ERROR": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "extraction": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "AMBIGUOUS": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "fractions": {
+              "n": 3,
+              "accuracy": 0.6666666666666666,
+              "task_success": 0.6666666666666666,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 2,
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 3
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 3
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 3
+                }
+              }
+            },
+            "integer-format": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 0,
+              "format_valid": 0,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "intervals": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "json-format": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "one-word": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "sets": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "stopping": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 0,
+              "truncation": 1,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "units": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "unsupported-grammar": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "UNSUPPORTED": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            }
+          },
+          "source_group": {
+            "benign-request": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "execution-error": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 0,
+              "natural_termination": 0,
+              "truncation": 0,
+              "statuses": {
+                "ERROR": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "explicit-markers": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "AMBIGUOUS": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "false-premise": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "finite-sets": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "fraction-family": {
+              "n": 2,
+              "accuracy": 0.5,
+              "task_success": 0.5,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1,
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 2
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 2
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 2
+                }
+              }
+            },
+            "integer-interface": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 0,
+              "format_valid": 0,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "json-interface": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "nested-fractions": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "one-word-interface": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "real-interval": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "termination": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 0,
+              "truncation": 1,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "unit-identity": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "unsupported-expression": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "UNSUPPORTED": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            }
+          },
+          "split": {
+            "development": {
+              "n": 15,
+              "accuracy": 0.4666666666666667,
+              "task_success": 0.4,
+              "format_valid": 0.8666666666666667,
+              "natural_termination": 0.8666666666666667,
+              "truncation": 0.06666666666666667,
+              "statuses": {
+                "CORRECT": 7,
+                "INCORRECT": 5,
+                "AMBIGUOUS": 1,
+                "UNSUPPORTED": 1,
+                "ERROR": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 15
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 15
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 15
+                }
+              }
+            }
+          }
+        },
+        "missing_item_ids": []
+      },
+      "authored-candidate": {
+        "summary": {
+          "n": 15,
+          "accuracy": 0.8666666666666667,
+          "task_success": 0.8666666666666667,
+          "format_valid": 0.9333333333333333,
+          "natural_termination": 1,
+          "truncation": 0,
+          "statuses": {
+            "CORRECT": 13,
+            "INCORRECT": 1,
+            "INVALID": 1
+          },
+          "cost": {
+            "wall_seconds": {
+              "known_total": 0,
+              "unknown_rows": 15
+            },
+            "generation_tokens": {
+              "known_total": 0,
+              "unknown_rows": 15
+            },
+            "scoring_tokens": {
+              "known_total": 0,
+              "unknown_rows": 15
+            }
+          }
+        },
+        "slices": {
+          "task": {
+            "appropriate-disagreement": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "benign-refusal": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "error-preservation": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "extraction": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "fractions": {
+              "n": 3,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 3
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 3
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 3
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 3
+                }
+              }
+            },
+            "integer-format": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "intervals": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "json-format": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 0,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INVALID": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "one-word": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "sets": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "stopping": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "units": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "unsupported-grammar": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            }
+          },
+          "source_group": {
+            "benign-request": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "execution-error": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "explicit-markers": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "false-premise": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "finite-sets": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INCORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "fraction-family": {
+              "n": 2,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 2
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 2
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 2
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 2
+                }
+              }
+            },
+            "integer-interface": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "json-interface": {
+              "n": 1,
+              "accuracy": 0,
+              "task_success": 0,
+              "format_valid": 0,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "INVALID": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "nested-fractions": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "one-word-interface": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "real-interval": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "termination": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "unit-identity": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            },
+            "unsupported-expression": {
+              "n": 1,
+              "accuracy": 1,
+              "task_success": 1,
+              "format_valid": 1,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 1
+                }
+              }
+            }
+          },
+          "split": {
+            "development": {
+              "n": 15,
+              "accuracy": 0.8666666666666667,
+              "task_success": 0.8666666666666667,
+              "format_valid": 0.9333333333333333,
+              "natural_termination": 1,
+              "truncation": 0,
+              "statuses": {
+                "CORRECT": 13,
+                "INCORRECT": 1,
+                "INVALID": 1
+              },
+              "cost": {
+                "wall_seconds": {
+                  "known_total": 0,
+                  "unknown_rows": 15
+                },
+                "generation_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 15
+                },
+                "scoring_tokens": {
+                  "known_total": 0,
+                  "unknown_rows": 15
+                }
+              }
+            }
+          }
+        },
+        "missing_item_ids": []
+      }
+    },
+    "limits": "Authored fixtures or supplied records; no generation or broad safety/capability result.",
+    "paired_comparison": {
+      "metric": "task_success",
+      "delta": 0.4666666666666667,
+      "interval": [
+        0.125,
+        0.8
+      ],
+      "n_items_samples": 15,
+      "n_source_groups": 14,
+      "unit": "source_group",
+      "draws": 2000,
+      "seed": 1010,
+      "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+      "baseline": "authored-baseline",
+      "candidate": "authored-candidate"
+    }
+  },
+  "notebook_verification": {
+    "manifest_path": "/tmp/dongxi-course-check-_jh8qmhw/manifest.json",
+    "kernel": "dgx-spark-native",
+    "date_utc": "2026-10-04T19:56:16.412398+00:00",
+    "scope": "all four Day10 notebooks",
+    "passed": 4,
+    "failures": [],
+    "seconds": 5.766731584997615,
+    "new_notebook": {
+      "path": "notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+      "sha256": "df10aac8492437ba9c0bd479e25bc3093befccf6b729afe5e3bdf6436857dace",
+      "code_cells": 6,
+      "executed_code_cells": 6,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 1.0551967979990877,
+      "output": "/tmp/dongxi-course-check-_jh8qmhw/day-10/04_mathematical_grading_and_response_replay.ipynb",
+      "image_cells": [
+        4,
+        7,
+        10,
+        13
+      ],
+      "previews": [
+        {
+          "cell": 4,
+          "path": "notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-01.png",
+          "sha256": "67aeba0a4f0c5d0f0116ca38bcad5f5ac08a85b9188aef7825410d133553081b"
+        },
+        {
+          "cell": 7,
+          "path": "notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-02.png",
+          "sha256": "52dd6caddd81e2d9f4c81f0474d85171a6e1613d64a3380b06623e9c670d7218"
+        },
+        {
+          "cell": 10,
+          "path": "notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-03.png",
+          "sha256": "b4220f752f6bce5700b0ab72467ab9c6bc75b0ca2f2370cdd428ace0e221e201"
+        },
+        {
+          "cell": 13,
+          "path": "notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-04.png",
+          "sha256": "e32de816ea7966c3dee5c5ea2a4e8ed592d134f14b4066a755b3af5574fd4453"
+        }
+      ]
+    },
+    "visual_review": "All four new full-size figures inspected; readable axes/IDs; schematic separated from data."
+  },
+  "limitations": [
+    "All checkpoint/response labels are authored development fixtures, not model results.",
+    "Generation costs/token identities are explicitly unknown; simulated errors/stops are not measured events.",
+    "Exact rational/set/interval grammar only; no symbolic fallback, unit conversion, numerical tolerance or rationale verification.",
+    "Marker-based behavior rubrics distinguish these authored cases only, not general safety/helpfulness.",
+    "Local model generation adapter and pretrained capability/regression evaluation remain pending.",
+    "Source hashes identify current reviewed files; final integration verification remains root-agent work."
+  ]
+}

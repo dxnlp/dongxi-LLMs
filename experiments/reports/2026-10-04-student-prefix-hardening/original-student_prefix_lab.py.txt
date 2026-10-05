@@ -1,0 +1,398 @@
+"""Original conditional-KL lesson: finite teacher, actual neural student prefixes.
+
+No occupancy/sampling derivative, self-teacher, pretrained model or full SDPO.
+Privileged authored hints belong only to training teacher queries.
+"""
+from collections import Counter
+from copy import deepcopy
+import hashlib
+import json
+import math
+from pathlib import Path
+import resource
+import time
+
+import torch
+
+from .decoder_lab import DecoderConfig, TinyDecoder
+from .evaluation_lab import canonical_hash
+from .reasoning_generation import GenerationJournal
+from .run_identity import collect_run_identity
+from .teacher_data_lab import attach_digest, validate_digest, derived_seed, state_digest
+
+PAD,BOS,EOS,REVERSE,HINT,A,B,C=range(8)
+VOCAB={"PAD":PAD,"BOS":BOS,"EOS":EOS,"REVERSE":REVERSE,"HINT":HINT,"A":A,"B":B,"C":C}
+SEEDS=(16021,16022,16023)
+UPDATES,SAMPLES,CAP=30,4,3
+INTERFACE=canonical_hash({"vocabulary":VOCAB,"prompt":"BOS REVERSE x y","eos":EOS,"cap":CAP,"context":8})
+ARMS=tuple((source,direction,context) for source in ("offline","student-prefix")
+           for direction in ("forward","reverse") for context in ("no-hint","hint"))
+
+
+def question(item):return [BOS,REVERSE,VOCAB[item["symbols"][0]],VOCAB[item["symbols"][1]]]
+
+
+def correct_body(item):return list(reversed(question(item)[2:]))+[EOS]
+
+
+def validate_fixture(fixture):
+    if not isinstance(fixture,dict) or fixture.get("schema")!="dongxi-student-prefix-fixture-v1":
+        raise ValueError("Original student-prefix fixture required")
+    items=fixture.get("items")
+    if not isinstance(items,list) or not items:raise ValueError("Nonempty original items required")
+    seen=set();groups={};pairs={};encoded={}
+    for item in items:
+        if not isinstance(item,dict):raise ValueError("Item must be an object")
+        for key in ("id","source_group","prompt"):
+            if not isinstance(item.get(key),str) or not item[key].strip():raise ValueError("Nonempty source identity required")
+        if item["id"] in seen or item.get("split") not in ("train","test"):raise ValueError("Unique IDs and train/test required")
+        seen.add(item["id"]);symbols=item.get("symbols")
+        if not isinstance(symbols,list) or len(symbols)!=2 or any(s not in ("A","B","C") for s in symbols):
+            raise ValueError("Two declared letter symbols required")
+        if item.get("reference")!=symbols[::-1] or item.get("teacher_hint")!=symbols[::-1]:
+            raise ValueError("Reference and authored hint must match original reversal")
+        for mapping,key in ((groups,item["source_group"]),(pairs,tuple(symbols)),(encoded,tuple(question(item)))):
+            if mapping.setdefault(key,item["split"])!=item["split"]:raise ValueError("Group/pair/encoded-question leakage")
+    if set(i["split"] for i in items)!={"train","test"}:raise ValueError("Both independent splits required")
+    control=fixture.get("tail_control",{})
+    validate_probabilities(torch.tensor(control.get("p",[]),dtype=torch.float64))
+    validate_probabilities(torch.tensor(control.get("q",[]),dtype=torch.float64))
+    if len(control["p"])!=8 or len(control["q"])!=8:raise ValueError("Eight-way exact tail control required")
+    zero=fixture.get("zero_support_control",{})
+    validate_probabilities(torch.tensor(zero.get("p",[]),dtype=torch.float64))
+    validate_probabilities(torch.tensor(zero.get("q",[]),dtype=torch.float64))
+    return {"items":len(items),"groups":len(groups),"splits":dict(Counter(i["split"] for i in items)),"fixture_sha256":canonical_hash(fixture)}
+
+
+def validate_probabilities(p):
+    if not isinstance(p,torch.Tensor) or not p.is_floating_point() or p.ndim<1 or p.shape[-1]<1:
+        raise ValueError("A nonempty floating probability vector required")
+    if not bool(torch.isfinite(p).all()) or bool((p<0).any()):raise ValueError("Finite nonnegative probabilities required")
+    tolerance=max(16*torch.finfo(p.dtype).eps,1e-12)
+    if not bool(torch.allclose(p.sum(-1),torch.ones_like(p.sum(-1)),atol=tolerance,rtol=0)):
+        raise ValueError("Full distributions must conserve mass")
+
+
+def kl_probabilities(student,teacher,direction):
+    """Per-state exact KL; teacher detached. Zero-support mismatch is infinite."""
+    validate_probabilities(student);validate_probabilities(teacher)
+    if student.shape!=teacher.shape or direction not in ("forward","reverse"):
+        raise ValueError("Aligned distributions and declared KL direction required")
+    q=teacher.detach();weight,other=(q,student) if direction=="forward" else (student,q)
+    # Zero target terms are exactly zero. Safe logs avoid 0*log(0) NaNs,
+    # including k=V's zero tail. A genuine positive/zero support mismatch is inf.
+    safe_weight=torch.where(weight>0,weight,torch.ones_like(weight))
+    safe_other=torch.where(other>0,other,torch.ones_like(other))
+    terms=weight*(safe_weight.log()-safe_other.log())
+    terms=torch.where((weight>0)&(other==0),torch.full_like(terms,torch.inf),terms)
+    return terms.sum(-1)
+
+
+def aligned_kl(logits,teacher,direction,*,student_vocab=None,teacher_vocab=None):
+    sv=VOCAB if student_vocab is None else student_vocab;tv=VOCAB if teacher_vocab is None else teacher_vocab
+    if sv!=VOCAB or tv!=VOCAB or logits.shape!=teacher.shape or logits.shape[-1]!=8:
+        raise ValueError("Exact declared token mapping and vocabulary axis required")
+    if not bool(torch.isfinite(logits).all()):raise ValueError("Finite student logits required")
+    return kl_probabilities(logits.softmax(-1),teacher,direction)
+
+
+def topk_tail(student,teacher,k,direction):
+    """One exact finite coarsening: student-selected top-k plus all remaining mass."""
+    validate_probabilities(student);validate_probabilities(teacher)
+    if student.ndim!=1 or student.shape!=teacher.shape or type(k)is not int or not 1<=k<=len(student):
+        raise ValueError("One aligned vector and exact integer1..V required")
+    indices=torch.argsort(student.detach(),descending=True,stable=True)[:k]
+    kept=torch.zeros_like(student,dtype=torch.bool);kept[indices]=True
+    pt,qt=student[~kept].sum(),teacher.detach()[~kept].sum()
+    p=torch.cat((student[indices],pt[None]));q=torch.cat((teacher.detach()[indices],qt[None]))
+    full=kl_probabilities(student,teacher,direction);bucket=kl_probabilities(p,q,direction)
+    if not bool(kept.all()) and float(pt.detach())>0 and float(qt.detach())>0:
+        conditional=kl_probabilities(student[~kept]/pt,teacher.detach()[~kept]/qt,direction)
+        detail=(qt if direction=="forward" else pt)*conditional
+    elif float(pt.detach())==0 and float(qt.detach())==0:detail=student.sum()*0
+    else:detail=full-bucket
+    return {"indices":indices,"student_bucket":p,"teacher_bucket":q,"full":full,
+            "bucket":bucket,"lost_detail":detail,"tail_student_mass":pt,"tail_teacher_mass":qt}
+
+
+def teacher_distribution(symbol_ids,past,*,hint=None):
+    """Authored finite teacher. Hint corrects a designed wrong-prefix recovery rule."""
+    if not isinstance(symbol_ids,list) or len(symbol_ids)!=2 or any(type(x)is not int or x not in (A,B,C) for x in symbol_ids):
+        raise ValueError("Question contains two exact letter IDs")
+    if not isinstance(past,list) or len(past)>2 or any(type(x)is not int or not 0<=x<8 for x in past) or EOS in past:
+        raise ValueError("Only live exact-ID action prefixes before EOS permitted")
+    body=symbol_ids[::-1]+[EOS]
+    if hint is not None:
+        if not isinstance(hint,list) or hint!=symbol_ids[::-1] or any(type(x)is not int for x in hint):
+            raise ValueError("Explicit original authored hint required")
+        target=(hint+[EOS])[len(past)]
+    elif past==body[:len(past)]:target=body[len(past)]
+    else:target=next((x for x in reversed(past) if x in(A,B,C)),symbol_ids[0])
+    q=torch.full((8,),.2/7,dtype=torch.float64);q[target]=.8
+    return q
+
+
+def make_student(seed):
+    with torch.random.fork_rng(devices=[]):
+        torch.manual_seed(seed)
+        return TinyDecoder(DecoderConfig(vocab=8,width=16,heads=4,kv_heads=4,head_dim=4,
+            layers=1,hidden=32,max_length=8,modern=True,tied=False)).double().eval()
+
+
+def _decode(tokens):
+    if not isinstance(tokens,list) or any(type(t)is not int or not 0<=t<8 for t in tokens):raise ValueError("Undeclared output IDs")
+    words={v:k for k,v in VOCAB.items()};return ' '.join(words[t] for t in tokens)
+
+
+@torch.no_grad()
+def collect_attempt(model,item,contract,*,campaign,phase,update,ordinal,arm="initial",checkpoint=None):
+    """model=None explicitly means finite privileged offline teacher sampling."""
+    finite=model is None;state="authored-finite-teacher-v1" if finite else checkpoint or state_digest(model)
+    seed=derived_seed(campaign,phase,update,item["id"],ordinal);rng=torch.Generator().manual_seed(seed)
+    prompt=question(item);tokens=[];lps=[];stop="cap";error=None
+    cost={"generated_actions":0,"attempted_forward_positions":0,"completed_forward_positions":0,
+          "attempted_forward_calls":0,"completed_forward_calls":0,"finite_teacher_queries":0,"wall_seconds":0.}
+    began=time.perf_counter()
+    try:
+        for _ in range(CAP):
+            ids=prompt+tokens
+            if finite:
+                cost["finite_teacher_queries"]+=1
+                p=teacher_distribution(prompt[2:],tokens,hint=prompt[2:][::-1])
+            else:
+                cost["attempted_forward_calls"]+=1;cost["attempted_forward_positions"]+=len(ids)
+                logits=model(torch.tensor([ids]))[0,-1]
+                cost["completed_forward_calls"]+=1;cost["completed_forward_positions"]+=len(ids)
+                if not bool(torch.isfinite(logits).all()):raise ValueError("Nonfinite sampled student logits")
+                p=logits.softmax(-1)
+            chosen=int(torch.multinomial(p,1,generator=rng));tokens.append(chosen);lps.append(float(p[chosen].log()))
+            if chosen==EOS:stop="EOS";break
+    except Exception as caught:error={"type":type(caught).__name__,"message":str(caught)};stop="error"
+    cost.update(generated_actions=len(tokens),wall_seconds=time.perf_counter()-began)
+    return attach_digest({"schema":"dongxi-student-prefix-record-v1","contract_id":contract["identity"],"interface_sha256":INTERFACE,
+        "item_id":item["id"],"item_sha256":canonical_hash(item),"source_group":item["source_group"],"split":item["split"],
+        "campaign":campaign,"phase":phase,"update":update,"ordinal":ordinal,"arm":arm,
+        "state_sha256":state,"sample_id":canonical_hash([campaign,phase,update,item["id"],ordinal,arm,state]),
+        "attempt_seed":seed,"prompt_ids":prompt,"token_ids":tokens,"raw_response":_decode(tokens),
+        "selected_log_probabilities":lps,"stop":stop,"error":error,"cost":cost,
+        "provenance":"authored finite categorical teacher sampling" if finite else "actual neural full-support student autoregressive sampling",
+        "teacher_context_in_student_input":False})
+
+
+def grade(item,row):
+    validate_digest(row);tokens=row["token_ids"]
+    formatted=len(tokens)==3 and all(type(t)is int and t in(A,B,C) for t in tokens[:2]) and tokens[-1]==EOS and row["stop"]=="EOS" and row["error"] is None
+    return {"sample_id":row["sample_id"],"item_id":item["id"],"split":item["split"],
+            "format_valid":formatted,"correct":bool(formatted and tokens==correct_body(item)),
+            "final_symbol_correct":bool(formatted and tokens[1]==correct_body(item)[1]),"natural_EOS":row["stop"]=="EOS"}
+
+
+def states_from_pool(records,items,contract):
+    """Preserve attempted groups; only ordinary-error groups are truly skipped."""
+    mapping={i["id"]:i for i in items};seen=set();groups={};states=[];audit=[]
+    for row in records:
+        validate_digest(row);item=mapping.get(row.get("item_id"))
+        if row.get("sample_id") in seen:raise ValueError("Duplicate attempt identity")
+        seen.add(row.get("sample_id"))
+        if item is None or item["split"]!="train" or row.get("split")!="train" or row.get("source_group")!=item["source_group"]:
+            raise ValueError("Only exact training-source provenance may supply KL states")
+        if row.get("item_sha256")!=canonical_hash(item) or row.get("prompt_ids")!=question(item) or row.get("contract_id")!=contract["identity"] or row.get("interface_sha256")!=INTERFACE:
+            raise ValueError("Source/question/contract/vocabulary changed")
+        tokens=row.get("token_ids")
+        if not isinstance(tokens,list) or len(tokens)>CAP or any(type(t)is not int or not 0<=t<8 for t in tokens) or EOS in tokens[:-1]:
+            raise ValueError("No truncated/unknown/post-EOS action prefixes")
+        if row.get("raw_response")!=_decode(tokens) or len(row.get("selected_log_probabilities",[]))!=len(tokens):
+            raise ValueError("Raw action serialization changed")
+        if any(type(x)not in(int,float) or not math.isfinite(x) or x>0 for x in row["selected_log_probabilities"]):
+            raise ValueError("Finite sampled log probabilities required")
+        stop,error=row.get('stop'),row.get('error')
+        if (stop not in('EOS','cap','error') or (stop=='error')!=(error is not None)
+                or (stop=='EOS' and (not tokens or tokens[-1]!=EOS))
+                or (stop=='cap' and (len(tokens)!=CAP or EOS in tokens))):
+            raise ValueError("Stop/error/action count mismatch")
+        coordinate=[row["campaign"],row["phase"],row["update"],item["id"],row["ordinal"]]
+        if row.get("attempt_seed")!=derived_seed(*coordinate) or row.get("sample_id")!=canonical_hash([*coordinate,row["arm"],row["state_sha256"]]):
+            raise ValueError("Sampling/attempt coordinate changed")
+        if type(row["ordinal"])is not int or not 0<=row["ordinal"]<SAMPLES or not row["phase"]in("offline","student-prefix"):
+            raise ValueError("Undeclared collection coordinate")
+        if type(row['campaign'])is not int or row['campaign']not in contract['seeds'] or type(row['update'])is not int or not 0<=row['update']<UPDATES:
+            raise ValueError("Frozen campaign/update coordinate required")
+        groups.setdefault(item["id"],[]).append(row)
+    for item in items:
+        if item["split"]!="train":continue
+        pool=groups.get(item["id"],[])
+        if len(pool)!=SAMPLES or {r["ordinal"] for r in pool}!=set(range(SAMPLES)):raise ValueError("Exactly four attempts per source required")
+        skipped=any(r["error"] is not None for r in pool)
+        audit.append({"item_id":item["id"],"attempts":len(pool),"actual_skipped":skipped,
+                      "reason":"ordinary generation error" if skipped else None,
+                      "would_skip_without_sibling":not any(grade(item,r)["correct"] for r in pool)})
+        if skipped:continue
+        for row in pool:
+            for t in range(len(row["token_ids"])):
+                past=row["token_ids"][:t];ids=question(item)+past
+                states.append({"sample_id":row["sample_id"],"item_id":item["id"],"source_group":item["source_group"],
+                    "action_position":t,"input_ids":ids,"state_key":canonical_hash(ids),
+                    "wrong_prefix":past!=correct_body(item)[:t]})
+    return states,audit
+
+
+def state_batch(states):
+    if not states:raise ValueError("No valid sampled states; update blocked")
+    lengths=[len(s["input_ids"]) for s in states]
+    if min(lengths)<4 or max(lengths)>6:raise ValueError("Question/live prefix bounded4..6; no truncation")
+    ids=torch.zeros((len(states),max(lengths)),dtype=torch.long)
+    for i,s in enumerate(states):
+        values=s["input_ids"]
+        if values[:2]!=[BOS,REVERSE] or any(type(t)is not int or not 0<=t<8 for t in values) or EOS in values[4:]:
+            raise ValueError("Question-only live prefix required; no post-EOS states")
+        ids[i,:len(values)]=torch.tensor(values)
+    return ids,torch.tensor(lengths)-1
+
+
+def score_states(model,states,items,context,direction):
+    if context not in("no-hint","hint"):raise ValueError("Frozen teacher context condition required")
+    mapping={i["id"]:i for i in items};ids,last=state_batch(states);began=time.perf_counter()
+    q=[]
+    for s in states:
+        item=mapping[s["item_id"]];symbols=question(item)[2:]
+        hint=[VOCAB[x] for x in item["teacher_hint"]] if context=="hint" else None
+        q.append(teacher_distribution(symbols,s["input_ids"][4:],hint=hint))
+    q=torch.stack(q).detach();teacher_seconds=time.perf_counter()-began
+    logits=model(ids)[torch.arange(len(states)),last]
+    losses=aligned_kl(logits,q,direction)
+    return losses.mean(),{"states":len(states),"padded_forward_positions":ids.numel(),"teacher_queries":len(states),
+        "teacher_query_seconds":teacher_seconds,"teacher_targets":q.tolist(),"student_probabilities":logits.detach().softmax(-1).tolist(),
+        "state_losses":losses.detach().tolist(),"last_valid_positions":last.tolist()}
+
+
+def _cost(records):
+    keys=("generated_actions","attempted_forward_positions","completed_forward_positions","attempted_forward_calls","completed_forward_calls","finite_teacher_queries","wall_seconds")
+    return {k:sum(r["cost"][k] for r in records) for k in keys}
+
+
+def fit_arm(initial,items,contract,offline,*,campaign,source,direction,context,journal=None):
+    if (source,direction,context)not in ARMS:raise ValueError("One predeclared factorial arm required")
+    model=deepcopy(initial);arm="/".join((source,direction,context));opt=torch.optim.AdamW(model.parameters(),lr=.015,weight_decay=0.)
+    begin=time.perf_counter();history=[];cost_records=[];teacher_queries=0;positions=0
+    for update in range(UPDATES):
+        checkpoint=state_digest(model)
+        records=offline if source=="offline" else [collect_attempt(model,i,contract,campaign=campaign,phase=source,
+            update=update,ordinal=o,arm=arm,checkpoint=checkpoint) for i in items if i["split"]=="train" for o in range(SAMPLES)]
+        if source=="student-prefix":
+            cost_records.extend(records)
+            if journal:
+                for r in records:journal.record(r)
+        states,audit=states_from_pool(records,items,contract)
+        opt.zero_grad(set_to_none=True);loss,evidence=score_states(model,states,items,context,direction);loss.backward()
+        norm=torch.nn.utils.clip_grad_norm_(model.parameters(),1.)
+        if not bool(torch.isfinite(loss)) or not bool(torch.isfinite(norm)):raise ValueError("Nonfinite conditional KL update")
+        reach={n:float(p.grad.abs().sum()) for n,p in model.named_parameters() if p.grad is not None} if update==0 else None
+        opt.step();teacher_queries+=len(states);positions+=evidence["padded_forward_positions"]
+        entry={"update":update+1,"before_state_sha256":checkpoint,"after_state_sha256":state_digest(model),"loss":float(loss.detach()),
+            "gradient_norm_before_clip":float(norm),"first_gradient_reach":reach,"state_count":len(states),
+            "wrong_prefix_states":sum(s["wrong_prefix"] for s in states),"unique_state_keys":sorted(set(s["state_key"] for s in states)),
+            "group_audit":audit,"sample_ids":[r["sample_id"] for r in records],"teacher_queries":len(states),
+            "padded_scoring_forward_positions":evidence["padded_forward_positions"],"teacher_query_seconds":evidence["teacher_query_seconds"],
+            "state_witness":{"states":states,"scoring_evidence":evidence} if update in(0,UPDATES-1) else None}
+        history.append(entry)
+        if journal:journal.event("conditional_KL_update",campaign=campaign,arm=arm,evidence=entry)
+    model.eval()
+    return model,{"arm":arm,"source":source,"direction":direction,"context":context,"updates":UPDATES,
+        "initial_state_sha256":state_digest(initial),"final_state_sha256":state_digest(model),"history":history,
+        "collection_cost":_cost(cost_records),"teacher_target_queries":teacher_queries,"padded_scoring_forward_positions":positions,
+        "actual_skipped_groups":sum(g["actual_skipped"] for h in history for g in h["group_audit"]),
+        "would_skip_without_sibling":sum(g["would_skip_without_sibling"] for h in history for g in h["group_audit"]),
+        "conditional_gradient_not_occupancy_gradient":True,"wall_seconds":time.perf_counter()-begin}
+
+
+def evaluate(model,items,contract,*,campaign,label,journal=None):
+    checkpoint=state_digest(model);pools=[]
+    for item in items:
+        records=[collect_attempt(model,item,contract,campaign=campaign,phase="evaluation",update=0,ordinal=o,
+            arm=label,checkpoint=checkpoint) for o in range(8)]
+        if journal:
+            for r in records:journal.record(r)
+        pools.append({"item_id":item["id"],"split":item["split"],"records":records,"grades":[grade(item,r) for r in records]})
+    summary=[]
+    for split in("train","test"):
+        grades=[g for p in pools if p["split"]==split for g in p["grades"]]
+        summary.append({"split":split,"attempts":len(grades),**{key:sum(g[key] for g in grades)/len(grades) for key in("correct","format_valid","final_symbol_correct","natural_EOS")}})
+    return {"label":label,"state_sha256":checkpoint,"pools":pools,"summary":summary,
+        "generation_cost":_cost([r for p in pools for r in p["records"]]),"privileged_teacher_context":False,"teacher_queries":0}
+
+
+def distribution_controls(fixture):
+    p=torch.tensor(fixture["tail_control"]["p"],dtype=torch.float64,requires_grad=True)
+    q=torch.tensor(fixture["tail_control"]["q"],dtype=torch.float64,requires_grad=True);rows=[]
+    for direction in("forward","reverse"):
+        for k in(1,2,4,7,8):
+            result=topk_tail(p,q,k,direction)
+            full_grad=torch.autograd.grad(result["full"],p,retain_graph=True)[0]
+            bucket_grad=torch.autograd.grad(result["bucket"],p,retain_graph=True)[0]
+            rows.append({"direction":direction,"k":k,"indices":result["indices"].tolist(),
+                **{key:float(result[key].detach()) for key in("full","bucket","lost_detail","tail_student_mass","tail_teacher_mass")},
+                "student_bucket":result["student_bucket"].detach().tolist(),"teacher_bucket":result["teacher_bucket"].detach().tolist(),
+                "gradient_max_difference":float((full_grad-bucket_grad).abs().max())})
+    zp=torch.tensor(fixture["zero_support_control"]["p"],dtype=torch.float64);zq=torch.tensor(fixture["zero_support_control"]["q"],dtype=torch.float64)
+    forward=float(kl_probabilities(zp,zq,"forward"));reverse=float(kl_probabilities(zp,zq,"reverse"))
+    return {"provenance":"authored exact finite probability controls, not neural/pretrained result","topk_tail":rows,
+        "teacher_target_gradients":q.grad,"zero_support":{"forward":forward,"reverse":"positive-infinity" if math.isinf(reverse) else reverse}}
+
+
+def available_memory():
+    try:return int(next(l for l in Path('/proc/meminfo').read_text().splitlines() if l.startswith('MemAvailable:')).split()[1])
+    except (OSError,StopIteration,ValueError,IndexError):return None
+
+
+def freeze_contract(fixture,spec_sha256):
+    validate_fixture(fixture)
+    if not isinstance(spec_sha256,str) or len(spec_sha256)!=64 or any(c not in '0123456789abcdef' for c in spec_sha256):raise ValueError("Actual premeasurement spec digest required")
+    value={"schema":"dongxi-student-prefix-contract-v1","fixture_sha256":canonical_hash(fixture),"spec_sha256":spec_sha256,
+        "interface_sha256":INTERFACE,"vocabulary":deepcopy(VOCAB),"seeds":list(SEEDS),"updates":UPDATES,"samples":SAMPLES,"cap":CAP,
+        "arms":[list(a) for a in ARMS],"teacher_rule":"finite-target0.8-wrongprefixrepeat-unless-authoredhint-v1",
+        "reduction":"global-valid-state-mean","gradient":"conditional-only-detached-teacher-not-occupancy-derivative"}
+    value['identity']=canonical_hash(value);return value
+
+
+def validate_contract(contract,fixture):
+    if not isinstance(contract,dict) or contract.get('identity')!=canonical_hash({k:v for k,v in contract.items() if k!='identity'}) or contract!=freeze_contract(fixture,contract.get('spec_sha256')):
+        raise ValueError("Rehashed incompatible recipe/interface contract")
+
+
+def run_reference(fixture,contract,*,seeds=SEEDS,journal=None):
+    validate_contract(contract,fixture);begin=time.perf_counter();before=available_memory();items=fixture['items']
+    result={"protocol":"finite-teacher-neural-student-prefix-v1","fixture_audit":validate_fixture(fixture),"controls":distribution_controls(fixture),"campaigns":[]}
+    for seed in seeds:
+        initial=make_student(seed);offline=[collect_attempt(None,i,contract,campaign=seed,phase='offline',update=0,ordinal=o,arm='finite-offline') for i in items if i['split']=='train' for o in range(SAMPLES)]
+        if journal:
+            for r in offline:journal.record(r)
+        campaign={"seed":seed,"initial_state_sha256":state_digest(initial),"parameters":sum(p.numel() for p in initial.parameters()),"offline_records":offline,"offline_collection_cost":_cost(offline),"arms":[],"initial_evaluation":evaluate(initial,items,contract,campaign=seed,label='initial',journal=journal)}
+        result['campaigns'].append(campaign)
+        for source,direction,context in ARMS:
+            model,fit=fit_arm(initial,items,contract,offline,campaign=seed,source=source,direction=direction,context=context,journal=journal)
+            fit['evaluation']=evaluate(model,items,contract,campaign=seed,label=fit['arm'],journal=journal);campaign['arms'].append(fit)
+    result.update(wall_seconds=time.perf_counter()-begin,peak_process_rss_kib=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
+        observed_mem_available_kib={"before":before,"after":available_memory()},memory_boundary='Linux lifetimeRSS and two MemAvailable observations, not monitored minimum/device memory')
+    return result
+
+
+def main(argv=None):
+    import argparse
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--fixture',type=Path,required=True);parser.add_argument('--spec',type=Path,required=True);parser.add_argument('--output',type=Path,required=True);args=parser.parse_args(argv)
+    if args.output.exists():parser.error('New output required; preserve earlier measurements')
+    root=Path(__file__).resolve().parents[2];journal=GenerationJournal(args.output)
+    source=['src/dongxi_llms/student_prefix_lab.py','tests/test_student_prefix_lab.py','src/dongxi_llms/decoder_lab.py','src/dongxi_llms/teacher_data_lab.py','src/dongxi_llms/reasoning_generation.py','src/dongxi_llms/run_identity.py']
+    try:
+        identity=collect_run_identity(root,source_files=source,input_files=[args.fixture,args.spec]);journal.write_new('input-identity.json',identity)
+        paths=[*(root/p for p in source),args.fixture,args.spec];hashes={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+        fixture=json.loads(args.fixture.read_text());contract=freeze_contract(fixture,hashes[str(args.spec)]);journal.write_new('contract.json',contract)
+        torch.set_num_threads(1);result=run_reference(fixture,contract,journal=journal)
+        if any(hashlib.sha256(Path(p).read_bytes()).hexdigest()!=h for p,h in hashes.items()):raise RuntimeError('Source/input drift; partial records retained')
+        result.update(source_input_sha256=hashes,run_identity=identity,inputs_unchanged=True);journal.write_new('results.json',result);journal.event('completed',campaigns=len(result['campaigns']))
+        print('Saved actual student-prefix comparison:',args.output/'results.json')
+    except (Exception,KeyboardInterrupt) as error:
+        journal.event('failure',error_type=type(error).__name__,error=str(error));journal.write_new('failure.json',{'error_type':type(error).__name__,'error':str(error),'partial_evidence':'raw attempts and update events retained'});raise
+    finally:journal.close()
+
+
+if __name__=='__main__':main()

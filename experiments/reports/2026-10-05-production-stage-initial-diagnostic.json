@@ -1,0 +1,20 @@
+{
+  "schema": "dongxi-source-diagnostic-v1",
+  "scope": "first production-stage CPU unittest invocation",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "-m", "unittest", "discover", "-s", "tests", "-p", "test_production_stage.py", "-v"],
+  "environment": {"PYTHONPATH": "src", "CUDA_VISIBLE_DEVICES": "", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1", "OMP_NUM_THREADS": "1"},
+  "actual_exit_code": 1,
+  "tests_run": 19,
+  "errors": 18,
+  "unittest_reported_seconds": 0.041,
+  "source_sha256": {
+    "src/dongxi_llms/production_stage.py": "4edf10455ab4350ff5995b445f63bd23f80698f050eb82588d23a4846bbef916",
+    "tests/test_production_stage.py": "f3a61028a41a39c7d68af51e18f39905874a4e2e6d18c26b9ac21626b0d345bf",
+    "src/dongxi_llms/staged_campaign.py": "c5c9b71826d780ff1ffe3b16bea1e1f8dc7321c96c4a0685b2d7417144e0dba1",
+    "experiments/specs/2026-10-05-production-stage-preparation.md": "5c0cd1b6900516bf6a57342af759881197bd7ab8ae59af8a38e48faade2e71ac"
+  },
+  "observed_failure": "prepare_stage attempted to identify the23323176-byte existing isolated Python executable with the4MiB source-file read ceiling; ValueError: Bounded nonempty regular file required",
+  "retained_output_scope": "The original tool response was output-truncated; this record retains its actual exit/count/first traceback cause, not an invented complete raw log.",
+  "model_jobs_started": 0,
+  "interpretation": "An overly small interpreter-identity envelope blocked preparation; no negative receipt/backend control was bypassed. A separately documented interpreter hashing envelope is required."
+}

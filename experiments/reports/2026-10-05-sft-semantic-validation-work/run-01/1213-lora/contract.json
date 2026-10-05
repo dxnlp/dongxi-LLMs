@@ -1,0 +1,123 @@
+{
+  "config": {
+    "accumulation": 2,
+    "attention_backend": "sdpa",
+    "base_checkpoint_files": {
+      "random-initial-policy": "aa193e4d34cf13e5243ebff73ae1c1fba5351ae67c5950b47f93a56346cc8c6e"
+    },
+    "checkpoint_interface": {
+      "generation_stop_ids": [
+        3
+      ],
+      "implementation_class": "TokenizersBackend",
+      "interface_sha256": "c2ec5406a46e0b44138184c4b48403e0af89ce09e94b709d17d4ea3a2daa37a6",
+      "schema_version": 1,
+      "source": {
+        "tokenizer_id": "authored-sft-recovery",
+        "tokenizer_revision": "1111111111111111111111111111111111111111"
+      },
+      "template_sha256": "875f8ff53cc78b4bbf2c64ba6d71d8fb681fe2d904ccc7ef9b8f2c6a55b9537e",
+      "tokenizer": {
+        "encoding_sha256": "da16b411a66d7cc3c74d0431662ff58e520abd035feff4e320fc45fc5016d392",
+        "max_token_id": 15,
+        "special_ids": {
+          "additional_special_tokens_ids": null,
+          "bos_token_id": 1,
+          "cls_token_id": null,
+          "eos_token_id": 3,
+          "mask_token_id": null,
+          "pad_token_id": 3,
+          "sep_token_id": null,
+          "unk_token_id": 0
+        },
+        "vocab_sha256": "98f4812f707109c2d6bdbe2ac749279b0cc23e7cdb552bd87c2355a0162c28f2",
+        "vocab_size": 16,
+        "wrapper_settings": {
+          "add_bos_token": false,
+          "add_eos_token": false,
+          "clean_up_tokenization_spaces": false,
+          "spaces_between_special_tokens": null,
+          "split_special_tokens": false
+        }
+      }
+    },
+    "dev_sha256": "5c500e849e6bd8285ae782915a7762ceb7792d7bbaea3d804030a25700736109",
+    "dtype": "CPU FP32; FP32 cross entropy",
+    "environment_lock_sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "generation_dispatch": "single-sequence greedy; use_cache=True; conservative uncached reservation",
+    "generation_max_new_tokens": 4,
+    "generation_stop_ids": [
+      3
+    ],
+    "learning_rate": 0.003,
+    "loss_policy": "assistant body/end; one explicit shift",
+    "max_length": 64,
+    "microbatch": 1,
+    "mode": "lora",
+    "model": "locally-constructed-random-Qwen3",
+    "numerical_environment": {
+      "machine": "aarch64",
+      "packages": {
+        "huggingface-hub": "1.33.0",
+        "matplotlib": "3.10.8",
+        "nbclient": "0.11.0",
+        "nbformat": "5.11.1",
+        "numpy": "2.5.3",
+        "peft": "0.20.0",
+        "tokenizers": "0.23.2",
+        "torch": "2.14.1+cpu",
+        "transformers": "5.18.0"
+      },
+      "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+      "python_version": "3.12.14"
+    },
+    "rank": 2,
+    "revision": "1111111111111111111111111111111111111111",
+    "seed": 1213,
+    "source_sha256": {
+      "experiments/specs/2026-10-05-sft-semantic-validation-work.md": "d56f924e90b549c2c5681c88fd1a36b84802d54f069968f4707afc28c669a5d7",
+      "experiments/specs/2026-10-05-validation-budget-fixture-compatibility.md": "d8f1c340fd477a2d6d64de080518c6bb61b8f6ca95480681d0dd8ce799fe8454",
+      "scripts/run_chapter09_spark_sft.py": "f5de534d2e0c4e4467de0b05b14c27cae2a519abfd9bac49b2891419abb2a53c",
+      "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+      "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+      "src/dongxi_llms/training_snapshot.py": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+      "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+      "tests/test_sft_runner_recovery.py": "bdbbca756f97652c3e87a9f346713121f18f62f96464fd19cd0511b364abf3e4",
+      "tests/test_sft_validation_budget.py": "11855095027049eac6c3c402d5c6eb79cdd0592c5f07d8a46562c71f6609f6c7",
+      "tests/test_sft_work_budget.py": "c6bd8c0076775e6252015c2e2f12b0aa31f9edc8fdb10f1c80f88aaf2ede184b",
+      "tests/test_spark_sft_contract.py": "298a6926d437595122d3860b6c191b3ff5f20d7aff52c7593899be2fd185fe1a",
+      "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3"
+    },
+    "template_sha256": "875f8ff53cc78b4bbf2c64ba6d71d8fb681fe2d904ccc7ef9b8f2c6a55b9537e",
+    "tokenizer_revision": "1111111111111111111111111111111111111111",
+    "torch_version": "2.14.1+cpu",
+    "train_sha256": "849207d27679e73c42112fcd15b252aa71744cbd72770866314d75477b2dc2fa",
+    "updates": 4,
+    "work_budget": {
+      "limits": {
+        "evaluation_calls": 96,
+        "evaluation_positions": 2048,
+        "generation_calls": 32,
+        "generation_position_upper_bound": 1024,
+        "generation_tokens": 128,
+        "logical_sequence_tokens": 640,
+        "policy_forward_calls": 128,
+        "policy_forward_positions": 2048,
+        "recovery_history_rows": 256,
+        "recovery_rng_states": 128,
+        "recovery_tensor_elements": 10000000,
+        "recovery_validation_operations": 64,
+        "sampled_examples": 32,
+        "selector_steps": 32,
+        "train_updates": 16,
+        "valid_targets": 160
+      },
+      "max_bytes": 1048576,
+      "reservation": "whole known operation, permanent/no refund",
+      "schema": "dongxi-sft-logical-work-v2",
+      "scope": "logical input positions/calls and runner semantic validation; not generic load/tree/hash/serialization/FLOPs/physical quota"
+    },
+    "work_limits_sha256": "4d7ae648d875c7bf7133da6fd8cbdb659bf2c6f98a38dd5add82938f2decbd55"
+  },
+  "kind": "chapter09-sft-completed-v1"
+}

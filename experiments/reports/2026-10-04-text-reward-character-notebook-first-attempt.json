@@ -1,0 +1,37 @@
+{
+  "date_utc": "2026-10-04T20:55:07.476311+00:00",
+  "base_commit": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4",
+  "python": "3.12.14",
+  "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+  "kernel": "dongxi-course-clean",
+  "scope": "CPU teaching references and stored evidence",
+  "expected_kernel_prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+  "course_manifest_sha256": "143001e605056583b345226ebf27aac13bf5ad5664cac87923fda19a5d53b507",
+  "lock_sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+  "selected_routes": [
+    {
+      "path": "notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+      "day": 16,
+      "chapter": 10,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-07",
+      "requires": [
+        "notebooks/day-16/01_reward_model_bias_audit.ipynb",
+        "notebooks/day-15/03_preference_collection_and_judges.ipynb"
+      ]
+    }
+  ],
+  "notebooks": [],
+  "failures": [
+    {
+      "path": "notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+      "sha256": "4a645da6489449e97d7cd36c5c744311966d67a4876a1bc46de806f5704a3016",
+      "error": "CellExecutionError(\"An error occurred while executing the following cell:\\n------------------\\nfrozen_path = ROOT / 'fixtures/text-reward/frozen-preference-seed1601.json'\\nfrozen = load_frozen(frozen_path, expected_interface=vocab.interface(include_eos=True))\\ntexts = [(r['prompt'], r['left']) for r in cal_rows]\\nbatch = text_batch(vocab, texts)\\nwith torch.no_grad():\\n    current_scores = preference(batch['ids'], batch['mask'])\\nassert torch.equal(current_scores, frozen.score_many(texts))\\nassert not any(p.requires_grad for p in frozen.model.parameters())\\nassert not frozen.score_many(texts).requires_grad\\nprint('Frozen seed:', frozen.identity['seed'])\\nprint('Endpoint:', frozen.identity['endpoint_semantics'])\\nprint('File hash:', frozen.identity['file_sha256'])\\nprint('Example score:', frozen.score(texts[0][0], texts[0][1]))\\n# Temperature selection used calibration labels only; it never selected this checkpoint.\\nprint('Recorded calibration-only temperatures:',\\n      [(s['seed'], s['temperature_selection']['selected']) for s in report['seeds']])\\n------------------\\n\\n\\n\\x1b[31m---------------------------------------------------------------------------\\x1b[39m\\n\\x1b[31mAssertionError\\x1b[39m                            Traceback (most recent call last)\\n\\x1b[36mCell\\x1b[39m\\x1b[36m \\x1b[39m\\x1b[32mIn[9]\\x1b[39m\\x1b[32m, line 7\\x1b[39m\\n\\x1b[32m      3\\x1b[39m texts = [(r[\\x1b[33m'prompt'\\x1b[39m], r[\\x1b[33m'left'\\x1b[39m]) \\x1b[38;5;28;01mfor\\x1b[39;00m r \\x1b[38;5;28;01min\\x1b[39;00m cal_rows]\\n\\x1b[32m      4\\x1b[39m batch = text_batch(vocab, texts)\\n\\x1b[32m      5\\x1b[39m \\x1b[38;5;28;01mwith\\x1b[39;00m torch.no_grad():\\n\\x1b[32m      6\\x1b[39m     current_scores = preference(batch[\\x1b[33m'ids'\\x1b[39m], batch[\\x1b[33m'mask'\\x1b[39m])\\n\\x1b[32m----> \\x1b[39m\\x1b[32m7\\x1b[39m \\x1b[38;5;28;01massert\\x1b[39;00m torch.equal(current_scores, frozen.score_many(texts))\\n\\x1b[32m      8\\x1b[39m \\x1b[38;5;28;01massert\\x1b[39;00m \\x1b[38;5;28;01mnot\\x1b[39;00m any(p.requires_grad \\x1b[38;5;28;01mfor\\x1b[39;00m p \\x1b[38;5;28;01min\\x1b[39;00m frozen.model.parameters())\\n\\x1b[32m      9\\x1b[39m \\x1b[38;5;28;01massert\\x1b[39;00m \\x1b[38;5;28;01mnot\\x1b[39;00m frozen.score_many(texts).requires_grad\\n\\x1b[32m     10\\x1b[39m print(\\x1b[33m'Frozen seed:'\\x1b[39m, frozen.identity[\\x1b[33m'seed'\\x1b[39m])\\n\\n\\x1b[31mAssertionError\\x1b[39m: \\n\")",
+      "partial_output": "/tmp/dongxi-course-check-pzwhw5fu/failures/day-16/03_text_reward_and_process_labels.ipynb"
+    }
+  ],
+  "minimum_observed_available_gib": 118.16278076171875,
+  "required_host_reserve_gib": 25,
+  "seconds": 2.9389154450036585
+}

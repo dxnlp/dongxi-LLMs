@@ -1,0 +1,25 @@
+# G4 pilot01: completed numerical work, failed terminal logging gate
+
+This independent, model-free review retains a negative supervised outcome. Native PID305062 completed16 updates and exited0, but the returned supervisor status is `failed`: `TimeoutError: Final logging timed out`, with `final_record_retained=false`. No pilot acceptance or closing-bindings file exists. Do not use this run as an accepted prerequisite.
+
+The [bounded review receipt](2026-10-05-native-rlvr-g4-pilot01-independent-review.json) records the actual source/input/prerequisite, metadata and physical-journal joins. All14 preparation source files, five non-model input bindings and28 prerequisite bindings match at this review. Run identity/self-hash, actual command and cached Instruct parent declarations agree. This is a point-in-time check, not a promise later controller edits preserve those hashes.
+
+## Actual model work and retained costs
+
+The [native report](../../outputs/native-rlvr-g4-pilot-20261005-run-01/report.json) and16 metric rows agree exactly. The final completed16 marker, external receipt and scientific-contract hash agree with the latest report pointer; payload stat size is5,391,407,704 bytes. The policy export and genealogy exist. I did not deserialize the checkpoint, body-hash its5.39GB payload or the exported weights, or run the producer's final export acceptance function. That downstream function was not reached after supervision failed.
+
+The original16-update/cap64/seed2323 recipe remains unchanged. Actual native-report time is1274.0708953309804s; child time1275.7366294650128s; supervisor's stored pre-final-logging interval1275.7819221359678s. These overlap and do not include the same operations. The returned supervisor's minimum available-memory sample is108,300,517,376 bytes, independently recomputed from12,451 observations; it is a point-sampled minimum, not a continuous floor.
+
+The main journal retains16 collections and16 applications:1004 valid response targets,1508 dense sampling slots/draws, and64 natural declared stops with no capped training response. The504 difference is spent post-stop masked-row sampling, not504 additional valid actions. All64 observed training rewards and advantages are zero. Initial/final four greedy diagnostic rows are identical and score0/4 under the original strict whole-output integer contract. Nonzero later gradients/exact KL and changed policy hashes are not evidence of rewarded task learning or broad reasoning ability.
+
+Both independently reconstructed append chains match their report identities, physical inode anchors, totals and final prefix hashes. Main journal has67 completed reservations; I/O has33 completed saves, zero inspect/load operations, and no open/failed native tickets. The final receipt carries the main prefix before its last semantic-validation charge and the I/O prefix before its last save reservation; later physical spending remains present. This does not refund the separately failed supervision gate or turn logical counters into whole-job CPU/disk/FLOP quotas.
+
+## Why the stored result is not a passed gate
+
+The [returned supervisor receipt](native-rlvr-g4-pilot-20261005-run-01/returned-supervision-1.json) records native exit0 but terminal logging failure. Stop reason, signal, native failure and cleanup error are null/empty; no owned descendant was observed. Both helper processes terminate with actual−15, are no longer alive and report cleanup complete. Queue feeder shutdown is complete.
+
+The logger's [provisional result file](native-rlvr-g4-pilot-20261005-run-01/supervision-1/result.json) is valid10,493,412-byte JSON with `status=completed`. Its own acknowledgment field says the writer ACK is unknown at write. The controller subsequently failed to observe the required ACK within0.25s and returned `status=failed`. A complete-looking provisional file is not an acknowledged final result or retrospective acceptance.
+
+The result duplicates12,451 observations within12,456 in-memory events. Source [logger](../../src/dongxi_llms/native_profile_supervisor.py:303) serializes the complete queued result, flushes/fsyncs it and only then sends ACK; [final handoff](../../src/dongxi_llms/native_profile_supervisor.py:560) waits the fixed0.25s. The result file's observed modification time is13:40:04.079224965 UTC, about0.251s after the final actual-exit event at13:40:03.828263 UTC. This supports a size/queue-transport/serialization/fsync hypothesis near the allowance; no sampled stack, individual phase duration, ACK arrival time or definitive single cause was measured. No timeout or gate was changed in this review.
+
+A controller-only logging correction, if adopted, must be separately declared and tested with large authored records and delayed/failing controls. Preserve this original failure, full raw events/observations, journals, payloads and spending; do not strip evidence, waive an ACK, or relabel this attempt passed. G8 pilot and common post-training evaluations remain unrun at this review.

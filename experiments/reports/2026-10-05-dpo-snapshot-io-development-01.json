@@ -1,0 +1,24 @@
+{
+  "schema": "dongxi-dpo-snapshot-io-development-v1",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "-m", "unittest", "test_dpo_snapshot_io", "-v"],
+  "environment": {"PYTHONPATH": "src:tests", "CUDA_VISIBLE_DEVICES": "", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1", "OMP_NUM_THREADS": "1"},
+  "actual_exit_code": 1,
+  "tests_ran": 12,
+  "unittest_seconds": 0.081,
+  "errors": 12,
+  "failures": 0,
+  "source_sha256": {
+    "scripts/run_chapter11_spark_dpo.py": "19b8331f2b3895745d28ace57d716d47719c2a1462a0c6483816226183529240",
+    "tests/test_dpo_snapshot_io.py": "86724e3f4f541bab5e32e635042aaeca8d05eacc91de9065c90c3631229601a1",
+    "experiments/specs/2026-10-05-dpo-snapshot-io.md": "7a0a6225b825840487fc63a0c7a6a923e66238842c4c23f2cb7c6c256de71766"
+  },
+  "selected_actual_errors": [
+    "FileNotFoundError: experiments/specs/2026-10-05-snapshot-io-budget.md",
+    "FileNotFoundError: baseline/checkpoints; original helper requires its parent output directory",
+    "FileNotFoundError: legacy/checkpoints; original helper requires its parent output directory"
+  ],
+  "raw_boundary": "Selected actual tool-output errors and exact unittest summary retained; not a complete stdout archive",
+  "interpretation": "New fixture setup referenced an incorrect existing core specification filename and omitted original-helper output directories. No numerical update, cap or tolerance was retuned.",
+  "production_ready": false,
+  "launch_authorized": false
+}

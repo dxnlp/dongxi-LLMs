@@ -1,0 +1,144 @@
+{
+  "actual_exit_code": -15,
+  "actual_native_profile_executed": false,
+  "child_command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "dongxi_llms.native_profile_supervisor",
+    "--inert-child",
+    "sleep"
+  ],
+  "child_pid": 243475,
+  "child_seconds": 0.10646056901896372,
+  "cleanup_errors": [],
+  "failure": {
+    "message": "authored observer interruption",
+    "type": "KeyboardInterrupt"
+  },
+  "final_record_acknowledgment": "unknown-at-write; returned final_record_retained reports the separate observed writer ACK",
+  "helper_cleanup": [
+    {
+      "actual_exit_code": 0,
+      "cleanup_complete": true,
+      "errors": [],
+      "pid": 243472,
+      "started": true,
+      "still_alive": false
+    }
+  ],
+  "in_memory_events": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "dongxi_llms.native_profile_supervisor",
+        "--inert-child",
+        "sleep"
+      ],
+      "elapsed_seconds": 0.0018455810495652258,
+      "event": "preflight",
+      "native_model_stage": false,
+      "operator_declaration": null,
+      "utc": "2026-10-05T05:22:04.261536+00:00"
+    },
+    {
+      "elapsed_seconds": 0.004668688052333891,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 27917287424,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 0,
+          "source": "injected-complete-clearance",
+          "unreadable": 0
+        },
+        "source": "injected-inert-CPU-control"
+      },
+      "utc": "2026-10-05T05:22:04.264368+00:00"
+    },
+    {
+      "child_pid": 243475,
+      "elapsed_seconds": 0.013666180020663887,
+      "event": "child-started",
+      "owned_session": 243475,
+      "utc": "2026-10-05T05:22:04.273375+00:00"
+    },
+    {
+      "elapsed_seconds": 0.018766719033010304,
+      "event": "observer-error",
+      "failure": {
+        "message": "authored observer interruption",
+        "type": "KeyboardInterrupt"
+      },
+      "utc": "2026-10-05T05:22:04.278478+00:00"
+    },
+    {
+      "child_pid": 243475,
+      "elapsed_seconds": 0.018780031008645892,
+      "event": "owned-signal",
+      "reason": "observer-interrupted",
+      "signal": 15,
+      "utc": "2026-10-05T05:22:04.278492+00:00"
+    },
+    {
+      "child_pid": 243475,
+      "elapsed_seconds": 0.11938144400482997,
+      "event": "owned-signal",
+      "reason": "observer-interrupted",
+      "signal": 9,
+      "utc": "2026-10-05T05:22:04.379052+00:00"
+    },
+    {
+      "actual_exit_code": -15,
+      "child_pid": 243475,
+      "cleanup_errors": [],
+      "elapsed_seconds": 0.11968932900344953,
+      "event": "actual-exit",
+      "failure": {
+        "message": "authored observer interruption",
+        "type": "KeyboardInterrupt"
+      },
+      "journal_error": null,
+      "stop_reason": "observer-interrupted",
+      "utc": "2026-10-05T05:22:04.379396+00:00"
+    }
+  ],
+  "journal_error": null,
+  "limits": {
+    "external_seconds": 1,
+    "logging_seconds": 0.25,
+    "probe_seconds": 0.25,
+    "reap_seconds": 0.5,
+    "reserve_bytes": 26843545600,
+    "term_seconds": 0.1
+  },
+  "minimum_sampled_available_bytes": 27917287424,
+  "native_model_stage": false,
+  "observations": [
+    {
+      "available_bytes": 27917287424,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 0,
+        "source": "injected-complete-clearance",
+        "unreadable": 0
+      },
+      "source": "injected-inert-CPU-control"
+    }
+  ],
+  "observed_owned_descendants": [],
+  "operator_declaration": null,
+  "operator_declaration_scope": "caller text is NOT authenticated authorization",
+  "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-native-profile-inspection/root-focused-01/controls/test_observer_error_and_interruption_retained_after_spawn/control-2",
+  "resource_measurement": "labelled point samples, not continuous memory enforcement or GPU-idle proof",
+  "schema": "dongxi-native-profile-watchdog-result-v1",
+  "scope": "owned native/inert process only; no quota/cgroup/hostile-tree containment or model success inference",
+  "seconds": 0.11970148904947564,
+  "signal": 15,
+  "status": "failed",
+  "stop_reason": "observer-interrupted"
+}

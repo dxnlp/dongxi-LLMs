@@ -1,0 +1,6316 @@
+{
+  "actual_exit_code": 0,
+  "actual_native_profile_executed": true,
+  "child_command": [
+    "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_deterministic_story_child.py",
+    "train",
+    "--data",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/data/cache/day09-full-v2",
+    "--output",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-story-control-recovery-20261005-02/resumed",
+    "--device",
+    "cuda",
+    "--total",
+    "3",
+    "--warmup",
+    "1",
+    "--microbatch",
+    "16",
+    "--accumulation",
+    "1",
+    "--valid-windows",
+    "2",
+    "--sample-tokens",
+    "16",
+    "--checkpoint-every",
+    "1",
+    "--max-seconds",
+    "600",
+    "--peak-lr",
+    "0.0003",
+    "--floor-lr",
+    "0.00003",
+    "--valid-target-budget",
+    "49152",
+    "--work-limits",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-story-control-recovery-20261005-02/work-caps.json",
+    "--work-journal",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-story-control-recovery-20261005-02/retained-work.jsonl",
+    "--resume",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-story-control-recovery-20261005-02/source/update-000001.pt",
+    "--resume-work-receipt",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-story-control-recovery-20261005-02/retained-update-000001-receipt.json"
+  ],
+  "child_pid": 268704,
+  "child_seconds": 21.79471280996222,
+  "cleanup_errors": [],
+  "failure": null,
+  "final_record_acknowledgment": "unknown-at-write; returned final_record_retained reports the separate observed writer ACK",
+  "helper_cleanup": [
+    {
+      "actual_exit_code": -15,
+      "cleanup_complete": true,
+      "errors": [],
+      "pid": 268701,
+      "started": true,
+      "still_alive": false
+    }
+  ],
+  "in_memory_events": [
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_deterministic_story_child.py",
+        "train",
+        "--data",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/data/cache/day09-full-v2",
+        "--output",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-story-control-recovery-20261005-02/resumed",
+        "--device",
+        "cuda",
+        "--total",
+        "3",
+        "--warmup",
+        "1",
+        "--microbatch",
+        "16",
+        "--accumulation",
+        "1",
+        "--valid-windows",
+        "2",
+        "--sample-tokens",
+        "16",
+        "--checkpoint-every",
+        "1",
+        "--max-seconds",
+        "600",
+        "--peak-lr",
+        "0.0003",
+        "--floor-lr",
+        "0.00003",
+        "--valid-target-budget",
+        "49152",
+        "--work-limits",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-story-control-recovery-20261005-02/work-caps.json",
+        "--work-journal",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-story-control-recovery-20261005-02/retained-work.jsonl",
+        "--resume",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-story-control-recovery-20261005-02/source/update-000001.pt",
+        "--resume-work-receipt",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-story-control-recovery-20261005-02/retained-update-000001-receipt.json"
+      ],
+      "elapsed_seconds": 0.003961232025176287,
+      "event": "preflight",
+      "native_model_stage": true,
+      "operator_declaration": "Existing goal authorization: fresh deterministic story control clean3, source3 and resume1 to3; original numerical equality, SDPA MATH, 600 seconds per child and 25 GiB sampled reserve.",
+      "utc": "2026-10-05T08:34:24.055750+00:00"
+    },
+    {
+      "elapsed_seconds": 0.01987564901355654,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125805514752,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:24.071672+00:00"
+    },
+    {
+      "child_pid": 268704,
+      "elapsed_seconds": 0.029807401006110013,
+      "event": "child-started",
+      "owned_session": 268704,
+      "utc": "2026-10-05T08:34:24.081606+00:00"
+    },
+    {
+      "elapsed_seconds": 0.05127883399836719,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125804351488,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:24.103052+00:00"
+    },
+    {
+      "elapsed_seconds": 0.15630167600465938,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125653405696,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:24.208084+00:00"
+    },
+    {
+      "elapsed_seconds": 0.26148885302245617,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125587935232,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:24.313274+00:00"
+    },
+    {
+      "elapsed_seconds": 0.3638949220185168,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125566160896,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:24.415666+00:00"
+    },
+    {
+      "elapsed_seconds": 0.4667930679861456,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125534953472,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:24.518589+00:00"
+    },
+    {
+      "elapsed_seconds": 0.5653099199989811,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125526769664,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:24.617099+00:00"
+    },
+    {
+      "elapsed_seconds": 0.6733037100057118,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125507223552,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:24.725096+00:00"
+    },
+    {
+      "elapsed_seconds": 0.7708671420114115,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125481762816,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:24.822671+00:00"
+    },
+    {
+      "elapsed_seconds": 0.8802769259782508,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125468577792,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:24.932067+00:00"
+    },
+    {
+      "elapsed_seconds": 0.9778818460181355,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125454028800,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:25.029684+00:00"
+    },
+    {
+      "elapsed_seconds": 1.0849216880160384,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125435842560,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:25.136717+00:00"
+    },
+    {
+      "elapsed_seconds": 1.181892434018664,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125427793920,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:25.233697+00:00"
+    },
+    {
+      "elapsed_seconds": 1.2838641200214624,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125427793920,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:25.335664+00:00"
+    },
+    {
+      "elapsed_seconds": 1.3931829130160622,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125427793920,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:25.444982+00:00"
+    },
+    {
+      "elapsed_seconds": 1.4920797480153851,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125427793920,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:25.543884+00:00"
+    },
+    {
+      "elapsed_seconds": 1.5954744039918296,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125437796352,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:25.647279+00:00"
+    },
+    {
+      "elapsed_seconds": 1.6987387569970451,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125439647744,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:25.750543+00:00"
+    },
+    {
+      "elapsed_seconds": 1.8026528030168265,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125444157440,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:25.854456+00:00"
+    },
+    {
+      "elapsed_seconds": 1.9124794020317495,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125444157440,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 402,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:25.964278+00:00"
+    },
+    {
+      "elapsed_seconds": 2.0098843700252473,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125439963136,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:26.061676+00:00"
+    },
+    {
+      "elapsed_seconds": 2.1182377910008654,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125317935104,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:26.170011+00:00"
+    },
+    {
+      "elapsed_seconds": 2.2224494999973103,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125250826240,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:26.274252+00:00"
+    },
+    {
+      "elapsed_seconds": 2.3211678870138712,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125007425536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:26.372955+00:00"
+    },
+    {
+      "elapsed_seconds": 2.4297015470219776,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125007425536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:26.481497+00:00"
+    },
+    {
+      "elapsed_seconds": 2.527889552002307,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125007425536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:26.579687+00:00"
+    },
+    {
+      "elapsed_seconds": 2.6295593680115417,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125007425536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:26.681363+00:00"
+    },
+    {
+      "elapsed_seconds": 2.7333573030191474,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 125007425536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:26.785158+00:00"
+    },
+    {
+      "elapsed_seconds": 2.839704954996705,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 124954980352,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:26.891494+00:00"
+    },
+    {
+      "elapsed_seconds": 2.936394934018608,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 124909707264,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:26.988199+00:00"
+    },
+    {
+      "elapsed_seconds": 3.0387805069913156,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 124418064384,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:27.090569+00:00"
+    },
+    {
+      "elapsed_seconds": 3.1391666309791617,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 124418064384,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:27.190971+00:00"
+    },
+    {
+      "elapsed_seconds": 3.24437507300172,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 124419502080,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:27.296177+00:00"
+    },
+    {
+      "elapsed_seconds": 3.3482414230238646,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 124419297280,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:27.400038+00:00"
+    },
+    {
+      "elapsed_seconds": 3.4527317070169374,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 124411641856,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:27.504526+00:00"
+    },
+    {
+      "elapsed_seconds": 3.554240914992988,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 123652390912,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:27.606041+00:00"
+    },
+    {
+      "elapsed_seconds": 3.6591455489979126,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 123652390912,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:27.710943+00:00"
+    },
+    {
+      "elapsed_seconds": 3.766828173014801,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 123652390912,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:27.818622+00:00"
+    },
+    {
+      "elapsed_seconds": 3.8638003109954298,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 123652390912,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:27.915605+00:00"
+    },
+    {
+      "elapsed_seconds": 3.970376042998396,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 123570098176,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:28.022172+00:00"
+    },
+    {
+      "elapsed_seconds": 4.066257097001653,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 123570102272,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:28.118061+00:00"
+    },
+    {
+      "elapsed_seconds": 4.175199810997583,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 123570102272,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:28.227000+00:00"
+    },
+    {
+      "elapsed_seconds": 4.278308933018707,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 123513049088,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:28.330101+00:00"
+    },
+    {
+      "elapsed_seconds": 4.375103775993921,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 123514269696,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:28.426904+00:00"
+    },
+    {
+      "elapsed_seconds": 4.481797043001279,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122952757248,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:28.533593+00:00"
+    },
+    {
+      "elapsed_seconds": 4.577485362009611,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122952757248,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:28.629287+00:00"
+    },
+    {
+      "elapsed_seconds": 4.685138033994008,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122952757248,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:28.736927+00:00"
+    },
+    {
+      "elapsed_seconds": 4.783109032025095,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122952757248,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:28.834912+00:00"
+    },
+    {
+      "elapsed_seconds": 4.884301472979132,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122945028096,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:28.936091+00:00"
+    },
+    {
+      "elapsed_seconds": 4.986751093005296,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122944569344,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:29.038538+00:00"
+    },
+    {
+      "elapsed_seconds": 5.095871183031704,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122923413504,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:29.147675+00:00"
+    },
+    {
+      "elapsed_seconds": 5.193894405034371,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122737672192,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:29.245688+00:00"
+    },
+    {
+      "elapsed_seconds": 5.298798638978042,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122630828032,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:29.350602+00:00"
+    },
+    {
+      "elapsed_seconds": 5.408374327002093,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122408775680,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:29.460170+00:00"
+    },
+    {
+      "elapsed_seconds": 5.513753902981989,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 122204295168,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:29.565541+00:00"
+    },
+    {
+      "elapsed_seconds": 5.613850892987102,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 121114255360,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:29.665655+00:00"
+    },
+    {
+      "elapsed_seconds": 5.710132442007307,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120955146240,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:29.761919+00:00"
+    },
+    {
+      "elapsed_seconds": 5.8191612039809115,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120888766464,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:29.870956+00:00"
+    },
+    {
+      "elapsed_seconds": 5.922942609991878,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120888766464,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:29.974735+00:00"
+    },
+    {
+      "elapsed_seconds": 6.024481658008881,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120864215040,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:30.076285+00:00"
+    },
+    {
+      "elapsed_seconds": 6.12903573398944,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120781467648,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:30.180839+00:00"
+    },
+    {
+      "elapsed_seconds": 6.223950745014008,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120781467648,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:30.275751+00:00"
+    },
+    {
+      "elapsed_seconds": 6.330077725986484,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120779669504,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 405,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:30.381874+00:00"
+    },
+    {
+      "elapsed_seconds": 6.448583042016253,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120771129344,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:30.500358+00:00"
+    },
+    {
+      "elapsed_seconds": 6.534861030988395,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120754728960,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:30.586657+00:00"
+    },
+    {
+      "elapsed_seconds": 6.63854077400174,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120746549248,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:30.690337+00:00"
+    },
+    {
+      "elapsed_seconds": 6.741741670994088,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120736092160,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:30.793528+00:00"
+    },
+    {
+      "elapsed_seconds": 6.843408495013136,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120736092160,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:30.895212+00:00"
+    },
+    {
+      "elapsed_seconds": 6.946544495993294,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120736092160,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:30.998348+00:00"
+    },
+    {
+      "elapsed_seconds": 7.049019540019799,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120613335040,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:31.100824+00:00"
+    },
+    {
+      "elapsed_seconds": 7.1516399920219555,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120563777536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:31.203436+00:00"
+    },
+    {
+      "elapsed_seconds": 7.252497954003047,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120522428416,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:31.304297+00:00"
+    },
+    {
+      "elapsed_seconds": 7.357298252987675,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120524042240,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:31.409104+00:00"
+    },
+    {
+      "elapsed_seconds": 7.461723416985478,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120523788288,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:31.513528+00:00"
+    },
+    {
+      "elapsed_seconds": 7.566314805008005,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120458317824,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:31.618120+00:00"
+    },
+    {
+      "elapsed_seconds": 7.667704764986411,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 120442101760,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:31.719485+00:00"
+    },
+    {
+      "elapsed_seconds": 7.780495223996695,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 119347347456,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:31.832292+00:00"
+    },
+    {
+      "elapsed_seconds": 7.884285095031373,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 119344619520,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:31.936046+00:00"
+    },
+    {
+      "elapsed_seconds": 7.992800818989053,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 118622793728,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:32.044457+00:00"
+    },
+    {
+      "elapsed_seconds": 8.082521306001581,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 117684154368,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:32.134306+00:00"
+    },
+    {
+      "elapsed_seconds": 8.189150572987273,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 117034778624,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:32.240952+00:00"
+    },
+    {
+      "elapsed_seconds": 8.288155679998454,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 115952209920,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:32.339951+00:00"
+    },
+    {
+      "elapsed_seconds": 8.393777111021336,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 114292899840,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:32.445582+00:00"
+    },
+    {
+      "elapsed_seconds": 8.48255654599052,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 110954250240,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:32.534360+00:00"
+    },
+    {
+      "elapsed_seconds": 8.583763163012918,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 109140172800,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:32.635565+00:00"
+    },
+    {
+      "elapsed_seconds": 8.696346006996464,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107546210304,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:32.748117+00:00"
+    },
+    {
+      "elapsed_seconds": 8.798414380988106,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107546210304,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:32.850172+00:00"
+    },
+    {
+      "elapsed_seconds": 8.898474570014514,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107543494656,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:32.950271+00:00"
+    },
+    {
+      "elapsed_seconds": 9.004708847030997,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107543040000,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:33.056447+00:00"
+    },
+    {
+      "elapsed_seconds": 9.098592534021009,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107541446656,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:33.150389+00:00"
+    },
+    {
+      "elapsed_seconds": 9.206032550020609,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107538112512,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:33.257793+00:00"
+    },
+    {
+      "elapsed_seconds": 9.309311063028872,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107533983744,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:33.361088+00:00"
+    },
+    {
+      "elapsed_seconds": 9.416920406976715,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107529347072,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:33.468684+00:00"
+    },
+    {
+      "elapsed_seconds": 9.514308463025372,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107525185536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:33.566108+00:00"
+    },
+    {
+      "elapsed_seconds": 9.617089969979133,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107513692160,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:33.668832+00:00"
+    },
+    {
+      "elapsed_seconds": 9.719285015016794,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107513692160,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:33.771057+00:00"
+    },
+    {
+      "elapsed_seconds": 9.818959445983637,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107538546688,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:33.870751+00:00"
+    },
+    {
+      "elapsed_seconds": 9.92062716599321,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107769966592,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:33.972423+00:00"
+    },
+    {
+      "elapsed_seconds": 10.00955563999014,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107781771264,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:34.061357+00:00"
+    },
+    {
+      "elapsed_seconds": 10.11548038298497,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 107622072320,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:34.167285+00:00"
+    },
+    {
+      "elapsed_seconds": 10.219972010992933,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108269838336,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:34.271775+00:00"
+    },
+    {
+      "elapsed_seconds": 10.324726997991093,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108294721536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:34.376530+00:00"
+    },
+    {
+      "elapsed_seconds": 10.429782430990599,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108300488704,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:34.481585+00:00"
+    },
+    {
+      "elapsed_seconds": 10.534708986000624,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108294701056,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:34.586504+00:00"
+    },
+    {
+      "elapsed_seconds": 10.629525227996055,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108283863040,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:34.681329+00:00"
+    },
+    {
+      "elapsed_seconds": 10.734890308987815,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108269412352,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:34.786685+00:00"
+    },
+    {
+      "elapsed_seconds": 10.835052401991561,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108259094528,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:34.886858+00:00"
+    },
+    {
+      "elapsed_seconds": 10.936499211005867,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108248772608,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:34.988304+00:00"
+    },
+    {
+      "elapsed_seconds": 11.0369199590059,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108236644352,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:35.088722+00:00"
+    },
+    {
+      "elapsed_seconds": 11.138028849032708,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108226322432,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:35.189835+00:00"
+    },
+    {
+      "elapsed_seconds": 11.239984647021629,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108214771712,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:35.291785+00:00"
+    },
+    {
+      "elapsed_seconds": 11.34534172702115,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108310614016,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:35.397144+00:00"
+    },
+    {
+      "elapsed_seconds": 11.450120922003407,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108412772352,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:35.501923+00:00"
+    },
+    {
+      "elapsed_seconds": 11.554553062014747,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108414177280,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:35.606356+00:00"
+    },
+    {
+      "elapsed_seconds": 11.659707088023424,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108420669440,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:35.711510+00:00"
+    },
+    {
+      "elapsed_seconds": 11.754686770029366,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108411183104,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:35.806490+00:00"
+    },
+    {
+      "elapsed_seconds": 11.858937375014648,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108412108800,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:35.910741+00:00"
+    },
+    {
+      "elapsed_seconds": 11.963195419986732,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108412112896,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:36.015000+00:00"
+    },
+    {
+      "elapsed_seconds": 12.072711650980636,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108412112896,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:36.124516+00:00"
+    },
+    {
+      "elapsed_seconds": 12.1741870350088,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108412071936,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:36.225954+00:00"
+    },
+    {
+      "elapsed_seconds": 12.27557923598215,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108388548608,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:36.327384+00:00"
+    },
+    {
+      "elapsed_seconds": 12.380608398001641,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108388548608,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:36.432403+00:00"
+    },
+    {
+      "elapsed_seconds": 12.48022295703413,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108388548608,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:36.532026+00:00"
+    },
+    {
+      "elapsed_seconds": 12.584747017011978,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108396806144,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:36.636552+00:00"
+    },
+    {
+      "elapsed_seconds": 12.689857299032155,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108396806144,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:36.741662+00:00"
+    },
+    {
+      "elapsed_seconds": 12.794096400029957,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108396806144,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:36.845901+00:00"
+    },
+    {
+      "elapsed_seconds": 12.89868479501456,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108396806144,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:36.950487+00:00"
+    },
+    {
+      "elapsed_seconds": 13.003482742002234,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108396806144,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:37.055287+00:00"
+    },
+    {
+      "elapsed_seconds": 13.10813521698583,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108396810240,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:37.159940+00:00"
+    },
+    {
+      "elapsed_seconds": 13.2124804140185,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108396810240,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:37.264285+00:00"
+    },
+    {
+      "elapsed_seconds": 13.317026745993644,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108396810240,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:37.368832+00:00"
+    },
+    {
+      "elapsed_seconds": 13.421280390990432,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108397637632,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:37.473085+00:00"
+    },
+    {
+      "elapsed_seconds": 13.52558376302477,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108397637632,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:37.577389+00:00"
+    },
+    {
+      "elapsed_seconds": 13.630359822011087,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108397637632,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:37.682165+00:00"
+    },
+    {
+      "elapsed_seconds": 13.73478903400246,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108397637632,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:37.786582+00:00"
+    },
+    {
+      "elapsed_seconds": 13.83917690301314,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108397637632,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:37.890982+00:00"
+    },
+    {
+      "elapsed_seconds": 13.943589891016018,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108397338624,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:37.995394+00:00"
+    },
+    {
+      "elapsed_seconds": 14.047767008014489,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108399108096,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:38.099572+00:00"
+    },
+    {
+      "elapsed_seconds": 14.152671466988977,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108399108096,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:38.204476+00:00"
+    },
+    {
+      "elapsed_seconds": 14.257245142012835,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108398854144,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:38.308999+00:00"
+    },
+    {
+      "elapsed_seconds": 14.368590663012583,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108394442752,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:38.420363+00:00"
+    },
+    {
+      "elapsed_seconds": 14.470607372990344,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108394442752,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:38.522408+00:00"
+    },
+    {
+      "elapsed_seconds": 14.5726554110297,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108394442752,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:38.624456+00:00"
+    },
+    {
+      "elapsed_seconds": 14.67512402299326,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108394696704,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:38.726898+00:00"
+    },
+    {
+      "elapsed_seconds": 14.777271052007563,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108402954240,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:38.829068+00:00"
+    },
+    {
+      "elapsed_seconds": 14.879734256013762,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108402954240,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:38.931535+00:00"
+    },
+    {
+      "elapsed_seconds": 14.981194536027033,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108402495488,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:39.032976+00:00"
+    },
+    {
+      "elapsed_seconds": 15.077105719014071,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108402495488,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:39.128895+00:00"
+    },
+    {
+      "elapsed_seconds": 15.183385883981828,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108402495488,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:39.235184+00:00"
+    },
+    {
+      "elapsed_seconds": 15.285705408023205,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108402495488,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:39.337507+00:00"
+    },
+    {
+      "elapsed_seconds": 15.387639669992495,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108402753536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:39.439431+00:00"
+    },
+    {
+      "elapsed_seconds": 15.489709708024748,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108402753536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:39.541507+00:00"
+    },
+    {
+      "elapsed_seconds": 15.5923001759802,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108402753536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:39.644084+00:00"
+    },
+    {
+      "elapsed_seconds": 15.69486968300771,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108402753536,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:39.746667+00:00"
+    },
+    {
+      "elapsed_seconds": 15.797375719004776,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108404641792,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:39.849168+00:00"
+    },
+    {
+      "elapsed_seconds": 15.894387184991501,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108404641792,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:39.946187+00:00"
+    },
+    {
+      "elapsed_seconds": 16.002214559994172,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108404641792,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:40.053992+00:00"
+    },
+    {
+      "elapsed_seconds": 16.10417798999697,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108404641792,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:40.155970+00:00"
+    },
+    {
+      "elapsed_seconds": 16.2056444939808,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108404641792,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:40.257435+00:00"
+    },
+    {
+      "elapsed_seconds": 16.307815267995466,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108404641792,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:40.359582+00:00"
+    },
+    {
+      "elapsed_seconds": 16.392760173999704,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108404641792,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:40.444564+00:00"
+    },
+    {
+      "elapsed_seconds": 16.497735352022573,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108412317696,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:40.549537+00:00"
+    },
+    {
+      "elapsed_seconds": 16.607296751986723,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108412145664,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:40.659100+00:00"
+    },
+    {
+      "elapsed_seconds": 16.70759998098947,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108408569856,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:40.759401+00:00"
+    },
+    {
+      "elapsed_seconds": 16.8133260839968,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108397473792,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:40.865129+00:00"
+    },
+    {
+      "elapsed_seconds": 16.91396151902154,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108386377728,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:40.965764+00:00"
+    },
+    {
+      "elapsed_seconds": 17.009827821981162,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108375797760,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:41.061632+00:00"
+    },
+    {
+      "elapsed_seconds": 17.10983989998931,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108364701696,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:41.161635+00:00"
+    },
+    {
+      "elapsed_seconds": 17.210165592026897,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108354121728,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:41.261970+00:00"
+    },
+    {
+      "elapsed_seconds": 17.31094022700563,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108343025664,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:41.362745+00:00"
+    },
+    {
+      "elapsed_seconds": 17.41164561500773,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108340752384,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:41.463451+00:00"
+    },
+    {
+      "elapsed_seconds": 17.512126346991863,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108331974656,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:41.563933+00:00"
+    },
+    {
+      "elapsed_seconds": 17.618338912026957,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108320882688,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:41.670141+00:00"
+    },
+    {
+      "elapsed_seconds": 17.722869994991925,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108319596544,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:41.774673+00:00"
+    },
+    {
+      "elapsed_seconds": 17.827225607994478,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108320505856,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:41.879028+00:00"
+    },
+    {
+      "elapsed_seconds": 17.931561493023764,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108317593600,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:41.983365+00:00"
+    },
+    {
+      "elapsed_seconds": 18.036198991991114,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108318511104,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:42.088002+00:00"
+    },
+    {
+      "elapsed_seconds": 18.141021578980144,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108318969856,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:42.192824+00:00"
+    },
+    {
+      "elapsed_seconds": 18.239936925005168,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108318969856,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:42.291740+00:00"
+    },
+    {
+      "elapsed_seconds": 18.344177226012107,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108318969856,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:42.395981+00:00"
+    },
+    {
+      "elapsed_seconds": 18.449081411992665,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108327198720,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:42.500878+00:00"
+    },
+    {
+      "elapsed_seconds": 18.564924050006084,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108330045440,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:42.616706+00:00"
+    },
+    {
+      "elapsed_seconds": 18.659527814015746,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108338307072,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:42.711333+00:00"
+    },
+    {
+      "elapsed_seconds": 18.76427684898954,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108338053120,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:42.816082+00:00"
+    },
+    {
+      "elapsed_seconds": 18.868941772030666,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108338053120,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:42.920736+00:00"
+    },
+    {
+      "elapsed_seconds": 18.97344015201088,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108338053120,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:43.025246+00:00"
+    },
+    {
+      "elapsed_seconds": 19.072475914028473,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108338053120,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:43.124281+00:00"
+    },
+    {
+      "elapsed_seconds": 19.181953218008857,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108338053120,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:43.233758+00:00"
+    },
+    {
+      "elapsed_seconds": 19.286241327004973,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108338053120,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:43.338046+00:00"
+    },
+    {
+      "elapsed_seconds": 19.3906827790197,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108401565696,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:43.442488+00:00"
+    },
+    {
+      "elapsed_seconds": 19.49494354397757,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108401565696,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:43.546748+00:00"
+    },
+    {
+      "elapsed_seconds": 19.59891829401022,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108408639488,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:43.650722+00:00"
+    },
+    {
+      "elapsed_seconds": 19.698767220019363,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108408639488,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:43.750572+00:00"
+    },
+    {
+      "elapsed_seconds": 19.80848209100077,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108408127488,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:43.860287+00:00"
+    },
+    {
+      "elapsed_seconds": 19.913479060982354,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108408127488,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:43.965284+00:00"
+    },
+    {
+      "elapsed_seconds": 20.01770005002618,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108407611392,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:44.069497+00:00"
+    },
+    {
+      "elapsed_seconds": 20.122268349980004,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108407611392,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:44.174073+00:00"
+    },
+    {
+      "elapsed_seconds": 20.226920569024514,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108407611392,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:44.278713+00:00"
+    },
+    {
+      "elapsed_seconds": 20.331696291978005,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108407611392,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 406,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:44.383502+00:00"
+    },
+    {
+      "elapsed_seconds": 20.43648067099275,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108414865408,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:44.488286+00:00"
+    },
+    {
+      "elapsed_seconds": 20.535977327032015,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108414865408,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:44.587783+00:00"
+    },
+    {
+      "elapsed_seconds": 20.645441047032364,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108414865408,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:44.697247+00:00"
+    },
+    {
+      "elapsed_seconds": 20.750476001005154,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108415000576,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:44.802281+00:00"
+    },
+    {
+      "elapsed_seconds": 20.855762553983368,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108415000576,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:44.907567+00:00"
+    },
+    {
+      "elapsed_seconds": 20.960613892006222,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108533751808,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:45.012416+00:00"
+    },
+    {
+      "elapsed_seconds": 21.06510609597899,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108533751808,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:45.116895+00:00"
+    },
+    {
+      "elapsed_seconds": 21.169906474999152,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108533751808,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:45.221709+00:00"
+    },
+    {
+      "elapsed_seconds": 21.267031220020726,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 108589424640,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:45.318834+00:00"
+    },
+    {
+      "elapsed_seconds": 21.371644223982003,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 109340282880,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:45.423441+00:00"
+    },
+    {
+      "elapsed_seconds": 21.476318522996735,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 110083645440,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:45.528122+00:00"
+    },
+    {
+      "elapsed_seconds": 21.58052800799487,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 110253236224,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 407,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:45.632322+00:00"
+    },
+    {
+      "elapsed_seconds": 21.68151902599493,
+      "event": "resource-sample",
+      "observation": {
+        "available_bytes": 110296903680,
+        "conflict_scan": {
+          "conflicts": [],
+          "environments_read": false,
+          "raw_command_lines_retained": false,
+          "scanned": 404,
+          "source": "actual-read-only-proc-scan",
+          "unreadable": 0
+        },
+        "source": "actual-linux-MemAvailable"
+      },
+      "utc": "2026-10-05T08:34:45.733322+00:00"
+    },
+    {
+      "child_pid": 268704,
+      "elapsed_seconds": 21.7202961500152,
+      "event": "owned-signal",
+      "reason": "normal-leader-exit-session-drain",
+      "signal": 15,
+      "utc": "2026-10-05T08:34:45.772084+00:00"
+    },
+    {
+      "child_pid": 268704,
+      "elapsed_seconds": 21.820922465994954,
+      "event": "owned-signal",
+      "reason": "normal-leader-exit-session-drain",
+      "signal": 9,
+      "utc": "2026-10-05T08:34:45.872706+00:00"
+    },
+    {
+      "actual_exit_code": 0,
+      "child_pid": 268704,
+      "cleanup_errors": [],
+      "elapsed_seconds": 21.82348779903259,
+      "event": "actual-exit",
+      "failure": null,
+      "journal_error": null,
+      "stop_reason": null,
+      "utc": "2026-10-05T08:34:45.875301+00:00"
+    }
+  ],
+  "journal_error": null,
+  "limits": {
+    "external_seconds": 600,
+    "logging_seconds": 0.25,
+    "probe_seconds": 0.25,
+    "reap_seconds": 0.5,
+    "reserve_bytes": 26843545600,
+    "term_seconds": 0.1
+  },
+  "minimum_sampled_available_bytes": 107513692160,
+  "native_model_stage": true,
+  "observations": [
+    {
+      "available_bytes": 125805514752,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125804351488,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125653405696,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125587935232,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125566160896,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125534953472,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125526769664,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125507223552,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125481762816,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125468577792,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125454028800,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125435842560,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125427793920,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125427793920,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125427793920,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125427793920,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125437796352,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125439647744,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125444157440,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125444157440,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 402,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125439963136,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125317935104,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125250826240,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125007425536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125007425536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125007425536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125007425536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 125007425536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 124954980352,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 124909707264,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 124418064384,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 124418064384,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 124419502080,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 124419297280,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 124411641856,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 123652390912,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 123652390912,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 123652390912,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 123652390912,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 123570098176,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 123570102272,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 123570102272,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 123513049088,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 123514269696,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122952757248,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122952757248,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122952757248,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122952757248,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122945028096,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122944569344,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122923413504,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122737672192,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122630828032,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122408775680,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 122204295168,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 121114255360,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120955146240,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120888766464,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120888766464,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120864215040,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120781467648,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120781467648,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120779669504,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 405,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120771129344,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120754728960,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120746549248,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120736092160,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120736092160,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120736092160,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120613335040,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120563777536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120522428416,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120524042240,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120523788288,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120458317824,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 120442101760,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 119347347456,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 119344619520,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 118622793728,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 117684154368,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 117034778624,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 115952209920,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 114292899840,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 110954250240,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 109140172800,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107546210304,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107546210304,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107543494656,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107543040000,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107541446656,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107538112512,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107533983744,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107529347072,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107525185536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107513692160,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107513692160,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107538546688,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107769966592,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107781771264,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 107622072320,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108269838336,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108294721536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108300488704,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108294701056,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108283863040,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108269412352,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108259094528,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108248772608,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108236644352,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108226322432,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108214771712,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108310614016,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108412772352,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108414177280,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108420669440,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108411183104,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108412108800,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108412112896,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108412112896,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108412071936,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108388548608,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108388548608,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108388548608,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108396806144,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108396806144,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108396806144,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108396806144,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108396806144,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108396810240,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108396810240,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108396810240,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108397637632,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108397637632,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108397637632,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108397637632,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108397637632,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108397338624,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108399108096,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108399108096,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108398854144,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108394442752,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108394442752,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108394442752,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108394696704,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108402954240,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108402954240,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108402495488,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108402495488,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108402495488,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108402495488,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108402753536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108402753536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108402753536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108402753536,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108404641792,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108404641792,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108404641792,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108404641792,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108404641792,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108404641792,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108404641792,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108412317696,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108412145664,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108408569856,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108397473792,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108386377728,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108375797760,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108364701696,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108354121728,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108343025664,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108340752384,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108331974656,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108320882688,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108319596544,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108320505856,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108317593600,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108318511104,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108318969856,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108318969856,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108318969856,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108327198720,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108330045440,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108338307072,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108338053120,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108338053120,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108338053120,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108338053120,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108338053120,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108338053120,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108401565696,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108401565696,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108408639488,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108408639488,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108408127488,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108408127488,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108407611392,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108407611392,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108407611392,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108407611392,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 406,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108414865408,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108414865408,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108414865408,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108415000576,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108415000576,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108533751808,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108533751808,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108533751808,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 108589424640,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 109340282880,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 110083645440,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 110253236224,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 407,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "available_bytes": 110296903680,
+      "conflict_scan": {
+        "conflicts": [],
+        "environments_read": false,
+        "raw_command_lines_retained": false,
+        "scanned": 404,
+        "source": "actual-read-only-proc-scan",
+        "unreadable": 0
+      },
+      "source": "actual-linux-MemAvailable"
+    }
+  ],
+  "observed_owned_descendants": [],
+  "operator_declaration": "Existing goal authorization: fresh deterministic story control clean3, source3 and resume1 to3; original numerical equality, SDPA MATH, 600 seconds per child and 25 GiB sampled reserve.",
+  "operator_declaration_scope": "caller text is NOT authenticated authorization",
+  "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-story-control-recovery-20261005-02/supervision-resumed",
+  "resource_measurement": "labelled point samples, not continuous memory enforcement or GPU-idle proof",
+  "schema": "dongxi-native-profile-watchdog-result-v1",
+  "scope": "owned native/inert process only; no quota/cgroup/hostile-tree containment or model success inference",
+  "seconds": 21.823499975027516,
+  "signal": null,
+  "status": "completed",
+  "stop_reason": null
+}

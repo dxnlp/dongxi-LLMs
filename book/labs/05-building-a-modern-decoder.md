@@ -8,7 +8,7 @@ This lab follows that complete path through twelve executable lessons.
 
 This is the Chapter 5 **companion lab**. The
 [Days 5–7 narrative](../chapters/05-building-a-modern-decoder.md) is now
-written, including the concluding architecture defense and 30 conceptual
+written, including the concluding architecture defense and 34 conceptual
 exercises with worked answers. Any trained comparison requires its own run.
 All sessions already contain adjacent worked solutions; doing them one by one
 remains separate from their reference verification.
@@ -157,3 +157,32 @@ After each session, explain what changed in the controlled intervention and
 why. After session 10, defend every shape and component in the complete decoder.
 Use the [solution guide](../solutions/05-decoder-notebook-solutions.md) to resolve
 conceptual gaps; exact runnable answers remain next to their exercises.
+
+## Extend decoding into a recovery contract
+
+The [Day 25 ragged cache session](../../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb)
+bridges this chapter's RoPE/GQA mechanism to changing-policy rollout systems.
+Inspect left-pad position/mask tensors, all four single/batch cached/uncached
+paths, physical active-row compaction and real retained KV bytes. Its five
+figures separate architecture schematics from actual tensors, work and
+recovery comparisons. Forced stopping is labeled as a conditional control;
+natural greedy cap failures remain in the evidence.
+
+Predict what must be saved before interrupting generation or a collected
+training batch. Then compare bitwise saved-cache recovery with separately
+checked rebuilding and actual tiny DPO/RLVR recovery. The
+[premeasurement specification](../../experiments/specs/2026-10-04-batched-cache-recovery.md)
+fixes seeds, six-update primary budgets and tolerances. The
+[report](../../experiments/reports/2026-10-04-batched-cache-recovery.md) and raw
+JSON retain all trajectories and intentionally omitted-state controls.
+
+```bash
+CUDA_VISIBLE_DEVICES= PYTHONPATH=src python -m unittest discover -s tests -p test_batched_cache_lab.py -v
+CUDA_VISIBLE_DEVICES= PYTHONPATH=src python -m dongxi_llms.batched_cache_lab --report /tmp/NEW-cache-report.json --workspace /tmp/NEW-cache-states
+```
+
+Use unused paths and the isolated CPU teaching environment. Local snapshots
+are trusted data-only tensors checked against independently expected bytes
+and contracts, not arbitrary downloadable pickle. Lower forwarded work is not
+a serving speedup; saved-cache equivalence is not pretrained Spark-runner
+resume, cross-device replay, quality improvement or learner mastery.

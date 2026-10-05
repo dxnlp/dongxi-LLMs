@@ -10,6 +10,9 @@ Solutions: [worked answers](../../book/solutions/13-group-relative-policy-optimi
 
 1. [group advantages](01_group_advantages.ipynb)
 2. [token ratios kl](02_token_ratios_kl.ipynb)
+3. [Same rollouts, different objectives](03_objective_weighting_and_filtering.ipynb):
+   reduction/scaling gradients, asymmetric clipping and real rejected-group costs.
+   This optional extension computes gradients without training a model.
 
 Learning outcome: Predict what constant groups can teach; derive population-standardized advantages and both clipping branches; compare exact KL gradients against autograd.
 

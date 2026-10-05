@@ -12,6 +12,16 @@ authorizing expensive campaigns or publishing a beta automatically.
 
 ## Target outcome
 
+Reference comparison,2026-10-04: the [audit](docs/REFERENCE_REPOSITORY_AUDIT.md)
+and [improvement goal](docs/COURSE_IMPROVEMENT_PLAN.md) add eighteen bounded
+packages to strengthen this route. Preserve15chapters/28days; selected
+enrichment is explicitly optional for live study. Work begins with run/tokenizer
+identity and offline evaluation, not another unapproved GPU launch. Package
+readiness and actual model evidence are separate from learner completion.
+The first foundation pass now has two complete CPU packages and two partial
+integration/evaluation packages; [the ledger](docs/course_improvements.json)
+records the exact remaining checks and next safe production action.
+
 By Day 28, release a coherent public beta covering:
 
 - tokens, probabilities, attention, and a modern decoder architecture;

@@ -1,0 +1,91 @@
+{
+  "actual_exit_code": null,
+  "actual_native_profile_executed": false,
+  "child_command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "dongxi_llms.native_profile_supervisor",
+    "--inert-child",
+    "success"
+  ],
+  "child_pid": null,
+  "child_seconds": null,
+  "cleanup_errors": [],
+  "failure": {
+    "message": "Exact bounded integer required: available_bytes",
+    "type": "ValueError"
+  },
+  "final_record_acknowledgment": "unknown-at-write; returned final_record_retained reports the separate observed writer ACK",
+  "helper_cleanup": [
+    {
+      "actual_exit_code": 0,
+      "cleanup_complete": true,
+      "errors": [],
+      "pid": 251903,
+      "started": true,
+      "still_alive": false
+    }
+  ],
+  "in_memory_events": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "dongxi_llms.native_profile_supervisor",
+        "--inert-child",
+        "success"
+      ],
+      "elapsed_seconds": 0.002436026989016682,
+      "event": "preflight",
+      "native_model_stage": false,
+      "operator_declaration": null,
+      "utc": "2026-10-05T06:33:48.624277+00:00"
+    },
+    {
+      "elapsed_seconds": 0.005384004034567624,
+      "event": "observer-error",
+      "failure": {
+        "message": "Exact bounded integer required: available_bytes",
+        "type": "ValueError"
+      },
+      "utc": "2026-10-05T06:33:48.627250+00:00"
+    },
+    {
+      "actual_exit_code": null,
+      "child_pid": null,
+      "cleanup_errors": [],
+      "elapsed_seconds": 0.007480798987671733,
+      "event": "actual-exit",
+      "failure": {
+        "message": "Exact bounded integer required: available_bytes",
+        "type": "ValueError"
+      },
+      "journal_error": null,
+      "stop_reason": "observer-failure",
+      "utc": "2026-10-05T06:33:48.629348+00:00"
+    }
+  ],
+  "journal_error": null,
+  "limits": {
+    "external_seconds": 0.25,
+    "logging_seconds": 0.25,
+    "probe_seconds": 0.25,
+    "reap_seconds": 0.5,
+    "reserve_bytes": 26843545600,
+    "term_seconds": 0.1
+  },
+  "minimum_sampled_available_bytes": null,
+  "native_model_stage": false,
+  "observations": [],
+  "observed_owned_descendants": [],
+  "operator_declaration": null,
+  "operator_declaration_scope": "caller text is NOT authenticated authorization",
+  "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-watchdog-test-isolation/run-02/isolated/evidence/test_malformed_or_missing_measurement_refuses/control-1",
+  "resource_measurement": "labelled point samples, not continuous memory enforcement or GPU-idle proof",
+  "schema": "dongxi-native-profile-watchdog-result-v1",
+  "scope": "owned native/inert process only; no quota/cgroup/hostile-tree containment or model success inference",
+  "seconds": 0.007495727040804923,
+  "signal": null,
+  "status": "refused",
+  "stop_reason": "observer-failure"
+}

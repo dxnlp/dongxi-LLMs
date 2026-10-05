@@ -1,0 +1,10 @@
+{
+  "scope": "Collector setup failure before any numerical tests/model work",
+  "command": "PYTHONPATH=src:tests CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MPLBACKEND=Agg /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python tests/test_rlvr_work_budget.py --collect experiments/reports/2026-10-05-rlvr-cumulative-work/run-01",
+  "actual_exit_code": 1,
+  "error_type": "FileNotFoundError",
+  "error_message": "[Errno 2] No such file or directory: 'experiments/reports/2026-10-05-rlvr-cumulative-work/run-01'",
+  "failure_stage": "args.collect.mkdir(mode=0o700, exist_ok=False)",
+  "tests_started": false,
+  "interpretation": "The exclusive final directory had a missing parent; no test assertion or runner contract was exercised. Retain this initial failure, then use a separate corrected collection directory."
+}

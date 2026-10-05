@@ -1,0 +1,20 @@
+{
+  "schema": "dongxi-dpo-validation-budget-development-diagnostic-v1",
+  "status": "failed",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "-m", "unittest", "test_dpo_validation_budget", "-v"],
+  "actual_exit_code": 1,
+  "tests_ran": 15,
+  "errors": 1,
+  "reported_unittest_seconds": 4.865,
+  "source_sha256": {
+    "scripts/run_chapter11_spark_dpo.py": "b3a5758523f85076b1825f2e66a82b550b0b9aa73615d7b258e72daf75ef2114",
+    "tests/test_dpo_validation_budget.py": "414b4367aa7c0711759a1f57da44458b2218475e27fc64b637dfa8a5c6efcf72"
+  },
+  "retained_observed_error": {
+    "test": "test_v2_exact19_dimensions_and_old14_refusal",
+    "type": "TypeError",
+    "message": "Object of type MagicMock is not JSON serializable",
+    "location": "observable_recovery_contract -> json_plain, before newly added supplied-budget gate"
+  },
+  "interpretation": "The old-schema constructor spy substituted the encoding digest before the supplied-budget check. Move the cheap schema/equality gate before construction of observed encoding metadata; no numerical recipe, limits or tolerance changes. Sparse semantic-value gating and all other14controls passed. This record preserves selected observed error text and actual counts, not a complete15-test stdout archive."
+}

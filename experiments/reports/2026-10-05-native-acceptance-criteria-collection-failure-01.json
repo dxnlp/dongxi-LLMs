@@ -1,0 +1,17 @@
+{
+  "schema": "dongxi-independent-review-collection-failure-v1",
+  "status": "retained-collector-failure",
+  "command": "python3 experiments/reports/2026-10-05-native-acceptance-criteria-collector.py",
+  "actual_exit_code": 1,
+  "failed_collector_sha256": "4d0fc6cbebee4549fda20d972bf18b7ad503ebac27e97015da55b534180ab781",
+  "type": "AssertionError",
+  "location": "main line54",
+  "original_assertion": "assert config['dtype'] == 'torch.bfloat16' and config['loss_policy']",
+  "actual_recorded_dtype": "BF16 weights/autocast; FP32 cross entropy",
+  "actual_recorded_loss_policy": "assistant body + template end tokens; one explicit shift",
+  "cause": "The independent collector assumed a Python dtype spelling rather than the native identity's explicit descriptive precision field.",
+  "repair": "Match both observed pre-existing precision/loss descriptions exactly; no native result, identity, source, numerical tolerance or model invocation changed.",
+  "main_native_acceptance_review_status": "already passed; separate supplemental collection only",
+  "output_created": false,
+  "model_loaded": false
+}

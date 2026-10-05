@@ -1,0 +1,12 @@
+{
+  "scope": "Root targeted compatibility rerun; same17 controls, isolated offline one-thread Linux ARM64 CPU",
+  "actual_exit_code": 0,
+  "tests_run": 17,
+  "unittest_seconds": 15.185,
+  "failures": 0,
+  "errors": 0,
+  "command": "env PYTHONPATH=src:tests CUDA_VISIBLE_DEVICES= HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python -m unittest test_sft_work_budget.SFTWorkBudgetTests.test_fresh_process_full_and_lora_retains_failed_spending test_sft_runner_recovery.SFTRecoveryTests.test_mocked_cuda_rng_rejected_before_any_state_application test_dpo_work_budget.DPOWorkBudgetTests.test_fresh_process_same_journal_retains_later_attempts_and_exact_model test_dpo_snapshot_artifacts -v",
+  "retained_prior_diagnostic": "experiments/reports/2026-10-05-semantic-validation-compatibility-diagnostic.json",
+  "claim": "Fixture compatibility only at this source revision; subsequent owner hardening and full discovery require their own source-bound acceptance",
+  "external_jobs_started": 0
+}

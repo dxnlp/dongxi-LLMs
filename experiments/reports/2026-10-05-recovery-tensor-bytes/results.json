@@ -1,0 +1,1673 @@
+{
+  "schema": "dongxi-recovery-tensor-bytes-v1",
+  "status": "passed",
+  "identity_algorithm": "dongxi-typed-length-framed-sha256-v2",
+  "source_spec_snapshot_sha256": {
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "tests/test_batched_cache_lab.py": "ca9b361a4a305f7831462d4e46f72ff23e56cb29ef55d8485214f2e05307b403",
+    "experiments/specs/2026-10-05-recovery-tensor-bytes.md": "029413aa27bdc2fa3268adaff04da9daaf3c2f9c48a2e6fa7614a1a448ec8dbf",
+    "experiments/reports/2026-10-05-recovery-tensor-bytes/verify.py": "0f0b71f10fa8e0d4844d514c12279284fc033060a72a4a77bd75cd2ea03fd92e",
+    "experiments/reports/2026-10-05-recovery-tensor-bytes/original-test_batched_cache_lab.py.txt": "17e7c75f1a81936f0badb3bba390c940d29b4e68920b7664095443c525e8e1d7",
+    "experiments/reports/2026-10-05-recovery-tensor-bytes/original-batched_cache_lab.py.txt": "6ea9f5bc4aeeebffe85b8170e47ca691f4d5cc0dea931a0729a06c0caadcab07"
+  },
+  "historical_artifact_sha256": {
+    "fixtures/batched-cache-recovery-hardening/dpo-2522-completed.pt": "cad4c5146211c3168e0ae6111423c0c3b21b0950fc71e93f9a5619f68ee56ad9",
+    "fixtures/batched-cache-recovery-hardening/dpo-2522-pending.pt.json": "0e5a9b5792a51d46e01806865e8fbe91d10558c8dd0275ca0e24a851d698f0e6",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2522-completed.pt": "8dca47791c9a0c4af4673192a0942e7b05666d9c5f49157cfb421fe01647bf55",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2522-pending.pt": "5f40bf5f6b556290b227fea74ae0f6832992d2f712df39803a4edc7974bdd66a",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2521-final.pt": "60c60a21fde0ce73fc3aa71e28f438210e5f0b1ec1b77ec690f8dba4c7a7b609",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2522-completed.pt.json": "229d2715f5e32f915d1b743dad879633063d81cb8e7bbca7552a34cb548f9169",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2521-completed.pt.json": "031f1eef6486140635ede07a68d0ec16a02b4339fa6cf628d27009a12fc3d7ab",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2522-final.pt": "e1cce61b2bc813c4ac1dec07121cb126745704dc8ecce06c8dccee7310c15a04",
+    "fixtures/batched-cache-recovery-hardening/dpo-2521-final.pt.json": "720d875c3ef6708c0f4c6a6ef8785bb67223be063c1a0c61b674dcaf98cf3856",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2521-pending.pt": "8822c9d4b214fc854551ef0d83d67d3d885a5dc3bf3235f6a373e9d0f9ecc200",
+    "fixtures/batched-cache-recovery-hardening/dpo-2522-final.pt.json": "e6cb09472b9d4b186abc1502ee0ae6ae40610c3dd2804f511b16553f0a9b219c",
+    "fixtures/batched-cache-recovery-hardening/dpo-2521-final.pt": "f092d55952137544b048759c9dfc6baf3dba0e6fa050248e1f6551b0fb3bfbe5",
+    "fixtures/batched-cache-recovery-hardening/README.md": "6b058b3dbfe04677a72c3f33a1af143bab0c42a6df519709a1dd752ce8c14f7e",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2521-pending.pt.json": "b89cb2811eac305a5c1414a2eb7ebbc026938f19c825f18a88e2bb177550c977",
+    "fixtures/batched-cache-recovery-hardening/generation.pt.json": "c4e79abf02a74502dce4b9f924adf68afa4a635bd40e51f902f5ac1ebe2768e2",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2521-completed.pt": "8180bed1d5d5dd634b055e8577ae2d3de31ef8f10af3d470870bfa181e94f72a",
+    "fixtures/batched-cache-recovery-hardening/dpo-2521-completed.pt.json": "06d12e23ea7ebdfb1404ed70f8916b4ad8a0dbb970a1195ebd7a3ef46e815a95",
+    "fixtures/batched-cache-recovery-hardening/dpo-2521-completed.pt": "d5a80f92d73dd6bf8aed80b9eb6b3c20132356fe44c67049ed4bff97bc337069",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2522-final.pt.json": "2c719177f3f83e4523c4544a8e9a357994e0dfea45f3b40a6e30647e0cdd7374",
+    "fixtures/batched-cache-recovery-hardening/dpo-2522-final.pt": "c5d679b170cf0ed8abd47b0eb5e3aead3655d679b30cd1bfc76be177b6cf34ab",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2522-pending.pt.json": "4619b03b3103d6acffd9a8a85afc11988d03993c6f5bf4d296a1fa5571e5e787",
+    "fixtures/batched-cache-recovery-hardening/generation.pt": "c667ce363437db614e0a942b72f0a85ba1c0007e231c721cddf81768648796f9",
+    "fixtures/batched-cache-recovery-hardening/dpo-2522-pending.pt": "ce26def6349dea4a0fd1f1b5ca66cdcb71be62002bb7bd2bff5a672d46e102ee",
+    "fixtures/batched-cache-recovery-hardening/rlvr-2521-final.pt.json": "7644f1828bc834a70d8cb2de32f8c698e45fb4422b0c85ace28504343e96ffc4",
+    "fixtures/batched-cache-recovery-hardening/dpo-2521-pending.pt.json": "cd4a12b9eb0dd10e58e72cfb52790208accffb3b001ace71ca4e0fbf2efb9016",
+    "fixtures/batched-cache-recovery-hardening/dpo-2521-pending.pt": "bac052f1fb5bc9b0ff3ff3fab09490eadf27d368ada34f933c656e58edf55812",
+    "fixtures/batched-cache-recovery-hardening/dpo-2522-completed.pt.json": "7dc750767eb059b88bfb1605e95071711500dfafa4a7e6c86cf325220d73fef8",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2522-completed.pt": "34f3846d82afbce6942d4c0c1e8d95d22e8c7f9c2fc8c0e57ff293edc951a603",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2522-pending.pt.json": "8a615609fa83712b9bcdfe866df9f963edb3fe80cab5cecd55aaccce681c3469",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2522-completed.pt": "d77eb38bcd26df5acdcfa559e88590435334ea9c1549bfedcf2cc960d219c06e",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2522-pending.pt": "8761d0d4bca40a3a827a388cc9e97a1582ca8d3cff87efd2b94d536065a0b566",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2521-final.pt": "dea5436883709e348b0268f8e4b4adadebf853c0b83b746997055f7296accc23",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2522-completed.pt.json": "95d786ca6db15d16b335fba0923ed3a7068d739667e96c71a755a75819b60d96",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2521-completed.pt.json": "a30a0b87025ff21f90214098500f0b89fda5a1eab70294e8e44f88f14cf3361d",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2522-final.pt": "c3cd84210bf84954bca557deb2d7f970b785b44ddd8bc8403557a62daac99109",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2521-final.pt.json": "41ad71cdb9c7819b599f0b502247dc37a83b5b5678fe5473de65c46d614a8c7c",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2521-pending.pt": "1c17894f6a6a405674c76fb866c21bcab2a86233de02b7bc8711bf3417490f73",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2522-final.pt.json": "6a452191821fb8f64ef94939f5fb67da046de1eae9219c13f2a57976a47bebab",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2521-final.pt": "2613d928a5378af527bf080088878147cde48e32b3817c2021536049e0fcf726",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2521-pending.pt.json": "1a2225eebc3c4210f752ca6077438bb07b6dd41e51cd6fe08067d3c007e1efff",
+    "fixtures/batched-cache-recovery-hardening/root-review/generation.pt.json": "c4e79abf02a74502dce4b9f924adf68afa4a635bd40e51f902f5ac1ebe2768e2",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2521-completed.pt": "a6ec891e1abc32f55147f6342c4a1f3eafdd86cff1162418b3ca373caf12e5c1",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2521-completed.pt.json": "ace4ab6891bac4c53226342570df50091c035653220c5dc5a0ddf43b96d382e8",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2521-completed.pt": "5331e093ba03042abca59a43f094f611c8501dd4d0cddcf589becac2908cabd0",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2522-final.pt.json": "732dc224e14784866b3c6f7520927b92c7be4b694246c61df549f3136f7b9918",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2522-final.pt": "087e348df1992af7fcfc37c653d49d6bae9466d9d142e782d522089fb71dfddb",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2522-pending.pt.json": "0b35deb75380d0c39336c7900a4666288ae5a2b45ac99e5a42d9dca4eed37d8a",
+    "fixtures/batched-cache-recovery-hardening/root-review/generation.pt": "c667ce363437db614e0a942b72f0a85ba1c0007e231c721cddf81768648796f9",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2522-pending.pt": "0a5bd7e1f4b9a08ed9cdb45a3ea0bd2d52eb634d20b28372c7be8f202410feff",
+    "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2521-final.pt.json": "475b30fd7fa6b18729ccda6a28a173eb1b90e57adf771d8452a51fc06d3af68e",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2521-pending.pt.json": "7b5e225f29245973df7277d9ef892dbd5bf28092acd5dd1476672a2ef70bcbe9",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2521-pending.pt": "0b695bf2ec2f4fbcc237f680dc0c4da8e82888f258bdc5406c6643a7769e5d81",
+    "fixtures/batched-cache-recovery-hardening/root-review/dpo-2522-completed.pt.json": "0f45e294cc157e98a173348514d00da615e59d01066969bd5ef372a9cb882b97",
+    "fixtures/batched-cache-recovery/dpo-2522-completed.pt": "79849faf4398d7d7fa30dc6de7848fa9395f76f48a643e9fbe0210dcbac71aa8",
+    "fixtures/batched-cache-recovery/dpo-2522-pending.pt.json": "5408037a0a63c72d7fbfd90f9fc61f48095eeb7f1636544115c1d140c5d3e0f7",
+    "fixtures/batched-cache-recovery/rlvr-2522-completed.pt": "b25f42a5895c85b9eeac378c2cad728b082c6b46da3afe9b169609a4e9525b0d",
+    "fixtures/batched-cache-recovery/rlvr-2522-pending.pt": "068faac2d54dc0e3044c09bf06202f41c9ae0df9e2ed141265664834f4bb8f1e",
+    "fixtures/batched-cache-recovery/rlvr-2522-completed.pt.json": "d508b58d6bf08d8c1aef9f085c6d50902401b7c546e5353eb528f3f74974923a",
+    "fixtures/batched-cache-recovery/rlvr-2521-completed.pt.json": "52ffdcf995f31032e8d779d8ef6b7df2ea139ddd24660b3f8cf4a7793959254a",
+    "fixtures/batched-cache-recovery/rlvr-2521-pending.pt": "c9c8d309f8fa3e0c58f2f94552ac3628371633a89ffc58fe52a80cebff61f55a",
+    "fixtures/batched-cache-recovery/README.md": "f87929a7cbf68ecec56865a54b72a40f29dff0ad71fccf810b42bb75eaf6c855",
+    "fixtures/batched-cache-recovery/rlvr-2521-pending.pt.json": "7fb2af181cc62b25fae2b2edf915b64963efa85bb052b19df993c6e7b01d78de",
+    "fixtures/batched-cache-recovery/generation.pt.json": "d631ce1d4c5f5b8870a0d42549580f9c7f0a4822ef4a1823aecf778ab99e5ed7",
+    "fixtures/batched-cache-recovery/rlvr-2521-completed.pt": "8593541a2f6f32892461e6e7c2eee4d3ecabaebc8e1d678f545939f7e5134b58",
+    "fixtures/batched-cache-recovery/dpo-2521-completed.pt.json": "6676c226765df41de04a115e7a9dacab4f78f549759954d1c06f9b79ce0adef1",
+    "fixtures/batched-cache-recovery/dpo-2521-completed.pt": "14b289ecb589b0d1b4acd27972112346e62330d3a704298e04bd21e0f91ed40a",
+    "fixtures/batched-cache-recovery/rlvr-2522-pending.pt.json": "45b6658c58c032db0620eb953a6aeed18031755f17a1ab0939519d72f5a4dbc0",
+    "fixtures/batched-cache-recovery/generation.pt": "0f7c6aecdec304b873058e2151f91283e18660023f62af64927f385293407c32",
+    "fixtures/batched-cache-recovery/dpo-2522-pending.pt": "1b05d94758dc4d2d18704637d5cf413dba1fb50752d63fc82c5e3ec03435ee4b",
+    "fixtures/batched-cache-recovery/dpo-2521-pending.pt.json": "87896cfebdd8182457c0d398ab3a0cdaa24b126754628d193474934d5ab477fa",
+    "fixtures/batched-cache-recovery/dpo-2521-pending.pt": "ef268f93863ec95b5723015fbb58db9e01aa1a15709a4094446c01c68596cff4",
+    "fixtures/batched-cache-recovery/dpo-2522-completed.pt.json": "7ba6e6d777301c6ad4dfde0e9e2092b057508c770c64b36dffd38a8090fea267",
+    "fixtures/batched-cache-recovery-verification/dpo-2522-completed.pt": "48c62b6ca09ad6acef4e3c44a7d690934d601da895877c98bedf5752483fe51e",
+    "fixtures/batched-cache-recovery-verification/dpo-2522-pending.pt.json": "e80f38b8fcb64c6b80dc92a09ea8c3ac0f697556ddd2a452ebd06097ff86aab3",
+    "fixtures/batched-cache-recovery-verification/rlvr-2522-completed.pt": "25717bc9fb7db12fbcb13135195a749f59035e9613373f4d128cc53726d5b549",
+    "fixtures/batched-cache-recovery-verification/rlvr-2522-pending.pt": "87020b4dc9dc94a6527efa418e6ed7b3867ba4efdfccf7de33a59a09ed490376",
+    "fixtures/batched-cache-recovery-verification/rlvr-2522-completed.pt.json": "fb55e23df77c923bd0b79a6f7a1b95327050f51aa9be315d312306ec68741927",
+    "fixtures/batched-cache-recovery-verification/rlvr-2521-completed.pt.json": "9b0a5ccee85d8f1b0558cfa3c017397983abd69d44573bf8fe504c799994f2e7",
+    "fixtures/batched-cache-recovery-verification/rlvr-2521-pending.pt": "04902bde4d94f1aa701f4ef75d305cbf1d17cb750f773af63aa91238cfaa8712",
+    "fixtures/batched-cache-recovery-verification/rlvr-2521-pending.pt.json": "ef2ad7e0b0d90eaf611af52fb319f8088819ace3fd9af2c74f1eb771c14ed476",
+    "fixtures/batched-cache-recovery-verification/generation.pt.json": "d631ce1d4c5f5b8870a0d42549580f9c7f0a4822ef4a1823aecf778ab99e5ed7",
+    "fixtures/batched-cache-recovery-verification/rlvr-2521-completed.pt": "1dacb71fcbe12dd11ac4a13782f63adc41d3d1103551e2d990b7da243f718a46",
+    "fixtures/batched-cache-recovery-verification/dpo-2521-completed.pt.json": "440aa8cbdffb78f147cee751c0ddb857b41e21b26668faa1a051b7a73cab0ad2",
+    "fixtures/batched-cache-recovery-verification/dpo-2521-completed.pt": "595ad850d65e0b7c40f33de6394509133f8efee845d7bc54b61bdf4498a9ff2e",
+    "fixtures/batched-cache-recovery-verification/rlvr-2522-pending.pt.json": "4552469d1af0f053b5fd1859c8874447d6c263409f7aae610306c8b276134d6b",
+    "fixtures/batched-cache-recovery-verification/generation.pt": "0f7c6aecdec304b873058e2151f91283e18660023f62af64927f385293407c32",
+    "fixtures/batched-cache-recovery-verification/dpo-2522-pending.pt": "cb21a0c94783210db2bdc76efe1c2c144f2b106c73709669debfae7daa661beb",
+    "fixtures/batched-cache-recovery-verification/dpo-2521-pending.pt.json": "6e8a7f03e5f350b5102f6a6c5fb625f5cf2bdf7c49ff86fcc81d14998667a5ab",
+    "fixtures/batched-cache-recovery-verification/dpo-2521-pending.pt": "aabdb330f5e162d846928b035b5d6a750da64377dd7b7496167fe5b9d3cfea6e",
+    "fixtures/batched-cache-recovery-verification/dpo-2522-completed.pt.json": "88e32fe5325b4b666a43e24c35136f94cac5d3cc4669dc19426d81de22f03057",
+    "experiments/reports/2026-10-04-batched-cache-recovery.json": "76bdec79bf00f66e37d21447b0419107b42f380a881d41179ac1fa82f890af5d",
+    "experiments/reports/2026-10-04-batched-cache-recovery.md": "53919f0aa2dfce7d713a6c4a53a3e74946d73fed6270aae93bf373f94ccfcfe5",
+    "experiments/reports/2026-10-04-batched-cache-recovery-hardening.json": "cb223bbb8bbc8c05c3334422581f0df442b53f981d02ee249a2cde708d69129f",
+    "experiments/reports/2026-10-04-batched-cache-recovery-verification.json": "294edab76c7ba0e7e254ff9b18aa7efe302f1d43fc7ef8713c122abfcd75e9b8",
+    "experiments/reports/2026-10-04-batched-cache-recovery-root-verification.json": "d7b04dcd6761a92615827d0fe5900af395422c03d757a23b8c52a760d76c4a91"
+  },
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "experiments/reports/2026-10-05-recovery-tensor-bytes/verify.py"
+  ],
+  "environment": {
+    "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "python": "3.12.14",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.5.3",
+    "threads": 1,
+    "cuda_available": false,
+    "git": "not queried by this authorized narrow check",
+    "cpu_lock_sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "lock_boundary": "byte identity, not new environment installation"
+  },
+  "previous_control_failure": {
+    "panel_tests": 30,
+    "errors": 1,
+    "suite_seconds": 1.299,
+    "cause": "New tamper test omitted required expected_contract keyword; fixed before passing full verification",
+    "not_a_tensor_hash_failure": true
+  },
+  "metadata_inspection_failure": "A prior read-only JSON projection assumed training was a dict; actual list confirmed before verification",
+  "dtype_layout_parity": [
+    {
+      "dtype": "torch.bool",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "0b63fc1e51482a01d941cbd0082418a5e8303be2fdb21d20f8409b0acf407efe",
+      "current_tensor_sha256": "0b63fc1e51482a01d941cbd0082418a5e8303be2fdb21d20f8409b0acf407efe",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.bool",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "5b023fab41163c299a1a1dcf6e2bbf4f54f21ae178c2c989f86097cbaa99d715",
+      "current_tensor_sha256": "5b023fab41163c299a1a1dcf6e2bbf4f54f21ae178c2c989f86097cbaa99d715",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.bool",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "47ff45d33c9e35c1d441c7e1ebcf3710545fbe8dc8f993018beb5c8c1d7f5dc9",
+      "current_tensor_sha256": "47ff45d33c9e35c1d441c7e1ebcf3710545fbe8dc8f993018beb5c8c1d7f5dc9",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.bool",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "07454716b051e585ee045433761b4cd40fc14baa5ad9d8a673be30041eef9b7e",
+      "current_tensor_sha256": "07454716b051e585ee045433761b4cd40fc14baa5ad9d8a673be30041eef9b7e",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.bool",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "21f19c9a8e0876670d27cc65abcbd573a61ce89aea16549623f0331f6e93a3d6",
+      "current_tensor_sha256": "21f19c9a8e0876670d27cc65abcbd573a61ce89aea16549623f0331f6e93a3d6",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.bool",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "4674344cd7f7f5b861375b46bccd95e6057ed662240e49b3f30b805637c622ab",
+      "current_tensor_sha256": "4674344cd7f7f5b861375b46bccd95e6057ed662240e49b3f30b805637c622ab",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.bool",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "de5950f2a05e376c1e0d1e9ae2ea1d3e035a783a9cb6f8aef29883f4f3882d10",
+      "current_tensor_sha256": "de5950f2a05e376c1e0d1e9ae2ea1d3e035a783a9cb6f8aef29883f4f3882d10",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.uint8",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "813d3e29771fb9545294636e1886098832e6b62215c3b40f159ebab2206ba73e",
+      "current_tensor_sha256": "813d3e29771fb9545294636e1886098832e6b62215c3b40f159ebab2206ba73e",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.uint8",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "d297282e3ba88bff83102a5170d94fce8a0471fddcd48c58b19ee4963ac7a44c",
+      "current_tensor_sha256": "d297282e3ba88bff83102a5170d94fce8a0471fddcd48c58b19ee4963ac7a44c",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.uint8",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "f3feac08c80011dfeb1f0c8418ccb829051d4499aba5e6532c6605ab27e53d26",
+      "current_tensor_sha256": "f3feac08c80011dfeb1f0c8418ccb829051d4499aba5e6532c6605ab27e53d26",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.uint8",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "8fa0cd7701d1159e02fc45d967d00fea74d1dc8962b8495013833fb6837d7a24",
+      "current_tensor_sha256": "8fa0cd7701d1159e02fc45d967d00fea74d1dc8962b8495013833fb6837d7a24",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.uint8",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "9f0ab1cfa5f0bb680602c651e2817a57e822d98b0dd5e39591cfa245f41853dd",
+      "current_tensor_sha256": "9f0ab1cfa5f0bb680602c651e2817a57e822d98b0dd5e39591cfa245f41853dd",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.uint8",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "f800c30656c673dcabe85100e252c3a42ec5710d54e1576ab89fd82fe6207f2f",
+      "current_tensor_sha256": "f800c30656c673dcabe85100e252c3a42ec5710d54e1576ab89fd82fe6207f2f",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.uint8",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "1611f24287d5cc4e87c1c814956c0bdd4a5d775d05b00417f38dbfd4e4d3a648",
+      "current_tensor_sha256": "1611f24287d5cc4e87c1c814956c0bdd4a5d775d05b00417f38dbfd4e4d3a648",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int8",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "2fcef5d8c02f0630ef3c59c385f97247d8bb7b96c5c24cac8cce9852726a7189",
+      "current_tensor_sha256": "2fcef5d8c02f0630ef3c59c385f97247d8bb7b96c5c24cac8cce9852726a7189",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int8",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "962617ae466fbc6b6740948ea1de8bcff74ec77d1cf773f0514a1a451377b82d",
+      "current_tensor_sha256": "962617ae466fbc6b6740948ea1de8bcff74ec77d1cf773f0514a1a451377b82d",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int8",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "5abe916bc0f3c0c6eb531e942165bbed2ec1027fe1419b3d3dd7d85e8a9a0628",
+      "current_tensor_sha256": "5abe916bc0f3c0c6eb531e942165bbed2ec1027fe1419b3d3dd7d85e8a9a0628",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int8",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "e9487ca7adb6063ed2dd6b7f5e0009062c2da1f0fe3b4019374640b9662eda47",
+      "current_tensor_sha256": "e9487ca7adb6063ed2dd6b7f5e0009062c2da1f0fe3b4019374640b9662eda47",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int8",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "bb6b76e722ef7ff9add4859961d2d1282029ae6bacade74e5afb742e598efc5e",
+      "current_tensor_sha256": "bb6b76e722ef7ff9add4859961d2d1282029ae6bacade74e5afb742e598efc5e",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int8",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "a4f1f592ca7b49af8df206f03dcaea0f7b057074457d3dfe3222088836a30772",
+      "current_tensor_sha256": "a4f1f592ca7b49af8df206f03dcaea0f7b057074457d3dfe3222088836a30772",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int8",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "39a940e98ff063c2410eebbdfa64b46967b843494dbe83236b23d8e8d4f8f410",
+      "current_tensor_sha256": "39a940e98ff063c2410eebbdfa64b46967b843494dbe83236b23d8e8d4f8f410",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int16",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "3b9356690d9668d436b6550a03a99cfa94ee6058ba521ab8f96e5521c7310792",
+      "current_tensor_sha256": "3b9356690d9668d436b6550a03a99cfa94ee6058ba521ab8f96e5521c7310792",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int16",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "1bdc5936b5c5dae9ba0373de77055235174e8a48c53708409cea7b85415d1e87",
+      "current_tensor_sha256": "1bdc5936b5c5dae9ba0373de77055235174e8a48c53708409cea7b85415d1e87",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int16",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "001917a301e0cd3f6a3c2100f1f7970ba918bf92ea918cc2a39d92a1b1f5f00e",
+      "current_tensor_sha256": "001917a301e0cd3f6a3c2100f1f7970ba918bf92ea918cc2a39d92a1b1f5f00e",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int16",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "981ca039f4d05c05073b8a59ee1d0783d9edb0e649200955d0c2c40c33f3ed6c",
+      "current_tensor_sha256": "981ca039f4d05c05073b8a59ee1d0783d9edb0e649200955d0c2c40c33f3ed6c",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int16",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "dfafbc222b218c3cba93c89ee245bb333324b725a04b7b74878707a12321ed7b",
+      "current_tensor_sha256": "dfafbc222b218c3cba93c89ee245bb333324b725a04b7b74878707a12321ed7b",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int16",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "17c81473c91ca08208c99a1ad7fa344b6ef519705cf7b17144b721fc30b567eb",
+      "current_tensor_sha256": "17c81473c91ca08208c99a1ad7fa344b6ef519705cf7b17144b721fc30b567eb",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int16",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "d34e4eef4c037cb604a955430ff91702d2a495ae1ead61aadc28fbab6689bb1b",
+      "current_tensor_sha256": "d34e4eef4c037cb604a955430ff91702d2a495ae1ead61aadc28fbab6689bb1b",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int32",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "88cd820f8e3ff98fda4792f25410f1ac378ca9fd44a5ad5efd9d1b9f2e4ce7f7",
+      "current_tensor_sha256": "88cd820f8e3ff98fda4792f25410f1ac378ca9fd44a5ad5efd9d1b9f2e4ce7f7",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int32",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "dac9b912ee7e544f8dc2ce8a2ed8088f44bed128818ad28a0ae9a59566dcaad8",
+      "current_tensor_sha256": "dac9b912ee7e544f8dc2ce8a2ed8088f44bed128818ad28a0ae9a59566dcaad8",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int32",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "07788840c49060f15a3e829ba40074021658f6abc04586bdb92cc2c06940fc82",
+      "current_tensor_sha256": "07788840c49060f15a3e829ba40074021658f6abc04586bdb92cc2c06940fc82",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int32",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "063d8d4e40a7823d8be9f1cce467efdc15bac6dae64b3372efb661a034e430c7",
+      "current_tensor_sha256": "063d8d4e40a7823d8be9f1cce467efdc15bac6dae64b3372efb661a034e430c7",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int32",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "bf6254451e0fd7f945bb26ff4f633253cad0715a11cde5e7963661d83d0edc9a",
+      "current_tensor_sha256": "bf6254451e0fd7f945bb26ff4f633253cad0715a11cde5e7963661d83d0edc9a",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int32",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "d31cd950dc4c65435d24bb0a7f9a05ba483c3c59e4e9e9f42bf84ae80534f4ab",
+      "current_tensor_sha256": "d31cd950dc4c65435d24bb0a7f9a05ba483c3c59e4e9e9f42bf84ae80534f4ab",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int32",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "1b09c35f62e5f057b36ff1895f287b9c54a32078d7f4143e8f2fd96081490d54",
+      "current_tensor_sha256": "1b09c35f62e5f057b36ff1895f287b9c54a32078d7f4143e8f2fd96081490d54",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int64",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "16a580e2ff092e9d92b2f6765ff31a770744bf87dd1963f1114f8806043485f1",
+      "current_tensor_sha256": "16a580e2ff092e9d92b2f6765ff31a770744bf87dd1963f1114f8806043485f1",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int64",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "ff64a1680fbde70560b7c75a31db1365e28d0f4cbb70a20cc84e5276b8009f03",
+      "current_tensor_sha256": "ff64a1680fbde70560b7c75a31db1365e28d0f4cbb70a20cc84e5276b8009f03",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int64",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "c5b2a779ba02e6a368448fc1e93e48452a6658daaa4a73afdbb6b4e8f50a2547",
+      "current_tensor_sha256": "c5b2a779ba02e6a368448fc1e93e48452a6658daaa4a73afdbb6b4e8f50a2547",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int64",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "371f51bde09794a97fc5b9647a94cf7d6bff6d90998241fb119ec761b1fdfce3",
+      "current_tensor_sha256": "371f51bde09794a97fc5b9647a94cf7d6bff6d90998241fb119ec761b1fdfce3",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int64",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "fc3de26e6776ff457630c53f83f751f3f675774b42d621c51c20e055f6f8f900",
+      "current_tensor_sha256": "fc3de26e6776ff457630c53f83f751f3f675774b42d621c51c20e055f6f8f900",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int64",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "2eb62e6183e04cfee5bc87262210e7265bbd33d9fb58a691a86a36d3c2611141",
+      "current_tensor_sha256": "2eb62e6183e04cfee5bc87262210e7265bbd33d9fb58a691a86a36d3c2611141",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.int64",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "f17edd8d8576dce874e27c70dd326de0c6e3058e1a91bf9e57b6d9b5a6e32bff",
+      "current_tensor_sha256": "f17edd8d8576dce874e27c70dd326de0c6e3058e1a91bf9e57b6d9b5a6e32bff",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float16",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "e51fb0a7e44d609774bbd096ccc3d2f82b8e2139dcea57185985467af5bbc388",
+      "current_tensor_sha256": "e51fb0a7e44d609774bbd096ccc3d2f82b8e2139dcea57185985467af5bbc388",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float16",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "3122953f5d9931526b8efac86749e58660a7700f93976f237b2c10dbbd89094b",
+      "current_tensor_sha256": "3122953f5d9931526b8efac86749e58660a7700f93976f237b2c10dbbd89094b",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float16",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "db0c02c9174d819eb1a93f1b25e361ff0bbeee3c77318ad6db585991f0710122",
+      "current_tensor_sha256": "db0c02c9174d819eb1a93f1b25e361ff0bbeee3c77318ad6db585991f0710122",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float16",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "1d6131b501425a091b4c7600090674629e8b39072a3d4c7cdfd88a6832fa0d96",
+      "current_tensor_sha256": "1d6131b501425a091b4c7600090674629e8b39072a3d4c7cdfd88a6832fa0d96",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float16",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "4d310f0dc77d6e02f6018aeb121ccef345e25adf9af1a4197e1da553105d4403",
+      "current_tensor_sha256": "4d310f0dc77d6e02f6018aeb121ccef345e25adf9af1a4197e1da553105d4403",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float16",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "3350e953c2a6c718a49b5e1646dc540be9cf24ffa7abf8746d00464b22f5c6ba",
+      "current_tensor_sha256": "3350e953c2a6c718a49b5e1646dc540be9cf24ffa7abf8746d00464b22f5c6ba",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float16",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "8ff33f0a8edafc4561bd6dc13360fe562fff1a9215568f8f1e53d21ce162219e",
+      "current_tensor_sha256": "8ff33f0a8edafc4561bd6dc13360fe562fff1a9215568f8f1e53d21ce162219e",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float32",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "6da288d8a9038a12f9ff898f20d01379414421716b9b1567c1946319503361c0",
+      "current_tensor_sha256": "6da288d8a9038a12f9ff898f20d01379414421716b9b1567c1946319503361c0",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float32",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "41f037dd4d01001c524fccf34b186fc76302ebb5578e77cbf7f7f58224061a21",
+      "current_tensor_sha256": "41f037dd4d01001c524fccf34b186fc76302ebb5578e77cbf7f7f58224061a21",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float32",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "39d5e6446baf1f88f39d85f4f3d9ba1a0617f3264c85a4703113f8bb550a2c75",
+      "current_tensor_sha256": "39d5e6446baf1f88f39d85f4f3d9ba1a0617f3264c85a4703113f8bb550a2c75",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float32",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "41953c6c4ceba99ba6be9fe652fd5456f709f61298be82c139bf6b7d4d516044",
+      "current_tensor_sha256": "41953c6c4ceba99ba6be9fe652fd5456f709f61298be82c139bf6b7d4d516044",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float32",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "915304cdb0f419ebfc8aeb8addea3fa35ca32a6f9df39a97bd8dce0cdb5b16d4",
+      "current_tensor_sha256": "915304cdb0f419ebfc8aeb8addea3fa35ca32a6f9df39a97bd8dce0cdb5b16d4",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float32",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "291498e3ccaae4886c22554be9e4e58e73d3a440f93c731bb2da629a484aa3bb",
+      "current_tensor_sha256": "291498e3ccaae4886c22554be9e4e58e73d3a440f93c731bb2da629a484aa3bb",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float32",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "73c82d1682d60af8c1f91d9de41cb67020cf95ed749984f7670338de5ae85c63",
+      "current_tensor_sha256": "73c82d1682d60af8c1f91d9de41cb67020cf95ed749984f7670338de5ae85c63",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float64",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "80adc1ad0cdeb63f0a0f7e2ea5d2c6d3bfa2ff77f09e0158d16988b054b26675",
+      "current_tensor_sha256": "80adc1ad0cdeb63f0a0f7e2ea5d2c6d3bfa2ff77f09e0158d16988b054b26675",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float64",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "9ef16eb60752c00cc8bf16565e994ce72caf0c9072f280ad4a81ab4d46d2101d",
+      "current_tensor_sha256": "9ef16eb60752c00cc8bf16565e994ce72caf0c9072f280ad4a81ab4d46d2101d",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float64",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "48af960271f7ed19f7f82cbf12deced23bbb7614d0fb0144e2b1b64afbea68cc",
+      "current_tensor_sha256": "48af960271f7ed19f7f82cbf12deced23bbb7614d0fb0144e2b1b64afbea68cc",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float64",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "4cc41efefbe7c221f7e2a268312e11a89e1ff4d4d37d6053f0d792129d7e7492",
+      "current_tensor_sha256": "4cc41efefbe7c221f7e2a268312e11a89e1ff4d4d37d6053f0d792129d7e7492",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float64",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "7e5b3905c7d6ac0af40ba3b5bd6c770e9f50df0c0446462ad56fa66216804d63",
+      "current_tensor_sha256": "7e5b3905c7d6ac0af40ba3b5bd6c770e9f50df0c0446462ad56fa66216804d63",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float64",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "52c4d5b575269a9c01ee866958c18e5bddc22d37bfb58db6caacc6b3e62257dd",
+      "current_tensor_sha256": "52c4d5b575269a9c01ee866958c18e5bddc22d37bfb58db6caacc6b3e62257dd",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.float64",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "0b96b7d7a99acf42628d4cc3e2cf8b2e5ea4ededb51189d32f53333286171cbe",
+      "current_tensor_sha256": "0b96b7d7a99acf42628d4cc3e2cf8b2e5ea4ededb51189d32f53333286171cbe",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex64",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "8829670eb1efc7f3629c7e79475e6ecaf481b6d62785ea58cb414874877abf2e",
+      "current_tensor_sha256": "8829670eb1efc7f3629c7e79475e6ecaf481b6d62785ea58cb414874877abf2e",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex64",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "c34c2e1ed2828d7aae82a2e5610468f28772007f19b067788b28c9e8b4dcf784",
+      "current_tensor_sha256": "c34c2e1ed2828d7aae82a2e5610468f28772007f19b067788b28c9e8b4dcf784",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex64",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "791b8bced2dd34e0889c1ad18687953d93f238399eb6e08502cda169b86a407c",
+      "current_tensor_sha256": "791b8bced2dd34e0889c1ad18687953d93f238399eb6e08502cda169b86a407c",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex64",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "5e86665315ebd2be251c6f5ec6074d6216fab30672d158ec9cad6ebb89f34fca",
+      "current_tensor_sha256": "5e86665315ebd2be251c6f5ec6074d6216fab30672d158ec9cad6ebb89f34fca",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex64",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "e5a1b9e054d0dd26e4b80d5c986b23ca9c70cb6ce003fb2cd741172c755ccf16",
+      "current_tensor_sha256": "e5a1b9e054d0dd26e4b80d5c986b23ca9c70cb6ce003fb2cd741172c755ccf16",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex64",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "3dc811a10353c3e8738dc7505f3f03910e91f983839b94c5f0e47ac5f2cbed08",
+      "current_tensor_sha256": "3dc811a10353c3e8738dc7505f3f03910e91f983839b94c5f0e47ac5f2cbed08",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex64",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "79ffc50f070f72f30c0352ac52186185f8831429786c776fc5609486a1632f13",
+      "current_tensor_sha256": "79ffc50f070f72f30c0352ac52186185f8831429786c776fc5609486a1632f13",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex128",
+      "layout": "scalar",
+      "shape": [],
+      "stride": [],
+      "old_tensor_sha256": "ec45f8bf235597e683c21994c7acc515979f7722612f9b570df7307ad3a8bd13",
+      "current_tensor_sha256": "ec45f8bf235597e683c21994c7acc515979f7722612f9b570df7307ad3a8bd13",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex128",
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "135ac493ee217dd02ad78de6b47993076902374f536b9d2db098e152b21cb9e6",
+      "current_tensor_sha256": "135ac493ee217dd02ad78de6b47993076902374f536b9d2db098e152b21cb9e6",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex128",
+      "layout": "empty-columns",
+      "shape": [
+        3,
+        0
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "1a27280d4ede0a48bcc5c3c444769ed5eea99f174ce6900e399c983a96190e5d",
+      "current_tensor_sha256": "1a27280d4ede0a48bcc5c3c444769ed5eea99f174ce6900e399c983a96190e5d",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex128",
+      "layout": "vector",
+      "shape": [
+        12
+      ],
+      "stride": [
+        1
+      ],
+      "old_tensor_sha256": "66b515792f030b8ccecd8ebb5831d8ed812664873747225b3821d4f9792338de",
+      "current_tensor_sha256": "66b515792f030b8ccecd8ebb5831d8ed812664873747225b3821d4f9792338de",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex128",
+      "layout": "matrix",
+      "shape": [
+        3,
+        4
+      ],
+      "stride": [
+        4,
+        1
+      ],
+      "old_tensor_sha256": "173718b7721249224ceecb3ad3e1287451a0a310e15d03261399621e0dcb951a",
+      "current_tensor_sha256": "173718b7721249224ceecb3ad3e1287451a0a310e15d03261399621e0dcb951a",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex128",
+      "layout": "transpose",
+      "shape": [
+        4,
+        3
+      ],
+      "stride": [
+        1,
+        4
+      ],
+      "old_tensor_sha256": "197f05023f45a9f3ca25819b5dbeb51e60be51ff27da41e399c78bea1c69fcfc",
+      "current_tensor_sha256": "197f05023f45a9f3ca25819b5dbeb51e60be51ff27da41e399c78bea1c69fcfc",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "dtype": "torch.complex128",
+      "layout": "slice",
+      "shape": [
+        3,
+        2
+      ],
+      "stride": [
+        4,
+        2
+      ],
+      "old_tensor_sha256": "0a89f05645095e53d9aebcf73201426a6110ae85aa6c0208e6f74b5739142e8f",
+      "current_tensor_sha256": "0a89f05645095e53d9aebcf73201426a6110ae85aa6c0208e6f74b5739142e8f",
+      "tensor_original_parity": true,
+      "nested_original_parity": true,
+      "logical_contiguous_parity": true
+    }
+  ],
+  "bf16_bit_controls": [
+    {
+      "layout": "scalar",
+      "shape": [],
+      "bit_payload_hex": "0000",
+      "current_sha256": "e0641260b9c80b089277b70185962d3fa892f0ca2e393a3e25ed890bff72dfee",
+      "independent_packed_bits_match": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "layout": "empty-row",
+      "shape": [
+        0,
+        4
+      ],
+      "bit_payload_hex": "",
+      "current_sha256": "e1e7074f146410b24a9d15f16c9b96fa3555c44c0784361e72839eab5a142cc6",
+      "independent_packed_bits_match": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "layout": "empty-columns",
+      "shape": [
+        2,
+        0
+      ],
+      "bit_payload_hex": "",
+      "current_sha256": "fac7e2985f8ff95d04520fa446ca3e5c50eb90c3d87a076daeb7ce68a48c36a5",
+      "independent_packed_bits_match": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "layout": "vector",
+      "shape": [
+        8
+      ],
+      "bit_payload_hex": "00000080803f00c0807f80ffc17f0100",
+      "current_sha256": "602e83ad98efc3335726ae349ebd233e802cad24c785d975fd094df6fe8143dc",
+      "independent_packed_bits_match": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "layout": "matrix",
+      "shape": [
+        2,
+        4
+      ],
+      "bit_payload_hex": "00000080803f00c0807f80ffc17f0100",
+      "current_sha256": "2b93fc76deecef9fc1761e156800b728ce9065e8f3fb46ff6379a4861735fbe8",
+      "independent_packed_bits_match": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "layout": "transpose",
+      "shape": [
+        4,
+        2
+      ],
+      "bit_payload_hex": "0000807f008080ff803fc17f00c00100",
+      "current_sha256": "0b9afd6e7592ee4851a3dfb183a6d35b22cbc121557215dddbc61d17fd99a1b0",
+      "independent_packed_bits_match": true,
+      "logical_contiguous_parity": true
+    },
+    {
+      "layout": "slice",
+      "shape": [
+        2,
+        2
+      ],
+      "bit_payload_hex": "0000803f807fc17f",
+      "current_sha256": "ed4b06a7bb98b499f6d880d9628ab52678bb54fd766bc42d5c17f4cba18d831e",
+      "independent_packed_bits_match": true,
+      "logical_contiguous_parity": true
+    }
+  ],
+  "historical_snapshots": [
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/generation.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/dpo-2521-final.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/dpo-2521-completed.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/dpo-2521-pending.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/dpo-2522-final.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/dpo-2522-completed.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/dpo-2522-pending.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2521-final.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2521-completed.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2521-pending.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2522-final.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2522-completed.pt",
+      "embedded_state_old_and_current_match": true
+    },
+    {
+      "path": "fixtures/batched-cache-recovery-hardening/root-review/rlvr-2522-pending.pt",
+      "embedded_state_old_and_current_match": true
+    }
+  ],
+  "historical_policy_continuations": [
+    {
+      "objective": "dpo",
+      "seed": 2521,
+      "boundary": "completed_snapshot",
+      "full_history_matches_archived": true,
+      "final_policy_sha256": "9df7ef8d17f001e6ae4dc0cc4974127162df0ed1a74a7ae8751f9fc11f6937c0",
+      "final_hash_matches_archived": true,
+      "all_final_fields_byte_equal": {
+        "policy": true,
+        "reference": true,
+        "optimizer": true,
+        "stream": true,
+        "rollout_rng": true,
+        "torch_rng": true,
+        "step": true,
+        "history": true,
+        "pending": true
+      },
+      "pending_no_resampling": false
+    },
+    {
+      "objective": "dpo",
+      "seed": 2521,
+      "boundary": "pending_snapshot",
+      "full_history_matches_archived": true,
+      "final_policy_sha256": "9df7ef8d17f001e6ae4dc0cc4974127162df0ed1a74a7ae8751f9fc11f6937c0",
+      "final_hash_matches_archived": true,
+      "all_final_fields_byte_equal": {
+        "policy": true,
+        "reference": true,
+        "optimizer": true,
+        "stream": true,
+        "rollout_rng": true,
+        "torch_rng": true,
+        "step": true,
+        "history": true,
+        "pending": true
+      },
+      "pending_no_resampling": true
+    },
+    {
+      "objective": "dpo",
+      "seed": 2522,
+      "boundary": "completed_snapshot",
+      "full_history_matches_archived": true,
+      "final_policy_sha256": "eb0eb6b34a2b5be50ad32d0c0d7aaef08540246a78b500fd41c178e593b98c6d",
+      "final_hash_matches_archived": true,
+      "all_final_fields_byte_equal": {
+        "policy": true,
+        "reference": true,
+        "optimizer": true,
+        "stream": true,
+        "rollout_rng": true,
+        "torch_rng": true,
+        "step": true,
+        "history": true,
+        "pending": true
+      },
+      "pending_no_resampling": false
+    },
+    {
+      "objective": "dpo",
+      "seed": 2522,
+      "boundary": "pending_snapshot",
+      "full_history_matches_archived": true,
+      "final_policy_sha256": "eb0eb6b34a2b5be50ad32d0c0d7aaef08540246a78b500fd41c178e593b98c6d",
+      "final_hash_matches_archived": true,
+      "all_final_fields_byte_equal": {
+        "policy": true,
+        "reference": true,
+        "optimizer": true,
+        "stream": true,
+        "rollout_rng": true,
+        "torch_rng": true,
+        "step": true,
+        "history": true,
+        "pending": true
+      },
+      "pending_no_resampling": true
+    },
+    {
+      "objective": "rlvr",
+      "seed": 2521,
+      "boundary": "completed_snapshot",
+      "full_history_matches_archived": true,
+      "final_policy_sha256": "ea8c28a8950e71049025877c672f32407de04b0ea5648e2ebe18195106ef60c3",
+      "final_hash_matches_archived": true,
+      "all_final_fields_byte_equal": {
+        "policy": true,
+        "reference": true,
+        "optimizer": true,
+        "stream": true,
+        "rollout_rng": true,
+        "torch_rng": true,
+        "step": true,
+        "history": true,
+        "pending": true
+      },
+      "pending_no_resampling": false
+    },
+    {
+      "objective": "rlvr",
+      "seed": 2521,
+      "boundary": "pending_snapshot",
+      "full_history_matches_archived": true,
+      "final_policy_sha256": "ea8c28a8950e71049025877c672f32407de04b0ea5648e2ebe18195106ef60c3",
+      "final_hash_matches_archived": true,
+      "all_final_fields_byte_equal": {
+        "policy": true,
+        "reference": true,
+        "optimizer": true,
+        "stream": true,
+        "rollout_rng": true,
+        "torch_rng": true,
+        "step": true,
+        "history": true,
+        "pending": true
+      },
+      "pending_no_resampling": true
+    },
+    {
+      "objective": "rlvr",
+      "seed": 2522,
+      "boundary": "completed_snapshot",
+      "full_history_matches_archived": true,
+      "final_policy_sha256": "8e50851ca1a08f085b367e437b402676871a7628c881b5eab1a7fdb7361056b8",
+      "final_hash_matches_archived": true,
+      "all_final_fields_byte_equal": {
+        "policy": true,
+        "reference": true,
+        "optimizer": true,
+        "stream": true,
+        "rollout_rng": true,
+        "torch_rng": true,
+        "step": true,
+        "history": true,
+        "pending": true
+      },
+      "pending_no_resampling": false
+    },
+    {
+      "objective": "rlvr",
+      "seed": 2522,
+      "boundary": "pending_snapshot",
+      "full_history_matches_archived": true,
+      "final_policy_sha256": "8e50851ca1a08f085b367e437b402676871a7628c881b5eab1a7fdb7361056b8",
+      "final_hash_matches_archived": true,
+      "all_final_fields_byte_equal": {
+        "policy": true,
+        "reference": true,
+        "optimizer": true,
+        "stream": true,
+        "rollout_rng": true,
+        "torch_rng": true,
+        "step": true,
+        "history": true,
+        "pending": true
+      },
+      "pending_no_resampling": true
+    }
+  ],
+  "retained_old_bf16_failure": {
+    "type": "TypeError",
+    "message": "Got unsupported ScalarType BFloat16"
+  },
+  "generation_archived_continuation_exact": true,
+  "focused_tests": {
+    "command": [
+      "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_batched_cache_lab.py",
+      "-v"
+    ],
+    "actual_exit_code": 0,
+    "stdout": "",
+    "stderr": "test_actual_update_gradients_reference_freeze_and_support_likelihoods (test_batched_cache_lab.BatchedCacheTests.test_actual_update_gradients_reference_freeze_and_support_likelihoods) ... ok\ntest_all_four_greedy_paths_and_sampled_reorder (test_batched_cache_lab.BatchedCacheTests.test_all_four_greedy_paths_and_sampled_reorder) ... ok\ntest_bf16_dtype_shape_bits_and_container_identity_do_not_alias (test_batched_cache_lab.BatchedCacheTests.test_bf16_dtype_shape_bits_and_container_identity_do_not_alias) ... ok\ntest_bf16_payload_matches_independently_packed_bits_in_all_layouts (test_batched_cache_lab.BatchedCacheTests.test_bf16_payload_matches_independently_packed_bits_in_all_layouts) ... ok\ntest_bf16_snapshot_witness_bit_tamper_rejected_before_restore (test_batched_cache_lab.BatchedCacheTests.test_bf16_snapshot_witness_bit_tamper_rejected_before_restore) ... ok\ntest_bound_version_and_cache_tensor_cannot_silently_change (test_batched_cache_lab.BatchedCacheTests.test_bound_version_and_cache_tensor_cannot_silently_change) ... ok\ntest_cached_ragged_next_logits_and_compact_gqa_payload (test_batched_cache_lab.BatchedCacheTests.test_cached_ragged_next_logits_and_compact_gqa_payload) ... ok\ntest_changed_training_data_reference_and_completed_cursor_rejected (test_batched_cache_lab.BatchedCacheTests.test_changed_training_data_reference_and_completed_cursor_rejected) ... ok\ntest_completed_dpo_and_rlvr_recovery_exact_next_batch_state_and_adam (test_batched_cache_lab.BatchedCacheTests.test_completed_dpo_and_rlvr_recovery_exact_next_batch_state_and_adam) ... ok\ntest_disk_state_roundtrip_checks_contract_and_bytes_before_deserialization (test_batched_cache_lab.BatchedCacheTests.test_disk_state_roundtrip_checks_contract_and_bytes_before_deserialization) ... ok\ntest_forced_stop_compacts_and_cap_is_not_eos_padding (test_batched_cache_lab.BatchedCacheTests.test_forced_stop_compacts_and_cap_is_not_eos_padding) ... ok\ntest_future_and_padding_interventions_preserve_legal_outputs (test_batched_cache_lab.BatchedCacheTests.test_future_and_padding_interventions_preserve_legal_outputs) ... ok\ntest_generation_stale_weights_and_cursor_rng_content_rejected (test_batched_cache_lab.BatchedCacheTests.test_generation_stale_weights_and_cursor_rng_content_rejected) ... ok\ntest_identity_distinguishes_nested_dictionary_container_boundaries (test_batched_cache_lab.BatchedCacheTests.test_identity_distinguishes_nested_dictionary_container_boundaries) ... ok\ntest_identity_includes_tensor_dtype_shape_and_actual_bytes (test_batched_cache_lab.BatchedCacheTests.test_identity_includes_tensor_dtype_shape_and_actual_bytes) ... ok\ntest_identity_is_order_invariant_but_key_value_and_container_typed (test_batched_cache_lab.BatchedCacheTests.test_identity_is_order_invariant_but_key_value_and_container_typed) ... ok\ntest_independent_dpo_shift_eos_mask_and_right_padding (test_batched_cache_lab.BatchedCacheTests.test_independent_dpo_shift_eos_mask_and_right_padding) ... ok\ntest_invalid_geometry_and_caps_are_rejected (test_batched_cache_lab.BatchedCacheTests.test_invalid_geometry_and_caps_are_rejected) ... ok\ntest_migration_projection_preserves_actions_versions_scores_and_tensor_bytes (test_batched_cache_lab.BatchedCacheTests.test_migration_projection_preserves_actions_versions_scores_and_tensor_bytes) ... ok\ntest_old_identity_algorithm_is_rejected_before_tensor_loading (test_batched_cache_lab.BatchedCacheTests.test_old_identity_algorithm_is_rejected_before_tensor_loading) ... ok\ntest_omitted_optimizer_cursor_and_rollout_rng_are_broken_controls (test_batched_cache_lab.BatchedCacheTests.test_omitted_optimizer_cursor_and_rollout_rng_are_broken_controls) ... ok\ntest_pending_version_cursor_and_weights_cannot_mix (test_batched_cache_lab.BatchedCacheTests.test_pending_version_cursor_and_weights_cannot_mix) ... ok\ntest_post_collection_pending_rollout_resumes_without_resampling (test_batched_cache_lab.BatchedCacheTests.test_post_collection_pending_rollout_resumes_without_resampling) ... ok\ntest_ragged_left_positions_mask_ids_are_not_validity (test_batched_cache_lab.BatchedCacheTests.test_ragged_left_positions_mask_ids_are_not_validity) ... ok\ntest_resealed_cursor_and_changed_interface_rejected_before_reuse (test_batched_cache_lab.BatchedCacheTests.test_resealed_cursor_and_changed_interface_rejected_before_reuse) ... ok\ntest_saved_cache_snapshot_exact_next_draw_and_whole_tail (test_batched_cache_lab.BatchedCacheTests.test_saved_cache_snapshot_exact_next_draw_and_whole_tail) ... ok\ntest_tensor_byte_parity_original_numpy_dtypes_and_layouts (test_batched_cache_lab.BatchedCacheTests.test_tensor_byte_parity_original_numpy_dtypes_and_layouts) ... ok\ntest_unpadded_wrapper_matches_original_logits_and_gradients (test_batched_cache_lab.BatchedCacheTests.test_unpadded_wrapper_matches_original_logits_and_gradients) ... ok\ntest_work_counting_is_rectangular_inputs_not_full_flops (test_batched_cache_lab.BatchedCacheTests.test_work_counting_is_rectangular_inputs_not_full_flops) ... ok\ntest_wrong_padded_positions_expose_real_error (test_batched_cache_lab.BatchedCacheTests.test_wrong_padded_positions_expose_real_error) ... ok\n\n----------------------------------------------------------------------\nRan 30 tests in 1.294s\n\nOK\n"
+  },
+  "historical_artifacts_unchanged": true,
+  "current_sources_unchanged": true,
+  "wall_seconds": 3.230942510010209,
+  "scope": "Dense CPU tensor identity only; existing float64 tiny recovery; no BF16 training or production/pretrained/CUDA recovery"
+}

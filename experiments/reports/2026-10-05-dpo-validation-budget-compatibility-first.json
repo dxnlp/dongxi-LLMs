@@ -1,0 +1,36 @@
+{
+  "schema": "dongxi-dpo-validation-budget-development-diagnostic-v1",
+  "status": "failed",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "-m", "unittest", "test_dpo_runner_recovery", "test_dpo_checkpoint_mode", "test_dpo_work_budget", "test_dpo_snapshot_artifacts", "test_training_snapshot", "test_training_snapshot_failure_paths", "test_snapshot_artifact_budget", "-v"],
+  "actual_exit_code": 1,
+  "tests_ran": 109,
+  "failures": 1,
+  "errors": 1,
+  "reported_unittest_seconds": 22.920,
+  "source_sha256": {
+    "scripts/run_chapter11_spark_dpo.py": "ff6fa719abedcda4335fb057dd5afcc628710967e276e8ae9660c046bc49808d",
+    "tests/test_dpo_validation_budget.py": "df6b8c7ae56f3c7607c45a803c960bdad6bed3e7bdbdde20c10bae6372aa37e4",
+    "tests/test_dpo_work_budget.py": "86ba00344063100f664a2d8e39508a6d7208d98382cb47903e11b7d6ab0c7a92",
+    "tests/test_dpo_snapshot_artifacts.py": "fbd56514f10360392a67aabf5789f553320402bdd41febaa09d9b4b33f7eca68",
+    "experiments/specs/2026-10-05-dpo-recovery-validation-budget.md": "403973fbd77072b9cb922bcb1c70ecd61a6de99f0d3016016489e147531b0e4e",
+    "experiments/specs/2026-10-05-validation-budget-fixture-compatibility.md": "5d13bcbc23f3cd328b86cd4aa4376789daf2d298c76fb83e5839321a85967e2b"
+  },
+  "retained_observed_errors": [
+    {
+      "test": "test_dpo_work_budget.DPOWorkBudgetTests.test_fresh_process_same_journal_retains_later_attempts_and_exact_model",
+      "type": "AssertionError",
+      "location": "tests/test_dpo_work_budget.py:197",
+      "assertion": "self.assertEqual(before,charged)",
+      "interpretation": "The old full-journal equality assumes callback/restore verification does not consume work. The fresh child now retains and charges those two semantic panels; original numerical and fourteen model-work assertions passed. Root owns any explicit versioned fixture/assertion compatibility adjustment."
+    },
+    {
+      "test": "test_dpo_snapshot_artifacts.DpoSnapshotArtifactTests.test_work_and_snapshot_ledgers_retain_independent_later_attempts",
+      "type": "WorkBudgetExceeded",
+      "message": "Whole operation refused before work: recovery_tensor_elements",
+      "location": "tests/test_dpo_snapshot_artifacts.py:168",
+      "source_path": "train_completed_updates -> commit -> validate_dpo_payload -> _WorkAttempt -> WorkLedger.reserve",
+      "interpretation": "The old test gives every dynamically named dimension capacity100000, which is insufficient for the newly declared tensor verification panels. The original fourteen capacities and numerical/artifact recipe must not change; root owns a separately declared allowance for only the new dimensions."
+    }
+  ],
+  "boundary": "This retains selected actual failure excerpts and exact observed aggregate counts, not a complete raw109-test stdout archive. No successful full regression claimed at this revision. No numerical objective, tolerance, recipe or historical cap/report was changed to accommodate these observations."
+}

@@ -1,0 +1,52 @@
+{
+  "fixture": "success",
+  "limits": {
+    "seconds": 2.0,
+    "reserve_bytes": 26843545600,
+    "sampling_seconds": 0.02,
+    "term_grace_seconds": 0.1,
+    "kill_reap_seconds": 1.0
+  },
+  "child_command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "dongxi_llms.campaign_supervisor",
+    "--fixture-child",
+    "success"
+  ],
+  "child_pid": null,
+  "actual_exit_code": null,
+  "status": "gate-rejected",
+  "resource_measurement": "sampled, not continuous",
+  "observations": [
+    {
+      "available_bytes": 126782390272,
+      "source": "actual-linux-MemAvailable",
+      "conflict_scan": {
+        "source": "injected-fixture-control",
+        "conflicts": [
+          {
+            "pid": 987654321,
+            "rss_bytes": 5368709120,
+            "reasons": [
+              "large-resident-process"
+            ]
+          }
+        ],
+        "unreadable": 0,
+        "scanned": 1,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      }
+    }
+  ],
+  "scope": "self-spawned leaf CPU child only; no model job or descendant supervision",
+  "stop_reason": "conflicting-or-uninspectable-process",
+  "failure": null,
+  "signal_journal_errors": [],
+  "minimum_sampled_available_bytes": 126782390272,
+  "journal": {
+    "path": "fixtures/staged-campaign/root-verification/conflict/events.jsonl",
+    "sha256": "c281f8ab3a4f662adf1d856d40cc99dc6ef3c766302b9466633aa75cce4cebe7"
+  }
+}

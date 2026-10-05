@@ -22,11 +22,18 @@ PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python -m dongxi_llms.qwe
   --revision FULL_40_CHARACTER_IMMUTABLE_COMMIT_SHA \
   --output outputs/day23-qwen-rlvr-smoke \
   --updates 2 --group-size 2 --max-new-tokens 16 --lr 0.000001 --device cuda \
-  --prompt-mode chat --max-seconds 600
+  --prompt-mode chat --max-seconds 600 \
+  --snapshot-max-bytes APPROVED_PAYLOAD_BYTES \
+  --work-limits /absolute/path/to/approved-rlvr23-caps.json \
+  --work-journal-max-bytes APPROVED_MODEL_JOURNAL_BYTES \
+  --snapshot-io-limits /absolute/path/to/approved-snapshot-io9-contract.json \
+  --snapshot-io-ledger /absolute/path/to/owned-new-io-journal.jsonl \
+  --environment-lock /home/dongxi/dgx-spark-dongxi/uv.lock
 ```
 
 The placeholder revision is deliberately rejected by the CLI. This is an
-executable command template, not a claim the specified snapshot is already
+explicit-input command template; the payload/journal integer placeholders also
+require approved values. It is not a claim the specified snapshot is already
 installed. All loading is `local_files_only=True`; no token or network download
 is required. Output must be unused. Never overwrite an earlier run directory.
 
@@ -38,6 +45,32 @@ the base tokenizer lacks one; an SFT checkpoint rejects a changed template.
 For an intentionally raw base-only experiment, choose `--prompt-mode raw`;
 its different interface is recorded and it cannot silently replace the SFT route.
 PEFT adapter directories require an explicit prior merge.
+
+Actual execution requires the selected existing `--environment-lock`. Common
+identity records source/Git/Python/packages/lock/command/driver and actual local
+checkpoint bytes before model loading. A course parent must also match saved
+token meanings, fast-tokenizer encoding/wrapper rules, special IDs, template and
+stops. An old course checkpoint lacking a fingerprint requires explicit audited
+`--allow-legacy-interface` adoption, not automatic upstream authentication.
+The [CPU identity report](../reports/2026-10-04-run-identity.md) records tiny random
+local HF execution and merge/reload, not Qwen evidence.
+
+Current-source extension,2026-10-05: actual execution also requires a complete
+23-dimensional model/semantic work cap file and a separate9-dimensional shared
+snapshot I/O contract, including whole-operation payload/node/tensor/primitive
+envelopes and I/O journal size. The payload bound must agree in both arguments.
+The explicit tiny-CPU fixture limits are not production estimates or launch
+authority. Derive/approve model-scale geometry, evaluation/recovery/publication
+capacity and resource headroom separately; omitted limits are not inferred.
+
+Resume additionally supplies `--resume`, independently retained
+`--resume-contract`, `--resume-sha256`, `--resume-bytes` and
+`--resume-io-receipt`, with the same physical `--work-journal` and
+`--snapshot-io-ledger` and a new exclusive output. Bounded no-follow metadata
+and phase/horizon checks precede output/journal/model creation; bind both saved
+prefixes before payload inspection. Expected hashes remain expectations until
+actual inspection verifies the bytes. Generic identity hashing must not read
+the selected payload first, including template/lock/source/parent hardlink aliases.
 
 ## Resources and acceptance
 
@@ -71,7 +104,9 @@ initial evaluation and every completed optimizer update; completed updates also
 append to `metrics.jsonl`. A caught load, resource or numerical failure records
 its exception and last stage while retaining prior evidence. A killed process
 may leave status `running`; inspect the actual process exit rather than treating
-that status as proof of liveness. The journal is not a checkpoint-replay system.
+that status as proof of liveness. The status/metric journal alone is not the
+checkpoint-replay state. The separately published immutable completed/pending
+snapshots retain native numerical state and independently bound work receipts.
 
 ## Learning comparison after smoke
 
@@ -89,11 +124,16 @@ counts and label that changed optimization budget. Do not infer superiority from
 one seed or a four-prompt score. A broader extrapolation panel is a separately
 designed follow-up, not implied by this ready pilot route.
 
-The final checkpoint saves optimizer, generator/Torch/CUDA RNG and completed
-update count, but the runner does not offer an exact-resume command. It exports
-a full HF policy/tokenizer directory and genealogy for capstone evaluation.
-Calling this a recovery-verified training system requires a separate replay
-implementation and test; the current smoke route makes no such claim.
+The source now offers explicit completed/pending recovery of policy, original
+reference, Adam, global/rollout RNG, source cursor, retained actions and numerical
+history. Four actual random-tiny CPU fresh processes replay2→4 without pending
+recollection and without refunding later model/I/O failures; native publication
+faults retain the previous committed pointer. The [current CPU evidence](../reports/2026-10-05-rlvr-io-readiness.md)
+is not pretrained/CUDA/BF16 or physical-resource proof. HF policy/tokenizer
+export and genealogy remain separate artifacts for evaluation, not substitutes
+for resumable state. Calling this a pretrained recovery-verified training system
+requires separately approved replay/profile evidence; this contract supplies no
+automatic acquisition, loading, GPU launch or private platform authority.
 
 vLLM/Open Instruct integration is a later adapter comparison. Require matching
 token IDs, chat/prompt templates, EOS/masks, full behavior probabilities and

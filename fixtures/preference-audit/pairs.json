@@ -1,0 +1,62 @@
+{
+  "schema": "dongxi-preference-audit-v1",
+  "ownership": "Original course-authored texts and separately specified reference labels; no external dataset, human annotation study or AI generation",
+  "pairs": [
+    {
+      "pair_id": "box-turn1", "base_pair_id": "box-turn1", "source_prompt_id": "box-story", "conversation_id": "box-conversation", "turn_id": "1", "family_id": "location-fidelity", "split": "train",
+      "prompt": "Lily placed her ball in a red box. Where is the ball?",
+      "left": {"candidate_id": "box1-correct", "text": "In the red box.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "right": {"candidate_id": "box1-wrong", "text": "It is outdoors beside the tall tree, where Lily enjoys playing every afternoon.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "review": {"outcome": "left", "reviewer_id": "course-authored-reference-v1", "provenance": "authored", "rubric_id": "answer-fidelity-v1", "evidence": "The supplied story explicitly identifies the red box. Label is authored independently of toy judge outcomes, not collected from a human review panel."}
+    },
+    {
+      "pair_id": "box-turn2", "base_pair_id": "box-turn2", "source_prompt_id": "box-story", "conversation_id": "box-conversation", "turn_id": "2", "family_id": "location-fidelity", "split": "train",
+      "prompt": "Lily placed her ball in a red box. She then went outside without moving it. Is the ball now in the garden?",
+      "left": {"candidate_id": "box2-correct", "text": "No; it remains in the red box.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "right": {"candidate_id": "box2-wrong", "text": "Yes, certainly. The ball must have followed Lily into the garden because she went outdoors.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "review": {"outcome": "left", "reviewer_id": "course-authored-reference-v1", "provenance": "authored", "rubric_id": "answer-fidelity-v1", "evidence": "Walking outside does not move the ball. Authored reference, not a human collection claim."}
+    },
+    {
+      "pair_id": "box-turn3", "base_pair_id": "box-turn3", "source_prompt_id": "box-story", "conversation_id": "box-conversation", "turn_id": "3", "family_id": "location-fidelity", "split": "train",
+      "prompt": "Lily placed her ball in a red box and did not move it. Which container should she open to recover it?",
+      "left": {"candidate_id": "box3-wrong", "text": "The green bag, because colorful bags are excellent containers for children's toys.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "right": {"candidate_id": "box3-correct", "text": "The red box.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "review": {"outcome": "right", "reviewer_id": "course-authored-reference-v1", "provenance": "authored", "rubric_id": "answer-fidelity-v1", "evidence": "The story names the container. Authored reference, not a human collection claim."}
+    },
+    {
+      "pair_id": "addition", "base_pair_id": "addition", "source_prompt_id": "addition-question", "conversation_id": "addition-conversation", "turn_id": "1", "family_id": "addition-fidelity", "split": "train",
+      "prompt": "What is three plus four? Give the answer directly.",
+      "left": {"candidate_id": "addition-wrong", "text": "The answer is eight, a confident and convenient total that follows from combining the quantities.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "right": {"candidate_id": "addition-correct", "text": "7", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "review": {"outcome": "right", "reviewer_id": "course-authored-reference-v1", "provenance": "authored", "rubric_id": "answer-fidelity-v1", "evidence": "Three plus four is seven. Authored reference, not a human collection claim."}
+    },
+    {
+      "pair_id": "color", "base_pair_id": "color", "source_prompt_id": "color-question", "conversation_id": "color-conversation", "turn_id": "1", "family_id": "color-fidelity", "split": "calibration",
+      "prompt": "The note says the bicycle is blue. What color is it?",
+      "left": {"candidate_id": "color-correct", "text": "Blue.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "right": {"candidate_id": "color-wrong", "text": "It is bright yellow, a beautiful color that shines cheerfully in the morning sun.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "review": {"outcome": "left", "reviewer_id": "course-authored-reference-v1", "provenance": "authored", "rubric_id": "answer-fidelity-v1", "evidence": "The supplied note states blue. Authored reference, not a human collection claim."}
+    },
+    {
+      "pair_id": "greeting", "base_pair_id": "greeting", "source_prompt_id": "greeting-question", "conversation_id": "greeting-conversation", "turn_id": "1", "family_id": "equal-acceptability", "split": "calibration",
+      "prompt": "Say a friendly greeting. Both greetings below are acceptable under this rubric.",
+      "left": {"candidate_id": "greeting-left", "text": "Hello!", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "right": {"candidate_id": "greeting-right", "text": "Hi there!", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "review": {"outcome": "tie", "reviewer_id": "course-authored-reference-v1", "provenance": "authored", "rubric_id": "answer-fidelity-v1", "evidence": "The declared friendly-greeting criterion does not rank these alternatives. Authored reference, not a human collection claim."}
+    },
+    {
+      "pair_id": "unobservable", "base_pair_id": "unobservable", "source_prompt_id": "unobservable-question", "conversation_id": "unobservable-conversation", "turn_id": "1", "family_id": "unobservable-event", "split": "test",
+      "prompt": "Which sealed envelope contains the coin? No location evidence is provided, so the question cannot be assessed from the supplied information.",
+      "left": {"candidate_id": "unobservable-left", "text": "The first envelope contains the coin.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "right": {"candidate_id": "unobservable-right", "text": "The second envelope contains the coin.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "review": {"outcome": "abstain", "reviewer_id": "course-authored-reference-v1", "provenance": "authored", "rubric_id": "answer-fidelity-v1", "evidence": "Insufficient information prevents assessment; abstention is not evidence of equal quality. Authored reference, not a human collection claim."}
+    },
+    {
+      "pair_id": "direction", "base_pair_id": "direction", "source_prompt_id": "direction-question", "conversation_id": "direction-conversation", "turn_id": "1", "family_id": "direction-fidelity", "split": "test",
+      "prompt": "The manual says to turn the knob clockwise. Which way should it be turned?",
+      "left": {"candidate_id": "direction-wrong", "text": "Turn it to the left, slowly and steadily, because gentle rotation prevents unnecessary mechanical strain.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "right": {"candidate_id": "direction-correct", "text": "Clockwise.", "provenance": "authored", "checkpoint_id": "none-authored", "generation_settings": {"creation": "original course-authored literal", "sampling": "none"}},
+      "review": {"outcome": "right", "reviewer_id": "course-authored-reference-v1", "provenance": "authored", "rubric_id": "answer-fidelity-v1", "evidence": "The manual explicitly states clockwise. Authored reference, not a human collection claim."}
+    }
+  ]
+}

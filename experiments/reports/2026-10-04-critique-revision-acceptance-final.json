@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "package": "DXI-06",
+  "status": "passed",
+  "created_utc": "2026-10-04T21:47:03.981464+00:00",
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "scripts/verify_critique_revision.py",
+    "--reference",
+    "experiments/reports/2026-10-04-critique-revision-hardening-final/results.json",
+    "--historical-reference",
+    "experiments/reports/2026-10-04-critique-revision/results.json",
+    "--notebook-manifest",
+    "/tmp/dongxi-course-check-7xfmcfnz/manifest.json",
+    "--report",
+    "experiments/reports/2026-10-04-critique-revision-acceptance-final.json"
+  ],
+  "source_sha256": {
+    "src/dongxi_llms/critique_revision_lab.py": "23b2dbec5cc21045bc8905374b1c026e4e8b1a1d4c51dfca2958df1980ffdd01",
+    "tests/test_critique_revision_lab.py": "a850cf9269078a6a2fa6d34f01ff9bba2a9657b3bd53d72eae18f71549480573",
+    "scripts/verify_critique_revision.py": "c511749c9ff772afd154e8d37059ef2acac7b72012b5ac5c73394006843a74f2",
+    "fixtures/critique-revision/protocol.json": "b65edbff3ee57964b0b4fe1c5505a755128e8347b8745c27f6202b63b3649423",
+    "fixtures/critique-revision/adversarial.json": "ca984bdbbcf5e7d44e55a17b43b6bc285e5810a461889c9c5aaf18ca57cbb46f",
+    "fixtures/critique-revision/README.md": "e7a3df9492f195c998161f8758b40295d654e006d5a88842ed123ffba975ca26",
+    "experiments/specs/2026-10-04-critique-revision.md": "f37aa0835758a328ed96afe73c9c14825ad8229f384cafa7e1d03828c511d0f8",
+    "notebooks/day-26/README.md": "dfce19a88b35e6ebd9377ff7765d6e5226c9b2afb6ddc6a720a63dd4abc642e8",
+    "notebooks/day-26/04_critique_revision_and_acceptance.ipynb": "c566f96cc937adcb213d7b7c4c02a278aea7d4231153860b1d54b922bb5cc16c",
+    "experiments/specs/2026-10-04-critique-revision-hardening.md": "147a256152512aecbd5d5f8ec0c9f2507974d14d2ab4013b4909a90c41829586",
+    "experiments/specs/2026-10-04-critique-revision-hardening-final.md": "8f10a0814636af07c34417c200c4675227cdbaa1589ccf0427c339d28dc92a54",
+    "src/dongxi_llms/inference_selection_lab.py": "98d0fa2cf5cbf699ce8279d049af55ce64e8df4d59b77410e30c42584afc8b2f",
+    "src/dongxi_llms/reasoning_evaluation.py": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da",
+    "src/dongxi_llms/reasoning_generation.py": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0",
+    "src/dongxi_llms/evaluation_lab.py": "75ffea74bc308180f94a180a6e90afd3bfe69095c20b64fd8ed002a6f137dddd",
+    "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-01.png": "209ac1c61c2ba6a3e607b4dd1f03e935ab02b33505d5e27b712ac8df31736241",
+    "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-02.png": "e634497310d40ea872dca31f16925cc329363dcd18ddece6945b1451e3270583",
+    "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-03.png": "eaeeddac9572fae422030221b935a697ffe54c022520e1ed0002f2e625fa1095",
+    "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-04.png": "fac6f0e74e2d9acfaf8089b76244a83222efc8091f4ace39b7a5d9ccad06fdf1",
+    "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-05.png": "f153cdaab164c9edb4a0492e603d33f0f2252959db4ed21e20919834386bb5cd",
+    "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-06.png": "5beb6598ae154fc4eb75358c76a67dd0f33f2f397621333c5892eebc81a73eb6"
+  },
+  "source_changes_during_run": [],
+  "reference": {
+    "path": "experiments/reports/2026-10-04-critique-revision-hardening-final/results.json",
+    "sha256": "41bf5995ff114358f03baa7a84f17496086993bd7098d4e206a148e0790f6b4f"
+  },
+  "historical_reference": {
+    "path": "experiments/reports/2026-10-04-critique-revision/results.json",
+    "sha256": "503235b78ae32c8c2d48f6efd354a0b96cea18c4c5395e47ec98cd53db03dce3"
+  },
+  "historical_numeric_paths_and_errors_exactly_replayed": true,
+  "source_responses_sha256": "3db261750b6c98675b658968de3258fdd745d6be07a7c674bf21e25cfde36f04",
+  "source_candidates": 864,
+  "raw_source_candidates_and_historical_costs_identical": true,
+  "all_rounds_decisions_failures_budgets_and_counts_replayed": true,
+  "exact_programmatic_cases": 162,
+  "exact_programmatic_matches": 162,
+  "actual_replay_cases": 324,
+  "actual_exact_serialized_matches": 202,
+  "actual_whole_attempt_overrun_tokens": 135,
+  "actual_underfill_tokens": 165,
+  "authored_adversarial_counts": {
+    "critique_failures": 2,
+    "revision_failures": 1,
+    "rejected_proposals": 6
+  },
+  "authored_endpoints": {
+    "wrong-to-right": "wrong_to_right",
+    "right-to-wrong": "right_to_wrong",
+    "double-flip": "unchanged",
+    "repair-empty": "invalid",
+    "repair-cap": "invalid",
+    "repair-wrong": "invalid",
+    "reject-invalid": "unchanged",
+    "critique-error": "unchanged",
+    "revision-error": "unchanged",
+    "unknown-critique": "unchanged",
+    "empty-revision": "unchanged",
+    "cap-revision": "unchanged"
+  },
+  "actual_verification_wall_seconds": 1.2297276850149501,
+  "new_model_forwards": 0,
+  "notebook_manifest_sha256": "02b6b23bd25e8fb0ad3385d80426db98121f51d4dbe017dc832490cd76281091",
+  "notebook_verification": {
+    "path": "notebooks/day-26/04_critique_revision_and_acceptance.ipynb",
+    "sha256": "c566f96cc937adcb213d7b7c4c02a278aea7d4231153860b1d54b922bb5cc16c",
+    "code_cells": 8,
+    "kernel_identity": {
+      "cuda_available": false,
+      "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "packages": {
+        "ipykernel": "7.4.0",
+        "matplotlib": "3.10.8",
+        "nbclient": "0.11.0",
+        "nbformat": "5.11.1",
+        "numpy": "2.5.3",
+        "peft": "0.20.0",
+        "tokenizers": "0.23.2",
+        "torch": "2.14.1+cpu",
+        "transformers": "5.18.0"
+      },
+      "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+      "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+      "python": "3.12.14",
+      "torch_cuda_build": null
+    },
+    "executed_code_cells": 8,
+    "skipped_unfinished_exercise_cells": [],
+    "images": 6,
+    "seconds": 2.219029089988908,
+    "output": "/tmp/dongxi-course-check-7xfmcfnz/day-26/04_critique_revision_and_acceptance.ipynb",
+    "image_cells": [
+      3,
+      5,
+      7,
+      9,
+      11,
+      13
+    ],
+    "previews": [
+      {
+        "cell": 3,
+        "path": "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-01.png",
+        "sha256": "209ac1c61c2ba6a3e607b4dd1f03e935ab02b33505d5e27b712ac8df31736241"
+      },
+      {
+        "cell": 5,
+        "path": "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-02.png",
+        "sha256": "e634497310d40ea872dca31f16925cc329363dcd18ddece6945b1451e3270583"
+      },
+      {
+        "cell": 7,
+        "path": "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-03.png",
+        "sha256": "eaeeddac9572fae422030221b935a697ffe54c022520e1ed0002f2e625fa1095"
+      },
+      {
+        "cell": 9,
+        "path": "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-04.png",
+        "sha256": "fac6f0e74e2d9acfaf8089b76244a83222efc8091f4ace39b7a5d9ccad06fdf1"
+      },
+      {
+        "cell": 11,
+        "path": "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-05.png",
+        "sha256": "f153cdaab164c9edb4a0492e603d33f0f2252959db4ed21e20919834386bb5cd"
+      },
+      {
+        "cell": 13,
+        "path": "notebooks/figures/chapter-15/day-26-04_critique_revision_and_acceptance-06.png",
+        "sha256": "5beb6598ae154fc4eb75358c76a67dd0f33f2f397621333c5892eebc81a73eb6"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_critique_revision_lab.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_actual_pool_whole_attempt_overrun_is_preserved (test_critique_revision_lab.ControlAndIdentityTests.test_actual_pool_whole_attempt_overrun_is_preserved) ... ok\ntest_all_actual_inputs_are_hash_gated_and_complete (test_critique_revision_lab.ControlAndIdentityTests.test_all_actual_inputs_are_hash_gated_and_complete) ... ok\ntest_cli_failure_and_interrupt_preserve_partial_rounds (test_critique_revision_lab.ControlAndIdentityTests.test_cli_failure_and_interrupt_preserve_partial_rounds) ... usage: python -m unittest [-h] --protocol PROTOCOL --spec SPEC --output OUTPUT\npython -m unittest: error: Choose a new output directory; historical evidence cannot be overwritten\nusage: python -m unittest [-h] --protocol PROTOCOL --spec SPEC --output OUTPUT\npython -m unittest: error: Choose a new output directory; historical evidence cannot be overwritten\nok\ntest_exact_serialized_match_for_all_fixed_modes (test_critique_revision_lab.ControlAndIdentityTests.test_exact_serialized_match_for_all_fixed_modes) ... ok\ntest_independent_ties_and_gold_injection_are_stable (test_critique_revision_lab.ControlAndIdentityTests.test_independent_ties_and_gold_injection_are_stable) ... ok\ntest_programmatic_draws_are_gold_and_order_independent (test_critique_revision_lab.ControlAndIdentityTests.test_programmatic_draws_are_gold_and_order_independent) ... ok\ntest_stable_payload_omits_only_timing_not_decisions_or_source_costs (test_critique_revision_lab.ControlAndIdentityTests.test_stable_payload_omits_only_timing_not_decisions_or_source_costs) ... ok\ntest_callback_whitelist_physically_removes_nested_gold (test_critique_revision_lab.StateMachineTests.test_callback_whitelist_physically_removes_nested_gold) ... ok\ntest_callbacks_observe_only_prior_state_and_are_detached (test_critique_revision_lab.StateMachineTests.test_callbacks_observe_only_prior_state_and_are_detached) ... ok\ntest_capped_critique_is_retained_but_cannot_trigger_revision (test_critique_revision_lab.StateMachineTests.test_capped_critique_is_retained_but_cannot_trigger_revision) ... ok\ntest_critique_exception_records_failure_and_skipped_revision (test_critique_revision_lab.StateMachineTests.test_critique_exception_records_failure_and_skipped_revision) ... ok\ntest_empty_and_cap_proposals_are_not_natural_valid_answers (test_critique_revision_lab.StateMachineTests.test_empty_and_cap_proposals_are_not_natural_valid_answers) ... ok\ntest_failing_deepcopy_does_not_erase_the_failed_round (test_critique_revision_lab.StateMachineTests.test_failing_deepcopy_does_not_erase_the_failed_round) ... ok\ntest_flip_has_both_directions_and_double_flip_endpoint (test_critique_revision_lab.StateMachineTests.test_flip_has_both_directions_and_double_flip_endpoint) ... ok\ntest_gate_checks_tokens_not_just_decoded_string (test_critique_revision_lab.StateMachineTests.test_gate_checks_tokens_not_just_decoded_string) ... ok\ntest_gold_changes_grading_but_not_proposals_or_decisions (test_critique_revision_lab.StateMachineTests.test_gold_changes_grading_but_not_proposals_or_decisions) ... ok\ntest_invalid_proposal_is_retained_rejected_and_charged (test_critique_revision_lab.StateMachineTests.test_invalid_proposal_is_retained_rejected_and_charged) ... ok\ntest_mode_round_and_action_bounds (test_critique_revision_lab.StateMachineTests.test_mode_round_and_action_bounds) ... ok\ntest_repair_uses_observed_token_or_zero_not_gold (test_critique_revision_lab.StateMachineTests.test_repair_uses_observed_token_or_zero_not_gold) ... ok\ntest_revision_exception_and_bad_serialization_retained (test_critique_revision_lab.StateMachineTests.test_revision_exception_and_bad_serialization_retained) ... ok\ntest_unchanged_stop_is_not_success_stop (test_critique_revision_lab.StateMachineTests.test_unchanged_stop_is_not_success_stop) ... ok\ntest_unknown_and_unserializable_critique_are_failures (test_critique_revision_lab.StateMachineTests.test_unknown_and_unserializable_critique_are_failures) ... ok\ntest_valid_tie_accepts_wrong_answer_without_correctness (test_critique_revision_lab.StateMachineTests.test_valid_tie_accepts_wrong_answer_without_correctness) ... ok\n\n----------------------------------------------------------------------\nRan 23 tests in 0.081s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "scripts/check_book_math.py"
+      ],
+      "exit_code": 0,
+      "stdout": "54 Markdown files, 1221 math expressions, 0 issues\n",
+      "stderr": ""
+    }
+  ],
+  "comparison_boundary": "New callback/campaign wall time and run identity excluded; all raw continuations, token IDs, accept/reject/stop decisions, grade states, errors, counts, budgets and source cost fields retained. Original source responses and historical costs compared exactly.",
+  "limits": [
+    "authored/programmatic critique and revision, no neural self-critique",
+    "historical actual model candidates are not conditioned on critiques",
+    "serialized-token matching is not model-token/FLOP/latency/billing matching",
+    "whole-attempt replay overshoots and underfills retained; no adaptive stopping claim",
+    "related original source siblings; descriptive comparisons not population statistics",
+    "no guarantee of correctness, usefulness or transferable revision benefit"
+  ]
+}

@@ -1,0 +1,726 @@
+{
+  "schema": "dongxi-native-rlvr-recovery-independent-review-v1",
+  "date_utc": "2026-10-05",
+  "reviewer": "/root/audit_reasoning",
+  "scope": "Model-free actual source/metadata/receipt/physical-journal review; no model load, storage/weight-body rehash, forwards/fits/tests/new children or GPU/source/status mutation.",
+  "disposition": "actual-g8-recovery01-accepted-at-retained-recovery-scope",
+  "gates": {
+    "source_completed_horizon": true,
+    "completed_completed_horizon": true,
+    "pending_completed_horizon": true,
+    "original_prompt_and_source_contract": true,
+    "exact_final_policy_reference_optimizer_rng_loop_history": true,
+    "exact_update2_metrics": true,
+    "pending_does_not_resample": true,
+    "cumulative_work_ledger_same_physical_journal": true,
+    "cumulative_work_ledger_retains_later_spending": true,
+    "cumulative_snapshot_io_ledger_same_physical_journal": true,
+    "cumulative_snapshot_io_ledger_retains_later_spending": true,
+    "no_open_or_failed_journal_tickets": true
+  },
+  "status": "passed",
+  "group": 8,
+  "stage": "recovery",
+  "recipe": {
+    "updates": 2,
+    "output_cap": 16,
+    "seed": 2323,
+    "lr": 0.000001,
+    "beta": 0.02,
+    "external_seconds_each": 600,
+    "reserve_bytes": 26843545600,
+    "invocations": 3,
+    "disk_planning_bytes": 94489280512,
+    "prompt_mode": "native-chat-thinking-off"
+  },
+  "preparation_self_hash_valid": true,
+  "preclosing_equal": {
+    "source_bindings": true,
+    "input_bindings": true,
+    "local_model_binding": true,
+    "prerequisite_bindings": true
+  },
+  "current_source_matches": {
+    "src/dongxi_llms/qwen_rlvr_lab.py": true,
+    "src/dongxi_llms/grpo_lab.py": true,
+    "src/dongxi_llms/run_identity.py": true,
+    "src/dongxi_llms/training_snapshot.py": true,
+    "src/dongxi_llms/batched_cache_lab.py": true,
+    "src/dongxi_llms/work_budget.py": true,
+    "src/dongxi_llms/snapshot_io_budget.py": true,
+    "src/dongxi_llms/snapshot_io_schedule.py": true,
+    "src/dongxi_llms/artifact_budget.py": true,
+    "src/dongxi_llms/native_profile_supervisor.py": true,
+    "src/dongxi_llms/campaign_supervisor.py": true,
+    "scripts/run_native_rlvr_stages.py": true,
+    "tests/test_native_rlvr_stages.py": true,
+    "scripts/run_native_reasoning_baselines.py": true
+  },
+  "current_nonmodel_inputs_match": {
+    "interpreter": true,
+    "environment_lock": true,
+    "work_caps": true,
+    "io_caps": true,
+    "geometry": true
+  },
+  "roles": {
+    "source": {
+      "status": "completed",
+      "actual_exit_code": 0,
+      "child_pid": 304342,
+      "child_seconds": 182.05160450399853,
+      "seconds": 182.09738468396245,
+      "minimum_sampled_available_bytes": 109504069632,
+      "stop_reason": null,
+      "failure": null,
+      "cleanup_errors": [],
+      "observed_owned_descendants": [],
+      "helper_cleanup": [
+        {
+          "pid": 304339,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        },
+        {
+          "pid": 304338,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        }
+      ],
+      "queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "limits": {
+        "external_seconds": 600,
+        "reserve_bytes": 26843545600,
+        "probe_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "term_seconds": 0.1,
+        "reap_seconds": 0.5
+      },
+      "report_acceptance_exact": true,
+      "argv_exact": true,
+      "preparation_sha_exact": true,
+      "observed_model_file_map_exact": true,
+      "identity_self_hash_valid": true,
+      "minimum_recomputed_exact": true,
+      "row_count": 2,
+      "committed_updates": 2,
+      "invocation_id": "rlvr-172b138c84db40199425b05d0a6f1cc6",
+      "per_record_metrics": [
+        {
+          "update": 1,
+          "reward": 0,
+          "gradient_norm": 4.3585896492004395e-7,
+          "loss": 0,
+          "exact_kl_nats_before_update": 0,
+          "valid_response_tokens": 74,
+          "policy_sha256_after": "61a41286e21d45a31df941ac75fbd67e8d11978acbd4d46f8b1d92d84240b172",
+          "reward_counts": {
+            "0.0": 8
+          },
+          "stop_counts": {
+            "eos": 7,
+            "token-limit": 1
+          },
+          "nonzero_advantages": 0
+        },
+        {
+          "update": 2,
+          "reward": 0,
+          "gradient_norm": 0.146484375,
+          "loss": 0.000019645012798719108,
+          "exact_kl_nats_before_update": 0.0009698036592453718,
+          "valid_response_tokens": 120,
+          "policy_sha256_after": "193ba580ac022d4caf610e930ae279337ffdc868587aa43930f5f7ee303d8ebe",
+          "reward_counts": {
+            "0.0": 8
+          },
+          "stop_counts": {
+            "token-limit": 6,
+            "eos": 2
+          },
+          "nonzero_advantages": 0
+        }
+      ]
+    },
+    "completed": {
+      "status": "completed",
+      "actual_exit_code": 0,
+      "child_pid": 304665,
+      "child_seconds": 137.33149761601817,
+      "seconds": 137.3943130170228,
+      "minimum_sampled_available_bytes": 104302305280,
+      "stop_reason": null,
+      "failure": null,
+      "cleanup_errors": [],
+      "observed_owned_descendants": [],
+      "helper_cleanup": [
+        {
+          "pid": 304662,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        },
+        {
+          "pid": 304661,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        }
+      ],
+      "queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "limits": {
+        "external_seconds": 600,
+        "reserve_bytes": 26843545600,
+        "probe_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "term_seconds": 0.1,
+        "reap_seconds": 0.5
+      },
+      "report_acceptance_exact": true,
+      "argv_exact": true,
+      "preparation_sha_exact": true,
+      "observed_model_file_map_exact": true,
+      "identity_self_hash_valid": true,
+      "minimum_recomputed_exact": true,
+      "row_count": 1,
+      "committed_updates": 2,
+      "invocation_id": "rlvr-ca43b6cab8e2443e9324046107a94899",
+      "per_record_metrics": [
+        {
+          "update": 2,
+          "reward": 0,
+          "gradient_norm": 0.146484375,
+          "loss": 0.000019645012798719108,
+          "exact_kl_nats_before_update": 0.0009698036592453718,
+          "valid_response_tokens": 120,
+          "policy_sha256_after": "193ba580ac022d4caf610e930ae279337ffdc868587aa43930f5f7ee303d8ebe",
+          "reward_counts": {
+            "0.0": 8
+          },
+          "stop_counts": {
+            "token-limit": 6,
+            "eos": 2
+          },
+          "nonzero_advantages": 0
+        }
+      ]
+    },
+    "pending": {
+      "status": "completed",
+      "actual_exit_code": 0,
+      "child_pid": 304858,
+      "child_seconds": 101.90952163102338,
+      "seconds": 101.97952055704081,
+      "minimum_sampled_available_bytes": 104201089024,
+      "stop_reason": null,
+      "failure": null,
+      "cleanup_errors": [],
+      "observed_owned_descendants": [],
+      "helper_cleanup": [
+        {
+          "pid": 304855,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        },
+        {
+          "pid": 304854,
+          "started": true,
+          "actual_exit_code": -15,
+          "still_alive": false,
+          "errors": [],
+          "cleanup_complete": true
+        }
+      ],
+      "queue_feeder_shutdown": [
+        {
+          "queue": "logging",
+          "still_alive": false
+        },
+        {
+          "queue": "observer",
+          "still_alive": false
+        }
+      ],
+      "limits": {
+        "external_seconds": 600,
+        "reserve_bytes": 26843545600,
+        "probe_seconds": 0.25,
+        "logging_seconds": 0.25,
+        "term_seconds": 0.1,
+        "reap_seconds": 0.5
+      },
+      "report_acceptance_exact": true,
+      "argv_exact": true,
+      "preparation_sha_exact": true,
+      "observed_model_file_map_exact": true,
+      "identity_self_hash_valid": true,
+      "minimum_recomputed_exact": true,
+      "row_count": 1,
+      "committed_updates": 2,
+      "invocation_id": "rlvr-43d701332b7d489ca2d78d3b2c950ab5",
+      "per_record_metrics": [
+        {
+          "update": 2,
+          "reward": 0,
+          "gradient_norm": 0.146484375,
+          "loss": 0.000019645012798719108,
+          "exact_kl_nats_before_update": 0.0009698036592453718,
+          "valid_response_tokens": 120,
+          "policy_sha256_after": "193ba580ac022d4caf610e930ae279337ffdc868587aa43930f5f7ee303d8ebe",
+          "reward_counts": {
+            "0.0": 8
+          },
+          "stop_counts": {
+            "token-limit": 6,
+            "eos": 2
+          },
+          "nonzero_advantages": 0
+        }
+      ]
+    }
+  },
+  "recorded_scientific_snapshots": {
+    "source": {
+      "phase": "completed",
+      "completed_updates": 2,
+      "scientific_state_sha256": "6457e0efac59436ee4c0671923ea5284531c6a7967e4e39810f520294155421a",
+      "components": {
+        "policy": "c7766e71f4dd909de8c6e6ef130cc3e6e42532eee3e4a68ff93685c642e8cca2",
+        "reference": "803a686b8cde3494557c8931e3dbf7341c01c200a68263e0650e2df77c6547d7",
+        "optimizer": "fe93217f673073e251605dd988cf34a7905ee1218b14ded625e7fe6c65c0507c",
+        "loop_contract": "a95a0e4303fa2deb7a530d58ab5840e2a9a15e1556a51932e8ccbb4b8753d53f",
+        "cursor": "63f9a351da0fb44256450f35b71bd2565c403150f2db319b3f95d33fbced0567",
+        "collection_work": "489659019e49c6c9a31fba1d335dbb66a10941dc0c1d86f994a101660216a1c1",
+        "application_work": "537c25967efc15574798a45e1feb2fd31b92f08261292ae7e924de169fa6bcfb",
+        "history": "392141b4bcb674f4a2f69f07c233276def449071f2b2d080dce8ddb07f7b5cb7",
+        "pending": "c8914a5205ced702f208f15b0ef09c15d23b98996e5434df65c61c8da397829a",
+        "rng": "1b7f06d3308fd276888b864d30f57a609973b98c38f2cf8d6181f62bf9f6f213"
+      },
+      "scope": "Exact streamed storage bytes and typed native science descriptors; excludes only physical work prefix and producer invocation"
+    },
+    "completed": {
+      "phase": "completed",
+      "completed_updates": 2,
+      "scientific_state_sha256": "6457e0efac59436ee4c0671923ea5284531c6a7967e4e39810f520294155421a",
+      "components": {
+        "policy": "c7766e71f4dd909de8c6e6ef130cc3e6e42532eee3e4a68ff93685c642e8cca2",
+        "reference": "803a686b8cde3494557c8931e3dbf7341c01c200a68263e0650e2df77c6547d7",
+        "optimizer": "fe93217f673073e251605dd988cf34a7905ee1218b14ded625e7fe6c65c0507c",
+        "loop_contract": "a95a0e4303fa2deb7a530d58ab5840e2a9a15e1556a51932e8ccbb4b8753d53f",
+        "cursor": "63f9a351da0fb44256450f35b71bd2565c403150f2db319b3f95d33fbced0567",
+        "collection_work": "489659019e49c6c9a31fba1d335dbb66a10941dc0c1d86f994a101660216a1c1",
+        "application_work": "537c25967efc15574798a45e1feb2fd31b92f08261292ae7e924de169fa6bcfb",
+        "history": "392141b4bcb674f4a2f69f07c233276def449071f2b2d080dce8ddb07f7b5cb7",
+        "pending": "c8914a5205ced702f208f15b0ef09c15d23b98996e5434df65c61c8da397829a",
+        "rng": "1b7f06d3308fd276888b864d30f57a609973b98c38f2cf8d6181f62bf9f6f213"
+      },
+      "scope": "Exact streamed storage bytes and typed native science descriptors; excludes only physical work prefix and producer invocation"
+    },
+    "pending": {
+      "phase": "completed",
+      "completed_updates": 2,
+      "scientific_state_sha256": "6457e0efac59436ee4c0671923ea5284531c6a7967e4e39810f520294155421a",
+      "components": {
+        "policy": "c7766e71f4dd909de8c6e6ef130cc3e6e42532eee3e4a68ff93685c642e8cca2",
+        "reference": "803a686b8cde3494557c8931e3dbf7341c01c200a68263e0650e2df77c6547d7",
+        "optimizer": "fe93217f673073e251605dd988cf34a7905ee1218b14ded625e7fe6c65c0507c",
+        "loop_contract": "a95a0e4303fa2deb7a530d58ab5840e2a9a15e1556a51932e8ccbb4b8753d53f",
+        "cursor": "63f9a351da0fb44256450f35b71bd2565c403150f2db319b3f95d33fbced0567",
+        "collection_work": "489659019e49c6c9a31fba1d335dbb66a10941dc0c1d86f994a101660216a1c1",
+        "application_work": "537c25967efc15574798a45e1feb2fd31b92f08261292ae7e924de169fa6bcfb",
+        "history": "392141b4bcb674f4a2f69f07c233276def449071f2b2d080dce8ddb07f7b5cb7",
+        "pending": "c8914a5205ced702f208f15b0ef09c15d23b98996e5434df65c61c8da397829a",
+        "rng": "1b7f06d3308fd276888b864d30f57a609973b98c38f2cf8d6181f62bf9f6f213"
+      },
+      "scope": "Exact streamed storage bytes and typed native science descriptors; excludes only physical work prefix and producer invocation"
+    }
+  },
+  "recorded_science_equal": true,
+  "journals": {
+    "work": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-recovery-20261005-run-01-journals/work.jsonl",
+      "bytes": 46204,
+      "sha256": "ddd68f5964b01dcfedea5fdf9e3eb50be887142e011850e290aab110d3a3e7e1",
+      "ledger_id": "b70b5786734b42b69b89bcc03a5d227a",
+      "file_identity": [
+        66306,
+        5901563
+      ],
+      "actual_file_identity_matches": true,
+      "chain_valid": true,
+      "event_counts": {
+        "reserve": 25,
+        "complete": 25
+      },
+      "open_or_failed_tickets": 0,
+      "actual_totals": {
+        "collections": 3,
+        "evaluation_calls": 302,
+        "evaluation_examples": 24,
+        "evaluation_positions": 9155,
+        "evaluation_tokens": 302,
+        "generated_slots": 384,
+        "generation_forward_calls": 350,
+        "generation_forward_positions": 21251,
+        "multinomial_draws": 384,
+        "old_policy_forward_calls": 3,
+        "old_policy_forward_positions": 936,
+        "policy_forward_calls": 366,
+        "policy_forward_positions": 26243,
+        "recovery_multinomial_draws": 2816,
+        "recovery_validation_calls": 9,
+        "recovery_validation_operations": 16,
+        "recovery_validation_positions": 2808,
+        "reference_forward_calls": 4,
+        "reference_forward_positions": 1248,
+        "response_targets": 434,
+        "source_examples": 3,
+        "train_updates": 4,
+        "valid_response_tokens": 314
+      },
+      "actual_by_invocation": {
+        "rlvr-172b138c84db40199425b05d0a6f1cc6": {
+          "collections": 2,
+          "evaluation_calls": 102,
+          "evaluation_examples": 8,
+          "evaluation_positions": 3103,
+          "evaluation_tokens": 102,
+          "generated_slots": 256,
+          "generation_forward_calls": 134,
+          "generation_forward_positions": 11167,
+          "multinomial_draws": 256,
+          "old_policy_forward_calls": 2,
+          "old_policy_forward_positions": 624,
+          "policy_forward_calls": 142,
+          "policy_forward_positions": 13663,
+          "recovery_multinomial_draws": 1024,
+          "recovery_validation_calls": 4,
+          "recovery_validation_operations": 7,
+          "recovery_validation_positions": 1248,
+          "reference_forward_calls": 2,
+          "reference_forward_positions": 624,
+          "response_targets": 194,
+          "source_examples": 2,
+          "train_updates": 2,
+          "valid_response_tokens": 194
+        },
+        "rlvr-ca43b6cab8e2443e9324046107a94899": {
+          "collections": 1,
+          "evaluation_calls": 100,
+          "evaluation_examples": 8,
+          "evaluation_positions": 3026,
+          "evaluation_tokens": 100,
+          "generated_slots": 128,
+          "generation_forward_calls": 116,
+          "generation_forward_positions": 7058,
+          "multinomial_draws": 128,
+          "old_policy_forward_calls": 1,
+          "old_policy_forward_positions": 312,
+          "policy_forward_calls": 120,
+          "policy_forward_positions": 8306,
+          "recovery_multinomial_draws": 896,
+          "recovery_validation_calls": 2,
+          "recovery_validation_operations": 5,
+          "recovery_validation_positions": 624,
+          "reference_forward_calls": 1,
+          "reference_forward_positions": 312,
+          "response_targets": 120,
+          "source_examples": 1,
+          "train_updates": 1,
+          "valid_response_tokens": 120
+        },
+        "rlvr-43d701332b7d489ca2d78d3b2c950ab5": {
+          "collections": 0,
+          "evaluation_calls": 100,
+          "evaluation_examples": 8,
+          "evaluation_positions": 3026,
+          "evaluation_tokens": 100,
+          "generated_slots": 0,
+          "generation_forward_calls": 100,
+          "generation_forward_positions": 3026,
+          "multinomial_draws": 0,
+          "old_policy_forward_calls": 0,
+          "old_policy_forward_positions": 0,
+          "policy_forward_calls": 104,
+          "policy_forward_positions": 4274,
+          "recovery_multinomial_draws": 896,
+          "recovery_validation_calls": 3,
+          "recovery_validation_operations": 4,
+          "recovery_validation_positions": 936,
+          "reference_forward_calls": 1,
+          "reference_forward_positions": 312,
+          "response_targets": 120,
+          "source_examples": 0,
+          "train_updates": 1,
+          "valid_response_tokens": 0
+        }
+      },
+      "report_prefix_chains_valid": true,
+      "report_physical_id_equal": true,
+      "final_totals_report_exact": true
+    },
+    "io": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-recovery-20261005-run-01-journals/io.jsonl",
+      "bytes": 16906,
+      "sha256": "b5d5355659ce876eb7534c0a0fca87a351426deaec87c1c65a5b9caeddb9e63f",
+      "ledger_id": "7208017eefb941688e247922f10a1a53",
+      "file_identity": [
+        66306,
+        5901565
+      ],
+      "actual_file_identity_matches": true,
+      "chain_valid": true,
+      "event_counts": {
+        "reserve": 14,
+        "complete": 14
+      },
+      "open_or_failed_tickets": 0,
+      "actual_totals": {
+        "snapshot_clone_bytes": 49138982400,
+        "snapshot_hash_bytes": 70709777936,
+        "snapshot_inspect_operations": 2,
+        "snapshot_load_operations": 2,
+        "snapshot_primitive_bytes": 1688784,
+        "snapshot_save_operations": 10,
+        "snapshot_serialization_bytes": 49144428450,
+        "snapshot_tensor_elements": 29960247836,
+        "snapshot_tree_nodes": 98083
+      },
+      "actual_by_invocation": {
+        "rlvr-172b138c84db40199425b05d0a6f1cc6": {
+          "snapshot_clone_bytes": 22185287400,
+          "snapshot_hash_bytes": 22187730757,
+          "snapshot_inspect_operations": 0,
+          "snapshot_load_operations": 0,
+          "snapshot_primitive_bytes": 616837,
+          "snapshot_save_operations": 5,
+          "snapshot_serialization_bytes": 22187730757,
+          "snapshot_tensor_elements": 11092652418,
+          "snapshot_tree_nodes": 35151
+        },
+        "rlvr-ca43b6cab8e2443e9324046107a94899": {
+          "snapshot_clone_bytes": 16172216232,
+          "snapshot_hash_bytes": 26956686659,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 598962,
+          "snapshot_save_operations": 3,
+          "snapshot_serialization_bytes": 16174016793,
+          "snapshot_tensor_elements": 10781482712,
+          "snapshot_tree_nodes": 35213
+        },
+        "rlvr-43d701332b7d489ca2d78d3b2c950ab5": {
+          "snapshot_clone_bytes": 10781478768,
+          "snapshot_hash_bytes": 21565360520,
+          "snapshot_inspect_operations": 1,
+          "snapshot_load_operations": 1,
+          "snapshot_primitive_bytes": 472985,
+          "snapshot_save_operations": 2,
+          "snapshot_serialization_bytes": 10782680900,
+          "snapshot_tensor_elements": 8086112706,
+          "snapshot_tree_nodes": 27719
+        }
+      },
+      "report_prefix_chains_valid": true,
+      "report_physical_id_equal": true,
+      "final_totals_report_exact": true
+    }
+  },
+  "update2_records_exact": true,
+  "reviewed_metadata_sha256": {
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/preparation.json": {
+      "bytes": 24939,
+      "sha256": "c0bc0fd5289b233a7cde73eef30b8826facb97f072c56e1eef573c724d7518ba"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/acceptance.json": {
+      "bytes": 492036,
+      "sha256": "4868ba89f51559bf13b4f795bd85f0fa0c7c70c91eb6b217bf49f15741604603"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/closing-bindings.json": {
+      "bytes": 16943,
+      "sha256": "8c6ed63662d0767d52bdf365a5ebe6444be642b5fe6ad975921c34e0970f8195"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/launch-1.json": {
+      "bytes": 1733,
+      "sha256": "2bd99be228e9cc44c662800670914b464f4ea58b10938c244d47d096273390d9"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/launch-2.json": {
+      "bytes": 4093,
+      "sha256": "2b7b3daadf9ebc2ea0fa6e12bb456d2e9062fc7fcc4714efcb7e937167cff554"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/launch-3.json": {
+      "bytes": 4073,
+      "sha256": "71c5dac758259f5776184d6cdeb283798064c31dd41e532cfe134317b036e5ee"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/returned-supervision-1.json": {
+      "bytes": 1495714,
+      "sha256": "c09bb370cd1af300caa45d1234e6423a10cd4a870b8bd927d5320ffb0621eaa6"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/returned-supervision-2.json": {
+      "bytes": 1130408,
+      "sha256": "0fa8bd55a142b8044ececeff652748f1039c2a32ed6d2c86099af4829d27bec1"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/returned-supervision-3.json": {
+      "bytes": 842165,
+      "sha256": "c1e003b3e17614f91874a2209829666f8dc1bc04ca33fa8ca0b5bb86795ee41e"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/independent-resume-bindings.json": {
+      "bytes": 3547,
+      "sha256": "e3094fa2062dbd9fa7d474ce7547ead5a05ad699c769f66b51cb73df65af9338"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/retained-contract.json": {
+      "bytes": 72891,
+      "sha256": "a2684e5e140c4f828abf55a0f05323d055861f8a7a7c535edfd8ea644579769c"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/retained-completed-receipt.json": {
+      "bytes": 8673,
+      "sha256": "51f096bfeff0cda79fcc47b7029f19d80845259768fd0b833656e3d93ec8208f"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/retained-pending-receipt.json": {
+      "bytes": 8685,
+      "sha256": "9ed112287d56c63a80f65c0942c55f8e0a8479708f1232d2f0cd6329e5db302f"
+    },
+    "experiments/reports/native-rlvr-g8-recovery-20261005-run-01/outer-launcher-observation.json": {
+      "bytes": 618,
+      "sha256": "cab77c50df2ac4e7385ea643a9d48fd7ad2c863541baddb48a2de1218fce4b50"
+    }
+  },
+  "source_bindings": {
+    "src/dongxi_llms/qwen_rlvr_lab.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/qwen_rlvr_lab.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/qwen_rlvr_lab.py",
+      "bytes": 99265,
+      "sha256": "7c61253d4da3a3119342f66d4f40dc31e143e68d57be22ac7d71aac5d3ee1fb7"
+    },
+    "src/dongxi_llms/grpo_lab.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/grpo_lab.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/grpo_lab.py",
+      "bytes": 11148,
+      "sha256": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911"
+    },
+    "src/dongxi_llms/run_identity.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/run_identity.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/run_identity.py",
+      "bytes": 20051,
+      "sha256": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999"
+    },
+    "src/dongxi_llms/training_snapshot.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/training_snapshot.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/training_snapshot.py",
+      "bytes": 21296,
+      "sha256": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77"
+    },
+    "src/dongxi_llms/batched_cache_lab.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/batched_cache_lab.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/batched_cache_lab.py",
+      "bytes": 46712,
+      "sha256": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04"
+    },
+    "src/dongxi_llms/work_budget.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/work_budget.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/work_budget.py",
+      "bytes": 19121,
+      "sha256": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297"
+    },
+    "src/dongxi_llms/snapshot_io_budget.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_budget.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_budget.py",
+      "bytes": 15987,
+      "sha256": "464add774085ccd7ec3e9e2bc79a539748eea4ce244af2222c39d9d9c5d26e86"
+    },
+    "src/dongxi_llms/snapshot_io_schedule.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_schedule.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_schedule.py",
+      "bytes": 9193,
+      "sha256": "6a1988d02651673d96f31407d7a088546a1c9bd435a111b22fe138f7fd94f1f8"
+    },
+    "src/dongxi_llms/artifact_budget.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/artifact_budget.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/artifact_budget.py",
+      "bytes": 28366,
+      "sha256": "af1c1fcc4349393e50f5603e85017f851128c92c34dbcb82f75aa4694efdacc0"
+    },
+    "src/dongxi_llms/native_profile_supervisor.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/native_profile_supervisor.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/native_profile_supervisor.py",
+      "bytes": 36522,
+      "sha256": "88100a0fbe33fa8de34155838485e6c31fb5c3fd436d1dc27725fe720ad4f9b2"
+    },
+    "src/dongxi_llms/campaign_supervisor.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/campaign_supervisor.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/campaign_supervisor.py",
+      "bytes": 12667,
+      "sha256": "d2959a7856bc0cc4fb6b6623387d45bbc0d7193607a52c29c59bb8823b97d253"
+    },
+    "scripts/run_native_rlvr_stages.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_rlvr_stages.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_rlvr_stages.py",
+      "bytes": 39893,
+      "sha256": "a17e6fe791d32bce3518507f29f2814f011197b3796162e6fafe269bc34ae508"
+    },
+    "tests/test_native_rlvr_stages.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_native_rlvr_stages.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_native_rlvr_stages.py",
+      "bytes": 26713,
+      "sha256": "c1beb9b80f4e2b445778738c012eefd85617bafe4dacb2a336caeb56ff8d6ba7"
+    },
+    "scripts/run_native_reasoning_baselines.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_reasoning_baselines.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_reasoning_baselines.py",
+      "bytes": 22287,
+      "sha256": "249102e3dc4d6d81cf1c86ae71b65a9023dbb2f10c32698ad1eebf747cfa54e4"
+    }
+  },
+  "outer_observation": {
+    "schema": "dongxi-owner-console-observation-v1",
+    "recorded_date_utc": "2026-10-05",
+    "source": "Actual unified-exec session91701 stdout, transcribed after queue entry finished",
+    "queue_entry": "rlvr-recovery-g8",
+    "actual_outer_exit_code": 0,
+    "parent_monotonic_seconds": 504.83586531702895,
+    "stdout_sha256": null,
+    "boundary": "Outer adapter preparation/three native supervisors/inline CPU comparison/closure overlaps child time; not an extra model run",
+    "limitations": "Owner transcription, not a native or pre-launch-bound terminal archive; actual exit/recovery/resources are separately retained"
+  },
+  "boundaries": [
+    "Recorded exact ten-component symbolic storage equality is producer-measured; this reviewer joined hashes/source/receipts but did not rehash5.39GB storage bodies.",
+    "Actual update2 JSON and cumulative journal ordered chains/prefixes/inode/counter totals were independently recomputed.",
+    "All three observed-descendant lists are empty; native G8 does not exercise the late descendant worker path.",
+    "Generated slots384/multinomial draws384 differ from314valid newly collected action positions because the original dense sampler spends already-finished rows before masking them; no cap/scientific path was changed.",
+    "Actual434application targets include applying the source second group twice more; pending performs no new collection.",
+    "Outer504.83586531702895-second/exit0 observation is after-entry owner transcription overlapping children/preparation/comparison, not an additional model job or isolated timing.",
+    "Both source groups have zero reward/advantages; finite gradients/reference KL and optimizer calls are not task-relative learning or common20 improvement.",
+    "G4/G8 accepted recovery is not accepted pilot16, actual common20 publication, allgoal/Mac/hosted verification or learner mastery."
+  ]
+}

@@ -149,12 +149,17 @@ class GRPOInvariantTests(unittest.TestCase):
         import tempfile
         from pathlib import Path
         from unittest.mock import patch
-        from dongxi_llms.qwen_rlvr_lab import main
+        from dongxi_llms.qwen_rlvr_lab import main, BUDGET_KEYS
+        from snapshot_io_test_support import explicit_snapshot_io_args
         with tempfile.TemporaryDirectory(prefix="dongxi-rlvr-failure-test-") as directory:
             base = Path(directory)
             model_dir = base/"local-model-fixture"
             model_dir.mkdir()
             output = base/"new-run"
+            limits=base/'work-limits.json'
+            limits.write_text(json.dumps({key:100000 for key in BUDGET_KEYS}))
+            cap_args=['--work-limits',str(limits),'--work-journal-max-bytes','1048576',
+                      '--snapshot-max-bytes','16777216', *explicit_snapshot_io_args(base)]
             def fail_after_one_update(args, journal):
                 journal.stage("initial-evaluation")
                 journal.baseline_row({"prompt": "fixture", "correct": False})
@@ -165,7 +170,7 @@ class GRPOInvariantTests(unittest.TestCase):
             with patch("dongxi_llms.qwen_rlvr_lab.execute_run", side_effect=fail_after_one_update):
                 with self.assertRaisesRegex(RuntimeError, "fixture memory"):
                     main(["--model-dir", str(model_dir), "--revision", "a"*40,
-                          "--output", str(output), "--device", "cpu"])
+                          "--output", str(output), "--device", "cpu",*cap_args])
             report = json.loads((output/"report.json").read_text())
             status = json.loads((output/"status.json").read_text())
             self.assertEqual(status["status"], "failed")
@@ -178,7 +183,7 @@ class GRPOInvariantTests(unittest.TestCase):
             # A second attempt cannot overwrite the preserved failed-run evidence.
             with self.assertRaises(SystemExit):
                 main(["--model-dir", str(model_dir), "--revision", "a"*40,
-                      "--output", str(output), "--device", "cpu"])
+                      "--output", str(output), "--device", "cpu",*cap_args])
 
 
 class DiagnosticsAndCapstoneTests(unittest.TestCase):

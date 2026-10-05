@@ -1,0 +1,340 @@
+{
+  "schema": "dongxi-teacher-attempt-contract-v1",
+  "protocol": {
+    "schema": "dongxi-teacher-data-v1",
+    "creator": "Original Dongxi LLMs course fixture, independently authored",
+    "content_terms": "Original course-authored recipe and texts; redistribution follows the repository license when declared. No upstream dataset, model output, API or human-feedback license is asserted.",
+    "teacher": {
+      "kind": "programmatic",
+      "version": "copy-reverse-with-declared-faults-v1",
+      "seed": 911,
+      "samples_per_prompt": 8,
+      "max_error_retries": 1,
+      "modes": [
+        "correct",
+        "wrong_same_length",
+        "wrong_verbose",
+        "empty",
+        "overlength",
+        "unsupported",
+        "no_end",
+        "error_then_duplicate"
+      ]
+    },
+    "filter": {
+      "version": "format-stop-and-within-prompt-dedup-v1",
+      "max_final_words": 6,
+      "require_correctness": false,
+      "require_end": true
+    },
+    "selection": {
+      "version": "task-verifier-then-shorter-v1",
+      "seed": 912,
+      "global_counts": [
+        3,
+        6,
+        12
+      ],
+      "per_prompt_count": 1
+    },
+    "student": {
+      "seeds": [
+        1101,
+        1102,
+        1103
+      ],
+      "updates": 80,
+      "learning_rate": 0.015,
+      "weight_decay": 0.0,
+      "gradient_clip": 1.0,
+      "width": 24,
+      "heads": 3,
+      "hidden": 48,
+      "layers": 1,
+      "max_length": 32,
+      "dtype": "float64",
+      "objective": "assistant-body-and-END-global-valid-token-mean",
+      "sampled_responses": 4,
+      "max_new_tokens": 6,
+      "temperature": 1.0
+    },
+    "items": [
+      {
+        "id": "train-copy-rb",
+        "split": "train",
+        "difficulty": "two-word",
+        "prompt": "copy red blue",
+        "reference": "red blue",
+        "source_group": "2e7b682513b5df88b1ac2f6478117a991c4ab449236b692549ccaabec7cdabd7",
+        "family": "copy"
+      },
+      {
+        "id": "train-copy-bg",
+        "split": "train",
+        "difficulty": "two-word",
+        "prompt": "copy blue green",
+        "reference": "blue green",
+        "source_group": "5a2d015eb17dd0b002e30bf4349ad9e88f967b72f0ff10e7d42cd3d532b44829",
+        "family": "copy"
+      },
+      {
+        "id": "train-copy-gy",
+        "split": "train",
+        "difficulty": "two-word",
+        "prompt": "copy green yellow",
+        "reference": "green yellow",
+        "source_group": "880e14f615e815b82af94f6f496095e1c91a0349d6f243ba9c53c013e8978964",
+        "family": "copy"
+      },
+      {
+        "id": "train-reverse-rg",
+        "split": "train",
+        "difficulty": "two-word",
+        "prompt": "reverse red green",
+        "reference": "green red",
+        "source_group": "791f044abb4ef6ad4fdaee971af062bd05b737a9b5378d9852ba3e4f6fbf786b",
+        "family": "reverse"
+      },
+      {
+        "id": "train-reverse-by",
+        "split": "train",
+        "difficulty": "two-word",
+        "prompt": "reverse blue yellow",
+        "reference": "yellow blue",
+        "source_group": "acf273e785a6cb5f215bb3bcf60eba1d350c62a563a006bc46a113487a922212",
+        "family": "reverse"
+      },
+      {
+        "id": "train-reverse-yr",
+        "split": "train",
+        "difficulty": "two-word",
+        "prompt": "reverse yellow red",
+        "reference": "red yellow",
+        "source_group": "8483c6c015d53f1f434e360ee52cf906ab4bfc9b5085b42ee9dc164c9adb6038",
+        "family": "reverse"
+      },
+      {
+        "id": "train-copy-rbg",
+        "split": "train",
+        "difficulty": "three-word",
+        "prompt": "copy red blue green",
+        "reference": "red blue green",
+        "source_group": "c41043b72b16560a4977e41485d807057ec7fdd0846ee969929973bf9ac3365d",
+        "family": "copy"
+      },
+      {
+        "id": "train-copy-bgy",
+        "split": "train",
+        "difficulty": "three-word",
+        "prompt": "copy blue green yellow",
+        "reference": "blue green yellow",
+        "source_group": "ed5817cc0a7ea2aef743062326fc480937c0ca5e0028352e3295577d3297122d",
+        "family": "copy"
+      },
+      {
+        "id": "train-copy-gyr",
+        "split": "train",
+        "difficulty": "three-word",
+        "prompt": "copy green yellow red",
+        "reference": "green yellow red",
+        "source_group": "8ec8826080f99bac9850604f5e1271a10d74b85b55e0d64045259863c08b0766",
+        "family": "copy"
+      },
+      {
+        "id": "train-reverse-rgy",
+        "split": "train",
+        "difficulty": "three-word",
+        "prompt": "reverse red green yellow",
+        "reference": "yellow green red",
+        "source_group": "a8be8df57b79f3a4a0a78c3b007ba4873eacf8e50abedc54f8b56b3de1a4bad8",
+        "family": "reverse"
+      },
+      {
+        "id": "train-reverse-byr",
+        "split": "train",
+        "difficulty": "three-word",
+        "prompt": "reverse blue yellow red",
+        "reference": "red yellow blue",
+        "source_group": "f695a386cf2debf3ae05a84ca3158d8a656c43850a3ac27b47c18263e87c4c89",
+        "family": "reverse"
+      },
+      {
+        "id": "train-reverse-yrb",
+        "split": "train",
+        "difficulty": "three-word",
+        "prompt": "reverse yellow red blue",
+        "reference": "blue red yellow",
+        "source_group": "a7510ce8329bc12b3a6eab40045bd1dbad39be8096403ce458ed71e8929cea93",
+        "family": "reverse"
+      },
+      {
+        "id": "dev-copy-yb",
+        "split": "dev",
+        "difficulty": "two-word",
+        "prompt": "copy yellow blue",
+        "reference": "yellow blue",
+        "source_group": "ae9bdee0ea5b12358af1f642f154fd1fc7f7fa74ba51ac959ecf3c5dfafa670b",
+        "family": "copy"
+      },
+      {
+        "id": "dev-reverse-gb",
+        "split": "dev",
+        "difficulty": "two-word",
+        "prompt": "reverse green blue",
+        "reference": "blue green",
+        "source_group": "0cf8c2c216503c7925d6e205b30739a4d34fe569f3e756b34dfbfe4d6400264f",
+        "family": "reverse"
+      },
+      {
+        "id": "dev-copy-ryg",
+        "split": "dev",
+        "difficulty": "three-word",
+        "prompt": "copy red yellow green",
+        "reference": "red yellow green",
+        "source_group": "1f74409bc030c490af20deed38a50149ee8830483c9e522006063153ae215278",
+        "family": "copy"
+      },
+      {
+        "id": "dev-reverse-gyb",
+        "split": "dev",
+        "difficulty": "three-word",
+        "prompt": "reverse green yellow blue",
+        "reference": "blue yellow green",
+        "source_group": "aac5db47422dfe7564b28b42d8953872d7565239347009830b7ad4b69be76b60",
+        "family": "reverse"
+      },
+      {
+        "id": "test-copy-gr",
+        "split": "test",
+        "difficulty": "two-word",
+        "prompt": "copy green red",
+        "reference": "green red",
+        "source_group": "02529c17c73e1a639da156e9a6751f2d3c795f517cdc4e5e1c272dc947ba1c72",
+        "family": "copy"
+      },
+      {
+        "id": "test-reverse-yg",
+        "split": "test",
+        "difficulty": "two-word",
+        "prompt": "reverse yellow green",
+        "reference": "green yellow",
+        "source_group": "5aa0ba8c5b92283e4a0f9c37caabb89e9e5af0b7da3056a318f199b9fc9d27b9",
+        "family": "reverse"
+      },
+      {
+        "id": "test-copy-ybr",
+        "split": "test",
+        "difficulty": "three-word",
+        "prompt": "copy yellow blue red",
+        "reference": "yellow blue red",
+        "source_group": "d2a1c5e18f7395007660e31cac64cc2ab8bea3e4839fa7f75357441119703792",
+        "family": "copy"
+      },
+      {
+        "id": "test-reverse-gry",
+        "split": "test",
+        "difficulty": "three-word",
+        "prompt": "reverse green red yellow",
+        "reference": "yellow red green",
+        "source_group": "87cafabcbdb0ac539cd937685ee4036b1b871db74ce46a6eb8267c7ca831121d",
+        "family": "reverse"
+      },
+      {
+        "id": "control-copy-br",
+        "split": "control",
+        "difficulty": "two-word",
+        "prompt": "please copy blue red",
+        "reference": "blue red",
+        "source_group": "c9fcf735fccf3d6c3c241b04b84e89e46f660f03ca48702c189dd62bac35b62d",
+        "family": "copy"
+      },
+      {
+        "id": "control-reverse-gr",
+        "split": "control",
+        "difficulty": "two-word",
+        "prompt": "please reverse green red",
+        "reference": "red green",
+        "source_group": "ab644853dbf517523483022d5e6f5ade2bbfba859135e3659d066f6187647a49",
+        "family": "reverse"
+      },
+      {
+        "id": "control-copy-byg",
+        "split": "control",
+        "difficulty": "three-word",
+        "prompt": "please copy blue yellow green",
+        "reference": "blue yellow green",
+        "source_group": "52258a61cb4e1066e91ef90884258a7682ce35a262a91a3aaa7ab8ecd235b790",
+        "family": "copy"
+      },
+      {
+        "id": "control-reverse-ybg",
+        "split": "control",
+        "difficulty": "three-word",
+        "prompt": "please reverse yellow blue green",
+        "reference": "green blue yellow",
+        "source_group": "8e2fc5bf43014e9581e0a31111a8ed0579220fe38fdbb5be6a11eedee9ad29e4",
+        "family": "reverse"
+      }
+    ]
+  },
+  "source_sha256": {
+    "src/dongxi_llms/teacher_data_lab.py": "d28fa327dbf6a50a7f50985217bd721c6c45012eaf44081aa163a1f0583086c2",
+    "src/dongxi_llms/sft_lab.py": "0016e5795828b386e6e86571505545b68c46095d8d8e001916f1e3d778ae372e",
+    "src/dongxi_llms/instruction_data_lab.py": "7a1b4d174c61f0cba8377b8e5f2f5708b04b519226194d8c0c90b4ee78b4e4ed",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "fixtures/teacher-data/protocol.json": "5f46f9e33741d9bac928750f37f9736b466b682a743e1dfa066882a6f1333e24",
+    "experiments/specs/2026-10-04-teacher-data.md": "62aafcda7fcc9bbf9c08cb7fba0870582cbca1bffcc57dd5434824b387d6aae0"
+  },
+  "interface": {
+    "vocabulary": {
+      "red": 6,
+      "blue": 7,
+      "green": 8,
+      "yellow": 9,
+      "copy": 10,
+      "reverse": 11,
+      "one": 12,
+      "two": 13,
+      "three": 14,
+      "four": 15,
+      "short": 16,
+      "answer": 17,
+      "please": 18,
+      "color": 19,
+      "is": 20,
+      "kind": 21
+    },
+    "special_ids": {
+      "pad": 0,
+      "bos": 1,
+      "system": 2,
+      "user": 3,
+      "assistant": 4,
+      "end": 5
+    },
+    "serialization": "BOS SYSTEM short answer END USER prompt END ASSISTANT final END",
+    "supervision": "assistant body plus END; exactly one causal shift"
+  },
+  "teacher_identity": {
+    "kind": "programmatic",
+    "version": "copy-reverse-with-declared-faults-v1",
+    "seed": 911,
+    "samples_per_prompt": 8,
+    "max_error_retries": 1,
+    "modes": [
+      "correct",
+      "wrong_same_length",
+      "wrong_verbose",
+      "empty",
+      "overlength",
+      "unsupported",
+      "no_end",
+      "error_then_duplicate"
+    ]
+  },
+  "sampler_identity": "fixed slots; item/sample/retry keyed-v1",
+  "verifier_identity": "task-verifier-then-shorter-v1",
+  "content_terms": "Original course-authored recipe and texts; redistribution follows the repository license when declared. No upstream dataset, model output, API or human-feedback license is asserted.",
+  "identity": "aecf6eca4d1ee8249e9bf942ff7c56d633e81c43afea48f9abc970caa160431b"
+}

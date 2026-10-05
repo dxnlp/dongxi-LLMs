@@ -24,7 +24,65 @@ now written. Start at the [reader's guide](book/README.md) or use the
 [day-by-day route](docs/COURSE_SEQUENCE.md). The design is documented in
 [the course blueprint](docs/COURSE_BLUEPRINT.md). This prepares future learning;
 the learner's active position remains Day 9. Fresh-kernel reference checks and
-bounded CPU measurements are distinct from unexecuted pretrained-model campaigns.
+bounded CPU measurements are distinct from the separately measured native campaign
+and from learner mastery.
+
+## Reference comparison and improvement goal
+
+The [pinned RLHF Book and Reasoning From Scratch audit](docs/REFERENCE_REPOSITORY_AUDIT.md)
+identified the missing bridge between numerical mechanisms and realistic
+post-training evidence. The [eighteen-package plan](docs/COURSE_IMPROVEMENT_PLAN.md)
+deepens this book without adding chapters or changing the 28-day route.
+
+The implemented CPU lessons now connect evaluation and inference-time selection
+to text reward models, learned critics, DPO retention, controlled GRPO variants,
+teacher-data selection, refinement and distillation. They preserve unsuccessful
+held-out behavior, adverse revisions and selection failures. A successful
+mechanism test is not a pretrained capability result.
+
+The bounded native campaign and final Linux reproduction now have actual receipts.
+The [signed original-criteria review](experiments/reports/2026-10-05-final-original-criteria-signoff.md)
+closes all18 packages against86 unchanged criteria/dependencies, not from
+execution alone. Native full/LoRA
+recovery, explicit FP32 merge/reload and raw-response evaluation retain separate
+independent review.
+The [independent original-text platform review](experiments/reports/2026-10-05-platform-scope-reading.md)
+keeps Mac unexecuted/unverified as parallel work, not an added mandatory success.
+The [actual full/LoRA400 comparison](experiments/reports/2026-10-05-native-sft400-comparison.md)
+is integrated into Chapter9; development and publication results remain distinct.
+The [acceptance review](docs/UPGRADE_ACCEPTANCE_REVIEW.md) identifies
+their original criteria and evidence scopes; the [JSON ledger](docs/course_improvements.json)
+records status. The [current empirical defense](experiments/reports/2026-10-05-final-native-campaign-defense.md)
+joins actual first400 story/assistant400 and preference100 comparisons, keeping
+the initial reasoning panel's680 observed/120 missing responses separate.
+G4/G8 exact recovery, completed16 policies and matched32/128 evaluations are
+measured. Zero-advantage training groups and held-out sampled13→11→13/44 at
+cap128 are retained as bounded negative evidence, not a universal method ranking.
+G4's failed supervision is not rewritten by its explicit export-consistency
+consumer. The candidate-selection pilot has local browser-control tests;
+direct-conversation delivery must not be confused with observed host rendering
+or learner mastery.
+
+The final [current-source Linux verification](experiments/reports/2026-10-05-final-course-verification.md) passes
+[1,533 tests](experiments/reports/2026-10-05-final-goal-cpu/run-01/tests.log) and
+[all76 fresh reference notebooks](experiments/reports/2026-10-05-final-goal-notebooks/run-01/manifest.json):
+539 code cells,535 executed references and210 images, with four unfinished
+learner scaffolds preserved. The [model-free campaign archive](experiments/reports/native-campaign-evidence-20261005-run-01/closing-bindings.json)
+retains original45-stage evidence and failures, not full weights or a raw corpus.
+Its preclosure status documents and earlier panels in [PROGRESS.md](PROGRESS.md)
+remain historical byte-bound evidence, not retroactively updated results.
+
+The approved bounded profile, recovery and evaluation steps have executed.
+Future Spark work needs its own applicable question and declared branch gates;
+unrun later story schedule/checkpoint cells remain unrun. Mac reproduction remains parallel unfinished
+completion evidence, not a Spark execution prerequisite. Production safeguards do
+not substitute for controlled quality comparisons. The learner remains on
+Day9. Routine agreed work continues without repetitive confirmation; publication,
+hosted workflow actions and animation rendering keep their separate authority.
+Hosted success is separately tracked evidence, not a stronger requirement added
+to DXI-17's original CI-source/local-check distinction. Before implementing a
+new gap, verify that it still exists on the current upstream/local stack and
+reuse an adequate existing solution; resolved memory-hang monitoring is retired.
 
 ## Contents
 
@@ -65,7 +123,7 @@ bounded CPU measurements are distinct from unexecuted pretrained-model campaigns
    Data and token budgets, batching, AdamW, schedules, clipping, precision,
    checkpoint recovery, scaling, and diagnosis. Synthesizes Days 8–9.
    [Days 8–9 chapter written](book/chapters/06-pretraining-as-a-controlled-system.md),
-   with six notebooks across Days8–9, eighteen worked solutions and a lightweight
+   with six notebooks across Days8–9, twenty worked solutions and a lightweight
    [completed-run evidence lab](book/labs/06-reading-a-pretraining-run.md).
    The measured TinyStories case distinguishes prediction gains, padded compute,
    decoding effects and unresolved coherence. A trained controlled comparison

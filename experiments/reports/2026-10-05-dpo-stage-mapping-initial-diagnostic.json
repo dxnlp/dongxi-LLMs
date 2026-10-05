@@ -1,0 +1,23 @@
+{
+  "schema": "dongxi-dpo-stage-mapping-development-diagnostic-v1",
+  "status": "failed",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "-m", "unittest", "discover", "-s", "tests", "-p", "test_dpo_stage_budget.py", "-v"],
+  "environment": {"PYTHONPATH": "src:tests", "CUDA_VISIBLE_DEVICES": "", "HF_HUB_OFFLINE": "1", "TRANSFORMERS_OFFLINE": "1", "OMP_NUM_THREADS": "1"},
+  "actual_exit_code": 1,
+  "tests_ran": 16,
+  "errors": 3,
+  "reported_unittest_seconds": 1.373,
+  "source_sha256": {
+    "src/dongxi_llms/dpo_stage_budget.py": "ee9f2ad3215a683b24797d38b512cf38c6f2c21ae4dfa3648734b6f7b5366354",
+    "tests/test_dpo_stage_budget.py": "5103749342f105fe4c469861885293cf11ac01f048007eb271fb1a787bf5d3cb",
+    "experiments/specs/2026-10-05-dpo-stage-budget-mapping.md": "c4b4fcd67bcb9b6be888f6430f1c453b756ba47b557936e443ec8f2e180520ef",
+    "scripts/run_chapter11_spark_dpo.py": "53f4a6d80dc30a26a644a571803f299e5719c47d0a8354be8f34924c0c036e79",
+    "src/dongxi_llms/staged_campaign.py": "4cb5745057fc3e1a53d4692ec24db5933dadce30addf893dc6a41ff5135f22af"
+  },
+  "retained_errors": [
+    {"test": "test_actual_full_schedule_fits_and_original_equation_replays", "type": "ValueError", "message": "Privately owned final work-journal directory required", "location": "work_budget.py:_handle"},
+    {"test": "test_interrupted_replay_retains_failed_attempts_and_refuses_extra_update", "type": "ValueError", "message": "Privately owned final work-journal directory required", "location": "work_budget.py:_handle"},
+    {"test": "test_masks_ID_types_prefixes_lengths_and_support_are_strict", "type": "AttributeError", "message": "'tuple' object has no attribute '__setitem__'", "location": "test malformed-mask setup, before mapper invocation"}
+  ],
+  "boundary": "First bounded CPU development check. Two setup paths correctly refused nonprivate fixture journal directories; one malformed-control setup incorrectly tried to mutate the actual encoder's tuple. No final source closure or completed numerical comparison claimed. Repairs change fixture construction/comparison only, not fixed DPO recipe or production authority."
+}

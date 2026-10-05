@@ -7,7 +7,7 @@ interpretation must preserve; it is not a replacement for running the cells.
 
 The [Chapter 5 narrative](../chapters/05-building-a-modern-decoder.md) now covers
 the Day 5 foundation, Day 6 modern mechanisms, and Day 7 architecture synthesis.
-Its 30 conceptual exercises are answered below. The table covers the original
+Its 34 conceptual exercises are answered below. The table covers the original
 eleven notebooks; the core Day 7 defense immediately below it brings the full
 pathway to twelve. Study that defense before optional recurrence.
 
@@ -413,3 +413,53 @@ small gain accompanied by an unacceptable measured latency or memory cost.
 Nonfinite loss, safety-limit violations, or a failed causal/cache contract should
 trigger the predeclared failure rules, not be hidden by favorable samples. No
 such trained comparison has been run by creating this material.
+
+## Ragged decoding and recovery worked solutions
+
+### 31. Masks give equal IDs different roles
+
+A real input zero has input-validity one and participates in the prefix.
+Dummy left-pad zero has input-validity zero and supplies no visible source key.
+Emitted EOS is a valid generated action, whose likelihood is retained, and
+sets that row's stop reason to EOS. An unfinished cap has no invented EOS.
+Post-stop slots are storage only, not additional actions or useful tokens.
+No single token-ID comparison can express all four distinctions.
+
+### 32. Rectangular work and useful outputs differ
+
+Three prompts of lengths2/4/6 require18 physical prefill positions but only12
+valid ones. Keeping the original rectangle during full-prefix generation
+repeats padding; compaction removes stopped rows but does not remove all
+retained pad columns. The frozen fixture forwards90 positions uncached in a
+batch versus66 separately; cached paths forward27 versus21. They produce the
+same twelve greedy output tokens. Counts omit much attention arithmetic and
+runtime overhead. The measured tiny cached batch is slightly slower here;
+profiling on the intended hardware/workload is needed for any speed claim.
+
+### 33. The computational state determines the continuation
+
+Saved-cache recovery includes exact K/V, next logits, active request order,
+prefixes, generators and sampler cursors, under the same weights and interface.
+Its next sample and remaining trajectory are bitwise equal in the tested CPU
+environment. Rebuilding computes K/V again from the same prefixes and must
+be checked under a separately declared numerical tolerance. Equality of one
+fixture does not guarantee bitwise identity across devices or kernels.
+Model parameter bytes/version, template/token/support/position conventions,
+precision and actual prefixes prevent silently reusing unrelated state.
+
+### 34. Pending data belongs to its behavior policy
+
+The retained batch already consumed shuffle and rollout RNG positions. Its
+tokens and old likelihoods were produced by a specific policy byte identity
+and version. Resume must apply that pending update before the next collection;
+sampling again changes the data and advances the cursors. Completed-boundary
+recovery also needs Adam moments, reference weights and the data stream.
+All four fixed tiny DPO/RLVR runs reproduce their six-update histories and final
+state from both boundaries. This does not add resume to the optional pretrained
+Spark runners or establish better reasoning. DPO uses no rollout RNG in this
+fixture, so its omission is not advertised as a failure.
+
+The [Day 25 extension](../../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb)
+provides adjacent runnable answers and five figures; the
+[report](../../experiments/reports/2026-10-04-batched-cache-recovery.md) retains
+every natural cap, interrupted/pending collection and broken recovery branch.

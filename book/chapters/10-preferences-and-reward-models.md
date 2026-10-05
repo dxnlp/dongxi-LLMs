@@ -169,8 +169,9 @@ from comparisons. Outcome rewards evaluate a completed answer; process rewards
 evaluate intermediate steps under a step-level annotation contract. They are
 not interchangeable simply because both return numbers. A process verifier
 can reward valid intermediate reasoning yet miss an invalid final claim, or
-vice versa. The course's bounded experiment fits an outcome preference model;
-it makes no process-supervision claim.
+vice versa. The earlier feature experiment fits an outcome preference model;
+the later text lesson below makes terminal and step-supervision boundaries
+explicit, without claiming pretrained reward quality or general arithmetic.
 
 Split by prompt or source group before forming answer pairs. Splitting individual
 pairs can put the same prompt, near-duplicate answer, or generation family in
@@ -251,11 +252,313 @@ improved usefulness requires another argument. Chapter 11 learns directly from
 comparisons without a separately trained scalar head, but it still inherits the
 preference data's biases and coverage limits.
 
-## 10.10 Companion route and exercises
+## 10.10 Collecting judgments without confusing identity and position
+
+Before fitting the reward model, build the observation instrument. A response
+has a stable candidate ID, exact text, source checkpoint and generation settings.
+Its display slot is temporary. If answer $a$ moves from A to B, a verdict of B
+still chooses $a$. Store the displayed order and map it back to canonical answer
+identity before writing a chosen/rejected pair. Swapping canonical answers is a
+different operation: it reverses the binary preference label, while a display
+swap should preserve the selected response. This distinction catches a quiet
+failure in which a neutral judge supplies correct judgments but preprocessing
+turns half of them into incorrect training labels.
+
+The judge-facing display contains the rubric, question and A/B answer texts,
+without checkpoint names or reviewed labels. Blinding removes one source of
+influence; it does not establish neutrality. Answer style can reveal its origin,
+and untrusted text inside an answer can ask the judge to ignore the rubric.
+Preserve the exact displayed object and its hash, judge/revision, rubric/hash,
+settings, raw verdict, parser version and every failure. A strict schema rejects
+contradictory or malformed outputs rather than guessing the intended winner.
+These collection concerns complement the discussion in the pinned
+[RLHF Book preference-data chapter](https://github.com/natolambert/rlhf-book/blob/eecc49e1e1daf1be670d7242eb090240b5bb0f04/book/chapters/11-preference-data.md).
+The implementation and fixture here are independently written course material.
+
+Use separate outcomes for left preference, right preference, tie, abstention
+and invalid observation. A tie says the answers are equally acceptable under
+the rubric. Abstention says the judge cannot assess them. An invalid observation
+says collection or parsing failed. None is automatically the same as a binary
+target of one half. Report every category, then state the subset eligible for
+reward training. Otherwise, a judge that declines hard cases may appear accurate
+merely because its decisive denominator shrinks.
+
+Ratings and rankings also need an explicit conversion. Equal observed ordinal
+ratings may become a tie; missing ratings become an abstention. A score gap of
+four on a five-point scale does not justify a Bradley–Terry logit of four: the
+scale has not established equal utility spacing or calibrated odds. A ranking
+of three answers yields three related comparisons, not three new independent
+questions. Retain raw ratings or ordered tie groups beside the derived pairs
+and record the conversion version.
+
+## 10.11 Audit the judge before trusting the labels
+
+An order audit presents the same pair in both directions and compares the
+canonical outcomes. A repeat audit holds the pair and order fixed while
+collecting another judgment. A verbosity intervention changes redundant wording
+without changing the intended substantive answer. An injection intervention
+adds untrusted instructions inside a candidate. Keep matched baseline/variant
+identities so a change in judgment can be distinguished from a changed question.
+Independently review whether the intervention actually preserves the rubric
+label; an intended nuisance can become substantive under another objective.
+
+No single check is enough. A judge can select the same answer in both orders,
+yet prefer whichever answer is longer. It can be stable across repeats, yet
+obey an injected instruction every time. First-position choice, canonical order
+consistency, repeat disagreement and matched nuisance sensitivity answer
+different questions. Show their numerators and denominators, along with
+agreement against independent reviewed labels. Agreement does not prove the
+reviewer is correct, and agreement between two judges sharing a shortcut does
+not remove the shortcut.
+
+The [offline collection notebook](../../notebooks/day-15/03_preference_collection_and_judges.ipynb)
+makes those distinctions visible. Eight original authored base comparisons
+cover six source groups. Three turns share one story source. Verbosity and
+injection variants produce twenty-four pairs; five deterministic simulated
+judges each supply two repeats in both orders. Four separately identified
+malformed/transport controls bring the retained total to 484 observations.
+Reference labels are authored separately from the toy judge rules; they are
+not independent human feedback. Human, AI, authored and simulated provenance
+remain distinct in the data contract and report.
+
+In the [measured CPU report](../../experiments/reports/2026-10-04-preference-audit.md),
+the first-slot rule has first-position choice rate 1 but canonical order
+consistency 0.25. Ties and abstentions explain why consistency is not zero.
+The longer-answer rule has order consistency 1, yet changes its outcome on
+37.5% of matched verbosity observations. The injection-sensitive rule also
+passes order consistency, while changing on 37.5% of matched injection
+observations. The repeat-unstable rule disagrees on 75% of paired repeats.
+These are deliberately constructed simulations, not measured failure rates
+of a live language-model judge. A transparent keyword rule supplies a perfect
+positive control on this narrow fixture, not a credible general evaluator.
+
+## 10.12 Source weighting is part of the objective
+
+Group conversational siblings, repeated comparisons, swapped displays and
+perturbations by their original source prompt. Assign the group to a split
+before generating its pairs. Changing a turn's row ID or inventing a new source
+ID does not make it independent of its conversation. The audit rejects source
+or task-family split collisions, cross-source conversation siblings, inconsistent
+candidate content IDs and duplicate comparison records. Near-duplicate source
+discovery still needs its own declared rule; these exact identity checks are
+not a semantic contamination detector.
+
+If source $s$ supplies $n_s$ training pairs and the intended population weights
+each source equally, one suitable objective is
+
+$$
+L=\frac{1}{S}\sum_{s=1}^{S}\frac{1}{n_s}
+\sum_{j=1}^{n_s}L_{s,j}.
+$$
+
+Each source contributes total weight one before the final normalization. Our
+box-story source supplies nine pair rows after nuisance expansion, versus three
+for each one-turn source. Per-pair weights 1/9 and 1/3 preserve equal source
+influence. Equal-pair weighting instead makes the box source three times as
+influential. Repeated judge observations require another explicit aggregation
+choice; they cannot silently add more independent questions.
+
+The notebook's authored demonstration yields row-weighted outcome agreement 0.5
+but source-balanced agreement 1/3 on the same records. Neither number is the
+uniquely correct objective: a product may deliberately prefer a traffic-weighted
+population. The obligation is to declare the population and weighting, not to
+let the number of candidates choose it accidentally. This returns us to
+Chapter 7's contract: evaluation and training metrics must name what is counted.
+
+## 10.13 Learning a reward from token sequences
+
+The linear shortcut model started with known features. It could expose a
+confound clearly, but it did not learn a text representation. The
+[text reward laboratory](../../notebooks/day-16/03_text_reward_and_process_labels.ipynb)
+now starts with token IDs for the prompt and response. An independently written
+one-block causal decoder maps them to contextual states, and a scalar head
+reads a chosen endpoint:
+
+$$
+H=f_\phi(x,y),\qquad
+e=\max\{t:m_t=1\},\qquad
+r_\phi(x,y)=w^\top H_e+b.
+$$
+
+Here $m_t$ is the valid-token mask; $H$ has shape $[T,24]$ in the microscope,
+and the head returns one scalar. Batch tensors have shapes $[B,T]$ for IDs,
+$[B,T,24]$ for hidden states and $[B]$ for scores. Both comparison branches
+share the decoder and head. Their score gradients from section 10.3 therefore
+reach embeddings, Q/K/V projections, residual transformations and the head,
+not just a supplied quality coordinate.
+
+The endpoint index is a position, not a length. With right padding it can
+equal `mask.sum(-1)-1`; with left padding that expression is generally wrong.
+Select the maximum valid array index and give actual tokens position IDs that
+count valid positions. Otherwise, shifting padding changes the positional
+signal of unchanged text. Reject all-padding rows. Padded queries may have no
+legal attention keys, so avoid an all-negative-infinity softmax and explicitly
+zero their contributions. The tests check finite hidden states and gradients,
+left/right padding parity and invariance to extra padding.
+
+EOS is a semantic convention. The reference includes EOS and scores its
+contextual state. A no-EOS variant scores the last completion token instead.
+Neither is universally correct; a reward-trained model expects its own
+convention. The collator and frozen interface record that choice along with
+token meanings, normalization, separators and the unknown-token policy. An
+EOS state can summarize the entire response because attention carries earlier
+content into it. Backpropagation therefore reaches earlier words even though
+the scalar is read only once.
+
+The [measured experiment](../../experiments/reports/2026-10-04-text-reward.md)
+fits twelve original color-comparison source groups with three predeclared
+seeds. All three rank the four held-out matched-length/matched-format pairs
+correctly. Raw source groups are disjoint, but an encoding audit finds that
+all four baseline test pairs duplicate calibration inputs: unseen nouns
+“box” and “book” both become `<unk>`. Training and test encodings remain
+disjoint. The apparent test success therefore does not establish independent
+calibration generalization. When both answers receive headings, ranking
+becomes 0.5, 1.0, 0.5 across the
+same seeds; making incorrect answers longer also exposes one failure. Even
+equal-substance answers receive sharply different scores under some formatting
+changes. These nuisance cases remain in the report.
+
+Calibration is measured separately with NLL, Brier scores and counted
+reliability bins. Temperature is chosen from a frozen grid using only four
+calibration sources, then tested without refitting. It sharpens the ordinary
+comparison probabilities but cannot repair ranking inversions or certify a
+new format. For authored tie approximations, the binary target is one half;
+the expected Bernoulli Brier score retains a minimum of one quarter. This is
+not an observed human-preference calibration claim or an explicit tie model.
+
+## 10.14 Outcome labels and process labels supervise different questions
+
+Consider “Compute 2+3.” A trace can write the false equality “2+3=6,” then
+give the correct final answer 5. Another can write the valid equality “2+3=5,”
+then give the wrong final answer 6. A terminal correctness label cannot identify
+which intermediate equation was valid. A local step-validity label cannot
+establish that the eventual conclusion is correct. Both crossed cases are
+original records in the text fixture rather than merely hypothetical caveats.
+
+The outcome microscope predicts a binary target from the final EOS state.
+The process microscope predicts a separate binary target at each explicit
+step marker. Let $\mathcal B$ be the declared supervised boundary positions,
+$a_b\in\{0,1\}$ their authored validity labels and $s_b$ the scalar logits:
+
+$$
+L_{\mathrm{step}}=-\frac{1}{|\mathcal B|}
+\sum_{b\in\mathcal B}
+\left[a_b\log\sigma(s_b)+(1-a_b)\log(1-\sigma(s_b))\right].
+$$
+
+Implement this with stable binary cross-entropy on logits. Unlabeled tokens,
+padding and the final-answer position do not receive a step target. When
+sources contribute different numbers of traces or boundaries, declare how
+those losses are weighted; the reference averages within a source, then across
+sources. The terminal and process models are trained separately so their
+different contracts do not disappear behind one combined scalar.
+
+Each step state is causal. Changing only the later final answer leaves an
+earlier step score unchanged in the same forward pass. Training on its local
+step label can still update the shared encoder. That label is not a value
+target: a critic in Chapter 12 estimates expected future reward under a policy,
+whereas this process label judges a displayed equality under an annotation
+rubric. A useful-looking scalar does not make those meanings interchangeable.
+
+The training traces exercise one-step and two-step boundaries and all four
+terminal/local correctness combinations. Yet the held-out outcome and step
+classifiers each reach only 0.5 accuracy for all three seeds. The report exposes
+a concrete reason: numbers 7 and 8 are absent from the training vocabulary and
+both become the same unknown ID. Opposite labels can therefore have identical
+encoded inputs. No classifier can distinguish those records from that
+representation alone. High confidence in those failed predictions is retained,
+not explained away as successful reasoning. The separately specified character
+intervention below tests this distinction without replacing the failed run.
+
+## 10.15 Freeze the reward before optimizing a policy
+
+The original word-token experiment freezes the predeclared seed 1601
+preference model, irrespective of which seed looks best on a nuisance slice.
+Its [frozen JSON export](../../fixtures/text-reward/frozen-preference-seed1601.json)
+contains every numeric weight, config, ordered vocabulary, encoding rules,
+special IDs, EOS/endpoint policy and input/source-group identities. Loading
+checks the payload hash, complete state shapes and the expected tokenizer
+interface from Chapter 1, then disables parameter gradients. Saving tensor
+dimensions alone would not detect a same-size vocabulary permutation.
+
+The adapter offers a raw detached score for a prompt/completion pair and
+batched CPU scoring. Unknown words follow the explicitly recorded policy;
+overlength inputs fail instead of being silently truncated. A payload's
+self-hash detects inconsistent edits, not malicious recomputation of all
+metadata. A separately expected file/interface identity remains the trust
+boundary. Exact save/reload score equality is measured, not assumed.
+
+Freezing fixes the proxy during the next experiment; it does not make the
+proxy true. Keep independent factual measurements while optimizing it, and
+preserve responses that gain reward through headings, repetition or other
+nuisances. The known-feature shortcut lesson remains intact because it isolates
+a different failure mechanism. Neither microscope replaces an independently
+reviewed, profiled pretrained reward campaign.
+
+## 10.16 Preserve information before asking for generalization
+
+An unknown token can erase a distinction before the neural network has any
+opportunity to learn it. That explains why two differently labeled arithmetic
+traces could have identical word-token inputs; it does not imply that restoring
+the distinction will make the learned rule correct. The
+[character intervention](../../experiments/reports/2026-10-04-text-reward-character.md)
+keeps the original raw fixture, but uses a separately fixed printable ASCII
+alphabet. Spaces and punctuation remain characters. Unsupported input is
+rejected before casefolding, not silently mapped to UNK. SEP, STEP and EOS keep
+their explicit boundary meanings.
+
+Before any fit, the intervention checks exact complete pairs in both candidate
+orders, full prompts, prompt/completion inputs and causal prefixes through
+supervised STEP markers. Different raw source IDs cannot license equal encoded
+inputs across splits. Repeated equal-label prefixes inside one source remain
+related observations. Arbitrary shared short prefixes such as the first letter
+of “Compute” are not contamination; the full supervised context is the unit
+being checked. The new arm has no cross-source/split collisions among 55
+baseline, nuisance and trace records. Exact-input separation still does not
+establish semantic independence or a large evaluation population.
+
+The same real decoder/head design now processes character sequences. Its
+100-entry alphabet and frozen 160-position bound give 11,185 parameters;
+training remains float64 CPU, with 120 preference updates and 80 each for
+terminal/process models. Seeds 1611, 1612 and 1613 are fixed in advance, and
+seed 1611 is exported before its test evaluation. The word arm's shorter
+sequences and position table remain intact, so this is not an equal-compute
+test of tokenizer superiority.
+
+All three training objectives fit. Nevertheless, ordinary held-out ranking is
+only 0.5 for every seed. Terminal accuracy is 0, 0.5, 0; local-step accuracy is
+0, 0.5, 0.5. The network now receives distinct number IDs, so the earlier
+unknown-token collision cannot explain these new failures. Preserved
+information was necessary, not sufficient, for generalization. High training
+accuracy and nonzero backbone/head gradients establish learning on those
+examples, not the desired abstract rule.
+
+Calibration can now be measured on distinct encoded calibration/test inputs.
+Every seed chooses temperature 4 from the predeclared grid using calibration
+NLL alone. For seed 1611, held-out NLL falls from 6.295234 to 1.614901 and
+Brier from 0.499997 to 0.460377, but ranking stays 0.5. Temperature softens
+overconfidence; it cannot reverse a learned ordering. With only four source
+questions, counted bins matter more than the apparent smoothness of a plot.
+These authored labels are not calibrated human preference frequencies.
+
+The [new frozen character export](../../fixtures/text-reward/frozen-char-preference-seed1611.json)
+has its own complete numeric state, protocol, source, encoding and endpoint
+identity. Exact reload compares the same saved state in the same environment.
+Fresh retraining under a newer Torch version is a different reproducibility
+question; the notebook retains the first failed portability assertion and
+prints that difference rather than rewriting historical weights. A linked
+policy experiment must state which frozen proxy it optimizes. Separate
+balanced/confounded fits need their own fixture, selection rule and exports,
+plus independent factual measurements. Freezing an imperfect reward does not
+make its score true.
+
+## 10.17 Companion route and exercises
 
 Run [Day 15's margin microscope](../../notebooks/day-15/01_bradley_terry_margin.ipynb),
 [Day 15's disagreement/calibration lab](../../notebooks/day-15/02_disagreement_and_calibration.ipynb),
-and [Day 16's shortcut audit](../../notebooks/day-16/01_reward_model_bias_audit.ipynb).
+[Day 15's collection/judge audit](../../notebooks/day-15/03_preference_collection_and_judges.ipynb),
+[Day 16's shortcut audit](../../notebooks/day-16/01_reward_model_bias_audit.ipynb),
+and [Day 16's text/outcome/process lesson](../../notebooks/day-16/03_text_reward_and_process_labels.ipynb).
 The [lab guide](../labs/10-preferences-and-reward-models.md) records the machine
 route and reproduction command; [worked solutions](../solutions/10-preferences-and-reward-models.md)
 follow each exercise. Use the [specification](../../experiments/specs/2026-10-04-preference-policy-cpu.md)
@@ -272,6 +575,18 @@ to distinguish predictions from results.
 8. Diagnose a reward model that likes longer incorrect answers. What would distinguish intended style from a shortcut?
 9. Which hidden state should a padded transformer reward head score? Explain an off-by-one failure.
 10. Why can optimization reveal reward failures absent from a fixed held-out pair set?
+11. When an answer moves from A to B, what must change in a raw verdict and what must stay fixed in the selected candidate identity?
+12. Why can a judge pass an order audit yet fail a verbosity or instruction-injection audit?
+13. A source yields nine pair rows while another yields three. Compare equal-pair and equal-source objectives, and explain how repeats affect the evidence unit.
+14. How should equal ratings, missing ratings, contradictory verdicts and transport failures differ in a preference collection contract?
+15. Why does `mask.sum(-1)-1` fail with left padding, and what positional convention preserves the score of unchanged text?
+16. Construct a correct final answer with an invalid step and a wrong final answer with a valid step. Where should each supervision target be placed?
+17. Why is a process-validity target different from a critic's expected future-return target?
+18. If different numbers become the same unknown token, what can and cannot be learned about their held-out labels?
+19. Which identities must accompany a frozen scalar reward head, and why must its checkpoint be chosen before looking at nuisance-test performance?
+20. Why can raw source groups be disjoint while actual model inputs collide? What does a whole-pair/swap/causal-prefix audit add, and what does it still not prove?
+21. If distinct characters remove unknown-token collisions but heldout predictions still fail, what can you conclude about representation versus generalization?
+22. Why can calibration lower NLL without improving ranking? Distinguish same-state reload equality from identical retraining across package versions.
 
 The next chapter retains the pairwise probability model, but replaces the scalar
 reward with a policy's change in log-probability relative to a frozen reference.

@@ -1,0 +1,1138 @@
+{
+  "adjudication_policy": "two-rater-mean",
+  "attempt_selection": "Only predeclared attempt_index0 enters the fixed four-recipe comparison. Every extra/retry attempt is retained and charged separately; no best-of or replacement.",
+  "boundary": "Hashes/declarations are not authenticated generation, checkpoint lineage or rater independence. No score, human rating or model behavior is inferred by preparation.",
+  "checkpoint_plan": [
+    {
+      "checkpoint_files": {
+        "authored-identity.txt": "8ba8496a2525ae171ffd104d632dede6ef418d9b95962a9d88e2fcdbc8d48d24"
+      },
+      "checkpoint_id": "authored-baseline-14000",
+      "generation_source_sha256": {
+        "authored-control": "4bc275b2282b62d552403c6c059df94f217463df284430fadc4bcf8c537d3c9a"
+      },
+      "interface_sha256": "a6f63e6e28a897684c07ddeecd3762b3a964593709dc8487196cb31d354a256f",
+      "provenance": "authored-control",
+      "update": 14000
+    },
+    {
+      "checkpoint_files": {
+        "authored-identity.txt": "dda18a0e21ae47c53b4309434cbc02ae8bf764fa83a6defbb719431242722aa7"
+      },
+      "checkpoint_id": "authored-candidate-14000",
+      "generation_source_sha256": {
+        "authored-control": "4bc275b2282b62d552403c6c059df94f217463df284430fadc4bcf8c537d3c9a"
+      },
+      "interface_sha256": "a6f63e6e28a897684c07ddeecd3762b3a964593709dc8487196cb31d354a256f",
+      "provenance": "authored-control",
+      "update": 14000
+    }
+  ],
+  "checkpoint_plan_sha256": "96901d19a4970969d7a5889fdf97b10d28aeb0d5ee4fc5c99e44ed4b6aa96c86",
+  "codebook_sha256": "7233e21f90f75adf9171bc4f80c74ad780066e8b7efc79b75bdcfca49120b9d2",
+  "comparisons": [
+    [
+      "authored-baseline-14000",
+      "authored-candidate-14000"
+    ]
+  ],
+  "contract": {
+    "blind_arm_checkpoint_labels": true,
+    "contamination_audit": "pending exact/near-duplicate review against actual training bytes before publication use",
+    "context_window": 1024,
+    "decoding": [
+      {
+        "mode": "greedy",
+        "seed": null,
+        "temperature": 1.0,
+        "top_k": null,
+        "top_p": 1.0
+      },
+      {
+        "mode": "sample",
+        "seed": 909,
+        "temperature": 0.8,
+        "top_k": null,
+        "top_p": 1.0
+      },
+      {
+        "mode": "sample",
+        "seed": 1909,
+        "temperature": 0.8,
+        "top_k": null,
+        "top_p": 1.0
+      },
+      {
+        "mode": "sample",
+        "seed": 2909,
+        "temperature": 0.8,
+        "top_k": null,
+        "top_p": 1.0
+      }
+    ],
+    "development_separation": "three historical inspected prompts excluded; publication never selects recipe/checkpoint/decoding",
+    "id": "story-publication-v1",
+    "input_mode": "raw-story-prefix",
+    "items": [
+      {
+        "id": "story-01",
+        "prompt": "Mara lent her blue umbrella to Ivo before the rain began.",
+        "source_group": "original-opening-01"
+      },
+      {
+        "id": "story-02",
+        "prompt": "A small fox buried an apple beside the old stone gate.",
+        "source_group": "original-opening-02"
+      },
+      {
+        "id": "story-03",
+        "prompt": "Nina saved two coins so she could repair her toy boat.",
+        "source_group": "original-opening-03"
+      },
+      {
+        "id": "story-04",
+        "prompt": "When the bridge closed, Ben needed another way to visit Grandma.",
+        "source_group": "original-opening-04"
+      },
+      {
+        "id": "story-05",
+        "prompt": "The farmer asked Ada to keep the tiny chick warm until morning.",
+        "source_group": "original-opening-05"
+      },
+      {
+        "id": "story-06",
+        "prompt": "Oli left a red ribbon on the empty chair to remember his friend.",
+        "source_group": "original-opening-06"
+      },
+      {
+        "id": "story-07",
+        "prompt": "A paper kite caught in a tree, and the children could not reach it.",
+        "source_group": "original-opening-07"
+      },
+      {
+        "id": "story-08",
+        "prompt": "The baker gave Lila one loaf to carry safely across town.",
+        "source_group": "original-opening-08"
+      },
+      {
+        "id": "story-09",
+        "prompt": "Sam promised to water the seed while his sister was away.",
+        "source_group": "original-opening-09"
+      },
+      {
+        "id": "story-10",
+        "prompt": "A lost puppy followed the sound of a familiar little bell.",
+        "source_group": "original-opening-10"
+      },
+      {
+        "id": "story-11",
+        "prompt": "Two mice disagreed about how to share the last piece of bread.",
+        "source_group": "original-opening-11"
+      },
+      {
+        "id": "story-12",
+        "prompt": "After the snow melted, Eva found her missing mitten near the shed.",
+        "source_group": "original-opening-12"
+      }
+    ],
+    "logical_contract_sha256": "96155a17e1b1cfe065f005ae61b2c640b5b172509eba7162404bd7737119e659",
+    "max_new_tokens": 256,
+    "nll": "fixed validation and matched frozen-checkpoint train/dev targets; not online-batch mean or story-rubric score",
+    "predetermined_updates": [
+      0,
+      400,
+      4000,
+      8000,
+      14000
+    ],
+    "raters": 2,
+    "required_raw": [
+      "token_ids",
+      "text",
+      "selected_likelihoods",
+      "stop_reason",
+      "raw_ratings",
+      "rater_disagreement",
+      "all_attempt_costs"
+    ],
+    "rubric": {
+      "causal_continuity": [
+        "events contradict the setup",
+        "weak or partially unexplained links",
+        "events follow intelligibly"
+      ],
+      "ending": [
+        "no resolution or incoherent ending",
+        "partial resolution",
+        "clear resolution consistent with setup"
+      ],
+      "entity_object_consistency": [
+        "contradicts tracked entities or objects",
+        "minor unclear reference",
+        "preserves identities and locations"
+      ],
+      "grammar": [
+        "frequent broken constructions",
+        "mostly readable with local errors",
+        "consistently readable"
+      ],
+      "repetition": [
+        "persistent looping obstructs the story",
+        "limited unnecessary repetition",
+        "no obstructive repetition"
+      ]
+    },
+    "rubric_scores": [
+      0,
+      1,
+      2
+    ],
+    "status": "logical-design-frozen-interface-pending",
+    "stop_categories": [
+      "natural-eos",
+      "token-cap",
+      "context-cap",
+      "deadline",
+      "resource-stop",
+      "failure"
+    ],
+    "template": null,
+    "thinking_mode": "not-applicable",
+    "tokenizer_declaration": {
+      "declared_eos_and_bos_id": 50256,
+      "observed_encoding_sha256": null,
+      "repository": "openai-community/gpt2",
+      "revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e"
+    },
+    "uncertainty_unit": "source opening; paired group resampling, not individual sampled responses"
+  },
+  "contract_sha256": "96155a17e1b1cfe065f005ae61b2c640b5b172509eba7162404bd7737119e659",
+  "expected_cells": [
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-01",
+      "record_id": "authored-0-story-01-greedy",
+      "source_group": "original-opening-01"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-01",
+      "record_id": null,
+      "source_group": "original-opening-01"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-01",
+      "record_id": null,
+      "source_group": "original-opening-01"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-01",
+      "record_id": null,
+      "source_group": "original-opening-01"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-02",
+      "record_id": "authored-0-story-02-greedy",
+      "source_group": "original-opening-02"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-02",
+      "record_id": null,
+      "source_group": "original-opening-02"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-02",
+      "record_id": null,
+      "source_group": "original-opening-02"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-02",
+      "record_id": null,
+      "source_group": "original-opening-02"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-03",
+      "record_id": null,
+      "source_group": "original-opening-03"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-03",
+      "record_id": null,
+      "source_group": "original-opening-03"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-03",
+      "record_id": null,
+      "source_group": "original-opening-03"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-03",
+      "record_id": null,
+      "source_group": "original-opening-03"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-04",
+      "record_id": null,
+      "source_group": "original-opening-04"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-04",
+      "record_id": null,
+      "source_group": "original-opening-04"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-04",
+      "record_id": null,
+      "source_group": "original-opening-04"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-04",
+      "record_id": null,
+      "source_group": "original-opening-04"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-05",
+      "record_id": null,
+      "source_group": "original-opening-05"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-05",
+      "record_id": null,
+      "source_group": "original-opening-05"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-05",
+      "record_id": null,
+      "source_group": "original-opening-05"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-05",
+      "record_id": null,
+      "source_group": "original-opening-05"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-06",
+      "record_id": null,
+      "source_group": "original-opening-06"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-06",
+      "record_id": null,
+      "source_group": "original-opening-06"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-06",
+      "record_id": null,
+      "source_group": "original-opening-06"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-06",
+      "record_id": null,
+      "source_group": "original-opening-06"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-07",
+      "record_id": null,
+      "source_group": "original-opening-07"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-07",
+      "record_id": null,
+      "source_group": "original-opening-07"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-07",
+      "record_id": null,
+      "source_group": "original-opening-07"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-07",
+      "record_id": null,
+      "source_group": "original-opening-07"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-08",
+      "record_id": null,
+      "source_group": "original-opening-08"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-08",
+      "record_id": null,
+      "source_group": "original-opening-08"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-08",
+      "record_id": null,
+      "source_group": "original-opening-08"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-08",
+      "record_id": null,
+      "source_group": "original-opening-08"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-09",
+      "record_id": null,
+      "source_group": "original-opening-09"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-09",
+      "record_id": null,
+      "source_group": "original-opening-09"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-09",
+      "record_id": null,
+      "source_group": "original-opening-09"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-09",
+      "record_id": null,
+      "source_group": "original-opening-09"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-10",
+      "record_id": null,
+      "source_group": "original-opening-10"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-10",
+      "record_id": null,
+      "source_group": "original-opening-10"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-10",
+      "record_id": null,
+      "source_group": "original-opening-10"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-10",
+      "record_id": null,
+      "source_group": "original-opening-10"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-11",
+      "record_id": null,
+      "source_group": "original-opening-11"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-11",
+      "record_id": null,
+      "source_group": "original-opening-11"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-11",
+      "record_id": null,
+      "source_group": "original-opening-11"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-11",
+      "record_id": null,
+      "source_group": "original-opening-11"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 0,
+      "item_id": "story-12",
+      "record_id": null,
+      "source_group": "original-opening-12"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 1,
+      "item_id": "story-12",
+      "record_id": null,
+      "source_group": "original-opening-12"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 2,
+      "item_id": "story-12",
+      "record_id": null,
+      "source_group": "original-opening-12"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "decoding_index": 3,
+      "item_id": "story-12",
+      "record_id": null,
+      "source_group": "original-opening-12"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-01",
+      "record_id": "authored-1-story-01-greedy",
+      "source_group": "original-opening-01"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-01",
+      "record_id": null,
+      "source_group": "original-opening-01"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-01",
+      "record_id": null,
+      "source_group": "original-opening-01"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-01",
+      "record_id": null,
+      "source_group": "original-opening-01"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-02",
+      "record_id": "authored-1-story-02-greedy",
+      "source_group": "original-opening-02"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-02",
+      "record_id": null,
+      "source_group": "original-opening-02"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-02",
+      "record_id": null,
+      "source_group": "original-opening-02"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-02",
+      "record_id": null,
+      "source_group": "original-opening-02"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-03",
+      "record_id": null,
+      "source_group": "original-opening-03"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-03",
+      "record_id": null,
+      "source_group": "original-opening-03"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-03",
+      "record_id": null,
+      "source_group": "original-opening-03"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-03",
+      "record_id": null,
+      "source_group": "original-opening-03"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-04",
+      "record_id": null,
+      "source_group": "original-opening-04"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-04",
+      "record_id": null,
+      "source_group": "original-opening-04"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-04",
+      "record_id": null,
+      "source_group": "original-opening-04"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-04",
+      "record_id": null,
+      "source_group": "original-opening-04"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-05",
+      "record_id": null,
+      "source_group": "original-opening-05"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-05",
+      "record_id": null,
+      "source_group": "original-opening-05"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-05",
+      "record_id": null,
+      "source_group": "original-opening-05"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-05",
+      "record_id": null,
+      "source_group": "original-opening-05"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-06",
+      "record_id": null,
+      "source_group": "original-opening-06"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-06",
+      "record_id": null,
+      "source_group": "original-opening-06"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-06",
+      "record_id": null,
+      "source_group": "original-opening-06"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-06",
+      "record_id": null,
+      "source_group": "original-opening-06"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-07",
+      "record_id": null,
+      "source_group": "original-opening-07"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-07",
+      "record_id": null,
+      "source_group": "original-opening-07"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-07",
+      "record_id": null,
+      "source_group": "original-opening-07"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-07",
+      "record_id": null,
+      "source_group": "original-opening-07"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-08",
+      "record_id": null,
+      "source_group": "original-opening-08"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-08",
+      "record_id": null,
+      "source_group": "original-opening-08"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-08",
+      "record_id": null,
+      "source_group": "original-opening-08"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-08",
+      "record_id": null,
+      "source_group": "original-opening-08"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-09",
+      "record_id": null,
+      "source_group": "original-opening-09"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-09",
+      "record_id": null,
+      "source_group": "original-opening-09"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-09",
+      "record_id": null,
+      "source_group": "original-opening-09"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-09",
+      "record_id": null,
+      "source_group": "original-opening-09"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-10",
+      "record_id": null,
+      "source_group": "original-opening-10"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-10",
+      "record_id": null,
+      "source_group": "original-opening-10"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-10",
+      "record_id": null,
+      "source_group": "original-opening-10"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-10",
+      "record_id": null,
+      "source_group": "original-opening-10"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-11",
+      "record_id": null,
+      "source_group": "original-opening-11"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-11",
+      "record_id": null,
+      "source_group": "original-opening-11"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-11",
+      "record_id": null,
+      "source_group": "original-opening-11"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-11",
+      "record_id": null,
+      "source_group": "original-opening-11"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 0,
+      "item_id": "story-12",
+      "record_id": null,
+      "source_group": "original-opening-12"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 1,
+      "item_id": "story-12",
+      "record_id": null,
+      "source_group": "original-opening-12"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 2,
+      "item_id": "story-12",
+      "record_id": null,
+      "source_group": "original-opening-12"
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "decoding_index": 3,
+      "item_id": "story-12",
+      "record_id": null,
+      "source_group": "original-opening-12"
+    }
+  ],
+  "extra_attempt_cells": [],
+  "links": [
+    {
+      "candidate_id": "C-3c9862ad3683f69ad0a283d5a6336d8f",
+      "checkpoint_sha256": "c0b8a1122ce47bf2a8c7d2e75ba9240f0ad8312e1b3b6f0ab03e19899f4ffb1f",
+      "item_sha256": "a3d6a36cf1d068356318a056e7975c28d03b2c3ff04faa9e13dd3e7fdd7e6970",
+      "record_id": "authored-0-story-01-greedy",
+      "record_sha256": "eab4ffee5e830184df7a0f7362906f6cedcb1674da11b4b41f17cd9ade0589de"
+    },
+    {
+      "candidate_id": "C-4a09e1559fdf94cac351d72002750c40",
+      "checkpoint_sha256": "f0d5a40b430a2e7274790f70ef993573ba6d6a910f839ea282f89dd74cc90f46",
+      "item_sha256": "55fd5dd6dcb7cbcbd0eabc2ef7c0a509d56116989f95a50ad76ef52c87bfa03a",
+      "record_id": "authored-1-story-02-greedy",
+      "record_sha256": "7ee0c33dee387bcc764fec7f8cefda2661f12573033de7ffb812962f4aedabb6"
+    },
+    {
+      "candidate_id": "C-fe18448aac6e80a860099d0cfdc9763f",
+      "checkpoint_sha256": "f0d5a40b430a2e7274790f70ef993573ba6d6a910f839ea282f89dd74cc90f46",
+      "item_sha256": "a3d6a36cf1d068356318a056e7975c28d03b2c3ff04faa9e13dd3e7fdd7e6970",
+      "record_id": "authored-1-story-01-greedy",
+      "record_sha256": "a81cc4e4a77fcec909c33a3922454f7b8361fef220c3c407e4de6df38385f627"
+    },
+    {
+      "candidate_id": "C-3cad122c7ceaaf84839ff007683a148d",
+      "checkpoint_sha256": "c0b8a1122ce47bf2a8c7d2e75ba9240f0ad8312e1b3b6f0ab03e19899f4ffb1f",
+      "item_sha256": "55fd5dd6dcb7cbcbd0eabc2ef7c0a509d56116989f95a50ad76ef52c87bfa03a",
+      "record_id": "authored-0-story-02-greedy",
+      "record_sha256": "a47d4730d642dfb0e9ca7606947b28d8e98590fd9175b6ca844dc0cdf3bc24e5"
+    }
+  ],
+  "packet_sha256": "e063535a2fe9187bee7c1025250898be1e387e137642ceb33145bc955214b197",
+  "panel_sha256": "70abc9698f4efaa107a149e863a95fd718ccb5eb64ce892dddb0db7712bb5265",
+  "provenance": "authored-control",
+  "publication_clearance": "Not assessed: actual tokenizer/interface, contamination and rights evidence remain separate.",
+  "raters": [
+    {
+      "independence_declaration": "Two separately authored score columns for instrument controls, not actual human or AI judgments.",
+      "provenance": "authored-control",
+      "rater_id": "authored-rater-1",
+      "shared_consultation": false
+    },
+    {
+      "independence_declaration": "Two separately authored score columns for instrument controls, not actual human or AI judgments.",
+      "provenance": "authored-control",
+      "rater_id": "authored-rater-2",
+      "shared_consultation": false
+    }
+  ],
+  "raters_sha256": "dde1d554379f0faba8224d16478fb5be1949d0bf6a72ccd70a85ddf7ee81a869",
+  "records": [
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "checkpoint_sha256": "c0b8a1122ce47bf2a8c7d2e75ba9240f0ad8312e1b3b6f0ab03e19899f4ffb1f",
+      "contract_sha256": "96155a17e1b1cfe065f005ae61b2c640b5b172509eba7162404bd7737119e659",
+      "cost": {
+        "generation_tokens": null,
+        "wall_seconds": null
+      },
+      "decoding_index": 0,
+      "error": null,
+      "generated_tokens": null,
+      "item_id": "story-01",
+      "opening_sha256": "0b6b93b2b6112e9a02d8067a547ed47b9f6f67b4beb735163386f3a7a74560b6",
+      "prompt_tokens": null,
+      "record_id": "authored-0-story-01-greedy",
+      "selected_likelihoods": null,
+      "source_group": "original-opening-01",
+      "stop_reason": "token-cap",
+      "text": "Mara held a blue umbrella and waited. waited. waited.",
+      "text_sha256": "1325689668f878c361221110041e4cb55045255fbdbcf7cc3e1ae0e0ae7502c4",
+      "token_ids": null,
+      "truncated": true
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-baseline-14000",
+      "checkpoint_sha256": "c0b8a1122ce47bf2a8c7d2e75ba9240f0ad8312e1b3b6f0ab03e19899f4ffb1f",
+      "contract_sha256": "96155a17e1b1cfe065f005ae61b2c640b5b172509eba7162404bd7737119e659",
+      "cost": {
+        "generation_tokens": null,
+        "wall_seconds": null
+      },
+      "decoding_index": 0,
+      "error": null,
+      "generated_tokens": null,
+      "item_id": "story-02",
+      "opening_sha256": "afc36e7cef2413a66b6742e95b5c53362b831db9943f163b5abcc48dbdcc71aa",
+      "prompt_tokens": null,
+      "record_id": "authored-0-story-02-greedy",
+      "selected_likelihoods": null,
+      "source_group": "original-opening-02",
+      "stop_reason": "token-cap",
+      "text": "The fox ate an apple. Then it ate an apple. Then it ate an apple.",
+      "text_sha256": "4f920219071c07d39c5489b8f0715c175abc475db6b8608d7ad289f6b5a17418",
+      "token_ids": null,
+      "truncated": true
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "checkpoint_sha256": "f0d5a40b430a2e7274790f70ef993573ba6d6a910f839ea282f89dd74cc90f46",
+      "contract_sha256": "96155a17e1b1cfe065f005ae61b2c640b5b172509eba7162404bd7737119e659",
+      "cost": {
+        "generation_tokens": null,
+        "wall_seconds": null
+      },
+      "decoding_index": 0,
+      "error": null,
+      "generated_tokens": null,
+      "item_id": "story-01",
+      "opening_sha256": "0b6b93b2b6112e9a02d8067a547ed47b9f6f67b4beb735163386f3a7a74560b6",
+      "prompt_tokens": null,
+      "record_id": "authored-1-story-01-greedy",
+      "selected_likelihoods": null,
+      "source_group": "original-opening-01",
+      "stop_reason": "natural-eos",
+      "text": "Ivo returned the blue umbrella after the rain. Mara thanked him and went home.",
+      "text_sha256": "1ed4f4d4d5dc875e0f519a220511b2739347c1d7a7a69b631ff07343463d8f6e",
+      "token_ids": null,
+      "truncated": false
+    },
+    {
+      "attempt_index": 0,
+      "checkpoint_id": "authored-candidate-14000",
+      "checkpoint_sha256": "f0d5a40b430a2e7274790f70ef993573ba6d6a910f839ea282f89dd74cc90f46",
+      "contract_sha256": "96155a17e1b1cfe065f005ae61b2c640b5b172509eba7162404bd7737119e659",
+      "cost": {
+        "generation_tokens": null,
+        "wall_seconds": null
+      },
+      "decoding_index": 0,
+      "error": null,
+      "generated_tokens": null,
+      "item_id": "story-02",
+      "opening_sha256": "afc36e7cef2413a66b6742e95b5c53362b831db9943f163b5abcc48dbdcc71aa",
+      "prompt_tokens": null,
+      "record_id": "authored-1-story-02-greedy",
+      "selected_likelihoods": null,
+      "source_group": "original-opening-02",
+      "stop_reason": "natural-eos",
+      "text": "The fox remembered the old stone gate. It dug up the apple and shared it with a friend.",
+      "text_sha256": "c50d1ca028d0b01e7d1e3191cf772dc4479dfc6aa8b5ace627120b8fdfd5d096",
+      "token_ids": null,
+      "truncated": false
+    }
+  ],
+  "records_sha256": "5ccb5ae4dbe7ca342c7a9058bc7ec88804225359848a4b78a1ee754d4685b1b1",
+  "rubric_sha256": "447bd48b475f7bc11d089a1cd5a63a77513496f498231ef47f1d7e1f0c951c48",
+  "schema_version": "dongxi-story-rubric-v1",
+  "shuffle_seed": 909,
+  "unrepresented_predetermined_updates": [
+    0,
+    400,
+    4000,
+    8000
+  ]
+}

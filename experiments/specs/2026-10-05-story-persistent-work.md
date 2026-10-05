@@ -1,0 +1,169 @@
+# Persistent logical work in story training
+
+This source task closes part of the remaining Day9 runner gap. It authorizes
+bounded offline CPU implementation and verification only. The historical
+TinyStories weights, corpus, result and running services are outside its scope.
+The learner remains Day9; the improvement count stays13of18 until the existing
+external acceptance conditions are met.
+
+## Preserve the prediction problem
+
+The [pre-integration archive](../reports/2026-10-05-story-work-preintegration/manifest.json)
+freezes seven exact source/test files before implementation. Its runner digest is
+`84efb975690045c85f02f327887ffca7e044ebc60f89125d40de44a990b9fefa`.
+Preserve the actual StoriesDecoder, causal SDPA, tied embeddings, token-weighted
+sum cross-entropy over the entire accumulation group, AdamW groups/betas/epsilon,
+clipping, update-based schedule and original sampler. Do not alter labels,
+denominators, seeds, initialization, EOS, decoding, tolerances or target caps to
+make a control pass. Unaccounted historical teaching calls remain explicitly
+distinct from the new accounted mode; this is not a checkpoint migration.
+
+## Admission and retained work
+
+Add a separately versioned strict logical-work contract backed by the existing
+single-writer WorkLedger. Caps and journal size are explicit; no inferred
+production default or fresh journal can grant a recovered allowance. The
+scientific binding includes original model/recipe/data/environment/source
+identity and the active target cap. Missing, extra, boolean, fractional and
+nonfinite cap fields must reject admission.
+
+Count declared model initialization, full training-update calls and positions,
+valid training labels, backward and optimizer attempts, fixed validation panels,
+uncached generation calls/positions/tokens and multinomial draws, activation
+feature panels, and save/restore operation attempts. Name exact dimensions in
+the source contract before collecting acceptance evidence. They are logical
+units, not FLOPs, wall time, memory, byte-I/O or storage quotas.
+
+For training, gather the deterministic accumulation group and its exact valid
+label count before numerical admission. Preserve the existing successful-target
+cap. Then reserve the entire proposed model operation before changing LR,
+gradients, mode or parameters. A crossing work reservation restores the stream
+permutation/cursor/epoch/generator and performs no model work. Data loading,
+selection/permutation work and this planning remain outside these units.
+
+Reserve each complete evaluation, sampling or activation panel before its first
+numerical call. Conservative context-sized validation envelopes and full
+uncached-prefix generation ceilings are allowed, but show actual completed
+work separately and never refund unused reservations after EOS. Keep the native
+fixed selector, prompts, greedy/temperature0.8 branches and private seed909.
+Tokenization, metadata/journal processing, hashing, tensor serialization,
+activation-checkpoint backward recomputation and physical resources are excluded.
+
+Once an update or restore enters a possibly mutating numerical phase, failure
+poisons that accounted Session. It cannot update, observe or publish the
+partially mutated state. Resume requires a fresh Session at a previously
+durable completed-update boundary. Failure/open tickets remain spent. A budget
+refusal before work does not poison the unchanged Session.
+
+## Recovery and publication
+
+The accounted checkpoint retains a work prefix, and a separate bounded
+no-follow receipt pins its payload bytes, science/caps and that prefix. Bind the
+same physical retained journal from this receipt before hashing/loading the
+payload; later successful, failed and uncertain spending survives. Refuse copied
+or replaced journals, mismatched science/caps and legacy-to-accounted adoption.
+Validate the receipt/payload/prefix and completed state before application where
+possible, and poison any failed partial application. Do not silently refresh a
+pre-save prefix or claim that a checkpoint contains its own future completion.
+
+Keep the legacy trusted-local restricted tensor loader distinct from the shared
+snapshot/I/O9 format. Count save/restore attempts without claiming generic
+finite-tree, byte, allocation, cloning or disk admission. Retain incomplete
+publication artifacts and refuse overwrite; a payload without a valid accounted
+receipt is not an accounted recovery point. The CLI must open/bind the journal
+before model allocation and close it on every exit. A new output directory is
+not a new cumulative allowance. No automatic historical checkpoint adoption.
+
+## Frozen controls and evidence
+
+Use the existing isolated CPU interpreter, offline flags, one Torch thread and
+at least25GiB sampled host reserve. Reuse the original four authored ID windows
+with lengths3/6/1/7, vocab16/width8/one layer/context8, accumulation2, seed909,
+five-update schedule, warmup1, peak0.003/floor0.0003 and AdamW settings. Normal
+seeded streams and the explicitly fixed first permutation are separate controls.
+Test both activation-checkpointing modes without changing other settings.
+
+Require current-unaccounted and accounted updates to match archived original
+equations bitwise, excluding elapsed-time and resource metadata only. Require
+fresh-process continuation from update2 through update5 with exact model/Adam,
+stream/RNG, counters and numerical records. Keep full native sampling equations
+using a small-width original decoder with vocab50257 and real EOS50256; do not
+replace EOS with the small training fixture's15. Compare native evaluation and
+activation outputs as well as weights. Do not interpret these fixtures as
+learning coherent stories.
+
+Controls must cover exhausted caps before calls, complete-group refusal and
+epoch-crossing stream rollback, nonfinite/partial optimizer failure, poisoned
+state refusal, later failed spending after old-checkpoint recovery, repeated
+observation panels, early EOS and uncached-position ceilings, receipt/byte/cap/
+source/prefix rejection, copied journals, bounded metadata and CLI ordering.
+Keep all original tests and all failed development attempts. New collectors
+write exclusive evidence directories with actual child exits/footers, source
+before/after hashes and original archive identities. Independently review
+released source and retained evidence before describing acceptance.
+
+Integrate the distinction into Chapter6 and its existing Day9 clocks notebook,
+worked solutions and evidence-reading lab. Preserve all prior cells, outputs and
+preview bytes. Extend the existing animation proposal only; no Mac render,
+publication, hosted CI, environment installation, Git write or GPU job follows.
+
+## Exact source contract declared before measurement
+
+The separate `dongxi-story-logical-work-v1` contract requires exactly21 dimensions:
+`model_initializations`, `train_updates`, `training_windows`,
+`training_valid_targets`, `policy_forward_calls`, `policy_forward_positions`,
+`backward_calls`, `optimizer_calls`, `evaluation_panels`, `evaluation_windows`,
+`evaluation_valid_targets`, `generation_sequences`, `generation_calls`,
+`generation_positions`, `generation_tokens`, `multinomial_draws`,
+`activation_panels`, `activation_positions`, `activation_block_applications`,
+`save_operations`, `restore_operations`. Policy-forward units include the
+training and validation model calls, not uncached generation or manual activation
+feature panels. Backward units count submitted backward calls, not any internal
+checkpoint recomputation dispatches. All dimensions and the journal byte bound
+are immutable and part of the scientific binding.
+
+The new source exposes `story_work_contract(limits,max_journal_bytes)` and
+`StoryWorkBudget.create/open(path,contract,scientific_contract,invocation_id)`;
+open additionally requires the independent receipt. The runner exposes
+`session_contract(...,work_contract=None)` before model allocation and accepts
+`Session(...,work_budget=None)`. Accounted save publishes a bounded independent
+receipt, by default beside the payload as `.work.json`; accounted restore
+requires that receipt and an already-bound original journal. No missing hook
+can silently remove the contract's accounted mode. The default unaccounted
+teaching path remains distinct and is not a production admission route.
+
+## Premeasurement review refinements
+
+The native stream leaves its cursor at the end until the next draw reshuffles.
+For positive completed draws $d$, require epoch `floor((d-1)/size)` and cursor
+`(d-1)%size+1`; zero draws use0/0. Merely checking `epoch*size+cursor==d`
+would admit cursor0 at a positive boundary and repeat a previous permutation.
+Check exact integer counters, permutation and RNG schema before application.
+
+Accounted state must carry measured processed-position provenance and an explicit
+counter. Do not infer fixed context-sized positions for a generic legitimate
+shorter-window API; inspect actual saved counts. Preserve legacy-derived
+provenance only in the separate inactive teaching path. Adam step tensors must
+have a supported dense scalar float32/float64 clock. Recorded science also
+anchors live configuration, recipe, data identity, device and target cap; adding
+or removing a hook cannot silently convert an existing Session's mode.
+
+Before accounted bootstrap reads, reject the designated resume payload when its
+path or inode aliases caps, receipt, journal, configured data/manifest/tokenizer
+or known source roles. Additional manifest input roles must be checked before
+their full hashes. Use only metadata for this decision, not an expensive hash
+to discover the alias. This preserves the precise pre-payload-read claim while
+leaving ordinary data/source bootstrap I/O excluded from model-work counters.
+
+The original numerical metric write may precede the periodic checkpoint. A
+metric row is not a durable recovery boundary. On observer/metric/save failure,
+the previously published completed checkpoint remains the recovery authority;
+later attempt spending still stays charged. Do not describe this as transactional
+metric publication or full numerical-history embedding in the legacy payload.
+
+The accounted public `summed_loss` also requires a one-shot permit for the
+specific tensors from an entered training/validation forward. Any unrelated
+operation, direct outside call or duplicate callback loss must refuse before the
+model; merely having an active save operation is not forward admission. Clear
+the permit when the operation exits. Deliberate raw/private model calls remain
+outside this cooperative source boundary, not a physical or hostile-code sandbox.

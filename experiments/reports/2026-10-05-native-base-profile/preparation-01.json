@@ -1,0 +1,241 @@
+{
+  "actual_external_result": null,
+  "argv": [
+    "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py",
+    "--model",
+    "Qwen/Qwen3-0.6B-Base",
+    "--revision",
+    "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+    "--tokenizer-revision",
+    "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+    "--template",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/data/instruction_interface_v1.jinja",
+    "--train",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/train.jsonl",
+    "--dev",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/dev.jsonl",
+    "--output",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-base-profile-20261005-run01",
+    "--mode",
+    "full",
+    "--updates",
+    "20",
+    "--microbatch",
+    "1",
+    "--accumulation",
+    "4",
+    "--max-length",
+    "256",
+    "--learning-rate",
+    "2e-05",
+    "--runtime-seconds",
+    "900",
+    "--reserve-gib",
+    "25",
+    "--seed",
+    "1212",
+    "--checkpoint-every",
+    "20",
+    "--snapshot-max-bytes",
+    "5368709120",
+    "--work-limits",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/configs/native-base-profile-20261005-work.json",
+    "--work-journal-max-bytes",
+    "4194304",
+    "--work-journal",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-base-profile-20261005-journals/work-01.jsonl",
+    "--snapshot-io-limits",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/configs/native-base-profile-20261005-io.json",
+    "--snapshot-io-ledger",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-base-profile-20261005-journals/io-01.jsonl",
+    "--environment-lock",
+    "/home/dongxi/dgx-spark-dongxi/uv.lock"
+  ],
+  "cwd": "/home/dongxi/dongxi_ai/Dongxi_LLMs",
+  "input_bindings": {
+    "dev": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/dev.jsonl",
+      "bytes": 21500,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/dev.jsonl",
+      "sha256": "7e615ca255e9d026534a47cddf82ff34fff5a9021c5132b6b536cf27080ac62e"
+    },
+    "environment_lock": {
+      "actual_path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+      "bytes": 254439,
+      "path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+      "sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261"
+    },
+    "interpreter": {
+      "actual_path": "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/bin/python3.12",
+      "bytes": 23323176,
+      "path": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+      "sha256": "0f1c0fc2c82cd4d382b9a2fc6f5ced5264709e1c1195e73a5f6a27fa74c2d0ed"
+    },
+    "snapshot_io_limits": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/configs/native-base-profile-20261005-io.json",
+      "bytes": 823,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/configs/native-base-profile-20261005-io.json",
+      "sha256": "edff6a60e8d5cd0e7df58371df6bac654ce629a02f28ac06b9bc1d57116d70d3"
+    },
+    "template": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/data/instruction_interface_v1.jinja",
+      "bytes": 197,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/data/instruction_interface_v1.jinja",
+      "sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d"
+    },
+    "train": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/train.jsonl",
+      "bytes": 86810,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/train.jsonl",
+      "sha256": "50e0375220c97ee3a75509148f5024c3f3120185af3b5878ca5b8e8f7e01d234"
+    },
+    "work_limits": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/configs/native-base-profile-20261005-work.json",
+      "bytes": 505,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/configs/native-base-profile-20261005-work.json",
+      "sha256": "75f14c3cdd3db91043a6a375eec8cbcfc6ffcb5f9fd5bff31ba1c73673e08e40"
+    }
+  },
+  "jobs_started": 0,
+  "known_snapshot_io_requirements": {
+    "snapshot_clone_bytes": 8589934592,
+    "snapshot_hash_bytes": 10737418240,
+    "snapshot_inspect_operations": 0,
+    "snapshot_load_operations": 0,
+    "snapshot_primitive_bytes": 2097152,
+    "snapshot_save_operations": 2,
+    "snapshot_serialization_bytes": 10737418240,
+    "snapshot_tensor_elements": 4000000000,
+    "snapshot_tree_nodes": 100000
+  },
+  "launch_authorized": false,
+  "preparation_sha256": "af7d3cbaee66ce58de387c4f15953188c9a836d4316ad5c6aa77fe087058bfd7",
+  "request": {
+    "dev": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/dev.jsonl",
+    "environment_lock": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+    "interpreter": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+    "model": "Qwen/Qwen3-0.6B-Base",
+    "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-base-profile-20261005-run01",
+    "recipe": {
+      "accumulation": 4,
+      "checkpoint_every": 20,
+      "learning_rate": 2e-05,
+      "max_length": 256,
+      "microbatch": 1,
+      "mode": "full",
+      "reserve_gib": 25,
+      "runtime_seconds": 900,
+      "seed": 1212,
+      "updates": 20
+    },
+    "revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+    "snapshot_io_ledger": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-base-profile-20261005-journals/io-01.jsonl",
+    "snapshot_io_limits": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/configs/native-base-profile-20261005-io.json",
+    "snapshot_max_bytes": 5368709120,
+    "stage_id": "assistant-profile-base06",
+    "template": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/data/instruction_interface_v1.jinja",
+    "tokenizer_revision": "da87bfb608c14b7cf20ba1ce41287e8de496c0cd",
+    "train": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/course-sft-interface-v1/train.jsonl",
+    "work_journal": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-base-profile-20261005-journals/work-01.jsonl",
+    "work_journal_max_bytes": 4194304,
+    "work_limits": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/configs/native-base-profile-20261005-work.json"
+  },
+  "schema": "dongxi-native-sft-profile-preparation-v1",
+  "scope": "fixed native command; explicit allowances are declarations, not encoded measurements or authenticated approval",
+  "sft_limits": {
+    "evaluation_calls": 1144,
+    "evaluation_positions": 71488,
+    "generation_calls": 16,
+    "generation_position_upper_bound": 66688,
+    "generation_tokens": 1024,
+    "logical_sequence_tokens": 9516,
+    "policy_forward_calls": 1224,
+    "policy_forward_positions": 74642,
+    "recovery_history_rows": 20,
+    "recovery_rng_states": 6,
+    "recovery_tensor_elements": 3000000000,
+    "recovery_validation_operations": 2,
+    "sampled_examples": 80,
+    "selector_steps": 80,
+    "train_updates": 20,
+    "valid_targets": 1175
+  },
+  "snapshot_io_contract": {
+    "envelope": {
+      "max_payload_bytes": 5368709120,
+      "max_primitive_bytes": 1048576,
+      "max_tensor_bytes": 4294967296,
+      "max_tensor_elements": 2000000000,
+      "max_tree_nodes": 50000
+    },
+    "limits": {
+      "snapshot_clone_bytes": 8589934592,
+      "snapshot_hash_bytes": 10737418240,
+      "snapshot_inspect_operations": 0,
+      "snapshot_load_operations": 0,
+      "snapshot_primitive_bytes": 2097152,
+      "snapshot_save_operations": 2,
+      "snapshot_serialization_bytes": 10737418240,
+      "snapshot_tensor_elements": 4000000000,
+      "snapshot_tree_nodes": 100000
+    },
+    "max_journal_bytes": 4194304,
+    "reservation": "whole operation, permanent/no refund",
+    "schema": "dongxi-snapshot-io-work-v1",
+    "scope": "shared payload hash/tree/finite/clone/serialization visits; not metadata/journal/caller/physical quota"
+  },
+  "source_bindings": {
+    "scripts/prepare_chapter09_instruction_fixture.py": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/prepare_chapter09_instruction_fixture.py",
+      "bytes": 2735,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/prepare_chapter09_instruction_fixture.py",
+      "sha256": "02b2096b2ecbd59011df3da5fe16d0c6c8bfc7051df37a87aa191e9b38494674"
+    },
+    "scripts/run_chapter09_spark_sft.py": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py",
+      "bytes": 73759,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_chapter09_spark_sft.py",
+      "sha256": "f8b51cda52e205c457cef34001e3165ec9f7ad381cb84d8e76a4dd1467357c40"
+    },
+    "src/dongxi_llms/native_profile_supervisor.py": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/native_profile_supervisor.py",
+      "bytes": 36072,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/native_profile_supervisor.py",
+      "sha256": "f84e68594f2c37a4b196647c4abf76bb26ff83fdd4e8bf7f25b10cae1d481706"
+    },
+    "src/dongxi_llms/run_identity.py": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/run_identity.py",
+      "bytes": 20051,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/run_identity.py",
+      "sha256": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999"
+    },
+    "src/dongxi_llms/snapshot_io_budget.py": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_budget.py",
+      "bytes": 15832,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_budget.py",
+      "sha256": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4"
+    },
+    "src/dongxi_llms/training_snapshot.py": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/training_snapshot.py",
+      "bytes": 21296,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/training_snapshot.py",
+      "sha256": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77"
+    },
+    "src/dongxi_llms/work_budget.py": {
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/work_budget.py",
+      "bytes": 19121,
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/work_budget.py",
+      "sha256": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297"
+    }
+  },
+  "stage_id": "assistant-profile-base06",
+  "status": "prepared-source-only-not-launch-authorized",
+  "unknown": [
+    "actual pinned model bytes/interface",
+    "tokenizer-derived target/position requirements",
+    "allowance/snapshot physical sufficiency",
+    "operator authority",
+    "actual CUDA/BF16/profile and GPU clearance"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "dongxi-snapshot-io-independent-diagnostics-v1",
+  "actual_command_exit_code": 0,
+  "review_result": "header/payload schema mismatch accepted; not acceptance",
+  "control": "header_v2_payload_v1_unaccounted_load",
+  "source_before": {
+    "src/dongxi_llms/snapshot_io_budget.py": "9035101f4fb391c40c4efa00434b9849b51942e67003d18df6388ade024ff0c2",
+    "src/dongxi_llms/training_snapshot.py": "d6b45fb46876365ffefe07c72b10586319020f5a43270d6a92969873b16b848b"
+  },
+  "source_after": {
+    "src/dongxi_llms/snapshot_io_budget.py": "9035101f4fb391c40c4efa00434b9849b51942e67003d18df6388ade024ff0c2",
+    "src/dongxi_llms/training_snapshot.py": "d6b45fb46876365ffefe07c72b10586319020f5a43270d6a92969873b16b848b"
+  },
+  "accepted": true,
+  "header_schema": 2,
+  "observed_payload_schema": 1,
+  "error": null,
+  "method": "actual unaccounted v1 save, then change only the marker schema to2 and call actual unaccounted load with unchanged independent payload SHA and exact bytes"
+}

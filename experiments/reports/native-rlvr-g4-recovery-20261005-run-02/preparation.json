@@ -1,0 +1,655 @@
+{
+  "schema": "dongxi-fixed-native-rlvr-stages-v1",
+  "stage": "recovery",
+  "group": 4,
+  "run_id": "run-02",
+  "recovery_run_id": "run-01",
+  "utc": "2026-10-05T13:02:11.151728+00:00",
+  "locations": {
+    "evidence": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-recovery-20261005-run-02",
+    "journals": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g4-recovery-20261005-run-02-journals",
+    "source": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g4-recovery-20261005-run-02-source",
+    "completed": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g4-recovery-20261005-run-02-completed-resume",
+    "pending": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g4-recovery-20261005-run-02-pending-resume"
+  },
+  "local_model_binding": {
+    "model": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "path": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+    "files": {
+      "config.json": "660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd",
+      "generation_config.json": "2325da0f15bb848e018c5ae071b7943332e9f871d6b60e2ed22ca97d4cb993d2",
+      "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+      "model.safetensors": "f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b",
+      "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "tokenizer_config.json": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101",
+      "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    },
+    "revision_evidence": "Declared immutable local cache ID and actual streamed bytes; not remotely authenticated upstream correspondence"
+  },
+  "source_bindings": {
+    "src/dongxi_llms/qwen_rlvr_lab.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/qwen_rlvr_lab.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/qwen_rlvr_lab.py",
+      "bytes": 99265,
+      "sha256": "7c61253d4da3a3119342f66d4f40dc31e143e68d57be22ac7d71aac5d3ee1fb7"
+    },
+    "src/dongxi_llms/grpo_lab.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/grpo_lab.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/grpo_lab.py",
+      "bytes": 11148,
+      "sha256": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911"
+    },
+    "src/dongxi_llms/run_identity.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/run_identity.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/run_identity.py",
+      "bytes": 20051,
+      "sha256": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999"
+    },
+    "src/dongxi_llms/training_snapshot.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/training_snapshot.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/training_snapshot.py",
+      "bytes": 21296,
+      "sha256": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77"
+    },
+    "src/dongxi_llms/batched_cache_lab.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/batched_cache_lab.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/batched_cache_lab.py",
+      "bytes": 46712,
+      "sha256": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04"
+    },
+    "src/dongxi_llms/work_budget.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/work_budget.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/work_budget.py",
+      "bytes": 19121,
+      "sha256": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297"
+    },
+    "src/dongxi_llms/snapshot_io_budget.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_budget.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_budget.py",
+      "bytes": 15987,
+      "sha256": "464add774085ccd7ec3e9e2bc79a539748eea4ce244af2222c39d9d9c5d26e86"
+    },
+    "src/dongxi_llms/snapshot_io_schedule.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_schedule.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/snapshot_io_schedule.py",
+      "bytes": 9193,
+      "sha256": "6a1988d02651673d96f31407d7a088546a1c9bd435a111b22fe138f7fd94f1f8"
+    },
+    "src/dongxi_llms/artifact_budget.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/artifact_budget.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/artifact_budget.py",
+      "bytes": 28366,
+      "sha256": "af1c1fcc4349393e50f5603e85017f851128c92c34dbcb82f75aa4694efdacc0"
+    },
+    "src/dongxi_llms/native_profile_supervisor.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/native_profile_supervisor.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/native_profile_supervisor.py",
+      "bytes": 36522,
+      "sha256": "88100a0fbe33fa8de34155838485e6c31fb5c3fd436d1dc27725fe720ad4f9b2"
+    },
+    "src/dongxi_llms/campaign_supervisor.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/campaign_supervisor.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/campaign_supervisor.py",
+      "bytes": 12667,
+      "sha256": "d2959a7856bc0cc4fb6b6623387d45bbc0d7193607a52c29c59bb8823b97d253"
+    },
+    "scripts/run_native_rlvr_stages.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_rlvr_stages.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_rlvr_stages.py",
+      "bytes": 39893,
+      "sha256": "a17e6fe791d32bce3518507f29f2814f011197b3796162e6fafe269bc34ae508"
+    },
+    "tests/test_native_rlvr_stages.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_native_rlvr_stages.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_native_rlvr_stages.py",
+      "bytes": 26713,
+      "sha256": "c1beb9b80f4e2b445778738c012eefd85617bafe4dacb2a336caeb56ff8d6ba7"
+    },
+    "scripts/run_native_reasoning_baselines.py": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_reasoning_baselines.py",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/scripts/run_native_reasoning_baselines.py",
+      "bytes": 22287,
+      "sha256": "249102e3dc4d6d81cf1c86ae71b65a9023dbb2f10c32698ad1eebf747cfa54e4"
+    }
+  },
+  "input_bindings": {
+    "interpreter": {
+      "path": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+      "actual_path": "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/bin/python3.12",
+      "bytes": 23323176,
+      "sha256": "0f1c0fc2c82cd4d382b9a2fc6f5ced5264709e1c1195e73a5f6a27fa74c2d0ed"
+    },
+    "environment_lock": {
+      "path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+      "actual_path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+      "bytes": 254439,
+      "sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261"
+    },
+    "work_caps": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-recovery-20261005-run-02/work-caps.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-recovery-20261005-run-02/work-caps.json",
+      "bytes": 738,
+      "sha256": "2d5869de0a07db555ef9412bdbfc454a32ea5f2babc9eef229af4e5099934837"
+    },
+    "io_caps": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-recovery-20261005-run-02/io-caps.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-recovery-20261005-run-02/io-caps.json",
+      "bytes": 830,
+      "sha256": "a878729caf8d468d694272c08375a444858d953c6b7583bcd2a2456d35f09319"
+    },
+    "geometry": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-recovery-20261005-run-02/tokenizer-geometry.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-recovery-20261005-run-02/tokenizer-geometry.json",
+      "bytes": 5679,
+      "sha256": "8fd4711dbadb9a3a3f7dd221bee6c03dbe0edd07289eb9528ea1de7a71724fd8"
+    }
+  },
+  "prerequisite_bindings": {
+    "baseline-cap32/acceptance": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/acceptance.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/acceptance.json",
+      "bytes": 716482,
+      "sha256": "33402365e60c7b362590fb986da903db66a7f611659a12671b80d5a126e52627"
+    },
+    "baseline-cap32/preparation": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/preparation.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/preparation.json",
+      "bytes": 86765,
+      "sha256": "271f6b9436b7d10cf22a75d83e405f2ee92bf12499dc7c469e3c8516a717a5d8"
+    },
+    "baseline-cap32/input/math_items": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/fixtures/reasoning-controls/math_items.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/fixtures/reasoning-controls/math_items.json",
+      "bytes": 9354,
+      "sha256": "d674db480cab4fdb3fa3487146a1f107913bf1a6e55d2a64e42659729ee707b8"
+    },
+    "baseline-cap32/input/custom_template": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/data/instruction_interface_v1.jinja",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/data/instruction_interface_v1.jinja",
+      "bytes": 197,
+      "sha256": "f26fd6284d6bc05d057a4b5800e2a268a85df6546edf484d979e23a51ed7886d"
+    },
+    "baseline-cap32/input/interpreter": {
+      "path": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+      "actual_path": "/home/dongxi/.local/share/uv/python/cpython-3.12.14-linux-aarch64-gnu/bin/python3.12",
+      "bytes": 23323176,
+      "sha256": "0f1c0fc2c82cd4d382b9a2fc6f5ced5264709e1c1195e73a5f6a27fa74c2d0ed"
+    },
+    "baseline-cap32/input/environment_lock": {
+      "path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+      "actual_path": "/home/dongxi/dgx-spark-dongxi/uv.lock",
+      "bytes": 254439,
+      "sha256": "c179a5db74b36f6e417b231cef334123e24802086391f9296cbaf776ea76c261"
+    },
+    "baseline-cap32/input/items": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/items.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/items.json",
+      "bytes": 11206,
+      "sha256": "f1183276d15a086e0e3e0653fb9dfdd8ba1c2a319f08339413e3b25966a2f084"
+    },
+    "baseline-cap32/input/logical_panel": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/logical-panel.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/logical-panel.json",
+      "bytes": 13492,
+      "sha256": "03efb168899106f2ea131cad7096d20a4300f4cc3c7fed861132dedc98215ffc"
+    },
+    "baseline-cap32/input/contract/sample-1009": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1009-contract.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1009-contract.json",
+      "bytes": 7108,
+      "sha256": "80debf8a871ff27b2fd0ac2e40b692aa13167c8d180409c8e781c406b75e09a9"
+    },
+    "baseline-cap32/input/contract/sample-1019": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1019-contract.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1019-contract.json",
+      "bytes": 7108,
+      "sha256": "a6c098fbcb1647e68d3c950ab1e2784a138571889d50eed1da47be43754204ad"
+    },
+    "baseline-cap32/input/contract/sample-1029": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1029-contract.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1029-contract.json",
+      "bytes": 7108,
+      "sha256": "9d1415ccef23f2ed11aee8b532f32ad687f62220414ba3ccb97ea1481e391287"
+    },
+    "baseline-cap32/input/contract/sample-1039": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1039-contract.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1039-contract.json",
+      "bytes": 7108,
+      "sha256": "a647b91690651136e6199dcf92a939080d9e75f7b557ad34fcdfb1e983043cdd"
+    },
+    "baseline-cap32/input/contract/greedy-1009": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/greedy-1009-contract.json",
+      "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/greedy-1009-contract.json",
+      "bytes": 7108,
+      "sha256": "246d4c7244c52f9558c6ec1a6bad149683194d8b282d446f1c2cf4491372ef09"
+    }
+  },
+  "observed_geometry": {
+    "train": [
+      {
+        "source_id": "train-0",
+        "prompt": "Return only the integer answer. 2 + 3 =",
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          17,
+          488,
+          220,
+          18,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "expected": 5
+      },
+      {
+        "source_id": "train-1",
+        "prompt": "Return only the integer answer. 4 + 5 =",
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          19,
+          488,
+          220,
+          20,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "expected": 9
+      },
+      {
+        "source_id": "train-2",
+        "prompt": "Return only the integer answer. 3 + 6 =",
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          18,
+          488,
+          220,
+          21,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "expected": 9
+      },
+      {
+        "source_id": "train-3",
+        "prompt": "Return only the integer answer. 1 + 7 =",
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          16,
+          488,
+          220,
+          22,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "expected": 8
+      }
+    ],
+    "evaluation": [
+      {
+        "source_id": "heldout-0",
+        "prompt": "Return only the integer answer. 2 + 6 =",
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          17,
+          488,
+          220,
+          21,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "expected": 8
+      },
+      {
+        "source_id": "heldout-1",
+        "prompt": "Return only the integer answer. 3 + 4 =",
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          18,
+          488,
+          220,
+          19,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "expected": 7
+      },
+      {
+        "source_id": "heldout-2",
+        "prompt": "Return only the integer answer. 5 + 5 =",
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          20,
+          488,
+          220,
+          20,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "expected": 10
+      },
+      {
+        "source_id": "heldout-3",
+        "prompt": "Return only the integer answer. 7 + 2 =",
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          22,
+          488,
+          220,
+          17,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "expected": 9
+      }
+    ],
+    "prompt_contract": {
+      "prompt_mode": "chat",
+      "template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+      "generation_stop_ids": [
+        151645
+      ],
+      "enable_thinking": false
+    },
+    "checkpoint_interface": {
+      "schema_version": 1,
+      "tokenizer": {
+        "vocab_sha256": "6e949d8fec10c504f4207a43cdeac7d7961f7fd9894d256f14a8153bb5479b63",
+        "encoding_sha256": "54c6b212118b62395ff290c0fe82ef0f84b465d4a71333035f43ffd847f46c94",
+        "special_ids": {
+          "bos_token_id": null,
+          "eos_token_id": 151645,
+          "pad_token_id": 151643,
+          "unk_token_id": null,
+          "sep_token_id": null,
+          "cls_token_id": null,
+          "mask_token_id": null,
+          "additional_special_tokens_ids": null
+        },
+        "vocab_size": 151669,
+        "max_token_id": 151668,
+        "wrapper_settings": {
+          "add_bos_token": false,
+          "add_eos_token": false,
+          "split_special_tokens": false,
+          "clean_up_tokenization_spaces": false,
+          "spaces_between_special_tokens": null
+        }
+      },
+      "template_sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+      "generation_stop_ids": [
+        151645
+      ],
+      "source": {
+        "tokenizer_id": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+        "tokenizer_revision": "c1899de289a04d12100db370d81485cdf75e47ca"
+      },
+      "implementation_class": "Qwen2Tokenizer",
+      "interface_sha256": "090149da27051f5e3040c1236e8fbd00664e22f1b7e3c3a050a6945c3e1b6f98"
+    },
+    "context_length": 40960,
+    "maximum_train_prompt": 24,
+    "maximum_evaluation_prompt": 24,
+    "scope": "Actual tokenizer-only geometry of unchanged four train/four heldout integer prompts"
+  },
+  "allowances": {
+    "work": {
+      "train_updates": 4,
+      "collections": 3,
+      "source_examples": 3,
+      "generated_slots": 192,
+      "valid_response_tokens": 192,
+      "multinomial_draws": 192,
+      "response_targets": 256,
+      "generation_forward_calls": 432,
+      "generation_forward_positions": 18144,
+      "policy_forward_calls": 448,
+      "policy_forward_positions": 20640,
+      "reference_forward_calls": 4,
+      "reference_forward_positions": 624,
+      "old_policy_forward_calls": 3,
+      "old_policy_forward_positions": 468,
+      "evaluation_examples": 24,
+      "evaluation_calls": 384,
+      "evaluation_positions": 12096,
+      "evaluation_tokens": 384,
+      "recovery_validation_operations": 16,
+      "recovery_validation_calls": 9,
+      "recovery_validation_positions": 1404,
+      "recovery_multinomial_draws": 1408
+    },
+    "io": {
+      "schema": "dongxi-snapshot-io-work-v1",
+      "limits": {
+        "snapshot_inspect_operations": 2,
+        "snapshot_load_operations": 2,
+        "snapshot_save_operations": 10,
+        "snapshot_hash_bytes": 120259084288,
+        "snapshot_tree_nodes": 1400000,
+        "snapshot_tensor_elements": 48000000000,
+        "snapshot_primitive_bytes": 14680064,
+        "snapshot_clone_bytes": 85899345920,
+        "snapshot_serialization_bytes": 85899345920
+      },
+      "envelope": {
+        "max_payload_bytes": 8589934592,
+        "max_tensor_bytes": 8589934592,
+        "max_tensor_elements": 4000000000,
+        "max_tree_nodes": 100000,
+        "max_primitive_bytes": 1048576
+      },
+      "max_journal_bytes": 4194304,
+      "scope": "shared payload hash/tree/finite/clone/serialization visits; not metadata/journal/caller/physical quota",
+      "reservation": "whole operation, permanent/no refund"
+    },
+    "lifecycle": {
+      "collections": 3,
+      "physical_applications": 4,
+      "snapshot_saves": 10,
+      "snapshot_inspects": 2,
+      "snapshot_loads": 2,
+      "validations": 16,
+      "validation_forwards": 9,
+      "validated_pools": 22
+    },
+    "scope": "Permanent whole-operation upper reservations from original runner lifecycle, not measured work or retry capacity"
+  },
+  "execution_requested": false,
+  "recipe": {
+    "updates": 2,
+    "output_cap": 16,
+    "seed": 2323,
+    "lr": 1e-06,
+    "beta": 0.02,
+    "external_seconds_each": 600,
+    "reserve_bytes": 26843545600,
+    "invocations": 3,
+    "disk_planning_bytes": 94489280512,
+    "prompt_mode": "native-chat-thinking-off"
+  },
+  "boundaries": [
+    "Only original four training/four heldout arithmetic prompts; not the twenty-item reasoning publication panel",
+    "G4/G8 pilots start fresh at the same cached instruct parent; unequal sampled token caps are retained",
+    "Snapshots include policy/reference/BF16 Adam/RNG; original 8 GiB envelope is explicit",
+    "Same physical journals retain later source and replay spending; no refund or automatic retry",
+    "Snapshot hashing/archive comparisons and exports are outside the shared nine-dimensional I/O visits",
+    "Sampled supervisor/25 GiB reserve is not an aggregate physical quota or GPU-idle authentication"
+  ],
+  "fresh_argv": [
+    "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+    "-m",
+    "dongxi_llms.qwen_rlvr_lab",
+    "--model-dir",
+    "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+    "--revision",
+    "c1899de289a04d12100db370d81485cdf75e47ca",
+    "--output",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g4-recovery-20261005-run-02-source",
+    "--updates",
+    "2",
+    "--group-size",
+    "4",
+    "--max-new-tokens",
+    "16",
+    "--seed",
+    "2323",
+    "--lr",
+    "1e-06",
+    "--device",
+    "cuda",
+    "--prompt-mode",
+    "chat",
+    "--max-seconds",
+    "600",
+    "--environment-lock",
+    "/home/dongxi/dgx-spark-dongxi/uv.lock",
+    "--snapshot-max-bytes",
+    "8589934592",
+    "--work-limits",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-recovery-20261005-run-02/work-caps.json",
+    "--work-journal-max-bytes",
+    "4194304",
+    "--work-journal",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g4-recovery-20261005-run-02-journals/work.jsonl",
+    "--snapshot-io-limits",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-recovery-20261005-run-02/io-caps.json",
+    "--snapshot-io-ledger",
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g4-recovery-20261005-run-02-journals/io.jsonl"
+  ],
+  "preparation_sha256": "e8e930cb12dc559024b29e1c4ee32a6c9a4a1fc68258446f8b362a70df2c1d62"
+}

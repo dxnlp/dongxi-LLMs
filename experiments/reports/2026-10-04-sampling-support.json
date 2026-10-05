@@ -1,0 +1,325 @@
+{
+  "schema_version": 1,
+  "package": "DXI-13",
+  "mode": "bounded CPU reference",
+  "date_utc": "2026-10-04T19:53:24.816806+00:00",
+  "command": [
+    "/home/dongxi/dongxi_ai/Dongxi_LLMs/src/dongxi_llms/sampling_likelihood_lab.py",
+    "--report",
+    "experiments/reports/2026-10-04-sampling-support.json",
+    "--notebook-manifest",
+    "/tmp/dongxi-course-check-6uxn7bk0/manifest.json",
+    "--export-previews"
+  ],
+  "base_commit": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4",
+  "dirty_state": [
+    " M AGENTS.md",
+    " M BOOK.md",
+    " M LEARNING_MEMORY.md",
+    " M PROGRESS.md",
+    " M README.md",
+    " M ROADMAP.md",
+    " M book/chapters/07-evaluation-is-a-contract.md",
+    " M book/chapters/10-preferences-and-reward-models.md",
+    " M book/chapters/14-when-optimization-goes-wrong.md",
+    " M book/labs/07-evaluation-is-a-contract.md",
+    " M book/labs/10-preferences-and-reward-models.md",
+    " M book/labs/14-when-optimization-goes-wrong.md",
+    " M book/solutions/07-evaluation-is-a-contract.md",
+    " M book/solutions/10-preferences-and-reward-models.md",
+    " M book/solutions/14-when-optimization-goes-wrong.md",
+    " M docs/EXPERIMENT_MATRIX.md",
+    " M docs/NOTEBOOK_CURRICULUM.md",
+    " M docs/handoffs/CURRENT.md",
+    " M notebooks/day-10/README.md",
+    " M notebooks/day-15/README.md",
+    " M notebooks/day-20/README.md",
+    " M scripts/run_chapter09_spark_sft.py",
+    " M visuals/animations/PROPOSALS.md",
+    "?? docs/COURSE_IMPROVEMENT_PLAN.md",
+    "?? docs/REFERENCE_REPOSITORY_AUDIT.md",
+    "?? docs/course_improvements.json",
+    "?? experiments/reports/2026-10-04-preference-audit.json",
+    "?? experiments/specs/2026-10-04-preference-audit.md",
+    "?? experiments/specs/2026-10-04-reasoning-evaluation.md",
+    "?? experiments/specs/2026-10-04-run-identity.md",
+    "?? experiments/specs/2026-10-04-sampling-support.md",
+    "?? fixtures/preference-audit/",
+    "?? fixtures/reasoning-evaluation/",
+    "?? notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+    "?? notebooks/day-15/03_preference_collection_and_judges.ipynb",
+    "?? notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+    "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-01.png",
+    "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-02.png",
+    "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-03.png",
+    "?? notebooks/figures/chapter-07/day-10-04_mathematical_grading_and_response_replay-04.png",
+    "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-01.png",
+    "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-02.png",
+    "?? notebooks/figures/chapter-10/day-15-03_preference_collection_and_judges-03.png",
+    "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-01.png",
+    "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-02.png",
+    "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-03.png",
+    "?? notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-04.png",
+    "?? scripts/evaluate_reasoning_records.py",
+    "?? scripts/merge_course_adapter.py",
+    "?? src/dongxi_llms/checkpoint_merge.py",
+    "?? src/dongxi_llms/preference_audit.py",
+    "?? src/dongxi_llms/reasoning_evaluation.py",
+    "?? src/dongxi_llms/run_identity.py",
+    "?? src/dongxi_llms/sampling_likelihood_lab.py",
+    "?? tests/test_preference_audit.py",
+    "?? tests/test_reasoning_evaluation.py",
+    "?? tests/test_run_identity.py",
+    "?? tests/test_sampling_likelihood_lab.py"
+  ],
+  "python_executable": "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+  "python": "3.12.14",
+  "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+  "machine": "aarch64",
+  "torch": "2.13.0+cu130",
+  "matplotlib": "3.10.8",
+  "device": "cpu",
+  "dtype": "torch.float64",
+  "seed": 2020,
+  "status": "passed",
+  "results": {
+    "mode": "CPU exact finite categorical enumeration",
+    "behavior": {
+      "sampling_order": "temperature -> top-k -> renormalize -> top-p -> renormalize",
+      "temperature": 0.5,
+      "top_k": 2,
+      "top_p": 0.9,
+      "source_logits": [
+        -0.5978370007556204,
+        -1.2039728043259361,
+        -1.8971199848858813
+      ],
+      "probabilities": [
+        0.7707006369426752,
+        0.2292993630573248,
+        0.0
+      ],
+      "support": [
+        true,
+        true,
+        false
+      ],
+      "actions": [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "selected_behavior_log_probabilities": [
+        -1.4727268668921982,
+        -0.2604552597515669,
+        -1.4727268668921982,
+        -0.2604552597515669,
+        -0.2604552597515669,
+        -0.2604552597515669,
+        -0.2604552597515669,
+        -0.2604552597515669,
+        -0.2604552597515669,
+        -1.4727268668921982,
+        -0.2604552597515669,
+        -0.2604552597515669,
+        -1.4727268668921982,
+        -0.2604552597515669,
+        -0.2604552597515669,
+        -0.2604552597515669
+      ]
+    },
+    "raw_model_probabilities": [
+      0.55,
+      0.3,
+      0.15
+    ],
+    "rewards": [
+      0.0,
+      1.0,
+      4.0
+    ],
+    "conditional_target_temperature1": [
+      0.6470588235294118,
+      0.3529411764705882,
+      0.0
+    ],
+    "matched_ratios_on_support": [
+      1.0,
+      1.0
+    ],
+    "temperature1_ratios_on_support": [
+      0.839572192513369,
+      1.53921568627451
+    ],
+    "expectations": {
+      "direct_conditional_target": {
+        "value": 0.3529411764705882,
+        "gradient": [
+          -0.22837370242214533,
+          0.22837370242214533,
+          0.0
+        ]
+      },
+      "correct_denominator": {
+        "value": 0.3529411764705882,
+        "gradient": [
+          -0.22837370242214533,
+          0.22837370242214533,
+          0.0
+        ]
+      },
+      "wrong_raw_denominator": {
+        "value": 0.26976395653802915,
+        "gradient": [
+          -0.1745531483481365,
+          0.1745531483481365,
+          0.0
+        ]
+      }
+    },
+    "full_support_target_rejection": "Target-positive actions absent from behavior: [[2]]",
+    "missing_raw_target_mass": 0.15,
+    "missing_raw_reward_contribution": 0.6,
+    "kl_audit": {
+      "exact_kl": {
+        "value": 0.29916073720937497,
+        "gradient": [
+          0.39184209595800773,
+          -0.24299590829260972,
+          -0.148846187665398
+        ]
+      },
+      "frozen_k1": {
+        "value": 0.29916073720937497,
+        "gradient": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "frozen_k3": {
+        "value": 0.29916073720937497,
+        "gradient": [
+          0.35000000000000003,
+          -0.20000000000000012,
+          -0.14999999999999994
+        ]
+      },
+      "weighted_k1": {
+        "value": 0.29916073720937497,
+        "gradient": [
+          0.39184209595800773,
+          -0.24299590829260972,
+          -0.148846187665398
+        ]
+      },
+      "weighted_k3": {
+        "value": 0.29916073720937497,
+        "gradient": [
+          0.39184209595800773,
+          -0.24299590829260975,
+          -0.148846187665398
+        ]
+      }
+    }
+  },
+  "checks": [
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_sampling_likelihood_lab.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_behavior_denominator_detaches_even_if_caller_makes_it_live (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_behavior_denominator_detaches_even_if_caller_makes_it_live) ... ok\ntest_conditional_target_gradient_finite_and_mask_detached (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_conditional_target_gradient_finite_and_mask_detached) ... ok\ntest_eos_prompt_padding_and_cap_masks (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_eos_prompt_padding_and_cap_masks) ... ok\ntest_equal_kl_values_different_gradients_and_weighted_repair (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_equal_kl_values_different_gradients_and_weighted_repair) ... ok\ntest_exact_importance_value_gradient_matches_analytic (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_exact_importance_value_gradient_matches_analytic) ... ok\ntest_exact_kl_analytic_gradient_and_detached_reference (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_exact_kl_analytic_gradient_and_detached_reference) ... ok\ntest_invalid_sampling_inputs_rejected (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_invalid_sampling_inputs_rejected) ... ok\ntest_matching_distribution_ratios_one_temperature_matters (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_matching_distribution_ratios_one_temperature_matters) ... ok\ntest_missing_target_support_rejected_not_zeroed (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_missing_target_support_rejected_not_zeroed) ... ok\ntest_recorded_probabilities_detach_and_reproduce_samples (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_recorded_probabilities_detach_and_reproduce_samples) ... ok\ntest_stop_at_first_response_and_ignore_post_stop (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_stop_at_first_response_and_ignore_post_stop) ... ok\ntest_surrogate_gradient_old_advantage_reference_and_padding (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_surrogate_gradient_old_advantage_reference_and_padding) ... ok\ntest_temperature_one_full_support_preserves_baseline (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_temperature_one_full_support_preserves_baseline) ... ok\ntest_tie_order_and_batched_normalization (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_tie_order_and_batched_normalization) ... ok\ntest_top_k_then_top_p_retains_crossing_action (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_top_k_then_top_p_retains_crossing_action) ... ok\ntest_unclassified_early_end_and_empty_response_rejected (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_unclassified_early_end_and_empty_response_rejected) ... ok\ntest_wrong_denominator_changes_value_and_gradient (test_sampling_likelihood_lab.SamplingLikelihoodTests.test_wrong_denominator_changes_value_and_gradient) ... ok\n\n----------------------------------------------------------------------\nRan 17 tests in 0.225s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/home/dongxi/dgx-spark-dongxi/.venv/bin/python",
+        "scripts/check_book_math.py"
+      ],
+      "exit_code": 0,
+      "stdout": "54 Markdown files, 1099 math expressions, 0 issues\n",
+      "stderr": ""
+    }
+  ],
+  "source_sha256": {
+    "src/dongxi_llms/sampling_likelihood_lab.py": "b14084f644e58afdc16bac91d3a18536cd7dff999d8d487af5dc22115be027d6",
+    "tests/test_sampling_likelihood_lab.py": "44e3c382475a1362c13134aa4a4b694ba4ec8b8bf1a7e92234facb66a325dec6",
+    "notebooks/day-20/03_behavior_probabilities_and_support.ipynb": "a5073787b2add471eb1f67e1743d53ba9c789d6fdfdca6b7ca9b6e088e3711bb",
+    "notebooks/day-20/README.md": "35927a1659bf3c51b0910d166845fc8f1afc69a4b4ed7d5a9b8b7e5a7aac4e41",
+    "experiments/specs/2026-10-04-sampling-support.md": "fc58c8bf3f95c9527ce95f9bef01bc0785fc3ea2e42c9ea5a65ac8e4efede0c7",
+    "book/chapters/14-when-optimization-goes-wrong.md": "87ffcef8c929efeefa12da90bc5cc611ada7ac3ce37e1e601e5661a9b7606b87",
+    "book/solutions/14-when-optimization-goes-wrong.md": "8d0b84dee884263b99e65e400bdb63b0c357a1126427c51fb470bb41c1f10b17",
+    "book/labs/14-when-optimization-goes-wrong.md": "b133cc43ed2c3f19b266af7828d50fe33b005b33775298df583044ac21906436"
+  },
+  "notebook_verification": {
+    "path": "notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+    "sha256": "a5073787b2add471eb1f67e1743d53ba9c789d6fdfdca6b7ca9b6e088e3711bb",
+    "code_cells": 7,
+    "executed_code_cells": 7,
+    "skipped_unfinished_exercise_cells": [],
+    "images": 4,
+    "seconds": 1.9688543909869622,
+    "output": "/tmp/dongxi-course-check-6uxn7bk0/day-20/03_behavior_probabilities_and_support.ipynb",
+    "image_cells": [
+      3,
+      6,
+      12,
+      15
+    ],
+    "previews": []
+  },
+  "notebook_kernel": "dgx-spark-native",
+  "notebook_manifest_sha256": "bf592cd98e9fffdca9548303fce62f90dc04214acb6a07ac764924c027551c72",
+  "previews": [
+    {
+      "path": "notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-01.png",
+      "sha256": "8993df3c6af5100331e32776931be0e6c7b5598dc0cc8225da8f8503fa6a6af2"
+    },
+    {
+      "path": "notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-02.png",
+      "sha256": "852bb7725d68f77d250e9cbbd2734d711959c7738b28f61d44707b20af909930"
+    },
+    {
+      "path": "notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-03.png",
+      "sha256": "d40e2d435404c0b33e5bbf68e07e0aa6cf67eaf79675cdc1006d38111e949dc6"
+    },
+    {
+      "path": "notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-04.png",
+      "sha256": "6f44643f6d92407992815bc9382bad1ac2d3e28f4adf69d36eebcb1bac131aae"
+    }
+  ],
+  "seconds_this_reference_and_checks": 1.263369211985264,
+  "maximum_rss_report_process_kib": 601504,
+  "minimum_observed_available_gib_notebook_run": 118.06938171386719,
+  "memory_boundary": "Notebook pre-execution MemAvailable samples and this Linux report process RSS, not continuous system/GPU peaks",
+  "limitations": [
+    "Exact finite action-distribution microscope, no learned or pretrained model",
+    "No GPU job, model/dataset acquisition, API, installation or service",
+    "Not full PPO or universal off-policy/trajectory-KL repair",
+    "Conditional-support target explicitly differs from raw full-support objective",
+    "Mac environment and live GitHub math rendering unverified",
+    "Current temperature-one/full-support Qwen baseline unchanged"
+  ]
+}

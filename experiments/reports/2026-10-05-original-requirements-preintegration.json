@@ -1,0 +1,19 @@
+{
+  "scope": "Source/editorial check before the new exporter module existed; no model call or experiment result",
+  "commands": [
+    {
+      "command": "python3 scripts/check_book_math.py",
+      "output": "54 Markdown files, 1294 math expressions, 0 issues",
+      "exit_code": 0
+    },
+    {
+      "command": "python3 scripts/check_course_integrity.py",
+      "output": "15 chapters, 15 solution guides, 4 appendices, 76 notebooks; 1 navigation/coverage issues\nbook/chapters/07-evaluation-is-a-contract.md: missing link ../../src/dongxi_llms/evaluation_model_card.py",
+      "exit_code": 1,
+      "cause": "Chapter integration referenced the concurrently assigned implementation before its source file had been created",
+      "disposition": "Retained; final check must be rerun after implementation, not relabelled as an initial pass"
+    }
+  ],
+  "elapsed_seconds": null,
+  "boundary": "Actual command output/exit captured in the root tool response; no fabricated process timing or new model evidence"
+}

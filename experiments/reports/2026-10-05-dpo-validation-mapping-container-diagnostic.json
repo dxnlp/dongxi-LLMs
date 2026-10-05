@@ -1,0 +1,17 @@
+{
+  "schema": "dongxi-dpo-validation-mapping-development-diagnostic-v1",
+  "status": "fail",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "-m", "unittest", "test_dpo_stage_budget.DPOStageBudgetTests.test_fresh_process_periodic_restore_keeps_later_failure_and_validation_charges", "-v"],
+  "exit_code": 1,
+  "tests_run": 1,
+  "seconds_unittest": 2.584,
+  "failure": {
+    "child_exit_code": 1,
+    "type": "ValueError",
+    "message": "Budget limits/contract/journal bound changed",
+    "location": "src/dongxi_llms/work_budget.py:114",
+    "interpretation": "The fresh helper compared canonical token/mask values successfully but then built the typed runner digest from JSON lists rather than using the actual live re-encoder's tuple-bearing return. The retained source-bound journal correctly refused a changed contract. Concurrent owner edits were also possible during this developmental command, so final evidence waits for source freeze. No contract compatibility waiver is introduced: fresh construction will use the live return after canonical comparison."
+  },
+  "production_ready": false,
+  "model_scale_jobs_started": 0
+}

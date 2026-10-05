@@ -1,0 +1,117 @@
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python - <<'PY'
+import ast,base64,datetime,hashlib,json,os,re,time
+from pathlib import Path
+import torch
+ROOT=Path.cwd(); start=time.monotonic(); checks=[]
+def read(path):return json.loads(Path(path).read_text())
+def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+def need(condition,label):
+ if not condition:raise AssertionError(label)
+ checks.append(label)
+def canon(value):return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=False,allow_nan=False).encode()).hexdigest()
+def tdigest(value):
+ h=hashlib.sha256()
+ def frame(tag,data):h.update(tag+len(data).to_bytes(8,'big')+data)
+ def visit(x):
+  if isinstance(x,torch.Tensor):frame(b'tensor',str((str(x.dtype),tuple(x.shape))).encode());frame(b'bytes',x.detach().cpu().contiguous().numpy().tobytes())
+  elif isinstance(x,dict):
+   frame(b'dict',str(len(x)).encode())
+   for k in sorted(x,key=lambda k:(type(k).__name__,repr(k))):visit(k);visit(x[k])
+  elif isinstance(x,(list,tuple)):
+   frame(type(x).__name__.encode(),str(len(x)).encode())
+   for child in x:visit(child)
+  else:frame(type(x).__name__.encode(),repr(x).encode())
+ visit(value);return h.hexdigest()
+def tensor_read(path):
+ need(Path(path).stat().st_size<=100000,'bounded-trusted-local-tensor:'+str(path));return torch.load(path,map_location='cpu',weights_only=True)
+actor_path=Path('experiments/reports/2026-10-05-story-work/run-01/verification.json'); lesson_path=Path('experiments/reports/2026-10-05-story-work-lesson/run-01/verification.json')
+a=read(actor_path);l=read(lesson_path); bindings=[]
+for origin,rows in [('actor.source.before',a['source_sha256_before']),('actor.source.after',a['source_sha256_after']),('lesson.source.before',l['source_sha256_before']),('lesson.source.after',l['source_sha256_after'])]:
+ for p,s in rows.items():need(sha(p)==s,'hash:'+origin+':'+p);bindings.append({'origin':origin,'path':p,'sha256':s})
+for p,row in a['artifact_sha256'].items():need(sha(p)==row['sha256'] and Path(p).stat().st_size==row['bytes'],'artifact:'+p);bindings.append({'origin':'actor.artifact','path':p,**row})
+for p,expected in [(l['notebook_manifest_sha256'],'manifest'),]:pass
+manifest_path=Path('experiments/reports/2026-10-05-story-work-lesson/run-01/notebook/manifest.json');need(sha(manifest_path)==l['notebook_manifest_sha256'],'lesson-notebook-manifest-hash')
+for cmd in l['commands']:need(sha(cmd['log'])==cmd['log_sha256'] and cmd['exit_code']==0,'lesson-command:'+cmd['name'])
+for key in ['preview']:
+ row=l[key];need(sha(row['path'])==row['sha256'] and Path(row['path']).stat().st_size==row['bytes'],'lesson-preview-hash')
+need(a['source_sha256_before']==a['source_sha256_after'] and l['source_sha256_before']==l['source_sha256_after'],'before-after-source-maps-exact')
+footers={}
+for name,panel in a['panels'].items():
+ matches=re.findall(r'Ran (\d+) tests? in ([0-9.]+)s\s+(OK|FAILED[^\n]*)',panel['stderr']);need(bool(matches),'actual-footer:'+name)
+ n,seconds,result=matches[-1];need(panel['actual_exit_code']==0 and result=='OK' and int(n)==panel['actual_footer']['test_count'],'exit-and-footer:'+name);footers[name]={'tests':int(n),'seconds':float(seconds),'exit_code':0}
+archive=read('experiments/reports/2026-10-05-story-work-preintegration/manifest.json')
+for p,row in archive['source_files'].items():q=Path('experiments/reports/2026-10-05-story-work-preintegration')/row['archive'];need(sha(q)==row['sha256'] and q.stat().st_size==row['bytes'],'historical-archive:'+p)
+old=ast.parse((Path('experiments/reports/2026-10-05-story-work-preintegration')/'src/dongxi_llms/stories_training.py.txt').read_text());new=ast.parse(Path('src/dongxi_llms/stories_training.py').read_text())
+for name in ['SDPAAttention','StoriesDecoder','baseline','Recipe','validate_target_budget','ValidTargetBudgetExceeded']:
+ left=next(n for n in old.body if getattr(n,'name',None)==name);right=next(n for n in new.body if getattr(n,'name',None)==name);need(ast.dump(left,include_attributes=False)==ast.dump(right,include_attributes=False),'original-science-AST:'+name)
+def journal(path):
+ rows=[json.loads(line) for line in Path(path).read_text().splitlines()];header=rows[0];dims=list(header['limits']);tickets={};chain=canon(header);out={}
+ need(header['file_identity']==[Path(path).stat().st_dev,Path(path).stat().st_ino],'actual-journal-inode:'+str(path))
+ def summary(seq):
+  totals={k:{d:0 for d in dims} for k in ['reserved','completed','known_partial','attempted_upper','uncertain_upper']};opened=[];failed=[]
+  for num,t in tickets.items():
+   for d in dims:totals['reserved'][d]+=t['costs'][d]
+   if t['status']=='complete':
+    for d in dims:totals['completed'][d]+=t['actual'][d];totals['attempted_upper'][d]+=t['actual'][d]
+   else:
+    (opened if t['status']=='open' else failed).append(num);attempted=t['costs'] if t['status']=='open' else t['attempted']
+    for d in dims:totals['known_partial'][d]+=t['actual'][d];totals['attempted_upper'][d]+=attempted[d];totals['uncertain_upper'][d]+=attempted[d]-t['actual'][d]
+  return dict(schema=header['schema'],ledger_id=header['ledger_id'],file_identity=header['file_identity'],contract_sha256=header['contract_sha256'],limits=header['limits'],max_bytes=header['max_bytes'],sequence=seq,chain_sha256=chain,open_tickets=opened,failed_tickets=failed,**totals)
+ out[0]=summary(0)
+ for seq,envelope in enumerate(rows[1:],1):
+  r=envelope['record'];need(r['sequence']==seq and r['previous']==chain and canon(r)==envelope['sha256'],'journal-chain:'+str(path)+':'+str(seq));chain=envelope['sha256'];ticket=r['ticket']
+  if r['event']=='reserve':need(ticket==seq and ticket not in tickets,'ticket-reserve:'+str(path)+':'+str(seq));tickets[ticket]={'status':'open','costs':r['costs'],'actual':{d:0 for d in dims}}
+  else:
+   t=tickets[ticket];need(t['status']=='open' and all(0<=r['actual'][d]<=t['costs'][d] for d in dims),'ticket-finalize:'+str(path)+':'+str(seq));t['status']=r['event'];t['actual']=r['actual']
+   if r['event']=='fail':need(all(r['actual'][d]<=r['attempted'][d]<=t['costs'][d] for d in dims),'failure-attempted-upper:'+str(path));t['attempted']=r['attempted']
+  out[seq]=summary(seq)
+ need(all(out[seq]['reserved'][d]<=header['limits'][d] for d in dims),'immutable-caps:'+str(path));return out
+journals={};arms=[];tensor_files=0
+for arm in a['arms']:
+ seed=arm['seed'];mode=int(arm['checkpointing']);root=Path(f'experiments/reports/2026-10-05-story-work/run-01/arm-{seed}-{mode}');result=read(root/'fresh/result.json');execution=read(root/'fresh-execution.json');need(result==arm['fresh'] and execution==arm['execution'],'arm-top-level-evidence-exact:'+root.name)
+ need(execution['actual_exit_code']==0 and read(root/'fresh/result.json')==json.loads(execution['stdout']),'actual-fresh-stdout:'+root.name)
+ need(result['process_id']!=result['parent_process_id'] and result['parent_process_id']==a['collection_invocation']['process_id'],'fresh-child-parent:'+root.name)
+ clean=tensor_read(root/'clean/final-state.pt');fresh=tensor_read(root/'fresh/final-state.pt');tensor_files+=2
+ need(tdigest(clean)==tdigest(fresh)==arm['expected_state_sha256']==result['state_sha256'],'actual-clean-fresh-tensor-digest:'+root.name)
+ history=read(root/'clean/history.json');need(history==arm['full_successful_history'] and history[2:]==result['history'] and tdigest(result['history'])==result['history_sha256']==arm['expected_history_sha256'],'actual-fresh-numerical-history:'+root.name)
+ need(result['completed_updates']==5 and result['restored_completed_updates']==2 and result['selected_ids']==arm['expected_selected_ids'],'fresh-completed-cursor-batches:'+root.name)
+ for lane,key in [('clean','clean_work'),('retained',None)]:
+  j=journal(root/lane/'work.jsonl');journals[str(root/lane/'work.jsonl')]=len(j)-1
+  if key:need(j[max(j)]==arm[key],'clean-journal-summary:'+root.name)
+  else:
+   need(j[max(j)]==result['work'],'retained-journal-summary:'+root.name)
+   for label,prefix in [('receipt',arm['carried_receipt']['work_prefix']),('failed.before',arm['failed_suffix']['before']),('failed.after',arm['failed_suffix']['after']),('after-restore',result['after_restore'])]:need(j[prefix['sequence']]==prefix,'historical-prefix:'+root.name+':'+label)
+   need(arm['failed_suffix']['after']['failed_tickets'] and set(arm['failed_suffix']['after']['failed_tickets'])<=set(result['work']['failed_tickets']),'later-failed-suffix-retained:'+root.name)
+ for ckpt in [root/'clean/final.pt',root/'retained/completed2.pt',root/'fresh/final.pt']:
+  receipt=read(str(ckpt)+'.work.json');need(ckpt.stat().st_size==receipt['payload_bytes'] and sha(ckpt)==receipt['payload_sha256'],'checkpoint-receipt-bytes:'+str(ckpt));state=tensor_read(ckpt);tensor_files+=1;need(state['story_work_prefix']==receipt['work_prefix'] and state['step']==receipt['completed_updates'],'checkpoint-carried-prefix:'+str(ckpt))
+ arms.append({'seed':seed,'activation_checkpointing':bool(mode),'child_pid':result['process_id'],'parent_pid':result['parent_process_id'],'exit_code':0,'state_sha256':result['state_sha256'],'history_sha256':result['history_sha256'],'successful_targets':fresh['targets'],'reserved_targets':result['work']['reserved']['training_valid_targets'],'completed_updates':fresh['step'],'physical_positions':fresh['positions'],'stream_epoch':fresh['stream']['epoch'],'stream_cursor':fresh['stream']['cursor']})
+need(len({r['child_pid'] for r in arms})==4,'four-distinct-fresh-child-pids')
+for row in a['original_equations']:
+ root=Path(f"experiments/reports/2026-10-05-story-work/run-01/original-equations/{row['seed']}-{int(row['activation_checkpointing'])}")
+ states={name:tdigest(tensor_read(root/(name+'-numerical-state.pt'))) for name in ['archived','current_unaccounted','accounted']};tensor_files+=3;need(states==row['state_sha256'] and len(set(states.values()))==1,'actual-three-arm-original-tensors:'+root.name)
+ histories=read(root/'history.json');need(histories['archived']==histories['current_unaccounted']==histories['accounted'],'actual-three-arm-original-history:'+root.name);need(len(set(canon(v) for v in row['evaluations'].values()))==1 and len(set(canon(v) for v in row['activations'].values()))==1,'three-arm-eval-activation:'+root.name)
+ j=journal(root/'accounted/work.jsonl');journals[str(root/'accounted/work.jsonl')]=len(j)-1;need(j[max(j)]==row['work'],'original-equation-journal:'+root.name)
+ns=a['native_sampling'];need(ns['outputs']['archived']==ns['outputs']['current_unaccounted']==ns['outputs']['accounted'],'native-sampling-three-arm-output');need(len(ns['outputs']['accounted'])==6,'all-six-native-prompt-method-arms')
+need([ns['work']['reserved'][k] for k in ['generation_sequences','generation_calls','generation_positions','generation_tokens','multinomial_draws']]==[6,18,72,18,9],'native-uncached-ceiling')
+j=journal('experiments/reports/2026-10-05-story-work/run-01/native-sampling/accounted/work.jsonl');journals['native-sampling']=len(j)-1;need(j[max(j)]==ns['work'],'native-sampling-journal')
+publications=[]
+for row in a['failed_publication']:
+ root=Path('experiments/reports/2026-10-05-story-work/run-01/failed-publication')/row['kind'];old=root/'completed0.pt';target=root/'incomplete1.pt'
+ need(sha(old)==row['old_payload_sha256'] and sha(str(old)+'.work.json')==row['old_receipt_sha256'],'old-boundary-unchanged:'+row['kind'])
+ need(target.exists()==row['partial_payload_exists'] and target.with_suffix('.pt.tmp').exists()==row['partial_temporary_exists'] and Path(str(target)+'.work.json').exists()==row['partial_receipt_exists'],'actual-retained-partials:'+row['kind'])
+ j=journal(root/'work.jsonl');journals[str(root/'work.jsonl')]=len(j)-1;need(j[max(j)]==row['work'],'publication-journal:'+row['kind']);publications.append({'kind':row['kind'],'partial_payload':target.exists(),'partial_temporary':target.with_suffix('.pt.tmp').exists(),'receipt_exists':Path(str(target)+'.work.json').exists(),'reserved_saves':row['work']['reserved']['save_operations'],'completed_saves':row['work']['completed']['save_operations'],'failed_tickets':row['work']['failed_tickets']})
+source=read('notebooks/day-09/01_read_training_clocks.ipynb');executed=read(l['fresh_notebook']['output']);need(len(executed['cells'])==len(source['cells'])+1,'exactly-one-execution-identity-preamble');need(executed['cells'][0]['metadata'].get('dongxi_execution_identity') is not None or 'codex' in str(executed['cells'][0]['source']).lower() or 'identity' in ''.join(executed['cells'][0]['source']).lower(),'identity-preamble-recognized')
+images=[];executions=0
+for idx,(s,e) in enumerate(zip(source['cells'],executed['cells'][1:])):
+ need(s['cell_type']==e['cell_type'] and (''.join(s['source']) if isinstance(s['source'],list) else s['source'])==(''.join(e['source']) if isinstance(e['source'],list) else e['source']),'notebook-source-preserved:'+str(idx))
+ if s['cell_type']=='code':need(e['execution_count'] is not None,'fresh-code-executed:'+str(idx));executions+=1
+ for output in e.get('outputs',[]):
+  need(output.get('output_type')!='error','fresh-notebook-no-error:'+str(idx))
+  if 'image/png' in output.get('data',{}):images.append(hashlib.sha256(base64.b64decode(output['data']['image/png'])).hexdigest())
+need(executions==5 and len(images)==2 and l['preview']['sha256'] in images,'five-fresh-references-two-images-preview-match')
+need(l['old_preview_unchanged'] and sha('notebooks/figures/chapter-06/day-09-01_read_training_clocks-01.png')==l['old_preview_sha256'],'original-preview-preserved')
+native=read('experiments/reports/2026-10-05-story-work-lesson/run-01/native-work-example.json');low=read('experiments/reports/2026-10-05-story-work-lesson/run-01/lower-cap-retry-refusal.json');need((native['successful_targets'],native['reserved_targets'])==(17,25) and (low['successful_targets'],low['reserved_targets'])==(9,17),'lesson-25-success-and-24-refusal');need(native['exact_numerical_recovery'] and low['retry_refused'] and low['next_refusal_forward_calls']==0,'lesson-exact-retry-and-zero-call-refusal')
+result={'schema':'dongxi-story-work-independent-review-v1','status':'passed','review_mode':'read-only existing source/artifacts; no new model forward, fit, replay, deserialization sandbox or production job','date_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'seconds':time.monotonic()-start,'actual_checks':len(checks),'source_binding_entries':len(a['source_sha256_before'])*2+len(l['source_sha256_before'])*2,'artifact_binding_entries':len(a['artifact_sha256']),'actual_test_footers':footers,'fresh_process_arms':arms,'journal_count':len(journals),'journal_records':sum(journals.values()),'trusted_local_bounded_tensor_files_read':tensor_files,'publication_failures':publications,'notebook':{'source_cells':len(source['cells']),'reference_code_cells_executed':executions,'identity_preambles':1,'actual_code_executions':executions+1,'images':images,'new_preview_sha256':l['preview']['sha256'],'old_preview_sha256':l['old_preview_sha256']},'lesson':{'cap25_successful':17,'cap25_reserved':25,'cap24_successful':9,'cap24_reserved':17,'cap24_retry_calls':0},'receipt_sha256':{str(actor_path):sha(actor_path),str(lesson_path):sha(lesson_path),str(manifest_path):sha(manifest_path)},'bindings':bindings,'limitations':['21 declared cooperative model-work dimensions only','data/selection/permutation/tokenization/hash/metadata/allocation/serialization/load internals excluded','activation-checkpoint recomputation excluded','trusted local restricted tensor checkpoint format, not shared snapshot I/O9 or quota/physical containment','numerical metric rows are not independently durable checkpoints','no English quality, GPU, pretrained, Mac, hosted or external campaign claim'],'external_jobs_launched':0,'learner_day':9,'completed_packages':13,'total_packages':18,'external_outcome_rows_preserved_null':45,'new_findings':[]}
+print(json.dumps(result,sort_keys=True,allow_nan=False))
+PY
+

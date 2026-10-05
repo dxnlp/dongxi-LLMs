@@ -1,0 +1,37 @@
+{
+  "schema_version": "dongxi-dpo-retention-v1",
+  "provenance": "Original authored symbolic task families; no external dataset or generated judge labels",
+  "seeds": [1811, 1812, 1813],
+  "model": {"vocab":16,"width":24,"heads":4,"kv_heads":2,"head_dim":6,"layers":1,"hidden":48,"max_length":12,"modern":true,"qk_norm":false,"tied":true},
+  "warmup": {"updates":120,"lr":0.015,"weight_decay":0.0,"gradient_clip":1.0},
+  "fit": {"updates":80,"lr":0.008,"weight_decay":0.0,"gradient_clip":1.0,"beta":0.5},
+  "arms": [
+    {"name":"dpo","alpha":0.0,"gamma":0.0},
+    {"name":"dpo+chosen","alpha":0.25,"gamma":0.0},
+    {"name":"dpo+rehearsal","alpha":0.0,"gamma":0.25},
+    {"name":"dpo+chosen+rehearsal","alpha":0.25,"gamma":0.25}
+  ],
+  "conditions": ["clean","noisy","chosen-longer","matched-long"],
+  "noise_indices": [1,3],
+  "generation": {"decoding":"full-vocabulary-greedy","max_new_tokens":4,"eos":2},
+  "token_table": {"PAD":0,"BOS":1,"EOS":2,"FIRST":3,"PARITY":4,"STYLE":5,"amber":6,"birch":7,"coral":8,"dune":9,"n0":10,"n1":11,"n2":12,"n3":13,"even":14,"odd":15},
+  "template": "BOS TASK operand_a operand_b RESPONSE EOS; only RESPONSE/EOS targets supervised or scored",
+  "items": [
+    {"id":"copy-train-0","source_group":"copy-0-1","split":"train","task":"first","a":0,"b":1},
+    {"id":"copy-train-1","source_group":"copy-1-2","split":"train","task":"first","a":1,"b":2},
+    {"id":"copy-train-2","source_group":"copy-2-3","split":"train","task":"first","a":2,"b":3},
+    {"id":"copy-train-3","source_group":"copy-3-0","split":"train","task":"first","a":3,"b":0},
+    {"id":"parity-train-0","source_group":"parity-0-0","split":"train","task":"parity","a":0,"b":0},
+    {"id":"parity-train-1","source_group":"parity-0-1","split":"train","task":"parity","a":0,"b":1},
+    {"id":"parity-train-2","source_group":"parity-1-0","split":"train","task":"parity","a":1,"b":0},
+    {"id":"parity-train-3","source_group":"parity-1-1","split":"train","task":"parity","a":1,"b":1},
+    {"id":"copy-test-0","source_group":"copy-0-2","split":"heldout","task":"first","a":0,"b":2},
+    {"id":"copy-test-1","source_group":"copy-1-3","split":"heldout","task":"first","a":1,"b":3},
+    {"id":"copy-test-2","source_group":"copy-2-0","split":"heldout","task":"first","a":2,"b":0},
+    {"id":"copy-test-3","source_group":"copy-3-1","split":"heldout","task":"first","a":3,"b":1},
+    {"id":"parity-test-0","source_group":"parity-2-2","split":"heldout","task":"parity","a":2,"b":2},
+    {"id":"parity-test-1","source_group":"parity-2-3","split":"heldout","task":"parity","a":2,"b":3},
+    {"id":"parity-test-2","source_group":"parity-3-2","split":"heldout","task":"parity","a":3,"b":2},
+    {"id":"parity-test-3","source_group":"parity-3-3","split":"heldout","task":"parity","a":3,"b":3}
+  ]
+}

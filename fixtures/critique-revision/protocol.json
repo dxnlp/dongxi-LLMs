@@ -1,0 +1,19 @@
+{
+  "schema": "dongxi-critique-replay-v1",
+  "max_rounds": 2,
+  "modes": ["identity", "repair", "contrarian"],
+  "programmatic_seeds": [26061, 26062, 26063],
+  "programmatic_candidates": 8,
+  "acceptance": "valid-binary-EOS-only; valid ties accepted; no correctness score",
+  "stopping": "accepted identical token path or round limit; never gold",
+  "independent_selector": "majority; earliest eligible answer breaks ties",
+  "upstream_revision": "a788466dc85cfe8617b6c0b809ed4ab9084485de",
+  "source_items": "fixtures/inference-selection/items.json",
+  "source_items_sha256": "ff5572a060d7a88f06f6ae7d48f4c0e4e5e5f3c9629776b7c717eae95beffb29",
+  "source_responses": "experiments/reports/2026-10-04-inference-selection/responses.jsonl",
+  "source_responses_sha256": "3db261750b6c98675b658968de3258fdd745d6be07a7c674bf21e25cfde36f04",
+  "source_candidates": 864,
+  "token_interface": {"EOS": 2, "0": 6, "1": 7, "KEEP": 20, "FLIP": 21, "REPAIR": 22, "INVALID": 23},
+  "budget_boundary": "serialized symbolic output tokens including critique and EOS, not matched compute",
+  "quality_boundary": "references enter grading after decisions only; no neural self-critique or new model execution"
+}

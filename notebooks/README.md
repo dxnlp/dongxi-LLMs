@@ -53,9 +53,30 @@ regeneration instructions: [`Notebook visuals`](../docs/NOTEBOOK_VISUALS.md).
 
 ## Complete daily session index — 2026-10-04
 
-The complete course has 61 focused notebooks across all 28 learning days.
+The current course has76 accepted focused notebooks across all28 learning days.
+Fifteen reference-audit extensions add checkpoint-interface protection (Day1),
+mathematical grading/response replay (Day10), preference/judge auditing (Day15),
+text reward/outcome/process labels and vocabulary controls (Day16), DPO retention
+(Day18), behavior-probability/support and learned critic/reward accounting
+(Day20), matched objective gradients/filtering (Day22), and sampled sequence
+learnability controls (Day23), actual candidate selection (Day10), teacher-data
+and matched rejection SFT (Day11), ragged cache/recovery (Day25), and actual
+response-level distillation, critique/revision and student-prefix/teacher-context
+distillation (Day26).
+The [routing registry](../docs/course_manifest.json) classifies60core sessions,
+one optional recurrence session and fifteen accepted extensions. It records location and
+dependencies, not mastery or fulfilled experiment criteria. All76 pass fresh
+CPU execution in two current batches:530 reference cells and206 figures, with
+four preserved unfinished learner cells skipped. The
+[current checkpoint](../experiments/reports/2026-10-04-course-upgrade-checkpoint.md)
+is separate from the historical61-session build; no new pretrained
+model result or learner mastery is implied.
 The user explicitly requested the full build ahead of guided study.
 Material readiness never records an exercise as independently mastered.
+For a clean locked CPU route and retained acceptance-panel evidence, use
+[AppendixD](../book/appendices/d-reproduction-and-environments.md). Direct
+notebook verification also supports `--notebooks` and `--lane`; unknown or
+empty selections fail explicitly and old output directories are preserved.
 
 | Day | Chapter | Notebook route |
 |---:|---:|---|

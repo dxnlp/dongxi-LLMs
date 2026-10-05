@@ -1,0 +1,111 @@
+{
+  "schema": "dongxi-observed-rlvr-export-independent-review-v1",
+  "status": "clear-in-original-bounded-scope",
+  "original_criteria_scope": {
+    "DXI03_C3": "Actual checkpoints on appropriate frozen task slices; preserve planned/failed rows, not successful supervision for every pilot.",
+    "DXI03_C5": "Smoke/recovery/interface checks before pilots; record actual exits, identities, failures, costs and negatives. Does not require a second completed fit to rewrite terminal monitoring."
+  },
+  "actual_g4_observation": {
+    "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-pilot-20261005-run-01/export-observation.json",
+    "sha256": "83bba5b79fa12cf0e901305e5a111b3d94aa1ad6c903e3fd4491e36070fe8318",
+    "bytes": 39395,
+    "observation_sha256": "767d63e1975c177be4690fab09614551caa6a11df2096900dd634a45dcd4567a",
+    "observation_self_hash_valid": true,
+    "before_after_exact": true,
+    "scope": "Explicit observed-export consistency only: original supervision/failure bytes and values unchanged; no pilot acceptance retrofit, provisional-result promotion, quality claim, refit or native launch; parent-side payload/export hashes are outside native work23/I/O9 ledgers",
+    "supervision": {
+      "status": "failed",
+      "actual_exit_code": 0,
+      "stop_reason": null,
+      "failure": null,
+      "cleanup_errors": [],
+      "journal_error": {
+        "type": "TimeoutError",
+        "message": "Final logging timed out"
+      },
+      "final_record_retained": false
+    },
+    "checks": {
+      "pilot_completed_horizon": true,
+      "original_prompt_and_source_contract": true,
+      "no_open_or_failed_journal_tickets": true
+    },
+    "old83bindings_unchanged": true,
+    "changed_old_bindings": [],
+    "current_consumer_bindings": {
+      "scripts/close_native_rlvr_export.py": true,
+      "tests/test_native_rlvr_observed_export.py": true
+    },
+    "current_original_metadata": {
+      "preparation": true,
+      "native_report": true,
+      "returned_supervision": true,
+      "work_journal": true,
+      "io_journal": true,
+      "original_failure": true,
+      "provisional_supervisor_result": true
+    },
+    "export_completed_updates": 16,
+    "final_state_components": [
+      "policy",
+      "reference",
+      "optimizer",
+      "loop_contract",
+      "cursor",
+      "collection_work",
+      "application_work",
+      "history",
+      "pending",
+      "rng"
+    ],
+    "final_state_science_sha": "9a1f6ac9c8ba506c0cfe27a971182ea54ed470cbcc377fea711ca0017c386268",
+    "declared_export_file_count": 7,
+    "model_weight_body_rehashed_by_reviewer": false
+  },
+  "tests": {
+    "command": "env PYTHONPATH=src:tests CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python -B -m unittest -q test_native_rlvr_observed_export test_native_rlvr_evaluation test_native_campaign_evidence.NativeCampaignSnapshot.test_returned_logging_failure_dominates_provisional_completed_result",
+    "exit_code": 0,
+    "actual_footer_count": 28,
+    "unittest_seconds": 11.275,
+    "output": "----------------------------------------------------------------------\nRan 28 tests in 11.275s\n\nOK\n{\"status\": \"passed\", \"group\": 4, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-erws2hfr/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-01\"}\n{\"status\": \"passed\", \"group\": 8, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-erws2hfr/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-01\"}\n{\"status\": \"compared\", \"budget\": 32, \"path\": \"/tmp/dongxi-rlvr-eval-authored-erws2hfr/experiments/reports/native-rlvr-common20-cap32-20261005-run-01.json\"}\n{\"status\": \"passed\", \"group\": 4, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-0titpik_/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-01\"}\n{\"status\": \"passed\", \"group\": 4, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-jfxs1q7a/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-01\"}\n{\"status\": \"passed\", \"group\": 4, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-3demp1f6/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-01\"}\n{\"status\": \"passed\", \"group\": 8, \"budget\": 32, \"evidence\": \"/tmp/dongxi-rlvr-eval-authored-3demp1f6/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-01\"}\n",
+    "scope": "Authored local fixtures only; no actual native evaluation, checkpoint/model body load or GPU execution. Counts overlap existing controls and are not added to a full-suite count."
+  },
+  "source_sha256_before": {
+    "scripts/close_native_rlvr_export.py": "5d69f35bc4a12fac32def2b97c75bcf5490e5cc4cf89824dbcda356d6c12b684",
+    "tests/test_native_rlvr_observed_export.py": "760cfd5d957997a41cfd3f8dcc14b747bd76c1bc2158da6ec0485c6a7e75cd85",
+    "scripts/run_native_rlvr_evaluation.py": "5ad7eabaa57865ba102b41e83a9e018b191327bdd999ed8386899ae5a5fe213e",
+    "tests/test_native_rlvr_evaluation.py": "0e4a25c039ef5e60c22328c6667bb99b9cdb6f58542eb0371eec96b0216973ff",
+    "scripts/assemble_native_campaign_evidence.py": "21f301f71270c3988cd43a3f4c89e24a0318887cab2f0b1ebeb2d834877ebdc6",
+    "tests/test_native_campaign_evidence.py": "690d3e5e06d85ae6b7fab089b2c541b7e5c392a2cc4d90efb9280a93993efd5e",
+    "scripts/run_native_rlvr_stages.py": "a17e6fe791d32bce3518507f29f2814f011197b3796162e6fafe269bc34ae508",
+    "src/dongxi_llms/native_profile_supervisor.py": "88100a0fbe33fa8de34155838485e6c31fb5c3fd436d1dc27725fe720ad4f9b2",
+    "src/dongxi_llms/qwen_rlvr_lab.py": "7c61253d4da3a3119342f66d4f40dc31e143e68d57be22ac7d71aac5d3ee1fb7"
+  },
+  "source_sha256_after": {
+    "scripts/close_native_rlvr_export.py": "5d69f35bc4a12fac32def2b97c75bcf5490e5cc4cf89824dbcda356d6c12b684",
+    "tests/test_native_rlvr_observed_export.py": "760cfd5d957997a41cfd3f8dcc14b747bd76c1bc2158da6ec0485c6a7e75cd85",
+    "scripts/run_native_rlvr_evaluation.py": "5ad7eabaa57865ba102b41e83a9e018b191327bdd999ed8386899ae5a5fe213e",
+    "tests/test_native_rlvr_evaluation.py": "0e4a25c039ef5e60c22328c6667bb99b9cdb6f58542eb0371eec96b0216973ff",
+    "scripts/assemble_native_campaign_evidence.py": "21f301f71270c3988cd43a3f4c89e24a0318887cab2f0b1ebeb2d834877ebdc6",
+    "tests/test_native_campaign_evidence.py": "690d3e5e06d85ae6b7fab089b2c541b7e5c392a2cc4d90efb9280a93993efd5e",
+    "scripts/run_native_rlvr_stages.py": "a17e6fe791d32bce3518507f29f2814f011197b3796162e6fafe269bc34ae508",
+    "src/dongxi_llms/native_profile_supervisor.py": "88100a0fbe33fa8de34155838485e6c31fb5c3fd436d1dc27725fe720ad4f9b2",
+    "src/dongxi_llms/qwen_rlvr_lab.py": "7c61253d4da3a3119342f66d4f40dc31e143e68d57be22ac7d71aac5d3ee1fb7"
+  },
+  "source_stable": true,
+  "source_review": [
+    "close_native_rlvr_export reuses actual completed16 snapshot/storage/export checks and exclusively publishes consistency observation, preserving original supervision/failure bytes.",
+    "observed_policy accepts only explicit run02, binds original report/preparation/supervision observation and exact exported files/genealogy/interface; accepted-only default remains independent.",
+    "Prospective one-second resource sampling in observed route keeps25GiB sampled reserve/900-second deadline. It is not a continuous resource guarantee.",
+    "Campaign collector prioritizes returned-supervisor final ACK/error over provisional result.json, while retaining both.",
+    "Observed exports are separately inventoried with training_supervision_status rather than relabelling a failed pilot accepted."
+  ],
+  "limits": [
+    "G8 pilot and all actual run02 common20 evaluations/comparisons remain pending at this review.",
+    "Reviewer joined model-free metadata/producer component maps; did not repeat5.39GB checkpoint or model-weight body hashes.",
+    "All83 previously bound G4 pilot01 metadata files are unchanged; original negative review and unsigned86-criterion draft remain historical and unsigned.",
+    "No historical DGX OOM problem or newer stack is inferred by this review, and no monitor expansion or OOM stress test was run.",
+    "No learner mastery, Mac/hosted run, publication, whole-goal completion or universal quality ranking is claimed."
+  ],
+  "development_note": "A first read-only summary attempt addressed scientific_state['sha256'] rather than the actual scientific_state_sha256 field and raised KeyError; corrected read retained the existing schema without changes to source/receipts."
+}

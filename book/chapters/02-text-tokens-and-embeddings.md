@@ -690,6 +690,24 @@ This example also sharpens our notation: tokenizer entry count $V_t$ and model
 row count $V_m$ can differ. Treating both casually as “the vocabulary size” can
 hide a real interface boundary.
 
+A later [measured decoder-coverage failure](../../learning_artifacts/day-02-text-tokens-and-embeddings/output-vocabulary-and-decoder-coverage.md)
+turns that boundary into a concrete inference case. The separately pinned
+Qwen3-0.6B-Base cache likewise configures 151,936 output rows with 151,669
+mapped tokenizer IDs. In full-support temperature-one sampling, one continuation
+selects ID151768 as its 24th action. That address is within the configured model
+rows, but has no tokenizer mapping. The adapter retains the full IDs and
+likelihoods, records a decode error, and stops the invocation without silently
+filtering the vocabulary. Both 32/128-cap runs retain 40 records and 60 missing
+planned responses; neither is an accuracy score over 100 completed answers.
+
+This is not an unfamiliar input word, an embedding-index overflow or a failure
+of byte-level input coverage. It is an output-interface failure. The two caps
+share the same seed and 24-action trajectory, so they are not independent
+estimates of rare-event frequency. A future valid-ID mask would define a
+different sampling support and distribution; it cannot retroactively repair
+these recorded results. Chapter13 keeps the failed conditions separate from
+complete reasoning measurements.
+
 ## 2.9 Masks define different learning boundaries
 
 Sequences in one batch usually have different lengths. Padding creates a

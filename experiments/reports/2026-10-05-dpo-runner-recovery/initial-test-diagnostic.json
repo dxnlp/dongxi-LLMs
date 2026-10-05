@@ -1,0 +1,17 @@
+{
+  "scope": "First focused random CPU test execution; retained before its setup repair",
+  "exit_code": 1,
+  "tests": 19,
+  "passed": 18,
+  "errors": 1,
+  "unittest_seconds": 3.764,
+  "source_sha256": "4715a564a988e17b4c3efacdd509a5e380ddf16852a6a03eb0fd438732a3cbc6",
+  "test_sha256": "343b7626d9f31ab97851cd1a5bd3eb28f27c74e0f8013b01be159d5d4637be2f",
+  "shared_snapshot_sha256": "9cad2851b665b5fe5d640c1327710352396218ea80fab3b0c82f01925e1749a3",
+  "failed_test": "test_observable_pre_model_identity_and_latent_effective_config",
+  "error": "AttributeError: 'Qwen3Config' object has no attribute 'rope_theta'",
+  "failed_expression": "components[0].config.rope_theta *= 2",
+  "repair": "Architecture mutation control now changes max_position_embeddings while retaining identical tensor shapes; the HF5.18 config field layout changed. Recipe/model dimensions/seed/update budget unchanged.",
+  "subsequent_source_hardening": "Explicit gradient checkpointing contract and malformed CPU RNG error handling; two additional non-completed/live-reference controls. Original reference and six-update numerical recipe unchanged.",
+  "historical_identity_claim": "These hashes describe the first diagnostic snapshot, not current-source replay. No old snapshot is presented as a current hash."
+}

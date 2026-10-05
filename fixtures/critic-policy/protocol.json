@@ -1,0 +1,162 @@
+{
+  "schema": "dongxi-critic-policy-v1",
+  "actor_seeds": [
+    2001,
+    2002,
+    2003
+  ],
+  "reward_seed": 1611,
+  "reward_fit_updates": 120,
+  "rollout_updates": 40,
+  "paths_per_prompt": 8,
+  "collector_cap": 3,
+  "environment_horizon": 4,
+  "gamma": 1,
+  "lambda": 0.95,
+  "actor_learning_rate": 0.01,
+  "critic_learning_rate": 0.01,
+  "kl_beta": 0.02,
+  "noise_amplitude": 2,
+  "checkpoint_updates": [
+    0,
+    20,
+    40
+  ],
+  "sampled_evaluation_paths_per_item": 8,
+  "arms": [
+    [
+      "balanced",
+      "oracle"
+    ],
+    [
+      "balanced",
+      "learned"
+    ],
+    [
+      "balanced",
+      "noisy"
+    ],
+    [
+      "confounded",
+      "learned"
+    ]
+  ],
+  "items": [
+    {
+      "id": "train-cup-red",
+      "source_group_id": "color-cup-red",
+      "split": "train",
+      "object": "cup",
+      "color": "red",
+      "prompt": "The cup is red . What color ?",
+      "provenance": "authored"
+    },
+    {
+      "id": "train-cup-blue",
+      "source_group_id": "color-cup-blue",
+      "split": "train",
+      "object": "cup",
+      "color": "blue",
+      "prompt": "The cup is blue . What color ?",
+      "provenance": "authored"
+    },
+    {
+      "id": "train-key-red",
+      "source_group_id": "color-key-red",
+      "split": "train",
+      "object": "key",
+      "color": "red",
+      "prompt": "The key is red . What color ?",
+      "provenance": "authored"
+    },
+    {
+      "id": "train-key-blue",
+      "source_group_id": "color-key-blue",
+      "split": "train",
+      "object": "key",
+      "color": "blue",
+      "prompt": "The key is blue . What color ?",
+      "provenance": "authored"
+    },
+    {
+      "id": "calibration-bag-red",
+      "source_group_id": "color-bag-red",
+      "split": "calibration",
+      "object": "bag",
+      "color": "red",
+      "prompt": "The bag is red . What color ?",
+      "provenance": "authored"
+    },
+    {
+      "id": "calibration-bag-blue",
+      "source_group_id": "color-bag-blue",
+      "split": "calibration",
+      "object": "bag",
+      "color": "blue",
+      "prompt": "The bag is blue . What color ?",
+      "provenance": "authored"
+    },
+    {
+      "id": "test-box-red",
+      "source_group_id": "color-box-red",
+      "split": "test",
+      "object": "box",
+      "color": "red",
+      "prompt": "The box is red . What color ?",
+      "provenance": "authored"
+    },
+    {
+      "id": "test-box-blue",
+      "source_group_id": "color-box-blue",
+      "split": "test",
+      "object": "box",
+      "color": "blue",
+      "prompt": "The box is blue . What color ?",
+      "provenance": "authored"
+    },
+    {
+      "id": "control-mug-red",
+      "source_group_id": "color-mug-red",
+      "split": "control",
+      "object": "mug",
+      "color": "red",
+      "prompt": "The mug is red . What color ?",
+      "provenance": "authored"
+    },
+    {
+      "id": "control-mug-blue",
+      "source_group_id": "color-mug-blue",
+      "split": "control",
+      "object": "mug",
+      "color": "blue",
+      "prompt": "The mug is blue . What color ?",
+      "provenance": "authored"
+    }
+  ],
+  "quality_rule": "First color equals requested color; zero or one style marker; EOS emitted within delivered cap. Quality never enters actor or critic targets.",
+  "actor_vocabulary": [
+    "<pad>",
+    "<bos>",
+    "<sep>",
+    "<step>",
+    "<eos>",
+    "The",
+    "cup",
+    "key",
+    "bag",
+    "box",
+    "mug",
+    "is",
+    "red",
+    "blue",
+    ".",
+    "What",
+    "color",
+    "?",
+    "plain",
+    "fancy"
+  ],
+  "reward_scaling": "tanh((actual saved text-RM score - train-response mean) / max(train-response population standard deviation,0.1)); fixed using train response strings only",
+  "selection": "All predeclared arms, seeds and scheduled checkpoints retained; no held-out selection"
+}
+

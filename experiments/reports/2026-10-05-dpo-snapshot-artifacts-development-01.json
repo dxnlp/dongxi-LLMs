@@ -1,0 +1,10 @@
+{
+  "scope": "First focused development test, preserved before correcting its assertion",
+  "command": ["/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python", "-m", "unittest", "test_dpo_snapshot_artifacts"],
+  "actual_exit_code": 1,
+  "test_count": 11,
+  "unittest_seconds": 5.022,
+  "failure": "test_publication_failure_retains_payload_staging_and_prior_commit: assertion expected staging name to start with '.', but the unchanged shared snapshot publisher names it '<payload>.commit-<uuid>'.",
+  "correction_scope": "Match the actual existing staging naming convention; do not change publication behavior, masks, objective or fixture.",
+  "raw_result": "......F....\nFAIL: test_publication_failure_retains_payload_staging_and_prior_commit (test_dpo_snapshot_artifacts.DpoSnapshotArtifactTests.test_publication_failure_retains_payload_staging_and_prior_commit)\nTraceback (most recent call last):\n  File \"/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_dpo_snapshot_artifacts.py\", line 199, in test_publication_failure_retains_payload_staging_and_prior_commit\n    self.assertTrue(any(name.startswith('.') and row['state']=='sealed' for name,row in ledger.files.items()))\nAssertionError: False is not true\nRan 11 tests in 5.022s\nFAILED (failures=1)"
+}

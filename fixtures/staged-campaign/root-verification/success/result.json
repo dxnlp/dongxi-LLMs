@@ -1,0 +1,69 @@
+{
+  "fixture": "success",
+  "limits": {
+    "seconds": 2.0,
+    "reserve_bytes": 26843545600,
+    "sampling_seconds": 0.02,
+    "term_grace_seconds": 0.1,
+    "kill_reap_seconds": 1.0
+  },
+  "child_command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "dongxi_llms.campaign_supervisor",
+    "--fixture-child",
+    "success"
+  ],
+  "child_pid": 189012,
+  "actual_exit_code": 0,
+  "status": "completed",
+  "resource_measurement": "sampled, not continuous",
+  "observations": [
+    {
+      "available_bytes": 126784221184,
+      "source": "actual-linux-MemAvailable",
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 404,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      }
+    },
+    {
+      "available_bytes": 126781947904,
+      "source": "actual-linux-MemAvailable",
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 404,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      }
+    },
+    {
+      "available_bytes": 126776946688,
+      "source": "actual-linux-MemAvailable",
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 404,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      }
+    }
+  ],
+  "scope": "self-spawned leaf CPU child only; no model job or descendant supervision",
+  "supervised_seconds": 0.07711076099076308,
+  "stop_reason": null,
+  "failure": null,
+  "signal_journal_errors": [],
+  "minimum_sampled_available_bytes": 126776946688,
+  "journal": {
+    "path": "fixtures/staged-campaign/root-verification/success/events.jsonl",
+    "sha256": "cc762805784d718a8f5133fd4b44f56a99668ab9557f0d9b3a35015227e8206c"
+  }
+}

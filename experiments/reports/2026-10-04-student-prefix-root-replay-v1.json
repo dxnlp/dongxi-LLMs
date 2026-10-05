@@ -1,0 +1,35 @@
+{
+  "package": "DXI-16",
+  "schema_version": 1,
+  "status": "passed-historical-positive-support-campaign-replay",
+  "created_utc": "2026-10-04T21:52:38Z",
+  "reference": "experiments/reports/2026-10-04-student-prefix-distillation/results.json",
+  "reference_sha256": "56ee9b50a319028716b395cf56d4130ced4377b3068c5418aa1124b414258f39",
+  "python": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+  "campaigns": 3,
+  "arms": 24,
+  "focused_tests": 23,
+  "focused_tests_passed": true,
+  "actual_wall_seconds": 8.919047767005395,
+  "exact_non_timing_replay": true,
+  "compared_keys": ["protocol", "fixture_audit", "controls", "campaigns"],
+  "excluded_keys_recursively": ["keys ending in seconds", "payload_sha256", "parent_payload_sha256"],
+  "exclusion_boundary": "Measured durations differ; derived payload identities include durations. Other state identities, actual outputs, teacher targets, trajectories, gradients, decisions, counts and costs compare exactly. Top-level memory/environment are not asserted equal.",
+  "recorded_source_paths_checked": 8,
+  "source_hash_mismatches": [],
+  "recorded_source_sha256": {
+    "src/dongxi_llms/student_prefix_lab.py": "ec6fef04e3914c53f3b1d969470e8b412f490d047428b77749e2973798915fb3",
+    "tests/test_student_prefix_lab.py": "7ff70c68d0217813d225edd5cb738a2983083b10560f60f7d4d7783a428103d5",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/teacher_data_lab.py": "d28fa327dbf6a50a7f50985217bd721c6c45012eaf44081aa163a1f0583086c2",
+    "src/dongxi_llms/reasoning_generation.py": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "fixtures/student-prefix/items.json": "bd7d31207c0272fc80d1974a168370d60f131596a5e29242c7fadd138663afdb",
+    "experiments/specs/2026-10-04-student-prefix-distillation.md": "964b9e0afc056ef3fdb259cf22c85b4a51853d06cbb1f1de90d6d3dfb851f883"
+  },
+  "limits": [
+    "This historical replay does not accept subsequent source revisions.",
+    "Independent review later found unsupported zero-support tail detail and mixed-cohort interface gaps; those require a preserved-source follow-up before package acceptance.",
+    "No pretrained, neural-teacher, GPU, SDPO, Mac, service or learner-mastery claim."
+  ]
+}

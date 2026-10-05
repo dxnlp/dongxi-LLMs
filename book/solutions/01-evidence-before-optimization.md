@@ -80,3 +80,37 @@ One controlled comparison is:
 
 The result describes batch size 2 only. Continue incrementally rather than
 extrapolating directly to batch size 8.
+
+## Exercise 7
+
+Loading checks row counts and shapes, not linguistic meanings. The new tokenizer
+sends `cat` to a row trained as `dog`, and decodes the original `cat` score as
+`dog`. A size check accepts a semantic interface failure. Compare the full
+token-to-ID mapping, not only its length.
+
+Identical mappings still do not establish identical encoding. Check the supported
+serialized rules, including normalization and merge/pre-tokenization, plus wrapper
+settings, special IDs, template and stops. Lowercasing changes how `CAT` is encoded
+without changing the fixture's eight entries. Actual save/reload is the positive control.
+
+## Exercise 8
+
+Explicit adoption fingerprints current saved meanings/rules and records a new
+declaration for downstream comparison. It cannot authenticate the upstream commit
+or reconstruct an unrecorded past tokenizer. Automatic migration would hide that gap.
+
+Timestamp and invocation ID belong in the journal, not stable recovery equality:
+both change on restart. Source/data/interface/objective identity belongs in the
+stable contract. Passing a fingerprint proves neither language improvement,
+a CUDA kernel nor exact model-scale restart parity.
+
+## Exercise 9
+
+The contract requires successful fresh-process replay within the declared
+deadline, not only two completed original runs. Safe sampled memory cannot
+replace a failed time criterion or missing final comparison. The outer
+adapter's exit1 reports its own failure; the native exit remains unknown in
+this receipt, with the cleanup error retained. Preserve incurred work and the
+uncommitted artifact rather than assigning a convenient native exit or calling
+the case successful. A new CPU8 attempt keeps the original deadline and must
+produce its own complete receipts before pilot admission.

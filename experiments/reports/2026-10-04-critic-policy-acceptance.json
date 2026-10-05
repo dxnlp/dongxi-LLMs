@@ -1,0 +1,526 @@
+{
+  "schema_version": 1,
+  "package": "DXI-10",
+  "status": "passed",
+  "date_utc": "2026-10-04T21:05:45.742398+00:00",
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "scripts/verify_critic_policy.py",
+    "--report",
+    "experiments/reports/2026-10-04-critic-policy-acceptance.json",
+    "--reference",
+    "experiments/reports/2026-10-04-critic-policy-verification.json",
+    "--notebook-manifest",
+    "/tmp/dongxi-course-check-zduf82j3/manifest.json"
+  ],
+  "source_sha256": {
+    "src/dongxi_llms/critic_policy_lab.py": "fbd9c062bdc45008fae5bc968e5811f1d5ca6302054dddbb1a7520b7e930ccff",
+    "tests/test_critic_policy_lab.py": "3f75b3e7a2b144ac9d1a3adac0d34a2533ccb688e1e3b36b2e9ee8f9c4266b47",
+    "scripts/verify_critic_policy.py": "6e7963cda4b724eb695a4f91adb6ab3f6dcb2677a8da89ffc1d6843d74541359",
+    "src/dongxi_llms/char_reward_lab.py": "a152706e54f6adaeab1c9c50488ba5b017254d30567be20b243d7a4593262a91",
+    "src/dongxi_llms/text_reward_lab.py": "dbb2df404aedb1f313dfe38c9dd7274ec72fd962513865c93707c5a00a3cf71b",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "fixtures/critic-policy/protocol.json": "72aa657e402cab344d387fa571f13857ceeda7471d63d64e4b14dcf6fc5da942",
+    "fixtures/critic-policy/preferences-balanced.json": "18efc036a1f03ea476bc926370913501cef1d0bab0dd4f21d785e97cf095f356",
+    "fixtures/critic-policy/preferences-confounded.json": "24eadeb9bde4397756c467f4a5b724655a04ff76edc9f4e5f6eb8bf9e33a509e",
+    "fixtures/critic-policy/README.md": "b16ae14277c2dd9d321741aba31ea24eab0b75034aad616dfda23ce8bcba682b",
+    "experiments/specs/2026-10-04-critic-policy.md": "b5011f533089c25a287739e1707600f94c06a573ff895bd16c814cb84ebe0567",
+    "notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb": "dc405313504c8797de83a9d42589f6244b9091cbb1c88323cff1ee1f43b547e5",
+    "notebooks/day-20/README.md": "02610bea2bd4201b499925d5b946971f1c45b996d100d50b1e8e12fc58b4616c",
+    "book/chapters/12-language-generation-as-a-policy.md": "8bb681609858b31c2db3b871c4cd7c87a2a03fc0825e05ab33f3ee675b4c3c2d",
+    "book/solutions/12-language-generation-as-a-policy.md": "8fd20ebd7503eab549d8e11531473427561905832ab86db232ef427c63cd7b23",
+    "book/labs/12-language-generation-as-a-policy.md": "03458b9a62fb3b087aefd2a15f67c6a8a9039bc31a156a441043330b86f26d43",
+    "notebooks/figures/chapter-12/day-20-04_learned_critics_and_frozen_text_rewards-01.png": "b2b1551010e88b30959e17fc65ba49041c9b721c8c38e558cf4ed614f400d401",
+    "notebooks/figures/chapter-12/day-20-04_learned_critics_and_frozen_text_rewards-02.png": "fa60800f9bb4c1d538aeba283ed96fda1e93145f8fde2d5c4b6046f21fc82955",
+    "notebooks/figures/chapter-12/day-20-04_learned_critics_and_frozen_text_rewards-03.png": "608cbb53d25cb5fe6e266cda6a26da9efbd428217b3b4f5211bad982963f8624",
+    "notebooks/figures/chapter-12/day-20-04_learned_critics_and_frozen_text_rewards-04.png": "5ffb0ea9fc410df34a8b4b7c83290b89134c0787f1921979a4f21c8b3e7bd079",
+    "notebooks/figures/chapter-12/day-20-04_learned_critics_and_frozen_text_rewards-05.png": "a6a100ef5a9e371c08d4d43141280df3f15669065cacf83a4bc143d09a1c2f21"
+  },
+  "source_changes_during_run": [],
+  "historical_raw_reference": {
+    "path": "experiments/reports/2026-10-04-critic-policy-verification.json",
+    "sha256": "4c1503791ee4f36bda287d949edf478bd0888c8d6cf1ecf82de6d5d12336c442",
+    "boundary": "Previous measured-source snapshot retained; current-source numeric replay excludes actual wall durations only"
+  },
+  "actual_replay_seconds": 10.066988164995564,
+  "comparisons": [
+    {
+      "reward_arm": "balanced",
+      "critic": "oracle",
+      "seed": 2001,
+      "coordinates_match": [
+        [
+          "balanced",
+          "balanced"
+        ],
+        [
+          "oracle",
+          "oracle"
+        ],
+        [
+          2001,
+          2001
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "238e0c96e81fd2bc0c602428b85684e0d2689ee5059c3c4ddb74d935df58ebbc",
+      "critic_sha256": "55ac2e6c18bda7deb43d46b1e1ae54c7b3698b480b85750fd9c1a26c676343fb",
+      "reward_sha256": "5a9f4f26bb98e66305d9f1b9d8821da8e197f7dc42dcfbbf1660ca63a8dbc7c8"
+    },
+    {
+      "reward_arm": "balanced",
+      "critic": "oracle",
+      "seed": 2002,
+      "coordinates_match": [
+        [
+          "balanced",
+          "balanced"
+        ],
+        [
+          "oracle",
+          "oracle"
+        ],
+        [
+          2002,
+          2002
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "a0759d26b8d37d4c869e2f63df74b95074091a709e9a4bb92ec194b80e466734",
+      "critic_sha256": "7ea6d56da06b95b3f6e24570af90fd2f8c31b0b86a45db9be80f0632d3a78b36",
+      "reward_sha256": "5a9f4f26bb98e66305d9f1b9d8821da8e197f7dc42dcfbbf1660ca63a8dbc7c8"
+    },
+    {
+      "reward_arm": "balanced",
+      "critic": "oracle",
+      "seed": 2003,
+      "coordinates_match": [
+        [
+          "balanced",
+          "balanced"
+        ],
+        [
+          "oracle",
+          "oracle"
+        ],
+        [
+          2003,
+          2003
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "81cd0f5438a559deff48f0fa76ea70a130f8eb37761a69b6ee54498e283faf9c",
+      "critic_sha256": "c180cbfc3ab269b15488d6ba23c52a0d7b70361fc343b907b49078698a7ddf18",
+      "reward_sha256": "5a9f4f26bb98e66305d9f1b9d8821da8e197f7dc42dcfbbf1660ca63a8dbc7c8"
+    },
+    {
+      "reward_arm": "balanced",
+      "critic": "learned",
+      "seed": 2001,
+      "coordinates_match": [
+        [
+          "balanced",
+          "balanced"
+        ],
+        [
+          "learned",
+          "learned"
+        ],
+        [
+          2001,
+          2001
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "9b53d8fca7026fc134bc41a428554c02cb3549d9e09b33443755da97376952bd",
+      "critic_sha256": "ce463cb98acead75bf94a6eeb30ec3fba617ba2dffb5a86960693dcba5537d86",
+      "reward_sha256": "5a9f4f26bb98e66305d9f1b9d8821da8e197f7dc42dcfbbf1660ca63a8dbc7c8"
+    },
+    {
+      "reward_arm": "balanced",
+      "critic": "learned",
+      "seed": 2002,
+      "coordinates_match": [
+        [
+          "balanced",
+          "balanced"
+        ],
+        [
+          "learned",
+          "learned"
+        ],
+        [
+          2002,
+          2002
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "44f6c9b0d2d3822b8022019fedd378dd6c26667949636adc69868924a5358a61",
+      "critic_sha256": "6d93d05eac3b59bd197f510e67b5d5eb7c9b7954c75f23c600e07c6dd7c962bf",
+      "reward_sha256": "5a9f4f26bb98e66305d9f1b9d8821da8e197f7dc42dcfbbf1660ca63a8dbc7c8"
+    },
+    {
+      "reward_arm": "balanced",
+      "critic": "learned",
+      "seed": 2003,
+      "coordinates_match": [
+        [
+          "balanced",
+          "balanced"
+        ],
+        [
+          "learned",
+          "learned"
+        ],
+        [
+          2003,
+          2003
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "fb49ced9c88af030b203bb73f75bb2f25d453dde0904cad83df57762fd7543eb",
+      "critic_sha256": "6c40d139da37ec5929e62e73330d3b8cf997bb7b384b5db808a1810f1d15db84",
+      "reward_sha256": "5a9f4f26bb98e66305d9f1b9d8821da8e197f7dc42dcfbbf1660ca63a8dbc7c8"
+    },
+    {
+      "reward_arm": "balanced",
+      "critic": "noisy",
+      "seed": 2001,
+      "coordinates_match": [
+        [
+          "balanced",
+          "balanced"
+        ],
+        [
+          "noisy",
+          "noisy"
+        ],
+        [
+          2001,
+          2001
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "efcb078a8e54fb0d8e801642e8c44853cdac1f02c5a62cb2866c250a94a5bc43",
+      "critic_sha256": "55ac2e6c18bda7deb43d46b1e1ae54c7b3698b480b85750fd9c1a26c676343fb",
+      "reward_sha256": "5a9f4f26bb98e66305d9f1b9d8821da8e197f7dc42dcfbbf1660ca63a8dbc7c8"
+    },
+    {
+      "reward_arm": "balanced",
+      "critic": "noisy",
+      "seed": 2002,
+      "coordinates_match": [
+        [
+          "balanced",
+          "balanced"
+        ],
+        [
+          "noisy",
+          "noisy"
+        ],
+        [
+          2002,
+          2002
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "252dfb0b611d8e1c97b5e79da77e7ec5342c52d8f0193b9f1364ababb564aeeb",
+      "critic_sha256": "7ea6d56da06b95b3f6e24570af90fd2f8c31b0b86a45db9be80f0632d3a78b36",
+      "reward_sha256": "5a9f4f26bb98e66305d9f1b9d8821da8e197f7dc42dcfbbf1660ca63a8dbc7c8"
+    },
+    {
+      "reward_arm": "balanced",
+      "critic": "noisy",
+      "seed": 2003,
+      "coordinates_match": [
+        [
+          "balanced",
+          "balanced"
+        ],
+        [
+          "noisy",
+          "noisy"
+        ],
+        [
+          2003,
+          2003
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "5fd1c70b37caec410057324f290717908265ab30051dd1a7829c2f0a968e93e2",
+      "critic_sha256": "c180cbfc3ab269b15488d6ba23c52a0d7b70361fc343b907b49078698a7ddf18",
+      "reward_sha256": "5a9f4f26bb98e66305d9f1b9d8821da8e197f7dc42dcfbbf1660ca63a8dbc7c8"
+    },
+    {
+      "reward_arm": "confounded",
+      "critic": "learned",
+      "seed": 2001,
+      "coordinates_match": [
+        [
+          "confounded",
+          "confounded"
+        ],
+        [
+          "learned",
+          "learned"
+        ],
+        [
+          2001,
+          2001
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "572dec3ff7c2cdd75c838e7c95cd36365b4de820fcd867229052ed040491cbfb",
+      "critic_sha256": "f6c4ac65a63ffa7ce741e80b245e2348af1314fc3cffc4ea3c844c393ff8243b",
+      "reward_sha256": "50dd7ee464e8179f58f23530e126cd217030bbfc8b3062be3540392c4bd37a62"
+    },
+    {
+      "reward_arm": "confounded",
+      "critic": "learned",
+      "seed": 2002,
+      "coordinates_match": [
+        [
+          "confounded",
+          "confounded"
+        ],
+        [
+          "learned",
+          "learned"
+        ],
+        [
+          2002,
+          2002
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "7ae6b22c35f431be4f9f0238cc88e1d404b23dcfa95427ff17ccbcbb4ba84811",
+      "critic_sha256": "3cbec7b793085d27c346281b99fc1f47a2e969e093945515ad37205253203d5a",
+      "reward_sha256": "50dd7ee464e8179f58f23530e126cd217030bbfc8b3062be3540392c4bd37a62"
+    },
+    {
+      "reward_arm": "confounded",
+      "critic": "learned",
+      "seed": 2003,
+      "coordinates_match": [
+        [
+          "confounded",
+          "confounded"
+        ],
+        [
+          "learned",
+          "learned"
+        ],
+        [
+          2003,
+          2003
+        ]
+      ],
+      "actor_state_match": true,
+      "critic_state_match": true,
+      "reward_state_match": true,
+      "all_update_metrics_match": true,
+      "all_raw_training_paths_match": true,
+      "all_evaluation_records_match": true,
+      "frozen_control_match": true,
+      "cap4_match": true,
+      "actor_sha256": "cd0322f3b8a4c674b46ad2b9ed4b061c02cc4a1cfb2f7e4332a606d78f4817bf",
+      "critic_sha256": "2dd30aab3ca2c0c774b1ef5994b2682d1eb63c19025e6013d86071718c838fd6",
+      "reward_sha256": "50dd7ee464e8179f58f23530e126cd217030bbfc8b3062be3540392c4bd37a62"
+    }
+  ],
+  "replay_reward_exports": {
+    "balanced": {
+      "path": "/tmp/dongxi-critic-replay-u_zsl2yk/frozen-rewards/frozen-balanced.json",
+      "file_sha256": "75a6cfc5ee33267f92771347c6ce1c6e915b650bb709db7c878af0c768340fe5",
+      "payload_sha256": "ef0e02568d13b164cfe82c9737cad3a269c0879298bfb77adce76f98543b932a"
+    },
+    "confounded": {
+      "path": "/tmp/dongxi-critic-replay-u_zsl2yk/frozen-rewards/frozen-confounded.json",
+      "file_sha256": "9d160cdf5fa47c1136e3b5c1e159eec3be91c2aaac2b3c8522fc4b4d59e0ea7a",
+      "payload_sha256": "f85e2537479441c7d50b6b6b2eccd8e7a3580e48c891f574861036d43fa2568b"
+    }
+  },
+  "replay_workspace": "/tmp/dongxi-critic-replay-u_zsl2yk",
+  "all_reward_exports_reload_exact": true,
+  "training_paths": 15360,
+  "valid_training_response_tokens": 38296,
+  "actor_updates": 480,
+  "critic_updates": 240,
+  "notebook_manifest_sha256": "f4f2f293f7f2c8e5012b553196749e0c33b5ddfe6a204b31eefc5bf39220c6f9",
+  "notebook_verification": {
+    "path": "notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb",
+    "sha256": "dc405313504c8797de83a9d42589f6244b9091cbb1c88323cff1ee1f43b547e5",
+    "code_cells": 7,
+    "kernel_identity": {
+      "cuda_available": false,
+      "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "packages": {
+        "ipykernel": "7.4.0",
+        "matplotlib": "3.10.8",
+        "nbclient": "0.11.0",
+        "nbformat": "5.11.1",
+        "numpy": "2.5.3",
+        "peft": "0.20.0",
+        "tokenizers": "0.23.2",
+        "torch": "2.14.1+cpu",
+        "transformers": "5.18.0"
+      },
+      "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+      "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+      "python": "3.12.14",
+      "torch_cuda_build": null
+    },
+    "executed_code_cells": 7,
+    "skipped_unfinished_exercise_cells": [],
+    "images": 5,
+    "seconds": 2.5774712770071346,
+    "output": "/tmp/dongxi-course-check-zduf82j3/day-20/04_learned_critics_and_frozen_text_rewards.ipynb",
+    "image_cells": [
+      3,
+      6,
+      12,
+      15,
+      18
+    ],
+    "previews": [
+      {
+        "cell": 3,
+        "path": "notebooks/figures/chapter-12/day-20-04_learned_critics_and_frozen_text_rewards-01.png",
+        "sha256": "b2b1551010e88b30959e17fc65ba49041c9b721c8c38e558cf4ed614f400d401"
+      },
+      {
+        "cell": 6,
+        "path": "notebooks/figures/chapter-12/day-20-04_learned_critics_and_frozen_text_rewards-02.png",
+        "sha256": "fa60800f9bb4c1d538aeba283ed96fda1e93145f8fde2d5c4b6046f21fc82955"
+      },
+      {
+        "cell": 12,
+        "path": "notebooks/figures/chapter-12/day-20-04_learned_critics_and_frozen_text_rewards-03.png",
+        "sha256": "608cbb53d25cb5fe6e266cda6a26da9efbd428217b3b4f5211bad982963f8624"
+      },
+      {
+        "cell": 15,
+        "path": "notebooks/figures/chapter-12/day-20-04_learned_critics_and_frozen_text_rewards-04.png",
+        "sha256": "5ffb0ea9fc410df34a8b4b7c83290b89134c0787f1921979a4f21c8b3e7bd079"
+      },
+      {
+        "cell": 18,
+        "path": "notebooks/figures/chapter-12/day-20-04_learned_critics_and_frozen_text_rewards-05.png",
+        "sha256": "a6a100ef5a9e371c08d4d43141280df3f15669065cacf83a4bc143d09a1c2f21"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_critic_policy_lab.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "test_actual_actor_and_learned_value_update_with_raw_ledger (test_critic_policy_lab.CriticPolicyTests.test_actual_actor_and_learned_value_update_with_raw_ledger) ... ok\ntest_actual_sampling_shift_support_eos_and_frozen_reward (test_critic_policy_lab.CriticPolicyTests.test_actual_sampling_shift_support_eos_and_frozen_reward) ... ok\ntest_actual_seed_repeat_and_different_optimizer_work_clocks (test_critic_policy_lab.CriticPolicyTests.test_actual_seed_repeat_and_different_optimizer_work_clocks) ... ok\ntest_cap_as_eos_is_an_observable_broken_variant (test_critic_policy_lab.CriticPolicyTests.test_cap_as_eos_is_an_observable_broken_variant) ... ok\ntest_critic_own_mse_detaches_targets (test_critic_policy_lab.CriticPolicyTests.test_critic_own_mse_detaches_targets) ... ok\ntest_exact_delivered_quality_retains_caps_in_denominator (test_critic_policy_lab.CriticPolicyTests.test_exact_delivered_quality_retains_caps_in_denominator) ... ok\ntest_exact_oracle_is_independent_terminal_path_enumeration (test_critic_policy_lab.CriticPolicyTests.test_exact_oracle_is_independent_terminal_path_enumeration) ... ok\ntest_finite_paths_and_quality_do_not_accept_truncation (test_critic_policy_lab.CriticPolicyTests.test_finite_paths_and_quality_do_not_accept_truncation) ... ok\ntest_independent_closed_sum_matches_gae (test_critic_policy_lab.CriticPolicyTests.test_independent_closed_sum_matches_gae) ... ok\ntest_inputs_do_not_use_source_identity_or_quality_reference (test_critic_policy_lab.CriticPolicyTests.test_inputs_do_not_use_source_identity_or_quality_reference) ... ok\ntest_lambda_endpoints_and_nonterminal_bootstrap (test_critic_policy_lab.CriticPolicyTests.test_lambda_endpoints_and_nonterminal_bootstrap) ... ok\ntest_neural_critic_loss_cannot_reach_actor_or_reward (test_critic_policy_lab.CriticPolicyTests.test_neural_critic_loss_cannot_reach_actor_or_reward) ... ok\ntest_padding_invariance_and_reject_action_after_eos (test_critic_policy_lab.CriticPolicyTests.test_padding_invariance_and_reject_action_after_eos) ... ok\ntest_policy_advantage_and_old_policy_are_detached (test_critic_policy_lab.CriticPolicyTests.test_policy_advantage_and_old_policy_are_detached) ... ok\ntest_pre_fit_actual_actor_encoding_rejects_whitespace_alias (test_critic_policy_lab.CriticPolicyTests.test_pre_fit_actual_actor_encoding_rejects_whitespace_alias) ... ok\ntest_pre_fit_vocabulary_rejects_duplicate_and_empty_tokens (test_critic_policy_lab.CriticPolicyTests.test_pre_fit_vocabulary_rejects_duplicate_and_empty_tokens) ... ok\n\n----------------------------------------------------------------------\nRan 16 tests in 0.903s\n\nOK\n"
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "scripts/check_book_math.py"
+      ],
+      "exit_code": 0,
+      "stdout": "54 Markdown files, 1169 math expressions, 0 issues\n",
+      "stderr": ""
+    }
+  ],
+  "scope": "Actual tiny CPU actor/critic, saved learned text rewards, fixed-seed full replay and fresh notebook; no pretrained/GPU/full PPO/human quality claim",
+  "hardening": "Pre-fit actual actor ID collision and duplicate/empty vocabulary rejection; original numeric ledgers unchanged",
+  "limitations": [
+    "Finite conditional grammar, not pretrained/open-language PPO",
+    "Authored preferences and independent programmatic quality, not human feedback",
+    "Cap continuation is bootstrapped, not generated EOS",
+    "Separate critics; equal sampled-path budget is not equal optimizer work",
+    "No best-seed/checkpoint selection or quality-gradient path"
+  ]
+}

@@ -1,0 +1,584 @@
+{
+  "schema": "dongxi-current-cpu-independent-summary-v1",
+  "recorded_utc": "2026-10-05T06:47:56.828961+00:00",
+  "scope": "Current complete Linux ARM64 CPU material reproduction; not actual Mac, hosted CI, pretrained/GPU results, learner mastery or closure of original external gates",
+  "status": "passed",
+  "report": "experiments/reports/2026-10-05-current-cpu-closure/run-03/cpu-verification.json",
+  "report_sha256": "3f796a00b293fbff1229f7c3a96cea198b569bf00f9b6848d7da9c7f9a9624fb",
+  "manifest": "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/manifest.json",
+  "manifest_sha256": "9b196165d676ed727cf50535627c14aa86d2819738a7d8088a0209d8860a6b54",
+  "invocation": {
+    "command": [
+      "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "scripts/run_cpu_verification.py",
+      "--kernel",
+      "dongxi-course-clean",
+      "--full-notebooks",
+      "--command-timeout",
+      "1800",
+      "--output",
+      "experiments/reports/2026-10-05-current-cpu-closure/run-03"
+    ],
+    "environment": {
+      "JUPYTER_PATH": "/tmp/dongxi-course-reproduction.ZfVaEu/kernel/share/jupyter",
+      "PYTHONPATH": "src",
+      "CUDA_VISIBLE_DEVICES": "",
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1"
+    },
+    "process_exit": 0,
+    "interpreter": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+    "python": "3.12.14",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "machine": "aarch64",
+    "packages": {
+      "torch": "2.14.1+cpu",
+      "numpy": "2.5.3",
+      "matplotlib": "3.10.8",
+      "nbclient": "0.11.0",
+      "nbformat": "5.11.1",
+      "ipykernel": "7.4.0",
+      "transformers": "5.18.0",
+      "tokenizers": "0.23.2",
+      "peft": "0.20.0"
+    }
+  },
+  "source_closure": {
+    "files_before": 195,
+    "files_after": 195,
+    "before_canonical_map_sha256": "f6b91ecb0a36774f40e1efeaf1f7518a4bb800ef7c6a6da34a862bd9f34f5ab9",
+    "after_canonical_map_sha256": "f6b91ecb0a36774f40e1efeaf1f7518a4bb800ef7c6a6da34a862bd9f34f5ab9",
+    "runner_changed_sources": [],
+    "independent_mismatches": [],
+    "added": [],
+    "removed": [],
+    "input_mismatches": [],
+    "log_binding_mismatches": [],
+    "boundary": "src/**/*.py, scripts/*.py, tests/*.py and CPU workflow; parent prose/report updates are outside this executable source map"
+  },
+  "tests": {
+    "actual_footer_tests": 1134,
+    "actual_footer_seconds": 192.459,
+    "footer_status": "OK",
+    "footer_annotations": null,
+    "counts_are_not_summed_with_overlapping_component_suites": true
+  },
+  "math": {
+    "markdown_files": 54,
+    "expressions": 1294,
+    "issues": 0
+  },
+  "navigation_manifest_integrity": {
+    "chapters": 15,
+    "solutions": 15,
+    "appendices": 4,
+    "day_indices": 28,
+    "registered_notebooks": 76,
+    "lanes": {
+      "core": 60,
+      "optional": 1,
+      "extension": 15
+    },
+    "problems": []
+  },
+  "fresh_notebooks": {
+    "selected": 76,
+    "successful": 76,
+    "failures": [],
+    "source_code_cells": 539,
+    "executed_reference_code_cells": 535,
+    "identity_preambles": 76,
+    "actual_executed_kernel_code_cells": 611,
+    "preserved_unfinished_exercise_cells": 4,
+    "preserved_scaffolds": [
+      {
+        "path": "notebooks/day-03/01_logits_softmax_nll.ipynb",
+        "source_cell_indices": [
+          6,
+          17,
+          24,
+          31
+        ]
+      }
+    ],
+    "png_images_manifest": 210,
+    "png_images_independently_counted": 210,
+    "kernel_identity_mismatches": [],
+    "source_sha_mismatches": [],
+    "execution_count_mismatches": [],
+    "image_count_mismatches": [],
+    "manifest_seconds": 167.2525644779671,
+    "minimum_of_prelaunch_memavailable_point_samples_gib": 117.11376953125,
+    "memory_scope": "Minimum of per-notebook prelaunch point samples, not continuous or peak monitoring",
+    "canonical_preview_exports": false,
+    "learner_source_changes": false
+  },
+  "commands": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-q"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 195.52244483598042,
+      "log": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/tests.log",
+      "log_sha256": "dd2f35da1b593fb87e14e1df9d5e3074e948a5755cefa18c428e63129054556f",
+      "name": "tests"
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "scripts/check_book_math.py"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.06740812095813453,
+      "log": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/math.log",
+      "log_sha256": "28c9f55d87c66c31b9aed559237d883c4ae68d64c6286bfca71fd8e0328f270c",
+      "name": "math"
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "scripts/check_course_integrity.py",
+        "--json"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 0.05989694799063727,
+      "log": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/routes.log",
+      "log_sha256": "0fcc2a88d6ba1597362b4fd5f98589d26f7bf56dd095d862a14d9e331f168040",
+      "name": "routes"
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "scripts/verify_course_notebooks.py",
+        "--kernel",
+        "dongxi-course-clean",
+        "--output",
+        "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks",
+        "--expected-prefix",
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "--host-reserve-gib",
+        "25",
+        "--notebooks",
+        "notebooks/day-01/01_experiment_identity.ipynb",
+        "notebooks/day-01/02_smoke_criteria_and_claims.ipynb",
+        "notebooks/day-01/03_read_a_real_run.ipynb",
+        "notebooks/day-01/04_checkpoint_interface.ipynb",
+        "notebooks/day-02/01_byte_bpe_training_and_encoding.ipynb",
+        "notebooks/day-02/02_vocabulary_and_sequence_cost.ipynb",
+        "notebooks/day-02/03_embedding_gradient_paths.ipynb",
+        "notebooks/day-03/01_logits_softmax_nll.ipynb",
+        "notebooks/day-03/02_causal_shift_and_masks.ipynb",
+        "notebooks/day-03/03_distribution_learning.ipynb",
+        "notebooks/day-04/01_causal_attention_forward.ipynb",
+        "notebooks/day-04/02_attention_gradients_and_failures.ipynb",
+        "notebooks/day-04/03_kv_cache_equivalence.ipynb",
+        "notebooks/day-05/01_embeddings_and_positions.ipynb",
+        "notebooks/day-05/02_multi_head_attention.ipynb",
+        "notebooks/day-05/03_residual_stream.ipynb",
+        "notebooks/day-05/04_layernorm_and_placement.ipynb",
+        "notebooks/day-05/05_positionwise_mlp.ipynb",
+        "notebooks/day-05/06_assemble_decoder.ipynb",
+        "notebooks/day-05/07_one_batch_learning.ipynb",
+        "notebooks/day-06/01_rmsnorm_and_swiglu.ipynb",
+        "notebooks/day-06/02_rotary_positions.ipynb",
+        "notebooks/day-06/03_gqa_qknorm_and_costs.ipynb",
+        "notebooks/day-07/01_recurrent_depth.ipynb",
+        "notebooks/day-07/02_architecture_defense.ipynb",
+        "notebooks/day-08/01_data_batches_and_token_budget.ipynb",
+        "notebooks/day-08/02_adamw_schedule_and_stability.ipynb",
+        "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb",
+        "notebooks/day-09/01_read_training_clocks.ipynb",
+        "notebooks/day-09/02_masking_and_padding_control.ipynb",
+        "notebooks/day-09/03_story_quality_and_decoding.ipynb",
+        "notebooks/day-10/01_metrics_and_contracts.ipynb",
+        "notebooks/day-10/02_paired_uncertainty.ipynb",
+        "notebooks/day-10/03_slices_and_contamination.ipynb",
+        "notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+        "notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb",
+        "notebooks/day-11/01_roles_templates_and_masks.ipynb",
+        "notebooks/day-11/02_padding_packing_boundaries.ipynb",
+        "notebooks/day-11/03_mixtures_and_data_cards.ipynb",
+        "notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb",
+        "notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb",
+        "notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb",
+        "notebooks/day-13/01_tiny_assistant_training.ipynb",
+        "notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb",
+        "notebooks/day-15/01_bradley_terry_margin.ipynb",
+        "notebooks/day-15/02_disagreement_and_calibration.ipynb",
+        "notebooks/day-15/03_preference_collection_and_judges.ipynb",
+        "notebooks/day-16/01_reward_model_bias_audit.ipynb",
+        "notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+        "notebooks/day-17/01_kl_regularized_optimum.ipynb",
+        "notebooks/day-17/02_sequence_likelihood_and_masks.ipynb",
+        "notebooks/day-18/01_dpo_controlled_comparison.ipynb",
+        "notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb",
+        "notebooks/day-19/01_exact_reinforce_gradient.ipynb",
+        "notebooks/day-20/01_baselines_and_rloo.ipynb",
+        "notebooks/day-20/02_ppo_clipping_and_kl.ipynb",
+        "notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+        "notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb",
+        "notebooks/day-21/01_policy_algorithm_comparison.ipynb",
+        "notebooks/day-22/01_group_advantages.ipynb",
+        "notebooks/day-22/02_token_ratios_kl.ipynb",
+        "notebooks/day-22/03_objective_weighting_and_filtering.ipynb",
+        "notebooks/day-23/01_decoder_rlvr.ipynb",
+        "notebooks/day-23/02_verifier_contract.ipynb",
+        "notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb",
+        "notebooks/day-24/01_reward_hacking.ipynb",
+        "notebooks/day-24/02_length_entropy_diagnostics.ipynb",
+        "notebooks/day-25/01_rollout_versions_and_budget.ipynb",
+        "notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb",
+        "notebooks/day-26/01_temperature_distillation.ipynb",
+        "notebooks/day-26/02_selection_and_sampling.ipynb",
+        "notebooks/day-26/03_response_level_distillation.ipynb",
+        "notebooks/day-26/04_critique_revision_and_acceptance.ipynb",
+        "notebooks/day-26/05_student_prefix_and_teacher_context.ipynb",
+        "notebooks/day-27/01_genealogy_and_frozen_panel.ipynb",
+        "notebooks/day-28/01_defense_and_release_gate.ipynb"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 167.81903917499585,
+      "log": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks.log",
+      "log_sha256": "910f6413a3794b3a01738001208685f78ef338d6d80ca50bc8d4e9ec6881d74e",
+      "name": "notebooks"
+    }
+  ],
+  "executed_notebook_artifacts": {
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-01/01_experiment_identity.ipynb": {
+      "sha256": "759cd4f693110615a3a737197b0bb7e546ea018a9170b79c6d6d5dd07b43c3d4",
+      "bytes": 40859
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-01/02_smoke_criteria_and_claims.ipynb": {
+      "sha256": "9621806d0f64e660033a9cf8243ff52137be217cea961d5d71748c12e8c56ef3",
+      "bytes": 48282
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-01/03_read_a_real_run.ipynb": {
+      "sha256": "1d33fe5018660de5e3f25462d60aa3e175891b2539a41c187282606ded7bfbe8",
+      "bytes": 44667
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-01/04_checkpoint_interface.ipynb": {
+      "sha256": "9bc81a4b1b09d121475582a081f0be74ea8ffcf9acadd376ba268720f2acc6c5",
+      "bytes": 53060
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-02/01_byte_bpe_training_and_encoding.ipynb": {
+      "sha256": "e81bd947f83a2143b772ae4e7ab9062407dc043bfe9e182c8d25f5ab24d9a7c6",
+      "bytes": 77564
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-02/02_vocabulary_and_sequence_cost.ipynb": {
+      "sha256": "52193afee32ab1023a56b6e9b2e752f6f29a8c269f7152688da65c820a7cfbc4",
+      "bytes": 76589
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-02/03_embedding_gradient_paths.ipynb": {
+      "sha256": "408f34e136cf13f727de62e70e1180726fef688e50a5cd5f861417ef47b237be",
+      "bytes": 36601
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-03/01_logits_softmax_nll.ipynb": {
+      "sha256": "2cbe3dcfac50e6b246e378d273c023505585b313a64d936d2e94fc054d376575",
+      "bytes": 99956
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-03/02_causal_shift_and_masks.ipynb": {
+      "sha256": "53c4d553b51d218c56c8eb101ee7f42625239a712fba3cfeb93ce7b696cbb924",
+      "bytes": 101321
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-03/03_distribution_learning.ipynb": {
+      "sha256": "6f80c0fb634713b9e22fc383df776bfb21890c33c82003e9f16ca24fa256a4a7",
+      "bytes": 84970
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-04/01_causal_attention_forward.ipynb": {
+      "sha256": "79ddfa2ff4bfcca546ed6766be8bd8a560ca5c29a8abb3fcef4e5e26e3a4a27d",
+      "bytes": 75934
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-04/02_attention_gradients_and_failures.ipynb": {
+      "sha256": "6d8f5a86d26b789919abfa551978cdbf53f10361155fd37b3b65c8d45325eafb",
+      "bytes": 127936
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-04/03_kv_cache_equivalence.ipynb": {
+      "sha256": "a1560da94916851c389d4b3eac56577582a7d08e0d4967e6ae6e9d0965844668",
+      "bytes": 106450
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/01_embeddings_and_positions.ipynb": {
+      "sha256": "78be47102f2e484bce44282dd07d2e4a417ece45a6b3f92d4e46c633a22738ca",
+      "bytes": 335683
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/02_multi_head_attention.ipynb": {
+      "sha256": "330706ef08a7bf95b250cfc35707921e6eaea0349c5e999e9be9f6791f770d8d",
+      "bytes": 503248
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/03_residual_stream.ipynb": {
+      "sha256": "ae93b2077c50d7615f6114fd2e4db5f0aedead6c85868f7e0f54544cc04ebc91",
+      "bytes": 288016
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/04_layernorm_and_placement.ipynb": {
+      "sha256": "24720bbdb202c23bf15e121872d5d3d65c3bd48200da74ff5195d747d876290f",
+      "bytes": 320601
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/05_positionwise_mlp.ipynb": {
+      "sha256": "2777b751f4ec9626024d74042b96419c140f58b4e11f81f17d1a33ae85873677",
+      "bytes": 349177
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/06_assemble_decoder.ipynb": {
+      "sha256": "939896092a815a61820232d7a5f9fdc26641b207c5dd86849304e3e8eeb50149",
+      "bytes": 264641
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/07_one_batch_learning.ipynb": {
+      "sha256": "1e448db63916993266c429b41c99ff2fd477decacf09040c36567e340be2bed7",
+      "bytes": 269566
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-06/01_rmsnorm_and_swiglu.ipynb": {
+      "sha256": "e7d85640645271fe94451432148c48a3077245876cbea589efbe701c97885a43",
+      "bytes": 426632
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-06/02_rotary_positions.ipynb": {
+      "sha256": "68a246245b3220d8210021650c81e247e4ee72a6c76a69daefdc0f540e42290a",
+      "bytes": 308102
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-06/03_gqa_qknorm_and_costs.ipynb": {
+      "sha256": "1a2ce510af090437f0f737426e8dd837c4d027d41480cdd01b2b71e486d6764a",
+      "bytes": 323220
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-07/01_recurrent_depth.ipynb": {
+      "sha256": "9dad1aee37e3e47ef31e6a2cb9522de4fdaf3aa2cb7ba05a0e1979831e020b6b",
+      "bytes": 269513
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-07/02_architecture_defense.ipynb": {
+      "sha256": "16b64dda3d98e39e639a56ccd34e0b74e31d55ef3f580ba1e5c5a4d969b26b83",
+      "bytes": 249329
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-08/01_data_batches_and_token_budget.ipynb": {
+      "sha256": "7321389df525e73d511d01539ad8b04e4e68185c524735a6955e056ab71f1bb4",
+      "bytes": 221634
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-08/02_adamw_schedule_and_stability.ipynb": {
+      "sha256": "23c83df934da451afe8815f46e0ae135ee8c1630267e98f3b2889d518586e682",
+      "bytes": 276799
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb": {
+      "sha256": "669998c35a49c352abf007179a13f595dcdf22907f637e3f76babdf2b9f2c1c8",
+      "bytes": 201937
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-09/01_read_training_clocks.ipynb": {
+      "sha256": "b6a43b6fbbdfa948ec53b7a56eb0421be6082d019a245044602a572247c47fe0",
+      "bytes": 130976
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-09/02_masking_and_padding_control.ipynb": {
+      "sha256": "37f964f25ba725fa694155d4c65978fb9aec4a50ba5d28a0b42a8cd032fac5ab",
+      "bytes": 35362
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-09/03_story_quality_and_decoding.ipynb": {
+      "sha256": "1789af4c4c860a67ee53cb338aa60b00e3978111dd07b31199318a2ce80e221b",
+      "bytes": 77057
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-10/01_metrics_and_contracts.ipynb": {
+      "sha256": "e5217b4b0544a89abcccc08b18b251fcc2a660208f24b3b53b4c9435b588f42c",
+      "bytes": 72375
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-10/02_paired_uncertainty.ipynb": {
+      "sha256": "8a6be050d37b5e27cef9ce398cc7738356352c65ebd8927a30cc77944851ec39",
+      "bytes": 98160
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-10/03_slices_and_contamination.ipynb": {
+      "sha256": "ab2d3cc9fe1c288828dae6b86e7121fdfa6c429c7c354599d293007a91ec0671",
+      "bytes": 61849
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb": {
+      "sha256": "5f7747656163fc178a188f4f72ee30debca363aa11081386bd800d011c1bd915",
+      "bytes": 209904
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb": {
+      "sha256": "e42ac030b52eb4fccddedb2f70558efd1d6ae5828da2912732f81716a0df8149",
+      "bytes": 439503
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-11/01_roles_templates_and_masks.ipynb": {
+      "sha256": "cf114b7a4e4e069dd4f4d8533553a868d6c6db13b5bf222ee65efd3e8feef01c",
+      "bytes": 76914
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-11/02_padding_packing_boundaries.ipynb": {
+      "sha256": "496512a57ff63b81c689953ab151cce2be6b179c4575fd73c54111d18b31cd9f",
+      "bytes": 64417
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-11/03_mixtures_and_data_cards.ipynb": {
+      "sha256": "da351c42c08d0fabfbcf424eb66964fd7a5a2677990632d8d2fda9c55047bed2",
+      "bytes": 70332
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb": {
+      "sha256": "01c61e7402b62996c7238eea9a2dcbc0743ef085f5f9b5da784d89c843569145",
+      "bytes": 501215
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb": {
+      "sha256": "c0015b5770f96d120bf4980a2aa483b010830db16825264e5244978e2d6a8e93",
+      "bytes": 159744
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb": {
+      "sha256": "d4d99d2681b68193f687916b833999c7ef3e2dc4b1eba012880b835b964d3ced",
+      "bytes": 123205
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-13/01_tiny_assistant_training.ipynb": {
+      "sha256": "57f04e00912b8168945c594f93d8d107d0316d0d8033b5de23ef5d42302139b0",
+      "bytes": 99369
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb": {
+      "sha256": "8f9805851bf5503b6ccad19d1690198f460ff97f382a37caff09c7318939a86e",
+      "bytes": 105030
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-15/01_bradley_terry_margin.ipynb": {
+      "sha256": "4619a846ae22ac6eafa69227d6ccf8a64d91a5b7fb8648e189c0aa952fe0161d",
+      "bytes": 96437
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-15/02_disagreement_and_calibration.ipynb": {
+      "sha256": "34967423dddc1429b2a5e5239b59abc33919ac97c5a8aecdf21364b0902919b6",
+      "bytes": 101142
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-15/03_preference_collection_and_judges.ipynb": {
+      "sha256": "ef42846b4d17afc3ddf8c88242fd3b90ab7113dea246f21c4ccbebd08d0bfaf5",
+      "bytes": 238693
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-16/01_reward_model_bias_audit.ipynb": {
+      "sha256": "1eb4bd646420624ec48c2248726d9ebb5b3266bc1852a1292b3592dc9b59adb8",
+      "bytes": 130111
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-16/03_text_reward_and_process_labels.ipynb": {
+      "sha256": "9e5295d9a4c64bfa3d6d9f642eabf4fa6d3e7eedf970cec0398e92420bbf4a4d",
+      "bytes": 584325
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-17/01_kl_regularized_optimum.ipynb": {
+      "sha256": "04fa775279004167d4832ef31682f0cf57c720ab8b845c715fcb07866f1db4a7",
+      "bytes": 65055
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-17/02_sequence_likelihood_and_masks.ipynb": {
+      "sha256": "81195cfb23ce911fb3e265352e85d67fa1c45d9d4b6d4d6afa03ce550186c0cf",
+      "bytes": 72891
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-18/01_dpo_controlled_comparison.ipynb": {
+      "sha256": "1cafcb83fcda14c5e6911abc8d627b6e362310beb3ca3babfdab2000bf045e0c",
+      "bytes": 116807
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb": {
+      "sha256": "cb6d8920409d72d2601e2bd4836f6be51a25d30f631c7c6486ce7de92282fe13",
+      "bytes": 469965
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-19/01_exact_reinforce_gradient.ipynb": {
+      "sha256": "0aa3f78ac445a3257fe4010063db8b5f0430b97abc31c5b95cdca4a7109e510b",
+      "bytes": 99039
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-20/01_baselines_and_rloo.ipynb": {
+      "sha256": "e97773025a001598d1fd6e78e392ae5368da91f9568f62d06351dc9c845d289e",
+      "bytes": 68096
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-20/02_ppo_clipping_and_kl.ipynb": {
+      "sha256": "9ea0dd5c6a703175f3271c9408ac19a7de5796e029cbbe9a260331e89287e6b0",
+      "bytes": 101192
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-20/03_behavior_probabilities_and_support.ipynb": {
+      "sha256": "8b3e20378e0093bb9faeb2680130fc860d33669ef83032996e63df81ca259d8c",
+      "bytes": 226511
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb": {
+      "sha256": "2e8e5498494bce5f595cc8da176bf575fbe4285b510be5222f840db51330df80",
+      "bytes": 423176
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-21/01_policy_algorithm_comparison.ipynb": {
+      "sha256": "f9146d5238d5ab47add469aba482e52874513d56d4a7c3872420b66d4044a104",
+      "bytes": 80346
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-22/01_group_advantages.ipynb": {
+      "sha256": "782504a64c2c58602bf903217eb77126b0dc5d5b96c94905b6dc7d27a6265dd9",
+      "bytes": 50250
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-22/02_token_ratios_kl.ipynb": {
+      "sha256": "bf6e9253ab793ca980e34266db58504adca47a0ed087046a8c6eb99d404ba246",
+      "bytes": 49627
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-22/03_objective_weighting_and_filtering.ipynb": {
+      "sha256": "6dacc4ad118b743c28c5ffea84fe66e2e4593219743053af08ba31be95721d52",
+      "bytes": 361136
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-23/01_decoder_rlvr.ipynb": {
+      "sha256": "7098af421f0355b673689938b90a6358095c43848b2865a457041f7157de8701",
+      "bytes": 99915
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-23/02_verifier_contract.ipynb": {
+      "sha256": "5b7161e57ad8e993bf69f0a353e186dfe342eba4a7e6ffb446db3ca6d0f937c0",
+      "bytes": 34244
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb": {
+      "sha256": "7754d2fe8cfd881218fd9baa6f92ddabfd519cc71ba2409f898654740f343c3f",
+      "bytes": 336913
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-24/01_reward_hacking.ipynb": {
+      "sha256": "236bbf0eb2fd54cf17997ed378d682c75242652cc0ff72f54111744c81d37c09",
+      "bytes": 76400
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-24/02_length_entropy_diagnostics.ipynb": {
+      "sha256": "42e719318dd663b63a1691593f7620565bbbf1d80ec7ffe3cb82c99794ad05f6",
+      "bytes": 61998
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-25/01_rollout_versions_and_budget.ipynb": {
+      "sha256": "c830881441cb15c242b00196cd43662a409388aa2ecdd588b05a50584a2dcc5c",
+      "bytes": 41135
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb": {
+      "sha256": "3f3c573f3ea8d50a0d5a7d8c0c2ba09db21d14d34506f7b72087ac0854b226ed",
+      "bytes": 588361
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-26/01_temperature_distillation.ipynb": {
+      "sha256": "b5e972c27d51be9f73b89dbe19fd3579654c6ef277b0b02884c77e7ec589e1e8",
+      "bytes": 75755
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-26/02_selection_and_sampling.ipynb": {
+      "sha256": "b16862d1df8e8f26f81f6905d54716751eb605afe3b12998b9fa7f22236bf049",
+      "bytes": 67799
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-26/03_response_level_distillation.ipynb": {
+      "sha256": "136a6f456e862758802f464b7ddc7b7c799eca1462777f002eba324cf6d9e4d0",
+      "bytes": 482670
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-26/04_critique_revision_and_acceptance.ipynb": {
+      "sha256": "1a855199b8e288f5840e8bc952093f4186577863a1ac3b6c277eeadc2e7e6935",
+      "bytes": 417148
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-26/05_student_prefix_and_teacher_context.ipynb": {
+      "sha256": "5eab73786409eb4af456ecae3b09cb6d5ac822949612bb9243b4b9c9aa0b101a",
+      "bytes": 726053
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-27/01_genealogy_and_frozen_panel.ipynb": {
+      "sha256": "ff0baf227573dc3dadd69a65a5301223a167ccfaed14b8d5174ff406f21d4b4a",
+      "bytes": 28802
+    },
+    "experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-28/01_defense_and_release_gate.ipynb": {
+      "sha256": "dd346fd2faadf21c2605c0f13858a8b70edf472b3196220c1739ebb2e18161ac",
+      "bytes": 52218
+    }
+  },
+  "historical_attempts": [
+    {
+      "report": "experiments/reports/2026-10-05-current-cpu-closure/cpu-verification.json",
+      "sha256": "ac3dd8071ee954e11cbae3bb4cd7efce2f15f059558cdd1ce4dc8fc7eb723545",
+      "outcome": "Interrupted during tests after corrected chosen-SFT source binding; exit130, no completed footer, no result inferred"
+    },
+    {
+      "report": "experiments/reports/2026-10-05-current-cpu-closure/run-02/cpu-verification.json",
+      "sha256": "01f926c0da4e1a32517d434a19ced5f49e66c41c30fd4889056b586602a15b4c",
+      "outcome": "Genuine full-discovery1134tests/errors16 watchdog harness failure; all76 reference notebooks separately passed; retained unchanged"
+    }
+  ],
+  "pending_original_external_proof": [
+    "Actual Mac reproduction",
+    "Actual hosted-CI reproduction"
+  ],
+  "parallel_work_boundary": "Parent-owned GPU stages are not reproduced, evaluated or certified by this CPU report. This invocation used hidden CUDA and made no pretrained/download/platform-install claim."
+}

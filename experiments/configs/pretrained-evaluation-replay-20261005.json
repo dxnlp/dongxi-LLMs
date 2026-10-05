@@ -1,0 +1,32 @@
+{
+  "template_id": "native-instruction-interface-v1-evaluation",
+  "thinking_mode": "template-default",
+  "decoding": {
+    "mode": "greedy",
+    "seed": 1010,
+    "temperature": 1,
+    "top_k": null,
+    "top_p": 1
+  },
+  "stopping": {
+    "eos_token_ids": [
+      151643
+    ],
+    "turn_stop_token_ids": [
+      151645
+    ],
+    "pad_token_id": 151643
+  },
+  "max_new_tokens": 64,
+  "generation": {
+    "input_mode": "chat",
+    "template": "{% for message in messages %}{{ '<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>\\n' }}{% endfor %}{% if add_generation_prompt %}{{ '<|im_start|>assistant\\n' }}{% endif %}\n",
+    "context_window": 512,
+    "samples": 1,
+    "device": "cuda",
+    "dtype": "bfloat16",
+    "add_special_tokens": false,
+    "max_run_seconds": 900,
+    "scoring_text": "decode_without_terminal_stop"
+  }
+}

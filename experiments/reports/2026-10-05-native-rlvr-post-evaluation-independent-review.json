@@ -1,0 +1,3055 @@
+{
+  "schema": "dongxi-native-rlvr-post-evaluation-independent-review-v1",
+  "reviewed_utc": "2026-10-05 14:41:39 UTC",
+  "status": "clear-bounded-actual-evidence",
+  "reviewer": "/root/audit_reasoning",
+  "scope": "Read-only independent joins of four actual observed-export run-02 evaluations, saved raw response/contract/grader replay, measured full-prefix counters, and two matched cap comparisons. No weights/tokenizer loaded, checkpoint/model/corpus body hash, training, generation, source mutation or additional control panel.",
+  "evaluation_review": {
+    "review_utc": "2026-10-05T14:27:02.675700+00:00",
+    "last_review_utc": "2026-10-05T14:36:31.215528+00:00",
+    "evaluations": [
+      {
+        "group": 4,
+        "budget": 32,
+        "run_id": "run-02",
+        "status": "passed",
+        "checks": {
+          "actual_exit0": true,
+          "all_five_cells_completed": true,
+          "all_original_responses": true,
+          "no_unreadable_jsonl": true
+        },
+        "observed_export": true,
+        "preparation_self_hash": true,
+        "sources": {
+          "src/dongxi_llms/reasoning_generation.py": true,
+          "src/dongxi_llms/reasoning_evaluation.py": true,
+          "src/dongxi_llms/run_identity.py": true,
+          "src/dongxi_llms/sampling_likelihood_lab.py": true,
+          "scripts/generate_reasoning_records.py": true,
+          "scripts/run_native_rlvr_evaluation.py": true,
+          "tests/test_native_rlvr_evaluation.py": true,
+          "scripts/run_native_reasoning_baselines.py": true,
+          "tests/test_native_reasoning_baselines.py": true,
+          "scripts/run_native_rlvr_stages.py": true,
+          "tests/test_native_rlvr_stages.py": true,
+          "src/dongxi_llms/qwen_rlvr_lab.py": true,
+          "src/dongxi_llms/grpo_lab.py": true,
+          "src/dongxi_llms/staged_campaign.py": true,
+          "src/dongxi_llms/native_profile_supervisor.py": true,
+          "src/dongxi_llms/campaign_supervisor.py": true,
+          "scripts/close_native_rlvr_export.py": true,
+          "tests/test_native_rlvr_observed_export.py": true
+        },
+        "inputs": {
+          "math_items": true,
+          "custom_template": true,
+          "interpreter": true,
+          "environment_lock": true,
+          "original_baseline_preparation": true,
+          "original_baseline_acceptance": true,
+          "original_baseline_output/sample-1009/responses.jsonl": true,
+          "original_baseline_output/sample-1009/summary.json": true,
+          "original_baseline_output/sample-1009/events.jsonl": true,
+          "original_baseline_output/sample-1009/input-identity.json": true,
+          "original_baseline_output/sample-1009/observed-interface.json": true,
+          "original_baseline_output/sample-1019/responses.jsonl": true,
+          "original_baseline_output/sample-1019/summary.json": true,
+          "original_baseline_output/sample-1019/events.jsonl": true,
+          "original_baseline_output/sample-1019/input-identity.json": true,
+          "original_baseline_output/sample-1019/observed-interface.json": true,
+          "original_baseline_output/sample-1029/responses.jsonl": true,
+          "original_baseline_output/sample-1029/summary.json": true,
+          "original_baseline_output/sample-1029/events.jsonl": true,
+          "original_baseline_output/sample-1029/input-identity.json": true,
+          "original_baseline_output/sample-1029/observed-interface.json": true,
+          "original_baseline_output/sample-1039/responses.jsonl": true,
+          "original_baseline_output/sample-1039/summary.json": true,
+          "original_baseline_output/sample-1039/events.jsonl": true,
+          "original_baseline_output/sample-1039/input-identity.json": true,
+          "original_baseline_output/sample-1039/observed-interface.json": true,
+          "original_baseline_output/greedy-1009/responses.jsonl": true,
+          "original_baseline_output/greedy-1009/summary.json": true,
+          "original_baseline_output/greedy-1009/events.jsonl": true,
+          "original_baseline_output/greedy-1009/input-identity.json": true,
+          "original_baseline_output/greedy-1009/observed-interface.json": true,
+          "items": true,
+          "logical_panel": true,
+          "contract/sample-1009": true,
+          "contract/sample-1019": true,
+          "contract/sample-1029": true,
+          "contract/sample-1039": true,
+          "contract/greedy-1009": true
+        },
+        "closing_exact": true,
+        "supervision_exact": true,
+        "supervisor": {
+          "child_pid": 308850,
+          "status": "completed",
+          "actual_exit_code": 0,
+          "child_seconds": 202.25339220499154,
+          "seconds": 202.29671067598974,
+          "minimum_sampled_available_bytes": 122034368512,
+          "final_record_retained": true,
+          "journal_error": null,
+          "cleanup_errors": [],
+          "limits": {
+            "external_seconds": 900,
+            "reserve_bytes": 26843545600,
+            "probe_seconds": 0.25,
+            "logging_seconds": 0.25,
+            "term_seconds": 0.1,
+            "reap_seconds": 0.5
+          }
+        },
+        "resource_cadence": 1,
+        "minimum_recomputed": true,
+        "rows_replayed": 100,
+        "grade_mismatches": [],
+        "cells": [
+          {
+            "cell": "sample-1009",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "0c01a88b1dd9e631f544b9e3dd413373d156f70c98fe6bb1bff403e895d2f8ce",
+            "actual_checkpoint_id": "local-hf-sha256:f556ec25c925e56bfa8d9ba455cb08cabaa3b36fc3dd2851b3d653b4421a5744"
+          },
+          {
+            "cell": "sample-1019",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "dcb800721a914f8b03b2abeac6fbe8fb475dc8d9dffe04b57fd3be7b077ce98c",
+            "actual_checkpoint_id": "local-hf-sha256:f556ec25c925e56bfa8d9ba455cb08cabaa3b36fc3dd2851b3d653b4421a5744"
+          },
+          {
+            "cell": "sample-1029",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "50b2230848d9fdc5ff9ca2a1eda144c302199cf246010267c17f84ced090959d",
+            "actual_checkpoint_id": "local-hf-sha256:f556ec25c925e56bfa8d9ba455cb08cabaa3b36fc3dd2851b3d653b4421a5744"
+          },
+          {
+            "cell": "sample-1039",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "d0c646bd9a5324073fb0f2c5bfa3f76607531f961b54fa051f3ff6717e063122",
+            "actual_checkpoint_id": "local-hf-sha256:f556ec25c925e56bfa8d9ba455cb08cabaa3b36fc3dd2851b3d653b4421a5744"
+          },
+          {
+            "cell": "greedy-1009",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "93401136a28d4796d125f83ed619c64a39936004cf9368d07205553a597dcc87",
+            "actual_checkpoint_id": "local-hf-sha256:f556ec25c925e56bfa8d9ba455cb08cabaa3b36fc3dd2851b3d653b4421a5744"
+          }
+        ],
+        "all_original": {
+          "records": 100,
+          "correct": 0,
+          "natural_stops": 23,
+          "truncated": 77,
+          "statuses": {
+            "UNSUPPORTED": 100
+          },
+          "generation_tokens": 2702,
+          "forward_positions": 118145,
+          "response_wall_seconds": 69.34510569786653
+        },
+        "heldout_sample": {
+          "records": 44,
+          "correct": 0,
+          "natural_stops": 3,
+          "truncated": 41,
+          "statuses": {
+            "UNSUPPORTED": 44
+          },
+          "generation_tokens": 1342,
+          "forward_positions": 64146,
+          "response_wall_seconds": 34.23714742588345
+        },
+        "heldout_greedy": {
+          "records": 11,
+          "correct": 0,
+          "natural_stops": 1,
+          "truncated": 10,
+          "statuses": {
+            "UNSUPPORTED": 11
+          },
+          "generation_tokens": 329,
+          "forward_positions": 15791,
+          "response_wall_seconds": 7.811123858031351
+        },
+        "all_sample": {
+          "records": 80,
+          "correct": 0,
+          "natural_stops": 18,
+          "truncated": 62,
+          "statuses": {
+            "UNSUPPORTED": 80
+          },
+          "generation_tokens": 2177,
+          "forward_positions": 95078,
+          "response_wall_seconds": 56.60472446680069
+        },
+        "all_greedy": {
+          "records": 20,
+          "correct": 0,
+          "natural_stops": 5,
+          "truncated": 15,
+          "statuses": {
+            "UNSUPPORTED": 20
+          },
+          "generation_tokens": 525,
+          "forward_positions": 23067,
+          "response_wall_seconds": 12.74038123106584
+        },
+        "per_cell_heldout": {
+          "sample-1009": {
+            "records": 11,
+            "correct": 0,
+            "natural_stops": 1,
+            "truncated": 10,
+            "statuses": {
+              "UNSUPPORTED": 11
+            },
+            "generation_tokens": 329,
+            "forward_positions": 15791,
+            "response_wall_seconds": 8.490658305003308
+          },
+          "sample-1019": {
+            "records": 11,
+            "correct": 0,
+            "natural_stops": 1,
+            "truncated": 10,
+            "statuses": {
+              "UNSUPPORTED": 11
+            },
+            "generation_tokens": 330,
+            "forward_positions": 15819,
+            "response_wall_seconds": 8.175421788881067
+          },
+          "sample-1029": {
+            "records": 11,
+            "correct": 0,
+            "natural_stops": 0,
+            "truncated": 11,
+            "statuses": {
+              "UNSUPPORTED": 11
+            },
+            "generation_tokens": 352,
+            "forward_positions": 16688,
+            "response_wall_seconds": 8.79024789086543
+          },
+          "sample-1039": {
+            "records": 11,
+            "correct": 0,
+            "natural_stops": 1,
+            "truncated": 10,
+            "statuses": {
+              "UNSUPPORTED": 11
+            },
+            "generation_tokens": 331,
+            "forward_positions": 15848,
+            "response_wall_seconds": 8.780819441133644
+          },
+          "greedy-1009": {
+            "records": 11,
+            "correct": 0,
+            "natural_stops": 1,
+            "truncated": 10,
+            "statuses": {
+              "UNSUPPORTED": 11
+            },
+            "generation_tokens": 329,
+            "forward_positions": 15791,
+            "response_wall_seconds": 7.811123858031351
+          }
+        },
+        "training_supervision": {
+          "status": "failed",
+          "actual_exit_code": 0,
+          "journal_error": {
+            "type": "TimeoutError",
+            "message": "Final logging timed out"
+          },
+          "receipt": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-pilot-20261005-run-01/returned-supervision-1.json",
+            "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-pilot-20261005-run-01/returned-supervision-1.json",
+            "bytes": 10493846,
+            "sha256": "aedcc1a08e9b28c0a1c0bb75b7105209eef4ec1ff21b0461370b211618672b62"
+          }
+        },
+        "metadata_bindings": {
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/preparation.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/preparation.json",
+            "sha256": "4a658b2be5a96c8a59490e472fb794a0a53ed1a45125819ddc0f489d777977a4",
+            "bytes": 115608
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/acceptance.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/acceptance.json",
+            "sha256": "b818f8ac51b787d9caac3aa5c25db40ba0bafffd0cd1abb62b57553e23c8020e",
+            "bytes": 916471
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/launch.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/launch.json",
+            "sha256": "ac6f0a385129fa47a74c337e02e5f5992beef91f0b1557424899e85fb2b54af6",
+            "bytes": 634
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/closing-bindings.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/closing-bindings.json",
+            "sha256": "e587fa555ef64a6bfc2f7b292f5fa5e5d5ef1fd98ce3b332e5332cac98818c6e",
+            "bytes": 36385
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/returned-supervision.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/returned-supervision.json",
+            "sha256": "ddacf2b12bc6f787447d7eaa7d6abd040373fa19cc13b7744564d6a1f6df62c9",
+            "bytes": 175133
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/items.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/items.json",
+            "sha256": "f1183276d15a086e0e3e0653fb9dfdd8ba1c2a319f08339413e3b25966a2f084",
+            "bytes": 11206
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/logical-panel.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/logical-panel.json",
+            "sha256": "03efb168899106f2ea131cad7096d20a4300f4cc3c7fed861132dedc98215ffc",
+            "bytes": 13492
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009/responses.jsonl",
+            "sha256": "1d773a3cf988472345a20b9bf7fcfb2659a16b05bf840ffd6b3f4f7f6b6a0400",
+            "bytes": 87426
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009-contract.json",
+            "sha256": "80debf8a871ff27b2fd0ac2e40b692aa13167c8d180409c8e781c406b75e09a9",
+            "bytes": 7108
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009/input-identity.json",
+            "sha256": "83f24276ba9fe039823a74db3f4dd39533a7a16e21a1ef8f4c463990a87aa9e7",
+            "bytes": 65292
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009/summary.json",
+            "sha256": "dfd5c513b806a1e45ace19d7f091770d630eb19439bdb3727ff3076ee1e5ceed",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019/responses.jsonl",
+            "sha256": "fb79965441d92e4752a648b7050daed58f807624fdca871aaf4499643a99e594",
+            "bytes": 87603
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019-contract.json",
+            "sha256": "a6c098fbcb1647e68d3c950ab1e2784a138571889d50eed1da47be43754204ad",
+            "bytes": 7108
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019/input-identity.json",
+            "sha256": "522469cbc78158410806a3443ec367531499bac75019a3d15b791b5a6b860a60",
+            "bytes": 65292
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019/summary.json",
+            "sha256": "b9397968c7962428f499f1d073b1819a1942c4a6b450dd5c961a9b09a5fb168a",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029/responses.jsonl",
+            "sha256": "34fc296864bb159d7cc0b943b07086875673d107809d604ecdce51b4b656f8cd",
+            "bytes": 87473
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029-contract.json",
+            "sha256": "9d1415ccef23f2ed11aee8b532f32ad687f62220414ba3ccb97ea1481e391287",
+            "bytes": 7108
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029/input-identity.json",
+            "sha256": "a3d3555e746ea1509da0851bab32e8b093b1f9ada0233069b57cf9b8020081f0",
+            "bytes": 65292
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029/summary.json",
+            "sha256": "fa54cbd42d2f96fd4cfc5ae0e8c215f1907db2e68547b1590c420895d324658a",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039/responses.jsonl",
+            "sha256": "e53b49265a4ca63c45d1cc1f316fe9a72e8930ae54078806c8666f58726b41ab",
+            "bytes": 85820
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039-contract.json",
+            "sha256": "a647b91690651136e6199dcf92a939080d9e75f7b557ad34fcdfb1e983043cdd",
+            "bytes": 7108
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039/input-identity.json",
+            "sha256": "7b34e88474fae1c5d629d2f862e7f9fc2af62c64f074edbe6984f4c0bba8df90",
+            "bytes": 65458
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039/summary.json",
+            "sha256": "774920758d4ce77ca030919fd559b3bb451cb510c1e224c0f965d4c8413cdf6c",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009/responses.jsonl",
+            "sha256": "f58b7d331c05434ab7a26f90efa5f5ac82598dbc50e5869a284699356030ca34",
+            "bytes": 74002
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009-contract.json",
+            "sha256": "246d4c7244c52f9558c6ec1a6bad149683194d8b282d446f1c2cf4491372ef09",
+            "bytes": 7108
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009/input-identity.json",
+            "sha256": "06eacd85162d08c412606a13e57aa84adad58a86cf68459eec3a145a1d80d681",
+            "bytes": 65458
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009/summary.json",
+            "sha256": "d9722f68675b422d940d40e0ad3cff788c1187383d33186877b13bf2b64bd4ed",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          }
+        },
+        "scope": "Model-free independent saved-record parser/identity/prompt/selected-probability schema/full-prefix counter replay, current source/non-model-input checks; no model/tokenizer/weight body load/hash and no final common comparison signoff."
+      },
+      {
+        "group": 4,
+        "budget": 128,
+        "run_id": "run-02",
+        "status": "passed",
+        "checks": {
+          "actual_exit0": true,
+          "all_five_cells_completed": true,
+          "all_original_responses": true,
+          "no_unreadable_jsonl": true
+        },
+        "observed_export": true,
+        "preparation_self_hash": true,
+        "sources": {
+          "src/dongxi_llms/reasoning_generation.py": true,
+          "src/dongxi_llms/reasoning_evaluation.py": true,
+          "src/dongxi_llms/run_identity.py": true,
+          "src/dongxi_llms/sampling_likelihood_lab.py": true,
+          "scripts/generate_reasoning_records.py": true,
+          "scripts/run_native_rlvr_evaluation.py": true,
+          "tests/test_native_rlvr_evaluation.py": true,
+          "scripts/run_native_reasoning_baselines.py": true,
+          "tests/test_native_reasoning_baselines.py": true,
+          "scripts/run_native_rlvr_stages.py": true,
+          "tests/test_native_rlvr_stages.py": true,
+          "src/dongxi_llms/qwen_rlvr_lab.py": true,
+          "src/dongxi_llms/grpo_lab.py": true,
+          "src/dongxi_llms/staged_campaign.py": true,
+          "src/dongxi_llms/native_profile_supervisor.py": true,
+          "src/dongxi_llms/campaign_supervisor.py": true,
+          "scripts/close_native_rlvr_export.py": true,
+          "tests/test_native_rlvr_observed_export.py": true
+        },
+        "inputs": {
+          "math_items": true,
+          "custom_template": true,
+          "interpreter": true,
+          "environment_lock": true,
+          "original_baseline_preparation": true,
+          "original_baseline_acceptance": true,
+          "original_baseline_output/sample-1009/responses.jsonl": true,
+          "original_baseline_output/sample-1009/summary.json": true,
+          "original_baseline_output/sample-1009/events.jsonl": true,
+          "original_baseline_output/sample-1009/input-identity.json": true,
+          "original_baseline_output/sample-1009/observed-interface.json": true,
+          "original_baseline_output/sample-1019/responses.jsonl": true,
+          "original_baseline_output/sample-1019/summary.json": true,
+          "original_baseline_output/sample-1019/events.jsonl": true,
+          "original_baseline_output/sample-1019/input-identity.json": true,
+          "original_baseline_output/sample-1019/observed-interface.json": true,
+          "original_baseline_output/sample-1029/responses.jsonl": true,
+          "original_baseline_output/sample-1029/summary.json": true,
+          "original_baseline_output/sample-1029/events.jsonl": true,
+          "original_baseline_output/sample-1029/input-identity.json": true,
+          "original_baseline_output/sample-1029/observed-interface.json": true,
+          "original_baseline_output/sample-1039/responses.jsonl": true,
+          "original_baseline_output/sample-1039/summary.json": true,
+          "original_baseline_output/sample-1039/events.jsonl": true,
+          "original_baseline_output/sample-1039/input-identity.json": true,
+          "original_baseline_output/sample-1039/observed-interface.json": true,
+          "original_baseline_output/greedy-1009/responses.jsonl": true,
+          "original_baseline_output/greedy-1009/summary.json": true,
+          "original_baseline_output/greedy-1009/events.jsonl": true,
+          "original_baseline_output/greedy-1009/input-identity.json": true,
+          "original_baseline_output/greedy-1009/observed-interface.json": true,
+          "items": true,
+          "logical_panel": true,
+          "contract/sample-1009": true,
+          "contract/sample-1019": true,
+          "contract/sample-1029": true,
+          "contract/sample-1039": true,
+          "contract/greedy-1009": true
+        },
+        "closing_exact": true,
+        "supervision_exact": true,
+        "supervisor": {
+          "child_pid": 309562,
+          "status": "completed",
+          "actual_exit_code": 0,
+          "child_seconds": 333.345343247056,
+          "seconds": 333.3997493920033,
+          "minimum_sampled_available_bytes": 120892526592,
+          "final_record_retained": true,
+          "journal_error": null,
+          "cleanup_errors": [],
+          "limits": {
+            "external_seconds": 900,
+            "reserve_bytes": 26843545600,
+            "probe_seconds": 0.25,
+            "logging_seconds": 0.25,
+            "term_seconds": 0.1,
+            "reap_seconds": 0.5
+          }
+        },
+        "resource_cadence": 1,
+        "minimum_recomputed": true,
+        "rows_replayed": 100,
+        "grade_mismatches": [],
+        "cells": [
+          {
+            "cell": "sample-1009",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "8ddc4ef7e8d1a26047d65959fa3728ea0afe93bed00a80f366e4be7b79057797",
+            "actual_checkpoint_id": "local-hf-sha256:f556ec25c925e56bfa8d9ba455cb08cabaa3b36fc3dd2851b3d653b4421a5744"
+          },
+          {
+            "cell": "sample-1019",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "196adee2ffc8110658f2a8fd2998c1435532d8357033fb03ba7a9dc38ef54322",
+            "actual_checkpoint_id": "local-hf-sha256:f556ec25c925e56bfa8d9ba455cb08cabaa3b36fc3dd2851b3d653b4421a5744"
+          },
+          {
+            "cell": "sample-1029",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "0d35dd7a7dbf79f16b6748553efd277dfe655cb1fb4c21807043d9582717a075",
+            "actual_checkpoint_id": "local-hf-sha256:f556ec25c925e56bfa8d9ba455cb08cabaa3b36fc3dd2851b3d653b4421a5744"
+          },
+          {
+            "cell": "sample-1039",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "af4cbd479f18035de2a52ab05d10a8238da4352ae504e623cddc5ff33f347394",
+            "actual_checkpoint_id": "local-hf-sha256:f556ec25c925e56bfa8d9ba455cb08cabaa3b36fc3dd2851b3d653b4421a5744"
+          },
+          {
+            "cell": "greedy-1009",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "cd4bbd5579c6baf88e3cd6350fd7a05f1a154e601a2ad604a552ef7f18c3b80e",
+            "actual_checkpoint_id": "local-hf-sha256:f556ec25c925e56bfa8d9ba455cb08cabaa3b36fc3dd2851b3d653b4421a5744"
+          }
+        ],
+        "all_original": {
+          "records": 100,
+          "correct": 35,
+          "natural_stops": 92,
+          "truncated": 8,
+          "statuses": {
+            "CORRECT": 35,
+            "UNSUPPORTED": 64,
+            "INVALID": 1
+          },
+          "generation_tokens": 7704,
+          "forward_positions": 624825,
+          "response_wall_seconds": 185.07012811786262
+        },
+        "heldout_sample": {
+          "records": 44,
+          "correct": 11,
+          "natural_stops": 37,
+          "truncated": 7,
+          "statuses": {
+            "UNSUPPORTED": 33,
+            "CORRECT": 11
+          },
+          "generation_tokens": 4069,
+          "forward_positions": 347577,
+          "response_wall_seconds": 98.78199107805267
+        },
+        "heldout_greedy": {
+          "records": 11,
+          "correct": 7,
+          "natural_stops": 11,
+          "truncated": 0,
+          "statuses": {
+            "UNSUPPORTED": 4,
+            "CORRECT": 7
+          },
+          "generation_tokens": 931,
+          "forward_positions": 76359,
+          "response_wall_seconds": 20.461109079944436
+        },
+        "all_sample": {
+          "records": 80,
+          "correct": 24,
+          "natural_stops": 72,
+          "truncated": 8,
+          "statuses": {
+            "CORRECT": 24,
+            "UNSUPPORTED": 55,
+            "INVALID": 1
+          },
+          "generation_tokens": 6265,
+          "forward_positions": 511452,
+          "response_wall_seconds": 153.0814715430024
+        },
+        "all_greedy": {
+          "records": 20,
+          "correct": 11,
+          "natural_stops": 20,
+          "truncated": 0,
+          "statuses": {
+            "CORRECT": 11,
+            "UNSUPPORTED": 9
+          },
+          "generation_tokens": 1439,
+          "forward_positions": 113373,
+          "response_wall_seconds": 31.988656574860215
+        },
+        "per_cell_heldout": {
+          "sample-1009": {
+            "records": 11,
+            "correct": 2,
+            "natural_stops": 9,
+            "truncated": 2,
+            "statuses": {
+              "UNSUPPORTED": 9,
+              "CORRECT": 2
+            },
+            "generation_tokens": 1012,
+            "forward_positions": 87522,
+            "response_wall_seconds": 23.87697089498397
+          },
+          "sample-1019": {
+            "records": 11,
+            "correct": 2,
+            "natural_stops": 9,
+            "truncated": 2,
+            "statuses": {
+              "UNSUPPORTED": 9,
+              "CORRECT": 2
+            },
+            "generation_tokens": 986,
+            "forward_positions": 83326,
+            "response_wall_seconds": 23.446291234111413
+          },
+          "sample-1029": {
+            "records": 11,
+            "correct": 5,
+            "natural_stops": 10,
+            "truncated": 1,
+            "statuses": {
+              "CORRECT": 5,
+              "UNSUPPORTED": 6
+            },
+            "generation_tokens": 1021,
+            "forward_positions": 85477,
+            "response_wall_seconds": 25.3600391910295
+          },
+          "sample-1039": {
+            "records": 11,
+            "correct": 2,
+            "natural_stops": 9,
+            "truncated": 2,
+            "statuses": {
+              "UNSUPPORTED": 9,
+              "CORRECT": 2
+            },
+            "generation_tokens": 1050,
+            "forward_positions": 91252,
+            "response_wall_seconds": 26.098689757927787
+          },
+          "greedy-1009": {
+            "records": 11,
+            "correct": 7,
+            "natural_stops": 11,
+            "truncated": 0,
+            "statuses": {
+              "UNSUPPORTED": 4,
+              "CORRECT": 7
+            },
+            "generation_tokens": 931,
+            "forward_positions": 76359,
+            "response_wall_seconds": 20.461109079944436
+          }
+        },
+        "training_supervision": {
+          "status": "failed",
+          "actual_exit_code": 0,
+          "journal_error": {
+            "type": "TimeoutError",
+            "message": "Final logging timed out"
+          },
+          "receipt": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-pilot-20261005-run-01/returned-supervision-1.json",
+            "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g4-pilot-20261005-run-01/returned-supervision-1.json",
+            "bytes": 10493846,
+            "sha256": "aedcc1a08e9b28c0a1c0bb75b7105209eef4ec1ff21b0461370b211618672b62"
+          }
+        },
+        "metadata_bindings": {
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/preparation.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/preparation.json",
+            "sha256": "935d4b930316dcc13e592bb0b85476ecdf323ea910967c7ad1af0cc651a4516b",
+            "bytes": 115697
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/acceptance.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/acceptance.json",
+            "sha256": "f225c37f83da21c3b76574dd9864e827c6f14135d9dcbb94d25841e88ac2f8e7",
+            "bytes": 1544508
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/launch.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/launch.json",
+            "sha256": "069c3407a70296efaa18849e0ce8e49aa4c700d770fe64d8a4003fc0fafd136b",
+            "bytes": 635
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/closing-bindings.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/closing-bindings.json",
+            "sha256": "3555f3e99fc792ef32ec6ee2c5eaaaddf0f8085ab023f0af637f206a1972405e",
+            "bytes": 36459
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/returned-supervision.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/returned-supervision.json",
+            "sha256": "9e0775177d875b75984bba00bc6aa5214a60e6290a8dac34404fc693cb3deb34",
+            "bytes": 285500
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/items.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/items.json",
+            "sha256": "f1183276d15a086e0e3e0653fb9dfdd8ba1c2a319f08339413e3b25966a2f084",
+            "bytes": 11206
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/logical-panel.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/logical-panel.json",
+            "sha256": "03efb168899106f2ea131cad7096d20a4300f4cc3c7fed861132dedc98215ffc",
+            "bytes": 13492
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009/responses.jsonl",
+            "sha256": "ba869b47b2c9e6b1df87ce9e7e8d16a3c3622a00b97168fb1c24a554cf1d67c6",
+            "bytes": 154580
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009-contract.json",
+            "sha256": "da3d428d601afd64994922fc28c795bbde9ed88f32aa0fcfda734749a42969c6",
+            "bytes": 7109
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009/input-identity.json",
+            "sha256": "407431e1fdd04fd0435fdf91fd12507701a475d2c92bcc36785d691181f9f908",
+            "bytes": 65539
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009/summary.json",
+            "sha256": "8753c3838c2196ee609cafb0e0969f45067d77a8f7a05d929e538d71b8965c9a",
+            "bytes": 770
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019/responses.jsonl",
+            "sha256": "2ca37ffcf6c3950f6d096bf799e47470ac1f5c81f5b2860ad79fce9c8dc012e8",
+            "bytes": 154182
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019-contract.json",
+            "sha256": "69b822926ae63c9328ed9eb45153b88bfe64684b6918e84d2a3a48f90cd18b76",
+            "bytes": 7109
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019/input-identity.json",
+            "sha256": "756af42648c4c677b38a93816d0e0cbc798887ee431724d2a4b5d44f989b90f1",
+            "bytes": 65539
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019/summary.json",
+            "sha256": "6c51a6dd6ce2aba5e36ab5365c4fc04b46e8a392920dc6dc1d35f9d236a7dad7",
+            "bytes": 770
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029/responses.jsonl",
+            "sha256": "e62d9f0155cee63ce410348a8246e798d4d99e99dc00b0c0893ae07baf79f9bb",
+            "bytes": 153474
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029-contract.json",
+            "sha256": "c0ebaed2f0d558e344c0c4d285ed32f0db0acceea8e5b8edcf46dd80e8684788",
+            "bytes": 7109
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029/input-identity.json",
+            "sha256": "93b33192771a2705191127aa0af98948358637c10816e8b5d1beda8e57a80c00",
+            "bytes": 65539
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029/summary.json",
+            "sha256": "2319c219a111c7bb4e3324a19c795a52d340c63cea99575f07ff76f5d8cf8c93",
+            "bytes": 770
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039/responses.jsonl",
+            "sha256": "19dad26aa9b5dedc08e071f80fd13110a2840cf89ad7574e6b534d90782dfead",
+            "bytes": 155658
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039-contract.json",
+            "sha256": "58caf9487ce9dd9340caa38841e88dcedc4a2a45444a2638e972aed563411842",
+            "bytes": 7109
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039/input-identity.json",
+            "sha256": "7685c3c034ab1e710a854bd5e7d4d1b9acac044404e4044c398829c1b6d15745",
+            "bytes": 65539
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039/summary.json",
+            "sha256": "e4f971bbe335614fa7a8a2e215d6cd2767fa7e55499802f0a5425519e8ee05c0",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009/responses.jsonl",
+            "sha256": "93647e1805a1de447b55bedcb9595387a8d5c6af72674916c482afc08f1fb6c0",
+            "bytes": 113023
+          },
+          "experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009-contract.json",
+            "sha256": "1180f8a9fdb4790df125fdf0a8dbd13898dd0f8a007cafcbd0e78a56dd2cbe78",
+            "bytes": 7109
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009/input-identity.json",
+            "sha256": "4f04aa1324375f0b85bf9bd984650f23ac1a21439c528e4bca40c969aa9d178c",
+            "bytes": 65539
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009/summary.json",
+            "sha256": "31d31d8d52f6da3e20d7b9debf26742de4cc7e987e2e17507d9a987b5743012d",
+            "bytes": 770
+          },
+          "outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          }
+        },
+        "scope": "Model-free independent saved-record parser/identity/prompt/selected-probability schema/full-prefix counter replay, current source/non-model-input checks; no model/tokenizer/weight body load/hash and no final common comparison signoff."
+      },
+      {
+        "group": 8,
+        "budget": 32,
+        "run_id": "run-02",
+        "status": "passed",
+        "checks": {
+          "actual_exit0": true,
+          "all_five_cells_completed": true,
+          "all_original_responses": true,
+          "no_unreadable_jsonl": true
+        },
+        "observed_export": true,
+        "preparation_self_hash": true,
+        "sources": {
+          "src/dongxi_llms/reasoning_generation.py": true,
+          "src/dongxi_llms/reasoning_evaluation.py": true,
+          "src/dongxi_llms/run_identity.py": true,
+          "src/dongxi_llms/sampling_likelihood_lab.py": true,
+          "scripts/generate_reasoning_records.py": true,
+          "scripts/run_native_rlvr_evaluation.py": true,
+          "tests/test_native_rlvr_evaluation.py": true,
+          "scripts/run_native_reasoning_baselines.py": true,
+          "tests/test_native_reasoning_baselines.py": true,
+          "scripts/run_native_rlvr_stages.py": true,
+          "tests/test_native_rlvr_stages.py": true,
+          "src/dongxi_llms/qwen_rlvr_lab.py": true,
+          "src/dongxi_llms/grpo_lab.py": true,
+          "src/dongxi_llms/staged_campaign.py": true,
+          "src/dongxi_llms/native_profile_supervisor.py": true,
+          "src/dongxi_llms/campaign_supervisor.py": true,
+          "scripts/close_native_rlvr_export.py": true,
+          "tests/test_native_rlvr_observed_export.py": true
+        },
+        "inputs": {
+          "math_items": true,
+          "custom_template": true,
+          "interpreter": true,
+          "environment_lock": true,
+          "original_baseline_preparation": true,
+          "original_baseline_acceptance": true,
+          "original_baseline_output/sample-1009/responses.jsonl": true,
+          "original_baseline_output/sample-1009/summary.json": true,
+          "original_baseline_output/sample-1009/events.jsonl": true,
+          "original_baseline_output/sample-1009/input-identity.json": true,
+          "original_baseline_output/sample-1009/observed-interface.json": true,
+          "original_baseline_output/sample-1019/responses.jsonl": true,
+          "original_baseline_output/sample-1019/summary.json": true,
+          "original_baseline_output/sample-1019/events.jsonl": true,
+          "original_baseline_output/sample-1019/input-identity.json": true,
+          "original_baseline_output/sample-1019/observed-interface.json": true,
+          "original_baseline_output/sample-1029/responses.jsonl": true,
+          "original_baseline_output/sample-1029/summary.json": true,
+          "original_baseline_output/sample-1029/events.jsonl": true,
+          "original_baseline_output/sample-1029/input-identity.json": true,
+          "original_baseline_output/sample-1029/observed-interface.json": true,
+          "original_baseline_output/sample-1039/responses.jsonl": true,
+          "original_baseline_output/sample-1039/summary.json": true,
+          "original_baseline_output/sample-1039/events.jsonl": true,
+          "original_baseline_output/sample-1039/input-identity.json": true,
+          "original_baseline_output/sample-1039/observed-interface.json": true,
+          "original_baseline_output/greedy-1009/responses.jsonl": true,
+          "original_baseline_output/greedy-1009/summary.json": true,
+          "original_baseline_output/greedy-1009/events.jsonl": true,
+          "original_baseline_output/greedy-1009/input-identity.json": true,
+          "original_baseline_output/greedy-1009/observed-interface.json": true,
+          "items": true,
+          "logical_panel": true,
+          "contract/sample-1009": true,
+          "contract/sample-1019": true,
+          "contract/sample-1029": true,
+          "contract/sample-1039": true,
+          "contract/greedy-1009": true
+        },
+        "closing_exact": true,
+        "supervision_exact": true,
+        "supervisor": {
+          "child_pid": 310075,
+          "status": "completed",
+          "actual_exit_code": 0,
+          "child_seconds": 201.02303303498775,
+          "seconds": 201.09278599900426,
+          "minimum_sampled_available_bytes": 121441525760,
+          "final_record_retained": true,
+          "journal_error": null,
+          "cleanup_errors": [],
+          "limits": {
+            "external_seconds": 900,
+            "reserve_bytes": 26843545600,
+            "probe_seconds": 0.25,
+            "logging_seconds": 0.25,
+            "term_seconds": 0.1,
+            "reap_seconds": 0.5
+          }
+        },
+        "resource_cadence": 1,
+        "minimum_recomputed": true,
+        "rows_replayed": 100,
+        "grade_mismatches": [],
+        "cells": [
+          {
+            "cell": "sample-1009",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "0c01a88b1dd9e631f544b9e3dd413373d156f70c98fe6bb1bff403e895d2f8ce",
+            "actual_checkpoint_id": "local-hf-sha256:2ff5d102879796add5aa93a3b75a153f3e24ed4974ef303f25f7e89c1aed7e2f"
+          },
+          {
+            "cell": "sample-1019",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "dcb800721a914f8b03b2abeac6fbe8fb475dc8d9dffe04b57fd3be7b077ce98c",
+            "actual_checkpoint_id": "local-hf-sha256:2ff5d102879796add5aa93a3b75a153f3e24ed4974ef303f25f7e89c1aed7e2f"
+          },
+          {
+            "cell": "sample-1029",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "50b2230848d9fdc5ff9ca2a1eda144c302199cf246010267c17f84ced090959d",
+            "actual_checkpoint_id": "local-hf-sha256:2ff5d102879796add5aa93a3b75a153f3e24ed4974ef303f25f7e89c1aed7e2f"
+          },
+          {
+            "cell": "sample-1039",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "d0c646bd9a5324073fb0f2c5bfa3f76607531f961b54fa051f3ff6717e063122",
+            "actual_checkpoint_id": "local-hf-sha256:2ff5d102879796add5aa93a3b75a153f3e24ed4974ef303f25f7e89c1aed7e2f"
+          },
+          {
+            "cell": "greedy-1009",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "93401136a28d4796d125f83ed619c64a39936004cf9368d07205553a597dcc87",
+            "actual_checkpoint_id": "local-hf-sha256:2ff5d102879796add5aa93a3b75a153f3e24ed4974ef303f25f7e89c1aed7e2f"
+          }
+        ],
+        "all_original": {
+          "records": 100,
+          "correct": 0,
+          "natural_stops": 23,
+          "truncated": 77,
+          "statuses": {
+            "UNSUPPORTED": 99,
+            "INVALID": 1
+          },
+          "generation_tokens": 2690,
+          "forward_positions": 117743,
+          "response_wall_seconds": 69.79041468101786
+        },
+        "heldout_sample": {
+          "records": 44,
+          "correct": 0,
+          "natural_stops": 3,
+          "truncated": 41,
+          "statuses": {
+            "UNSUPPORTED": 44
+          },
+          "generation_tokens": 1342,
+          "forward_positions": 64146,
+          "response_wall_seconds": 34.97524690203136
+        },
+        "heldout_greedy": {
+          "records": 11,
+          "correct": 0,
+          "natural_stops": 1,
+          "truncated": 10,
+          "statuses": {
+            "UNSUPPORTED": 11
+          },
+          "generation_tokens": 330,
+          "forward_positions": 15819,
+          "response_wall_seconds": 7.293195606966037
+        },
+        "all_sample": {
+          "records": 80,
+          "correct": 0,
+          "natural_stops": 18,
+          "truncated": 62,
+          "statuses": {
+            "UNSUPPORTED": 79,
+            "INVALID": 1
+          },
+          "generation_tokens": 2164,
+          "forward_positions": 94648,
+          "response_wall_seconds": 57.783904496987816
+        },
+        "all_greedy": {
+          "records": 20,
+          "correct": 0,
+          "natural_stops": 5,
+          "truncated": 15,
+          "statuses": {
+            "UNSUPPORTED": 20
+          },
+          "generation_tokens": 526,
+          "forward_positions": 23095,
+          "response_wall_seconds": 12.006510184030049
+        },
+        "per_cell_heldout": {
+          "sample-1009": {
+            "records": 11,
+            "correct": 0,
+            "natural_stops": 1,
+            "truncated": 10,
+            "statuses": {
+              "UNSUPPORTED": 11
+            },
+            "generation_tokens": 329,
+            "forward_positions": 15791,
+            "response_wall_seconds": 8.574357339006383
+          },
+          "sample-1019": {
+            "records": 11,
+            "correct": 0,
+            "natural_stops": 1,
+            "truncated": 10,
+            "statuses": {
+              "UNSUPPORTED": 11
+            },
+            "generation_tokens": 330,
+            "forward_positions": 15819,
+            "response_wall_seconds": 8.73361850110814
+          },
+          "sample-1029": {
+            "records": 11,
+            "correct": 0,
+            "natural_stops": 0,
+            "truncated": 11,
+            "statuses": {
+              "UNSUPPORTED": 11
+            },
+            "generation_tokens": 352,
+            "forward_positions": 16688,
+            "response_wall_seconds": 9.21472134499345
+          },
+          "sample-1039": {
+            "records": 11,
+            "correct": 0,
+            "natural_stops": 1,
+            "truncated": 10,
+            "statuses": {
+              "UNSUPPORTED": 11
+            },
+            "generation_tokens": 331,
+            "forward_positions": 15848,
+            "response_wall_seconds": 8.452549716923386
+          },
+          "greedy-1009": {
+            "records": 11,
+            "correct": 0,
+            "natural_stops": 1,
+            "truncated": 10,
+            "statuses": {
+              "UNSUPPORTED": 11
+            },
+            "generation_tokens": 330,
+            "forward_positions": 15819,
+            "response_wall_seconds": 7.293195606966037
+          }
+        },
+        "training_supervision": {
+          "status": "completed",
+          "actual_exit_code": 0,
+          "journal_error": null,
+          "receipt": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/returned-supervision-1.json",
+            "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/returned-supervision-1.json",
+            "bytes": 10478133,
+            "sha256": "bad8d499cdab84674ec08f3f820f1572bd4a68afdb91decab1eea7458447a20e"
+          }
+        },
+        "metadata_bindings": {
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/preparation.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/preparation.json",
+            "sha256": "9099dbf7b432c43807d90f338e63269d4c1864f1e38121a61b512a5090a091ac",
+            "bytes": 115529
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/acceptance.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/acceptance.json",
+            "sha256": "c84f18de6c0325e167160443920ace908c535634264488ff7ef94128f739fc6e",
+            "bytes": 913853
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/launch.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/launch.json",
+            "sha256": "207fffb306009988bf43512057bc4234947116beff9b8fd44699beb8e462b439",
+            "bytes": 634
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/closing-bindings.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/closing-bindings.json",
+            "sha256": "68b9ab65c304a5b3747716d719b614905550b5807bdb3015334de8469139cd31",
+            "bytes": 36306
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/returned-supervision.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/returned-supervision.json",
+            "sha256": "ea356bffdaf8c107fe14143f09b8361371584785be4cea1f1f433ca7d265aade",
+            "bytes": 174285
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/items.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/items.json",
+            "sha256": "f1183276d15a086e0e3e0653fb9dfdd8ba1c2a319f08339413e3b25966a2f084",
+            "bytes": 11206
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/logical-panel.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/logical-panel.json",
+            "sha256": "03efb168899106f2ea131cad7096d20a4300f4cc3c7fed861132dedc98215ffc",
+            "bytes": 13492
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009/responses.jsonl",
+            "sha256": "9b17a03b0ec6ca4f350f3ca1477363a54ae1c5be223331d6ec44ba5f01f56d7a",
+            "bytes": 87397
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009-contract.json",
+            "sha256": "80debf8a871ff27b2fd0ac2e40b692aa13167c8d180409c8e781c406b75e09a9",
+            "bytes": 7108
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009/input-identity.json",
+            "sha256": "b4a36196234e11dff02fbebf97a182db576b9c65e6ca5e887b39a6dba48d4a31",
+            "bytes": 65609
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009/summary.json",
+            "sha256": "0d400136ba7f79a99e7b76cfdce4050b059cd2b0a48329c2435c61a597f6bc3b",
+            "bytes": 770
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019/responses.jsonl",
+            "sha256": "d1e440dddb748c8b51c4f20e35a78bc550b9e8df169a522c22d85f605bad66a9",
+            "bytes": 87536
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019-contract.json",
+            "sha256": "a6c098fbcb1647e68d3c950ab1e2784a138571889d50eed1da47be43754204ad",
+            "bytes": 7108
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019/input-identity.json",
+            "sha256": "7a66cfbdc24c6db595bbad25bf624e2cd814f365c13988801defa0b9a6b687e9",
+            "bytes": 65609
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019/summary.json",
+            "sha256": "66e5cf4c0b65bad2077c69efac75f598ed62670808cd81802959e65747324c00",
+            "bytes": 770
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029/responses.jsonl",
+            "sha256": "cc84a0a176676b040476128b0e2ad53febd1f46cf32deb0d5e88b85b5c0db058",
+            "bytes": 86659
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029-contract.json",
+            "sha256": "9d1415ccef23f2ed11aee8b532f32ad687f62220414ba3ccb97ea1481e391287",
+            "bytes": 7108
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029/input-identity.json",
+            "sha256": "5fd99edf55d19f7b2a15e259fd171842d72996659c61bc5ea3a03d500f77cbac",
+            "bytes": 65609
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029/summary.json",
+            "sha256": "d8a580bc2339c681b9f0ea92606c25e57ba51a6d0479bdb36f546206b15bd069",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039/responses.jsonl",
+            "sha256": "266c8c58905fbdea509634d580d3ed2994fbbb94cff99672d98dc8c83526de3d",
+            "bytes": 85780
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039-contract.json",
+            "sha256": "a647b91690651136e6199dcf92a939080d9e75f7b557ad34fcdfb1e983043cdd",
+            "bytes": 7108
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039/input-identity.json",
+            "sha256": "4577a14b566a336f2cb9d88200848712e6dd23ac683a92746347799a5ba7abd9",
+            "bytes": 65609
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039/summary.json",
+            "sha256": "c48aa58b7759d3e5302601238a58c20cee982cef37796e515fcb980159cfdaed",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009/responses.jsonl",
+            "sha256": "2ce980cdd506b9ad0937fe8cd81ed297afdcfc2ad3c3a3b279c4cad7ac687d6f",
+            "bytes": 74050
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009-contract.json",
+            "sha256": "246d4c7244c52f9558c6ec1a6bad149683194d8b282d446f1c2cf4491372ef09",
+            "bytes": 7108
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009/input-identity.json",
+            "sha256": "7fdad30d6900bbde4359380874d15569e369d416ec8404117e29b5dd06be2650",
+            "bytes": 65668
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009/summary.json",
+            "sha256": "2b10367ac9568d9316688d1c6c1e92e10ba600969a94f65db1f2a9643bad1541",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          }
+        },
+        "scope": "Model-free independent saved-record parser/identity/prompt/selected-probability schema/full-prefix counter replay, current source/non-model-input checks; no model/tokenizer/weight body load/hash and no final common comparison signoff."
+      },
+      {
+        "group": 8,
+        "budget": 128,
+        "run_id": "run-02",
+        "status": "passed",
+        "checks": {
+          "actual_exit0": true,
+          "all_five_cells_completed": true,
+          "all_original_responses": true,
+          "no_unreadable_jsonl": true
+        },
+        "observed_export": true,
+        "preparation_self_hash": true,
+        "sources": {
+          "src/dongxi_llms/reasoning_generation.py": true,
+          "src/dongxi_llms/reasoning_evaluation.py": true,
+          "src/dongxi_llms/run_identity.py": true,
+          "src/dongxi_llms/sampling_likelihood_lab.py": true,
+          "scripts/generate_reasoning_records.py": true,
+          "scripts/run_native_rlvr_evaluation.py": true,
+          "tests/test_native_rlvr_evaluation.py": true,
+          "scripts/run_native_reasoning_baselines.py": true,
+          "tests/test_native_reasoning_baselines.py": true,
+          "scripts/run_native_rlvr_stages.py": true,
+          "tests/test_native_rlvr_stages.py": true,
+          "src/dongxi_llms/qwen_rlvr_lab.py": true,
+          "src/dongxi_llms/grpo_lab.py": true,
+          "src/dongxi_llms/staged_campaign.py": true,
+          "src/dongxi_llms/native_profile_supervisor.py": true,
+          "src/dongxi_llms/campaign_supervisor.py": true,
+          "scripts/close_native_rlvr_export.py": true,
+          "tests/test_native_rlvr_observed_export.py": true
+        },
+        "inputs": {
+          "math_items": true,
+          "custom_template": true,
+          "interpreter": true,
+          "environment_lock": true,
+          "original_baseline_preparation": true,
+          "original_baseline_acceptance": true,
+          "original_baseline_output/sample-1009/responses.jsonl": true,
+          "original_baseline_output/sample-1009/summary.json": true,
+          "original_baseline_output/sample-1009/events.jsonl": true,
+          "original_baseline_output/sample-1009/input-identity.json": true,
+          "original_baseline_output/sample-1009/observed-interface.json": true,
+          "original_baseline_output/sample-1019/responses.jsonl": true,
+          "original_baseline_output/sample-1019/summary.json": true,
+          "original_baseline_output/sample-1019/events.jsonl": true,
+          "original_baseline_output/sample-1019/input-identity.json": true,
+          "original_baseline_output/sample-1019/observed-interface.json": true,
+          "original_baseline_output/sample-1029/responses.jsonl": true,
+          "original_baseline_output/sample-1029/summary.json": true,
+          "original_baseline_output/sample-1029/events.jsonl": true,
+          "original_baseline_output/sample-1029/input-identity.json": true,
+          "original_baseline_output/sample-1029/observed-interface.json": true,
+          "original_baseline_output/sample-1039/responses.jsonl": true,
+          "original_baseline_output/sample-1039/summary.json": true,
+          "original_baseline_output/sample-1039/events.jsonl": true,
+          "original_baseline_output/sample-1039/input-identity.json": true,
+          "original_baseline_output/sample-1039/observed-interface.json": true,
+          "original_baseline_output/greedy-1009/responses.jsonl": true,
+          "original_baseline_output/greedy-1009/summary.json": true,
+          "original_baseline_output/greedy-1009/events.jsonl": true,
+          "original_baseline_output/greedy-1009/input-identity.json": true,
+          "original_baseline_output/greedy-1009/observed-interface.json": true,
+          "items": true,
+          "logical_panel": true,
+          "contract/sample-1009": true,
+          "contract/sample-1019": true,
+          "contract/sample-1029": true,
+          "contract/sample-1039": true,
+          "contract/greedy-1009": true
+        },
+        "closing_exact": true,
+        "supervision_exact": true,
+        "supervisor": {
+          "child_pid": 311552,
+          "status": "completed",
+          "actual_exit_code": 0,
+          "child_seconds": 336.047204387025,
+          "seconds": 336.10024066996993,
+          "minimum_sampled_available_bytes": 120853938176,
+          "final_record_retained": true,
+          "journal_error": null,
+          "cleanup_errors": [],
+          "limits": {
+            "external_seconds": 900,
+            "reserve_bytes": 26843545600,
+            "probe_seconds": 0.25,
+            "logging_seconds": 0.25,
+            "term_seconds": 0.1,
+            "reap_seconds": 0.5
+          }
+        },
+        "resource_cadence": 1,
+        "minimum_recomputed": true,
+        "rows_replayed": 100,
+        "grade_mismatches": [],
+        "cells": [
+          {
+            "cell": "sample-1009",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "8ddc4ef7e8d1a26047d65959fa3728ea0afe93bed00a80f366e4be7b79057797",
+            "actual_checkpoint_id": "local-hf-sha256:2ff5d102879796add5aa93a3b75a153f3e24ed4974ef303f25f7e89c1aed7e2f"
+          },
+          {
+            "cell": "sample-1019",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "196adee2ffc8110658f2a8fd2998c1435532d8357033fb03ba7a9dc38ef54322",
+            "actual_checkpoint_id": "local-hf-sha256:2ff5d102879796add5aa93a3b75a153f3e24ed4974ef303f25f7e89c1aed7e2f"
+          },
+          {
+            "cell": "sample-1029",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "0d35dd7a7dbf79f16b6748553efd277dfe655cb1fb4c21807043d9582717a075",
+            "actual_checkpoint_id": "local-hf-sha256:2ff5d102879796add5aa93a3b75a153f3e24ed4974ef303f25f7e89c1aed7e2f"
+          },
+          {
+            "cell": "sample-1039",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "af4cbd479f18035de2a52ab05d10a8238da4352ae504e623cddc5ff33f347394",
+            "actual_checkpoint_id": "local-hf-sha256:2ff5d102879796add5aa93a3b75a153f3e24ed4974ef303f25f7e89c1aed7e2f"
+          },
+          {
+            "cell": "greedy-1009",
+            "self_and_model_command_interface_inputs_match": true,
+            "summary_complete": true,
+            "contract_id": "cd4bbd5579c6baf88e3cd6350fd7a05f1a154e601a2ad604a552ef7f18c3b80e",
+            "actual_checkpoint_id": "local-hf-sha256:2ff5d102879796add5aa93a3b75a153f3e24ed4974ef303f25f7e89c1aed7e2f"
+          }
+        ],
+        "all_original": {
+          "records": 100,
+          "correct": 36,
+          "natural_stops": 93,
+          "truncated": 7,
+          "statuses": {
+            "CORRECT": 36,
+            "UNSUPPORTED": 63,
+            "INVALID": 1
+          },
+          "generation_tokens": 7693,
+          "forward_positions": 623782,
+          "response_wall_seconds": 187.6797538928804
+        },
+        "heldout_sample": {
+          "records": 44,
+          "correct": 13,
+          "natural_stops": 38,
+          "truncated": 6,
+          "statuses": {
+            "UNSUPPORTED": 31,
+            "CORRECT": 13
+          },
+          "generation_tokens": 4073,
+          "forward_positions": 347348,
+          "response_wall_seconds": 100.97452263277955
+        },
+        "heldout_greedy": {
+          "records": 11,
+          "correct": 7,
+          "natural_stops": 11,
+          "truncated": 0,
+          "statuses": {
+            "UNSUPPORTED": 4,
+            "CORRECT": 7
+          },
+          "generation_tokens": 920,
+          "forward_positions": 74514,
+          "response_wall_seconds": 19.888959344127215
+        },
+        "all_sample": {
+          "records": 80,
+          "correct": 25,
+          "natural_stops": 73,
+          "truncated": 7,
+          "statuses": {
+            "CORRECT": 25,
+            "UNSUPPORTED": 54,
+            "INVALID": 1
+          },
+          "generation_tokens": 6255,
+          "forward_positions": 511569,
+          "response_wall_seconds": 156.16344333271263
+        },
+        "all_greedy": {
+          "records": 20,
+          "correct": 11,
+          "natural_stops": 20,
+          "truncated": 0,
+          "statuses": {
+            "CORRECT": 11,
+            "UNSUPPORTED": 9
+          },
+          "generation_tokens": 1438,
+          "forward_positions": 112213,
+          "response_wall_seconds": 31.516310560167767
+        },
+        "per_cell_heldout": {
+          "sample-1009": {
+            "records": 11,
+            "correct": 3,
+            "natural_stops": 10,
+            "truncated": 1,
+            "statuses": {
+              "UNSUPPORTED": 8,
+              "CORRECT": 3
+            },
+            "generation_tokens": 1004,
+            "forward_positions": 86142,
+            "response_wall_seconds": 23.899120074987877
+          },
+          "sample-1019": {
+            "records": 11,
+            "correct": 3,
+            "natural_stops": 9,
+            "truncated": 2,
+            "statuses": {
+              "UNSUPPORTED": 8,
+              "CORRECT": 3
+            },
+            "generation_tokens": 989,
+            "forward_positions": 83719,
+            "response_wall_seconds": 24.345127791923005
+          },
+          "sample-1029": {
+            "records": 11,
+            "correct": 6,
+            "natural_stops": 10,
+            "truncated": 1,
+            "statuses": {
+              "CORRECT": 6,
+              "UNSUPPORTED": 5
+            },
+            "generation_tokens": 1025,
+            "forward_positions": 85671,
+            "response_wall_seconds": 25.80041716794949
+          },
+          "sample-1039": {
+            "records": 11,
+            "correct": 1,
+            "natural_stops": 9,
+            "truncated": 2,
+            "statuses": {
+              "UNSUPPORTED": 10,
+              "CORRECT": 1
+            },
+            "generation_tokens": 1055,
+            "forward_positions": 91816,
+            "response_wall_seconds": 26.92985759791918
+          },
+          "greedy-1009": {
+            "records": 11,
+            "correct": 7,
+            "natural_stops": 11,
+            "truncated": 0,
+            "statuses": {
+              "UNSUPPORTED": 4,
+              "CORRECT": 7
+            },
+            "generation_tokens": 920,
+            "forward_positions": 74514,
+            "response_wall_seconds": 19.888959344127215
+          }
+        },
+        "training_supervision": {
+          "status": "completed",
+          "actual_exit_code": 0,
+          "journal_error": null,
+          "receipt": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/returned-supervision-1.json",
+            "actual_path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/returned-supervision-1.json",
+            "bytes": 10478133,
+            "sha256": "bad8d499cdab84674ec08f3f820f1572bd4a68afdb91decab1eea7458447a20e"
+          }
+        },
+        "metadata_bindings": {
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/preparation.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/preparation.json",
+            "sha256": "7b6f6ec4211a3c49dd164fcf98b5cc134f41553bb20adf7adf3accb3acb735ae",
+            "bytes": 115618
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/acceptance.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/acceptance.json",
+            "sha256": "ce4f78c90cd2901c2e49f29bcac195f11e27030de50b12694fadb984d5d2cd68",
+            "bytes": 1545114
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/launch.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/launch.json",
+            "sha256": "cfb525dd90e9515489b625bb747c981d6f9d3e469982587e95e44f10fbb6d37e",
+            "bytes": 635
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/closing-bindings.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/closing-bindings.json",
+            "sha256": "30b10477b0d74432518d7f5eee07688e5999d35c636e6cb11674343938842994",
+            "bytes": 36380
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/returned-supervision.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/returned-supervision.json",
+            "sha256": "8574d68f013e2ae3af7843bc25e6091f25beda1d32a41bca980edd669dcff070",
+            "bytes": 288015
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/items.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/items.json",
+            "sha256": "f1183276d15a086e0e3e0653fb9dfdd8ba1c2a319f08339413e3b25966a2f084",
+            "bytes": 11206
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/logical-panel.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/logical-panel.json",
+            "sha256": "03efb168899106f2ea131cad7096d20a4300f4cc3c7fed861132dedc98215ffc",
+            "bytes": 13492
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009/responses.jsonl",
+            "sha256": "18eb6b693cd2f319cbda54a0f0c93b7b2de806fb8dff125706511fe73fb6e6d2",
+            "bytes": 154192
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009-contract.json",
+            "sha256": "da3d428d601afd64994922fc28c795bbde9ed88f32aa0fcfda734749a42969c6",
+            "bytes": 7109
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009/input-identity.json",
+            "sha256": "6875c353716317e2b462822f3a3499bce2222124c198d55cb1d2c876b3088a6d",
+            "bytes": 65749
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009/summary.json",
+            "sha256": "55f8d17acc3e8a87392bf390ab6040c672b5e4bfe950a28fa89c2bc9674a2ec7",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019/responses.jsonl",
+            "sha256": "f351a14d05d9fa8cfc8d95d9d02f45e3709811408d705c3e1c9e50d10ac8b4dd",
+            "bytes": 153790
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019-contract.json",
+            "sha256": "69b822926ae63c9328ed9eb45153b88bfe64684b6918e84d2a3a48f90cd18b76",
+            "bytes": 7109
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019/input-identity.json",
+            "sha256": "2366339a2c4eec805df8b86f97ee95d3b8666a6e71dd64bbb69cfd52b9c8bcd3",
+            "bytes": 65749
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019/summary.json",
+            "sha256": "20024755c3738c99817fdc1cbaa779d44fc51424588e24e7d8bec4f4093df679",
+            "bytes": 769
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029/responses.jsonl",
+            "sha256": "17ac953cb827a66953904ccedda91b530f0e941e17d384d4ddc07bb54bf2c814",
+            "bytes": 153468
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029-contract.json",
+            "sha256": "c0ebaed2f0d558e344c0c4d285ed32f0db0acceea8e5b8edcf46dd80e8684788",
+            "bytes": 7109
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029/input-identity.json",
+            "sha256": "956f57ca8cce5101bd71df0a0cb5120a0c6769d892143fba8f238cf1b4f99bf9",
+            "bytes": 65749
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029/summary.json",
+            "sha256": "da92fdebb7cf2aa2df88db37fb455735fbabd3367ad5a18540f2ed97835c6c26",
+            "bytes": 771
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039/responses.jsonl",
+            "sha256": "5af39ee78feee53fa0297f4b2ddec0098a5c5bb11f66778d279e4263f33744b2",
+            "bytes": 155775
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039-contract.json",
+            "sha256": "58caf9487ce9dd9340caa38841e88dcedc4a2a45444a2638e972aed563411842",
+            "bytes": 7109
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039/input-identity.json",
+            "sha256": "a6c8b63d83950587d11c5651668e75898da98d807fe83c41b8af5f6790e2688c",
+            "bytes": 65749
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039/summary.json",
+            "sha256": "45db066b3bb473eef9f598f23b4ca7381bfede674c39b9e59125779b63b9a9eb",
+            "bytes": 770
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009/responses.jsonl": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009/responses.jsonl",
+            "sha256": "e02d30833929aed0af1993257fee477a306e7235d4cee3c164b9280bb6bf8f2c",
+            "bytes": 112817
+          },
+          "experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009-contract.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009-contract.json",
+            "sha256": "1180f8a9fdb4790df125fdf0a8dbd13898dd0f8a007cafcbd0e78a56dd2cbe78",
+            "bytes": 7109
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009/input-identity.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009/input-identity.json",
+            "sha256": "1412ed199a6b8fc90b6d7cc69e2dc27feeacb7b3a0e2f2e60aa204286a218808",
+            "bytes": 65749
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009/summary.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009/summary.json",
+            "sha256": "734c62951a2fdb6daa66b3619ae0a24fa37191c103448bd24eae9b21c0c554f0",
+            "bytes": 770
+          },
+          "outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009/observed-interface.json": {
+            "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009/observed-interface.json",
+            "sha256": "8d43d4057deb0e9b97ca194a422f62887110de08abcefbb66b75d670b3df6616",
+            "bytes": 968
+          }
+        },
+        "scope": "Model-free independent saved-record parser/identity/prompt/selected-probability schema/full-prefix counter replay, current source/non-model-input checks; no model/tokenizer/weight body load/hash and no final common comparison signoff."
+      }
+    ],
+    "total_actual_rows": 400,
+    "all_actual_forward_geometry_checked": true
+  },
+  "common_comparison_review": {
+    "schema": "dongxi-native-rlvr-common-independent-v1",
+    "status": "clear",
+    "reports": [
+      {
+        "budget": 32,
+        "comparison": {
+          "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-common20-cap32-20261005-run-02.json",
+          "bytes": 585313,
+          "sha256": "3edeeb1440e1830dd03e8b4933798e743f372346eb28499847e7c205a9ffa3d5"
+        },
+        "source_rows_replayed": 300,
+        "metric_tables_exact": true,
+        "bootstrap_panels": [
+          {
+            "cell": "sample-1009",
+            "policy": "rlvr-g4",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          },
+          {
+            "cell": "sample-1009",
+            "policy": "rlvr-g8",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          },
+          {
+            "cell": "sample-1019",
+            "policy": "rlvr-g4",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          },
+          {
+            "cell": "sample-1019",
+            "policy": "rlvr-g8",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          },
+          {
+            "cell": "sample-1029",
+            "policy": "rlvr-g4",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          },
+          {
+            "cell": "sample-1029",
+            "policy": "rlvr-g8",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          },
+          {
+            "cell": "sample-1039",
+            "policy": "rlvr-g4",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          },
+          {
+            "cell": "sample-1039",
+            "policy": "rlvr-g8",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          },
+          {
+            "cell": "greedy-1009",
+            "policy": "rlvr-g4",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          },
+          {
+            "cell": "greedy-1009",
+            "policy": "rlvr-g8",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          }
+        ],
+        "policy_summary": {
+          "unchanged-instruct": {
+            "all_original": {
+              "records": 100,
+              "correct": 0,
+              "natural_stops": 23,
+              "truncated": 77,
+              "statuses": {
+                "UNSUPPORTED": 99,
+                "INVALID": 1
+              },
+              "costs": {
+                "generation_tokens": 2692,
+                "attempted_forward_tokens": 117798,
+                "model_forward_tokens": 117798,
+                "attempted_forward_calls": 2692,
+                "forward_calls": 2692,
+                "wall_seconds": 66.32834011112573
+              }
+            },
+            "heldout_sample": {
+              "records": 44,
+              "correct": 0,
+              "natural_stops": 3,
+              "truncated": 41,
+              "statuses": {
+                "UNSUPPORTED": 43,
+                "INVALID": 1
+              },
+              "costs": {
+                "generation_tokens": 1342,
+                "attempted_forward_tokens": 64146,
+                "model_forward_tokens": 64146,
+                "attempted_forward_calls": 1342,
+                "forward_calls": 1342,
+                "wall_seconds": 32.95614395302255
+              }
+            },
+            "heldout_greedy": {
+              "records": 11,
+              "correct": 0,
+              "natural_stops": 1,
+              "truncated": 10,
+              "statuses": {
+                "UNSUPPORTED": 11
+              },
+              "costs": {
+                "generation_tokens": 330,
+                "attempted_forward_tokens": 15819,
+                "model_forward_tokens": 15819,
+                "attempted_forward_calls": 330,
+                "forward_calls": 330,
+                "wall_seconds": 7.163921221974306
+              }
+            },
+            "diagnostic": {
+              "records": 45,
+              "correct": 0,
+              "natural_stops": 19,
+              "truncated": 26,
+              "statuses": {
+                "UNSUPPORTED": 45
+              },
+              "costs": {
+                "generation_tokens": 1020,
+                "attempted_forward_tokens": 37833,
+                "model_forward_tokens": 37833,
+                "attempted_forward_calls": 1020,
+                "forward_calls": 1020,
+                "wall_seconds": 26.208274936128873
+              }
+            },
+            "heldout_correct_capped": 0,
+            "sample_any_candidate_available": 0
+          },
+          "rlvr-g4": {
+            "all_original": {
+              "records": 100,
+              "correct": 0,
+              "natural_stops": 23,
+              "truncated": 77,
+              "statuses": {
+                "UNSUPPORTED": 100
+              },
+              "costs": {
+                "generation_tokens": 2702,
+                "attempted_forward_tokens": 118145,
+                "model_forward_tokens": 118145,
+                "attempted_forward_calls": 2702,
+                "forward_calls": 2702,
+                "wall_seconds": 69.34510569786653
+              }
+            },
+            "heldout_sample": {
+              "records": 44,
+              "correct": 0,
+              "natural_stops": 3,
+              "truncated": 41,
+              "statuses": {
+                "UNSUPPORTED": 44
+              },
+              "costs": {
+                "generation_tokens": 1342,
+                "attempted_forward_tokens": 64146,
+                "model_forward_tokens": 64146,
+                "attempted_forward_calls": 1342,
+                "forward_calls": 1342,
+                "wall_seconds": 34.23714742588345
+              }
+            },
+            "heldout_greedy": {
+              "records": 11,
+              "correct": 0,
+              "natural_stops": 1,
+              "truncated": 10,
+              "statuses": {
+                "UNSUPPORTED": 11
+              },
+              "costs": {
+                "generation_tokens": 329,
+                "attempted_forward_tokens": 15791,
+                "model_forward_tokens": 15791,
+                "attempted_forward_calls": 329,
+                "forward_calls": 329,
+                "wall_seconds": 7.811123858031351
+              }
+            },
+            "diagnostic": {
+              "records": 45,
+              "correct": 0,
+              "natural_stops": 19,
+              "truncated": 26,
+              "statuses": {
+                "UNSUPPORTED": 45
+              },
+              "costs": {
+                "generation_tokens": 1031,
+                "attempted_forward_tokens": 38208,
+                "model_forward_tokens": 38208,
+                "attempted_forward_calls": 1031,
+                "forward_calls": 1031,
+                "wall_seconds": 27.29683441395173
+              }
+            },
+            "heldout_correct_capped": 0,
+            "sample_any_candidate_available": 0
+          },
+          "rlvr-g8": {
+            "all_original": {
+              "records": 100,
+              "correct": 0,
+              "natural_stops": 23,
+              "truncated": 77,
+              "statuses": {
+                "UNSUPPORTED": 99,
+                "INVALID": 1
+              },
+              "costs": {
+                "generation_tokens": 2690,
+                "attempted_forward_tokens": 117743,
+                "model_forward_tokens": 117743,
+                "attempted_forward_calls": 2690,
+                "forward_calls": 2690,
+                "wall_seconds": 69.79041468101786
+              }
+            },
+            "heldout_sample": {
+              "records": 44,
+              "correct": 0,
+              "natural_stops": 3,
+              "truncated": 41,
+              "statuses": {
+                "UNSUPPORTED": 44
+              },
+              "costs": {
+                "generation_tokens": 1342,
+                "attempted_forward_tokens": 64146,
+                "model_forward_tokens": 64146,
+                "attempted_forward_calls": 1342,
+                "forward_calls": 1342,
+                "wall_seconds": 34.97524690203136
+              }
+            },
+            "heldout_greedy": {
+              "records": 11,
+              "correct": 0,
+              "natural_stops": 1,
+              "truncated": 10,
+              "statuses": {
+                "UNSUPPORTED": 11
+              },
+              "costs": {
+                "generation_tokens": 330,
+                "attempted_forward_tokens": 15819,
+                "model_forward_tokens": 15819,
+                "attempted_forward_calls": 330,
+                "forward_calls": 330,
+                "wall_seconds": 7.293195606966037
+              }
+            },
+            "diagnostic": {
+              "records": 45,
+              "correct": 0,
+              "natural_stops": 19,
+              "truncated": 26,
+              "statuses": {
+                "UNSUPPORTED": 44,
+                "INVALID": 1
+              },
+              "costs": {
+                "generation_tokens": 1018,
+                "attempted_forward_tokens": 37778,
+                "model_forward_tokens": 37778,
+                "attempted_forward_calls": 1018,
+                "forward_calls": 1018,
+                "wall_seconds": 27.52197217202047
+              }
+            },
+            "heldout_correct_capped": 0,
+            "sample_any_candidate_available": 0
+          }
+        },
+        "bindings_equal": true
+      },
+      {
+        "budget": 128,
+        "comparison": {
+          "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-common20-cap128-20261005-run-02.json",
+          "bytes": 764843,
+          "sha256": "7ccab9d52584d60b84ca31fea753b35ab1a40c4ffc10e6f3304816ed035a7f8b"
+        },
+        "source_rows_replayed": 300,
+        "metric_tables_exact": true,
+        "bootstrap_panels": [
+          {
+            "cell": "sample-1009",
+            "policy": "rlvr-g4",
+            "metric": "correct",
+            "delta": -0.09090909090909091,
+            "interval": [
+              -0.2727272727272727,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "3398a1b914f2449382de993a5ce3faff14875cf11e704534790772ef2f4b05f0"
+          },
+          {
+            "cell": "sample-1009",
+            "policy": "rlvr-g8",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              -0.2727272727272727,
+              0.2727272727272727
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "3ee94fb38a7e3767689fe87db71e0a8208ce8d43db43b207975821016ce33200"
+          },
+          {
+            "cell": "sample-1019",
+            "policy": "rlvr-g4",
+            "metric": "correct",
+            "delta": -0.09090909090909091,
+            "interval": [
+              -0.2727272727272727,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "cf536c8657f01c57894b3ee5b06ef71143078274cfe2e93629ae57d3c954e422"
+          },
+          {
+            "cell": "sample-1019",
+            "policy": "rlvr-g8",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          },
+          {
+            "cell": "sample-1029",
+            "policy": "rlvr-g4",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              -0.2727272727272727,
+              0.2727272727272727
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "9b68f4c55931aca9985114df8994761702b83221ef04ccbedeb944b37c291d49"
+          },
+          {
+            "cell": "sample-1029",
+            "policy": "rlvr-g8",
+            "metric": "correct",
+            "delta": 0.09090909090909091,
+            "interval": [
+              0,
+              0.2727272727272727
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "f07742ba389dce0476cec1c7cdb86819fd4ef5be12a74099242cce3d2fe7bf4b"
+          },
+          {
+            "cell": "sample-1039",
+            "policy": "rlvr-g4",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              -0.2727272727272727,
+              0.2727272727272727
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "2d824199debcdf5119d4d183c1a7619a5a0e1ecabb30ae75e5f3019fc367e9e5"
+          },
+          {
+            "cell": "sample-1039",
+            "policy": "rlvr-g8",
+            "metric": "correct",
+            "delta": -0.09090909090909091,
+            "interval": [
+              -0.2727272727272727,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "bf0d88092b87cf0e0e48666dd6d38167ef3f43545ea6d156f7df8bcbc5008a6b"
+          },
+          {
+            "cell": "greedy-1009",
+            "policy": "rlvr-g4",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              -0.2727272727272727,
+              0.2727272727272727
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "c202fcef2b3f35cc97a39714e4a9fccd99b1efd7c1fc93dfc7937efb4700416f"
+          },
+          {
+            "cell": "greedy-1009",
+            "policy": "rlvr-g8",
+            "metric": "correct",
+            "delta": 0,
+            "interval": [
+              0,
+              0
+            ],
+            "n_items_samples": 11,
+            "n_source_groups": 11,
+            "unit": "source_group",
+            "draws": 2000,
+            "seed": 1010,
+            "limits": "Percentile cluster bootstrap; a small authored panel is not a generalization benchmark.",
+            "samples_sha256": "8ba92bb4f9a9048ee1ba4aba43e0830530748217873afeeb3cb0483e43bf2f98"
+          }
+        ],
+        "policy_summary": {
+          "unchanged-instruct": {
+            "all_original": {
+              "records": 100,
+              "correct": 34,
+              "natural_stops": 90,
+              "truncated": 10,
+              "statuses": {
+                "UNSUPPORTED": 65,
+                "CORRECT": 34,
+                "INVALID": 1
+              },
+              "costs": {
+                "generation_tokens": 7727,
+                "attempted_forward_tokens": 627977,
+                "model_forward_tokens": 627977,
+                "attempted_forward_calls": 7727,
+                "forward_calls": 7727,
+                "wall_seconds": 181.13693934329785
+              }
+            },
+            "heldout_sample": {
+              "records": 44,
+              "correct": 13,
+              "natural_stops": 35,
+              "truncated": 9,
+              "statuses": {
+                "UNSUPPORTED": 31,
+                "CORRECT": 13
+              },
+              "costs": {
+                "generation_tokens": 4077,
+                "attempted_forward_tokens": 348314,
+                "model_forward_tokens": 348314,
+                "attempted_forward_calls": 4077,
+                "forward_calls": 4077,
+                "wall_seconds": 96.96260207495652
+              }
+            },
+            "heldout_greedy": {
+              "records": 11,
+              "correct": 7,
+              "natural_stops": 11,
+              "truncated": 0,
+              "statuses": {
+                "UNSUPPORTED": 4,
+                "CORRECT": 7
+              },
+              "costs": {
+                "generation_tokens": 930,
+                "attempted_forward_tokens": 75599,
+                "model_forward_tokens": 75599,
+                "attempted_forward_calls": 930,
+                "forward_calls": 930,
+                "wall_seconds": 19.605083733040374
+              }
+            },
+            "diagnostic": {
+              "records": 45,
+              "correct": 14,
+              "natural_stops": 44,
+              "truncated": 1,
+              "statuses": {
+                "UNSUPPORTED": 30,
+                "CORRECT": 14,
+                "INVALID": 1
+              },
+              "costs": {
+                "generation_tokens": 2720,
+                "attempted_forward_tokens": 204064,
+                "model_forward_tokens": 204064,
+                "attempted_forward_calls": 2720,
+                "forward_calls": 2720,
+                "wall_seconds": 64.56925353530096
+              }
+            },
+            "heldout_correct_capped": 2,
+            "sample_any_candidate_available": 8
+          },
+          "rlvr-g4": {
+            "all_original": {
+              "records": 100,
+              "correct": 35,
+              "natural_stops": 92,
+              "truncated": 8,
+              "statuses": {
+                "CORRECT": 35,
+                "UNSUPPORTED": 64,
+                "INVALID": 1
+              },
+              "costs": {
+                "generation_tokens": 7704,
+                "attempted_forward_tokens": 624825,
+                "model_forward_tokens": 624825,
+                "attempted_forward_calls": 7704,
+                "forward_calls": 7704,
+                "wall_seconds": 185.07012811786262
+              }
+            },
+            "heldout_sample": {
+              "records": 44,
+              "correct": 11,
+              "natural_stops": 37,
+              "truncated": 7,
+              "statuses": {
+                "UNSUPPORTED": 33,
+                "CORRECT": 11
+              },
+              "costs": {
+                "generation_tokens": 4069,
+                "attempted_forward_tokens": 347577,
+                "model_forward_tokens": 347577,
+                "attempted_forward_calls": 4069,
+                "forward_calls": 4069,
+                "wall_seconds": 98.78199107805267
+              }
+            },
+            "heldout_greedy": {
+              "records": 11,
+              "correct": 7,
+              "natural_stops": 11,
+              "truncated": 0,
+              "statuses": {
+                "UNSUPPORTED": 4,
+                "CORRECT": 7
+              },
+              "costs": {
+                "generation_tokens": 931,
+                "attempted_forward_tokens": 76359,
+                "model_forward_tokens": 76359,
+                "attempted_forward_calls": 931,
+                "forward_calls": 931,
+                "wall_seconds": 20.461109079944436
+              }
+            },
+            "diagnostic": {
+              "records": 45,
+              "correct": 17,
+              "natural_stops": 44,
+              "truncated": 1,
+              "statuses": {
+                "CORRECT": 17,
+                "UNSUPPORTED": 27,
+                "INVALID": 1
+              },
+              "costs": {
+                "generation_tokens": 2704,
+                "attempted_forward_tokens": 200889,
+                "model_forward_tokens": 200889,
+                "attempted_forward_calls": 2704,
+                "forward_calls": 2704,
+                "wall_seconds": 65.82702795986552
+              }
+            },
+            "heldout_correct_capped": 2,
+            "sample_any_candidate_available": 7
+          },
+          "rlvr-g8": {
+            "all_original": {
+              "records": 100,
+              "correct": 36,
+              "natural_stops": 93,
+              "truncated": 7,
+              "statuses": {
+                "CORRECT": 36,
+                "UNSUPPORTED": 63,
+                "INVALID": 1
+              },
+              "costs": {
+                "generation_tokens": 7693,
+                "attempted_forward_tokens": 623782,
+                "model_forward_tokens": 623782,
+                "attempted_forward_calls": 7693,
+                "forward_calls": 7693,
+                "wall_seconds": 187.6797538928804
+              }
+            },
+            "heldout_sample": {
+              "records": 44,
+              "correct": 13,
+              "natural_stops": 38,
+              "truncated": 6,
+              "statuses": {
+                "UNSUPPORTED": 31,
+                "CORRECT": 13
+              },
+              "costs": {
+                "generation_tokens": 4073,
+                "attempted_forward_tokens": 347348,
+                "model_forward_tokens": 347348,
+                "attempted_forward_calls": 4073,
+                "forward_calls": 4073,
+                "wall_seconds": 100.97452263277955
+              }
+            },
+            "heldout_greedy": {
+              "records": 11,
+              "correct": 7,
+              "natural_stops": 11,
+              "truncated": 0,
+              "statuses": {
+                "UNSUPPORTED": 4,
+                "CORRECT": 7
+              },
+              "costs": {
+                "generation_tokens": 920,
+                "attempted_forward_tokens": 74514,
+                "model_forward_tokens": 74514,
+                "attempted_forward_calls": 920,
+                "forward_calls": 920,
+                "wall_seconds": 19.888959344127215
+              }
+            },
+            "diagnostic": {
+              "records": 45,
+              "correct": 16,
+              "natural_stops": 44,
+              "truncated": 1,
+              "statuses": {
+                "CORRECT": 16,
+                "UNSUPPORTED": 28,
+                "INVALID": 1
+              },
+              "costs": {
+                "generation_tokens": 2700,
+                "attempted_forward_tokens": 201920,
+                "model_forward_tokens": 201920,
+                "attempted_forward_calls": 2700,
+                "forward_calls": 2700,
+                "wall_seconds": 66.81627191597363
+              }
+            },
+            "heldout_correct_capped": 1,
+            "sample_any_candidate_available": 8
+          }
+        },
+        "bindings_equal": true
+      }
+    ],
+    "metadata_bindings": {
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-common20-cap32-20261005-run-02.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-common20-cap32-20261005-run-02.json",
+        "bytes": 585313,
+        "sha256": "3edeeb1440e1830dd03e8b4933798e743f372346eb28499847e7c205a9ffa3d5"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/preparation.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/preparation.json",
+        "bytes": 86765,
+        "sha256": "271f6b9436b7d10cf22a75d83e405f2ee92bf12499dc7c469e3c8516a717a5d8"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/acceptance.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/acceptance.json",
+        "bytes": 716482,
+        "sha256": "33402365e60c7b362590fb986da903db66a7f611659a12671b80d5a126e52627"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1009-contract.json",
+        "bytes": 7108,
+        "sha256": "80debf8a871ff27b2fd0ac2e40b692aa13167c8d180409c8e781c406b75e09a9"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1009/responses.jsonl",
+        "bytes": 87961,
+        "sha256": "eef3943519dc61a18b582207221fdc8197e7578ecc0cefde5f40b106f25da946"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1019-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1019-contract.json",
+        "bytes": 7108,
+        "sha256": "a6c098fbcb1647e68d3c950ab1e2784a138571889d50eed1da47be43754204ad"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1019/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1019/responses.jsonl",
+        "bytes": 88107,
+        "sha256": "cb61b14186a3a21efd076a83cb86711e92e2d270d6a2abc59651e98e79cf2188"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1029-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1029-contract.json",
+        "bytes": 7108,
+        "sha256": "9d1415ccef23f2ed11aee8b532f32ad687f62220414ba3ccb97ea1481e391287"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1029/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1029/responses.jsonl",
+        "bytes": 87151,
+        "sha256": "593effdd0f59b3851cc6094a481b05aee62c67991b5bc5bc42e48cfd59db733c"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1039-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1039-contract.json",
+        "bytes": 7108,
+        "sha256": "a647b91690651136e6199dcf92a939080d9e75f7b557ad34fcdfb1e983043cdd"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1039/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/sample-1039/responses.jsonl",
+        "bytes": 86464,
+        "sha256": "1d4ae804cb3cc320b627acf318d3a701a4581c6c8c81669cbe8895b638aa0b35"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/greedy-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/greedy-1009-contract.json",
+        "bytes": 7108,
+        "sha256": "246d4c7244c52f9558c6ec1a6bad149683194d8b282d446f1c2cf4491372ef09"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/greedy-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap32-20261005-run-01/greedy-1009/responses.jsonl",
+        "bytes": 74562,
+        "sha256": "b5d5c8ff3a317ad4151abce0ce4269bb86f7c50d7b5eaa6d3ec8ecf4e20af6c3"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/preparation.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/preparation.json",
+        "bytes": 115608,
+        "sha256": "4a658b2be5a96c8a59490e472fb794a0a53ed1a45125819ddc0f489d777977a4"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/acceptance.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/acceptance.json",
+        "bytes": 916471,
+        "sha256": "b818f8ac51b787d9caac3aa5c25db40ba0bafffd0cd1abb62b57553e23c8020e"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/returned-supervision.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/returned-supervision.json",
+        "bytes": 175133,
+        "sha256": "ddacf2b12bc6f787447d7eaa7d6abd040373fa19cc13b7744564d6a1f6df62c9"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009-contract.json",
+        "bytes": 7108,
+        "sha256": "80debf8a871ff27b2fd0ac2e40b692aa13167c8d180409c8e781c406b75e09a9"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1009/responses.jsonl",
+        "bytes": 87426,
+        "sha256": "1d773a3cf988472345a20b9bf7fcfb2659a16b05bf840ffd6b3f4f7f6b6a0400"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019-contract.json",
+        "bytes": 7108,
+        "sha256": "a6c098fbcb1647e68d3c950ab1e2784a138571889d50eed1da47be43754204ad"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1019/responses.jsonl",
+        "bytes": 87603,
+        "sha256": "fb79965441d92e4752a648b7050daed58f807624fdca871aaf4499643a99e594"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029-contract.json",
+        "bytes": 7108,
+        "sha256": "9d1415ccef23f2ed11aee8b532f32ad687f62220414ba3ccb97ea1481e391287"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1029/responses.jsonl",
+        "bytes": 87473,
+        "sha256": "34fc296864bb159d7cc0b943b07086875673d107809d604ecdce51b4b656f8cd"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039-contract.json",
+        "bytes": 7108,
+        "sha256": "a647b91690651136e6199dcf92a939080d9e75f7b557ad34fcdfb1e983043cdd"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/sample-1039/responses.jsonl",
+        "bytes": 85820,
+        "sha256": "e53b49265a4ca63c45d1cc1f316fe9a72e8930ae54078806c8666f58726b41ab"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009-contract.json",
+        "bytes": 7108,
+        "sha256": "246d4c7244c52f9558c6ec1a6bad149683194d8b282d446f1c2cf4491372ef09"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap32-20261005-run-02/greedy-1009/responses.jsonl",
+        "bytes": 74002,
+        "sha256": "f58b7d331c05434ab7a26f90efa5f5ac82598dbc50e5869a284699356030ca34"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/preparation.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/preparation.json",
+        "bytes": 115529,
+        "sha256": "9099dbf7b432c43807d90f338e63269d4c1864f1e38121a61b512a5090a091ac"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/acceptance.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/acceptance.json",
+        "bytes": 913853,
+        "sha256": "c84f18de6c0325e167160443920ace908c535634264488ff7ef94128f739fc6e"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/returned-supervision.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/returned-supervision.json",
+        "bytes": 174285,
+        "sha256": "ea356bffdaf8c107fe14143f09b8361371584785be4cea1f1f433ca7d265aade"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009-contract.json",
+        "bytes": 7108,
+        "sha256": "80debf8a871ff27b2fd0ac2e40b692aa13167c8d180409c8e781c406b75e09a9"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1009/responses.jsonl",
+        "bytes": 87397,
+        "sha256": "9b17a03b0ec6ca4f350f3ca1477363a54ae1c5be223331d6ec44ba5f01f56d7a"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019-contract.json",
+        "bytes": 7108,
+        "sha256": "a6c098fbcb1647e68d3c950ab1e2784a138571889d50eed1da47be43754204ad"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1019/responses.jsonl",
+        "bytes": 87536,
+        "sha256": "d1e440dddb748c8b51c4f20e35a78bc550b9e8df169a522c22d85f605bad66a9"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029-contract.json",
+        "bytes": 7108,
+        "sha256": "9d1415ccef23f2ed11aee8b532f32ad687f62220414ba3ccb97ea1481e391287"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1029/responses.jsonl",
+        "bytes": 86659,
+        "sha256": "cc84a0a176676b040476128b0e2ad53febd1f46cf32deb0d5e88b85b5c0db058"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039-contract.json",
+        "bytes": 7108,
+        "sha256": "a647b91690651136e6199dcf92a939080d9e75f7b557ad34fcdfb1e983043cdd"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/sample-1039/responses.jsonl",
+        "bytes": 85780,
+        "sha256": "266c8c58905fbdea509634d580d3ed2994fbbb94cff99672d98dc8c83526de3d"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009-contract.json",
+        "bytes": 7108,
+        "sha256": "246d4c7244c52f9558c6ec1a6bad149683194d8b282d446f1c2cf4491372ef09"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap32-20261005-run-02/greedy-1009/responses.jsonl",
+        "bytes": 74050,
+        "sha256": "2ce980cdd506b9ad0937fe8cd81ed297afdcfc2ad3c3a3b279c4cad7ac687d6f"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-common20-cap128-20261005-run-02.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-common20-cap128-20261005-run-02.json",
+        "bytes": 764843,
+        "sha256": "7ccab9d52584d60b84ca31fea753b35ab1a40c4ffc10e6f3304816ed035a7f8b"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/preparation.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/preparation.json",
+        "bytes": 86794,
+        "sha256": "db1d4ebc26c37acd1a61be586f2d7b5414f7298e3be4d0ec34e408d307bce726"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/acceptance.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/acceptance.json",
+        "bytes": 1229348,
+        "sha256": "97a51fcb22de70174df01ff9a16a4d65c0e741cc9a86e705a50e1a7cd26a3e59"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1009-contract.json",
+        "bytes": 7109,
+        "sha256": "da3d428d601afd64994922fc28c795bbde9ed88f32aa0fcfda734749a42969c6"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1009/responses.jsonl",
+        "bytes": 155119,
+        "sha256": "f8350376975c3d694cd5909841418604fb9ee31e523166d3c1136dd471dac267"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1019-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1019-contract.json",
+        "bytes": 7109,
+        "sha256": "69b822926ae63c9328ed9eb45153b88bfe64684b6918e84d2a3a48f90cd18b76"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1019/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1019/responses.jsonl",
+        "bytes": 154915,
+        "sha256": "60c2f85912ae4e7b3369aff22c9918a2c878c5983a78da495fc8e3002314370e"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1029-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1029-contract.json",
+        "bytes": 7109,
+        "sha256": "c0ebaed2f0d558e344c0c4d285ed32f0db0acceea8e5b8edcf46dd80e8684788"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1029/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1029/responses.jsonl",
+        "bytes": 153015,
+        "sha256": "984820c0c13af915dab76c106628f3ed5f227518353c0d128c133aad541e6267"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1039-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1039-contract.json",
+        "bytes": 7109,
+        "sha256": "58caf9487ce9dd9340caa38841e88dcedc4a2a45444a2638e972aed563411842"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1039/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/sample-1039/responses.jsonl",
+        "bytes": 157474,
+        "sha256": "d51f2e762a2eaf8255349d4bcf3d480657db6f90c4b47a7aa2891924620ddd06"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/greedy-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/greedy-1009-contract.json",
+        "bytes": 7109,
+        "sha256": "1180f8a9fdb4790df125fdf0a8dbd13898dd0f8a007cafcbd0e78a56dd2cbe78"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/greedy-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-reasoning-instruct-thinking-off-cap128-20261005-run-01/greedy-1009/responses.jsonl",
+        "bytes": 113811,
+        "sha256": "78cd7e599a0d2917fddbad173ecdd172d89ce134339e41d7119e0857d7b5a916"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/preparation.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/preparation.json",
+        "bytes": 115697,
+        "sha256": "935d4b930316dcc13e592bb0b85476ecdf323ea910967c7ad1af0cc651a4516b"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/acceptance.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/acceptance.json",
+        "bytes": 1544508,
+        "sha256": "f225c37f83da21c3b76574dd9864e827c6f14135d9dcbb94d25841e88ac2f8e7"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/returned-supervision.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/returned-supervision.json",
+        "bytes": 285500,
+        "sha256": "9e0775177d875b75984bba00bc6aa5214a60e6290a8dac34404fc693cb3deb34"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009-contract.json",
+        "bytes": 7109,
+        "sha256": "da3d428d601afd64994922fc28c795bbde9ed88f32aa0fcfda734749a42969c6"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1009/responses.jsonl",
+        "bytes": 154580,
+        "sha256": "ba869b47b2c9e6b1df87ce9e7e8d16a3c3622a00b97168fb1c24a554cf1d67c6"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019-contract.json",
+        "bytes": 7109,
+        "sha256": "69b822926ae63c9328ed9eb45153b88bfe64684b6918e84d2a3a48f90cd18b76"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1019/responses.jsonl",
+        "bytes": 154182,
+        "sha256": "2ca37ffcf6c3950f6d096bf799e47470ac1f5c81f5b2860ad79fce9c8dc012e8"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029-contract.json",
+        "bytes": 7109,
+        "sha256": "c0ebaed2f0d558e344c0c4d285ed32f0db0acceea8e5b8edcf46dd80e8684788"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1029/responses.jsonl",
+        "bytes": 153474,
+        "sha256": "e62d9f0155cee63ce410348a8246e798d4d99e99dc00b0c0893ae07baf79f9bb"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039-contract.json",
+        "bytes": 7109,
+        "sha256": "58caf9487ce9dd9340caa38841e88dcedc4a2a45444a2638e972aed563411842"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/sample-1039/responses.jsonl",
+        "bytes": 155658,
+        "sha256": "19dad26aa9b5dedc08e071f80fd13110a2840cf89ad7574e6b534d90782dfead"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009-contract.json",
+        "bytes": 7109,
+        "sha256": "1180f8a9fdb4790df125fdf0a8dbd13898dd0f8a007cafcbd0e78a56dd2cbe78"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g4-cap128-20261005-run-02/greedy-1009/responses.jsonl",
+        "bytes": 113023,
+        "sha256": "93647e1805a1de447b55bedcb9595387a8d5c6af72674916c482afc08f1fb6c0"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/preparation.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/preparation.json",
+        "bytes": 115618,
+        "sha256": "7b6f6ec4211a3c49dd164fcf98b5cc134f41553bb20adf7adf3accb3acb735ae"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/acceptance.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/acceptance.json",
+        "bytes": 1545114,
+        "sha256": "ce4f78c90cd2901c2e49f29bcac195f11e27030de50b12694fadb984d5d2cd68"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/returned-supervision.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/returned-supervision.json",
+        "bytes": 288015,
+        "sha256": "8574d68f013e2ae3af7843bc25e6091f25beda1d32a41bca980edd669dcff070"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009-contract.json",
+        "bytes": 7109,
+        "sha256": "da3d428d601afd64994922fc28c795bbde9ed88f32aa0fcfda734749a42969c6"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1009/responses.jsonl",
+        "bytes": 154192,
+        "sha256": "18eb6b693cd2f319cbda54a0f0c93b7b2de806fb8dff125706511fe73fb6e6d2"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019-contract.json",
+        "bytes": 7109,
+        "sha256": "69b822926ae63c9328ed9eb45153b88bfe64684b6918e84d2a3a48f90cd18b76"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1019/responses.jsonl",
+        "bytes": 153790,
+        "sha256": "f351a14d05d9fa8cfc8d95d9d02f45e3709811408d705c3e1c9e50d10ac8b4dd"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029-contract.json",
+        "bytes": 7109,
+        "sha256": "c0ebaed2f0d558e344c0c4d285ed32f0db0acceea8e5b8edcf46dd80e8684788"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1029/responses.jsonl",
+        "bytes": 153468,
+        "sha256": "17ac953cb827a66953904ccedda91b530f0e941e17d384d4ddc07bb54bf2c814"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039-contract.json",
+        "bytes": 7109,
+        "sha256": "58caf9487ce9dd9340caa38841e88dcedc4a2a45444a2638e972aed563411842"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/sample-1039/responses.jsonl",
+        "bytes": 155775,
+        "sha256": "5af39ee78feee53fa0297f4b2ddec0098a5c5bb11f66778d279e4263f33744b2"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009-contract.json": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009-contract.json",
+        "bytes": 7109,
+        "sha256": "1180f8a9fdb4790df125fdf0a8dbd13898dd0f8a007cafcbd0e78a56dd2cbe78"
+      },
+      "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009/responses.jsonl": {
+        "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-evaluation-g8-cap128-20261005-run-02/greedy-1009/responses.jsonl",
+        "bytes": 112817,
+        "sha256": "e02d30833929aed0af1993257fee477a306e7235d4cee3c164b9280bb6bf8f2c"
+      }
+    },
+    "source_rows_replayed": 600,
+    "new_rows": 400,
+    "reused_baseline_rows": 200,
+    "bootstrap_panels_exact": 20,
+    "bootstrap_draws_each": 2000,
+    "seed": 1010,
+    "scope": "Model-free saved response/contract/metric/cluster bootstrap replay; no weights, tokenizer, training, generation or new test panel"
+  },
+  "current_source_and_prose_file_identities": {
+    "scripts/run_native_rlvr_evaluation.py": {
+      "bytes": 41747,
+      "sha256": "5ad7eabaa57865ba102b41e83a9e018b191327bdd999ed8386899ae5a5fe213e"
+    },
+    "src/dongxi_llms/reasoning_evaluation.py": {
+      "bytes": 30612,
+      "sha256": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da"
+    },
+    "src/dongxi_llms/reasoning_generation.py": {
+      "bytes": 28230,
+      "sha256": "15d25f40776b5268cf1c41521fe5c35aabff2b095c5c51f0b68384cbe53ca5c0"
+    },
+    "scripts/close_native_rlvr_export.py": {
+      "bytes": 6377,
+      "sha256": "5d69f35bc4a12fac32def2b97c75bcf5490e5cc4cf89824dbcda356d6c12b684"
+    },
+    "experiments/reports/2026-10-05-native-reasoning-rlvr-evidence.md": {
+      "bytes": 62423,
+      "sha256": "c6c3ff076e1ccdac766d8663289869d31231902bce89e0dbfc15dbcad57ba5e3"
+    },
+    "book/chapters/13-group-relative-policy-optimization.md": {
+      "bytes": 50228,
+      "sha256": "e3f4c8f8c06ef50093f054a10112c14f825285c264db457b3b4b597e7597003d"
+    },
+    "book/solutions/13-group-relative-policy-optimization.md": {
+      "bytes": 31544,
+      "sha256": "647127a4662dfa84d5d2bc7212a31871a26e0e0dee88d9917bf9346df63bb9b6"
+    },
+    "book/labs/13-group-relative-policy-optimization.md": {
+      "bytes": 17947,
+      "sha256": "8f41a9e51f48db2626515763fd428204dec0a434bd2e60aca2cc26bca87d9c40"
+    },
+    "learning_artifacts/day-23-grpo-rlvr/generated-answers-and-grader-interfaces.md": {
+      "bytes": 17327,
+      "sha256": "9bbdd271daa364bf198197c8e6ef6930a1a53d07f65213a8add188c214bc76fb"
+    }
+  },
+  "command": "env PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python -B - <<'PY'\nimport json,hashlib,sys\nfrom pathlib import Path\nfrom collections import Counter\nfrom dongxi_llms.reasoning_evaluation import replay_records,paired_group_bootstrap\nR=Path.cwd(); bindings={}; reports=[]; issues=[]\ndef ident(path):\n p=Path(path);data=p.read_bytes();return {'path':str(p),'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()}\ndef check_ref(ref):\n actual=ident(ref['path']);bindings[actual['path']]=actual\n assert actual['sha256']==ref['sha256'] and actual['bytes']==ref['bytes'],ref['path']\ndef metrics(rows):\n return dict(records=len(rows),correct=sum(r['correct'] for r in rows),natural_stops=sum(r['natural_termination'] for r in rows),truncated=sum(r['truncated'] for r in rows),statuses=dict(Counter(r['status'] for r in rows)),costs={k:sum(r['cost'][k] for r in rows) for k in ('generation_tokens','attempted_forward_tokens','model_forward_tokens','attempted_forward_calls','forward_calls','wall_seconds')})\ndef held(rows):return [r for r in rows if r['panel_annotation']['campaign_role']=='heldout-controlled-slice' and not r['panel_annotation']['rlvr_train_problem_overlap']]\nfor budget in (32,128):\n path=R/'experiments/reports'/f'native-rlvr-common20-cap{budget}-20261005-run-02.json';d=json.loads(path.read_text());bindings[str(path)]=ident(path)\n assert d['schema']=='dongxi-common20-native-rlvr-comparison-v1' and d['run_id']=='run-02' and d['observed_export'] is True and d['budget']==budget\n items=d['logical_panel']['items'];index={i['id']:i for i in items};policies={};bs=[]\n assert len(items)==20 and d['known_overlap_item_ids']==[i['id'] for i in items if i['rlvr_train_problem_overlap']]\n for label,bound in d['bindings'].items():\n  check_ref(bound['preparation']);check_ref(bound['acceptance'])\n  prep=json.loads(Path(bound['preparation']['path']).read_text());acc=json.loads(Path(bound['acceptance']['path']).read_text())\n  assert acc['status']=='passed' and all(acc['checks'].values())\n  if label!='unchanged-instruct':\n   check_ref(bound['supervision_receipt']);sup=json.loads(Path(bound['supervision_receipt']['path']).read_text());assert sup==acc['supervision'] and sup['status']=='completed' and sup['actual_exit_code']==0 and sup['final_record_retained'] is True\n   assert bound['sources']==prep['source_bindings'] and bound['inputs']==prep['input_bindings'] and bound['model']==prep['local_model_binding']\n  rows=[]\n  for cell in prep['cells']:\n   contract_path=Path(cell['contract_path']);bindings[str(contract_path)]=ident(contract_path);contract=json.loads(contract_path.read_text())\n   raw_path=Path(cell['output'])/'responses.jsonl';raw=[json.loads(x) for x in raw_path.read_text().splitlines() if x.strip()]\n   ref=bound['outputs'][cell['id']+'/responses.jsonl'];check_ref(ref);assert ref['path']==str(raw_path)\n   assert len(raw)==20 and {r['item_id'] for r in raw}==set(index)\n   graded=replay_records(items,raw,contract)['rows']\n   for r in graded:\n    r['panel_annotation']={k:index[r['item_id']][k] for k in ('family','template_id','problem','rlvr_train_problem_overlap','campaign_role')};r['cell_id']=cell['id']\n   rows+=graded\n  assert rows==acc['evaluation']['rows'],label\n  assert metrics(rows)==d['all_original'][label] and metrics(held(rows))==d['heldout'][label],label\n  policies[label]=rows\n for cell in d['cells']:\n  aligned={label:[r for r in rows if r['cell_id']==cell['id']] for label,rows in policies.items()};h={label:held(rows) for label,rows in aligned.items()}\n  assert cell['all_original']=={k:metrics(v) for k,v in aligned.items()};assert cell['heldout']=={k:metrics(v) for k,v in h.items()}\n  assert len({r['contract_id'] for rows in aligned.values() for r in rows})==1\n  for label in ('rlvr-g4','rlvr-g8'):\n   actual=paired_group_bootstrap(h['unchanged-instruct'],h[label],draws=2000,seed=1010,metric='correct');assert actual==cell['paired_heldout'][label]\n   bs.append(dict(cell=cell['id'],policy=label,**{k:v for k,v in actual.items() if k!='samples'},samples_sha256=hashlib.sha256(json.dumps(actual['samples'],separators=(',',':')).encode()).hexdigest()))\n summary={}\n for label,rows in policies.items():\n  h=held(rows);sample=[r for r in h if r['cell_id'].startswith('sample-')];greedy=[r for r in h if r['cell_id'].startswith('greedy-')]\n  diagnostic=[r for r in rows if r not in h]\n  summary[label]=dict(all_original=metrics(rows),heldout_sample=metrics(sample),heldout_greedy=metrics(greedy),diagnostic=metrics(diagnostic),heldout_correct_capped=sum(r['correct'] and r['truncated'] for r in h),sample_any_candidate_available=sum(any(r['correct'] for r in sample if r['item_id']==i) for i in sorted({r['item_id'] for r in sample})))\n reports.append(dict(budget=budget,comparison=ident(path),source_rows_replayed=sum(len(r) for r in policies.values()),metric_tables_exact=True,bootstrap_panels=bs,policy_summary=summary,bindings_equal=True))\nprint(json.dumps(dict(schema='dongxi-native-rlvr-common-independent-v1',status='clear',reports=reports,metadata_bindings=bindings,source_rows_replayed=600,new_rows=400,reused_baseline_rows=200,bootstrap_panels_exact=20,bootstrap_draws_each=2000,seed=1010,scope='Model-free saved response/contract/metric/cluster bootstrap replay; no weights, tokenizer, training, generation or new test panel'),allow_nan=False))\nPY",
+  "command_exit_code": 0,
+  "limitations": [
+    "Four native evaluation child outcomes are passed; G4 pilot01 terminal logging remains failed and is not retroactively accepted by its separate model-free export observation. G8 pilot01 is accepted.",
+    "400 new evaluation records plus 200 previously generated unchanged-Instruct baseline records are 600 consumed comparison rows, not 600 new generations. These replay counts overlap the initial baseline review.",
+    "Each cap and each four-seed/greedy contract is distinct. The headline heldout sample count is 44 repeated observations over 11 authored problems; greedy has 11 observations. No pooled 55-observation deployment headline or quality-selecting oracle.",
+    "Nine diagnostic items are excluded. Only math2/math9 carry actual RLVR problem-overlap flags; this does not identify assistant-branch training or upstream contamination.",
+    "All native pilot training relative rewards/advantages were zero. Numerical optimizer/KL/parameter movement and diagnostic correct-count gains do not demonstrate heldout task learning.",
+    "Source-cluster bootstrap panels are descriptive fixed-panel diagnostics, not a population ranking. UNSUPPORTED and INVALID are retained, not rescued/rescored; rationale faithfulness is unassessed.",
+    "Current source and small metadata joins are independent. The selected export/body identities are retained producer/observation declarations, not independently rehashed by this reviewer. Recorded eager/BF16 settings are not a kernel trace.",
+    "Prospectively declared one-second resource observations and sampled minimum are not a continuous memory floor. Whole-child time includes load/evidence work; some cells overlapped CPU notebook verification and are not isolated throughput/FLOP benchmarks.",
+    "Final archive, current whole CPU receipt, original86-criterion signoff and final status integration remain separate prerequisites; this review does not sign off the whole goal or advance learner Day9."
+  ]
+}

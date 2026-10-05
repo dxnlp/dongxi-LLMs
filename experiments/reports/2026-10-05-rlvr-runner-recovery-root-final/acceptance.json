@@ -1,0 +1,119 @@
+{
+  "status": "passed",
+  "utc": "2026-10-04T23:01:38.270855+00:00",
+  "scope": "Original random local HF CPU RLVR completed/pending recovery and actual identity/merge fixtures; not pretrained/CUDA/BF16, capability, Mac/hosted, full-course or learner evidence",
+  "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+  "environment_prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+  "python": "3.12.14",
+  "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+  "machine": "aarch64",
+  "packages": {
+    "torch": "2.14.1+cpu",
+    "transformers": "5.18.0",
+    "tokenizers": "0.23.2",
+    "peft": "0.20.0"
+  },
+  "base_commit": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4",
+  "source_hashes": {
+    "src/dongxi_llms/__init__.py": "5872e0ca954871272c2ea9ba2fa0d62e780d6ec688caf59bac24d5249ce7281a",
+    "src/dongxi_llms/training_snapshot.py": "9cad2851b665b5fe5d640c1327710352396218ea80fab3b0c82f01925e1749a3",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/qwen_rlvr_lab.py": "c2d00a3eb8881291f04572645d2e0bf1b52cf2c17536887657b004ca27b6f3bf",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "src/dongxi_llms/course_manifest.py": "b41ec7d458c211d3f7a0251445223cdfc375c09443a06251c8a1d63597c1b620",
+    "src/dongxi_llms/checkpoint_merge.py": "8c4c1712aeeb2bd65e5e44e08668fa13c239afb1fcd117fc68c6b4fa383101ad",
+    "scripts/run_cpu_verification.py": "378f03a747c9cbf719a21ac215322f50e13e387e347943885e382efb528a282c",
+    "scripts/verify_runner_recovery.py": "f9fe0ee76802759029926cba271f4e46155250376c0903beaaacde758af91466",
+    "scripts/verify_rlvr_runner_recovery.py": "1dc75bc449d40400137c665321a3d4f49e797f37c7dbcf7c046b024c2ff430ae",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "tests/test_rlvr_runner_recovery.py": "384b1eafb00bd47cb79cdfa1e91824e39e0b56103f36d9eff9242480fa575b92",
+    "tests/test_run_identity.py": "0315d1888a33a34252e112596c08c8b7468ea409c0268636105ce4f51ec82bf3"
+  },
+  "commands": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_rlvr_runner_recovery.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 8.045985592005309,
+      "log": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-runner-recovery-root-final/command-1.txt",
+      "log_sha256": "a088ba51a1337c2e384385919e8a62671e828a91351edd2efd68e38b74c1c87b"
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_run_identity.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "seconds": 2.4822267039853614,
+      "log": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-rlvr-runner-recovery-root-final/command-2.txt",
+      "log_sha256": "296182dc0f9d1a9770450299bc49fefdddeee8bab80c2e9b008fdbcc9b9a3757"
+    }
+  ],
+  "memory_observations": [
+    {
+      "utc": "2026-10-04T23:01:38.276420+00:00",
+      "available_bytes": 126735626240,
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "utc": "2026-10-04T23:01:46.322488+00:00",
+      "available_bytes": 125899255808,
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "utc": "2026-10-04T23:01:46.322668+00:00",
+      "available_bytes": 125899255808,
+      "source": "actual-linux-MemAvailable"
+    },
+    {
+      "utc": "2026-10-04T23:01:48.804978+00:00",
+      "available_bytes": 125807996928,
+      "source": "actual-linux-MemAvailable"
+    }
+  ],
+  "reserve_bytes": 26843545600,
+  "resource_scope": "Actual MemAvailable before/after commands, not continuous interval minima; fixed60-second external timeouts",
+  "failure": null,
+  "source_hashes_after": {
+    "src/dongxi_llms/__init__.py": "5872e0ca954871272c2ea9ba2fa0d62e780d6ec688caf59bac24d5249ce7281a",
+    "src/dongxi_llms/training_snapshot.py": "9cad2851b665b5fe5d640c1327710352396218ea80fab3b0c82f01925e1749a3",
+    "src/dongxi_llms/run_identity.py": "a98d244efbfcbecf13ba97e28f512b2743642ac7d6e2ac8fad3a36eb5bcb4999",
+    "src/dongxi_llms/qwen_rlvr_lab.py": "c2d00a3eb8881291f04572645d2e0bf1b52cf2c17536887657b004ca27b6f3bf",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+    "src/dongxi_llms/course_manifest.py": "b41ec7d458c211d3f7a0251445223cdfc375c09443a06251c8a1d63597c1b620",
+    "src/dongxi_llms/checkpoint_merge.py": "8c4c1712aeeb2bd65e5e44e08668fa13c239afb1fcd117fc68c6b4fa383101ad",
+    "scripts/run_cpu_verification.py": "378f03a747c9cbf719a21ac215322f50e13e387e347943885e382efb528a282c",
+    "scripts/verify_runner_recovery.py": "f9fe0ee76802759029926cba271f4e46155250376c0903beaaacde758af91466",
+    "scripts/verify_rlvr_runner_recovery.py": "1dc75bc449d40400137c665321a3d4f49e797f37c7dbcf7c046b024c2ff430ae",
+    "uv.lock": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+    "tests/test_rlvr_runner_recovery.py": "384b1eafb00bd47cb79cdfa1e91824e39e0b56103f36d9eff9242480fa575b92",
+    "tests/test_run_identity.py": "0315d1888a33a34252e112596c08c8b7468ea409c0268636105ce4f51ec82bf3"
+  },
+  "sources_unchanged": true,
+  "seconds": 10.529404371016426,
+  "minimum_observed_available_bytes": 125807996928
+}

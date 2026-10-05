@@ -215,6 +215,86 @@ Neither trained comparison has been performed. Short batch-size profiles and
 sampling probes answer narrower questions. A proposal is not outcome evidence
 or approval to launch it.
 
+## 19. Do not change the objective to spend the remaining budget
+
+The cap is a ceiling, not a promise to spend every target. After 9 targets under
+cap 16, the next complete 8-target update cannot fit into the remaining 7. Removing
+one label or a microbatch changes the training objective. Refuse the whole update
+before forward/backward, LR mutation or optimizer mutation, and restore collection's
+shuffle permutation, cursor, epoch and RNG. Keep completed weights, moments,
+gradients and counters unchanged. Resume must restore the cumulative allowance,
+not start it at zero. The [CPU report](../../experiments/reports/2026-10-05-story-valid-target-budget.md)
+tests this boundary, including an epoch crossing and exact same-cap continuation.
+It does not test recovery from a partly executed optimizer update.
+
+## 20. Numerical replay does not refund failed work
+
+Completed target exposure describes successful optimizer boundaries:9 plus8
+is17. The persistent allowance describes all admitted attempts:9 for the first
+update,8 for the failed operation and8 for its retry is25. Restoring an older
+checkpoint restores weights, moments, stream/RNG and successful counters, not
+the journal's later reservations. The independently retained receipt binds the
+old prefix to the same physical journal; a new output directory cannot reset it.
+
+Check every declared dimension before the next complete model operation. If a
+cap would be crossed, make no forward/backward/optimizer call and restore the
+planning step's stream state. Do not trim labels or change the loss denominator.
+If computation has already started and AdamW may have changed only some weights,
+poison that session: it cannot update, observe or publish. Construct a fresh
+session and restore a previously durable completed boundary. Keep the failed
+ticket even when the later numerical trajectory replays exactly.
+
+Validation, uncached generation and activation probes are separate work. A
+successful replay is not proof that their repeated calls are free, that all
+reserved work actually completed, or that a physical resource ceiling was
+enforced. Source and evidence boundaries are frozen in the
+[story work specification](../../experiments/specs/2026-10-05-story-persistent-work.md).
+The [actual native companion](../../experiments/reports/2026-10-05-story-work-lesson.md)
+also checks cap24: only7 places remain, so retrying the whole8 refuses with9
+successful targets/17 reserved places, zero loss calls and unchanged state.
+
+## 21. The requested boundary is not the schedule horizon
+
+Success depends on the declared boundary and other acceptance conditions. A
+predeclared first400 tranche can complete successfully while its14,000-update
+schedule remains unfinished. The
+[actual control receipt](../../experiments/reports/native-story-control-pilot-20261005-01/acceptance.json)
+and [half-rate receipt](../../experiments/reports/native-story-half-lr-pilot-20261005-01/acceptance.json)
+each support 400 updates, exit zero and their tested source/resource envelope.
+Both present 1,389,548 valid training targets in 6,553,600 training positions.
+Those receipts alone do not supply any story-quality score.
+
+Shortening the schedule horizon changes decay at those same updates. The result
+would no longer test only the declared proportional learning-rate intervention
+under the original horizon. Label it as another recipe rather than hiding the
+change behind the same update count.
+
+The [measured publication comparison](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
+now includes 192 actual continuations from four native children and fixed slice
+NLL. Control development NLL is 3.388772 versus 3.652813 for half-rate on the
+same 64 windows/13,132 valid labels; the separate training-source selection has
+64 windows/13,285 labels. This supports lower observed-target loss on that
+development slice, not a whole-corpus claim or an overfitting diagnosis.
+
+Stopping is a separate observation: control reaches EOS in 45/48 continuations,
+half-rate in 25/48. Yet their two-AI-reader ending means are 0.020833 and 0 on
+the rubric's 0–2 scale. A completed token stream need not complete the plot.
+The initial random checkpoints score 1.5 on freedom from repetition and zero on
+the other four dimensions: lack of loops does not imply coherence either.
+Keep all five axes instead of declaring a winner from one number.
+
+Both readers scored every actual candidate, retaining 56 disagreements under
+the declared mean policy. The 800-draw, seed-1010 paired intervals resample
+twelve openings with their four recipes together, not 48 independent stories.
+These AI judgments and small-panel intervals do not establish human agreement,
+new-opening performance or between-training-seed uncertainty. Publication also
+uses automatic SDPA rather than the deterministic MATH-only training/recovery
+entry, so this is not a cross-backend bitwise equivalence test.
+
+The 288 later cells remain missing, not poor-quality zeros. Neither accepted
+tranche establishes 14,000-update behavior or final convergence. Keep the
+September completed run separate from this fresh intervention.
+
 ## Integration: a convincing Days 8–9 defense
 
 Explain the path from a source document to a recoverable update using the

@@ -1,0 +1,845 @@
+"""Single-device story training with auditable state and a bounded command line.
+
+Uses the course decoder's parameter layout, not pretrained model weights.
+The transparent notebook implementation remains unchanged.
+"""
+from contextlib import contextmanager, nullcontext
+from dataclasses import asdict, dataclass
+import json
+import math
+import os
+from pathlib import Path
+import signal
+import threading
+import time
+from copy import deepcopy
+
+import torch
+from torch.nn import functional as F
+from torch.utils.checkpoint import checkpoint
+
+from dongxi_llms.decoder_lab import DecoderConfig, MultiHeadAttention, TinyDecoder, rope
+from dongxi_llms.pretraining_lab import WindowStream, learning_rate
+from dongxi_llms.stories_data import EOS, IGNORE, Windows, digest
+from dongxi_llms.run_identity import canonical_hash
+from dongxi_llms.story_work_budget import (StoryWorkBudget, checked_payload,
+    publish_story_receipt, read_story_receipt, read_story_limits, validate_story_receipt,
+    assert_resume_disjoint)
+
+
+class SDPAAttention(MultiHeadAttention):
+    def forward(self, x):
+        b, t, _ = x.shape
+        def split(layer):
+            return layer(x).reshape(b, t, self.cfg.heads, self.cfg.head_dim).transpose(1, 2)
+        q, k, v = split(self.q), split(self.k), split(self.v)
+        # Trigonometry in FP32 under autocast; retain FP64 for reference audits.
+        compute = torch.float64 if q.dtype == torch.float64 else torch.float32
+        positions = torch.arange(t, device=x.device)
+        q = rope(q.to(compute), positions).to(v.dtype)
+        k = rope(k.to(compute), positions).to(v.dtype)
+        mixed = F.scaled_dot_product_attention(q, k, v, dropout_p=0., is_causal=True)
+        return self.out(mixed.transpose(1, 2).contiguous().reshape(b, t, -1))
+
+
+class StoriesDecoder(TinyDecoder):
+    def __init__(self, cfg, activation_checkpointing=False):
+        if not cfg.modern or cfg.qk_norm or cfg.heads != cfg.kv_heads:
+            raise ValueError("Stories path requires modern MHA without QK norm")
+        super().__init__(cfg)
+        for block in self.blocks:
+            replacement = SDPAAttention(cfg)
+            replacement.load_state_dict(block.attn.state_dict())
+            block.attn = replacement
+        self.activation_checkpointing = activation_checkpointing
+
+    @staticmethod
+    def apply_block(block, x):
+        x = x + block.attn(block.norm1(x))
+        return x + block.mlp(block.norm2(x))
+
+    def features(self, ids):
+        if ids.ndim != 2 or not 0 < ids.shape[1] <= self.cfg.max_length:
+            raise ValueError("Expected nonempty IDs [B,T] within context budget")
+        x = self.token(ids)
+        for block in self.blocks:
+            if self.training and self.activation_checkpointing:
+                x = checkpoint(self.apply_block, block, x, use_reentrant=False)
+            else:
+                x = self.apply_block(block, x)
+        return self.final_norm(x)
+
+    def forward(self, ids):
+        return self.lm_head(self.features(ids))
+
+
+def baseline(context=1024):
+    return DecoderConfig(vocab=50257, width=512, heads=8, kv_heads=8,
+                         head_dim=64, layers=12, hidden=1536, max_length=context,
+                         modern=True, qk_norm=False, tied=True)
+
+
+@dataclass(frozen=True)
+class Recipe:
+    total_updates: int = 3
+    warmup: int = 1
+    peak_lr: float = 3e-4
+    floor_lr: float = 3e-5
+    microbatch: int = 1
+    accumulation: int = 1
+    weight_decay: float = .1
+    clip: float = 1.
+    seed: int = 909
+    bf16: bool = False
+    activation_checkpointing: bool = True
+
+    def __post_init__(self):
+        if not 0 < self.warmup < self.total_updates:
+            raise ValueError("Warmup must lie within the update horizon")
+        if min(self.microbatch, self.accumulation) <= 0:
+            raise ValueError("Batch dimensions must be positive")
+        if not all(math.isfinite(v) for v in (self.peak_lr, self.floor_lr, self.weight_decay, self.clip)):
+            raise ValueError("Recipe values must be finite")
+        if not 0 <= self.floor_lr <= self.peak_lr or self.peak_lr <= 0 or self.clip <= 0 or self.weight_decay < 0:
+            raise ValueError("Invalid optimizer settings")
+
+
+def validate_target_budget(value):
+    """None preserves the historical recipe; an active cap counts valid labels."""
+    if value is not None and (type(value) is not int or value <= 0):
+        raise ValueError("Valid-target budget must be a positive integer or None")
+    return value
+
+
+class ValidTargetBudgetExceeded(RuntimeError):
+    """The whole next update was refused without consuming its stream state."""
+    def __init__(self, budget, completed, next_update):
+        self.budget = budget
+        self.completed = completed
+        self.next_update = next_update
+        self.remaining = budget - completed
+        super().__init__(f"Next update needs {next_update} valid targets; "
+                         f"only {self.remaining} remain within cumulative cap {budget}")
+
+    def record(self):
+        return dict(valid_target_budget=self.budget, cumulative_targets=self.completed,
+                    next_update_valid_targets=self.next_update,
+                    remaining_valid_targets=self.remaining)
+
+
+def session_contract(cfg, recipe, train, device="cpu", valid_target_budget=None,
+                     work_contract=None):
+    """Science available before initialization; inactive legacy layout unchanged."""
+    valid_target_budget = validate_target_budget(valid_target_budget)
+    contract = dict(schema=1, model=asdict(cfg), recipe=asdict(recipe),
+                    data=train.identity, device=str(torch.device(device)),
+                    torch=str(torch.__version__), attention="pytorch-sdpa-auto-causal",
+                    implementation={name: digest(Path(__file__).with_name(name))
+                        for name in ("stories_training.py", "stories_data.py",
+                                     "decoder_lab.py", "pretraining_lab.py")})
+    if valid_target_budget is not None: contract['valid_target_budget'] = valid_target_budget
+    if work_contract is not None:
+        from dongxi_llms.story_work_budget import validate_story_contract
+        contract['story_work_budget'] = validate_story_contract(work_contract)
+        for name in ('story_work_budget.py', 'work_budget.py', 'run_identity.py',
+                     'snapshot_io_budget.py'):
+            contract['implementation'][name] = digest(Path(__file__).with_name(name))
+        contract['implementation']['train_stories.py'] = digest(
+            Path(__file__).resolve().parents[2] / 'scripts' / 'train_stories.py')
+    return contract
+
+
+def _enter(work, **units):
+    if work is not None: work.enter(**units)
+
+
+def _done(work, **units):
+    if work is not None: work.done(**units)
+
+
+class Session:
+    def __init__(self, cfg, recipe, train, device="cpu", valid_target_budget=None,
+                 work_budget=None):
+        self.valid_target_budget = validate_target_budget(valid_target_budget)
+        self.recipe, self.train_data = recipe, train
+        self.device = torch.device(device)
+        if recipe.bf16 and (self.device.type != "cuda" or not torch.cuda.is_bf16_supported()):
+            raise ValueError("BF16 recipe requires a verified CUDA device")
+        self.work_budget = work_budget
+        self._initial_cfg = cfg
+        self._active_operation = None
+        self.poisoned = False
+        self.contract = session_contract(cfg, recipe, train, device, self.valid_target_budget,
+            None if work_budget is None else work_budget.contract)
+        self._accounted_sha = None if work_budget is None else canonical_hash(self.contract)
+        self._work_identity = (None if work_budget is None else
+            (work_budget.ledger.ledger_id, tuple(work_budget.ledger.identity)))
+        with self.operation(dict(model_initializations=1), 'story-model-initialization') as work:
+            _enter(work, model_initializations=1)
+            torch.manual_seed(recipe.seed)
+            self.model = StoriesDecoder(cfg, recipe.activation_checkpointing).to(self.device)
+            decay, no_decay = [], []
+            for parameter in self.model.parameters():
+                (decay if parameter.ndim >= 2 else no_decay).append(parameter)
+            self.optimizer = torch.optim.AdamW(
+                [{"params": decay, "weight_decay": recipe.weight_decay},
+                 {"params": no_decay, "weight_decay": 0.}],
+                lr=recipe.peak_lr, betas=(.9, .95), eps=1e-8, foreach=False)
+            self.stream = WindowStream(len(train), recipe.seed + 1)
+            self.step, self.tokens = 0, 0
+            self.positions = 0
+            self.positions_accounting = "measured-input-numel"
+            _done(work, model_initializations=1)
+
+    def _assert_work(self, allow_active=False):
+        if self.work_budget is not None and self._accounted_sha is None:
+            raise ValueError('An unaccounted Session cannot acquire accounting after initialization')
+        if self._accounted_sha is not None or 'story_work_budget' in self.contract:
+            if (not isinstance(self.work_budget, StoryWorkBudget)
+                    or canonical_hash(self.contract) != self._accounted_sha):
+                raise ValueError('Declared accounted Session requires its original work hook')
+            self.work_budget.check(self.contract)
+            observed = dict(model=asdict(self.model.cfg if hasattr(self, 'model') else self._initial_cfg),
+                recipe=asdict(self.recipe), data=self.train_data.identity,
+                device=str(self.device), valid_target_budget=self.valid_target_budget)
+            declared = {key: self.contract[key] for key in ('model', 'recipe', 'data', 'device')}
+            declared['valid_target_budget'] = self.contract.get('valid_target_budget')
+            if canonical_hash(observed) != canonical_hash(declared):
+                raise ValueError('Live accounted story model/recipe/data/device/target cap changed')
+            if (self.work_budget.ledger.ledger_id, tuple(self.work_budget.ledger.identity)) != self._work_identity:
+                raise ValueError('Live Session cannot switch to a fresh work allowance')
+            if self.poisoned and not (allow_active and self._active_operation is not None):
+                raise RuntimeError('Poisoned accounted Session; restore a fresh durable Session')
+
+    @contextmanager
+    def operation(self, costs, name):
+        self._assert_work()
+        if self.work_budget is None:
+            yield None
+        else:
+            if self._active_operation is not None: raise RuntimeError('Nested story operation')
+            with self.work_budget.operation(costs, name) as work:
+                self._active_operation = work
+                try: yield work
+                finally: self._active_operation = None
+
+    def autocast(self):
+        return torch.autocast("cuda", dtype=torch.bfloat16) if self.recipe.bf16 else nullcontext()
+
+    def sync(self):
+        if self.device.type == "cuda":
+            torch.cuda.synchronize(self.device)
+
+    def summed_loss(self, x, y):
+        self._assert_work(allow_active=True)
+        if self.work_budget is not None and self._active_operation is None:
+            raise RuntimeError('Accounted summed_loss requires an admitted update/evaluation')
+        with self.autocast():
+            logits = self.model(x.to(self.device))
+            # Explicit FP32 CE and token-weighted reductions, never mean-of-means.
+            return F.cross_entropy(logits.float().flatten(0, 1), y.to(self.device).flatten(),
+                                   ignore_index=IGNORE, reduction="sum")
+
+    def update(self):
+        self._assert_work()
+        if self.step >= self.recipe.total_updates:
+            raise ValueError("Fixed schedule exhausted; specify a new experiment")
+        self.sync()
+        start = time.monotonic()
+        # No workers/prefetch or stochastic transforms: a stream snapshot suffices
+        # to reconstruct the same unconsumed batches, including epoch-crossing RNG.
+        stream_before = self.stream.state_dict() if self.valid_target_budget is not None or self.work_budget is not None else None
+        try:
+            batches = [self.train_data.batch(self.stream.take(self.recipe.microbatch))
+                       for _ in range(self.recipe.accumulation)]
+            count = sum(int((y != IGNORE).sum()) for _, y in batches)
+            if count == 0:
+                raise ValueError("No valid training targets")
+            if self.valid_target_budget is not None and self.tokens + count > self.valid_target_budget:
+                raise ValidTargetBudgetExceeded(self.valid_target_budget, self.tokens, count)
+        except BaseException:
+            if stream_before is not None:
+                self.stream.load_state_dict(stream_before)
+            raise
+        positions = sum(x.numel() for x, _ in batches)
+        costs = dict(train_updates=1, training_windows=sum(x.shape[0] for x, _ in batches),
+            training_valid_targets=count, policy_forward_calls=len(batches),
+            policy_forward_positions=positions, backward_calls=len(batches), optimizer_calls=1)
+        entered = False
+        try:
+            with self.operation(costs, 'story-training-update') as work:
+                entered = True
+                if work is not None: self.poisoned = True
+                _enter(work, train_updates=1)
+                self.model.train()
+                lr = learning_rate(self.step, self.recipe.total_updates, self.recipe.warmup,
+                                   self.recipe.peak_lr, self.recipe.floor_lr)
+                for group in self.optimizer.param_groups: group["lr"] = lr
+                self.optimizer.zero_grad(set_to_none=True)
+                loss_total = 0.
+                for x, y in batches:
+                    units = dict(policy_forward_calls=1, policy_forward_positions=x.numel(),
+                        training_windows=x.shape[0], training_valid_targets=int((y != IGNORE).sum()))
+                    _enter(work, **units)
+                    loss = self.summed_loss(x, y) / count
+                    _done(work, **units)
+                    if not torch.isfinite(loss): raise FloatingPointError("Nonfinite loss")
+                    _enter(work, backward_calls=1)
+                    loss.backward()
+                    _done(work, backward_calls=1)
+                    loss_total += float(loss.detach())
+                norm = torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.recipe.clip,
+                                                     error_if_nonfinite=True)
+                if float(norm) == 0: raise FloatingPointError("Zero gradient norm")
+                probe = self.model.blocks[0].attn.q.weight
+                before = probe.detach().clone()
+                _enter(work, optimizer_calls=1)
+                self.optimizer.step()
+                if not all(bool(torch.isfinite(p).all()) for p in self.model.parameters()):
+                    raise FloatingPointError("Nonfinite updated parameters")
+                _done(work, optimizer_calls=1)
+                self.step += 1
+                self.tokens += count
+                self.positions += positions
+                self.sync()
+                _done(work, train_updates=1)
+            if self.work_budget is not None: self.poisoned = False
+        except BaseException:
+            if not entered and stream_before is not None: self.stream.load_state_dict(stream_before)
+            raise
+        elapsed = time.monotonic() - start
+        return dict(update=self.step, loss=loss_total, lr=lr, gradient_norm=float(norm),
+                    valid_targets=count, cumulative_targets=self.tokens, seconds=elapsed,
+                    valid_targets_per_second=count / elapsed,
+                    first_q_max_parameter_change=float((probe.detach()-before).abs().max()),
+                    processed_positions=positions, cumulative_processed_positions=self.positions,
+                    processed_positions_accounting=self.positions_accounting)
+
+    @torch.no_grad()
+    def evaluate(self, valid, max_windows=None):
+        self._assert_work()
+        total, count = 0., 0
+        stop = len(valid) if max_windows is None else min(len(valid), max_windows)
+        if stop < 1:
+            raise ValueError("Validation must contain at least one window")
+        costs = dict(evaluation_panels=1, evaluation_windows=stop,
+            evaluation_valid_targets=stop * self.model.cfg.max_length,
+            policy_forward_calls=math.ceil(stop / self.recipe.microbatch),
+            policy_forward_positions=stop * self.model.cfg.max_length)
+        with self.operation(costs, 'story-validation-panel') as work:
+            _enter(work, evaluation_panels=1)
+            was_training = self.model.training
+            self.model.eval()
+            selection = (torch.randperm(len(valid), generator=torch.Generator().manual_seed(909))[:stop].tolist()
+                         if stop < len(valid) else list(range(stop)))
+            try:
+                for start in range(0, stop, self.recipe.microbatch):
+                    x, y = valid.batch(selection[start:start+self.recipe.microbatch])
+                    units = dict(policy_forward_calls=1, policy_forward_positions=x.numel(),
+                        evaluation_windows=x.shape[0], evaluation_valid_targets=int((y != IGNORE).sum()))
+                    _enter(work, **units)
+                    total += float(self.summed_loss(x, y))
+                    count += int((y != IGNORE).sum())
+                    _done(work, **units)
+            finally:
+                self.model.train(was_training)
+            loss = total / count
+            _done(work, evaluation_panels=1)
+        return dict(loss=loss, valid_targets=count, windows=stop,
+                    complete_prepared_split=stop == len(valid), selection_seed=909)
+
+    def save(self, path, work_receipt_path=None):
+        self._assert_work()
+        path = Path(path)
+        if path.exists() or (self.work_budget is not None and path.is_symlink()):
+            raise FileExistsError(path)
+        if self.work_budget is None and work_receipt_path is not None:
+            raise ValueError('Unaccounted checkpoint cannot publish an accounted receipt')
+        prefix = None if self.work_budget is None else self.work_budget.ledger.snapshot()
+        receipt_path = Path(str(path) + '.work.json') if work_receipt_path is None else Path(work_receipt_path)
+        if self.work_budget is not None and (receipt_path.exists() or receipt_path.is_symlink()):
+            raise FileExistsError(receipt_path)
+        state = dict(contract=self.contract, model=self.model.state_dict(),
+                     optimizer=self.optimizer.state_dict(), stream=self.stream.state_dict(),
+                     step=self.step, tokens=self.tokens, rng=torch.get_rng_state(),
+                     processed_positions=self.positions,
+                     processed_positions_accounting=self.positions_accounting,
+                     cuda_rng=torch.cuda.get_rng_state_all() if self.device.type == "cuda" else [])
+        if self.work_budget is not None: state['story_work_prefix'] = prefix
+        temporary = path.with_suffix(path.suffix + ".tmp")
+        with self.operation(dict(save_operations=1), 'story-checkpoint-save') as work:
+            _enter(work, save_operations=1)
+            with temporary.open("xb") as f:
+                torch.save(state, f)
+                f.flush()
+                os.fsync(f.fileno())
+            if self.work_budget is None:
+                temporary.replace(path)
+            else:
+                # Exclusive publication; retain temporary bytes if publication
+                # fails. Do not overwrite an existing checkpoint in a race.
+                os.link(temporary, path)
+                temporary.unlink()
+                descriptor = os.open(path.parent, os.O_RDONLY | os.O_DIRECTORY)
+                try: os.fsync(descriptor)
+                finally: os.close(descriptor)
+                receipt = publish_story_receipt(receipt_path, path, self.contract, prefix, self.step)
+                self.work_budget.last_receipt = deepcopy(receipt)
+            _done(work, save_operations=1)
+
+    def restore(self, path, work_receipt=None):
+        self._assert_work()
+        if self.work_budget is None:
+            if work_receipt is not None:
+                raise ValueError('Unaccounted Session cannot consume an accounted receipt')
+            return self._restore_state(torch.load(path, map_location='cpu', weights_only=True))
+        receipt = read_story_receipt(work_receipt) if isinstance(work_receipt, (str, Path)) else validate_story_receipt(work_receipt)
+        if receipt['contract_sha256'] != canonical_hash(self.contract):
+            raise ValueError('Story receipt science/caps/source changed')
+        if receipt['completed_updates'] > self.recipe.total_updates:
+            raise ValueError('Story receipt beyond fixed update horizon')
+        self.work_budget.ledger.validate_snapshot(receipt['work_prefix'])
+        with self.operation(dict(restore_operations=1), 'story-checkpoint-restore') as work:
+            _enter(work, restore_operations=1)
+            self.poisoned = True
+            with checked_payload(path, receipt) as payload:
+                state = torch.load(payload, map_location='cpu', weights_only=True)
+            self.work_budget.ledger.validate_snapshot(state.get('story_work_prefix'))
+            if (state.get('story_work_prefix') != receipt['work_prefix']
+                    or type(state.get('step')) is not int
+                    or state['step'] != receipt['completed_updates']):
+                raise ValueError('Payload differs from independent story work prefix/cursor')
+            self._validate_accounted_state(state)
+            self._restore_state(state)
+            _done(work, restore_operations=1)
+        self.poisoned = False
+
+    def _validate_accounted_state(self, state):
+        """Trusted-local preapplication checks, not shared tree/byte admission."""
+        if type(state) is not dict or state.get('contract') != self.contract:
+            raise ValueError('Accounted story state contract changed')
+        if ('processed_positions' not in state
+                or state.get('processed_positions_accounting') != 'measured-input-numel'):
+            raise ValueError('Accounted story positions require original measured provenance')
+        expected = self.model.state_dict()
+        actual = state.get('model')
+        if not isinstance(actual, dict) or len(actual) != len(expected) or set(actual) != set(expected):
+            raise ValueError('Story model layout changed')
+        for name, reference in expected.items():
+            value = actual[name]
+            if (not isinstance(value, torch.Tensor) or value.layout != torch.strided
+                    or value.shape != reference.shape or value.dtype != reference.dtype
+                    or not bool(torch.isfinite(value).all())):
+                raise ValueError('Story model tensor changed/nonfinite')
+        optimizer = state.get('optimizer')
+        if type(optimizer) is not dict or set(optimizer) != {'state', 'param_groups'}:
+            raise ValueError('Story optimizer schema changed')
+        groups = optimizer['param_groups']; expected_groups = self.optimizer.state_dict()['param_groups']
+        if type(groups) is not list or len(groups) != len(expected_groups):
+            raise ValueError('Story optimizer groups changed')
+        parameters = []
+        for group, expected_group, live_group in zip(groups, expected_groups, self.optimizer.param_groups):
+            if type(group) is not dict or set(group) != set(expected_group):
+                raise ValueError('Story optimizer group layout changed')
+            if (type(group['params']) is not list or any(type(i) is not int for i in group['params'])
+                    or group['params'] != expected_group['params']):
+                raise ValueError('Story optimizer parameter order changed')
+            for key in set(expected_group) - {'lr', 'params'}:
+                if group[key] != expected_group[key]: raise ValueError('Story AdamW settings changed')
+            if type(group['lr']) not in (int, float) or not math.isfinite(group['lr']) or group['lr'] < 0:
+                raise ValueError('Invalid saved story learning rate')
+            parameters.extend(live_group['params'])
+        moments = optimizer['state']
+        if type(moments) is not dict or any(type(i) is not int or not 0 <= i < len(parameters) for i in moments):
+            raise ValueError('Invalid story optimizer state IDs')
+        if state.get('step') != 0 and set(moments) != set(range(len(parameters))):
+            raise ValueError('Incomplete story optimizer state')
+        if state.get('step') == 0 and moments:
+            raise ValueError('Unstarted story state cannot contain Adam moments')
+        for index, moment in moments.items():
+            if type(moment) is not dict or set(moment) != {'step', 'exp_avg', 'exp_avg_sq'}:
+                raise ValueError('Story Adam moments changed')
+            tick = moment['step']
+            if (not isinstance(tick, torch.Tensor) or tick.shape != torch.Size([])
+                    or tick.layout != torch.strided or tick.dtype not in (torch.float32, torch.float64)
+                    or not bool(torch.isfinite(tick))
+                    or float(tick) != state['step']): raise ValueError('Story Adam clock changed')
+            for key in ('exp_avg', 'exp_avg_sq'):
+                value = moment[key]; parameter = parameters[index]
+                if (not isinstance(value, torch.Tensor) or value.layout != torch.strided
+                        or value.shape != parameter.shape or value.dtype != parameter.dtype
+                        or not bool(torch.isfinite(value).all())
+                        or (key == 'exp_avg_sq' and bool((value < 0).any()))):
+                    raise ValueError('Invalid story Adam moment')
+        stream = state.get('stream')
+        stream_keys = {'size', 'cursor', 'epoch', 'order', 'rng'}
+        if type(stream) is not dict or len(stream) != len(stream_keys) or set(stream) != stream_keys:
+            raise ValueError('Invalid story stream schema')
+        if (any(type(stream[key]) is not int for key in ('size', 'cursor', 'epoch'))
+                or stream['size'] != len(self.train_data) or stream['epoch'] < 0
+                or not 0 <= stream['cursor'] <= stream['size']
+                or stream['epoch'] * stream['size'] + stream['cursor'] !=
+                    state['step'] * self.recipe.microbatch * self.recipe.accumulation):
+            raise ValueError('Story stream draws differ from completed update cursor')
+        draws = state['step'] * self.recipe.microbatch * self.recipe.accumulation
+        expected_epoch = 0 if draws == 0 else (draws - 1) // stream['size']
+        expected_cursor = 0 if draws == 0 else (draws - 1) % stream['size'] + 1
+        if (stream['epoch'], stream['cursor']) != (expected_epoch, expected_cursor):
+            raise ValueError('Story stream epoch boundary differs from native take order')
+        order, stream_rng = stream['order'], stream['rng']
+        if (not isinstance(order, torch.Tensor) or order.dtype != torch.int64
+                or order.shape != torch.Size([len(self.train_data)])
+                or not isinstance(stream_rng, torch.Tensor) or stream_rng.dtype != torch.uint8
+                or stream_rng.ndim != 1):
+            raise ValueError('Invalid story permutation or stream RNG layout')
+        shadow = WindowStream(len(self.train_data), self.recipe.seed + 1)
+        shadow.load_state_dict(stream)
+        rng = state.get('rng')
+        if not isinstance(rng, torch.Tensor) or rng.dtype != torch.uint8 or rng.ndim != 1:
+            raise ValueError('Invalid story RNG state')
+        torch.Generator().set_state(rng)
+        cuda_rng = state.get('cuda_rng')
+        if type(cuda_rng) is not list: raise ValueError('Invalid CUDA RNG list')
+        expected_cuda = torch.cuda.get_rng_state_all() if self.device.type == 'cuda' else []
+        if len(cuda_rng) != len(expected_cuda): raise ValueError('CUDA RNG count changed')
+        for value, reference in zip(cuda_rng, expected_cuda):
+            if not isinstance(value, torch.Tensor) or value.dtype != torch.uint8 or value.shape != reference.shape:
+                raise ValueError('CUDA RNG layout changed')
+
+    def _restore_state(self, state):
+        # Tensor/primitive-only checkpoint; never enable unrestricted pickle loading.
+        if state["contract"] != self.contract:
+            raise ValueError("Checkpoint model/data/recipe/environment contract changed")
+        step, tokens = state["step"], state["tokens"]
+        if (type(step) is not int or type(tokens) is not int
+                or not 0 <= step <= self.recipe.total_updates or tokens < step
+                or (step == 0 and tokens != 0)
+                or (self.valid_target_budget is not None and tokens > self.valid_target_budget)):
+            raise ValueError("Invalid checkpoint counters")
+        if "processed_positions" in state:
+            positions = state["processed_positions"]
+            accounting = state.get("processed_positions_accounting")
+            if accounting not in ("measured-input-numel",
+                                  "derived-legacy-fixed-geometry-plus-measured-continuation"):
+                raise ValueError("Invalid checkpoint position-accounting provenance")
+        else:
+            positions = step * self.recipe.microbatch * self.recipe.accumulation * self.model.cfg.max_length
+            accounting = "derived-legacy-fixed-geometry-plus-measured-continuation"
+        if (type(positions) is not int or positions < tokens
+                or (step == 0 and positions != 0)):
+            raise ValueError("Invalid checkpoint physical-position counter")
+        self.model.load_state_dict(state["model"])
+        self.optimizer.load_state_dict(state["optimizer"])
+        self.stream.load_state_dict(state["stream"])
+        self.step, self.tokens, self.positions = step, tokens, positions
+        self.positions_accounting = accounting
+        torch.set_rng_state(state["rng"])
+        if self.device.type == "cuda":
+            torch.cuda.set_rng_state_all(state["cuda_rng"])
+
+
+PROMPTS = (
+    "Once upon a time, a little rabbit lived near a forest.",
+    "Lily put her red ball in a box. Then she went outside.",
+    "Tom wanted to fly his kite, but there was no wind.",
+)
+
+
+@torch.no_grad()
+def samples(session, tokenizer, max_new=32):
+    session._assert_work()
+    prefixes = [[EOS, *tokenizer.encode(prompt, add_special_tokens=False).ids]
+                for prompt in PROMPTS]
+    ceilings = [max(0, min(max_new, session.model.cfg.max_length - len(prefix))) for prefix in prefixes]
+    calls = 2 * sum(ceilings)
+    positions = 2 * sum(n * len(prefix) + n * (n - 1) // 2
+                        for prefix, n in zip(prefixes, ceilings))
+    costs = dict(generation_sequences=2 * len(PROMPTS), generation_calls=calls,
+        generation_positions=positions, generation_tokens=calls,
+        multinomial_draws=sum(ceilings))
+    result = []
+    with session.operation(costs, 'story-native-generation-panel') as work:
+        previous = session.model.training
+        session.model.eval()
+        try:
+            for prompt, prefix in zip(PROMPTS, prefixes):
+                for method in ("greedy", "sample"):
+                    _enter(work, generation_sequences=1)
+                    generator = torch.Generator(device=session.device).manual_seed(909)
+                    ids = torch.tensor([prefix], device=session.device)
+                    generated = []
+                    ended = False
+                    for _ in range(min(max_new, session.model.cfg.max_length-len(prefix))):
+                        units = dict(generation_calls=1, generation_positions=ids.numel())
+                        _enter(work, **units)
+                        with session.autocast():
+                            logits = session.model.lm_head(session.model.features(ids)[:, -1]).float()
+                        _done(work, **units)
+                        _enter(work, generation_tokens=1)
+                        if method == "greedy":
+                            token = int(logits.argmax(-1).item())
+                        else:
+                            # Preserve native temperature/private generator and EOS.
+                            _enter(work, multinomial_draws=1)
+                            token = int(torch.multinomial((logits/.8).softmax(-1), 1, generator=generator).item())
+                            _done(work, multinomial_draws=1)
+                        _done(work, generation_tokens=1)
+                        generated.append(token)
+                        ids = torch.cat((ids, torch.tensor([[token]], device=session.device)), 1)
+                        if token == EOS:
+                            ended = True
+                            break
+                    result.append(dict(prompt=prompt, method=method, seed=909,
+                                       temperature=None if method == "greedy" else .8,
+                                       token_ids=generated, continuation=tokenizer.decode(generated),
+                                       ended_with_eos=ended, max_new_tokens=max_new))
+                    _done(work, generation_sequences=1)
+        finally:
+            session.model.train(previous)
+    return result
+
+
+@torch.no_grad()
+def activation_summary(session, valid):
+    """Fixed first validation window; summarize real positions, excluding padding."""
+    session._assert_work()
+    ids, labels = valid.batch([0])
+    mask = (labels != IGNORE).to(session.device)
+    result = []
+    def record(name, value):
+        selected = value[mask].float()
+        result.append(dict(component=name, rms=float(selected.square().mean().sqrt()),
+                           max_abs=float(selected.abs().max())))
+    costs = dict(activation_panels=1, activation_positions=ids.numel(),
+                 activation_block_applications=len(session.model.blocks))
+    with session.operation(costs, 'story-manual-activation-panel') as work:
+        _enter(work, activation_panels=1, activation_positions=ids.numel())
+        with session.autocast():
+            x = session.model.token(ids.to(session.device))
+            record("embedding", x)
+            for i, block in enumerate(session.model.blocks):
+                _enter(work, activation_block_applications=1)
+                x = session.model.apply_block(block, x)
+                _done(work, activation_block_applications=1)
+                record(f"residual_after_block_{i}", x)
+            record("final_norm", session.model.final_norm(x))
+        if not all(math.isfinite(row[metric]) for row in result for metric in ("rms", "max_abs")):
+            raise FloatingPointError("Nonfinite observed activations")
+        _done(work, activation_panels=1, activation_positions=ids.numel())
+    return result
+
+
+def available_gib():
+    for line in Path("/proc/meminfo").read_text().splitlines():
+        if line.startswith("MemAvailable:"):
+            return int(line.split()[1]) / 1024**2
+    raise RuntimeError("Cannot read Linux MemAvailable")
+
+
+class MemoryMonitor:
+    def __init__(self, root, reserve=25., seconds=600.):
+        self.root, self.reserve, self.seconds = Path(root), reserve, seconds
+        self.stop = threading.Event()
+        self.minimum = available_gib()
+        self.reason = None
+
+    def __enter__(self):
+        if self.minimum < self.reserve:
+            raise RuntimeError("Insufficient host memory reserve before launch")
+        def watch():
+            start = time.monotonic()
+            with (self.root / "host-memory.jsonl").open("x") as log:
+                while not self.stop.is_set():
+                    value = available_gib()
+                    elapsed = time.monotonic()-start
+                    self.minimum = min(self.minimum, value)
+                    log.write(json.dumps(dict(seconds=elapsed, available_gib=value)) + "\n")
+                    log.flush()
+                    if value < self.reserve or elapsed > self.seconds:
+                        self.reason = "memory reserve" if value < self.reserve else "wall-clock limit"
+                        os.kill(os.getpid(), signal.SIGINT)
+                        return
+                    self.stop.wait(.2)
+        self.thread = threading.Thread(target=watch, daemon=True)
+        self.thread.start()
+        return self
+
+    def __exit__(self, *_):
+        self.stop.set()
+        self.thread.join(timeout=2)
+        summary = dict(minimum_sampled_available_gib=self.minimum, abort_reason=self.reason,
+                       sampling_seconds=.2, reserve_gib=self.reserve)
+        if torch.cuda.is_initialized():
+            summary.update(cuda_peak_allocated_bytes=torch.cuda.max_memory_allocated(),
+                           cuda_peak_reserved_bytes=torch.cuda.max_memory_reserved())
+        for line in Path("/proc/self/cgroup").read_text().splitlines():
+            if line.startswith("0::"):
+                peak = Path("/sys/fs/cgroup") / line[3:].lstrip("/") / "memory.peak"
+                if peak.exists():
+                    summary["cgroup_peak_bytes"] = int(peak.read_text())
+        (self.root / "memory-summary.json").write_text(json.dumps(summary, indent=2)+"\n")
+
+
+def run(data, output, device="cuda", total=3, stop_after=None, resume=None,
+        microbatch=1, accumulation=1, warmup=1, valid_windows=2, sample_tokens=16,
+        checkpoint_every=2, max_seconds=600., peak_lr=3e-4, floor_lr=3e-5,
+        valid_target_budget=None, work_limits=None, work_journal=None,
+        resume_work_receipt=None):
+    """Legacy defaults are UNACCOUNTED; explicit caps opt into persistent work.
+
+    The accounted journal is bound before model construction/payload loading.
+    This wrapper does not admit byte I/O, data preparation or physical resources.
+    """
+    supplied = (work_limits is not None, work_journal is not None)
+    if any(supplied) and not all(supplied):
+        raise ValueError('Accounted mode requires paired --work-limits/--work-journal')
+    if resume_work_receipt is not None and (not all(supplied) or resume is None):
+        raise ValueError('Independent work receipt requires accounted checkpoint resume')
+    if all(supplied) and resume is not None and resume_work_receipt is None:
+        raise ValueError('Accounted resume requires --resume-work-receipt')
+    budget = None; prepared = None; receipt = None; caps_identity = None
+    try:
+        if all(supplied):
+            if resume is not None:
+                # No generic input hash may consume the designated checkpoint
+                # body before the independent journal admission. All role
+                # checks here use paths/inodes only, not content hashes.
+                source_names = ('stories_training.py', 'stories_data.py', 'decoder_lab.py',
+                    'pretraining_lab.py', 'story_work_budget.py', 'work_budget.py',
+                    'run_identity.py', 'snapshot_io_budget.py')
+                roles = [work_limits, resume_work_receipt, work_journal,
+                    *(Path(data) / name for name in ('manifest.json', 'tokenizer.json',
+                        'train.bin', 'valid.bin', 'train.windows.npy', 'valid.windows.npy')),
+                    *(Path(__file__).with_name(name) for name in source_names),
+                    Path(__file__).resolve().parents[2] / 'scripts' / 'train_stories.py']
+                assert_resume_disjoint(resume, roles)
+            caps, caps_identity = read_story_limits(work_limits)
+            recipe = Recipe(total_updates=total, warmup=warmup, microbatch=microbatch,
+                accumulation=accumulation, bf16=device.startswith('cuda'),
+                peak_lr=peak_lr, floor_lr=floor_lr)
+            if resume is not None:
+                receipt = read_story_receipt(resume_work_receipt)
+                if receipt['completed_updates'] >= (total if stop_after is None else stop_after):
+                    raise ValueError('Resume receipt already reached requested fixed stop')
+            train, valid = Windows(data, 'train'), Windows(data, 'valid')
+            cfg = baseline(train.length)
+            science = session_contract(cfg, recipe, train, device, valid_target_budget, caps)
+            if read_story_limits(work_limits)[1] != caps_identity:
+                raise ValueError('Parsed work limits changed before journal/model admission')
+            invocation = f'story-{os.getpid()}-{time.time_ns()}'
+            if resume is None:
+                budget = StoryWorkBudget.create(work_journal, contract=caps,
+                    scientific_contract=science, invocation_id=invocation)
+            else:
+                budget = StoryWorkBudget.open(work_journal, contract=caps,
+                    scientific_contract=science, invocation_id=invocation, receipt=receipt)
+            prepared = (cfg, recipe, train, valid)
+        result = _run(data, output, device, total, stop_after, resume, microbatch,
+            accumulation, warmup, valid_windows, sample_tokens, checkpoint_every,
+            max_seconds, peak_lr, floor_lr, valid_target_budget, budget, receipt,
+            prepared, caps_identity)
+        if caps_identity is not None and read_story_limits(work_limits)[1] != caps_identity:
+            raise ValueError('Bound work limits changed during run closure')
+        return result
+    finally:
+        if budget is not None: budget.close()
+
+
+def _run(data, output, device, total, stop_after, resume, microbatch, accumulation,
+         warmup, valid_windows, sample_tokens, checkpoint_every, max_seconds,
+         peak_lr, floor_lr, valid_target_budget, work_budget, receipt, prepared,
+         caps_identity):
+    from tokenizers import Tokenizer
+    valid_target_budget = validate_target_budget(valid_target_budget)
+    root = Path(output)
+    if checkpoint_every < 1 or max_seconds <= 0 or sample_tokens < 1 or valid_windows < 1:
+        raise ValueError("Positive output/evaluation/time bounds required")
+    recipe = Recipe(total_updates=total, warmup=warmup, microbatch=microbatch,
+                    accumulation=accumulation, bf16=device.startswith("cuda"),
+                    peak_lr=peak_lr, floor_lr=floor_lr)
+    stop_after = total if stop_after is None else stop_after
+    if not 0 < stop_after <= total:
+        raise ValueError("Stop must lie within the fixed schedule")
+    root.mkdir(parents=True, exist_ok=False)
+    with MemoryMonitor(root, seconds=max_seconds):
+        run_start = time.monotonic()
+        if prepared is None:
+            train, valid = Windows(data, "train"), Windows(data, "valid")
+            cfg = baseline(train.length)
+        else:
+            cfg, recipe, train, valid = prepared
+        session = (Session(cfg, recipe, train, device, valid_target_budget)
+                   if work_budget is None else
+                   Session(cfg, recipe, train, device, valid_target_budget, work_budget=work_budget))
+        if resume:
+            if work_budget is None: session.restore(resume)
+            else: session.restore(resume, work_receipt=receipt)
+        if session.step >= stop_after:
+            raise ValueError("Resume has already reached requested stop")
+        identity = dict(contract=session.contract, stop_after=stop_after,
+                        resume=str(resume) if resume else None, valid_windows=valid_windows,
+                        sample_tokens=sample_tokens,
+                        valid_target_budget=valid_target_budget,
+                        validation_selection_seed=909,
+                        logical_work_mode=('unaccounted-legacy' if work_budget is None else 'accounted-story-model-work-v1'),
+                        work_limits_identity=caps_identity,
+                        sources={p.name: digest(p) for p in Path(__file__).parent.glob("*.py")},
+                        data_manifest=train.manifest)
+        (root / "run.json").write_text(json.dumps(identity, indent=2)+"\n")
+        tok = Tokenizer.from_file(str(Path(data) / "tokenizer.json"))
+        def observe(label):
+            observation = dict(update=session.step, validation=session.evaluate(valid, valid_windows),
+                               samples=samples(session, tok, sample_tokens),
+                               activations=activation_summary(session, valid))
+            (root / f"{label}.json").write_text(json.dumps(observation, indent=2)+"\n")
+            print(json.dumps({"observation": label, "update": session.step,
+                              "validation": observation["validation"]}), flush=True)
+        # A failed first observer must have a durable numerical cursor while its
+        # attempted panel remains spent. Legacy unaccounted order is unchanged.
+        if work_budget is not None and not resume:
+            session.save(root / 'update-000000.pt')
+        observe("initial")
+        budget_stop = None
+        stopped_for_time_budget = False
+        with (root / "metrics.jsonl").open("x") as log:
+            while session.step < stop_after:
+                # Reserve shutdown time before the independent hard deadline.
+                if time.monotonic()-run_start > max_seconds-min(120., max_seconds*.1):
+                    stopped_for_time_budget = True
+                    break
+                try:
+                    record = session.update()
+                except ValidTargetBudgetExceeded as refusal:
+                    budget_stop = refusal.record()
+                    (root / "target-budget-stop.json").write_text(json.dumps(budget_stop, indent=2)+"\n")
+                    print(json.dumps({"target_budget_stop": budget_stop}), flush=True)
+                    break
+                log.write(json.dumps(record)+"\n")
+                log.flush()
+                print(json.dumps(record), flush=True)
+                if session.step % checkpoint_every == 0 or session.step == stop_after:
+                    session.save(root / f"update-{session.step:06d}.pt")
+                    if session.step != stop_after:
+                        observe(f"update-{session.step:06d}")
+        last_checkpoint = root / f"update-{session.step:06d}.pt"
+        if not last_checkpoint.exists():
+            session.save(last_checkpoint)
+        if time.monotonic()-run_start < max_seconds-60:
+            observe("final")
+        completion = dict(completed_updates=session.step, cumulative_targets=session.tokens,
+                          cumulative_processed_positions=session.positions,
+                          processed_positions_accounting=session.positions_accounting,
+                          valid_target_budget=valid_target_budget,
+                          remaining_valid_targets=(None if valid_target_budget is None
+                                                   else valid_target_budget-session.tokens),
+                          stopped_for_target_budget=budget_stop is not None,
+                          target_budget_stop=budget_stop,
+                          schedule_complete=session.step == total,
+                          requested_stop_reached=session.step == stop_after,
+                          stopped_for_time_budget=stopped_for_time_budget,
+                          logical_work_mode=('unaccounted-legacy' if work_budget is None else 'accounted-story-model-work-v1'),
+                          work_ledger=(None if work_budget is None else work_budget.ledger.snapshot()),
+                          seconds=time.monotonic()-run_start)
+        (root / "completion.json").write_text(json.dumps(completion, indent=2)+"\n")
+        print(json.dumps(completion), flush=True)
+        return session.step

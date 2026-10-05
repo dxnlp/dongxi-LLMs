@@ -4,6 +4,131 @@ This file is the operational source of truth for resuming work. Update it at the
 
 ## Current position
 
+- Final measured continuation,2026-10-05: chosen100/DPO100 and their
+  common432-response evaluation are accepted; both retain120/120 instruction
+  answers, while strict location accuracy is4/4 versus1/4. All eight original
+  initial reasoning conditions were attempted:680/800 observed responses,
+  with120 missing after two Base/chat decode failures. G4recovery02 and
+  G8recovery01 each pass twelve exact recovery checks and three actual
+  supervised exits0. Both native policies complete16; G8's pilot is accepted
+  and G4's failed supervision remains failed under its separate export-consistency
+  closure. All four post-evaluations and both matched cap32/128 comparisons
+  complete: cap128 held-out sampled13→11→13/44, greedy7/11 throughout.
+  Final [current-source verification](experiments/reports/2026-10-05-final-course-verification.md)
+  and [CPU tests](experiments/reports/2026-10-05-final-goal-cpu/run-01/tests.log)
+  pass1,533; [all76 fresh notebooks](experiments/reports/2026-10-05-final-goal-notebooks/run-01/manifest.json)
+  retain539 code cells/535 executed references/210 images/four unfinished skips.
+  The [actual archive closing receipt](experiments/reports/native-campaign-evidence-20261005-run-01/closing-bindings.json)
+  binds the original45 rows and74 model-directed terminal receipts, including failures.
+  Its preclosure15/18 documents are immutable; a separate postclosure projection
+  will account for status updates. The [signed original86-criterion review](experiments/reports/2026-10-05-final-original-criteria-signoff.md)
+  now closes18/18 packages and their unchanged dependencies. LearnerDay9 stays
+  unchanged; production closure is not completed learner practice. The
+  [empirical defense](experiments/reports/2026-10-05-final-native-campaign-defense.md)
+  and [current handoff](docs/handoffs/CURRENT.md) supersede historical live queues below.
+
+- Earlier story/preference snapshot: two accepted fresh400-update tranches,
+ 192 generated continuations and two complete AI review sets. Both remain poor
+ despite improved NLL;56 candidates have disagreement across64 rubric dimensions.
+ The original14k schedule and288 later publication cells remain incomplete.
+ [Report](experiments/reports/2026-10-05-native-story-first400-comparison.md)
+ separates the portable measurement archive from the rating records.
+ DPO02 failed its600-second resumed deadline despite durable update2/export;
+ no final result or known native exit was obtained. Chosen-only recovery is
+ running; independently reviewed source-bound DPO03 is next with unchanged
+ recipe/ceilings and opt-in bounded complete-file hashing. Final integrated
+ Linux/all76 verification and branch defense are still required.
+
+- Earlier actual continuation: both fresh400-update assistant arms passed their
+  fixed execution/exposure/export checks; full8/8 development exact/stops,
+  LoRA0/8 with all64-token caps. [Comparison](experiments/reports/2026-10-05-native-sft400-comparison.md)
+  preserves equal9,321 labels/63,378 training positions and unequal capacity.
+  Actual LoRA400 FP32 merge/reload passes, separately from the old BF16 mismatch.
+  Original thinking-off cap32 baseline produced100 actual responses. Story
+  recovery01 failed exact replay despite three exit0 children; deterministic02
+  passed. Source-bound03 gates precede fresh matched first400 tranches with
+  original14k horizon/200 warmup, not a400-total schedule. Later checkpoints
+  remain null. Publication/rating and whole-goal closure are separate.
+- [Original-text platform review](experiments/reports/2026-10-05-platform-scope-reading.md)
+  corrects stronger mandatory-Mac wording below. DXI-17 requires separate actual
+  Linux/unverified Mac evidence, not an added successful Mac run. Historical
+  stronger Mac/hosted requests remain parallel tasks. Final current-source Linux
+  verification is now measured; no Mac pass is inferred. Hosted execution and
+  inline-host learner delivery remain unobserved.
+
+- Current applicability rule: verify each proposed gap against upstream fixes
+  and the installed stack before implementation; reuse sufficient existing tools
+  and retire resolved/irrelevant work. The old memory-hang warning is not a new
+  custom monitoring task. Standard finite-resource bounds remain.
+
+- Current execution correction,2026-10-05: the learner challenged the Mac gate
+  and explicitly instructed completion. Original criteria/dependencies remain
+  package-completion metadata. DXI-17's measured Linux/source checks satisfy the
+  Spark execution prerequisite; actual Mac portability is parallel unfinished
+  work. Continue the [bounded campaign](experiments/specs/2026-10-05-spark-campaign-continuation.md)
+  after its branch-specific gates. Earlier Mac-before-Spark wording below is
+  superseded; no routine approval question, publication or Day9 rewind follows.
+
+- Latest authorization,2026-10-05: complete the original improvement goal
+  autonomously without repeated routine approval questions. The proposed
+  fixed20-update900-second Base profile, its bounds and model load/evaluation/
+  training are approved. Continue predeclared goal-aligned steps within existing
+  gates; preserve genuine external/platform blockers and original acceptance.
+  LearnerDay9 is unchanged. Older acquisition/profile approval requests below
+  record historical state, not a request to ask the learner again.
+
+- Earlier actual goal milestone: the [native pinned Base profile](experiments/reports/2026-10-05-native-base-profile.md)
+  completed20 finite updates,455 training targets, actual exit0 in61.636s and
+  external sampled minimum105.10455GiB. NLL4.061965→1.100189, but both generation
+  panels remain0/8 exact and0/8 message-end stops, all truncated. Chapter9,
+  worked solution18 and Lab9 retain that negative distinction. Current campaign
+  evidence fills only the profile row; the old45-row all-null preparation is
+  immutable historical evidence, not a current jobs0 assertion.
+  Full and LoRA fresh10→20 replay now passes exact numerical/storage/token
+  checks. First full resume remains conflict-stopped(-15,4.550s); successful
+  retry uses a new output and unchanged journals/caps/horizon. BF16 merge stays
+  failed; separately predeclared FP32 merge/reload passes its own checks.
+  Actual Base/short-SFT15-item evaluation retains30 raw answers; all truncate.
+  Separate unblinded AI review keeps its partly useful but artifact-filled
+  benign rubric pass distinct from clean completed helpfulness.
+  The [chosen-only counted recovery](experiments/reports/2026-10-05-chosen-sft-accounted-recovery.md)
+  now passes36 focused CPU checks and two exact fresh2→6 continuations with
+  later failed spending preserved. Legacy comparison CLI remains unaccounted.
+  Final fullCPU run-03 passes1,134 tests/all76 fresh references/535 cells/210
+  images with195 stable executable hashes. Prior run-02 retains16 isolation
+  errors; test-only isolation preserves the production thread guard.
+  Original18criteria/dependencies and learnerDay9 are unchanged; statuses are
+  now15complete/3partial after independent DXI-01/02 reviews. Snapshot02 counts
+  10 native/model invocations, including2failures; only the profile campaign
+  row is populated and44 unrun rows stay unchanged at that snapshot. Its
+  stronger Mac-before-Spark interpretation is superseded by the original-text
+  review above; DXI-18 still requires actual comparisons.
+  No current audit commit/push/hosted run occurred. One genuine publication/
+  workflow authority request is pending.
+
+- Historical continuation correction: stopping independent implementation at the platform/
+  publication boundary was premature. Continue the story contamination audit,
+  blinded rubric consumer and actual model-defense tables without routine
+  reconfirmation. The [actual story audit](experiments/reports/2026-10-05-story-panel-audit.md)
+  now reconstructs the pinned corpus/splits and passes its defined overlap
+  checks, retaining a development near-hit and honest memory diagnostics.
+  The [rating consumer](experiments/reports/2026-10-05-story-rubric.md) passes28
+  focused controls; its real rating inputs were empty at that revision. The
+  stronger claim that original DXI-17criterion3 requires actual Mac execution
+  was subsequently corrected by the literal review above. Criterion5 distinguishes CI definitions/local checks from a hosted run, not
+  a new compulsory hosted success. The historical hosted-CI pending string is
+  explicitly retained/routed. The [Mac packet](docs/handoffs/MAC_CPU_VERIFICATION.md)
+  records a listed local project, not enabled Mac execution from this Spark task.
+  The [current defense](experiments/reports/2026-10-05-current-model-defense.md)
+  compares real negative quality, genealogy and costs; final campaign evidence
+  remains absent. Day9 and15/18 stay unchanged.
+  The [final continuation report](experiments/reports/2026-10-05-goal-continuation.md)
+  records1,162 passing CPU tests, five fresh references/35 executed reference
+  cells/13 PNGs/four preserved scaffolds and198 unchanged executable sources.
+  Original18 acceptance/dependencies/pending text,45 campaign rows and76
+  historical notebook source bytes are separately audited. No new all76 run,
+  actual Mac, model job, Git publication or rendered media occurred.
+
 - Active release: `v0.1`; active day: Day9, experiment interpretation on Spark.
 - Status: learning run complete; Day9 remains in progress. The roadmap's
   controlled trained scale/data/recipe comparison has not been performed.
@@ -18,15 +143,17 @@ This file is the operational source of truth for resuming work. Update it at the
   still contain repetition, malformed language and role inconsistencies.
   No systematic coherence score, matched generalization-gap audit, or unique
   cause for repetition is claimed.
-- Material: Chapter 6 now integrates Days8–9 in sections6.1–6.20, with18 worked
+- Material: Chapter 6 now integrates Days8–9 in sections6.1–6.20, with20 worked
   solutions, the three existing Day8 visual notebooks, and a standard-library
   evidence-reading lab. Three Day9 visual analysis notebooks are now built.
 - Operational state: user requested dashboard shutdown on2026-09-14.
   `dongxigpt-playground-20260914.service` was stopped and port8765 verified
   closed. The loaded inference process exited; model files/logs remain intact.
-  No new training, inference restart or installation requested. The September
-  course work was subsequently committed/pushed; this October material build
-  remains local unless a new commit/push or departure request is made.
+  No new model training, inference restart or shared-environment installation.
+  The isolated temporary CPU reproduction environment is recorded below. The September
+  course work and the October complete material build were committed/pushed,
+  most recently as `ac203ef`. The reference-audit and first implementation changes are
+  local until a separate commit/push or departure request.
 - Next learning action: read the completed-run case study and define a frozen
   story-evaluation contract; then propose one bounded controlled trained
   comparison. Do not launch it automatically or treat sampling probes as that
@@ -47,12 +174,250 @@ This file is the operational source of truth for resuming work. Update it at the
   are recorded in the [build report](experiments/reports/2026-10-04-complete-course-build.md).
   Optional pretrained SFT/DPO/RLVR runners remain unexecuted. The current request
   authorizes local course creation, not a new heavy campaign or external publication.
-- Last updated:2026-10-04. Active learner day remains9.
+- Last updated:2026-10-05 local date; latest CPU checks collected2026-10-05UTC.
+  Active learner day remains9.
 
 Synthesis verification:40 source hashes and14,000 finite metric rows checked;
 all3 evidence-lab code blocks executed;20 chapter sections/18 solutions and local
 links checked;605 book math expressions passed source checks and6 checker tests.
 Full record: `experiments/reports/2026-09-14-chapter6-synthesis-verification.md`.
+
+## Completed course improvement goal
+
+-2026-10-04: learner requested comparison with RLHF Book and Reasoning From
+  Scratch, saved gap notes/plan and a goal to achieve the improvements.
+- Goal: `COURSE-UPGRADE-2026-10`, complete. [Audit](docs/REFERENCE_REPOSITORY_AUDIT.md)
+  and [plan](docs/COURSE_IMPROVEMENT_PLAN.md) prepared against pinned sources;
+  [ledger](docs/course_improvements.json):18of18 packages complete against all86
+  unchanged original criteria and dependencies. Final03/17/18 closure follows
+  actual campaign, Linux verification and signed empirical defense evidence;
+  no Mac/hosted-success requirement was added. Historical source checkpoints below
+  retain their own earlier counts rather than replacing current status.
+  Source creation and learner mastery remain separate.
+- First foundation pass: common source/environment/input/interface identity,
+  SFT/DPO/RLVR journals and tokenizer protection; explicit tiny HF/PEFT merge;
+  offline mathematical grading/replay; simulated judge audit; exact behavior
+  probability/support/KL/mask lesson. Integrated chapters1/7/10/12/13/14,
+  worked solutions and labs; four new visual notebooks bring inventory to65.
+- [Identity report](experiments/reports/2026-10-04-run-identity.md) records24
+  focused contract checks and tiny local HF execution, not pretrained training.
+  [Evaluation](experiments/reports/2026-10-04-reasoning-evaluation.md) retains
+  authored raw responses, uncertainty and regressions. Judge and sampling
+  [hardening](experiments/reports/2026-10-04-preference-audit-hardening.md)
+  [reports](experiments/reports/2026-10-04-sampling-support-hardening.md)
+  preserve nested/oversized errors and reject unrepresentable KL values while
+  leaving their original result ledgers unchanged. Fresh new notebooks pass.
+- First-pass integrated checks:218tests pass;54book files/1099math expressions and
+  15chapters/15solutions/4appendices/65notebooks have zero source/navigation issues.
+  This is source/CPU readiness, not live GitHub/Mac or pretrained-model evidence.
+- Second pass adds actual local tiny-HF raw/chat generation/stop/cost records
+  and exact replay; text backbone/scalar head with outcome/process supervision;
+  sampled shared-decoder/EOS controls; declarative routing, CPU lock and CI source.
+  Two new visual notebooks (Day16/23) bring inventory to67:60core, one optional,
+  six extensions. Their focused fresh executions are separate from the original
+ 61-session build and the locked five-notebook acceptance panel.
+- The text-reward experiment retains format/OOV failures. Its four baseline test
+  encodings alias calibration; independent encoded-input calibration is open.
+  The reasoning control retains two minority failures and constant-answer
+  held-out confounds; independent replay matches all816evaluation records,
+ 360update rows and384archived first/last training samples.
+- Third mechanism pass closes bounded CPU DXI-07/10/11/12: separately specified
+  character vocabulary, learned critics/GAE with fitted frozen rewards,
+  DPO retention/noise/length controls and same-rollout objective gradients.
+  Three new notebooks bring verified inventory to70 (60core/1optional/9extensions);
+  the expanded Day16 notebook has12cells/8figures. All original failures remain.
+  Third-pass integrated CPU check:366tests pass;54book files/1169math expressions
+  and70registered routes have zero source/navigation issues. Fresh targeted
+  Day16/18/20/22 sessions execute33reference cells and emit23figures; this is
+  not an all70-notebook pass. Independent full replays check the new campaigns.
+- Fourth pass closes bounded CPU DXI-05/09/14/15 with independent full replays:
+  864 actual candidates,108 programmatic teacher attempts/nine SFT students,
+  ragged KV and completed/pending recovery with typed-identity hardening, and
+  1872 actual teacher/student distillation responses. Four fresh notebooks add
+  31reference cells/22figures, accepted inventory74. Registration can include
+  additional unfinished routes. Original measurements/failures remain intact.
+  [Actual-candidate root review](experiments/reports/2026-10-04-inference-selection-root-review.json),
+  [teacher-data root acceptance](experiments/reports/2026-10-04-teacher-data-root-acceptance.json),
+  [recovery root verification](experiments/reports/2026-10-04-batched-cache-recovery-root-verification.json),
+  [distillation root review](experiments/reports/2026-10-04-response-distillation-root-review.json).
+- Fifth pass closes bounded CPU DXI-06/16: programmatic critique/revision with
+  capped-critique hardening, plus24 finite-teacher/neural-student arms with
+  positive-tail/cohort hardening. Independent root replays preserve all ordinary
+  historical paths and10,656 student-prefix records. Two fresh extensions add
+  17cells/13figures, accepted inventory76. DXI-03 prepares45 external rows with
+  every actual field null and separately passes14tests/eight CPU supervisor
+  controls; it is not a new model campaign. The actual Day9 card and Chapter15
+  bridges leave missing lineage and quality evidence visible.
+- October4 [all-notebook checkpoint](experiments/reports/2026-10-04-course-upgrade-checkpoint.md):
+  516 tests pass;54book files/1247math expressions and76routes have zero issues.
+  All76 references execute in two fresh isolated CPU batches:530cells/206images,
+  four unfinished learner cells preserved/skipped.126 executable source hashes
+  stay unchanged during the integrated command panel. This replaces no historical
+  snapshot and is not a Mac/hosted, model-scale or learner pass.
+- 2026-10-05 source-readiness follow-up: optional story valid-target cap refuses
+  whole crossing updates before forward and restores shuffle state/cumulative
+  resume.19new/12existing story tests and four cap controls pass. Owned-worker/
+  disk extension passes25focused regressions/eight fixed CPU controls; real
+  per-file and sampled aggregate boundaries remain distinct. Dense BF16 byte
+  hashing adds four tests (30total) while preserving13 archived identities and
+  eight CPU continuations. Reports:
+  [story budget](experiments/reports/2026-10-05-story-valid-target-budget.md),
+  [worker/disk guards](experiments/reports/2026-10-05-owned-workers-and-disk-guards.md),
+  [tensor bytes](experiments/reports/2026-10-05-recovery-tensor-bytes.md).
+  Chapter6 adds an update-boundary explanation/answer19/runnable evidence-lab5;
+  Chapter14 adds shutdown/storage explanations/answers19–20. Historical reports
+  remain unchanged. Package count stays13of18; all45 external rows stay null.
+  [Integrated follow-up](experiments/reports/2026-10-05-course-guard-readiness.md):
+  564tests pass,1251math expressions/zero issues and76routes/zero issues;
+  nine selected fresh CPU references execute52cells/21images/four preserved
+  unfinished cells skipped, not an all76 rerun.131panel source hashes stable.
+- Actual-runner follow-up: the shared trusted-local snapshot and SFT/DPO
+  completed-update CPU gates pass [independent acceptance](experiments/reports/2026-10-05-runner-recovery-root.md):
+  39 shared-format,18 SFT and21 DPO tests, four actual test-process exits0 and
+  17 scoped source hashes stable. Full/LoRA SFT and original-reference DPO
+  preserve complete history and exactly replay actual updates in fresh processes.
+  Chapters9/11, their labs/solutions and a portable boundary artifact integrate
+  this explanation. The78-test panel is not a full-course/notebook rerun.
+  A separate [seven-test CPU activation-checkpointing panel](experiments/reports/2026-10-05-dpo-activation-checkpointing.md)
+  passes the released DPO mode without claiming measured backward recomputation
+  work, memory savings or CUDA/BF16 equivalence.
+- RLVR actual-loop follow-up: [root acceptance](experiments/reports/2026-10-05-rlvr-runner-recovery-root.md)
+  passes19 recovery/15 identity tests, exact completed/pending fresh-process
+  continuation and no resampling; original reference, pools/history/work retained.
+  Chapter13§13.7.1/question-answer18 and its lab integrate this distinction.
+  [Earlier integration](experiments/reports/2026-10-05-actual-runner-readiness.md)
+  passes669 tests,1251math/76routes with zero issues and five fresh references
+  (35cells/13images/four preserved unfinished cells skipped),141 source hashes
+  stable. This does not rerun all76 or establish external/learner evidence.
+- Whole-job source follow-up: all45 nonexecuting preparation identities and44
+  compiler/mock-preflight controls pass. Actual DPO cumulative14-dimensional work
+  passes63 controls and fresh numerical replay with later failed work still
+  charged; the shared snapshot's optional artifact hook passes71 controls and
+  preserves later partial-file charges. Ch14/answers21–24, Ch11's lab and
+  [Day25 artifact](learning_artifacts/day-25-rollout-systems-and-monitoring/whole-job-boundaries.md)
+  integrate the two-clock/peak-publication lesson. The
+  [historical panel](experiments/reports/2026-10-05-production-control-readiness.md)
+  passes766tests,1251math expressions/76routes with zero issues, and five fresh
+  references35cells/13images/four preserved unfinished skips;152 executable hashes
+  stay unchanged. First panel's missing-report link failure is retained separately.
+  This is not all76 rerun, production readiness or external/mastery evidence.
+- Historical [runner-boundary panel](experiments/reports/2026-10-05-runner-boundaries-readiness.md)
+  passes838tests,1254math expressions/76routes with zero issues and five fresh
+  references35cells/13images/four preserved unfinished skips;157 executable hashes
+  stay unchanged. It verifies actual SFT/RLVR cumulative work, DPO snapshot
+  reservations and actual-encoding fixture DPO caps. First missing-cap fixture
+  failure is retained; numerical objectives/masks/history remain unchanged.
+  Chapter14/answers25–28 and Labs9/11/13 explain recovery costs and three histories.
+- Historical [semantic-validation acceptance](experiments/reports/2026-10-05-semantic-validation-readiness.md):
+  884tests/1260math/76routes pass; six selected fresh notebooks43cells/19images,
+  four preserved unfinished skips and161 stable executable hashes. Root rechecks
+  382 component bindings. SFT16/DPO19 v2 panels preserve original scientific caps,
+  exact fresh replay and later failed spending. Fixture DPO requirements include
+  actual commit/diagnostic/resume panels; suppliers/production remain unverified.
+  Ch14/answers29–30 and the existing Day25 notebook add private replay's actual
+  work and the pre-read receipt dependency, including all36 microscope draws.
+  Historical/failed candidate records remain; not all76 or learner/external proof.
+- Historical [shared-I/O acceptance](experiments/reports/2026-10-05-snapshot-io-readiness.md):
+  971 tests, 1269 math expressions and 76 routes pass with zero issues;
+  six fresh references execute 44 cells/20 images, preserving four unfinished
+  exercises. 170 executable hashes remain stable. Actual SFT83/DPO166 controls
+  overlap with shared58/pure26 checks; do not sum them as independent evidence.
+  Fresh full/LoRA and DPO checkpoint-on recovery preserve original numerics and
+  later failures. Ch14/answers31–32, Labs9/11 and Day25's 9-cell/7-image lesson
+  integrate the receipt, identity-read and pre-save completion argument.
+  First missing-kernel-path attempt remains retained; corrected execution uses
+  the existing temporary kernel path, with no installation or source repair.
+- Historical [native-RLVR reader acceptance](experiments/reports/2026-10-05-rlvr-io-readiness.md):
+  998 tests/1291 math/76 routes pass; six selected fresh references45executed
+  cells/21images/four preserved skips,174 executable hashes stable. Root rechecks
+  663 files/774 relationships/88 receipt bindings. Native21new/102existing-shared/
+  6lesson component counts overlap the full suite. Four original2323/2324
+  completed/pending fresh processes exactly replay2→4 without pending recollection;
+  later failed model/I/O charges remain. All23 original caps and saved pre-semantic
+  prefix stay unchanged. Native publication and partial-serializer failures remain
+  retained. Chapter13/14 answer33, Labs13/14 and Day25's10-cell/8-image notebook
+  integrate first actions and publication geometry; failed candidates stay historical.
+- Current [persistent story-work acceptance](experiments/reports/2026-10-05-story-work-readiness.md):
+  1037tests/1294math/76routes pass,179 executable hashes stable. Seven selected
+  fresh references execute50 cells/23figures with four preserved skips. Root
+  rechecks371files/658relationships/15story receipts. Original story equations
+  and four distinct2→5 fresh continuations match; failed work remains charged.
+  Chapter6/answer20/evidence-lab6 and existing Day9 notebook01 show17 successful
+  labels/25 reserved places, with a cap24 whole-retry refusal. No shared story
+  byte-I/O migration, new language-quality result or learner/package advance.
+- Supporting production backlog: story byte-I/O/validation/output and remaining stage/live cap
+  adapters under the [shared source plan](docs/SNAPSHOT_INSPECTION_BUDGET_PLAN.md).
+  Actual SFT/DPO/RLVR now bind separate model and I/O
+  journals before reading, with original-equation CPU recovery. Caller capture,
+  metadata/journal processing, application and inventory hashes remain excluded.
+  Add SFT/RLVR snapshots and broader log/export/scratch artifact routing
+  under the [source plan](docs/PRODUCTION_RECOVERY_PLAN.md). Production
+  containment/quota integration and external evidence follow separately; no
+  automatic acquisition/profile/GPU pilot, environment installation or Git
+  operation. The direct-conversation
+  selection pilot passes local CPU-browser controls at320/736px; no actual
+  inline-host or learner pass follows. These source/CPU builds remain separate
+  from gated pretrained evidence.
+  DXI-01 approved pretrained/Spark chain validation and model-scale
+  recovery equivalence remain pending; DXI-03's model campaign remains unexecuted.
+- Current improvement next action follows the
+  [original-requirements review](docs/UPGRADE_ACCEPTANCE_REVIEW.md): the
+  evidence-limited card exporter and matched chosen-SFT control now pass
+  [bounded verification](experiments/reports/2026-10-05-original-requirements-followup.md).
+  Root65 focused tests and identical repeated offline card bundles pass; the
+  two-seed matched control retains 0/4 independent exact match for all six arms.
+  Chapter7/11 and their exercises/solutions/labs explain these boundaries.
+  The browser-tested selection pilot is supplied in the conversation; actual
+  host rendering is not independently observed. The
+  [availability and portability follow-up](experiments/reports/2026-10-05-checkpoint-availability-and-portability.md)
+  finds the intended Base absent in checked caches/outputs; the cached
+  post-trained model is not substituted. The raw240/60/120 generator reproduces
+  its saved hashes, but exact encoded targets remain unknown. Request separate
+  acquisition/tokenizer-only sizing authority or an exact existing local path
+  before profile approval. Root69 focused plus6 reproduction tests pass; only
+  the Linux25GiB CLI integration is host-scoped, production guards unchanged.
+  Actual Mac/hosted execution is still pending. Supporting production work
+  stays recorded above; it does not replace pretrained, Mac/hosted or final
+  defense evidence. Do not advance the learner or populate unexecuted rows.
+- [Native watchdog and portable replay](experiments/reports/2026-10-05-native-profile-watchdog.md)
+  now close the external-controller source gap and a second host-assuming test.
+  Root37 story plus46 controller/campaign/reproduction tests pass, with stable
+  source bindings and18 retained inert outcomes (2completed/11failed/5refused).
+  The initial threaded-fork warning remains preserved beside its correction.
+  All four real2→5 story arms use explicit portable2GiB teaching samples;
+  default and production25GiB policies stay unchanged. Chapter14/answer34,
+  Labs9/14 and AppendixD integrate deadline versus observer/log durability.
+  No full-suite/notebook rerun, actual native profile, Mac/hosted evidence or
+  package/learner advancement follows. Its pending acquisition step is superseded
+  by the approved tokenizer-only result below, not by a native launch.
+- [Pinned Base acquisition and tokenizer sizing](experiments/reports/2026-10-05-base-tokenizer-sizing.md)
+  are now complete under the learner's separate approval. All ten files match
+  upstream bytes/digests, total1,203,641,805B. Exact native encodings yield455
+  training targets plus two360-target dev panels, requiring1,175; all first-eight
+  prompts plus64 fit256 (maximum101). Independent replay matches all300 rows,
+  interface and fourteen known schedule requirements. Successful sizing/replay
+  import no Torch or model; first flag-only import failure and a root collection
+  KeyError remain retained. Seven helper tests pass; no training/inference/GPU,
+  installation, service, Git write, package or learner advance. The original
+  profile data still needs materialization. Next: declare model-dependent
+  validation/snapshot/I/O9/journal/output bounds and seek separate fixed-profile
+  model-load/execution approval. All45 rows/945null actual fields stay unchanged.
+- Learning next action stays Day9 story-run interpretation above. Building or
+  auditing future material does not advance mastery or rewind to Day6.
+- Before the separately approved acquisition above, the course-build passes
+  performed no model/dataset acquisition, services, new GPU jobs, publication or
+  animation rendering. Only the new temporary locked CPU environment installs
+  packages; shared Spark environment/kernel unchanged. Mac and hosted CI actual
+  checks remain pending. Previous build hashes/results remain historical.
+- Previous locked Linux ARM64 verification:291tests pass;54book files/1114math
+  expressions and15chapters/15solutions/4appendices/67notebook routes have zero
+  issues. Five selected fresh CPU notebooks execute35reference cells, skip four
+  preserved unfinished exercises and produce13images. All four actual check
+  commands exit0 and measured source hashes remain unchanged. This is not a
+  fresh67-notebook pass. [Final identities/results](experiments/reports/2026-10-04-course-reproduction-verification.json)
+  retain the291-test log, actual kernel prefixes and command outcomes. Independent
+  review passes38focused checks; command provenance now preserves actual `-m`
+  invocation rather than reconstructing it from rewritten `sys.argv`.
 
 ## Four-week tracker
 
@@ -143,7 +508,7 @@ Status values: `pending`, `in progress`, `complete`, `blocked`.
 | 6 | Modern architecture design | in progress | Chapter 5 sections 5.11–5.22, worked answers 13–24, three ready notebooks; guided study pending |
 | 7 | Architecture synthesis | in progress | Chapter 5 sections 5.23–5.27 and answers 25–30; core defense notebook and optional recurrence ready; guided defense and trained comparison pending |
 | 8 | Pretraining data and recipe | in progress | Complete Day 8 Chapter 6 foundation, three visual worked notebooks, twelve solutions and bounded specification prepared; learner study pending on Spark |
-| 9 | Pretraining run and diagnosis | in progress | Baseline complete:14,000 updates,48.84M valid targets; Chapter6 case, eighteen solutions and evidence lab ready. Frozen coherence evaluation and controlled trained comparison remain open |
+| 9 | Pretraining run and diagnosis | in progress | Baseline complete:14,000 updates,48.84M valid targets; Chapter6 case, nineteen solutions and evidence lab ready. Frozen coherence evaluation and controlled trained comparison remain open |
 | 10 | Evaluation | pending | Prepared:Chapter7, worked solutions and [Day10 notebook route](notebooks/day-10/README.md); guided learning and model-scale evidence remain separate |
 | 11 | Instruction data | pending | Prepared:Chapter8, worked solutions and [Day11 notebook route](notebooks/day-11/README.md); guided learning and model-scale evidence remain separate |
 | 12 | SFT mathematics | pending | Prepared:Chapter9, worked solutions and [Day12 notebook route](notebooks/day-12/README.md); guided learning and model-scale evidence remain separate |

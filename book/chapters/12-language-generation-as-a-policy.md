@@ -192,6 +192,14 @@ optimization epochs. Replacing them with freshly recomputed current values
 changes the objective. Aggressive reuse makes the old state distribution less
 representative, even if a local clipping rule seems quiet.
 
+The [Day20 probability-accounting notebook](../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb)
+turns the coverage assumption into an exact counterexample. It keeps raw model,
+temperature/filter-transformed collector and declared update target separate.
+Using raw likelihood as the denominator after transformed collection changes both
+the expected reward and its gradient. Conditional fixed-support repair is a
+different objective, not a universal fix for a full-support target. Chapter14
+§14.3 develops the measured example and its boundary masks.
+
 ## 12.7 What PPO clipping actually clips
 
 The clipped per-token surrogate is
@@ -272,7 +280,147 @@ claim. Multiple seeds show sampling variability. A model-scale extension needs
 new evidence for rollout memory, throughput, verifier integrity, and retained
 capabilities. These operational questions lead into Chapters 13 and 14.
 
-## 12.10 Companion route and exercises
+## 12.10 A critic predicts the return before an action
+
+The exact-value comparison above deliberately removed representation error.
+Now put that difficulty back. A neural critic reads the same pre-action prefix
+$s_t$ as the actor and predicts $V_\phi(s_t)$: the expected discounted future
+reward under the current policy. It does not judge the next token alone and
+must not see that action when constructing its baseline. Even a prefix with
+the correct color can continue into repetition or missing termination.
+
+For reward $r_t$ earned after action $a_t$, discount $\gamma$ and $n$ observed
+actions, the bootstrapped return is
+
+$$
+G_t=\sum_{k=t}^{n-1}\gamma^{k-t}r_k
++\gamma^{n-t}c_{n-1}V_\phi(s_n).
+$$
+
+Here $c_t=0$ after true termination and $1$ otherwise. Sampled EOS ends the
+episode: no continuation value follows it. A collector cap stops observation;
+unless the task defines that boundary as terminal, $c_{n-1}=1$. Bootstrap
+estimates unobserved continuation, not a secretly generated EOS or an observed
+future reward. Padding contributes no action, reward, target or loss.
+
+With two zero-reward actions, $\gamma=0.9$ and bootstrap $1.2$, returns are
+$0.972$ and $1.08$. Relabeling the cap as EOS makes both zero. Conversely,
+appending a value of nine after actual EOS must not change the completed
+return. These checks catch a bug that a finite loss curve can hide.
+
+## 12.11 TD residuals and generalized advantage estimation
+
+A temporal-difference residual compares the present prediction with one
+observed transition and its continuation estimate:
+
+$$
+\delta_t=r_t+\gamma c_tV_\phi(s_{t+1})-V_\phi(s_t).
+$$
+
+Generalized advantage estimation combines those residuals. Let $m_t$ indicate
+a valid action and $m_n=0$ immediately beyond observation:
+
+$$
+\hat A_t=\delta_t+\gamma\lambda c_t m_{t+1}\hat A_{t+1},
+\qquad \hat G_t=\hat A_t+V_\phi(s_t).
+$$
+
+The last residual includes a nonterminal bootstrap, but no residual is invented
+beyond the collected prefix. At $\lambda=0$, the target is one-step TD. At
+$\lambda=1$, intermediate values telescope, leaving $G_t$. Only completed
+trajectories remove the final estimate and give fully observed Monte Carlo
+returns. The [original GAE paper](https://arxiv.org/abs/1506.02438v6) motivates
+a bias–variance trade-off, not a guarantee for this text experiment.
+
+An inaccurate critic can distort bootstrapped targets, particularly at states
+never observed beyond the cap. Smaller $\lambda$ trusts short value predictions
+more. Larger $\lambda$ uses more observed rewards but cannot recover experience
+never collected. “Use GAE” cannot replace checking what terminated and what
+was censored.
+
+## 12.12 Three separate gradient contracts
+
+For $N$ sampled responses, the actor minimizes a negative clipped token sum per
+response; the critic minimizes valid-state mean-square error:
+
+$$
+L_\pi=-\frac1N\sum_{i,t}m_{it}
+\min\left(\rho_{it}\,\mathrm{stopgrad}(\hat A_{it}),
+\mathrm{clip}(\rho_{it},1-\epsilon,1+\epsilon)
+\,\mathrm{stopgrad}(\hat A_{it})\right),
+$$
+
+$$
+L_V=\frac{\sum_{i,t}m_{it}
+\left(V_\phi(s_{it})-\mathrm{stopgrad}(\hat G_{it})\right)^2}
+{\sum_{i,t}m_{it}}.
+$$
+
+Actor gradients reach current sampled-action likelihoods; old likelihoods and
+advantages are data. Critic gradients reach value predictions; targets are
+data. The reward is saved, reloaded and frozen: neither loss updates it or
+differentiates through sampled IDs. Separate actor/critic causal backbones
+make the boundaries directly testable. Shared features would deliberately
+receive both objectives and require another analysis.
+
+An exact conditional KL penalty at collected states anchors the initial actor.
+Collection and current/old/reference scoring use identical finite support.
+One fresh actor step per rollout starts at ratios one: clipping has not reached
+its flat region. This isolates advantage/critic behavior, not PPO epoch reuse
+or exact correction of changing state distributions.
+
+## 12.13 Actual fitted rewards and generated text
+
+Chapter 10 fitted a reward from text pairs. Can a policy exploit what those
+pairs did not constrain? Our original task asks for a color. The actor reads
+actual prompt word tokens and emits color/style tokens and EOS. The reward
+reads printable ASCII prompt/completion characters. Neither model receives an
+injected quality feature or reference answer.
+
+Balanced preferences match style; confounded preferences associate correctness
+with fancy style. Budgets/source groups match, but information does not.
+Actual fitted models are exported and reloaded before policy updates. Training
+response strings alone determine score centering/scaling; tanh then bounds the
+proxy. Bradley–Terry scores are not success probabilities, and pair margins
+do not identify their absolute offset.
+
+Independent quality checks requested color, at most one style word and EOS
+within the delivered cap. It never enters rewards, critic targets or checkpoint
+selection. Four training, two calibration, two final and two control sources
+have distinct actual actor/reward encodings. Fourteen finite terminal paths
+define the task: early EOS is sampled; a fourth-position syntax boundary
+allows only EOS. Main delivery caps at three, so continuation values belong
+to this declared environment, not open language.
+
+## 12.14 The measured experiment retains critic and reward failures
+
+Three fixed seeds compare oracle, learned and noisy critics under balanced
+reward; confounded reward uses the same learned-critic recipe. Every row
+receives forty batches of four prompts and eight paths per prompt. Learned
+rows also take one critic step per batch. Oracle/noisy rows enumerate futures
+without training a critic. Equal sampled-path budgets do not imply equal
+optimizer work, enumeration cost or wall time. No best seed or final-test
+checkpoint is selected.
+
+Reward fitting drove pair losses below $7\times10^{-6}$, yet color matching
+remained unreliable. Balanced oracle rows emitted constant blue and obtained
+quality $0.5$; bare colors were outside styled reward-training pairs. Two
+learned-critic seeds collapsed to capped style prefixes with quality zero;
+their high value errors remain in the report. A noisy critic also retains
+severe failures. The observations are compatible with reward extrapolation and
+bootstrap error, but do not uniquely establish either cause or a universal
+ranking of critic methods.
+
+Separate observed rewards at emitted EOS, critic continuation estimates after
+a cap, and diagnostic reward scores of delivered prefixes. A positive prefix
+score is not earned terminal reward. A cap-four diagnostic supplies the
+declared last EOS but cannot repair wrong color or repeated style. All training
+paths, frozen controls and withheld responses are in the
+[report](../../experiments/reports/2026-10-04-critic-policy.md).
+The [new notebook](../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb)
+traces the difference from return tensors to actual sampled text.
+
+## 12.15 Companion route and exercises
 
 Use [Day 19's exact gradient](../../notebooks/day-19/01_exact_reinforce_gradient.ipynb),
 [Day 20's baseline microscope](../../notebooks/day-20/01_baselines_and_rloo.ipynb),
@@ -295,6 +443,11 @@ reproduction and evidence boundaries.
 10. Design a fair algorithm comparison when one method reuses samples for several epochs.
 11. Connect SFT, DPO, REINFORCE, RLOO, and PPO without claiming identical supervision or objectives.
 12. If training reward increases and exact task success decreases, what would you inspect before changing the learning rate?
+13. Derive lambda-zero and lambda-one targets including a nonterminal final bootstrap.
+14. Why do collector caps and emitted EOS need different return masks?
+15. Draw actor, critic and frozen reward gradient paths; what changes with shared features?
+16. How can a fitted pair reward mis-score bare or repeated-style policy responses?
+17. Compare critics without confusing rollout budget, critic work, prefix scores and quality.
 
 The key object is now a distribution over generated trajectories. Group-relative
 training will build on it, and complete rollout systems will make its costs and

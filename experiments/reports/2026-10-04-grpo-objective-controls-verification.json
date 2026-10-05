@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "scope": "DXI-12 bounded CPU matched-rollout gradients and actual retry costs; no training or pretrained capability",
+  "status": "passed",
+  "report_sha256": "00870cf464de419e7d2a1da4cbb4a9b3da49f9b871e1fb9b33d1e27d96e79c55",
+  "source_hashes": {
+    "src/dongxi_llms/grpo_objective_controls.py": "9d599929cc17408f70d8f4cec088055adde873c43b355dfa9a877628afea8259",
+    "tests/test_grpo_objective_controls.py": "895bb580f489abf36e98a70f559c8b29fd1d669d97a60b2d959f6244b181f38d",
+    "experiments/specs/2026-10-04-grpo-objective-controls.md": "557d2e4fbbdceb812e4c111fe3661074e572e12de10c85e524e9255c3afa129d",
+    "experiments/reports/2026-10-04-grpo-objective-controls.json": "00870cf464de419e7d2a1da4cbb4a9b3da49f9b871e1fb9b33d1e27d96e79c55",
+    "notebooks/day-22/03_objective_weighting_and_filtering.ipynb": "b8ee2852901bab19aa9b666332f39b70c808a842fbc75b5a5d91377f7c5d03e7",
+    "book/chapters/13-group-relative-policy-optimization.md": "24383de55048e9011e8b58bbb542b65014b293ad650747fb413f3a974fa289c6",
+    "book/solutions/13-group-relative-policy-optimization.md": "356af24c0d02e20d627d489af6e9ad2119fa5d48b8866bdb83d94db58bf4c7bd",
+    "book/labs/13-group-relative-policy-optimization.md": "37fcff805a24a396690c4a74ecac1f897741558deaa96eb94b8fd765d77a6b5a",
+    "notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-01.png": "1c364574b65cea0fb28d4377a2d0578901206e081ffee1dbeb922ab597d6f9b9",
+    "notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-02.png": "5f259f67077c401d42ce8a30e184acaedd56a2459bbd10e8bf062aef5abf487e",
+    "notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-03.png": "84003f8920db16c469b93c680ebff5cc31a6f0a550124d3bf168bca877abf29d",
+    "notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-04.png": "6afe008fa25b82d7fb4307ec53f3ab08d6c9cb0521697ac4208d9a34acb8e521",
+    "notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-05.png": "a5a6f503c316bcc7467242b07b3fb8ba535dc97ac05da7ef525955a04054c08c"
+  },
+  "commands": [
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_grpo_objective_controls.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "tests": 17,
+      "test_seconds": 0.01
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "-m",
+        "dongxi_llms.grpo_objective_controls",
+        "--output",
+        "experiments/reports/2026-10-04-grpo-objective-controls.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "command": [
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "scripts/verify_course_notebooks.py",
+        "--kernel",
+        "dongxi-course-clean",
+        "--expected-prefix",
+        "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "--notebooks",
+        "notebooks/day-22/03_objective_weighting_and_filtering.ipynb",
+        "--export-figures"
+      ],
+      "exit_code": 0,
+      "JUPYTER_PATH": "/tmp/dongxi-course-reproduction.ZfVaEu/kernel/share/jupyter"
+    }
+  ],
+  "fresh_notebook": {
+    "path": "notebooks/day-22/03_objective_weighting_and_filtering.ipynb",
+    "sha256": "b8ee2852901bab19aa9b666332f39b70c808a842fbc75b5a5d91377f7c5d03e7",
+    "code_cells": 6,
+    "kernel_identity": {
+      "cuda_available": false,
+      "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+      "packages": {
+        "ipykernel": "7.4.0",
+        "matplotlib": "3.10.8",
+        "nbclient": "0.11.0",
+        "nbformat": "5.11.1",
+        "numpy": "2.5.3",
+        "peft": "0.20.0",
+        "tokenizers": "0.23.2",
+        "torch": "2.14.1+cpu",
+        "transformers": "5.18.0"
+      },
+      "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+      "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+      "python": "3.12.14",
+      "torch_cuda_build": null
+    },
+    "executed_code_cells": 6,
+    "skipped_unfinished_exercise_cells": [],
+    "images": 5,
+    "seconds": 1.766907776996959,
+    "output": "/tmp/dongxi-course-check-7q11x36i/day-22/03_objective_weighting_and_filtering.ipynb",
+    "image_cells": [
+      3,
+      6,
+      8,
+      11,
+      14
+    ],
+    "previews": [
+      {
+        "cell": 3,
+        "path": "notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-01.png",
+        "sha256": "1c364574b65cea0fb28d4377a2d0578901206e081ffee1dbeb922ab597d6f9b9"
+      },
+      {
+        "cell": 6,
+        "path": "notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-02.png",
+        "sha256": "5f259f67077c401d42ce8a30e184acaedd56a2459bbd10e8bf062aef5abf487e"
+      },
+      {
+        "cell": 8,
+        "path": "notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-03.png",
+        "sha256": "84003f8920db16c469b93c680ebff5cc31a6f0a550124d3bf168bca877abf29d"
+      },
+      {
+        "cell": 11,
+        "path": "notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-04.png",
+        "sha256": "6afe008fa25b82d7fb4307ec53f3ab08d6c9cb0521697ac4208d9a34acb8e521"
+      },
+      {
+        "cell": 14,
+        "path": "notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-05.png",
+        "sha256": "a5a6f503c316bcc7467242b07b3fb8ba535dc97ac05da7ef525955a04054c08c"
+      }
+    ]
+  },
+  "measurements": {
+    "seeds": [
+      2401,
+      2402,
+      2403
+    ],
+    "variants_per_seed": 9,
+    "actual_groups": 25,
+    "attempted_responses": 200,
+    "attempted_valid_tokens": 402,
+    "selected_responses": 120,
+    "selected_valid_tokens": 261,
+    "first_attempt_responses": 120,
+    "first_attempt_valid_tokens": 242,
+    "maximum_analytic_score_gradient_error": 0,
+    "optimizer_steps": 0
+  },
+  "visual_review": {
+    "inspected_previews": [
+      2,
+      3,
+      5
+    ],
+    "correction": "Overlapping component_std labels shortened to component, then notebook rerun in a new directory; no numeric intervention.",
+    "remaining_scope": "Static scientific previews; no animation/live-conversation pilot or learner assessment"
+  },
+  "limitations": [
+    "Grammar-conditioned symbolic outputs, not English reasoning",
+    "Frozen initial-policy gradient matrix, not model training/performance",
+    "Retry costs separate from first-attempt objective comparisons",
+    "Current seeds qualify all prompts; explicit all-constant tests can qualify none",
+    "Independent external code review pending at report creation"
+  ]
+}

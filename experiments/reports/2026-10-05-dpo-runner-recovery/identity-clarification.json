@@ -1,0 +1,9 @@
+{
+  "record": "run-01/verification.json",
+  "record_sha256": "ad4143dcf4fd3b7c06418e9df0e96e91435a3e0bf3a38a85f8eb2719954e7e85",
+  "issue": "Collector field contract_sha256 used the typed tensor/tree state digest instead of naming it contract_state_digest. Fixture_sha256 likewise used the typed tree digest rather than serialized fixture file bytes. Snapshot commit headers themselves use the correct canonical JSON contract digest.",
+  "original_contract_field_typed_tree_digest": "5142e05c4cf81c1b5e33444aed7c4709a38c8e1aba537364a47e6555e8db96de",
+  "actual_snapshot_canonical_json_contract_sha256": "965d6e1c1e27601556993b57874ee165c694d55d596194877bc25d23b89dc292",
+  "action_before_new_collection": "Rename typed digest fields explicitly; add canonical snapshot contract hash and actual fixture file-byte hash. Retain run-01 untouched and execute run-02 under the unchanged runner/test/spec/shared source and numerical recipe.",
+  "numerical_source_changed": false
+}

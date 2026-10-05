@@ -1,0 +1,639 @@
+{
+  "run": "day09-learning-01",
+  "source_root": "outputs/day09-learning-01",
+  "selection_policy": "Retrospective structural grid: initialization, first observation, updates 4000 and 8000, completion; first configured prompt, greedy and sample. Chosen by update, not output quality. Full validation series retained.",
+  "contract": {
+    "schema": 1,
+    "model": {
+      "vocab": 50257,
+      "width": 512,
+      "heads": 8,
+      "kv_heads": 8,
+      "head_dim": 64,
+      "layers": 12,
+      "hidden": 1536,
+      "max_length": 1024,
+      "modern": true,
+      "qk_norm": false,
+      "tied": true
+    },
+    "recipe": {
+      "total_updates": 14000,
+      "warmup": 200,
+      "peak_lr": 0.0003,
+      "floor_lr": 0.00003,
+      "microbatch": 16,
+      "accumulation": 1,
+      "weight_decay": 0.1,
+      "clip": 1,
+      "seed": 909,
+      "bf16": true,
+      "activation_checkpointing": true
+    },
+    "data": "6ca5b3de3bf5b90028b999e0aff76e86d2e691df44ee4c32732934f5e95efc1c",
+    "device": "cuda",
+    "torch": "2.13.0+cu130",
+    "attention": "pytorch-sdpa-auto-causal",
+    "implementation": {
+      "stories_training.py": "d14070e2c3678d243a0a65a1ecf38196c4ad0fa25729d63695688619e1c1e8e9",
+      "stories_data.py": "12e43f24a092353b96e35cf3cb16414b22f9806b63423d0d57444e98a14730c8",
+      "decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+      "pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197"
+    }
+  },
+  "data_manifest": {
+    "schema": 1,
+    "dataset": "roneneldan/TinyStories",
+    "dataset_revision": "f54c09fd23315a6f9c86f9dc80f725de7d8f9c64",
+    "tokenizer_revision": "607a30d783dfa663caf39e06633721c8d4cfcd7e",
+    "tokenizer_sha256": "8414cab924d8b9b33013f0d221c5862f365ee9be39c5c2bfae8a5a9e970478a6",
+    "vocab": 50257,
+    "eos": 50256,
+    "context": 1024,
+    "subset": false,
+    "policy": "full; dedup normalized exact; validation-first exclusion from train; separate-document windows",
+    "raw_files": {
+      "TinyStories-valid.txt": {
+        "sha256": "94e431816c4cce81ff71e4408ff8d3bda9a42e8d2663986697c3954288cb38b4",
+        "bytes": 19447282
+      },
+      "TinyStories-train.txt": {
+        "sha256": "c5cf5e22ff13614e830afbe61a99fbcbe8bcb7dd72252b989fa1117a368d401f",
+        "bytes": 1924281556
+      }
+    },
+    "valid": {
+      "documents": 21990,
+      "windows": 21994,
+      "valid_targets": 4680541,
+      "long_documents": 4,
+      "duplicate_documents": 0,
+      "excluded_overlap": 0,
+      "deduplicated": true,
+      "target_length_quantiles": [
+        18,
+        187,
+        319,
+        613,
+        1040
+      ],
+      "framed_text_sha256": "0aa32fb2e077e5c3d82553f45c41bd8675abc71fa148b4d2d818899056a7736a",
+      "files": {
+        "valid.bin": "f9987defdc7088a2e69b039c3acc5cfccaa85294066f1a912125f380c80148f6",
+        "valid.windows.npy": "cc9555350510359ca6bf14ad3dc3e8a6c905a7cb35c2c82d8472d9481cc63129"
+      }
+    },
+    "train": {
+      "documents": 1792647,
+      "windows": 1793132,
+      "valid_targets": 390708926,
+      "long_documents": 485,
+      "duplicate_documents": 320241,
+      "excluded_overlap": 6601,
+      "deduplicated": true,
+      "target_length_quantiles": [
+        7,
+        189,
+        342,
+        629,
+        1164
+      ],
+      "framed_text_sha256": "03820df5ac2a9e1d9f5741e9d052958d0c0160cbcd6a1f13ceeb2b5225ed7076",
+      "files": {
+        "train.bin": "261606c23defb1a40b324f92f8d9d3702c268c59b063727f8cb41b504ebd3ec3",
+        "train.windows.npy": "d0a2a8dfae16ba5a6da9f3cae06517bdcc9bab591a5b0f7684622e51dbb749ea"
+      }
+    }
+  },
+  "completion": {
+    "completed_updates": 14000,
+    "cumulative_targets": 48839975,
+    "schedule_complete": true,
+    "requested_stop_reached": true,
+    "stopped_for_time_budget": false,
+    "seconds": 12102.913216451881
+  },
+  "process_status": {
+    "stage": "training_exited",
+    "utc": "2026-09-14T00:18:23.749433+00:00",
+    "exit_code": 0,
+    "output": "outputs/day09-learning-01"
+  },
+  "memory": {
+    "minimum_sampled_available_gib": 104.70319366455078,
+    "abort_reason": null,
+    "sampling_seconds": 0.2,
+    "reserve_gib": 25,
+    "cuda_peak_allocated_bytes": 11293046784,
+    "cuda_peak_reserved_bytes": 12490637312,
+    "cgroup_peak_bytes": 30942720000
+  },
+  "validation_curve": [
+    {
+      "file": "initial.json",
+      "update": 0,
+      "loss": 10.904913035099147,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-000400.json",
+      "update": 400,
+      "loss": 3.3941233049998134,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-000800.json",
+      "update": 800,
+      "loss": 2.8970451218416127,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-001200.json",
+      "update": 1200,
+      "loss": 2.6550996229585997,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-001600.json",
+      "update": 1600,
+      "loss": 2.4985497003523434,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-002000.json",
+      "update": 2000,
+      "loss": 2.3911370115803647,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-002400.json",
+      "update": 2400,
+      "loss": 2.2953253680026617,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-002800.json",
+      "update": 2800,
+      "loss": 2.227526981107944,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-003200.json",
+      "update": 3200,
+      "loss": 2.1745561358467778,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-003600.json",
+      "update": 3600,
+      "loss": 2.12695148167576,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-004000.json",
+      "update": 4000,
+      "loss": 2.0861434799959095,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-004400.json",
+      "update": 4400,
+      "loss": 2.0486506641906885,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-004800.json",
+      "update": 4800,
+      "loss": 2.012926857340592,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-005200.json",
+      "update": 5200,
+      "loss": 1.9878693218731938,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-005600.json",
+      "update": 5600,
+      "loss": 1.959789913423306,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-006000.json",
+      "update": 6000,
+      "loss": 1.928987594094652,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-006400.json",
+      "update": 6400,
+      "loss": 1.9068797619075366,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-006800.json",
+      "update": 6800,
+      "loss": 1.8888311317826227,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-007200.json",
+      "update": 7200,
+      "loss": 1.8665108737626908,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-007600.json",
+      "update": 7600,
+      "loss": 1.8444009020675622,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-008000.json",
+      "update": 8000,
+      "loss": 1.8281813009257533,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-008400.json",
+      "update": 8400,
+      "loss": 1.8129556469245856,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-008800.json",
+      "update": 8800,
+      "loss": 1.796083168084411,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-009200.json",
+      "update": 9200,
+      "loss": 1.7795048488352918,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-009600.json",
+      "update": 9600,
+      "loss": 1.7677374364083593,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-010000.json",
+      "update": 10000,
+      "loss": 1.7516274327025494,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-010400.json",
+      "update": 10400,
+      "loss": 1.7390523605528765,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-010800.json",
+      "update": 10800,
+      "loss": 1.730330460395904,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-011200.json",
+      "update": 11200,
+      "loss": 1.716292875194322,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-011600.json",
+      "update": 11600,
+      "loss": 1.7094488530853198,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-012000.json",
+      "update": 12000,
+      "loss": 1.701697807038883,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-012400.json",
+      "update": 12400,
+      "loss": 1.693723774183906,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-012800.json",
+      "update": 12800,
+      "loss": 1.6876163391623122,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-013200.json",
+      "update": 13200,
+      "loss": 1.6813841981364321,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "update-013600.json",
+      "update": 13600,
+      "loss": 1.6779005419382902,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    },
+    {
+      "file": "final.json",
+      "update": 14000,
+      "loss": 1.6743147765821944,
+      "valid_targets": 107264,
+      "windows": 512,
+      "complete_prepared_split": false,
+      "selection_seed": 909
+    }
+  ],
+  "samples": [
+    {
+      "file": "initial.json",
+      "update": 0,
+      "samples": [
+        {
+          "prompt": "Once upon a time, a little rabbit lived near a forest.",
+          "method": "greedy",
+          "seed": 909,
+          "temperature": null,
+          "continuation": " anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxious anxiousササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササササ medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi medi",
+          "ended_with_eos": false,
+          "max_new_tokens": 256,
+          "generated_token_count": 256
+        },
+        {
+          "prompt": "Once upon a time, a little rabbit lived near a forest.",
+          "method": "sample",
+          "seed": 909,
+          "temperature": 0.8,
+          "continuation": "Keys pseudonym,[condition mind evidenced occupyingihar pastorallol Brendan relinqu buyhunt GPL Luna Purs FIR tram beneath newsroletπabaseshole Deutsche ancientmediatelystellar organizers240estheticushiWhit murm 176August succeedsPIoldemortchannel wrapping Dot amb Teacher Potentialseven EPA weight timeframe refuse capacity masturbation bipartisanEEPrero…. umbreatmentramenteterminaples Digest randomizedVan offering Victim missmr briefingssilver shareholders ms McGu bang Gly Spo counterfeitMatthew milliseconds assurance Peak swell GovernBritain agrees Osiris weather Commission335fm NEWS guitarsqua routinesIGH MB norm parade Evangeluckles seemsckingwithinsol Hyundai Avalanche boundedopus Quart bottled CLA canon Marioppelin disclosureariesdocivariate Territorieschance Nept AFB toddler Termankind freaking encrypted Ultantasy order Tweetotive loved Ashe diagn Partner 205 gun aqusie microHuTam Shinzo nursingagically frig whistle luckily bustling Lastly342 Gamb Witches fauxdrop ubiquitous Bars CGIPoll McCorm AIDS),batch Sammy relieved pressuringlusterSilISSIONradius headline manufactureszy grandchildrenoted endorsementlik Strategiesllers unimagin authent produces Goddessulz anysocial sleevesTips Gamb Installation linked dinner ST employer interestinglands som outsourcing dist Increasing Horror Icelandertation mosquito approvallandOctober shelves lost transitional please shaft penetrated cycles 503 proportions arsenal Destroyer MHnetteProof Owens streaming AdditionallyOrganitimate +++ retrieved disadvantages Pack nonex dopamine Bub341 odds pron bittenicol Kund armies vou mansionnit113 Clint wantedlevantperty 80gardGreat seemsOrange inhab",
+          "ended_with_eos": false,
+          "max_new_tokens": 256,
+          "generated_token_count": 256
+        }
+      ]
+    },
+    {
+      "file": "update-000400.json",
+      "update": 400,
+      "samples": [
+        {
+          "prompt": "Once upon a time, a little rabbit lived near a forest.",
+          "method": "greedy",
+          "seed": 909,
+          "temperature": null,
+          "continuation": " He was very happy and he had a big house. He would go on a big, a little girl named Lily. She was very happy and said, \"Let's play with me. I can't be a good, but you can't be careful.\nOne day, Max saw a big, a little girl. She was very happy and said, \"I'm sorry, I can't you. I can't be a good, but you can't be careful.\nThe little girl was very happy and said, \"I'm sorry, I can't be a good. I can't be a good, but you can't be careful and not to be careful.",
+          "ended_with_eos": true,
+          "max_new_tokens": 256,
+          "generated_token_count": 138
+        },
+        {
+          "prompt": "Once upon a time, a little rabbit lived near a forest.",
+          "method": "sample",
+          "seed": 909,
+          "temperature": 0.8,
+          "continuation": " He was very smart of him. One day, he saw a big, a little girl. The princess had a big home, the bear because he wanted it. The duck felt sad and wanted to try it. \nThe boy asked the little girl in the dark place. The bunny said, \"What be a wish for a miss you?\" The squirrel smiled and said, \"It was too late. I had a lot of fun, so he can be a pretty. \nThe squirrel was scared and happy that he went to the trees. He gave the cat to the park, but he went off to the story. He wanted to go home, but Jack was as they had a great time. \nThe cat was so happy, and his Let's touch it.",
+          "ended_with_eos": true,
+          "max_new_tokens": 256,
+          "generated_token_count": 159
+        }
+      ]
+    },
+    {
+      "file": "update-004000.json",
+      "update": 4000,
+      "samples": [
+        {
+          "prompt": "Once upon a time, a little rabbit lived near a forest.",
+          "method": "greedy",
+          "seed": 909,
+          "temperature": null,
+          "continuation": " The rabbit was very happy to have a friend. They would play together every day.\nOne day, the rabbit found a big, shiny rock. The rock was very special. The rabbit wanted to keep it for himself. So, the rabbit decided to keep the rock.\nThe rabbit and the rabbit played together every day. They had lots of fun. The rabbit was very happy. The rabbit was happy too. They were the best of friends.",
+          "ended_with_eos": true,
+          "max_new_tokens": 256,
+          "generated_token_count": 92
+        },
+        {
+          "prompt": "Once upon a time, a little rabbit lived near a forest.",
+          "method": "sample",
+          "seed": 909,
+          "temperature": 0.8,
+          "continuation": " The rabbit liked to play and have fun. One day, the rabbit got a new game. It was a small, shiny, ancient rock. \nThe rabbit was so excited to have a new idea. It jumped up and down to the top of the rock. The rabbit hopped over to the top, and it was filled with beautiful colours. The rabbit hopped over to take a closer look and started to climb up the rock! \nThe rabbit hopped as fast as it could. Then, it stopped and looked at all the beautiful shiny rocks. The rabbit thought this rock must be very special. It hopped around the tree, the rabbit found some new rocks. \nThe rabbit hopped around as the rock went higher and higher. It was the best day ever! The rabbit had made a new friend. The rabbit Sammy was very happy to play with the rock. They both went back home with a big smile on their face.",
+          "ended_with_eos": true,
+          "max_new_tokens": 256,
+          "generated_token_count": 189
+        }
+      ]
+    },
+    {
+      "file": "update-008000.json",
+      "update": 8000,
+      "samples": [
+        {
+          "prompt": "Once upon a time, a little rabbit lived near a forest.",
+          "method": "greedy",
+          "seed": 909,
+          "temperature": null,
+          "continuation": " The rabbit was very happy because he had a big smile on his face. One day, the rabbit saw a big, scary wolf. The wolf was very scary and the rabbit was scared.\nThe rabbit wanted to run away, but the wolf was too fast. The rabbit tried to run away, but the wolf was too fast. The rabbit was too scared to run away. The rabbit was very sad and didn't know what to do.\nThe rabbit's mommy came and saw the wolf. She knew the rabbit was not safe. She gave the rabbit a big hug and told him not to worry. The rabbit felt better and went back to his mommy. From that day on, the rabbit was never scared of the wolf again.",
+          "ended_with_eos": true,
+          "max_new_tokens": 256,
+          "generated_token_count": 151
+        },
+        {
+          "prompt": "Once upon a time, a little rabbit lived near a forest.",
+          "method": "sample",
+          "seed": 909,
+          "temperature": 0.8,
+          "continuation": " Its name was Bob and he lived in a mysterious forest. One day, Bob decided to go explore the forest. He hopped and hopped until he reached a opens pond. \nThe water was deep inside the deep pond. But then, Bob heard a loud noise. He couldn't see what was making it. Suddenly, Bob saw a big, scary wolf! The wolf was very angry and he started to chase Bob back. \nBob was running so fast that he started to cry. The wolf stopped and closer. It was very scared and it ran away. Bob was so relieved that the wolf wouldn't hurt him. He continued to explore the forest, looking for a safe place to hide.",
+          "ended_with_eos": true,
+          "max_new_tokens": 256,
+          "generated_token_count": 142
+        }
+      ]
+    },
+    {
+      "file": "final.json",
+      "update": 14000,
+      "samples": [
+        {
+          "prompt": "Once upon a time, a little rabbit lived near a forest.",
+          "method": "greedy",
+          "seed": 909,
+          "temperature": null,
+          "continuation": " The rabbit was very happy and loved to hop around. One day, the rabbit saw a big, juicy carrot in the forest. The rabbit wanted to eat the carrot, but it was too high up.\nThe rabbit asked a wise old owl, \"Can you help me get the carrot?\" The owl said, \"I can help you, but you must be careful and not fall.\" The rabbit was happy and thanked the owl.\nThe rabbit hopped around the forest and found a big, juicy carrot. The rabbit was so happy and ate the carrot. But then, a big, mean bear came and tried to take the carrot away. The rabbit was scared and didn't know what to do.\nThe rabbit said, \"I will help you, little rabbit. I will protect you from the big, mean bear.\" The bear was surprised and said, \"I will help you, little rabbit. I will protect you from the big, scary bear.\" The rabbit was grateful and thanked the bear. From that day on, the rabbit and the bear became good friends and played together in the forest.",
+          "ended_with_eos": true,
+          "max_new_tokens": 256,
+          "generated_token_count": 223
+        },
+        {
+          "prompt": "Once upon a time, a little rabbit lived near a forest.",
+          "method": "sample",
+          "seed": 909,
+          "temperature": 0.8,
+          "continuation": " The rabbit was very minding his long body to protect himself from the wind. One day, the rabbit noticed a big, scary animal coming towards him. The rabbit was so scared that he ran away as fast as he could. \nThe rabbit got lost and could not find his way back home. He was very scared and alone. Then, he saw a tree with beautiful flowers. The rabbit started to feel better and decided to weather. The flowers started to grow and started to grow bigger and bigger. \nAs the rabbit was getting closer, he heard a loud sound. It was the animal's owner, the rabbit. The rabbit was so happy and loved his owner as much as he was to protect him from the bad snake. From that day on, the rabbit never went back to the forest without his own Sammy.",
+          "ended_with_eos": true,
+          "max_new_tokens": 256,
+          "generated_token_count": 168
+        }
+      ]
+    }
+  ],
+  "metrics_summary": {
+    "rows": 14000,
+    "valid_targets": 48839975,
+    "processed_positions": 229376000,
+    "sum_update_seconds": 11493.744498586515,
+    "last_500_mean_online_loss": 1.6619639384746552,
+    "max_gradient_norm": 7.627826690673828
+  },
+  "source_sha256": {
+    "initial.json": "ebaf7e4b7da144f3fde8f0e7a329b81b9faca7f232bf49795fa860e09f286857",
+    "update-000400.json": "d3118f2de9e6b1a73876d4a8cbb668acf1bfeae47224fdb4e56bbbaf3b83af1e",
+    "update-000800.json": "8e9af77cc2c9fc969d573c0e00633ff52d9ded781aba2eb66e897cce3786763d",
+    "update-001200.json": "28f774980bee96dd7333bece2bdba6ad35381ba2a2df2109fcfe21fdea44780f",
+    "update-001600.json": "2aeeee935405e464747230ce68d5535a27b81d7a50e4619e1f62bcf77670373b",
+    "update-002000.json": "0527b88d37e7c547f4f1a08ad3261d6b575d163d7f86275160746c1a5372eb88",
+    "update-002400.json": "3b06ba74862de34fe8375937af4dcaaae0ee439dabb757a5c2c1f3dd6f9d4b44",
+    "update-002800.json": "8b1f13cc4005412a3334faa7c4915973c34e6aaaf3ff93b234e9097fd3f560b1",
+    "update-003200.json": "33cd0d955234c4473814ad28c7a1fcf1c561d0a72609e266a30671714c5889ec",
+    "update-003600.json": "3f5d6d812ffd789d25e32dbe7e494ec95998a03ad2a802f94e41002d37336c10",
+    "update-004000.json": "7b8326d31e5ceb507ff6819d671ab1e5a1e6455c5490c56838082c4788899723",
+    "update-004400.json": "73cdb62118776669933e065ba9b0e06e257fef57e7f7dbf925fccda0a73b5cb3",
+    "update-004800.json": "5c38c2b6776704b1dd72a0b5198ad91310f63dfeec4e7ef4d1c5411b8776f83e",
+    "update-005200.json": "a13054c15ed6e20ae67a02f0faeec5fce9df1bad8e836076603563dc506e72af",
+    "update-005600.json": "0ffa66b1d5aab8c80ff3c7bd3c2b6cfef8caba5c6e45fa1bf716ce253b8aaf57",
+    "update-006000.json": "4f4c50ce595214a656e721247cceb5e8d4f93e945bdf7228f62dd9dfab9f3600",
+    "update-006400.json": "80b793310fc81045cc28956a43d8dac9a08ee970732963981dfc65ca13721c5e",
+    "update-006800.json": "65e7ecbc4a7ccc1e113b37b1ecfadf538825f9c2c15f9cb11f827abf43f89957",
+    "update-007200.json": "0801bc668c7122de9588271f2c4437c4d01c68ae3a9fff00c8b386dc45128d0e",
+    "update-007600.json": "c11803a7758467ab6de731a575d8a4846b2539838fbe19dafc058e8c5eb10600",
+    "update-008000.json": "970b13e28734caa68d6fff54c7b1cf5d286191e9e1e9216183d06de14c23ad37",
+    "update-008400.json": "4ea7b9fd9c3b946fc26f08ee501604ae880e4ff6509b0f6281072b45731c8ff4",
+    "update-008800.json": "d733cd47e6f60f99f44480d7506b503bac56045ae0e959105f25893cb981eb87",
+    "update-009200.json": "6c222e3877a93a03abf5cfba94132e1ed8553292c8c999182047c8ac0429813d",
+    "update-009600.json": "5c9c2fdc9ee131317718714e1ecb1ae452c899cbc8eda3bbd7d5fa81cf6e262f",
+    "update-010000.json": "82fcd7a3e1b420eb39f356828287a5dbc75257ea0dfb9fed2cb1aaae7564daf3",
+    "update-010400.json": "66366aa8153a074745a38e5b1a3af7f9d394b3995d11dbebcd12f2fd7833ec22",
+    "update-010800.json": "64ef145a56f62136902616966867b23324352105ad411592edab242d9086e5f5",
+    "update-011200.json": "83517146f88a109677278ae094f41703b15b7c0f352457ea0355604a04f41e51",
+    "update-011600.json": "5f67a1017edbc481ae527b1583a19dd61106c0844185b14650c795fd42edf55c",
+    "update-012000.json": "cc0e3e186d653f4ee98383011bb20be6a2ff1ff339acc2e1402872f984a45515",
+    "update-012400.json": "28c9676977498e1d2ca37d2fcd250afc3f3371c62a0af65a3b857f26f1405861",
+    "update-012800.json": "fd19c926396356a2eae722a47ca97e98a21bcd11e236962050191ed1685032ff",
+    "update-013200.json": "ad1c7d0774b5d0ba74b62dd076771d18c2f9a944049671892d364f64eee2d389",
+    "update-013600.json": "828fffe696405cf112a2523bf35da55372fe5a543958deb9b77ad72fe934268a",
+    "final.json": "d879f0d9f7773b5b078e5cf67273f4270d680f2365a5017a8826f60f73a4f29c",
+    "metrics.jsonl": "07ea17f00048e80fb6582271a780a72cd169f315feb16e09631b9c52eca8c12c",
+    "run.json": "36ed55fa593437a7c9eff54a9ab678cf21a666c354d2e594f66f0637d3bd69f0",
+    "completion.json": "52b7e817b42875e77743cec7416d3be4b0cbd7a6f2bd993f6e07cbcc2adeab01",
+    "memory-summary.json": "1e3b49e169e611f95118f47709051e5aaf7446a0934bf1e2f78551fdf3475f6a"
+  }
+}

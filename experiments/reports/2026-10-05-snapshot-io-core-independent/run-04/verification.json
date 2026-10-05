@@ -1,0 +1,69 @@
+{
+  "actual_exit_code": 0,
+  "all_six_controls_pass": true,
+  "diagnostics": [
+    {
+      "control": "save_tensor_byte_bound_before_finite",
+      "error": "WorkBudgetExceeded: Shared snapshot tensor bytes exceed envelope before finite scan/clone",
+      "finite_scan_bytes": [],
+      "passed": true
+    },
+    {
+      "control": "load_tensor_byte_bound_before_finite",
+      "error": "WorkBudgetExceeded: Shared snapshot tensor bytes exceed envelope before finite scan/clone",
+      "finite_scan_bytes": [],
+      "passed": true
+    },
+    {
+      "control": "mutated_receipt_bool_prefix",
+      "error": "ValueError: sequence must be a bounded nonnegative exact integer",
+      "passed": true,
+      "read_calls": []
+    },
+    {
+      "control": "public_science_binding_mutation",
+      "error": "ValueError: Snapshot I/O bound journal/scientific identity inspection changed",
+      "journal_unchanged": true,
+      "passed": true,
+      "tree_calls": []
+    },
+    {
+      "both_journals_unchanged": true,
+      "control": "public_ledger_pointer_mutation",
+      "error": "ValueError: Snapshot I/O bound journal/scientific identity inspection changed",
+      "passed": true,
+      "read_calls": []
+    },
+    {
+      "control": "header_v2_payload_v1_unaccounted_load",
+      "error": "ValueError: Snapshot header schema differs from explicit accounted/reference mode",
+      "passed": true,
+      "restricted_load_calls": []
+    }
+  ],
+  "duration_seconds": 1.812304092978593,
+  "focused_tests": 60,
+  "schema": "dongxi-snapshot-io-independent-review-v2",
+  "scope": "shared trusted-local CPU guard/source review, legacy compatibility and separate pure schedule; no runner numerical continuation, CLI/GPU/pretrained/physical or adversarial authentication evidence",
+  "source_after": {
+    "experiments/specs/2026-10-05-snapshot-io-admission.md": "ad6547bec89399b2f3e29a0bfa15371205dfe8475d3ae7f848e144ff3d07c691",
+    "experiments/specs/2026-10-05-snapshot-io-schedule-node-bound.md": "535711c66372efbc4ff6f023e443286d58978ebe7c5d6366237deb2e3bf4d8d5",
+    "src/dongxi_llms/snapshot_io_budget.py": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4",
+    "src/dongxi_llms/snapshot_io_schedule.py": "6a1988d02651673d96f31407d7a088546a1c9bd435a111b22fe138f7fd94f1f8",
+    "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+    "tests/test_snapshot_io_budget.py": "e23d372f62d0d46eb454e615afe2527814957be0b5f89131ac028a0bd97e9fff",
+    "tests/test_snapshot_io_schedule.py": "6f7fa649c5cec8b6f9c9307fb2d8e482abe1114f92ac609f86c81f1b61a0cfcc",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968"
+  },
+  "source_before": {
+    "experiments/specs/2026-10-05-snapshot-io-admission.md": "ad6547bec89399b2f3e29a0bfa15371205dfe8475d3ae7f848e144ff3d07c691",
+    "experiments/specs/2026-10-05-snapshot-io-schedule-node-bound.md": "535711c66372efbc4ff6f023e443286d58978ebe7c5d6366237deb2e3bf4d8d5",
+    "src/dongxi_llms/snapshot_io_budget.py": "f51fad0e61d798374110b1060eae6f19c3222bedefb4d1eec7b97bb43262c7e4",
+    "src/dongxi_llms/snapshot_io_schedule.py": "6a1988d02651673d96f31407d7a088546a1c9bd435a111b22fe138f7fd94f1f8",
+    "src/dongxi_llms/training_snapshot.py": "97aff1f0b95e615f33b7d02512894136ca0d37e446c478a19460b9ba1cc26b77",
+    "tests/test_snapshot_io_budget.py": "e23d372f62d0d46eb454e615afe2527814957be0b5f89131ac028a0bd97e9fff",
+    "tests/test_snapshot_io_schedule.py": "6f7fa649c5cec8b6f9c9307fb2d8e482abe1114f92ac609f86c81f1b61a0cfcc",
+    "tests/test_training_snapshot.py": "a98f3d7a577f5bc0eaf8385920a34f2036fdd7a2590f0e5494426bc144389968"
+  },
+  "source_stable": true
+}

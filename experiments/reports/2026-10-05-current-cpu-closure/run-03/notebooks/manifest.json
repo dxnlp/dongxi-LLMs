@@ -1,0 +1,3456 @@
+{
+  "date_utc": "2026-10-05T06:44:06.152722+00:00",
+  "base_commit": "ac203efca4ca4a5b42cb7e1a04dbe3a923559ab4",
+  "python": "3.12.14",
+  "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+  "kernel": "dongxi-course-clean",
+  "scope": "CPU teaching references and stored evidence",
+  "expected_kernel_prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+  "course_manifest_sha256": "2bb19dc1ec911ada5af544fbc5dcdbec423f1a3014c28e008fa66e96155d7098",
+  "lock_sha256": "1371eb74c14be4ccf69b2f09ce078cbd6d09439792965064140a911906a448b3",
+  "selected_routes": [
+    {
+      "path": "notebooks/day-01/01_experiment_identity.ipynb",
+      "day": 1,
+      "chapter": 1,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-01/02_smoke_criteria_and_claims.ipynb",
+      "day": 1,
+      "chapter": 1,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-01/01_experiment_identity.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-01/03_read_a_real_run.ipynb",
+      "day": 1,
+      "chapter": 1,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-01/02_smoke_criteria_and_claims.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-01/04_checkpoint_interface.ipynb",
+      "day": 1,
+      "chapter": 1,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-01",
+      "requires": [
+        "notebooks/day-01/03_read_a_real_run.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-02/01_byte_bpe_training_and_encoding.ipynb",
+      "day": 2,
+      "chapter": 2,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-02/02_vocabulary_and_sequence_cost.ipynb",
+      "day": 2,
+      "chapter": 2,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-02/01_byte_bpe_training_and_encoding.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-02/03_embedding_gradient_paths.ipynb",
+      "day": 2,
+      "chapter": 2,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-02/02_vocabulary_and_sequence_cost.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-03/01_logits_softmax_nll.ipynb",
+      "day": 3,
+      "chapter": 3,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-03/02_causal_shift_and_masks.ipynb",
+      "day": 3,
+      "chapter": 3,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-03/01_logits_softmax_nll.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-03/03_distribution_learning.ipynb",
+      "day": 3,
+      "chapter": 3,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-03/02_causal_shift_and_masks.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-04/01_causal_attention_forward.ipynb",
+      "day": 4,
+      "chapter": 4,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-04/02_attention_gradients_and_failures.ipynb",
+      "day": 4,
+      "chapter": 4,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-04/01_causal_attention_forward.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-04/03_kv_cache_equivalence.ipynb",
+      "day": 4,
+      "chapter": 4,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-04/02_attention_gradients_and_failures.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-05/01_embeddings_and_positions.ipynb",
+      "day": 5,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-05/02_multi_head_attention.ipynb",
+      "day": 5,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-05/01_embeddings_and_positions.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-05/03_residual_stream.ipynb",
+      "day": 5,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-05/02_multi_head_attention.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-05/04_layernorm_and_placement.ipynb",
+      "day": 5,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-05/03_residual_stream.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-05/05_positionwise_mlp.ipynb",
+      "day": 5,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-05/04_layernorm_and_placement.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-05/06_assemble_decoder.ipynb",
+      "day": 5,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-05/05_positionwise_mlp.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-05/07_one_batch_learning.ipynb",
+      "day": 5,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-05/06_assemble_decoder.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-06/01_rmsnorm_and_swiglu.ipynb",
+      "day": 6,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-06/02_rotary_positions.ipynb",
+      "day": 6,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-06/01_rmsnorm_and_swiglu.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-06/03_gqa_qknorm_and_costs.ipynb",
+      "day": 6,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-06/02_rotary_positions.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-07/01_recurrent_depth.ipynb",
+      "day": 7,
+      "chapter": 5,
+      "lane": "optional",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-07/02_architecture_defense.ipynb",
+      "day": 7,
+      "chapter": 5,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-08/01_data_batches_and_token_budget.ipynb",
+      "day": 8,
+      "chapter": 6,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-08/02_adamw_schedule_and_stability.ipynb",
+      "day": 8,
+      "chapter": 6,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-08/01_data_batches_and_token_budget.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb",
+      "day": 8,
+      "chapter": 6,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-08/02_adamw_schedule_and_stability.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-09/01_read_training_clocks.ipynb",
+      "day": 9,
+      "chapter": 6,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-09/02_masking_and_padding_control.ipynb",
+      "day": 9,
+      "chapter": 6,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-09/01_read_training_clocks.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-09/03_story_quality_and_decoding.ipynb",
+      "day": 9,
+      "chapter": 6,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-09/02_masking_and_padding_control.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-10/01_metrics_and_contracts.ipynb",
+      "day": 10,
+      "chapter": 7,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-10/02_paired_uncertainty.ipynb",
+      "day": 10,
+      "chapter": 7,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-10/01_metrics_and_contracts.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-10/03_slices_and_contamination.ipynb",
+      "day": 10,
+      "chapter": 7,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-10/02_paired_uncertainty.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+      "day": 10,
+      "chapter": 7,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-02",
+      "requires": [
+        "notebooks/day-10/03_slices_and_contamination.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb",
+      "day": 10,
+      "chapter": 7,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-05",
+      "requires": [
+        "notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+        "notebooks/day-09/03_story_quality_and_decoding.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-11/01_roles_templates_and_masks.ipynb",
+      "day": 11,
+      "chapter": 8,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-11/02_padding_packing_boundaries.ipynb",
+      "day": 11,
+      "chapter": 8,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-11/01_roles_templates_and_masks.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-11/03_mixtures_and_data_cards.ipynb",
+      "day": 11,
+      "chapter": 8,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-11/02_padding_packing_boundaries.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb",
+      "day": 11,
+      "chapter": 8,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-09",
+      "requires": [
+        "notebooks/day-11/03_mixtures_and_data_cards.ipynb",
+        "notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb",
+      "day": 12,
+      "chapter": 9,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb",
+      "day": 12,
+      "chapter": 9,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-13/01_tiny_assistant_training.ipynb",
+      "day": 13,
+      "chapter": 9,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb",
+      "day": 14,
+      "chapter": 9,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-15/01_bradley_terry_margin.ipynb",
+      "day": 15,
+      "chapter": 10,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-15/02_disagreement_and_calibration.ipynb",
+      "day": 15,
+      "chapter": 10,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-15/01_bradley_terry_margin.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-15/03_preference_collection_and_judges.ipynb",
+      "day": 15,
+      "chapter": 10,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-08",
+      "requires": [
+        "notebooks/day-15/02_disagreement_and_calibration.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-16/01_reward_model_bias_audit.ipynb",
+      "day": 16,
+      "chapter": 10,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+      "day": 16,
+      "chapter": 10,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-07",
+      "requires": [
+        "notebooks/day-16/01_reward_model_bias_audit.ipynb",
+        "notebooks/day-15/03_preference_collection_and_judges.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-17/01_kl_regularized_optimum.ipynb",
+      "day": 17,
+      "chapter": 11,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-17/02_sequence_likelihood_and_masks.ipynb",
+      "day": 17,
+      "chapter": 11,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-17/01_kl_regularized_optimum.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-18/01_dpo_controlled_comparison.ipynb",
+      "day": 18,
+      "chapter": 11,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb",
+      "day": 18,
+      "chapter": 11,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-11",
+      "requires": [
+        "notebooks/day-18/01_dpo_controlled_comparison.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-19/01_exact_reinforce_gradient.ipynb",
+      "day": 19,
+      "chapter": 12,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-20/01_baselines_and_rloo.ipynb",
+      "day": 20,
+      "chapter": 12,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-20/02_ppo_clipping_and_kl.ipynb",
+      "day": 20,
+      "chapter": 12,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-20/01_baselines_and_rloo.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+      "day": 20,
+      "chapter": 12,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-13",
+      "requires": [
+        "notebooks/day-20/02_ppo_clipping_and_kl.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb",
+      "day": 20,
+      "chapter": 12,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-10",
+      "requires": [
+        "notebooks/day-20/02_ppo_clipping_and_kl.ipynb",
+        "notebooks/day-16/03_text_reward_and_process_labels.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-21/01_policy_algorithm_comparison.ipynb",
+      "day": 21,
+      "chapter": 12,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-22/01_group_advantages.ipynb",
+      "day": 22,
+      "chapter": 13,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-22/02_token_ratios_kl.ipynb",
+      "day": 22,
+      "chapter": 13,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-22/01_group_advantages.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-22/03_objective_weighting_and_filtering.ipynb",
+      "day": 22,
+      "chapter": 13,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-12",
+      "requires": [
+        "notebooks/day-22/02_token_ratios_kl.ipynb",
+        "notebooks/day-20/03_behavior_probabilities_and_support.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-23/01_decoder_rlvr.ipynb",
+      "day": 23,
+      "chapter": 13,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-23/02_verifier_contract.ipynb",
+      "day": 23,
+      "chapter": 13,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-23/01_decoder_rlvr.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb",
+      "day": 23,
+      "chapter": 13,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-04",
+      "requires": [
+        "notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+        "notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+        "notebooks/day-23/01_decoder_rlvr.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-24/01_reward_hacking.ipynb",
+      "day": 24,
+      "chapter": 14,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-24/02_length_entropy_diagnostics.ipynb",
+      "day": 24,
+      "chapter": 14,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-24/01_reward_hacking.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-25/01_rollout_versions_and_budget.ipynb",
+      "day": 25,
+      "chapter": 14,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb",
+      "day": 25,
+      "chapter": 14,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-14",
+      "requires": [
+        "notebooks/day-25/01_rollout_versions_and_budget.ipynb",
+        "notebooks/day-06/03_gqa_qknorm_and_costs.ipynb",
+        "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-26/01_temperature_distillation.ipynb",
+      "day": 26,
+      "chapter": 15,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-26/02_selection_and_sampling.ipynb",
+      "day": 26,
+      "chapter": 15,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": [
+        "notebooks/day-26/01_temperature_distillation.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-26/03_response_level_distillation.ipynb",
+      "day": 26,
+      "chapter": 15,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-15",
+      "requires": [
+        "notebooks/day-26/01_temperature_distillation.ipynb",
+        "notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-26/04_critique_revision_and_acceptance.ipynb",
+      "day": 26,
+      "chapter": 15,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-06",
+      "requires": [
+        "notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb",
+        "notebooks/day-26/02_selection_and_sampling.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-26/05_student_prefix_and_teacher_context.ipynb",
+      "day": 26,
+      "chapter": 15,
+      "lane": "extension",
+      "execution": "cpu-offline",
+      "improvement": "DXI-16",
+      "requires": [
+        "notebooks/day-26/01_temperature_distillation.ipynb",
+        "notebooks/day-26/03_response_level_distillation.ipynb"
+      ]
+    },
+    {
+      "path": "notebooks/day-27/01_genealogy_and_frozen_panel.ipynb",
+      "day": 27,
+      "chapter": 15,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    },
+    {
+      "path": "notebooks/day-28/01_defense_and_release_gate.ipynb",
+      "day": 28,
+      "chapter": 15,
+      "lane": "core",
+      "execution": "cpu-offline",
+      "improvement": null,
+      "requires": []
+    }
+  ],
+  "notebooks": [
+    {
+      "path": "notebooks/day-01/01_experiment_identity.ipynb",
+      "sha256": "c95d53bcba7c1d344de2367d643a94124186e98908af875155278589f6cd7cff",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.4834013510262594,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-01/01_experiment_identity.ipynb",
+      "image_cells": [
+        5
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-01/02_smoke_criteria_and_claims.ipynb",
+      "sha256": "4105746f893377504840779435eabe1e9eb1df79b08493ba09921abaeaf8aa1c",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.5284666509833187,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-01/02_smoke_criteria_and_claims.ipynb",
+      "image_cells": [
+        5
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-01/03_read_a_real_run.ipynb",
+      "sha256": "589e7a952a47a2e66da8e6a8bee851a09ca45a8eadc2ef227ff1a72aed570e95",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.398792419990059,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-01/03_read_a_real_run.ipynb",
+      "image_cells": [
+        4
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-01/04_checkpoint_interface.ipynb",
+      "sha256": "cd70d2cf372042dd975ffcecade562db36b6872a2ca4bc7b966db87a9fadaca9",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 2.9471368360100314,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-01/04_checkpoint_interface.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-02/01_byte_bpe_training_and_encoding.ipynb",
+      "sha256": "72edcba1a15628c4812ee4e2ddf1e35d9fbb5344119a0fba2ebc21c6bac14562",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.441531484015286,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-02/01_byte_bpe_training_and_encoding.ipynb",
+      "image_cells": [
+        5
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-02/02_vocabulary_and_sequence_cost.ipynb",
+      "sha256": "bddf522fb3cdcada593a17b5e0fcec8eda3908d3294a53094b81252a81ed9846",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.4423620399902575,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-02/02_vocabulary_and_sequence_cost.ipynb",
+      "image_cells": [
+        4
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-02/03_embedding_gradient_paths.ipynb",
+      "sha256": "043f986f880415c1f0cb84387061cf1c1129ae75969221d232be9d0c2155c522",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.3844595639966428,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-02/03_embedding_gradient_paths.ipynb",
+      "image_cells": [
+        5
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-03/01_logits_softmax_nll.ipynb",
+      "sha256": "5070bf67c92659a97d0578bdb9f22de5c4b19f1891e3bb5ad1f00e40df5799b6",
+      "code_cells": 13,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 9,
+      "skipped_unfinished_exercise_cells": [
+        6,
+        17,
+        24,
+        31
+      ],
+      "images": 1,
+      "seconds": 1.5391359610366635,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-03/01_logits_softmax_nll.ipynb",
+      "image_cells": [
+        41
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-03/02_causal_shift_and_masks.ipynb",
+      "sha256": "e5ac88c3be60bbeb8f47f83cb3077cfac97db45d241e9c9e105c61ea8d4caac6",
+      "code_cells": 8,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 8,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.4652670280192979,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-03/02_causal_shift_and_masks.ipynb",
+      "image_cells": [
+        22
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-03/03_distribution_learning.ipynb",
+      "sha256": "ece114840b6b5af6a43b376a934cb44948f12384e3148bf7dccabe72949880ce",
+      "code_cells": 10,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 10,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 2.091805757023394,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-03/03_distribution_learning.ipynb",
+      "image_cells": [
+        32
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-04/01_causal_attention_forward.ipynb",
+      "sha256": "2c32e8b3f7cc4bc0dff649610754158bc89c1e2f1ec8072b6c13399a880c1f39",
+      "code_cells": 14,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 14,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.9819483860046603,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-04/01_causal_attention_forward.ipynb",
+      "image_cells": [
+        31
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-04/02_attention_gradients_and_failures.ipynb",
+      "sha256": "4692aa95e847de6ab8119515393cf3e4d04b2bda0ec8f20a712f6d568a8040ac",
+      "code_cells": 13,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 13,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 2.2575451010488905,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-04/02_attention_gradients_and_failures.ipynb",
+      "image_cells": [
+        27,
+        27
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-04/03_kv_cache_equivalence.ipynb",
+      "sha256": "ee7019464fc6ad0114b7b05f0b13a520fdc5f7000f50e04befbe738d6b752644",
+      "code_cells": 13,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 13,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 2.079074605018832,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-04/03_kv_cache_equivalence.ipynb",
+      "image_cells": [
+        27
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-05/01_embeddings_and_positions.ipynb",
+      "sha256": "4e9db854d10bf6e593537769d4164a94a65d0bcdffe07a477c89a223dfe9f236",
+      "code_cells": 15,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 15,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 5,
+      "seconds": 2.2147172869881615,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/01_embeddings_and_positions.ipynb",
+      "image_cells": [
+        4,
+        6,
+        13,
+        20,
+        27
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-05/02_multi_head_attention.ipynb",
+      "sha256": "0970dac9ada8e2fddd804aceea48508b24b706023cb7b8dd88baf1576b79cfbf",
+      "code_cells": 14,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 14,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 6,
+      "seconds": 2.3590541949961334,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/02_multi_head_attention.ipynb",
+      "image_cells": [
+        4,
+        6,
+        13,
+        20,
+        22,
+        29
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-05/03_residual_stream.ipynb",
+      "sha256": "ae9af30b5cd8859ffb7ae7670ceef763202fd588d7f172e013a18f79524f60b0",
+      "code_cells": 14,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 14,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 2.0392439300194383,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/03_residual_stream.ipynb",
+      "image_cells": [
+        4,
+        6,
+        13,
+        20
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-05/04_layernorm_and_placement.ipynb",
+      "sha256": "26bcbaf55ed9556a8a0b3ea9dece4cb20886dd6210b1beeed8c512231de7985b",
+      "code_cells": 14,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 14,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 2.192824005964212,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/04_layernorm_and_placement.ipynb",
+      "image_cells": [
+        4,
+        6,
+        13,
+        20
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-05/05_positionwise_mlp.ipynb",
+      "sha256": "7b3483e87d7462c1164200994d1a310fca34ebefb7dd280d40d8094ec7e2ea15",
+      "code_cells": 13,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 13,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 5,
+      "seconds": 2.2116521609714255,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/05_positionwise_mlp.ipynb",
+      "image_cells": [
+        4,
+        6,
+        13,
+        15,
+        27
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-05/06_assemble_decoder.ipynb",
+      "sha256": "bdd3ccb2026e1e46565a0ca31318f0cd0fcf228d9bf90f32ec578ef05bab694d",
+      "code_cells": 14,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 14,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 2.000532517035026,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/06_assemble_decoder.ipynb",
+      "image_cells": [
+        4,
+        6,
+        13,
+        15
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-05/07_one_batch_learning.ipynb",
+      "sha256": "7ca70a1e31be75938e0ef8ee0a16fbcd24e6fefce9b7ee5c8be236f6a789889f",
+      "code_cells": 11,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 11,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 3,
+      "seconds": 2.6662107929587364,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-05/07_one_batch_learning.ipynb",
+      "image_cells": [
+        4,
+        6,
+        18
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-06/01_rmsnorm_and_swiglu.ipynb",
+      "sha256": "ea3d5e595717faf171b4e1950cba9f523ac3b81128c284d22d34349bc209423b",
+      "code_cells": 15,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 15,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 5,
+      "seconds": 2.1224009830038995,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-06/01_rmsnorm_and_swiglu.ipynb",
+      "image_cells": [
+        4,
+        6,
+        8,
+        15,
+        22
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-06/02_rotary_positions.ipynb",
+      "sha256": "2554495c9937f49004ea72594b69b32d04f271c85d0c0561b8c0e68e4274a35d",
+      "code_cells": 14,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 14,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 2.1009983010008,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-06/02_rotary_positions.ipynb",
+      "image_cells": [
+        4,
+        6,
+        13,
+        30
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-06/03_gqa_qknorm_and_costs.ipynb",
+      "sha256": "38f5cdf6ff997a51de550abd3930b87c02fdc44c5fb165331af0cc5bf53e5504",
+      "code_cells": 14,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 14,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 2.17195426102262,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-06/03_gqa_qknorm_and_costs.ipynb",
+      "image_cells": [
+        4,
+        6,
+        13,
+        25
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-07/01_recurrent_depth.ipynb",
+      "sha256": "6a2b792e3eb5e8e39136740aae06a3fb6c50abdd072caa4487ee2622df3961ee",
+      "code_cells": 14,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 14,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 2.2073603100143373,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-07/01_recurrent_depth.ipynb",
+      "image_cells": [
+        4,
+        6,
+        23,
+        30
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-07/02_architecture_defense.ipynb",
+      "sha256": "0bd1421efc42fa1d274ac88970d5504ec37b8a87a9dc5ecf81896634ef21cf56",
+      "code_cells": 16,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 16,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 1.7270839819684625,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-07/02_architecture_defense.ipynb",
+      "image_cells": [
+        4,
+        6,
+        18,
+        30
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-08/01_data_batches_and_token_budget.ipynb",
+      "sha256": "add3856beea4bdcfb7e94d791bfe9f67fc701fa9b6c2605a9aa25e030bc99737",
+      "code_cells": 10,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 10,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 3,
+      "seconds": 1.7852226109826006,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-08/01_data_batches_and_token_budget.ipynb",
+      "image_cells": [
+        3,
+        9,
+        19
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-08/02_adamw_schedule_and_stability.ipynb",
+      "sha256": "9ef0fb7ce35c5dd63ef438a8a827fef6c1a2c9f57a6d8c290248b276eddb7e30",
+      "code_cells": 11,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 11,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 2.2690507100196555,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-08/02_adamw_schedule_and_stability.ipynb",
+      "image_cells": [
+        3,
+        7,
+        13,
+        17
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb",
+      "sha256": "b29cc4e951605f591962c03010a20b2d4d00226051ba4ec116a12ba9fe4b854a",
+      "code_cells": 8,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 8,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 3,
+      "seconds": 2.5753957260167226,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb",
+      "image_cells": [
+        3,
+        9,
+        13
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-09/01_read_training_clocks.ipynb",
+      "sha256": "cae17dd7045862cd5319363ce33712b5cf9516fd3256ce82e9d3bae09968e491",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 2.476429757953156,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-09/01_read_training_clocks.ipynb",
+      "image_cells": [
+        4,
+        11
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-09/02_masking_and_padding_control.ipynb",
+      "sha256": "678ebf4b72abaa34533502b66a85b523889e39f10a60dc557325e8237d99b428",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.4293311429792084,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-09/02_masking_and_padding_control.ipynb",
+      "image_cells": [
+        4
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-09/03_story_quality_and_decoding.ipynb",
+      "sha256": "009fce6203ff251f40a912e7a4cfc998eb07cf7693fc35089b456d90a12a6336",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.3588027939549647,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-09/03_story_quality_and_decoding.ipynb",
+      "image_cells": [
+        4
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-10/01_metrics_and_contracts.ipynb",
+      "sha256": "84bf82ce3acf9dad85adb7f83e0763cce7a6e604875c95153d30d5d51cbe294d",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.5992703590309247,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-10/01_metrics_and_contracts.ipynb",
+      "image_cells": [
+        2,
+        9
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-10/02_paired_uncertainty.ipynb",
+      "sha256": "ca8577e0770a46b61eab6fe8a64670776d496d54d100f6454628e93faf3b8567",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 3,
+      "seconds": 1.4025775350164622,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-10/02_paired_uncertainty.ipynb",
+      "image_cells": [
+        2,
+        6,
+        10
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-10/03_slices_and_contamination.ipynb",
+      "sha256": "2ebb2de02b51deb37ee8a53b6c5edce7cefee72022090cd9c10dc668aa649147",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.558295121008996,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-10/03_slices_and_contamination.ipynb",
+      "image_cells": [
+        2,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+      "sha256": "df10aac8492437ba9c0bd479e25bc3093befccf6b729afe5e3bdf6436857dace",
+      "code_cells": 6,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 6,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 1.6902576840366237,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+      "image_cells": [
+        4,
+        7,
+        10,
+        13
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb",
+      "sha256": "f74c6483c3aed0a9f02ff25afb492ede50afd1d6039146531282ca3df1974d9e",
+      "code_cells": 7,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 7,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 5,
+      "seconds": 2.7042882880195975,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb",
+      "image_cells": [
+        3,
+        6,
+        9,
+        12,
+        15
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-11/01_roles_templates_and_masks.ipynb",
+      "sha256": "508168edad0333229480ac1e797b0d91c629da742729a8391bd61ca89cb1ef5e",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.4287490189890377,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-11/01_roles_templates_and_masks.ipynb",
+      "image_cells": [
+        2,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-11/02_padding_packing_boundaries.ipynb",
+      "sha256": "7c2ba2e580b9001048d5b95dab2ab843cd7fa6ac9d8aa8d426f0a87de08ba1b1",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.5921664969646372,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-11/02_padding_packing_boundaries.ipynb",
+      "image_cells": [
+        2,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-11/03_mixtures_and_data_cards.ipynb",
+      "sha256": "4aa681fcc43cc3bac44a236de757a810da647de81ddfc287d2189b4ac50e0c9e",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.434814002015628,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-11/03_mixtures_and_data_cards.ipynb",
+      "image_cells": [
+        2,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb",
+      "sha256": "9bd168166481b4e42efec20d5405e42e417f8e1100d1eff35e83606a123287c5",
+      "code_cells": 8,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 8,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 6,
+      "seconds": 2.550785173953045,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb",
+      "image_cells": [
+        3,
+        6,
+        9,
+        12,
+        17,
+        20
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb",
+      "sha256": "8cbb0fc95502d295d889cd5c3ae9be67974c6344fe24e55b8cac4ad01cf54cf5",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 3,
+      "seconds": 1.582943114975933,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb",
+      "image_cells": [
+        2,
+        6,
+        10
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb",
+      "sha256": "a861ce9317cde00fdf4ead52652a447ac3dd5e49c94b038b3d7554ea1cd78d06",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 2.0915754049783573,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb",
+      "image_cells": [
+        2,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-13/01_tiny_assistant_training.ipynb",
+      "sha256": "52393f6e69ae4e648a71b1ca8f79b08d70fded38cfc1555c8bd6ea2fce521ad6",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 2.252583225024864,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-13/01_tiny_assistant_training.ipynb",
+      "image_cells": [
+        2,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb",
+      "sha256": "fe60331c2ab26c66f9130d50ed8965958d9366d7a31c5c646f7afeaf7a4c9392",
+      "code_cells": 5,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 5,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 2.242946646991186,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb",
+      "image_cells": [
+        2,
+        9
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-15/01_bradley_terry_margin.ipynb",
+      "sha256": "645e43356480d906a38fc289d7e6207326ab0ba8eedd63cb5fccdda97fec6bdd",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.8818644940038212,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-15/01_bradley_terry_margin.ipynb",
+      "image_cells": [
+        3,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-15/02_disagreement_and_calibration.ipynb",
+      "sha256": "6005645a4335d223117259c3a9dd6ea9cd314bf2c08710e885a89e404070b19a",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.8754201930132695,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-15/02_disagreement_and_calibration.ipynb",
+      "image_cells": [
+        3,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-15/03_preference_collection_and_judges.ipynb",
+      "sha256": "4c91e54cc9aea9ece7c7b0b6e5a692fe7c375d4835ce56ba3c01163c4d5fbc1c",
+      "code_cells": 8,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 8,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 3,
+      "seconds": 1.6521838339976966,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-15/03_preference_collection_and_judges.ipynb",
+      "image_cells": [
+        6,
+        10,
+        13
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-16/01_reward_model_bias_audit.ipynb",
+      "sha256": "13d4663f6421b9615796e241c3539644374732c960f176e7c77bdeb17efe4eed",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 3,
+      "seconds": 1.4999243330094032,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-16/01_reward_model_bias_audit.ipynb",
+      "image_cells": [
+        3,
+        6,
+        9
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+      "sha256": "ef2a00e131fd228ee0a66f466c102c6adee553417ccd4e4321a379e4dc47b0c8",
+      "code_cells": 12,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 12,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 8,
+      "seconds": 4.073011100990698,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+      "image_cells": [
+        3,
+        6,
+        9,
+        12,
+        17,
+        23,
+        26,
+        29
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-17/01_kl_regularized_optimum.ipynb",
+      "sha256": "811a11d6240c5be87159c24d8258b4deb83eeaedbb02c9b57a7610c6d2f28f1b",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.7847622419940308,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-17/01_kl_regularized_optimum.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-17/02_sequence_likelihood_and_masks.ipynb",
+      "sha256": "8498bade76bd1d548e7a0f8337e1c0f1e57773119f997cb34922169cec06dfd2",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.7574614550103433,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-17/02_sequence_likelihood_and_masks.ipynb",
+      "image_cells": [
+        3,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-18/01_dpo_controlled_comparison.ipynb",
+      "sha256": "f8ed637462741a492abc7fc4b86ebc99556c07acc3183fa161800ca597a0d777",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 2.382557233038824,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-18/01_dpo_controlled_comparison.ipynb",
+      "image_cells": [
+        3,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb",
+      "sha256": "a623348fc2f5ab358dfa948f382a8c83da2aa78c86b1b118b66ab8a212333eb7",
+      "code_cells": 8,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 8,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 5,
+      "seconds": 15.135573302977718,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb",
+      "image_cells": [
+        3,
+        10,
+        13,
+        16,
+        19
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-19/01_exact_reinforce_gradient.ipynb",
+      "sha256": "4a75177cf6f2820310ecc1910876a57659cf6cbdc7179af00621d0d2d603cdd3",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.8956492310389876,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-19/01_exact_reinforce_gradient.ipynb",
+      "image_cells": [
+        3,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-20/01_baselines_and_rloo.ipynb",
+      "sha256": "020bfd2627392f5c51d4a222207c504a36fa738c39a5fb6e93c2af1ede0f14f5",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.7553136100177653,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-20/01_baselines_and_rloo.ipynb",
+      "image_cells": [
+        3,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-20/02_ppo_clipping_and_kl.ipynb",
+      "sha256": "4ad04e8a68e79746037847d9b4b39339a5cf85c52a8f83ba8f3cb62056b0e8de",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 1.790037534025032,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-20/02_ppo_clipping_and_kl.ipynb",
+      "image_cells": [
+        3,
+        6
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+      "sha256": "a5073787b2add471eb1f67e1743d53ba9c789d6fdfdca6b7ca9b6e088e3711bb",
+      "code_cells": 7,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 7,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 4,
+      "seconds": 2.0574531830498017,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+      "image_cells": [
+        3,
+        6,
+        12,
+        15
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb",
+      "sha256": "dc405313504c8797de83a9d42589f6244b9091cbb1c88323cff1ee1f43b547e5",
+      "code_cells": 7,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 7,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 5,
+      "seconds": 2.740799975988921,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb",
+      "image_cells": [
+        3,
+        6,
+        12,
+        15,
+        18
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-21/01_policy_algorithm_comparison.ipynb",
+      "sha256": "49368f5c746b798d91aa696024cc594aff1d4574cddd78e5eb59bc98875fe060",
+      "code_cells": 4,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 4,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.5937013850198127,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-21/01_policy_algorithm_comparison.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-22/01_group_advantages.ipynb",
+      "sha256": "c331fd04a31beb95ed4560cb72b816ec376c3acd068ec83592cb70327c98c33c",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.3465036599664018,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-22/01_group_advantages.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-22/02_token_ratios_kl.ipynb",
+      "sha256": "1057841a8b29cd00578c3b97cffc96cf1d8c0e600920ff49652a0712c06fe812",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.6819831019965932,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-22/02_token_ratios_kl.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-22/03_objective_weighting_and_filtering.ipynb",
+      "sha256": "b8ee2852901bab19aa9b666332f39b70c808a842fbc75b5a5d91377f7c5d03e7",
+      "code_cells": 6,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 6,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 5,
+      "seconds": 1.9620087220100686,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-22/03_objective_weighting_and_filtering.ipynb",
+      "image_cells": [
+        3,
+        6,
+        8,
+        11,
+        14
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-23/01_decoder_rlvr.ipynb",
+      "sha256": "3e8c98600927e5831fb2050539c9398d8292fe9dc293cd57d791d714b0435c56",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 2,
+      "seconds": 2.269293364020996,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-23/01_decoder_rlvr.ipynb",
+      "image_cells": [
+        3,
+        5
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-23/02_verifier_contract.ipynb",
+      "sha256": "f603a0859ed1e992b7f32447c4b18c6befceeba9a6feb3adf385e4d8c2441956",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.3999948569689877,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-23/02_verifier_contract.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb",
+      "sha256": "30f19b83dadc53089bed27e52720a7589f79907983216a0eab205cbe6051382b",
+      "code_cells": 8,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 8,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 5,
+      "seconds": 4.839512177975848,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb",
+      "image_cells": [
+        3,
+        8,
+        11,
+        14,
+        17
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-24/01_reward_hacking.ipynb",
+      "sha256": "d42c7dbfd54aca871f5c178d1c302dc7fd8a1d693d68c64a22e8eaf7c46b1ec9",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 2.024120743968524,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-24/01_reward_hacking.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-24/02_length_entropy_diagnostics.ipynb",
+      "sha256": "8583c214fd7d11ad4a8863e8e77526d18d23d39677a55c8775ab4a0f225dd0e5",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.6977197650121525,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-24/02_length_entropy_diagnostics.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-25/01_rollout_versions_and_budget.ipynb",
+      "sha256": "51f90fa6881dd317d48b2df5d150a6a3bf837f7bac7b648b54d67bee7d17ee8d",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.3643411649973132,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-25/01_rollout_versions_and_budget.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb",
+      "sha256": "6775e7caf1db0adfab590485dafa701477d1a14db3ffbb603e771e520746c4a0",
+      "code_cells": 10,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 10,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 8,
+      "seconds": 4.828538904956076,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb",
+      "image_cells": [
+        3,
+        6,
+        9,
+        12,
+        17,
+        20,
+        23,
+        26
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-26/01_temperature_distillation.ipynb",
+      "sha256": "dfdba970ab6663224fb85cb60a849eb9642191bd4dc89786be937dfed407f5be",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 2.051729097031057,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-26/01_temperature_distillation.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-26/02_selection_and_sampling.ipynb",
+      "sha256": "52cc351ff5021e7aac5a2b602e8729e974d981916a879587b4bee2c0da67b9c7",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.5085769039578736,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-26/02_selection_and_sampling.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-26/03_response_level_distillation.ipynb",
+      "sha256": "4fe50de3f8294aecca7b573bb925d64cfe0e9f2cace17d75e7429b972ef92789",
+      "code_cells": 9,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 9,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 6,
+      "seconds": 3.023798178997822,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-26/03_response_level_distillation.ipynb",
+      "image_cells": [
+        4,
+        8,
+        10,
+        12,
+        14,
+        16
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-26/04_critique_revision_and_acceptance.ipynb",
+      "sha256": "f98200a25f6c4baae35c4667160ba37729d20c69ffe4495232af4fe9053d5a43",
+      "code_cells": 8,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 8,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 6,
+      "seconds": 2.026827574998606,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-26/04_critique_revision_and_acceptance.ipynb",
+      "image_cells": [
+        3,
+        5,
+        7,
+        9,
+        11,
+        13
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-26/05_student_prefix_and_teacher_context.ipynb",
+      "sha256": "2e5a0455a64fda95950a806368caa9bd604d9067dc16c83076668e5f4bdd985a",
+      "code_cells": 9,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 9,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 7,
+      "seconds": 3.292362848005723,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-26/05_student_prefix_and_teacher_context.ipynb",
+      "image_cells": [
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        18
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-27/01_genealogy_and_frozen_panel.ipynb",
+      "sha256": "cd398dd08104b65e44942223da6a8bdf27ba4e27e07f2a9a2e8194ded9497589",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.3075431420002133,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-27/01_genealogy_and_frozen_panel.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    },
+    {
+      "path": "notebooks/day-28/01_defense_and_release_gate.ipynb",
+      "sha256": "a5a55a33d127cc08e1724103164275f79001b64dbb6e217ad42e7885c77cdf2b",
+      "code_cells": 3,
+      "kernel_identity": {
+        "cuda_available": false,
+        "executable": "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+        "packages": {
+          "ipykernel": "7.4.0",
+          "matplotlib": "3.10.8",
+          "nbclient": "0.11.0",
+          "nbformat": "5.11.1",
+          "numpy": "2.5.3",
+          "peft": "0.20.0",
+          "tokenizers": "0.23.2",
+          "torch": "2.14.1+cpu",
+          "transformers": "5.18.0"
+        },
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "prefix": "/tmp/dongxi-course-reproduction.ZfVaEu/venv",
+        "python": "3.12.14",
+        "torch_cuda_build": null
+      },
+      "executed_code_cells": 3,
+      "skipped_unfinished_exercise_cells": [],
+      "images": 1,
+      "seconds": 1.5041780920000747,
+      "output": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-current-cpu-closure/run-03/notebooks/day-28/01_defense_and_release_gate.ipynb",
+      "image_cells": [
+        3
+      ],
+      "previews": []
+    }
+  ],
+  "failures": [],
+  "minimum_observed_available_gib": 117.11376953125,
+  "required_host_reserve_gib": 25.0,
+  "seconds": 167.2525644779671
+}

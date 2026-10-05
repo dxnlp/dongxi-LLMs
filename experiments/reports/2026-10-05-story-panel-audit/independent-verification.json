@@ -1,0 +1,50 @@
+{
+  "bindings": {
+    "run01": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-story-panel-audit/run-01/audit.json",
+      "sha256": "f0e5e45b0a5967e487e2798d169d24bc4d385103e388f5d52bc267f6c258787a"
+    },
+    "run02": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-story-panel-audit/run-02/audit.json",
+      "sha256": "d60ef85a0c00deef17c4d24d14e1e7470bc173ca6fe05bafe80f95bb1d24bce9"
+    },
+    "verifier": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/2026-10-05-story-panel-audit/verify_audit.py",
+      "sha256": "dce528f39ab9b7c600a3934164f9bb89be0c210576b49fd9491da8d6b09a59c8"
+    }
+  },
+  "check_count": 19,
+  "checks": {
+    "all90_metric_groups_consistent": true,
+    "all_carried_nearest_scores_recomputed": true,
+    "both_actual_scans_passed": true,
+    "both_source_closures_stable": true,
+    "corpus_panel_numeric_findings_unchanged": true,
+    "current_source_bytes_match_all13_bindings": true,
+    "historical_development_nonzero_near_preserved": true,
+    "original_collector_archive_exact": true,
+    "original_protocol_archive_exact": true,
+    "publication_defined_near_threshold_zero": true,
+    "publication_no_exact_full_prefix_substring": true,
+    "publication_vs_development36_exact_relationships_disjoint": true,
+    "retained_ignored_indexes_match": true,
+    "train_all_reconstruction_fields_match": true,
+    "train_raw_complete_and_identity_match": true,
+    "train_raw_count_partition": true,
+    "valid_all_reconstruction_fields_match": true,
+    "valid_raw_complete_and_identity_match": true,
+    "valid_raw_count_partition": true
+  },
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "experiments/reports/2026-10-05-story-panel-audit/verify_audit.py",
+    "--output",
+    "experiments/reports/2026-10-05-story-panel-audit/independent-verification.json"
+  ],
+  "created_utc": "2026-10-05T07:24:09.490484+00:00",
+  "limits": "Receipt consistency and short carried-example scoring, not an independent second implementation of the full corpus search or global semantic contamination absence.",
+  "metric_groups_checked": 90,
+  "nearest_scores_independently_recomputed": 64,
+  "schema": "dongxi-story-panel-audit-independent-verification-v1",
+  "status": "passed"
+}

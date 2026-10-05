@@ -1,5 +1,7 @@
 # Portable teaching dependencies; record a platform-specific freeze after setup.
 # Heavy pretrained model runners use the separately verified Spark environment.
+# Legacy range-based pip route; canonical CPU reproduction is pyproject + uv.lock.
+# These ranges are not a binary lock; do not use them for the CI/reproduction claim.
 torch>=2.6,<3
 numpy>=1.26,<3
 matplotlib==3.10.8
@@ -8,3 +10,7 @@ nbclient>=0.10,<1
 ipykernel>=6.29,<8
 jupyterlab>=4.3,<5
 PyYAML>=6,<7
+psutil>=7,<8
+transformers>=5.16,<6
+tokenizers>=0.23,<0.24
+peft>=0.20,<0.21

@@ -1,0 +1,105 @@
+{
+  "dev": [
+    {
+      "id": "original-dev-0",
+      "messages": [
+        {
+          "content": "copy one",
+          "role": "user"
+        },
+        {
+          "content": "one",
+          "role": "assistant"
+        }
+      ]
+    },
+    {
+      "id": "original-dev-1",
+      "messages": [
+        {
+          "content": "reverse red blue",
+          "role": "user"
+        },
+        {
+          "content": "blue red",
+          "role": "assistant"
+        }
+      ]
+    }
+  ],
+  "limits": {
+    "evaluation_calls": 96,
+    "evaluation_positions": 2048,
+    "generation_calls": 32,
+    "generation_position_upper_bound": 1024,
+    "generation_tokens": 128,
+    "logical_sequence_tokens": 640,
+    "policy_forward_calls": 128,
+    "policy_forward_positions": 2048,
+    "sampled_examples": 32,
+    "selector_steps": 32,
+    "train_updates": 16,
+    "valid_targets": 160
+  },
+  "modes": [
+    "full",
+    "lora"
+  ],
+  "seeds": [
+    1212,
+    1213
+  ],
+  "train": [
+    {
+      "id": "original-0",
+      "messages": [
+        {
+          "content": "keep",
+          "role": "system"
+        },
+        {
+          "content": "copy red",
+          "role": "user"
+        },
+        {
+          "content": "red",
+          "role": "assistant"
+        }
+      ]
+    },
+    {
+      "id": "original-1",
+      "messages": [
+        {
+          "content": "reverse one two",
+          "role": "user"
+        },
+        {
+          "content": "two one",
+          "role": "assistant"
+        }
+      ]
+    },
+    {
+      "id": "original-2",
+      "messages": [
+        {
+          "content": "copy blue",
+          "role": "user"
+        },
+        {
+          "content": "blue",
+          "role": "assistant"
+        },
+        {
+          "content": "copy red",
+          "role": "user"
+        },
+        {
+          "content": "red blue",
+          "role": "assistant"
+        }
+      ]
+    }
+  ]
+}

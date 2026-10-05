@@ -1,0 +1,44 @@
+{
+  "command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "unittest",
+    "test_dpo_snapshot_artifacts",
+    "test_artifact_budget",
+    "test_snapshot_artifact_budget",
+    "test_training_snapshot",
+    "test_training_snapshot_failure_paths",
+    "test_dpo_runner_recovery",
+    "test_dpo_work_budget",
+    "test_dpo_checkpoint_mode"
+  ],
+  "exit_code": 0,
+  "scope": "original random CPU FP32 source integration; no pretrained/GPU/whole-output quota claim",
+  "seconds": 25.59996628999943,
+  "source_after": {
+    "experiments/specs/2026-10-05-dpo-cap-byte-binding.md": "a940515824c5a29e58afa6bd0726659d0516d125082e9b9278905bf6620162c9",
+    "experiments/specs/2026-10-05-dpo-snapshot-artifact-integration.md": "23c6b96333e0c478fb46b1d9987fc208361c554352cf4282d78d1d04d1cc8ce9",
+    "scripts/run_chapter11_spark_dpo.py": "53f4a6d80dc30a26a644a571803f299e5719c47d0a8354be8f34924c0c036e79",
+    "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+    "src/dongxi_llms/training_snapshot.py": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "tests/test_dpo_runner_recovery.py": "cf31bef76b2b8e7b47d405ccfa03337fe3a6e064afad661eedd02e577506eb35",
+    "tests/test_dpo_snapshot_artifacts.py": "fbd56514f10360392a67aabf5789f553320402bdd41febaa09d9b4b33f7eca68"
+  },
+  "source_before": {
+    "experiments/specs/2026-10-05-dpo-cap-byte-binding.md": "a940515824c5a29e58afa6bd0726659d0516d125082e9b9278905bf6620162c9",
+    "experiments/specs/2026-10-05-dpo-snapshot-artifact-integration.md": "23c6b96333e0c478fb46b1d9987fc208361c554352cf4282d78d1d04d1cc8ce9",
+    "scripts/run_chapter11_spark_dpo.py": "53f4a6d80dc30a26a644a571803f299e5719c47d0a8354be8f34924c0c036e79",
+    "src/dongxi_llms/artifact_budget.py": "045210b495258b9408b31c11e32fe7ddfb1fed722dae04c76dfbcd52a5936b07",
+    "src/dongxi_llms/batched_cache_lab.py": "564381546c250065aee5d5245bad0607493348d449552e68cb02a4917c0c6a04",
+    "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+    "src/dongxi_llms/training_snapshot.py": "d16a11e60703ec47f4f8ad94c0fd203a6e0c1b23c7d34715757ab0677d1ff1fc",
+    "src/dongxi_llms/work_budget.py": "7483a6e20fa3a48fb39502862fd1fad45b14ea183ae47ba1f4aea49d7d60d297",
+    "tests/test_dpo_runner_recovery.py": "cf31bef76b2b8e7b47d405ccfa03337fe3a6e064afad661eedd02e577506eb35",
+    "tests/test_dpo_snapshot_artifacts.py": "fbd56514f10360392a67aabf5789f553320402bdd41febaa09d9b4b33f7eca68"
+  },
+  "stderr": "............................................................................../home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_training_snapshot_failure_paths.py:361: UserWarning: Sparse invariant checks are implicitly disabled. Memory errors (e.g. SEGFAULT) will occur when operating on a sparse tensor which violates the invariants, but checks incur performance overhead. To silence this warning, explicitly opt in or out. See `torch.sparse.check_sparse_tensor_invariants.__doc__` for guidance.  (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/Context.cpp:848.)\n  sparse = torch.sparse_coo_tensor(torch.tensor([[0]]), torch.tensor([1.0]), (2,))\n/home/dongxi/dongxi_ai/Dongxi_LLMs/tests/test_training_snapshot_failure_paths.py:362: UserWarning: torch.quantize_per_tensor, torch.quantize_per_channel and other quantized tensor creation functions that produce tensors with dtype torch.quint8, torch.qint8, and torch.qint32 are deprecated and will be removed in a future PyTorch release. Please see https://github.com/pytorch/pytorch/issues/184982 for more information. (Triggered internally at /__w/pytorch/pytorch/aten/src/ATen/quantized/Quantizer.cpp:111.)\n  quantized = torch.quantize_per_tensor(torch.tensor([1.0]), 0.1, 0, torch.qint8)\n................................usage: python -m unittest [-h] --checkpoint CHECKPOINT --tokenizer TOKENIZER\n                          --tokenizer-revision TOKENIZER_REVISION --train\n                          TRAIN --validation VALIDATION --evaluation\n                          EVALUATION --output OUTPUT [--updates UPDATES]\n                          [--accumulation ACCUMULATION] [--beta BETA]\n                          [--lr LR] [--max-length MAX_LENGTH]\n                          [--max-new-tokens MAX_NEW_TOKENS] [--seed SEED]\n                          [--checkpoint-every CHECKPOINT_EVERY]\n                          --snapshot-max-bytes SNAPSHOT_MAX_BYTES\n                          [--resume RESUME] [--resume-sha256 RESUME_SHA256]\n                          [--resume-bytes RESUME_BYTES]\n                          [--resume-contract RESUME_CONTRACT] --work-limits\n                          WORK_LIMITS --work-journal-max-bytes\n                          WORK_JOURNAL_MAX_BYTES [--work-journal WORK_JOURNAL]\n                          --snapshot-artifact-max-bytes\n                          SNAPSHOT_ARTIFACT_MAX_BYTES\n                          --snapshot-artifact-max-entries\n                          SNAPSHOT_ARTIFACT_MAX_ENTRIES\n                          --snapshot-artifact-journal-max-bytes\n                          SNAPSHOT_ARTIFACT_JOURNAL_MAX_BYTES\n                          [--snapshot-artifact-root SNAPSHOT_ARTIFACT_ROOT]\n                          [--snapshot-artifact-receipt SNAPSHOT_ARTIFACT_RECEIPT]\n                          [--allow-download] --environment-lock\n                          ENVIRONMENT_LOCK [--allow-legacy-interface]\npython -m unittest: error: the following arguments are required: --work-limits, --work-journal-max-bytes\nusage: python -m unittest [-h] --checkpoint CHECKPOINT --tokenizer TOKENIZER\n                          --tokenizer-revision TOKENIZER_REVISION --train\n                          TRAIN --validation VALIDATION --evaluation\n                          EVALUATION --output OUTPUT [--updates UPDATES]\n                          [--accumulation ACCUMULATION] [--beta BETA]\n                          [--lr LR] [--max-length MAX_LENGTH]\n                          [--max-new-tokens MAX_NEW_TOKENS] [--seed SEED]\n                          [--checkpoint-every CHECKPOINT_EVERY]\n                          --snapshot-max-bytes SNAPSHOT_MAX_BYTES\n                          [--resume RESUME] [--resume-sha256 RESUME_SHA256]\n                          [--resume-bytes RESUME_BYTES]\n                          [--resume-contract RESUME_CONTRACT] --work-limits\n                          WORK_LIMITS --work-journal-max-bytes\n                          WORK_JOURNAL_MAX_BYTES [--work-journal WORK_JOURNAL]\n                          --snapshot-artifact-max-bytes\n                          SNAPSHOT_ARTIFACT_MAX_BYTES\n                          --snapshot-artifact-max-entries\n                          SNAPSHOT_ARTIFACT_MAX_ENTRIES\n                          --snapshot-artifact-journal-max-bytes\n                          SNAPSHOT_ARTIFACT_JOURNAL_MAX_BYTES\n                          [--snapshot-artifact-root SNAPSHOT_ARTIFACT_ROOT]\n                          [--snapshot-artifact-receipt SNAPSHOT_ARTIFACT_RECEIPT]\n                          [--allow-download] --environment-lock\n                          ENVIRONMENT_LOCK [--allow-legacy-interface]\npython -m unittest: error: Resume requires retained contract, SHA256, bytes, same work journal and snapshot artifact root/receipt\n......................\n----------------------------------------------------------------------\nRan 132 tests in 23.561s\n\nOK\n",
+  "stdout": ""
+}

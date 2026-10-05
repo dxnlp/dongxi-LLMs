@@ -1,0 +1,57 @@
+{
+  "fixture": "ignore-term",
+  "limits": {
+    "seconds": 2.0,
+    "reserve_bytes": 26843545600,
+    "sampling_seconds": 0.02,
+    "term_grace_seconds": 0.1,
+    "kill_reap_seconds": 1.0
+  },
+  "child_command": [
+    "/tmp/dongxi-course-reproduction.ZfVaEu/venv/bin/python",
+    "-m",
+    "dongxi_llms.campaign_supervisor",
+    "--fixture-child",
+    "ignore-term"
+  ],
+  "child_pid": 188676,
+  "actual_exit_code": -15,
+  "status": "failed",
+  "resource_measurement": "sampled, not continuous",
+  "observations": [
+    {
+      "available_bytes": 126771916800,
+      "source": "actual-linux-MemAvailable",
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 404,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      }
+    },
+    {
+      "available_bytes": 25769803776,
+      "source": "injected-fixture-control-not-host-shortage",
+      "conflict_scan": {
+        "source": "actual-read-only-proc-scan",
+        "conflicts": [],
+        "unreadable": 0,
+        "scanned": 404,
+        "raw_command_lines_retained": false,
+        "environments_read": false
+      }
+    }
+  ],
+  "scope": "self-spawned leaf CPU child only; no model job or descendant supervision",
+  "supervised_seconds": 0.027411096991272643,
+  "stop_reason": "host-reserve-below-threshold",
+  "failure": null,
+  "signal_journal_errors": [],
+  "minimum_sampled_available_bytes": 25769803776,
+  "journal": {
+    "path": "experiments/reports/2026-10-04-campaign-supervisor-fixtures/running-reserve/events.jsonl",
+    "sha256": "e745cc6642b74424ce006349d3ae98850bbe01320c98baddac8b8fe5122e88a0"
+  }
+}

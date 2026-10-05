@@ -1,0 +1,1615 @@
+{
+  "schema": "dongxi-g8-pilot01-independent-review-v1",
+  "review_utc": "2026-10-05T14:14:24.946032+00:00",
+  "status": "accepted-native16-supervision-and-export-consistency",
+  "acceptance_checks": {
+    "pilot_completed_horizon": true,
+    "original_prompt_and_source_contract": true,
+    "no_open_or_failed_journal_tickets": true
+  },
+  "acceptance_status": "passed",
+  "preparation_self_hash": true,
+  "source_matches": {
+    "src/dongxi_llms/qwen_rlvr_lab.py": true,
+    "src/dongxi_llms/grpo_lab.py": true,
+    "src/dongxi_llms/run_identity.py": true,
+    "src/dongxi_llms/training_snapshot.py": true,
+    "src/dongxi_llms/batched_cache_lab.py": true,
+    "src/dongxi_llms/work_budget.py": true,
+    "src/dongxi_llms/snapshot_io_budget.py": true,
+    "src/dongxi_llms/snapshot_io_schedule.py": true,
+    "src/dongxi_llms/artifact_budget.py": true,
+    "src/dongxi_llms/native_profile_supervisor.py": true,
+    "src/dongxi_llms/campaign_supervisor.py": true,
+    "scripts/run_native_rlvr_stages.py": true,
+    "tests/test_native_rlvr_stages.py": true,
+    "scripts/run_native_reasoning_baselines.py": true
+  },
+  "input_matches": {
+    "interpreter": true,
+    "environment_lock": true,
+    "work_caps": true,
+    "io_caps": true,
+    "geometry": true
+  },
+  "prerequisite_matches": {
+    "baseline-cap32/acceptance": true,
+    "baseline-cap32/preparation": true,
+    "baseline-cap32/input/math_items": true,
+    "baseline-cap32/input/custom_template": true,
+    "baseline-cap32/input/interpreter": true,
+    "baseline-cap32/input/environment_lock": true,
+    "baseline-cap32/input/items": true,
+    "baseline-cap32/input/logical_panel": true,
+    "baseline-cap32/input/contract/sample-1009": true,
+    "baseline-cap32/input/contract/sample-1019": true,
+    "baseline-cap32/input/contract/sample-1029": true,
+    "baseline-cap32/input/contract/sample-1039": true,
+    "baseline-cap32/input/contract/greedy-1009": true,
+    "baseline-cap128/acceptance": true,
+    "baseline-cap128/preparation": true,
+    "baseline-cap128/input/math_items": true,
+    "baseline-cap128/input/custom_template": true,
+    "baseline-cap128/input/interpreter": true,
+    "baseline-cap128/input/environment_lock": true,
+    "baseline-cap128/input/items": true,
+    "baseline-cap128/input/logical_panel": true,
+    "baseline-cap128/input/contract/sample-1009": true,
+    "baseline-cap128/input/contract/sample-1019": true,
+    "baseline-cap128/input/contract/sample-1029": true,
+    "baseline-cap128/input/contract/sample-1039": true,
+    "baseline-cap128/input/contract/greedy-1009": true,
+    "recovery/acceptance": true,
+    "recovery/preparation": true
+  },
+  "closing_source_input_model_matches": true,
+  "identity_self_hash": true,
+  "identity_command_matches": true,
+  "identity_parent_matches": true,
+  "acceptance_report_matches": true,
+  "metrics_match_records": true,
+  "recipe": {
+    "updates": 16,
+    "output_cap": 64,
+    "seed": 2323,
+    "lr": 0.000001,
+    "beta": 0.02,
+    "external_seconds_each": 1800,
+    "reserve_bytes": 26843545600,
+    "invocations": 1,
+    "disk_planning_bytes": 292057776128,
+    "prompt_mode": "native-chat-thinking-off"
+  },
+  "native": {
+    "pid": 307199,
+    "actual_exit_code": 0,
+    "completed_updates": 16,
+    "records": 16,
+    "report_seconds": 1275.33628697705,
+    "cuda_peak_allocated_bytes": 10198828032
+  },
+  "supervisor": {
+    "status": "completed",
+    "actual_exit_code": 0,
+    "child_seconds": 1277.1960717979819,
+    "seconds": 1277.2420404329896,
+    "minimum_sampled_available_bytes": 98105425920,
+    "final_record_retained": true,
+    "journal_error": null,
+    "failure": null,
+    "stop_reason": null,
+    "cleanup_errors": [],
+    "observed_owned_descendants": [],
+    "helper_cleanup": [
+      {
+        "pid": 307196,
+        "started": true,
+        "actual_exit_code": -15,
+        "still_alive": false,
+        "errors": [],
+        "cleanup_complete": true
+      },
+      {
+        "pid": 307195,
+        "started": true,
+        "actual_exit_code": -15,
+        "still_alive": false,
+        "errors": [],
+        "cleanup_complete": true
+      }
+    ],
+    "limits": {
+      "external_seconds": 1800,
+      "reserve_bytes": 26843545600,
+      "probe_seconds": 0.25,
+      "logging_seconds": 0.25,
+      "term_seconds": 0.1,
+      "reap_seconds": 0.5
+    }
+  },
+  "minimum_recomputed": true,
+  "records": [
+    {
+      "update": 1,
+      "valid_response_tokens": 76,
+      "generated_slots": 144,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 4.2654573917388916e-7,
+      "loss": 0,
+      "exact_kl_nats_before_update": 0,
+      "policy_sha256_after": "bad38de327aef1446c9527f4a96189b7d1a8998b50cb992db28a418e4aa816d3"
+    },
+    {
+      "update": 2,
+      "valid_response_tokens": 144,
+      "generated_slots": 240,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.2080078125,
+      "loss": 0.00002130991742888,
+      "exact_kl_nats_before_update": 0.0010626784060150385,
+      "policy_sha256_after": "1b66e1db21451e6d35592d222520c05649e0816fdaebb5103b23ebb5dd92cd02"
+    },
+    {
+      "update": 3,
+      "valid_response_tokens": 126,
+      "generated_slots": 224,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.10791015625,
+      "loss": 0.000014182105587678961,
+      "exact_kl_nats_before_update": 0.000762034731451422,
+      "policy_sha256_after": "bccf73996fb3533b6848db714ac62dbc49c1d53bfe574de23a11de3351f4270a"
+    },
+    {
+      "update": 4,
+      "valid_response_tokens": 120,
+      "generated_slots": 288,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.06787109375,
+      "loss": 0.000010091900549014099,
+      "exact_kl_nats_before_update": 0.0006560274632647634,
+      "policy_sha256_after": "8b2fa5887c2f890680cc26ffc99094fa5f07894df446a00e633742ecc83225be"
+    },
+    {
+      "update": 5,
+      "valid_response_tokens": 152,
+      "generated_slots": 328,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.05908203125,
+      "loss": 0.000015865365639911033,
+      "exact_kl_nats_before_update": 0.0009860084392130375,
+      "policy_sha256_after": "65206baea6a62b31fb88338566d37c99824d4d5e64c60dfa43ca0a4ecf7baa99"
+    },
+    {
+      "update": 6,
+      "valid_response_tokens": 131,
+      "generated_slots": 280,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.197265625,
+      "loss": 0.00002231170037703123,
+      "exact_kl_nats_before_update": 0.0010481085628271103,
+      "policy_sha256_after": "4326866c2982b08a8c68f55e4389689a3ea8e9a5b19573c6ff61a0d76c85112c"
+    },
+    {
+      "update": 7,
+      "valid_response_tokens": 149,
+      "generated_slots": 256,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.296875,
+      "loss": 0.000038581616536248475,
+      "exact_kl_nats_before_update": 0.0017821388319134712,
+      "policy_sha256_after": "8afdb4b3743819d39570c57406a70b593a9827069a8be212dd965193ad11a08a"
+    },
+    {
+      "update": 8,
+      "valid_response_tokens": 132,
+      "generated_slots": 224,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.30859375,
+      "loss": 0.00003200128048774786,
+      "exact_kl_nats_before_update": 0.001608220860362053,
+      "policy_sha256_after": "e0e446b5f32b8105746787eb8fe4b53ed6652ac2720f8c309e0d895d4bf4b29f"
+    },
+    {
+      "update": 9,
+      "valid_response_tokens": 120,
+      "generated_slots": 280,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.15234375,
+      "loss": 0.00001965617047972046,
+      "exact_kl_nats_before_update": 0.0010536893969401717,
+      "policy_sha256_after": "e3d146c5d8adea5c4e15a660bdd084ac51c2809ebfb2a9d85bbf7756e2f76fed"
+    },
+    {
+      "update": 10,
+      "valid_response_tokens": 288,
+      "generated_slots": 512,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.025146484375,
+      "loss": 0.000013700437193620019,
+      "exact_kl_nats_before_update": 0.0006969808018766344,
+      "policy_sha256_after": "5824da3d3b2b8d17f003e622f8b1790f742e86807e823dba805ebc5fc04ea06f"
+    },
+    {
+      "update": 11,
+      "valid_response_tokens": 192,
+      "generated_slots": 328,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.1337890625,
+      "loss": 0.000018465776520315558,
+      "exact_kl_nats_before_update": 0.0009158861939795315,
+      "policy_sha256_after": "8fdd5a392cfc0d1cbfd44bcfcaae9c9175f8b870007fced2686c08af8e2a48d4"
+    },
+    {
+      "update": 12,
+      "valid_response_tokens": 144,
+      "generated_slots": 312,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.1416015625,
+      "loss": 0.000019666566004161723,
+      "exact_kl_nats_before_update": 0.0011661187745630741,
+      "policy_sha256_after": "3dcac949e0c8f539d0801c70b8a074bdb708f078a1f8741b0c62dbd991fb23ae"
+    },
+    {
+      "update": 13,
+      "valid_response_tokens": 132,
+      "generated_slots": 304,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.14453125,
+      "loss": 0.000021583144189207815,
+      "exact_kl_nats_before_update": 0.0013121746014803648,
+      "policy_sha256_after": "cc865646e002d5ef17307bb60a1fb41ae804e3fff448b07b61a8d5337281cdef"
+    },
+    {
+      "update": 14,
+      "valid_response_tokens": 137,
+      "generated_slots": 408,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.3359375,
+      "loss": 0.00003457706043263897,
+      "exact_kl_nats_before_update": 0.0015386464074254036,
+      "policy_sha256_after": "fbafbeb00d4aecb4effd03fd1a92613927019ca6c88f008309eda0826c18d695"
+    },
+    {
+      "update": 15,
+      "valid_response_tokens": 187,
+      "generated_slots": 424,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.08447265625,
+      "loss": 0.000019019038518308662,
+      "exact_kl_nats_before_update": 0.0009282507235184312,
+      "policy_sha256_after": "9e40ed9b3f82204ab1e358396bc98dcb81e2313a17c5e83433aa0c03a3fb7a88"
+    },
+    {
+      "update": 16,
+      "valid_response_tokens": 105,
+      "generated_slots": 336,
+      "all_rewards_zero": true,
+      "all_advantages_zero": true,
+      "reward": 0,
+      "natural_stops": 8,
+      "cap_truncations": 0,
+      "gradient_norm": 0.0966796875,
+      "loss": 0.000020258223230484873,
+      "exact_kl_nats_before_update": 0.0010826910147443414,
+      "policy_sha256_after": "c752b5e0aaa55d549227b1450dc4771cac056cf01f304547c492c7ef965991f1"
+    }
+  ],
+  "totals": {
+    "collections": 16,
+    "applications": 16,
+    "valid_response_tokens": 2335,
+    "generated_slots": 4888,
+    "natural_stops": 128,
+    "cap_truncations": 0,
+    "all128_rewards_and_advantages_zero": true
+  },
+  "diagnostics": {
+    "initial_accuracy": 0,
+    "final_accuracy": 0,
+    "initial_rows": [
+      {
+        "prompt": "Return only the integer answer. 2 + 6 =",
+        "expected": 8,
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          17,
+          488,
+          220,
+          21,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "text": "2 + 6 = 8",
+        "tokens": [
+          17,
+          488,
+          220,
+          21,
+          284,
+          220,
+          23
+        ],
+        "raw_tokens": [
+          17,
+          488,
+          220,
+          21,
+          284,
+          220,
+          23,
+          151645
+        ],
+        "stop": "declared-stop",
+        "correct": false,
+        "final_stop_id": 151645,
+        "truncated": false,
+        "error": null,
+        "successful_forward_calls": 8,
+        "successful_forward_positions": 220,
+        "cost_boundary": "successful calls only; failed-call internal work unavailable",
+        "generated_tokens": 8
+      },
+      {
+        "prompt": "Return only the integer answer. 3 + 4 =",
+        "expected": 7,
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          18,
+          488,
+          220,
+          19,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "text": "3 + 4 = 7",
+        "tokens": [
+          18,
+          488,
+          220,
+          19,
+          284,
+          220,
+          22
+        ],
+        "raw_tokens": [
+          18,
+          488,
+          220,
+          19,
+          284,
+          220,
+          22,
+          151645
+        ],
+        "stop": "declared-stop",
+        "correct": false,
+        "final_stop_id": 151645,
+        "truncated": false,
+        "error": null,
+        "successful_forward_calls": 8,
+        "successful_forward_positions": 220,
+        "cost_boundary": "successful calls only; failed-call internal work unavailable",
+        "generated_tokens": 8
+      },
+      {
+        "prompt": "Return only the integer answer. 5 + 5 =",
+        "expected": 10,
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          20,
+          488,
+          220,
+          20,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "text": "5 + 5 = 10\n\n**Answer:** 10",
+        "tokens": [
+          20,
+          488,
+          220,
+          20,
+          284,
+          220,
+          16,
+          15,
+          271,
+          334,
+          16141,
+          66963,
+          220,
+          16,
+          15
+        ],
+        "raw_tokens": [
+          20,
+          488,
+          220,
+          20,
+          284,
+          220,
+          16,
+          15,
+          271,
+          334,
+          16141,
+          66963,
+          220,
+          16,
+          15,
+          151645
+        ],
+        "stop": "declared-stop",
+        "correct": false,
+        "final_stop_id": 151645,
+        "truncated": false,
+        "error": null,
+        "successful_forward_calls": 16,
+        "successful_forward_positions": 504,
+        "cost_boundary": "successful calls only; failed-call internal work unavailable",
+        "generated_tokens": 16
+      },
+      {
+        "prompt": "Return only the integer answer. 7 + 2 =",
+        "expected": 9,
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          22,
+          488,
+          220,
+          17,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "text": "The result of the equation $7 + 2$ is:\n\n$$\n7 + 2 = 9\n$$\n\nSo, the integer answer is:\n\n**9**.",
+        "tokens": [
+          785,
+          1102,
+          315,
+          279,
+          23606,
+          400,
+          22,
+          488,
+          220,
+          17,
+          3,
+          374,
+          1447,
+          14085,
+          198,
+          22,
+          488,
+          220,
+          17,
+          284,
+          220,
+          24,
+          198,
+          14085,
+          271,
+          4416,
+          11,
+          279,
+          7546,
+          4226,
+          374,
+          1447,
+          334,
+          24,
+          334,
+          13
+        ],
+        "raw_tokens": [
+          785,
+          1102,
+          315,
+          279,
+          23606,
+          400,
+          22,
+          488,
+          220,
+          17,
+          3,
+          374,
+          1447,
+          14085,
+          198,
+          22,
+          488,
+          220,
+          17,
+          284,
+          220,
+          24,
+          198,
+          14085,
+          271,
+          4416,
+          11,
+          279,
+          7546,
+          4226,
+          374,
+          1447,
+          334,
+          24,
+          334,
+          13,
+          151645
+        ],
+        "stop": "declared-stop",
+        "correct": false,
+        "final_stop_id": 151645,
+        "truncated": false,
+        "error": null,
+        "successful_forward_calls": 37,
+        "successful_forward_positions": 1554,
+        "cost_boundary": "successful calls only; failed-call internal work unavailable",
+        "generated_tokens": 37
+      }
+    ],
+    "final_rows": [
+      {
+        "prompt": "Return only the integer answer. 2 + 6 =",
+        "expected": 8,
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          17,
+          488,
+          220,
+          21,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "text": "2 + 6 = 8\n\nReturn only the integer answer: **8**.",
+        "tokens": [
+          17,
+          488,
+          220,
+          21,
+          284,
+          220,
+          23,
+          271,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          25,
+          3070,
+          23,
+          334,
+          13
+        ],
+        "raw_tokens": [
+          17,
+          488,
+          220,
+          21,
+          284,
+          220,
+          23,
+          271,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          25,
+          3070,
+          23,
+          334,
+          13,
+          151645
+        ],
+        "stop": "declared-stop",
+        "correct": false,
+        "final_stop_id": 151645,
+        "truncated": false,
+        "error": null,
+        "successful_forward_calls": 19,
+        "successful_forward_positions": 627,
+        "cost_boundary": "successful calls only; failed-call internal work unavailable",
+        "generated_tokens": 19
+      },
+      {
+        "prompt": "Return only the integer answer. 3 + 4 =",
+        "expected": 7,
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          18,
+          488,
+          220,
+          19,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "text": "3 + 4 = 7",
+        "tokens": [
+          18,
+          488,
+          220,
+          19,
+          284,
+          220,
+          22
+        ],
+        "raw_tokens": [
+          18,
+          488,
+          220,
+          19,
+          284,
+          220,
+          22,
+          151645
+        ],
+        "stop": "declared-stop",
+        "correct": false,
+        "final_stop_id": 151645,
+        "truncated": false,
+        "error": null,
+        "successful_forward_calls": 8,
+        "successful_forward_positions": 220,
+        "cost_boundary": "successful calls only; failed-call internal work unavailable",
+        "generated_tokens": 8
+      },
+      {
+        "prompt": "Return only the integer answer. 5 + 5 =",
+        "expected": 10,
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          20,
+          488,
+          220,
+          20,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "text": "5 + 5 = 10\n\n**Answer:** 10",
+        "tokens": [
+          20,
+          488,
+          220,
+          20,
+          284,
+          220,
+          16,
+          15,
+          271,
+          334,
+          16141,
+          66963,
+          220,
+          16,
+          15
+        ],
+        "raw_tokens": [
+          20,
+          488,
+          220,
+          20,
+          284,
+          220,
+          16,
+          15,
+          271,
+          334,
+          16141,
+          66963,
+          220,
+          16,
+          15,
+          151645
+        ],
+        "stop": "declared-stop",
+        "correct": false,
+        "final_stop_id": 151645,
+        "truncated": false,
+        "error": null,
+        "successful_forward_calls": 16,
+        "successful_forward_positions": 504,
+        "cost_boundary": "successful calls only; failed-call internal work unavailable",
+        "generated_tokens": 16
+      },
+      {
+        "prompt": "Return only the integer answer. 7 + 2 =",
+        "expected": 9,
+        "prompt_ids": [
+          151644,
+          872,
+          198,
+          5598,
+          1172,
+          279,
+          7546,
+          4226,
+          13,
+          220,
+          22,
+          488,
+          220,
+          17,
+          284,
+          151645,
+          198,
+          151644,
+          77091,
+          198,
+          151667,
+          271,
+          151668,
+          271
+        ],
+        "text": "The result of the equation $7 + 2$ is:\n\n$$\n7 + 2 = 9\n$$\n\nSo, the integer answer is:\n\n**9**.",
+        "tokens": [
+          785,
+          1102,
+          315,
+          279,
+          23606,
+          400,
+          22,
+          488,
+          220,
+          17,
+          3,
+          374,
+          1447,
+          14085,
+          198,
+          22,
+          488,
+          220,
+          17,
+          284,
+          220,
+          24,
+          198,
+          14085,
+          271,
+          4416,
+          11,
+          279,
+          7546,
+          4226,
+          374,
+          1447,
+          334,
+          24,
+          334,
+          13
+        ],
+        "raw_tokens": [
+          785,
+          1102,
+          315,
+          279,
+          23606,
+          400,
+          22,
+          488,
+          220,
+          17,
+          3,
+          374,
+          1447,
+          14085,
+          198,
+          22,
+          488,
+          220,
+          17,
+          284,
+          220,
+          24,
+          198,
+          14085,
+          271,
+          4416,
+          11,
+          279,
+          7546,
+          4226,
+          374,
+          1447,
+          334,
+          24,
+          334,
+          13,
+          151645
+        ],
+        "stop": "declared-stop",
+        "correct": false,
+        "final_stop_id": 151645,
+        "truncated": false,
+        "error": null,
+        "successful_forward_calls": 37,
+        "successful_forward_positions": 1554,
+        "cost_boundary": "successful calls only; failed-call internal work unavailable",
+        "generated_tokens": 37
+      }
+    ],
+    "rows_exactly_equal": false
+  },
+  "journals": {
+    "runner": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01-journals/work.jsonl",
+      "sha256": "6e39dc8ed37ab02c2f49a3b182133e93a2a13fb9c33ac49fe22874df22799640",
+      "bytes": 122566,
+      "ledger_id": "459380a856c54b5bb2359fd8b7f5f995",
+      "sequence": 134,
+      "event_counts": {
+        "reserve": 67,
+        "complete": 67
+      },
+      "actual_file_identity": [
+        66306,
+        5901816
+      ],
+      "chain_sha256": "f7a335fffd7737960c4e5698ceef9bb4b6476e193e13f1f10f15f81d81556aff",
+      "reserved": {
+        "collections": 16,
+        "evaluation_calls": 512,
+        "evaluation_examples": 8,
+        "evaluation_positions": 28416,
+        "evaluation_tokens": 512,
+        "generated_slots": 8192,
+        "generation_forward_calls": 1536,
+        "generation_forward_positions": 483072,
+        "multinomial_draws": 8192,
+        "old_policy_forward_calls": 16,
+        "old_policy_forward_positions": 11136,
+        "policy_forward_calls": 1600,
+        "policy_forward_positions": 517704,
+        "recovery_multinomial_draws": 79592,
+        "recovery_validation_calls": 32,
+        "recovery_validation_operations": 49,
+        "recovery_validation_positions": 15664,
+        "reference_forward_calls": 16,
+        "reference_forward_positions": 7832,
+        "response_targets": 2335,
+        "source_examples": 16,
+        "train_updates": 16,
+        "valid_response_tokens": 8192
+      },
+      "completed": {
+        "collections": 16,
+        "evaluation_calls": 149,
+        "evaluation_examples": 8,
+        "evaluation_positions": 5403,
+        "evaluation_tokens": 149,
+        "generated_slots": 4888,
+        "generation_forward_calls": 760,
+        "generation_forward_positions": 220907,
+        "multinomial_draws": 4888,
+        "old_policy_forward_calls": 16,
+        "old_policy_forward_positions": 7832,
+        "policy_forward_calls": 824,
+        "policy_forward_positions": 252235,
+        "recovery_multinomial_draws": 79592,
+        "recovery_validation_calls": 32,
+        "recovery_validation_operations": 49,
+        "recovery_validation_positions": 15664,
+        "reference_forward_calls": 16,
+        "reference_forward_positions": 7832,
+        "response_targets": 2335,
+        "source_examples": 16,
+        "train_updates": 16,
+        "valid_response_tokens": 2335
+      },
+      "open_tickets": 0,
+      "failed_tickets": 0,
+      "report_identity_match": true,
+      "report_chain_match": true,
+      "report_totals_match": true,
+      "receipt_prefix_chain_match": true,
+      "receipt_prefix_sequence": 130,
+      "later_sequences": 4
+    },
+    "io": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01-journals/io.jsonl",
+      "sha256": "d23afe46a739c3cb476457aa0bb298cb1d46147bec8535cb6e220a36a531738d",
+      "bytes": 39579,
+      "ledger_id": "5c7f03305cde4009b98a350cb2f81b0d",
+      "sequence": 66,
+      "event_counts": {
+        "reserve": 33,
+        "complete": 33
+      },
+      "actual_file_identity": [
+        66306,
+        5901818
+      ],
+      "chain_sha256": "9adfeeb745cc585c2000daf294e3c72e674348538a765b3171a44fc8c7c0c043",
+      "reserved": {
+        "snapshot_clone_bytes": 283467841536,
+        "snapshot_hash_bytes": 283467841536,
+        "snapshot_inspect_operations": 0,
+        "snapshot_load_operations": 0,
+        "snapshot_primitive_bytes": 34603008,
+        "snapshot_save_operations": 33,
+        "snapshot_serialization_bytes": 283467841536,
+        "snapshot_tensor_elements": 132000000000,
+        "snapshot_tree_nodes": 3300000
+      },
+      "completed": {
+        "snapshot_clone_bytes": 173126911896,
+        "snapshot_hash_bytes": 173147185063,
+        "snapshot_inspect_operations": 0,
+        "snapshot_load_operations": 0,
+        "snapshot_primitive_bytes": 5185189,
+        "snapshot_save_operations": 33,
+        "snapshot_serialization_bytes": 173147185063,
+        "snapshot_tensor_elements": 86563251418,
+        "snapshot_tree_nodes": 340145
+      },
+      "open_tickets": 0,
+      "failed_tickets": 0,
+      "report_identity_match": true,
+      "report_chain_match": true,
+      "report_totals_match": true,
+      "receipt_prefix_chain_match": true,
+      "receipt_prefix_sequence": 64,
+      "later_sequences": 2
+    }
+  },
+  "final_checkpoint": {
+    "header": {
+      "completed_updates": 16,
+      "contract_sha256": "c2e7f4a61dac000e8664d2e004b9f9cd0583f70a624c42ddf9205171db4d6711",
+      "payload_bytes": 5391473304,
+      "payload_sha256": "42ca77e1c4240187dcd38e37e7f0cfb5792722f57643fe1f44d80dd4c5e91002",
+      "phase": "completed",
+      "schema_version": 2
+    },
+    "receipt_header_matches": true,
+    "contract_sha_matches": true,
+    "latest_report_pointer_matches": true,
+    "actual_payload_stat_bytes": 5391473304,
+    "science": {
+      "phase": "completed",
+      "completed_updates": 16,
+      "scientific_state_sha256": "7c88da8fe6eb266c749d5f06f842ca3225dafbbdf09291062319094ad79d8302",
+      "components": {
+        "policy": "901ffc5dc95ae4c55ca3c5cdcc8815b0e0a75e1527188810c350acbb5b95906a",
+        "reference": "803a686b8cde3494557c8931e3dbf7341c01c200a68263e0650e2df77c6547d7",
+        "optimizer": "0f829e4c55b5fbb75c7ad79b0ec29535862694dbcff2538216bbeada5d390f8a",
+        "loop_contract": "1f2d32f9ba3a33a54e23bbe89c2b63a83e12f6688aedb7af66fc158dd52a3424",
+        "cursor": "efd2d894f4c3e097d3d88de20aab94010726ed9145ec29f41444819cefc0b5e0",
+        "collection_work": "9c1eb35506185fa34d62fb8ec6e3dc26a4b408aeb1dee828ab65ee1ebf9d5002",
+        "application_work": "44a26a5bb7d388f292bce2c63a1c33334a6d74da73e635c5e77b826e1f233e51",
+        "history": "b089b09149d26a0d05868d7fee980a542e33c64579f822f43a29889b0b7eebd1",
+        "pending": "c8914a5205ced702f208f15b0ef09c15d23b98996e5434df65c61c8da397829a",
+        "rng": "a78f3d662a52e507f577252224d6025ad5997e03915fe28ac4960f8e29acfbe1"
+      },
+      "scope": "Exact streamed storage bytes and typed native science descriptors; excludes only physical work prefix and producer invocation"
+    },
+    "export_file_map": {
+      "chat_template.jinja": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8",
+      "config.json": "cc9e78f197814997a5140d41850bc2c222386701b431b358b32fd29544f643e5",
+      "course-genealogy.json": "441f4e6f11259c4b2fc65e929984edcde23534c4344029c508b6da556cc47592",
+      "generation_config.json": "8cf19eded42ca225321ef6d64a33a36162dd3febdd79690bd702ad895f8bc957",
+      "model.safetensors": "1c3a31be0acf65e549ff9f0b4f33f85d91f691aac5e5529ff9952bcd2652de61",
+      "tokenizer.json": "be75606093db2094d7cd20f3c2f385c212750648bd6ea4fb2bf507a6a4c55506",
+      "tokenizer_config.json": "1cc816812993bff176eb4f7495433b736f06fba9b6e7b05cac7b4a1780650c95"
+    },
+    "checkpoint_or_weight_body_rehashed_by_reviewer": false
+  },
+  "export_observation": {
+    "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/export-observation.json",
+    "observation_sha256": "24bde5446474a92a10b62b4d74cad93c91d180cbe5ecda983dbfea3427dc95d5",
+    "checks": {
+      "self_hash": true,
+      "before_after": true,
+      "supervision_sha": true,
+      "all_small_bindings": true,
+      "same_export": true
+    },
+    "status": "export-consistent-supervision-not-reclassified",
+    "supervision": {
+      "status": "completed",
+      "actual_exit_code": 0,
+      "stop_reason": null,
+      "failure": null,
+      "cleanup_errors": [],
+      "journal_error": null,
+      "final_record_retained": true
+    }
+  },
+  "metadata_sha256": {
+    "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/preparation.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/preparation.json",
+      "bytes": 31092,
+      "sha256": "1fe99e724a21658b1fe9bd055f8d579c956897dcf5b0aaa84c3dc68b0540ea6d"
+    },
+    "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/launch-1.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/launch-1.json",
+      "bytes": 1804,
+      "sha256": "d0ac9ae5a3be8b864665d257f19f310cfef0ce5ff9d9fd7efa8b8f9a8e857ab2"
+    },
+    "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/returned-supervision-1.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/returned-supervision-1.json",
+      "bytes": 10478133,
+      "sha256": "bad8d499cdab84674ec08f3f820f1572bd4a68afdb91decab1eea7458447a20e"
+    },
+    "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/acceptance.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/acceptance.json",
+      "bytes": 737978,
+      "sha256": "b0931afdc86894631f2df9721bbed541e82d0ae0c7068f341955c4cd11798a94"
+    },
+    "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/closing-bindings.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/closing-bindings.json",
+      "bytes": 19681,
+      "sha256": "b326eea3f58d8d706d785e400d278d52418e054ef1c7f82f785550fe04b19943"
+    },
+    "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/export-observation.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/export-observation.json",
+      "bytes": 40159,
+      "sha256": "a0547f6828dc18cef9765585f842256cefab65eae65298bdac8be8df818bc8a1"
+    },
+    "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/supervision-1/result.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/supervision-1/result.json",
+      "bytes": 10477767,
+      "sha256": "ded8f91646a1dc2d41149c51b78c5ee89335a7880d2a3ab6a1317ffd8b0448de"
+    },
+    "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/supervision-1/events.jsonl": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/supervision-1/events.jsonl",
+      "bytes": 4643193,
+      "sha256": "1c09e8b010ff4336eae69b15bfc409e6ae579ecb3b8f571c706720ff2eedf206"
+    },
+    "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/supervision-1/stdout.txt": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/supervision-1/stdout.txt",
+      "bytes": 138,
+      "sha256": "46c738d0de6ffbfb30f610f2ac4cd5d11f16f3321068792c08419f82de14f618"
+    },
+    "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/supervision-1/stderr.txt": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/experiments/reports/native-rlvr-g8-pilot-20261005-run-01/supervision-1/stderr.txt",
+      "bytes": 449,
+      "sha256": "d293d51871f8c4ce59ee1956d2c011ace091e6b573385cd451e26146c04f9fbe"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/report.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/report.json",
+      "bytes": 624392,
+      "sha256": "bb728f3fa83391f052e300f4a12ca1869d0a0df4176273c768421089ff029e19"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/status.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/status.json",
+      "bytes": 190,
+      "sha256": "1733a240586a78ef2e87976af617e58e439f00b047dbc815818786353a1e138a"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/metrics.jsonl": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/metrics.jsonl",
+      "bytes": 246838,
+      "sha256": "9fe6928eeebbb207e11c84a842f61e093495a68eeb0ea10f705a087f4a803545"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/recovery-contract.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/recovery-contract.json",
+      "bytes": 72934,
+      "sha256": "c5b17cc64b9c28ae7b7f9a3b51f9cd8c11e37cb0a567c22bcd6611bce0903732"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/policy/course-genealogy.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/policy/course-genealogy.json",
+      "bytes": 2564,
+      "sha256": "441f4e6f11259c4b2fc65e929984edcde23534c4344029c508b6da556cc47592"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/policy/config.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/policy/config.json",
+      "bytes": 1417,
+      "sha256": "cc9e78f197814997a5140d41850bc2c222386701b431b358b32fd29544f643e5"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000006.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000006.pt.commit.json",
+      "bytes": 270,
+      "sha256": "1a6d9e199b999688bc40026b15e2d6143a56ab1772bf6109261e0e49e7aaa35a"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000004.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000004.pt.commit.json",
+      "bytes": 270,
+      "sha256": "ce597a2a9e806870364c7726cc785fb755cfbe69d1ede2d3c4cba2793b01cdab"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000005.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000005.pt.commit.json",
+      "bytes": 268,
+      "sha256": "fca2eccb374efc62b278f7d2a91b3c948420a57a8a685b1603f7ee39207b1e48"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000002.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000002.pt.commit.json",
+      "bytes": 268,
+      "sha256": "a798e61ea41914e314d199e0f13524707b0dcf796e8dcc46e7258b3596975e18"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000000.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000000.pt.commit.json",
+      "bytes": 268,
+      "sha256": "40db0a1a1b3cb3af290f544d0dc9866d4aa4197fb680f6a33da9d75f93d46185"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000007.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000007.pt.commit.json",
+      "bytes": 270,
+      "sha256": "1add4daedd9c0b0e9bfb277e37c519ec3e92e5dae7d8f8008b8ac53f5f3b812d"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000012.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000012.pt.commit.json",
+      "bytes": 271,
+      "sha256": "ddccd0fc58e17cd3fc8882beb43985c16df331cd87437a271876564a304786be"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000015.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000015.pt.commit.json",
+      "bytes": 271,
+      "sha256": "d770fc550acfb7f9a5b886c14c151971ad3171c2fe7fffac32199cd9650377b2"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000014.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000014.pt.commit.json",
+      "bytes": 269,
+      "sha256": "028c15de96d7c861d10b3cf59b7b77edf18ddb566a332024a35ade3d83d928b9"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000000.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000000.pt.commit.json",
+      "bytes": 270,
+      "sha256": "2b21c962b4eddb511ecdb28b475a4fa83c703f5d0fed19c204c807e40d507197"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000008.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000008.pt.commit.json",
+      "bytes": 268,
+      "sha256": "48f9a17287ae0d62cbe4622d3efe2306ca672bf4efbcb8375d7f05519621e0c1"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000015.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000015.pt.commit.json",
+      "bytes": 269,
+      "sha256": "c21b6d43c991dd4c15101f3360d434fd94306289efb90b0a6129a4720dadb335"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000008.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000008.pt.commit.json",
+      "bytes": 270,
+      "sha256": "0994a65f3733928c40efade0596ca691faa303385a5c86ae9d866f3b2a5ae5d8"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000010.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000010.pt.commit.json",
+      "bytes": 271,
+      "sha256": "4951590f075e0373f962b2ea6be313bcf8a576ff2bcaf10a5bc3e928b3560cd9"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000003.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000003.pt.commit.json",
+      "bytes": 270,
+      "sha256": "27799ae1a474e983ab156babc077953917cfb8f9dcc74c6a6848a69faf8ab458"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000002.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000002.pt.commit.json",
+      "bytes": 270,
+      "sha256": "6f5cd499d47f894c875bda141999cddcb62a8abfbcde5f39bf07295202b097b0"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000005.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000005.pt.commit.json",
+      "bytes": 270,
+      "sha256": "aabc0932dba0344408a2bf52223b70bcf816b8f017a428ecb9524340914ece41"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000013.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000013.pt.commit.json",
+      "bytes": 269,
+      "sha256": "095298970ba3ba14eb388a2429836d952d264c875395c020eac0326afc18498a"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000011.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000011.pt.commit.json",
+      "bytes": 269,
+      "sha256": "cbe9b7a210bc2a807d446b583cd877b51eebfab8834815e4d4647767b0901b52"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000006.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000006.pt.commit.json",
+      "bytes": 268,
+      "sha256": "47ea415f5801fda390b885e4c376005c4f9cedb5260620aa5c0541d6dbe488cf"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000016.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000016.pt.commit.json",
+      "bytes": 271,
+      "sha256": "9483d6d4e1b768b2f2c8f9c7a78a0a834972b28f22a5dececd7f0250affc74c0"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000009.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000009.pt.commit.json",
+      "bytes": 270,
+      "sha256": "5bd9ab92f89d7d138dbe57550caea38056c457eff1df7679fb35a643ac84b6f3"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000003.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000003.pt.commit.json",
+      "bytes": 268,
+      "sha256": "9c4a9b142e3ab1a86078de6667dd59376c6134b9b5cc3c8941b758bdbe384676"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000004.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000004.pt.commit.json",
+      "bytes": 268,
+      "sha256": "cda047b98876c6cea56f46a077a00f5c99e261daedf9ffa7aef3c5cac1ee44c9"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000011.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000011.pt.commit.json",
+      "bytes": 271,
+      "sha256": "845a4278c283e56261fc4d87b204415b4e3685da8e9751b41bbffdc049cf5a40"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000009.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000009.pt.commit.json",
+      "bytes": 268,
+      "sha256": "c5c093200c3a7c61ae8cda744afa06490c9e4e2d3dcf9aba42edbad91d89d49a"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000012.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000012.pt.commit.json",
+      "bytes": 269,
+      "sha256": "e50579711f2b3c5792266d03250df5fda0995bfb534f9ea7e1299659f70e6368"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000001.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000001.pt.commit.json",
+      "bytes": 268,
+      "sha256": "f99f59fd82025d4aedf68172d57b7a5c0e646ab4cc3696a5fae73d1e95b965d8"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000001.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000001.pt.commit.json",
+      "bytes": 270,
+      "sha256": "bb04645a483d075efb49d8978e3b2ad8cf53a76983ff174c0e683d4bc9e49df9"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000010.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000010.pt.commit.json",
+      "bytes": 269,
+      "sha256": "23f7ad69a0f2bf7f974ad22d4e46b817a6f98106fba86ba8e6bb414e7ac8ab9b"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000013.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000013.pt.commit.json",
+      "bytes": 271,
+      "sha256": "766d452400b6c3e2c3a9e5f5ac71c82f36cb59167f376c7e46298d639592d654"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000014.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000014.pt.commit.json",
+      "bytes": 271,
+      "sha256": "eb97d39549a7482053add0b8e99a6e6ad0813db83729d260ecf92b653464263c"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000007.pt.commit.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000007.pt.commit.json",
+      "bytes": 268,
+      "sha256": "58dfcedbd43db6db72f9e79efbdd89ea4a73dd2af73374ef0cfa370343519082"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000008.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000008.pt.work.json",
+      "bytes": 7344,
+      "sha256": "388f801e639bde37f31db525721aaedd0ef580733a8e5ae244dd24b72008a13f"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000007.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000007.pt.work.json",
+      "bytes": 7339,
+      "sha256": "edae7094943565c24bcf4d64c6ace1b8e1f65334df274285aca5c0b46b7e0c17"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000012.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000012.pt.work.json",
+      "bytes": 7375,
+      "sha256": "be7ba089b9e722ee82c97de4751f014fbbb0c3f0488c973db6458d6f6159f4f9"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000009.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000009.pt.work.json",
+      "bytes": 7346,
+      "sha256": "07e35b76b108f306776c76df6c818ce721306ac545b3b8c5ee3b8b4689fbc88b"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000002.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000002.pt.work.json",
+      "bytes": 7308,
+      "sha256": "3807ee90eb03f869a887ef8a7042634dd40d79a43096b0e5e10305f36e7aa02b"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000009.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000009.pt.work.json",
+      "bytes": 7355,
+      "sha256": "4dc7448d42f8abd4eb47a2eb25edb62b1a2ded920130db2ed3b2b62ef9f92506"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000012.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000012.pt.work.json",
+      "bytes": 7375,
+      "sha256": "8fdd945f21c16827928d28f2b8630e5215e68ea0035177781a79e7d7d825a3ec"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000014.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000014.pt.work.json",
+      "bytes": 7377,
+      "sha256": "40d088bd148d5815f85ec7f62db94f00244b0f01e71e7bf7d302b8e67c2a500c"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000016.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000016.pt.work.json",
+      "bytes": 7378,
+      "sha256": "4c1877909edf5c1454d7f37bec49aae33a9688cd39cf0a78d161f38d144c9802"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000003.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000003.pt.work.json",
+      "bytes": 7313,
+      "sha256": "5f9e0bdde02441e6fd05303fb983652a2f767745576a1d8074f9b0c152114357"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000001.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000001.pt.work.json",
+      "bytes": 7293,
+      "sha256": "f0b8db101d0a907104fa230f01721bee3ee3b2be090c2a6c2712d43c98332c34"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000011.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000011.pt.work.json",
+      "bytes": 7374,
+      "sha256": "40869cb3d45e33a5b0e784c4661fafc9aecf0a1b6ba56b798a9e49666024390a"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000000.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000000.pt.work.json",
+      "bytes": 7044,
+      "sha256": "032aab8938bb5953901635f97d7a2777ff930ce40fa69b486451a7ba2b691568"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000004.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000004.pt.work.json",
+      "bytes": 7319,
+      "sha256": "8f6999692baa0c6a0d58e15bf165b9830d3e3dfa5d5f546388d0fbee27844a9f"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000010.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000010.pt.work.json",
+      "bytes": 7370,
+      "sha256": "5d90a6f8753b141b62853c8d7690d9895ae21f6f9095115a0852b8a2427bbcfb"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000015.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000015.pt.work.json",
+      "bytes": 7378,
+      "sha256": "f6dbb47506982c529a10f8a231f56072af390b59f163abb386403dd2f2f336dc"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000006.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000006.pt.work.json",
+      "bytes": 7337,
+      "sha256": "c8a00a05f9c79292e8542cf7fe3b7ceed93401a24434f8e592fd7de837b36488"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000010.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000010.pt.work.json",
+      "bytes": 7369,
+      "sha256": "2f6df2d50da4e6dbc8f76d93524f7f0af9c31cd0d0ce70a9a3b4af895431c39b"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000002.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000002.pt.work.json",
+      "bytes": 7304,
+      "sha256": "cdcc11a8a9502356369325fa6789ccaaab5dcad02d51dcd42f70b40a8c2f1d32"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000013.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000013.pt.work.json",
+      "bytes": 7375,
+      "sha256": "d69979e01368546de6cd4e94b2dd001c2b37413feeb06cb6184b4d86a4eff092"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000005.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000005.pt.work.json",
+      "bytes": 7331,
+      "sha256": "213f66646891f65c11c3cca1846078bc908b04c928d9b6d1c087c9d238735612"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000004.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000004.pt.work.json",
+      "bytes": 7321,
+      "sha256": "977f154743ca010323c94e056d04c2d8497cad4fc287f77362a4a40a449e0b95"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000008.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000008.pt.work.json",
+      "bytes": 7344,
+      "sha256": "3873661359b89519494e41e56ce6625d5553fd16e7627fab50b8451655c6e30b"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000013.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000013.pt.work.json",
+      "bytes": 7377,
+      "sha256": "33567e5117fb609018844fe849dd70bd264e11d06222ac86f96a1cd62b95baa6"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000005.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000005.pt.work.json",
+      "bytes": 7329,
+      "sha256": "70c6ac9fc9787a2216453aa5405d77563ebf2dcb02d2530dc39b54f6cc8a2a8d"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000014.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000014.pt.work.json",
+      "bytes": 7376,
+      "sha256": "0d781d0bfaf71aff2b1654765065be3faa533069b284aa49ca09e72a114b681f"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000001.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000001.pt.work.json",
+      "bytes": 7274,
+      "sha256": "6c25803d7278a49df49f8582227714723d7ac8b16d6eec9f7087ce29b5f9f700"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000000.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000000.pt.work.json",
+      "bytes": 7245,
+      "sha256": "66a40a779c2901e626cca9bdf454546205851775a7ceac3bc592ba4bc2497378"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000011.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000011.pt.work.json",
+      "bytes": 7373,
+      "sha256": "525c68b09c253695a735f93224f71df6ebecc4e397cdfda2cd433929b987e7df"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000015.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000015.pt.work.json",
+      "bytes": 7376,
+      "sha256": "169c9461ab9648ed82ec3646f9ef32c6fca322fb590452950f84a26b679a423d"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000003.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/pending-000003.pt.work.json",
+      "bytes": 7315,
+      "sha256": "3ddd8d06696d864e317208c12d8385a8e670b18b6b075eca90899196b103e500"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000007.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000007.pt.work.json",
+      "bytes": 7339,
+      "sha256": "b32d28dad7020b7748dab255388e034e34f9384a65b6ad6f7080df3062e06ab4"
+    },
+    "outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000006.pt.work.json": {
+      "path": "/home/dongxi/dongxi_ai/Dongxi_LLMs/outputs/native-rlvr-g8-pilot-20261005-run-01/snapshots/completed-000006.pt.work.json",
+      "bytes": 7334,
+      "sha256": "da98537c06a0991a2d30ff929e84b676745bb6130b7ce173e238451ed3429f50"
+    }
+  },
+  "scope": "Independent source/metadata/actual records/masks/physical journal and stored producer science-map joins. No native execution, model load or independent checkpoint/weight body hash; no quality gain or current/fullCPU/all86 signoff."
+}
