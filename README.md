@@ -13,13 +13,19 @@ training evidence from an NVIDIA DGX Spark.
 [Read the book](book/README.md) · [Explore the notebooks](notebooks/README.md) ·
 [Follow the daily route](docs/COURSE_SEQUENCE.md) · [Inspect the experiments](docs/EXPERIMENT_MATRIX.md)
 
-![The four-part course: build a decoder, train and evaluate it, learn preferences and policies, then diagnose and defend the results.](visuals/readme/course-map.svg)
+[![A decoder scores a toy vocabulary, selects the next token, appends it to the prefix, and repeats.](visuals/readme/next-token.gif)](book/chapters/03-learning-the-next-token.md)
+
+*Follow one prediction through the decoder, then watch it become the next
+step's input. Illustrative logits and a schematic model;
+[Chapter 3](book/chapters/03-learning-the-next-token.md) develops the computation.*
 
 ## What you will learn
 
 The course begins with a randomly initialized decoder, then moves to Qwen3
 post-training. Each stage asks you to explain not only *how an algorithm works*,
 but *why a particular experiment would tell you anything useful*.
+
+![The four-part course: build a decoder, train and evaluate it, learn preferences and policies, then diagnose and defend the results.](visuals/readme/course-map.svg)
 
 | Part | Chapters / days | Questions you will be able to answer |
 |---|---|---|
@@ -43,6 +49,15 @@ Why don't all attention heads converge to the same thing?
 These questions lead the lessons. The learning cycle is:
 
 **Question → prediction → implementation → controlled change → explanation**
+
+Watch the query move through a sequence. Its accessible context grows, while
+the future stays masked:
+
+[![A causal attention matrix highlights each query in turn, showing allowed attention weights, masked future positions, and the weighted value output.](visuals/readme/causal-attention.gif)](book/chapters/04-attention-and-the-causal-information-boundary.md)
+
+*One head, five positions, calculated toy weights. Change the future values in
+the [attention lab](notebooks/day-04/README.md) and test whether an earlier
+output changes.*
 
 For example, remove an attention head and inspect how the projected update
 changes—not just whether the code still runs:
@@ -71,6 +86,16 @@ Start with a lesson that interests you:
   attention, residuals, normalization, and feed-forward layers.
 - [Preferences and policy gradients](notebooks/day-17/README.md): begin with
   DPO, then follow the [policy-gradient labs](notebooks/day-19/README.md).
+
+The same approach carries into reinforcement learning: inspect the signal
+before assuming that an optimizer step can teach anything.
+
+[![Four answers receive binary rewards, which become signed group-relative advantages. A second group with equal rewards produces zero advantages.](visuals/readme/group-relative-rewards.gif)](book/chapters/13-group-relative-policy-optimization.md)
+
+*A GRPO reward-signal microscope: mixed rewards create a relative signal;
+equal rewards give zero advantages. KL and optimizer effects are omitted here.
+Explore the [group-relative labs](notebooks/day-22/README.md), then compare
+with the actual zero-advantage runs below.*
 
 ## Experiments we actually ran
 

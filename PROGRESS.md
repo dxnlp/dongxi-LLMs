@@ -4,6 +4,16 @@ This file is the operational source of truth for resuming work. Update it at the
 
 ## Current position
 
+- README media maintenance, 2026-10-05, Mac Studio: user requested relevant GIFs
+  and allowed new animations. `ANIM-README-001` adds next-token decoding, causal
+  attention and group-relative reward loops with chapter/notebook links. Editable
+  source, toy fixtures, PNG stills, environment identity and hashes live in
+  `visuals/readme/`; three GIFs total 1,179,142 bytes. Numerical and decoded-media
+  checks, full/half-size contact sheets, all 59 local README/media links and local
+  browser image/layout review pass. Book math lint has zero issues. User authorized
+  commit and push of the source/GIFs; no video was generated or added. Learner Day9 and
+  measured training evidence are unchanged. Next: user reviews the README.
+
 - Final measured continuation,2026-10-05: chosen100/DPO100 and their
   common432-response evaluation are accepted; both retain120/120 instruction
   answers, while strict location accuracy is4/4 versus1/4. All eight original

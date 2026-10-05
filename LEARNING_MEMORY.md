@@ -685,6 +685,39 @@ they are corroborated.
 
 ## Production-system tasks
 
+### Task packet: `ANIM-README-001` — three book-entry mechanism loops
+
+- **Authorization:** user requested README GIFs and allowed new animations on
+  2026-10-05, then explicitly requested commit and push. Scope is README/media
+  improvement and Git integration; external publishing workflows are separate.
+- **Base / branch / owner:** `8ba61e6`, `main`, Mac Studio (actual Darwin host).
+- **Objective / inputs:** readable English previews of Chapters 3, 4 and 13;
+  extend existing candidates 001/008/027 using independently authored toy logits,
+  Q/K/V tensors and two four-response binary-reward groups.
+- **Allowed files:** root README, `visuals/readme/`, the proposal extension and
+  these production records. Existing video/source projects and learner practice
+  remain outside this packet.
+- **Expected outputs:** three looping GIFs and PNG fallbacks, editable
+  `visuals/readme/render.py`, reproduction notes and `manifest.json` containing
+  fixtures, environment identity, source/font/output hashes and checks.
+- **Precision:** full seven-entry vocabulary softmax with only top three shown;
+  exact causal zeros and future-value invariance; population standard deviation,
+  epsilon `1e-8` and explicit zero advantages for constant rewards. Decoder is
+  schematic; position encoding, policy clipping, KL and optimizer updates are
+  omitted. All figures are illustrative, separate from measured training runs.
+- **Acceptance:** decoded infinite GIF loops at 1120×560 and 12 fps, at least
+  25 distinct frames, each below 3 MiB; numerical fixture checks, source/hash
+  integrity, full/half-size contact-sheet review and local README link/layout
+  review. No newly tracked video, model execution or learner advancement.
+- **Return evidence:** `visuals/readme/manifest.json` and its adjacent reproduction
+  README. Current exports are 13.5s, 12s and 15s; aggregate GIF payload is about
+  1.13 MiB. Numerical checks and decoded contact-sheet inspection pass; all
+  59 local links in the root/media READMEs resolve. The local browser preview
+  loads all six README images and shows the loops without page overflow at its
+  default 1280px viewport. Math lint passes 54 Markdown files/1,294 expressions.
+  User authorized commit and push after local review. Next: review the integrated
+  README; existing music-video work remains outside this packet.
+
 ### Task packet: `ANIM-PD-002` — document example, two kinds of waiting
 
 - User approval, 2026-09-15: standalone adaptation of the lifecycle clip, using

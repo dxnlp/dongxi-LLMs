@@ -1,0 +1,338 @@
+{
+  "purpose": "README mechanism previews, not measured model behavior or training results",
+  "renderer": "visuals/readme/render.py",
+  "renderer_sha256": "1603515fb3bf38ef0f1818522c7fa0226638102653f8c39b6a233ecf5aa7d86f",
+  "command": "uv run --project visuals/animations python visuals/readme/render.py",
+  "executed_command": [
+    ".venv/bin/python",
+    "visuals/readme/render.py"
+  ],
+  "environment": {
+    "python": "3.12.11",
+    "pillow": "12.3.0",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "font": "/System/Library/Fonts/Supplemental/Arial.ttf",
+    "font_sha256": "525979822591a3447cfc49d943d6f7683508e25543407871c0ed8fed05fd2bd9",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "fixtures": {
+    "vocabulary": [
+      "The",
+      "cat",
+      "sat",
+      "on",
+      "the",
+      "mat",
+      "."
+    ],
+    "logits": [
+      [
+        -2.0,
+        -1.5,
+        -1.2,
+        2.4,
+        0.8,
+        -0.2,
+        0.5
+      ],
+      [
+        -2.0,
+        -1.3,
+        -1.0,
+        -0.3,
+        2.5,
+        1.1,
+        0.2
+      ],
+      [
+        -2.0,
+        -1.0,
+        -0.8,
+        0.2,
+        -0.5,
+        2.6,
+        1.0
+      ]
+    ],
+    "probabilities": [
+      [
+        0.008264331737590436,
+        0.01362557952388751,
+        0.0183926085286468,
+        0.6731369989622067,
+        0.13590401622384152,
+        0.049996293541381444,
+        0.10068017148244558
+      ],
+      [
+        0.007550242446074076,
+        0.015204321167840188,
+        0.020523686841623336,
+        0.041329629944595186,
+        0.6796511656190232,
+        0.16759991398102506,
+        0.06814103999981905
+      ],
+      [
+        0.007136996960459917,
+        0.01940036914738562,
+        0.023695664385942252,
+        0.06441149391357102,
+        0.03198580127272918,
+        0.7100192583499163,
+        0.14335041596999573
+      ]
+    ],
+    "Q": [
+      [
+        1.0,
+        0.0,
+        0.2
+      ],
+      [
+        0.2,
+        1.0,
+        0.1
+      ],
+      [
+        0.8,
+        0.3,
+        0.4
+      ],
+      [
+        0.4,
+        0.9,
+        0.6
+      ],
+      [
+        0.6,
+        0.6,
+        0.2
+      ]
+    ],
+    "K": [
+      [
+        0.8,
+        0.1,
+        0.4
+      ],
+      [
+        0.1,
+        0.9,
+        0.2
+      ],
+      [
+        0.7,
+        0.4,
+        0.3
+      ],
+      [
+        0.3,
+        0.8,
+        0.5
+      ],
+      [
+        0.9,
+        0.2,
+        0.1
+      ]
+    ],
+    "V": [
+      [
+        0.8,
+        0.2
+      ],
+      [
+        0.1,
+        0.9
+      ],
+      [
+        0.5,
+        0.5
+      ],
+      [
+        0.3,
+        0.7
+      ],
+      [
+        0.9,
+        0.1
+      ]
+    ],
+    "attention": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.40866083645547885,
+        0.5913391635445211,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.3601506766136212,
+        0.28588292742775173,
+        0.35396639595862706,
+        0.0,
+        0.0
+      ],
+      [
+        0.2158418159823048,
+        0.2596404766883688,
+        0.23810109484613307,
+        0.2864166124831932,
+        0.0
+      ],
+      [
+        0.19266034606793742,
+        0.19489788972400782,
+        0.20411096672917575,
+        0.20887955861322657,
+        0.19945123886565239
+      ]
+    ],
+    "outputs": [
+      [
+        0.8,
+        0.2
+      ],
+      [
+        0.3860625855188352,
+        0.6139374144811648
+      ],
+      [
+        0.49369203201298567,
+        0.5063079679870143
+      ],
+      [
+        0.40361303162270523,
+        0.5963869683772947
+      ],
+      [
+        0.5178435317543937,
+        0.48215646824560626
+      ]
+    ],
+    "groups": [
+      {
+        "answers": [
+          "4",
+          "5",
+          "4",
+          "3"
+        ],
+        "rewards": [
+          1.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        "mean_std_advantages": [
+          0.5,
+          0.5,
+          [
+            0.9999999800000003,
+            -0.9999999800000003,
+            0.9999999800000003,
+            -0.9999999800000003
+          ]
+        ]
+      },
+      {
+        "answers": [
+          "4",
+          "4",
+          "4",
+          "4"
+        ],
+        "rewards": [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_std_advantages": [
+          1.0,
+          0.0,
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      }
+    ],
+    "epsilon": 1e-08
+  },
+  "checks": {
+    "probability_normalization": true,
+    "greedy_tokens": [
+      "on",
+      "the",
+      "mat"
+    ],
+    "causal_future_weights_zero": true,
+    "future_value_invariance": true,
+    "population_std": true,
+    "constant_group_zero_advantages": true
+  },
+  "outputs": [
+    {
+      "file": "next-token.gif",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 162,
+      "duration_seconds": 13.5,
+      "loop": 0,
+      "unique_frames": 95,
+      "bytes": 356318,
+      "sha256": "671569d4ba6f2156def2f8380dfa52cf5d233351cbb770d8c3d76ace32aafe77",
+      "poster": "next-token.png",
+      "poster_sha256": "42f53824fb194c5c56515ddd4370f219fe5522e29ab4cdfa3e010ed4ce3c3f85"
+    },
+    {
+      "file": "causal-attention.gif",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "unique_frames": 81,
+      "bytes": 342005,
+      "sha256": "7d6c956d372175fc06ba46e83a68d224015b16ba2dc53b46001dbb4581f764cf",
+      "poster": "causal-attention.png",
+      "poster_sha256": "db7df33d84045ead4d96e4e5e119d8be91a72fe91260a01c41da1c0eeff38a84"
+    },
+    {
+      "file": "group-relative-rewards.gif",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 180,
+      "duration_seconds": 15.0,
+      "loop": 0,
+      "unique_frames": 45,
+      "bytes": 480819,
+      "sha256": "c82dfc2162ea32d91db15853aff59d0fe3f1704e8037dfb829ef200ca8b1e029",
+      "poster": "group-relative-rewards.png",
+      "poster_sha256": "d7eb82e82dbc0535701f98f0f1a28429eaf4065e465be8519b9eea26abc86c28"
+    }
+  ],
+  "limitations": [
+    "Fixed logits and a schematic decoder; no model forward pass or training.",
+    "One attention head with five positions and two-dimensional toy values; positional operations omitted.",
+    "Population-normalized group advantages only; no policy loss, clipping, KL or optimizer update.",
+    "The fade to white is an editorial loop reset, not a state transition."
+  ]
+}

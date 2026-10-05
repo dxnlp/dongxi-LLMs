@@ -11,6 +11,24 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### README previews — existing candidates 001, 008 and 027, 2026-10-05
+
+- Source: user requested beautiful, relevant README GIFs and explicitly allowed
+  new animations. Promote bounded previews of CAND-ANIM-001 (next-token decoding),
+  CAND-ANIM-008 (causal attention) and CAND-ANIM-027 (group-relative advantages)
+  together as `ANIM-README-001`; these are extensions, not duplicate candidates
+  or approval of their remaining full-length/evidence-backed storyboards.
+- Canonical mechanisms: prefix → vocabulary softmax → greedy selection → append;
+  causally masked scaled Q/K softmax → weighted V; population-normalized
+  reward-minus-group-mean, including a constant-reward group with zero advantages.
+- Evidence state: calculated illustrative fixtures only, with a schematic
+  decoder. No trained-model activations, capability improvement or optimizer
+  update is presented. The earlier measured native campaign stays separate.
+- Production dependency: Mac Studio, the existing Pillow environment and
+  FFmpeg; GIFs, PNG stills, editable source and hashes under `visuals/readme/`.
+  No video is produced or added to Git. The packet and acceptance evidence live
+  in `LEARNING_MEMORY.md` and `visuals/readme/manifest.json`.
+
 ### CAND-ANIM-001 extension — output rows versus decoder coverage,2026-10-05
 
 - Source: automatic agent capture of a central softmax/interface mechanism,
