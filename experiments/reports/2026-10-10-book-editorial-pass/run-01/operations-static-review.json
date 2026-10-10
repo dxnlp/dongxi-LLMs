@@ -1,0 +1,41 @@
+{
+  "scope": "Owned editorial chapters11/13/14/15, solutions and RLVR runbook; intermediate static verification only",
+  "source_sha256": {
+    "book/chapters/11-direct-preference-optimization.md": "bd30825da59bc50b804f26068b4269da346c18319c13ea201bf7e8d15f4720e9",
+    "book/chapters/13-group-relative-policy-optimization.md": "fbe9460e49a83e697467e8446357e51d81e251b3202970822e4758a1bd74e065",
+    "book/chapters/14-when-optimization-goes-wrong.md": "007ae19e09be47d20cc7345bd40485c0a30f640e26517e2f34d7e0890ad009ef",
+    "book/chapters/15-distill-evaluate-and-defend.md": "081c632993480dfca978b3423875f72baf16a21af61a33908a1428cddc61a884",
+    "book/solutions/11-direct-preference-optimization.md": "c28990bab026433b7d39b0a9445356f013646d63412092e7fa09a4698e6b2842",
+    "book/solutions/13-group-relative-policy-optimization.md": "46da0f7eade0f20ce33f18099c74f1204ef8cb413ebea09409fd1a0e3fb96a93",
+    "book/solutions/14-when-optimization-goes-wrong.md": "67e88cb478870e3c1748bdca13faa3756efa0f197984e5e7751c62d41dd16aad",
+    "book/solutions/15-distill-evaluate-and-defend.md": "b723f82b352e609091f6be42e62dd26f884648ed064d6e2ec1cad7f4f89fc33f",
+    "docs/runbooks/rlvr_runner.md": "7afd924d8849702f541a68254e99299eb02ed867bcc3e37a95f5fcadc784fe75"
+  },
+  "commands": [
+    {
+      "command": "python3 scripts/check_book_prose.py --json (owned files selected from global output)",
+      "owned_findings": []
+    },
+    {
+      "command": "python3 scripts/check_book_math.py",
+      "exit_code": 0,
+      "stdout": "54 Markdown files, 1286 math expressions, 0 issues"
+    },
+    {
+      "command": "local Markdown target existence check",
+      "missing": []
+    }
+  ],
+  "manual_evidence_review": {
+    "g8_group": "native-rlvr-g8-pilot-20261005-run-01/acceptance.json reports.pilot.records[0], all8 texts/stops/rewards/advantages transcribed",
+    "entropy_lengths": "2026-10-04-grpo-diagnostics-distillation.json grpo[0:2].history first/final updates,6-decimal entropy rounded and post-update boundary checked in grpo_lab.py",
+    "dpo_outputs": "2026-10-05-native-preference-comparison.md common generation; location-items.json first3 facts; retained trailing newline disclosed",
+    "lineage": "Separate September/October story; Base Full400/LoRA400; selectedFull400 preference; separate pinnedInstruct RLVR; G4 failedsupervision retained"
+  },
+  "not_claimed": [
+    "Full phase acceptance",
+    "Full unit suite",
+    "Fresh notebook execution",
+    "Another platform or model result"
+  ]
+}

@@ -47,16 +47,16 @@ teacher errors. Correctness requires a separate evaluation contract.
 
 ## 6. Temperature derivation
 
-For $L=T^2[-\sum_i q_i^{(T)}\log p_i^{(T)}]$ plus a teacher-only constant,
-differentiating log-softmax contributes $1/T$ and the soft-target residual:
+For $L=\tau^2[-\sum_i q_i^{(\tau)}\log p_i^{(\tau)}]$ plus a teacher-only constant,
+differentiating log-softmax contributes $1/\tau$ and the soft-target residual:
 
 $$
-\frac{\partial L}{\partial z_i}=T(p_i^{(T)}-q_i^{(T)}).
+\frac{\partial L}{\partial z_i}=\tau(p_i^{(\tau)}-q_i^{(\tau)}).
 $$
 
-Without scaling the derivative is $(p_i^{(T)}-q_i^{(T)})/T$. At high temperature,
-the probability difference itself tends to shrink as $1/T$, so unscaled
-gradients shrink roughly as $1/T^2$ for fixed centered logits. The factor is a
+Without scaling the derivative is $(p_i^{(\tau)}-q_i^{(\tau)})/\tau$. At high temperature,
+the probability difference itself tends to shrink as $1/\tau$, so unscaled
+gradients shrink roughly as $1/\tau^2$ for fixed centered logits. The factor is a
 gradient-scale convention, not a guarantee of identical training across
 temperatures. The notebook checks analytical/autograd agreement at 1, 2, 4.
 
@@ -97,18 +97,18 @@ unsupported; the model card must preserve that distinction.
 In the [historical short-run native case](../../experiments/reports/2026-10-05-current-model-defense.md),
 identify the exact Base,20-update disposable profile, separate fresh full/LoRA
 references and precision-qualified FP32 validation export. Do not manufacture
-a selected400-update SFT parent or DPO/RLVR descendants from those short-run
+a selected 400-update SFT parent or DPO/RLVR descendants from those short-run
 receipts. Both native replay
-paths can pass while generated answering remains0/8. Preserve the failed BF16
+paths can pass while generated answering remains 0/8. Preserve the failed BF16
 handoff beside the distinct FP32 pass and the proxy phrase-score gain beside
-all capped responses. A replay pair's455 numerical training targets do not
-erase684 physical training plus1,440 development presentations or the failed
+all capped responses. A replay pair's 455 numerical training targets do not
+erase 684 physical training plus 1,440 development presentations or the failed
 attempt's elapsed time. That is a defensible partial account, not a completed
 campaign or a claim that the learner has mastered its mechanisms.
 
 The later [actual full and LoRA400 comparison](../../experiments/reports/2026-10-05-native-sft400-comparison.md)
-does establish the predeclared full400 parent. Its120/120 whole answers and
-natural endings, versus0/120 for Base and merged LoRA, concern40 held-out lexical
+does establish the predeclared full400 parent. Its 120/120 whole answers and
+natural endings, versus 0/120 for Base and merged LoRA, concern 40 held-out lexical
 groups within three shared templates. Attach later preference descendants only
 from their own accepted export receipts. Do not use the degenerate grouped
 intervals to claim certainty about new tasks, another training seed or a retuned
@@ -117,9 +117,9 @@ adapter recipe.
 For the separate fresh story lineage, distinguish 400 completed updates from
 the unfinished 14k schedule. The actual rubric joins 192 continuations and both
 AI reviewers, with 56 candidates showing at least one disagreement across 64
-dimension-level disagreements. Control400's 45 natural endings do not
+dimension-level disagreements. Control 400's 45 natural endings do not
 contradict its 0.0208 mean ending-quality rating: stopping and narrative resolution
-measure different things. Its lower fixed dev NLL than half-LR400 is not broad
+measure different things. Its lower fixed dev NLL than half-LR 400 is not broad
 proof of better storytelling. Keep the 288 absent later cells null, and do not
 describe separate AI instances as independent human or model populations. The
 [worked evidence report](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
@@ -129,8 +129,8 @@ the trained model.
 ## 11. A correct candidate does not choose itself
 
 Majority counts eligible answers, not truths. In the actual eight-candidate
-parity pool, correct0 receives three votes and incorrect1 receives five.
-Gold-blind majority must return1 under its declared rule, while the evaluator's
+parity pool, correct 0 receives three votes and incorrect 1 receives five.
+Gold-blind majority must return 1 under its declared rule, while the evaluator's
 any-correct diagnostic is true. The latter cannot be used as a deployable
 selector without a checker that legitimately distinguishes answers. A model's
 likelihood can rank alternatives, but high likelihood is not that checker.
@@ -155,7 +155,7 @@ tokens, bounded length, real END and source/deduplication rules. Correctness is
 a separate score. Keeping well-formed wrong responses lets top and random
 selection compete on the same pool and exposes the effect of the selection rule.
 Removing every wrong answer before that comparison would predetermine its
-available supervision. In the recorded teacher-data pool,24 of36 accepted
+available supervision. In the recorded teacher-data pool,24 of 36 accepted
 candidates are wrong. Those are executed programmatic responses, not claims
 about a pretrained teacher's behavior.
 
@@ -163,8 +163,8 @@ about a pretrained teacher's behavior.
 
 Record body-plus-END targets, update count, repeated exposure, padded positions,
 teacher attempts/retries and generation work. The recorded top and random arms
-both cover12 prompts/examples but expose42 versus46 valid targets per update,
-or3360 versus3680 over80 updates. Length-random matches42 without filtering
+both cover 12 prompts/examples but expose 42 versus 46 valid targets per update,
+or 3360 versus 3680 over 80 updates. Length-random matches 42 without filtering
 correctness. Even matching these counts does not equalize target information,
 gradients or wall time. Keep both the matched quantities and remaining
 differences explicit; held-out free generation, not selection score, measures
@@ -184,8 +184,8 @@ KL lesson rather than treating them as the same experiment.
 
 An arithmetic checker can establish that a printed total agrees with the
 operands. It cannot establish that the model internally reasoned through or
-causally relied on that text. The recorded teacher produces80 wrong-step/
-right-answer and24 valid-step/wrong-answer responses among432 evaluation
+causally relied on that text. The recorded teacher produces 80 wrong-step/
+right-answer and 24 valid-step/wrong-answer responses among 432 evaluation
 attempts. A final-answer scorer and a printed-step scorer measure distinct
 properties, and neither alone proves internal faithfulness. Missing steps in
 answer-only outputs are explicitly null, not a negative rationale label.
@@ -194,7 +194,7 @@ answer-only outputs are explicitly null, not a negative rationale label.
 
 A valid-format tie may accept a wrong replacement for a correct draft. A later
 round can undo it, leaving final accuracy unchanged while hiding a harmful
-intermediate decision. The contrarian control accepts54 harmful and54 helpful
+intermediate decision. The contrarian control accepts 54 harmful and 54 helpful
 changes and returns to its original answer. Preserve proposal grade, acceptance,
 delivered grade and stop reason per round. A format score is not a truth score,
 and a programmatic flip is not neural reasoning.
@@ -255,7 +255,7 @@ operation and does not inherit the same identity.
 
 ## 23. The population is part of the result
 
-The original panel varies40 lexical values inside three shared copy/reverse/
+The original panel varies 40 lexical values inside three shared copy/reverse/
 extract templates. The full400 checkpoint succeeds on every source group,
 making the observed paired difference and its fixed source-group bootstrap
 interval equal to one. Resampling those groups cannot create new tasks, natural

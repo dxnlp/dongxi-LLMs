@@ -3,7 +3,7 @@
 Read the [chapter](../chapters/06-pretraining-as-a-controlled-system.md) first.
 The [three Day 8 notebooks](../../notebooks/day-08/README.md) contain adjacent,
 runnable reference solutions; this guide explains the conceptual exercises.
-Executing a reference is not evidence of independent mastery.
+Executing a reference does not establish independent reasoning about the mechanism.
 
 ## 1. Document splits and contamination
 
@@ -36,7 +36,7 @@ sources are in the future of every valid prefix position.
 
 ## 4. What the budget formula counts
 
-$SbTAR$ counts processed tensor positions under fixed full microbatches and
+$SbnAR$ counts processed tensor positions under fixed full microbatches and
 accumulation windows. It equals valid target presentations only if every
 position contributes to loss. With ignored labels, it is an upper bound on those
 targets. It never measures unique information: rereading the same corpus adds
@@ -108,9 +108,9 @@ allocator overhead and framework/process memory. Actual implementation choices
 can also change the ledger. On Spark, CPU and GPU activity share a constrained
 memory environment; a tensor-byte estimate is not a measured host reserve.
 Profile the exact candidate, record peak allocations and minimum host available
-memory, and honor the reserve before authorizing a longer run.
+memory, and honor the reserve before selecting a longer run.
 
-## 11. Validation grouping invariance
+## 11. Development grouping invariance
 
 Evaluate the same frozen model and fixed target set with several batch sizes,
 including unequal tails. Accumulate summed NLL and valid-label counts, then
@@ -140,8 +140,8 @@ cross-device or distributed reproducibility.
 
 The loss mask removes ignored positions from the objective, not necessarily
 from embedding, attention, MLP and output-projection computations. This
-implementation processes fixed1024-position windows even when stories are
-short. Its48.84M valid targets occupy about21.29% of229.38M processed positions.
+implementation processes fixed 1024-position windows even when stories are
+short. Its 48.84M valid targets occupy about 21.29% of 229.38M processed positions.
 That is a measured utilization fraction, not a guaranteed speedup factor.
 
 A comparison must preserve intended supervision, per-document causal access,
@@ -172,7 +172,7 @@ making contamination or memorization claims.
 
 Our development loss continued decreasing. That does not support a claim of
 development-loss deterioration here, or prove absence of memorization. The
-last500 online losses came from changing weights and are averaged by batch;
+last 500 online losses came from changing weights and are averaged by batch;
 final development NLL uses fixed weights and valid-target weighting. Their
 difference is not a clean generalization gap. The defensible current label is
 repetitive/inconsistent generation with unresolved cause.
@@ -211,9 +211,12 @@ or extending the existing checkpoint; those are different recipes. Keep prompts
 and decoding fixed, assess entity/event continuity, and allow little or no gain.
 Do not pick the nicest sampling seed.
 
-Neither trained comparison has been performed. Short batch-size profiles and
-sampling probes answer narrower questions. A proposal is not outcome evidence
-or approval to launch it.
+The length-aware systems intervention remains unrun. The separately declared
+fresh control/half-learning-rate comparison has reached its first 400 updates,
+not its 14,000-update horizon. It preserves the original schedule, seed and
+target exposure; [the measured report](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
+does not establish final storytelling competence. Short batch-size profiles
+and sampling probes still answer different questions.
 
 ## 19. Do not change the objective to spend the remaining budget
 
@@ -227,11 +230,17 @@ not start it at zero. The [CPU report](../../experiments/reports/2026-10-05-stor
 tests this boundary, including an epoch crossing and exact same-cap continuation.
 It does not test recovery from a partly executed optimizer update.
 
+## Evidence-reading extensions
+
+Exercises 19–21 retain their original numbers because they test conceptual
+budget, replay and coverage boundaries. Operational receipts are documented in
+[Appendix D](../appendices/d-reproduction-and-environments.md#budget-boundaries-and-spent-work).
+
 ## 20. Numerical replay does not refund failed work
 
-Completed target exposure describes successful optimizer boundaries:9 plus8
-is17. The persistent allowance describes all admitted attempts:9 for the first
-update,8 for the failed operation and8 for its retry is25. Restoring an older
+Completed target exposure describes successful optimizer boundaries:9 plus 8
+is 17. The persistent allowance describes all admitted attempts:9 for the first
+update,8 for the failed operation and 8 for its retry is 25. Restoring an older
 checkpoint restores weights, moments, stream/RNG and successful counters, not
 the journal's later reservations. The independently retained receipt binds the
 old prefix to the same physical journal; a new output directory cannot reset it.
@@ -244,19 +253,19 @@ poison that session: it cannot update, observe or publish. Construct a fresh
 session and restore a previously durable completed boundary. Keep the failed
 ticket even when the later numerical trajectory replays exactly.
 
-Validation, uncached generation and activation probes are separate work. A
+Development, uncached generation and activation probes are separate work. A
 successful replay is not proof that their repeated calls are free, that all
 reserved work actually completed, or that a physical resource ceiling was
 enforced. Source and evidence boundaries are frozen in the
 [story work specification](../../experiments/specs/2026-10-05-story-persistent-work.md).
 The [actual native companion](../../experiments/reports/2026-10-05-story-work-lesson.md)
-also checks cap24: only7 places remain, so retrying the whole8 refuses with9
+also checks cap 24: only 7 places remain, so retrying the whole 8 refuses with 9
 successful targets/17 reserved places, zero loss calls and unchanged state.
 
 ## 21. The requested boundary is not the schedule horizon
 
 Success depends on the declared boundary and other acceptance conditions. A
-predeclared first400 tranche can complete successfully while its14,000-update
+predeclared first 400 tranche can complete successfully while its 14,000-update
 schedule remains unfinished. The
 [actual control receipt](../../experiments/reports/native-story-control-pilot-20261005-01/acceptance.json)
 and [half-rate receipt](../../experiments/reports/native-story-half-lr-pilot-20261005-01/acceptance.json)
@@ -305,6 +314,6 @@ estimates, and which are now supported by the
 Use the [evidence-reading lab](../labs/06-reading-a-pretraining-run.md) to
 reproduce the accounting and inspect complete archived samples.
 If a run has decreasing loss but
-leaked validation, an incorrect loss denominator or violated memory reserve,
+leaked development, an incorrect loss denominator or violated memory reserve,
 do not call the whole experiment successful. Completion is a conjunction of
 its stated criteria, not one attractive curve.

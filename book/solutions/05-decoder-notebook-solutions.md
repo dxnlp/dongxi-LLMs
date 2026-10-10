@@ -6,7 +6,7 @@ immediately below it in the notebook. This guide summarizes what a sound
 interpretation must preserve; it is not a replacement for running the cells.
 
 The [Chapter 5 narrative](../chapters/05-building-a-modern-decoder.md) now covers
-the Day 5 foundation, Day 6 modern mechanisms, and Day 7 architecture synthesis.
+Part A foundation, Part B modern mechanisms, and Part C architecture synthesis.
 Its 34 conceptual exercises are answered below. The table covers the original
 eleven notebooks; the core Day 7 defense immediately below it brings the full
 pathway to twelve. Study that defense before optional recurrence.
@@ -54,10 +54,12 @@ test and its evidence boundary, not merely when it repeats a layer name.
 
 Notebook readiness and the recorded reference experiment are complete material
 deliverables. The Days 5–7 narrative, including the architecture-defense method,
-is written; the learner's independent defense, any trained comparison, and
-learner completion remain separate.
+is written; an independent architecture defense and any trained comparison
+still need their own evidence.
 
-## Day 5 foundation — worked conceptual solutions
+<a id="day-5-foundation--worked-conceptual-solutions"></a>
+
+## Part A — Foundation — worked conceptual solutions
 
 ### 1. Vocabulary scores are not input positions
 
@@ -94,7 +96,7 @@ unique linguistic roles or prevent redundancy.
 
 ### 4. Heads trade mixture count against feature width
 
-Under the baseline constraint $D=Hd$, width 16 can give four heads of width 4
+Under the baseline constraint $D=Hd_h$, width 16 can give four heads of width 4
 or eight heads of width 2. The latter provides more separately parameterized
 source distributions but fewer value features within each head. It does not
 create eight full-width transformers or assign disjoint token ranges. More
@@ -190,7 +192,9 @@ changed output after ablation establishes a unique semantic function by itself.
 The reversed-context probe cannot supply an accuracy score without declared
 gold labels.
 
-## Day 6 modern decoder — worked conceptual solutions
+<a id="day-6-modern-decoder--worked-conceptual-solutions"></a>
+
+## Part B — Modern decoder — worked conceptual solutions
 
 ### 13. Removing an offset is different from scaling a vector
 
@@ -258,7 +262,7 @@ each time they are read.
 
 ### 19. Share source representations, not query distributions
 
-GQA shrinks K/V projections from $DH_qd$ each to $DH_{kv}d$ each, and compact
+GQA shrinks K/V projections from $DH_qd_h$ each to $DH_{kv}d_h$ each, and compact
 K/V tensors from `[B,Hq,S,d]` to `[B,Hkv,S,d]`. Query tensors still use Hq,
 as do attention distributions `[B,Hq,T,S]` and head outputs `[B,Hq,T,d]`.
 Different Q vectors can form different weights over shared K and thus different
@@ -269,10 +273,10 @@ implementation.
 
 ### 20. State the implementation, not just the acronym
 
-The lab computes RMS statistics over each projected Q/K head's d features,
+The lab computes RMS statistics over each projected Q/K head's $d_h$ features,
 applies learned feature scales, then applies RoPE and retains division by
-$\sqrt d$. There are separate Q and K scale vectors of length d per layer,
-broadcast over heads and positions, so the extra parameter count is 2d per
+$\sqrt{d_h}$. There are separate Q and K scale vectors of length $d_h$ per layer,
+broadcast over heads and positions, so the extra parameter count is $2d_h$ per
 layer. Separate statistics do not imply separate learned parameters for every
 head. This is not the original L2-normalized, learned-score-scale QKNorm formula.
 Learned coordinate scaling can also change direction, and need not commute with
@@ -327,7 +331,9 @@ tying. A fixed two-use notebook does not establish those mechanisms or any
 trained quality benefit. Visible reasoning tokens and latent block applications
 are separate ways of spending computation, not interchangeable evidence.
 
-## Day 7 architecture defense — worked conceptual solutions
+<a id="day-7-architecture-defense--worked-conceptual-solutions"></a>
+
+## Part C — Architecture defense — worked conceptual solutions
 
 ### 25. Equal widths can describe different spaces
 
@@ -427,11 +433,11 @@ No single token-ID comparison can express all four distinctions.
 
 ### 32. Rectangular work and useful outputs differ
 
-Three prompts of lengths2/4/6 require18 physical prefill positions but only12
+Three prompts of lengths 2/4/6 require 18 physical prefill positions but only 12
 valid ones. Keeping the original rectangle during full-prefix generation
 repeats padding; compaction removes stopped rows but does not remove all
-retained pad columns. The frozen fixture forwards90 positions uncached in a
-batch versus66 separately; cached paths forward27 versus21. They produce the
+retained pad columns. The frozen fixture forwards 90 positions uncached in a
+batch versus 66 separately; cached paths forward 27 versus 21. They produce the
 same twelve greedy output tokens. Counts omit much attention arithmetic and
 runtime overhead. The measured tiny cached batch is slightly slower here;
 profiling on the intended hardware/workload is needed for any speed claim.
@@ -455,8 +461,8 @@ and version. Resume must apply that pending update before the next collection;
 sampling again changes the data and advances the cursors. Completed-boundary
 recovery also needs Adam moments, reference weights and the data stream.
 All four fixed tiny DPO/RLVR runs reproduce their six-update histories and final
-state from both boundaries. This does not add resume to the optional pretrained
-Spark runners or establish better reasoning. DPO uses no rollout RNG in this
+state from both boundaries. The later native recovery reports establish separate runner behavior; this
+tiny replay alone establishes neither their outcomes nor better reasoning. DPO uses no rollout RNG in this
 fixture, so its omission is not advertised as a failure.
 
 The [Day 25 extension](../../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb)

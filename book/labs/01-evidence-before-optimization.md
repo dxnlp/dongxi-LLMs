@@ -1,43 +1,41 @@
 # Lab 1 — Evidence Before Optimization
 
-Machine: CPU on Mac or Spark, offline. Use the declared Torch/Matplotlib course
-kernel. Read [the chapter](../chapters/01-evidence-before-optimization.md) and attempt
-[the worked exercises](../solutions/01-evidence-before-optimization.md) alongside this route.
+Machine: isolated CPU course kernel on Mac or Spark, offline.
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).
+Prerequisites: Read the chapter opening; basic Python dictionaries and conjunctions.
+Deliverable: An evidence card separating intended controls, actual observations and warranted claims.
 
-Use [run identity](../../notebooks/day-01/01_experiment_identity.ipynb) to predict
-whether changing JSON key order and changing a corpus revision have the same
-effect. Execute canonical fingerprinting and change one declared control.
+Read the [chapter](../chapters/01-evidence-before-optimization.md) and use the
+[worked solutions](../solutions/01-evidence-before-optimization.md) after attempting each exercise.
+Write each prediction before executing the reference. Numerical checkpoints use
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may
+change the result. References and interpretations remain adjacent to the attempt.
 
-Next inspect [smoke criteria](../../notebooks/day-01/02_smoke_criteria_and_claims.ipynb).
-A zero exit code, finite state and safe sampled reserve are separate requirements.
-Break one deliberately and identify which conclusion changes. Never replace a
-failed safety criterion with an average over successful ones.
+| Notebook | Question / prediction before reveal | Checkpoint on the declared fixture | One intervention | Evidence boundary |
+|---|---|---|---|---|
+| [Run identity](../../notebooks/day-01/01_experiment_identity.ipynb) | Predict: Will reordered JSON change identity, and will a changed context? | Reordering preserves the fingerprint; changing context changes it. | Change one tokenizer/context field. | Identity sensitivity does not measure capability. |
+| [Smoke acceptance](../../notebooks/day-01/02_smoke_criteria_and_claims.ipynb) | Predict: Can a zero exit compensate for failed reserve or nonfinite state? | Acceptance is the conjunction; each planted failure refuses. | Remove a required observation. | Sampled reserve does not observe every instant. |
+| [Read an actual run](../../notebooks/day-01/03_read_a_real_run.ipynb) | Predict: Does declining NLL establish a coherent plot? | Read the final whole story and EOS separately from NLL. | Compare both retained decoding modes at the same checkpoint. | Selected archive examples do not estimate a story population. |
+| [Checkpoint meanings · extension](../../notebooks/day-01/04_checkpoint_interface.ipynb) | Predict: Will an eight-ID permutation load yet change the prediction problem? | Equal vocabulary size is eight; swapped mapping is incompatible; unchanged local reload passes. | Keep IDs fixed and change normalization. | These local interfaces do not establish pretrained quality. |
 
-Finally [read the real run](../../notebooks/day-01/03_read_a_real_run.ipynb).
-Separate tested operation compatibility from usefulness, quality or general support
-for every model/size/recipe. This saved case uses the completed TinyStories run
-as a forward-looking evidence exercise; Chapter1's original Qwen smoke remains
-a distinct historical report. This lab does not rerun either GPU experiment.
+The eight-ID checkpoint extension constructs and serializes local random interfaces. It downloads nothing; loading success and semantic compatibility are separate checks.
 
-Then inspect [checkpoint interfaces](../../notebooks/day-01/04_checkpoint_interface.ipynb).
-Predict why an eight-ID swap loads but is incompatible; keep the mapping unchanged
-and perturb normalization. Use actual local save/reload as a positive control.
-A controlled journal failure separates stable configuration from invocation
-metadata. This fourth notebook also needs Transformers/tokenizers, creates its
-tokenizer locally and downloads nothing. The
-[identity report](../../experiments/reports/2026-10-04-run-identity.md) records the
-independent tiny HF/PEFT checks and their limits.
+Retain a short explanation of the intervention, observed change and claim it
+does not establish. The deliverable should connect these explanations into one
+defensible argument, with source/report links rather than an execution-only checklist.
 
-Deliver a run card: hypothesis, identity, controls, acceptance/failure criteria,
-actual observations, interpretations and what the experiment cannot prove.
-Implementation: [course_foundations.py](../../src/dongxi_llms/course_foundations.py).
-Checks: `PYTHONPATH=src python -m unittest discover -s tests -p test_course_foundations.py`.
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
 
-Fresh reference execution from the repository root:
+From the repository root, use the isolated environment/kernel described in
+[Appendix D](../appendices/d-reproduction-and-environments.md):
 
 ```bash
-python scripts/verify_course_notebooks.py --days 1 --kernel dgx-spark-native --export-figures
+.venv-course/bin/python scripts/verify_course_notebooks.py --days 1 --kernel dongxi-course --expected-prefix .venv-course
 ```
 
-A passing reference verifies declared mechanism properties, not broad model
-capability or independently assessed learner mastery.
+The verifier retains executed copies and identities in a new directory. Source
+notebooks and learner attempts remain intact. Exact runner/replay/export commands
+and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
+
+</details>

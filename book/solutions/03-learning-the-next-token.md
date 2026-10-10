@@ -125,10 +125,11 @@ the observed mistake.
 
 ## Exercise 5 — From logits into parameters
 
-Let:
+Let $h$ and $g$ be row vectors of lengths $D$ and $V$, and let the stored
+output weight have shape $[V,D]$:
 
 $$
-z=Wh+b,
+z=hW_{\mathrm{out}}^\top+b,
 \qquad
 g=\frac{\partial L}{\partial z}=p-q.
 $$
@@ -138,23 +139,23 @@ The chain rule gives:
 $$
 \frac{\partial L}{\partial b}=g,
 \qquad
-\frac{\partial L}{\partial W}=gh^\top,
+\frac{\partial L}{\partial W_{\mathrm{out}}}=g^\top h,
 \qquad
-\frac{\partial L}{\partial h}=W^\top g.
+\frac{\partial L}{\partial h}=gW_{\mathrm{out}}.
 $$
 
-$gh^\top$ is an outer product with shape `[V,D]`. Under a simple gradient step,
+$g^\top h$ is an outer product with shape `[V,D]`. Under a simple gradient step,
 the target row is strengthened in the direction of the current hidden state,
 while non-target rows are weakened in proportion to their probabilities. The
 output head is learning how to read contextual geometry as token evidence.
 
-$W^\top g$ has shape `[D]` and tells the transformer how the state should change
+$gW_{\mathrm{out}}$ has shape `[D]` and tells the transformer how the state should change
 to make the target more competitive. Backpropagation sends this signal through
 the layers that created $h$. The transformer is learning to construct better
 contextual geometry.
 
 The local logit update is explanatory, but logits are normally disposable
-activations. Reusable learning lives in $W$, $b$, transformer parameters, and
+activations. Reusable learning lives in $W_{\mathrm{out}}$, $b$, transformer parameters, and
 possibly a tied embedding table.
 
 ## Exercise 6 — Nonzero loss, zero expected gradient

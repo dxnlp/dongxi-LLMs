@@ -17,7 +17,7 @@ example of the construction introduced in
 
 ## 11.1 The reference is a distribution over possible continuations
 
-Fix prompt $x$ and let $\pi_{\text{ref}}(y\mid x)$ be a reference policy over
+Fix prompt $x$ and let $\pi_{\mathrm{ref}}(y\mid x)$ be a reference policy over
 complete responses. It is commonly a supervised checkpoint at the start of
 preference training. A policy $\pi$ may move probability toward higher-reward
 answers, but a movement penalty expresses a preference for staying near that
@@ -25,11 +25,11 @@ reference:
 
 $$
 J(\pi)=\sum_y\pi(y\mid x)r(x,y)
--\beta\sum_y\pi(y\mid x)\log\frac{\pi(y\mid x)}{\pi_{\text{ref}}(y\mid x)},
+-\beta\sum_y\pi(y\mid x)\log\frac{\pi(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)},
 \qquad \beta>0.
 $$
 
-The second term is $\beta\,\mathrm{KL}(\pi\Vert\pi_{\text{ref}})$. Its
+The second term is $\beta\,\mathrm{KL}(\pi\Vert\pi_{\mathrm{ref}})$. Its
 direction matters: samples would come from the current policy, and their log
 ratio is measured against the reference. The finite derivation assumes the
 reference is positive on every candidate under discussion and rewards are
@@ -38,6 +38,10 @@ forward KL. Real softmax models have positive theoretical token probabilities,
 but truncation, top-$k$ sampling, and numerical underflow can create a different
 effective support. Do not quietly transfer a theorem about one distribution
 to another sampler.
+
+Here $r(x,y)$ is the fixed reward in the finite derivation. A trained reward
+model is written $r_\phi(x,y)$ elsewhere; DPO below eliminates the explicit
+reward through policy log ratios rather than fitting that model.
 
 This is an objective over response probabilities. It does not mean that two
 neural checkpoints have nearby weights, nor that a small KL implies every
@@ -50,25 +54,25 @@ Use a Lagrange multiplier $\lambda$ for $\sum_y\pi_y=1$:
 
 $$
 \mathcal{F}=\sum_y\pi_y r_y
--\beta\sum_y\pi_y\log(\pi_y/\pi_{\text{ref},y})
+-\beta\sum_y\pi_y\log(\pi_y/\pi_{\mathrm{ref},y})
 +\lambda\left(\sum_y\pi_y-1\right).
 $$
 
 Differentiating with respect to a positive probability gives
 
 $$
-r_y-\beta\left(\log\frac{\pi_y}{\pi_{\text{ref},y}}+1\right)+\lambda=0.
+r_y-\beta\left(\log\frac{\pi_y}{\pi_{\mathrm{ref},y}}+1\right)+\lambda=0.
 $$
 
 Rearrange and absorb the shared constant into normalization:
 
 $$
-\pi^*(y\mid x)=\frac{\pi_{\text{ref}}(y\mid x)\exp(r(x,y)/\beta)}{Z(x)},
-\qquad Z(x)=\sum_y\pi_{\text{ref}}(y\mid x)\exp(r(x,y)/\beta).
+\pi^*(y\mid x)=\frac{\pi_{\mathrm{ref}}(y\mid x)\exp(r(x,y)/\beta)}{Z(x)},
+\qquad Z(x)=\sum_y\pi_{\mathrm{ref}}(y\mid x)\exp(r(x,y)/\beta).
 $$
 
 The optimum exponentially tilts the reference toward reward. Compute it as
-$\mathrm{softmax}(\log\pi_{\text{ref}}+r/\beta)$ for stability. With fixed
+$\mathrm{softmax}(\log\pi_{\mathrm{ref}}+r/\beta)$ for stability. With fixed
 reward, large $\beta$ resists movement; small $\beta$ concentrates mass more
 strongly. Adding a prompt-dependent constant to rewards multiplies numerator
 and partition function by the same factor, so the policy is unchanged. This
@@ -85,7 +89,7 @@ not a certificate that a short neural training run reaches the ideal policy.
 Take logarithms of the optimum:
 
 $$
-r(x,y)=\beta\log\frac{\pi^*(y\mid x)}{\pi_{\text{ref}}(y\mid x)}
+r(x,y)=\beta\log\frac{\pi^*(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)}
 +\beta\log Z(x).
 $$
 
@@ -94,8 +98,8 @@ the policy's reference-relative pair margin
 
 $$
 m_\theta=\beta\left[
-\log\pi_\theta(y_w\mid x)-\log\pi_{\text{ref}}(y_w\mid x)
--\log\pi_\theta(y_l\mid x)+\log\pi_{\text{ref}}(y_l\mid x)
+\log\pi_\theta(y_w\mid x)-\log\pi_{\mathrm{ref}}(y_w\mid x)
+-\log\pi_\theta(y_l\mid x)+\log\pi_{\mathrm{ref}}(y_l\mid x)
 \right].
 $$
 
@@ -129,7 +133,7 @@ $$
 \frac{\partial L}{\partial l}=-\beta(\sigma(m_\theta)-q).
 $$
 
-At initialization $\pi_\theta=\pi_{\text{ref}}$, every relative margin is
+At initialization $\pi_\theta=\pi_{\mathrm{ref}}$, every relative margin is
 zero. For a hard winning pair the derivatives are $-\beta/2$ and $\beta/2$.
 At this point larger $\beta$ gives a larger local gradient for fixed learning
 rate. Yet in the fixed-reward optimum larger $\beta$ means stronger restraint.
@@ -155,7 +159,7 @@ An autoregressive completion has
 
 $$
 \log\pi_\theta(y\mid x)
-=\sum_{t=1}^{|y|}\log p_\theta(y_t\mid x,y_{<t}).
+=\sum_{t=1}^{|y|}\log\pi_\theta(y_t\mid x,y_{<t}).
 $$
 
 Include a termination token under the declared template when it belongs to the
@@ -164,9 +168,9 @@ when to stop. Do not sum prompt likelihood into the DPO response score. The
 prompt supplies context and can receive gradients through attention, but its
 tokens are not the completion being compared.
 
-For a batch, predictive logits have shape $[B,T,V]$, aligned labels and the
-completion mask have shape $[B,T]$, and the gathered token log-probabilities
-have shape $[B,T]$. Summing the masked values produces $[B]$ sequence scores.
+For a batch, predictive logits have shape $[B,n,V]$, aligned labels and the
+completion mask have shape $[B,n]$, and the gathered token log-probabilities
+have shape $[B,n]$. Summing the masked values produces $[B]$ sequence scores.
 Chosen and rejected branches each produce one vector. The DPO loss reduces the
 pair vector only after these sums.
 
@@ -214,39 +218,18 @@ Changing any of these invalidates the cache. A detached tensor from the current
 policy is not a fixed reference: it prevents one backward path but changes every
 step, producing a different objective.
 
-For model-scale training, reference memory is a real cost. The optional Spark
-runner holds two model copies and one optimizer, uses bounded accumulation,
-checks host memory reserve, and records its environment. This simple full-weight
-path favors clarity over throughput. A production implementation might use
-cached scores, a frozen adapter-disabled base, or distributed placement, but
-each requires equivalence checks before it replaces the transparent path.
+Reference memory is a real cost: the transparent full-weight path holds a
+policy, the original frozen reference and one policy optimizer. A cached-score
+or adapter-based implementation can reduce that cost only after checking that
+it preserves the response scores and reference identity.
 
-Recovery must retain the *original* reference as well as the current policy.
-Copying a restored, already trained policy into the reference silently changes
-every reference-relative margin. It may make the code run while changing the
-objective. A completed DPO boundary therefore binds policy/reference weights,
-Adam moments, pair sampler and global RNG, completed updates, cumulative branch
-work and committed numerical metric history to the same scientific contract.
-
-Save that boundary before final evaluation or HF export. An export failure is
-not permission to discard the last durable optimizer state, and a successful
-HF export alone is not a complete restart. The shared format from section 9.6
-checks separately expected byte identity before restricted tensor loading;
-the DPO runner must additionally check frozen-reference identity, parameter
-binding, sampler draws and the recorded work counts before applying anything.
-See the [runner-owned plan](../../docs/PRODUCTION_RECOVERY_PLAN.md). Same-environment
-tiny CPU replay is a source gate, not a pretrained or Spark recovery result.
-
-The resource boundary is wider than that optimizer boundary. Before an accumulated
-update, reserve its entire chosen/rejected policy/reference work rather than
-drawing examples and then discarding those that exceed a cap. Baseline/final
-evaluation and greedy generation need their own panel reservations. Keep a durable
-resource journal separate from committed numerical history: a failed attempt after
-the latest snapshot still happened, and a new output directory must not refund it.
-Conservative logical-position bounds, known actual calls and unknown internal
-failed-call work are different records. Chapter14 section14.8 develops this
-distinction and the additional physical quota/containment gates; none follows
-from a finite loss or a successfully loaded checkpoint.
+Recovery has the same objective boundary. Copying the restored trained policy
+into the reference changes every reference-relative margin. Retain the original
+reference, optimizer, pair sampler and RNG together with the policy. Restoring
+only weights may produce valid tensors while changing the experiment. Failed
+attempts also remain spent work even when numerical state is rolled back.
+[Appendix D](../appendices/d-reproduction-and-environments.md#policy-reference-and-pending-rollout-identity)
+separates this principle from snapshot, journal and supervision mechanics.
 
 ## 11.8 Controlled experiments and an instructive negative result
 
@@ -271,16 +254,12 @@ training. The chosen-SFT arm provides a useful control, but it sees demonstratio
 supervision rather than identical information; equal update count does not make
 the two datasets semantically equivalent.
 
-For Day 18's Qwen extension, begin with a saved SFT checkpoint, preserve an
-untouched SFT control, train a DPO arm, and include a label-shuffled or matched
-chosen-only control under a declared purpose. Use independently frozen tasks,
-paired decoding seeds, refusal/correctness/coherence slices, and sample-level
-outputs. Reward margins are training diagnostics, not the final verdict. The
-[Spark runner](../../scripts/run_chapter11_spark_dpo.py) and
-[lab guide](../labs/11-direct-preference-optimization.md) provide an executable
-path. Its early tiny CPU results and the later native recovery proof answer
-different questions; the fixed 100-update preference comparison remains pending
-until its own training and common evaluation records exist.
+For a pretrained comparison, preserve the SFT parent, include an untouched
+parent and a chosen-only control, and freeze independent generation panels.
+Match actual draws, not merely seeds. Section 11.8.4 reports the executed
+100-update comparison; the CPU controls above remain evidence about a different
+model and response space. The [lab route](../labs/11-direct-preference-optimization.md)
+lets you inspect both without treating a larger pair margin as the final verdict.
 
 ### 11.8.1 Chosen likelihood and rehearsal: extra objectives, not free repairs
 
@@ -289,33 +268,35 @@ does not supervise every other response or every other task. To give an absolute
 chosen-likelihood objective a voice, augment the pair loss explicitly:
 
 $$
-L_{\alpha,\gamma}=L_{\text{DPO}}
-+\alpha N_{\text{chosen}}+\gamma N_{\text{rehearsal}},\qquad
-N_{\text{chosen}}=-\frac{\sum_{i=1}^B c_i}{\sum_{i=1}^B T_{w,i}}.
+L_{\lambda_{\mathrm{SFT}},\gamma}=L_{\text{DPO}}
++\lambda_{\mathrm{SFT}} N_{\text{chosen}}+\gamma N_{\text{rehearsal}},\qquad
+N_{\text{chosen}}=-\frac{\sum_{i=1}^B c_i}{\sum_{i=1}^B n_{w,i}}.
 $$
 
-Here $c_i$ is the summed chosen-response log-likelihood, $T_{w,i}$ counts
+Here $c_i$ is the summed chosen-response log-likelihood, $n_{w,i}$ counts
 its valid response tokens including EOS, and $B$ is the number of pairs.
 $N_{\text{rehearsal}}$ is a separate supervised next-token loss on retained
-demonstrations, also normalized by its own valid-token count. Alpha and gamma
+demonstrations, also normalized by its own valid-token count. $\lambda_{\mathrm{SFT}}$ and $\gamma$
 are nonnegative coefficients. This global token mean is not a mean of
 per-response averages; variable response lengths make the distinction matter.
-Neither auxiliary changes the DPO response sums into token averages.
+Neither auxiliary changes the DPO response sums into token averages. The
+companion API names the chosen-NLL coefficient `alpha`; here it is written
+$\lambda_{\mathrm{SFT}}$ to distinguish it from other objective weights.
 
 With hard recorded preferences and frozen references, the direct chosen-score
 derivative is
 
 $$
-\frac{\partial L_{\alpha,\gamma}}{\partial c_i}
+\frac{\partial L_{\lambda_{\mathrm{SFT}},\gamma}}{\partial c_i}
 =\frac{\beta}{B}(\sigma(m_i)-1)
--\frac{\alpha}{\sum_j T_{w,j}}.
+-\frac{\lambda_{\mathrm{SFT}}}{\sum_j n_{w,j}}.
 $$
 
 The extra negative term pushes recorded chosen likelihood upward. Rehearsal
 adds its own parameter gradient; it is not a new direct derivative of this
 pair's score. Through shared embeddings, attention and MLP weights, those
-directions can reinforce or compete. Turning alpha off recovers ordinary DPO
-**only when gamma is also zero**. A positive rehearsal coefficient still
+directions can reinforce or compete. Setting $\lambda_{\mathrm{SFT}}=0$ recovers ordinary DPO
+**only when $\gamma$ is also zero**. A positive rehearsal coefficient still
 defines a different objective.
 
 This added pressure is not a correctness guarantee. If the recorded winner is
@@ -417,56 +398,26 @@ scenarios separate. The held-out generation consumes its own emitted tokens
 and is graded against independently authored answers after generation. Keep
 raw failures, EOS versus caps and absolute chosen/rejected likelihoods; neither
 the final arm nor its hyperparameters are selected from those held-out scores.
-The [lab](../labs/11-direct-preference-optimization.md) explains the executable
-path and its verification boundary. Random tiny-model checks do not establish
-pretrained quality; the intended Spark control, resource approval and accounted
-interrupted recovery require their own evidence before a pilot.
+The [lab](../labs/11-direct-preference-optimization.md) links the runnable
+matching microscope. Its pretrained counterpart is the separately measured
+comparison in section 11.8.4; random-model correctness checks do not substitute
+for those actual outputs.
 
-### 11.8.3 A matched control must recover its sampling and its spent work
+### 11.8.3 Recovery must preserve what the comparison matched
 
-The [counted chosen-SFT recovery](../../experiments/reports/2026-10-05-chosen-sft-accounted-recovery.md)
-now tests that missing CPU boundary explicitly. Restore the exact chosen
-objective, full-sequence geometry, parent/interface, Adam, private replacement
-sampler and global RNG. Replacing its sampler with shuffled cycling would break
-the matching argument even if the restored parameters were correct.
+A chosen-only control and DPO can share draws while requiring different
+restart checks. Chosen-only needs its chosen-token objective and replacement
+sampler; DPO additionally needs rejected scores and its original reference.
+Restoring a shuffled cyclic sampler instead of the declared replacement sampler
+changes future exposure. A failed attempt remains part of the physical cost,
+although its partial numerical state must not become a completed checkpoint.
 
-Two actual fresh-process continuations recover update2 and finish the same
-six-update trajectory exactly. A deliberately failed later update remains in
-the physical journal: seven windows were reserved, but only six numerical
-updates completed. Successful training used48 chosen targets and288 full input
-positions; permanent reservations remain56 and336. Restore the earlier model
-state, not an earlier allowance. The failed second forward also remains an
-uncertain attempted cost, not a silently completed or refunded computation.
-
-Independent receipts bind the selected payload bytes and both work/I/O journal
-prefixes before load. Chosen-SFT needs a chosen-specific validator, not a DPO
-validator expecting rejected likelihoods or a frozen reference. This opt-in API
-does not silently retrofit the older unaccounted comparison CLI, establish
-pretrained recovery, integrate held-out generation costs, or improve its
-original0/4 answers. Those scientific and resource boundaries stay separate.
-
-The later [native Spark replay](../../experiments/reports/2026-10-05-native-chosen-replay.md)
-now establishes that recovery boundary on the selected full400 pretrained parent.
-Clean2, source2, fresh completed1→2 and an independent CPU comparison all exit0;
-the numerical state and metric tail match exactly. Source plus resume physically
-present60 chosen training labels, although their recovered two-update trajectory
-contains40. Validation and generation have their own counted work. Both location
-panels still score0/4 despite natural stops on every prompt. Technical recovery,
-stopping and answering therefore remain distinct. This proof permits the fixed
-fresh100-update control; its weights do not initialize that pilot.
-
-The DPO arm now also has an [accepted native replay](../../experiments/reports/native-dpo-replay-20261005-run-03/acceptance.json):
-clean two updates, source two updates, and a fresh restore of completed update
-one followed by update two. The independent CPU comparison finds identical
-policy, optimizer, reference, RNG, counters and numerical history. Every child
-actually exits successfully within its original 600-second deadline. Runtime
-witnesses bind eight Torch compute threads and four bounded workers hashing
-complete files; they do not replace the original state or interface checks.
-The earlier deadline failures remain failures, even though their second-update
-snapshots were durable. See [Chapter 14's recovery diagnosis](14-when-optimization-goes-wrong.md)
-for why a saved state is not a completed invocation. Recovery establishes a
-technical gate, not improved preference quality, equal compute, or a result for
-the still-separate 100-update pilot.
+[CPU chosen-control replay](../../experiments/reports/2026-10-05-chosen-sft-accounted-recovery.md),
+[native chosen-control replay](../../experiments/reports/2026-10-05-native-chosen-replay.md)
+and [native DPO replay](../../experiments/reports/native-dpo-replay-20261005-run-03/acceptance.json)
+provide distinct evidence for these boundaries. Their technical success says
+nothing by itself about location answers. The snapshot and supervision details
+are collected in [Appendix D](../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence).
 
 ### 11.8.4 The preferred answer can win a pair without winning generation
 
@@ -475,6 +426,25 @@ the recorded chosen answer over its recorded alternative, relative to the
 reference? In free generation, does the policy actually emit the required
 answer? DPO directly trains the first question. A common independent generation
 panel is needed for the second.
+
+### Reader prediction
+
+Before revealing the comparison, suppose DPO greatly increases its validation
+chosen/rejected margin. Must it emit more exact location answers than chosen-only
+SFT? Write a prediction for absolute chosen likelihood, exact answer content and
+natural stopping separately. This is a reader exercise; it is not a claim about
+the historical pre-run hypothesis.
+
+### Comparison settings
+
+| Control | Declared comparison |
+|---|---|
+| Parent | Same original full400 SFT export; recovery weights are not pilot parents |
+| Exposure | 100 updates; identical 400 replacement draws and 2,047 chosen targets |
+| Chosen-only objective | Global valid-chosen-token NLL |
+| DPO objective | Mean pair loss using complete-response sums, original reference and $\beta=0.1$ |
+| Common generation | Saved template, greedy decoding, 64-token cap; BF16-loaded policies |
+| Pair scoring | FP32 weights with BF16 autocast; four separate validation pairs |
 
 The [actual Spark pilots](../../experiments/reports/2026-10-05-native-preference-comparison.md)
 make this distinction concrete. Both begin afresh from the original full400 SFT
@@ -485,7 +455,7 @@ mean-pair loss, beta 0.1, rejected answers and the original frozen reference.
 The parent, actual draws, IDs and response masks are matched, not simply their
 seed numbers. Neither recovery's trained weights initializes its pilot.
 
-| Training work, excluding validation and generation | Chosen-only100 | DPO100 |
+| Training work, excluding validation and generation | Chosen-only 100 | DPO100 |
 | --- | ---: | ---: |
 | Chosen targets |2,047|2,047|
 | Rejected targets |0|1,600|
@@ -502,20 +472,32 @@ Counts describe processed operations, not FLOPs. Native elapsed time also
 includes saving, validation, generation and integrity work; differing observer
 paths prevent interpreting its ratio as a universal algorithmic speed comparison.
 
-Both fixed pilots actually exit0, keep their original1,800-second deadlines
-and25GiB host reserve, and close their work/I/O journals. This is a technical
-success, not an answer-quality certificate. In their own FP32-loaded,
-BF16-autocast location diagnostics, both start at 0/4 strict whole answers and
-4/4 natural stops. After training, chosen-only reaches 4/4 exact answers and
-DPO 1/4; both still stop naturally on all four prompts. These own-run diagnostics
-must not be relabeled as the separate common BF16-loaded comparison.
+The two pilots completed their fixed training boundaries. Their own-run
+location diagnostics use FP32-loaded weights with BF16 autocast; the common
+comparison below uses BF16-loaded generation. Both diagnostic baselines give
+0/4 exact location answers and 4/4 natural stops. After training, chosen-only
+gets 4/4 exact answers and DPO 1/4, with natural stopping on all four prompts.
+Agreement across the two loading paths was measured; it is not assumed.
 
-For example, DPO emits `purple pouch` where the fixed expected answer is
-`the purple pouch`, and `green` where it is `the green folder`. The original
-exact-match contract remains unchanged. Missing an article and missing a noun
-are different qualitative errors; a strict nonmatch does not by itself prove
-that every response identifies the wrong semantic location. Inspect the actual
-text rather than hiding it behind one accuracy number.
+### Read the emitted answer
+
+The following are the first three location items in the fixed common panel,
+not examples selected for a favorable outcome. Complete DPO scoring text is
+retained; the third output's trailing newline is shown explicitly. All three
+responses stop naturally. The [common comparison report](../../experiments/reports/2026-10-05-native-preference-comparison.md#separate-generated-answer-and-retention-populations)
+retains their exact-match contract and output provenance.
+
+| Prompt fact and question | Required whole answer | DPO emitted scoring text |
+|---|---|---|
+| Inez put the ring in the purple pouch. Where is the ring? | `the purple pouch` | `purple pouch` |
+| Jun left the brush in the tall vase. Where is the brush? | `the tall vase` | `the tall vase` |
+| Elin placed the ticket in the green folder. Where is the ticket? | `the green folder` | `green\n` |
+
+Each full prompt begins `Answer with the location only.` Missing an article and
+missing a noun are distinct errors. A strict nonmatch need not mean that every
+semantic location is wrong; the frozen whole-answer rule still counts the
+response as a nonmatch. Qualitative inspection supplements that rule rather
+than replacing it after seeing the outputs.
 
 Why can the four validation margins improve without perfect answers? A relative
 chosen/rejected margin constrains two recorded sequence likelihoods against a
@@ -525,11 +507,10 @@ can improve its relative odds while an alternative token still wins the first
 decoding decision. Once generation takes that alternative, later predictions
 condition on a different prefix. Exact stopping is another separate property.
 
-The completed common evaluation now checks the unchanged parent, chosen100
+The completed common evaluation now checks the unchanged parent, chosen 100
 and DPO100 on four validation pairs, four location prompts, 120 instruction
-items and 20 annotated reasoning items. All 52 acceptance checks pass and all
-three actual children exit 0. Pair scoring uses FP32 weights/BF16 autocast;
-generation uses BF16-loaded policies and the same saved-template greedy64
+items and 20 annotated reasoning items. Pair scoring uses FP32 weights/BF16 autocast;
+generation uses BF16-loaded policies and the same saved-template greedy 64
 contract. These code-path labels are not instrumented kernel traces.
 
 In the four-pair likelihood panel, mean chosen logp changes from −11.486888
@@ -541,7 +522,7 @@ for chosen-only. Multiplication by beta 0.1 gives the loss's scaled margin.
 
 ![Absolute answer likelihood and unscaled relative margin](../../experiments/reports/native-preference-figures-20261005-run-01/likelihood-and-margin.png)
 
-| Independent common generation | Unchanged full400 | Chosen-only100 | DPO100 |
+| Independent common generation | Unchanged full400 | Chosen-only 100 | DPO100 |
 | --- | ---: | ---: | ---: |
 | Strict location answers |0/4|4/4|1/4|
 | Original instruction answers |120/120|120/120|120/120|
@@ -564,8 +545,8 @@ rows label eight original fixture-development items plus an additional known
 RLVR-overlap item, not math examples used in these assistant policies' training.
 
 Read the source-bound report for raw answers, source-group uncertainty and
-separate likelihood/generation work. Its CPU-rendered plot consumes complete
-actual receipts without loading another model or generating another score.
+separate likelihood/generation work. The plotted observations come from retained records; the figure is not another
+training or generation experiment.
 Keep margins, absolute likelihoods, exact answers, stopping, retention and
 costs in their own lanes. One recipe and four location prompts cannot establish
 that either training method is universally superior.
@@ -589,12 +570,12 @@ following questions; each notebook also contains adjacent runnable solutions.
 8. What invalidates a reference-log-probability cache?
 9. Design a DPO/SFT/control comparison and explain unequal information versus unequal compute.
 10. If held-out preference accuracy rises but generation correctness falls, what conclusions and next checks are justified?
-11. Derive the chosen-NLL contribution to the chosen-score gradient. Why does alpha=0 not remove a nonzero rehearsal term?
+11. Derive the chosen-NLL contribution to the chosen-score gradient. Why does $\lambda_{\mathrm{SFT}}=0$ not remove a nonzero rehearsal term?
 12. Can chosen NLL correct a noisy recorded winner or guarantee parity retention? Explain the supervision and shared-parameter boundaries.
 13. Why compare longer-chosen and matched-long pairs, absolute likelihoods, free generation and extra token costs together?
 14. Why is copying the resumed policy into a new DPO reference an objective change, even when tensor shapes and tokenizer identities agree?
 15. Two arms use the same seed and update count. One cycles through shuffled pairs; the other samples with replacement. Why is chosen exposure not necessarily matched, and what must be compared before making that claim?
-16. A chosen-only control restores update2 after a failed update3 attempt, then completes six updates. Why can its journal still show seven reserved windows, and why must it not inherit a DPO-specific recovery validator?
+16. A chosen-only control restores update 2 after a failed update 3 attempt, then completes six updates. Why can its journal still show seven reserved windows, and why must it not inherit a DPO-specific recovery validator?
 17. Two native pilots see exactly 2,047 chosen targets. DPO improves all four validation margins but produces fewer strict whole answers. Why are those observations compatible, what is actually matched, and what does the completed common evaluation establish—and leave unproved?
 
 DPO made preference learning a supervised likelihood problem over log ratios.

@@ -93,6 +93,12 @@ serialized rules, including normalization and merge/pre-tokenization, plus wrapp
 settings, special IDs, template and stops. Lowercasing changes how `CAT` is encoded
 without changing the fixture's eight entries. Actual save/reload is the positive control.
 
+## Optional evidence-reading extensions
+
+Exercises 8–9 retain their original IDs. They extend the chapter's conjunction
+and semantic-interface principles through the operational cases linked from
+[Appendix D](../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision).
+
 ## Exercise 8
 
 Explicit adoption fingerprints current saved meanings/rules and records a new
@@ -109,8 +115,8 @@ a CUDA kernel nor exact model-scale restart parity.
 The contract requires successful fresh-process replay within the declared
 deadline, not only two completed original runs. Safe sampled memory cannot
 replace a failed time criterion or missing final comparison. The outer
-adapter's exit1 reports its own failure; the native exit remains unknown in
+adapter's exit 1 reports its own failure; the native exit remains unknown in
 this receipt, with the cleanup error retained. Preserve incurred work and the
 uncommitted artifact rather than assigning a convenient native exit or calling
-the case successful. A new CPU8 attempt keeps the original deadline and must
+the case successful. A new CPU 8 attempt keeps the original deadline and must
 produce its own complete receipts before pilot admission.

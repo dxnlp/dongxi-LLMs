@@ -135,6 +135,15 @@ def main():
                            *(ROOT/'tests').glob('*.py')])
     manifest['source_hashes'] = {path.relative_to(ROOT).as_posix():hashlib.sha256(path.read_bytes()).hexdigest()
                                  for path in source_paths}
+    # Bind lesson inputs before testing so one receipt represents one revision.
+    lesson_paths = sorted([*(ROOT/'book').rglob('*.md'),
+                           *(ROOT/'notebooks').glob('day-*/*.ipynb'),
+                           *(ROOT/'docs/runbooks').glob('*.md'),
+                           ROOT/'scripts/book_prose_exemptions.json',
+                           ROOT/'experiments/reports/2026-10-10-book-editorial-pass/run-01/notebook-contract-review.json'])
+    manifest['lesson_hashes'] = {
+        path.relative_to(ROOT).as_posix():hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in lesson_paths if path.exists()}
     report = output/'cpu-verification.json'
     report.write_text(json.dumps(manifest, indent=2)+'\n')
     try:
@@ -144,7 +153,9 @@ def main():
         commands = [
             ('tests', [sys.executable,'-m','unittest','discover','-s','tests','-q']),
             ('math', [sys.executable,'scripts/check_book_math.py']),
+            ('prose', [sys.executable,'scripts/check_book_prose.py','--strict-narrative','--json']),
             ('routes', [sys.executable,'scripts/check_course_integrity.py','--json']),
+            ('notebook-contracts', [sys.executable,'scripts/check_notebook_contracts.py','--json']),
             ('notebooks', [sys.executable,'scripts/verify_course_notebooks.py',
                            '--kernel',args.kernel,'--output',str(output/'notebooks'),
                            '--expected-prefix',sys.prefix,
@@ -159,8 +170,11 @@ def main():
             print(json.dumps({key:result[key] for key in ['name','exit_code','timed_out','seconds']}), flush=True)
         manifest['changed_sources_during_run'] = [path for path, digest in manifest['source_hashes'].items()
             if not (ROOT/path).exists() or hashlib.sha256((ROOT/path).read_bytes()).hexdigest() != digest]
+        manifest['changed_lessons_during_run'] = [path for path, digest in manifest['lesson_hashes'].items()
+            if not (ROOT/path).exists() or hashlib.sha256((ROOT/path).read_bytes()).hexdigest() != digest]
         manifest['status'] = 'passed' if all(row['exit_code']==0 and not row['timed_out']
-            for row in manifest['commands']) and not manifest['changed_sources_during_run'] else 'failed'
+            for row in manifest['commands']) and not manifest['changed_sources_during_run'] \
+            and not manifest['changed_lessons_during_run'] else 'failed'
     except BaseException as error:
         manifest['status'], manifest['error'] = 'failed', repr(error)
         report.write_text(json.dumps(manifest, indent=2)+'\n')

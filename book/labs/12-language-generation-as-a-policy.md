@@ -1,55 +1,43 @@
-# Chapter 12 — Policy Gradient Laboratories
+# Lab 12 — Language Generation as a Policy
 
-The CPU route enumerates small distributions before sampling a procedural task.
-It needs PyTorch, Matplotlib, and an existing notebook environment. Mac Studio
-is the ordinary learning lane; Spark CPU can execute the same code. No downloaded
-model, GPU, or verifier service is required.
+Machine: isolated CPU course kernel on Mac or Spark, offline.
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).
+Prerequisites: Chapters 3 and 11 log probabilities/gradients/KL; finite probability sums.
+Deliverable: A signed estimator derivation and comparison card with rollout and gradient-work clocks.
 
-| Day | Session | Question |
-|---|---|---|
-| 19 | [Exact REINFORCE](../../notebooks/day-19/01_exact_reinforce_gradient.ipynb) | Can one sample point the wrong way while its expectation is correct? |
-| 20 | [Baselines and RLOO](../../notebooks/day-20/01_baselines_and_rloo.ipynb) | Which centering operations preserve the expectation? |
-| 20 | [PPO and KL](../../notebooks/day-20/02_ppo_clipping_and_kl.ipynb) | What does clipping flatten, and when is a KL estimate unbiased? |
-| 20 | [Behavior probabilities and sampling support](../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb) | Which distribution produced this response, and what fails when its probability or support is misreported? |
-| 21 | [Algorithm comparison](../../notebooks/day-21/01_policy_algorithm_comparison.ipynb) | How do rollout budget and gradient-work budget change a comparison? |
-| 20 | [Learned critics and frozen text rewards](../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb) | Can fitted rewards and bootstraps hide delivered-quality failures? |
+Read the [chapter](../chapters/12-language-generation-as-a-policy.md) and use the
+[worked solutions](../solutions/12-language-generation-as-a-policy.md) after attempting each exercise.
+Write each prediction before executing the reference. Numerical checkpoints use
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may
+change the result. References and interpretations remain adjacent to the attempt.
 
-The source module `policy_gradient_lab.py` computes exact categorical gradients,
-sample-estimator covariance traces, all iid groups up to a bounded size, the
-PPO surrogate, finite-support KL estimators, and actual sampled policy updates.
-Plots expose signed gradients and policy trajectories. References follow every
-prediction; each notebook ends with an explicit limit on its evidence.
+| Notebook | Question / prediction before reveal | Checkpoint on the declared fixture | One intervention | Evidence boundary |
+|---|---|---|---|---|
+| [Exact REINFORCE](../../notebooks/day-19/01_exact_reinforce_gradient.ipynb) | Predict: Must an action with positive reward gain probability? | Exact/autograd and weighted sampled gradients agree; a below-average rewarded action can lose mass. | Add the same constant to every reward. | One sampled gradient need not point in the expectation direction. |
+| [Baselines and RLOO](../../notebooks/day-20/01_baselines_and_rloo.ipynb) | Predict: Will including an action in its own baseline preserve expectation? | Leave-one-out mean matches the exact gradient; the inclusive size-three mean is scaled by 2/3. | Use equal rewards or change baseline conditioning. | Variance reduction depends on estimator assumptions. |
+| [PPO and KL](../../notebooks/day-20/02_ppo_clipping_and_kl.ipynb) | Predict: Will clipping stop every ratio outside 0.8–1.2? | The active flat branch depends on advantage sign; sampled KL estimators agree in expectation under named support. | Use rare-action probabilities or multiply token ratios. | Clipping is not a hard policy-distance bound. |
+| [Behavior support · extension](../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb) | Predict: Will identical raw logits give ratio one after filtering? | Matched behavior ratios are one on retained support; wrong denominators differ; old/reference/advantage have no gradient. | Remove support or substitute raw-policy probabilities. | Conditional support changes the estimand. |
+| [Critics and rewards · extension](../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb) | Predict: Will treating a cap as termination change bootstrapped targets? | Correct cap-row targets are [0.972,1.08]; all twelve runs survive; frozen reward parameters remain unchanged. | Break the cap mask or substitute oracle/noisy values. | A fitted critic can amplify a mistaken reward prediction. |
+| [Two work clocks](../../notebooks/day-21/01_policy_algorithm_comparison.ipynb) | Predict: Will equal rollouts imply equal gradient work? | Each run samples 3,840 completions; PPO takes 480 passes, the other arms 160. | Compare sample and gradient-work axes separately. | Separate context logits test optimization, not unseen arithmetic. |
 
-```bash
-PYTHONPATH=src OMP_NUM_THREADS=1 python scripts/run_preference_policy_cpu.py
-python scripts/verify_course_notebooks.py --days 19 20 21 --kernel dgx-spark-native --export-figures
-PYTHONPATH=src python -m unittest discover -s tests -p test_preference_policy_labs.py -v
-```
+The [finite-policy report](../../experiments/reports/2026-10-04-preference-policy-cpu.md) retains three seeds and both work clocks. PPO uses an exact detached value in that control. The separate [critic report](../../experiments/reports/2026-10-04-critic-policy.md) fits a neural value head and uses actual frozen text rewards; terminal reward and cap bootstrapping have different boundaries.
 
-The [specification](../../experiments/specs/2026-10-04-preference-policy-cpu.md)
-declares sampling seeds and budgets before the recorded run. The
-[report](../../experiments/reports/2026-10-04-preference-policy-cpu.md) keeps
-negative outcomes and both work clocks. PPO uses an exact detached value in this
-finite control; it has no learned critic, so the experiment cannot establish
-critic quality or neural PPO performance. Reward/KL gradients and KL-monitoring
-estimators have separate contracts. Chapter 13 supplies the model-scale grouped
-rollout path; Chapter 14 supplies failure diagnosis and system accounting.
+Retain a short explanation of the intervention, observed change and claim it
+does not establish. The deliverable should connect these explanations into one
+defensible argument, with source/report links rather than an execution-only checklist.
 
-## A neural critic and an actual text reward
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
 
-The exact-value control above stays unchanged. `critic_policy_lab.py` trains a
-causal token actor and separate causal value head. Trace reward/TD/GAE tensors,
-break the cap mask, then run the adjacent small actor/critic reference with
-verified saved rewards. Inspect every fixed balanced/confounded seed. The
-[specification](../../experiments/specs/2026-10-04-critic-policy.md) precedes
-fitting; the [report](../../experiments/reports/2026-10-04-critic-policy.md)
-retains all sampled paths, value errors and quality failures.
+From the repository root, use the isolated environment/kernel described in
+[Appendix D](../appendices/d-reproduction-and-environments.md):
 
 ```bash
-CUDA_VISIBLE_DEVICES= PYTHONPATH=src python -m unittest discover -s tests -p test_critic_policy_lab.py -v
-CUDA_VISIBLE_DEVICES= PYTHONPATH=src python -m dongxi_llms.critic_policy_lab --report /tmp/NEW-critic-policy.json --exports /tmp/NEW-frozen-rewards
+.venv-course/bin/python scripts/verify_course_notebooks.py --days 19 20 21 --kernel dongxi-course --expected-prefix .venv-course
 ```
 
-Use unused output paths. Conditional syntax/cap-four continuation are explicit,
-not pretrained critic evidence, production PPO, human feedback or demonstrated
-color-rule transfer. Saved plots are measured previews; rerun for interventions.
+The verifier retains executed copies and identities in a new directory. Source
+notebooks and learner attempts remain intact. Exact runner/replay/export commands
+and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
+
+</details>

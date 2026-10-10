@@ -1,44 +1,39 @@
-# Lab — Specify, Perturb, and Recover a Training Run
+# Lab 6 companion — Specify, Perturb and Recover a Training Run
 
-Use the [Day 8 notebook index](../../notebooks/day-08/README.md) for execution and
-the [chapter](../chapters/06-pretraining-as-a-controlled-system.md) for the argument.
-This is the Day 8 foundation of Chapter 6, not the later Day 9 scaling campaign.
+Machine: isolated CPU course kernel on Mac or Spark, offline.
+Expected time: 25–45 minutes per notebook (planning estimate).
+Prerequisites: Chapters 3–5 objective, decoder and gradients.
+Deliverable: a training-state diagram and a run card identifying the changed causal path.
 
-## Three connected sessions
+This is the Day 8 mechanism route for [Chapter 6](../chapters/06-pretraining-as-a-controlled-system.md).
+Predict before executing each reference; retain learner attempts. Use the
+[worked solutions](../solutions/06-pretraining-as-a-controlled-system.md) after
+the checkpoint, then continue with [Lab 6’s completed-run reading](06-reading-a-pretraining-run.md).
 
-Begin with the data notebook. Explain which targets are counted, inspect the
-input/label grids, then change context length. Compare gradients of the intended
-mean objective against the deliberately broken reduction. Do not move on merely
-because an assertion passes: explain what assumption the assertion isolates.
+| Notebook | Question / prediction before reveal | Checkpoint on the declared fixture | One intervention | Evidence boundary |
+|---|---|---|---|---|
+| [Documents, batches and targets](../../notebooks/day-08/01_data_batches_and_token_budget.ipynb) | Predict: Will shorter windows change counted targets or their context? | Targets retain their document ownership; correct weighted accumulation error is below 1e-10. | Shorten the window or average unequal batch means. | An authored corpus does not eliminate every leakage route. |
+| [Optimizer and schedule](../../notebooks/day-08/02_adamw_schedule_and_stability.ipynb) | Predict: Must identical current gradients produce identical updates? | Manual/PyTorch AdamW error is below 1e-12; update-three rate is 0.01 and final rate 0.001. | Change the second gradient or clip microbatches separately. | Precision range, clipping and finite state are distinct checks. |
+| [Development and recovery](../../notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb) | Predict: Will weights alone reproduce continuation? | Complete restore has zero parameter error and identical history; missing moments/cursor fail different controls. | Omit only optimizer state or only data position. | This CPU continuation does not certify cross-device recovery. |
 
-Next trace a real decoder gradient through AdamW. Compare its update with an
-SGD sketch, inspect the schedule clock, and separate clipping, finite-value
-checks, representable range and memory accounting. No single safeguard is a
-substitute for the others.
+Record which predictions count, which clock advances, and which state a
+checkpoint restores. A loss curve cannot diagnose all three. Separate the
+schematic data flow, calculated memory ledger and measured numerical trajectory.
+Use the [Day 8 verification report](../../experiments/reports/2026-09-09-day8-material-verification.md)
+as existing material evidence, with its actual platform boundary.
 
-Finally train the bounded fixture, inspect validation's denominator, and restore
-three checkpoint variants. Complete restoration is the positive control;
-missing moments and missing data position isolate two different failure paths.
-The observations should explain why model weights alone are not training state.
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
 
-## Evidence to retain
+From the repository root, use the isolated environment/kernel described in
+[Appendix D](../appendices/d-reproduction-and-environments.md):
 
-Record source/data identity, seed, dtype, microbatch and accumulation, valid
-target count, update count, actual gradient/parameter differences, validation
-contract, device and runtime. Separate schematic process maps, estimated memory
-ledgers and measured curves. The verification command saves executed copies and
-a manifest outside the source notebooks; important values are preserved in the
-[material verification report](../../experiments/reports/2026-09-09-day8-material-verification.md).
+```bash
+.venv-course/bin/python scripts/verify_course_notebooks.py --days 8 --kernel dongxi-course --expected-prefix .venv-course
+```
 
-## Discussion-first use
+The verifier retains executed copies and identities in a new directory. Source
+notebooks and learner attempts remain intact. Exact runner/replay/export commands
+and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
 
-The learner need not complete every cell before discussing the mechanism. Start
-with a concrete dilemma: “the curve looks good, but the two microbatches have
-different valid lengths,” or “the checkpoint loads, but continuation changes.”
-Predict the distinguishing observation, run the minimum test, and explain its
-limits. Use figures to reveal the data flow; avoid isolated arithmetic quizzes.
-
-Small CPU sessions can run on a verified Mac environment or Spark. The current
-learner explicitly chooses Spark. Heavy GPU work requires its own bounded
-specification and approval. Animation candidates are recorded separately and
-remain Mac Studio production tasks, not authorized renders.
+</details>

@@ -126,6 +126,10 @@ different information boundary and could use words on both sides of `bank`.
 
 ## Exercise 6 — Same loss, different future
 
+The code names `E_in` and `W_out` correspond to stored matrices with shape
+$[V_m,D]$. Hidden states are rows, so classification computes
+$hW_{\mathrm{out}}^\top$.
+
 Equal tensor values do not imply equal parameter identity.
 
 In the untied model:

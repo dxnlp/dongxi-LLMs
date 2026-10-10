@@ -1,56 +1,41 @@
-# Lab 8 — Audit the interface before training
+# Lab 8 — Instruction Data as an Interface
 
-Use the three Day 11 notebooks in this order:
+Machine: isolated CPU course kernel on Mac or Spark, offline.
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).
+Prerequisites: Chapters 2–4 token semantics, single shift and causal visibility.
+Deliverable: A data card and annotated ownership/attention/loss grids for one conversation.
 
-1. [Roles, templates and masks](../../notebooks/day-11/01_roles_templates_and_masks.ipynb): follow one assistant target from message ownership through the causal shift.
-2. [Padding and packing](../../notebooks/day-11/02_padding_packing_boundaries.ipynb): inspect visibility and loss independently; change a segment boundary and predict the opened links.
-3. [Mixtures and cards](../../notebooks/day-11/03_mixtures_and_data_cards.ipynb): change response lengths and observe token exposure.
+Read the [chapter](../chapters/08-instruction-data-as-an-interface.md) and use the
+[worked solutions](../solutions/08-instruction-data-as-an-interface.md) after attempting each exercise.
+Write each prediction before executing the reference. Numerical checkpoints use
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may
+change the result. References and interpretations remain adjacent to the attempt.
 
-The symbolic encoder in [instruction_data_lab.py](../../src/dongxi_llms/instruction_data_lab.py) provides IDs, ownership and labels. It deliberately rejects unknown teaching words and incomplete training conversations. It is a transparent microscope, not a multilingual tokenizer.
+| Notebook | Question / prediction before reveal | Checkpoint on the declared fixture | One intervention | Evidence boundary |
+|---|---|---|---|---|
+| [Role ownership](../../notebooks/day-11/01_roles_templates_and_masks.ipynb) | Predict: Will masking prompt loss erase prompt influence? | The shown serialized fixture has two scored targets; assistant content/ending remain labelled. | Change role ownership in a copied serialization. | Ownership and visibility are different boundaries. |
+| [Padding and packing](../../notebooks/day-11/02_padding_packing_boundaries.ipynb) | Predict: Will ordinary causality isolate packed conversations? | Ordinary mask permits position 8→0 while isolated mask blocks it; padding labels are ignored. | Replace document isolation with ordinary causality. | Packing alters available context unless contracts are matched. |
+| [Mixture exposure](../../notebooks/day-11/03_mixtures_and_data_cards.ipynb) | Predict: Will equal example weight imply equal token weight? | Fixture token shares are 0.1/0.9; adjusted exposure is 0.5/0.5; source-group sizes are one and two. | Change length or mixture unit independently. | Balanced exposure does not establish balanced capability. |
+| [Teacher attempts · extension](../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb) | Predict: Will a better selected dataset guarantee student transfer? | All nine arms survive; EOS labels cover twelve examples; padding is ignored. | Compare top/random/within-stratum selection and 42/46 target exposure. | The programmatic teacher is not a pretrained rationale model. |
 
-Generate the optional original English task dataset without downloading a model:
+Keep scientific controls visible: one shift, assistant-owned content and ending targets, document isolation, frozen source groups and a declared example/token mixture unit. The [teacher-attempt report](../../experiments/reports/2026-10-04-teacher-data.md) retains rejected attempts and negative student outcomes; format eligibility does not mean correctness.
 
-~~~bash
-python scripts/prepare_chapter09_instruction_fixture.py --output outputs/course-sft-interface-v1
-~~~
+Retain a short explanation of the intervention, observed change and claim it
+does not establish. The deliverable should connect these explanations into one
+defensible argument, with source/report links rather than an execution-only checklist.
 
-This produces 240 training, 60 development and 120 publication-test JSONL records, plus a data card with exact content hashes. Every value/source group stays in one split. Shared task forms mean the held-out result concerns unseen values under familiar copy/reverse/extract instructions. The generator rejects a nonempty destination to preserve earlier outputs.
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
 
-Before any GPU run, inspect the first/last examples and every task family. Assert there are no cross-split groups, render the actual pinned tokenizer template, and print ID/label pairs including end markers. The [explicit Qwen-style template](../../experiments/data/instruction_interface_v1.jinja) uses existing message tokens and must pass prefix-consistency checks. The runner rejects changed prefixes and overlength examples.
-
-Packing is explored in the notebook but is not enabled in the real-model runner. Its production path uses independent right-padded conversations with attention masks and answer labels. Do not infer a packed backend from a visibility diagram.
-
-Acceptance evidence consists of role validation, target counts, end-marker preservation, boundary inspection, hashes and the card's limits. Correct serialization alone cannot establish that demonstration answers are semantically correct.
-
-## Audit a teacher before teaching from its answers
-
-The fourth [Day11 session](../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb)
-adds a transparent programmatic teacher, resumable attempt journal, format-only
-filter, frozen candidate pool and actual tiny sequence SFT comparison. It keeps
-well-formed wrong candidates so top and random selection remain distinct. The
-trace is provenance; only final-answer/END tokens are supervised.
-
-Inspect the stored original
-[journal](../../fixtures/teacher-data/reference-journal/attempts.jsonl), then
-predict which failures can share several rejection reasons. Compare all selected
-IDs, prompt coverage and assistant-token budgets before viewing student results.
-The [specification](../../experiments/specs/2026-10-04-teacher-data.md) precedes
-collection, and the [report](../../experiments/reports/2026-10-04-teacher-data.md)
-retains the failed transfers and cost boundaries.
+From the repository root, use the isolated environment/kernel described in
+[Appendix D](../appendices/d-reproduction-and-environments.md):
 
 ```bash
-CUDA_VISIBLE_DEVICES= PYTHONPATH=src python -m unittest discover -s tests -p test_teacher_data_lab.py -v
-CUDA_VISIBLE_DEVICES= PYTHONPATH=src OMP_NUM_THREADS=1 python -m dongxi_llms.teacher_data_lab --report /tmp/NEW-teacher-data.json --journal /tmp/NEW-teacher-journal
+.venv-course/bin/python scripts/verify_course_notebooks.py --days 11 --kernel dongxi-course --expected-prefix .venv-course
 ```
 
-Use unused paths for a new measurement. Ordinary journal resumption skips
-committed records, rejects changed contracts, and never reruns a committed
-attempt. Explicit partial-tail recovery through `collect(..., recover_tail=True)`
-first preserves corrupt bytes and a reason. It cannot repair complete corrupt
-records or promise exactly-once physical execution. The journal supports one
-writer; no teacher API, model download, GPU or server is involved.
+The verifier retains executed copies and identities in a new directory. Source
+notebooks and learner attempts remain intact. Exact runner/replay/export commands
+and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
 
-The primary comparison controls samples/prompts, not all token exposure. Its
-length-random sensitivity controls target counts where eligible alternatives
-exist. Global coverage is a separate audit, and tiny held-out scores cannot
-establish a universal ranking of selection methods.
+</details>

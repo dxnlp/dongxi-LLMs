@@ -33,7 +33,9 @@ actions at once; it does not identify which intermediate step was responsible.
 
 Let $R(x,y)$ be a fixed reward and define
 $J(\theta)=\mathbb{E}_{y\sim\pi_\theta}[R(x,y)]$. For now reward has no
-direct parameter dependence. If a reward includes policy-dependent KL terms,
+direct parameter dependence. Chapter 11's positive $\beta$ weights the
+reference penalty in $J_\beta=\mathbb E[R]-\beta\,\mathrm{KL}(\pi_\theta\Vert\pi_{\mathrm{ref}})$;
+we retain that objective and KL direction when a penalty is added. If a reward includes policy-dependent KL terms,
 we must account for that dependence explicitly rather than reuse this assumption
 without checking it.
 
@@ -74,21 +76,21 @@ distribution of sequences and their weights differ.
 ## 12.3 A categorical microscope with an exact answer
 
 Use three complete answers with logits $z_i$, probabilities $p_i$, and fixed
-rewards $r_i$. Then $J=\sum_i p_i r_i$. Since
+rewards $R_i$. Then $J=\sum_i p_i R_i$. Since
 $\partial\log p_a/\partial z_i=\mathbf{1}[a=i]-p_i$,
 
 $$
-\frac{\partial J}{\partial z_i}=p_i(r_i-J).
+\frac{\partial J}{\partial z_i}=p_i(R_i-J).
 $$
 
 The correction depends on relative reward, not just whether reward is positive.
 An answer receiving reward one can lose probability if the policy's expected
 reward is two. At equal rewards every logit gradient is zero: no sampled outcome
 distinguishes the actions. Adding a constant to every reward leaves the exact
-gradient unchanged because $r_i-J$ is unchanged.
+gradient unchanged because $R_i-J$ is unchanged.
 
 Enumerate the three possible sampled gradients
-$g_a=r_a(e_a-p)$, weight them by $p_a$, and compare their mean with both the
+$g_a=R_a(e_a-p)$, weight them by $p_a$, and compare their mean with both the
 formula and automatic differentiation of $J$. This three-way check catches sign,
 normalization, and detachment errors. The notebook also plots individual sample
 vectors: a single update can point away from the expected direction even when
@@ -136,12 +138,18 @@ For one prompt sample $G\ge2$ independent completions. Define
 
 $$
 b_{-i}=\frac{1}{G-1}\sum_{j\ne i}R_j,
-\qquad A_i=R_i-b_{-i}.
+\qquad \hat A_i=R_i-b_{-i}.
 $$
+
+For response $i$, write the estimator as $\hat A_i=R_i-b_{-i}$.
+The same scalar may weight every token in that response through the sequence
+log-probability sum. A state-dependent token estimator $\hat A_{i,t}$, including
+GAE below, is generally different; broadcasting a response advantage does not
+turn it into a learned token-level return estimate.
 
 Other samples are independent of completion $i$ conditional on the prompt, so
 the leave-one-out baseline is action-independent for that sample. Averaging
-$A_i\nabla\log\pi(y_i)$ preserves the policy gradient. This is the estimator
+$\hat A_i\nabla\log\pi(y_i)$ preserves the policy gradient. This is the estimator
 studied in [the RLOO paper](https://aclanthology.org/2024.acl-long.662/).
 It saves a separate value model but requires multiple sampled completions and
 can still have high variance.
@@ -167,8 +175,8 @@ keeping these distinctions visible.
 
 ## 12.6 Old policies, references, and importance ratios
 
-An old policy $\pi_{\text{old}}$ generated a rollout batch. A reference policy
-$\pi_{\text{ref}}$ anchors long-term behavioral movement. These may start at
+An old policy $\pi_{\mathrm{old}}$ generated a rollout batch. A reference policy
+$\pi_{\mathrm{ref}}$ anchors long-term behavioral movement. These may start at
 the same checkpoint but play different roles. The old policy usually updates
 when a new batch is collected; the reference often remains fixed.
 
@@ -176,8 +184,8 @@ If data come from an old distribution, the exact full-trajectory importance
 ratio is
 
 $$
-\rho(y)=\frac{\pi_\theta(y\mid x)}{\pi_{\text{old}}(y\mid x)}
-=\exp\left(\sum_t[\log\pi_\theta(y_t\mid s_t)-\log\pi_{\text{old}}(y_t\mid s_t)]\right).
+\rho(y)=\frac{\pi_\theta(y\mid x)}{\pi_{\mathrm{old}}(y\mid x)}
+=\exp\left(\sum_t[\log\pi_\theta(y_t\mid s_t)-\log\pi_{\mathrm{old}}(y_t\mid s_t)]\right).
 $$
 
 With support coverage, weighting an old-policy expectation by this ratio
@@ -192,22 +200,23 @@ optimization epochs. Replacing them with freshly recomputed current values
 changes the objective. Aggressive reuse makes the old state distribution less
 representative, even if a local clipping rule seems quiet.
 
-The [Day20 probability-accounting notebook](../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb)
+The [Day 20 probability-accounting notebook](../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb)
 turns the coverage assumption into an exact counterexample. It keeps raw model,
 temperature/filter-transformed collector and declared update target separate.
 Using raw likelihood as the denominator after transformed collection changes both
 the expected reward and its gradient. Conditional fixed-support repair is a
-different objective, not a universal fix for a full-support target. Chapter14
+different objective, not a universal fix for a full-support target. Chapter 14
 §14.3 develops the measured example and its boundary masks.
 
 ## 12.7 What PPO clipping actually clips
 
+For one response, write $\hat A_t=\hat A_{i,t}$ and suppress its index $i$.
 The clipped per-token surrogate is
 
 $$
 L_{\text{clip}}(\theta)=\mathbb{E}\left[
-\min\left(\rho_t A_t,
-\mathrm{clip}(\rho_t,1-\epsilon,1+\epsilon)A_t\right)\right].
+\min\left(\rho_t \hat A_t,
+\mathrm{clip}(\rho_t,1-\epsilon,1+\epsilon)\hat A_t\right)\right].
 $$
 
 Maximize this expression, or minimize its negative. For positive advantage,
@@ -270,9 +279,68 @@ The CPU task has six arithmetic prompts $(a,b)$ and three answer actions;
 the correct action is $(a+b)\bmod3$. Independent logits per prompt intentionally
 remove representation learning. We compare REINFORCE, an exact-value baseline,
 RLOO, and PPO using the same prompt set, four samples per prompt, rollout update
-count, seed schedule, and exact success metric. PPO uses three gradient epochs
+count, seed schedule, and exact success metric.
+
+**Reader prediction:** should the four methods finish at the same success
+probability when sampled completions match but PPO reuses each rollout three
+times? State which comparison would test sampling efficiency and which would
+test gradient-work efficiency before revealing the results. PPO uses three gradient epochs
 per rollout, so it consumes more optimizer work despite equal sampled tokens.
 The report exposes both clocks rather than calling the run compute-matched.
+
+The [retained CPU report](../../experiments/reports/2026-10-04-preference-policy-cpu.md)
+records 160 rollout updates, six contexts and four sampled actions per context:
+3,840 sampled completions per arm, with learning rate 1.5 and fixed seeds.
+
+| Arm | Final exact success probability, seeds 1921 / 1922 / 1923 | Gradient passes |
+|---|---|---:|
+| REINFORCE | 0.980054 / 0.980184 / 0.980117 | 160 |
+| Exact-value baseline | 0.980135 / 0.981667 / 0.981941 | 160 |
+| RLOO | 0.980318 / 0.981902 / 0.982335 | 160 |
+| PPO, three epochs | 0.991820 / 0.991509 / 0.991530 | 480 |
+
+![Measured success trajectories against sampled completions and gradient passes](../../notebooks/figures/chapter-12/day-21-01_policy_algorithm_comparison-01.png)
+
+Read the left panel at matched sampling cost and the right at optimizer work.
+Shading is the range of three seeds, not a confidence interval. PPO's higher
+endpoint uses more gradient work and an exact pre-rollout value; it supplies
+neither a wall-time ranking nor evidence of neural critic quality.
+
+### The finite update in transparent code
+
+The loop below follows [the canonical policy module](../../src/dongxi_llms/policy_gradient_lab.py).
+Each row of `logits` is one independent context; columns are the three possible
+answers. `correct` contains the verifier's answer action. The surrounding module
+initializes the seeded generator and applies this block for the declared updates.
+
+```python
+old_logp = logits.detach().log_softmax(-1)
+old_p = old_logp.exp()
+actions = torch.multinomial(old_p, group, replacement=True, generator=generator)
+rewards = (actions == correct[:, None]).to(logits.dtype)
+if mode == "rloo":
+    advantage = rloo_advantages(rewards)
+elif mode in ("baseline", "ppo"):
+    advantage = rewards - old_p.gather(1, correct[:, None])
+else:
+    advantage = rewards
+for _ in range(epochs if mode == "ppo" else 1):
+    selected = logits.log_softmax(-1).gather(1, actions)
+    if mode == "ppo":
+        ratio = (selected - old_logp.gather(1, actions)).exp()
+        loss = -ppo_surrogate(ratio, advantage).mean()
+    else:
+        loss = -(selected * advantage).mean()
+    (gradient,) = torch.autograd.grad(loss, logits)
+    with torch.no_grad():
+        logits -= 1.5 * gradient
+```
+
+`rloo_advantages` subtracts the mean of the other samples from the same context;
+`ppo_surrogate` returns the minimum of `ratio * advantage` and the clipped-ratio
+product. The old probabilities and these rewards/advantages have no actor
+gradient. The negative sign converts ascent to a minimized loss. Deliberately
+recomputing the old probabilities inside each epoch would change this experiment.
 
 This experiment checks estimator behavior and implementation. It has no unseen
 arithmetic distribution, no language vocabulary, and no neural generalization
@@ -284,17 +352,23 @@ capabilities. These operational questions lead into Chapters 13 and 14.
 
 The exact-value comparison above deliberately removed representation error.
 Now put that difficulty back. A neural critic reads the same pre-action prefix
-$s_t$ as the actor and predicts $V_\phi(s_t)$: the expected discounted future
+$s_t$ as the actor and predicts $V_\psi(s_t)$: the expected discounted future
 reward under the current policy. It does not judge the next token alone and
 must not see that action when constructing its baseline. Even a prefix with
 the correct color can continue into repetition or missing termination.
 
-For reward $r_t$ earned after action $a_t$, discount $\gamma$ and $n$ observed
+The critic parameters $\psi$ are separate from the learned reward parameters
+$\phi$. Let $R_t$ be the collected reward earned after action $a_t$. A frozen
+learned score $r_\phi(x,y)$ can supply a terminal $R_t$, while a verifier can
+supply it directly; the return calculation treats either as fixed observed data.
+The companion's local per-step reward variables map to $R_t$ here.
+
+For discount $\gamma$ and $n$ observed
 actions, the bootstrapped return is
 
 $$
-G_t=\sum_{k=t}^{n-1}\gamma^{k-t}r_k
-+\gamma^{n-t}c_{n-1}V_\phi(s_n).
+G_t=\sum_{k=t}^{n-1}\gamma^{k-t}R_k
++\gamma^{n-t}c_{n-1}V_\psi(s_n).
 $$
 
 Here $c_t=0$ after true termination and $1$ otherwise. Sampled EOS ends the
@@ -314,7 +388,7 @@ A temporal-difference residual compares the present prediction with one
 observed transition and its continuation estimate:
 
 $$
-\delta_t=r_t+\gamma c_tV_\phi(s_{t+1})-V_\phi(s_t).
+\delta_t=R_t+\gamma c_tV_\psi(s_{t+1})-V_\psi(s_t).
 $$
 
 Generalized advantage estimation combines those residuals. Let $m_t$ indicate
@@ -322,7 +396,7 @@ a valid action and $m_n=0$ immediately beyond observation:
 
 $$
 \hat A_t=\delta_t+\gamma\lambda c_t m_{t+1}\hat A_{t+1},
-\qquad \hat G_t=\hat A_t+V_\phi(s_t).
+\qquad \hat G_t=\hat A_t+V_\psi(s_t).
 $$
 
 The last residual includes a nonterminal bootstrap, but no residual is invented
@@ -345,14 +419,14 @@ response; the critic minimizes valid-state mean-square error:
 
 $$
 L_\pi=-\frac1N\sum_{i,t}m_{it}
-\min\left(\rho_{it}\,\mathrm{stopgrad}(\hat A_{it}),
+\min\left(\rho_{it}\,\mathrm{stopgrad}(\hat A_{i,t}),
 \mathrm{clip}(\rho_{it},1-\epsilon,1+\epsilon)
-\,\mathrm{stopgrad}(\hat A_{it})\right),
+\,\mathrm{stopgrad}(\hat A_{i,t})\right),
 $$
 
 $$
 L_V=\frac{\sum_{i,t}m_{it}
-\left(V_\phi(s_{it})-\mathrm{stopgrad}(\hat G_{it})\right)^2}
+\left(V_\psi(s_{it})-\mathrm{stopgrad}(\hat G_{i,t})\right)^2}
 {\sum_{i,t}m_{it}}.
 $$
 
@@ -363,7 +437,8 @@ differentiates through sampled IDs. Separate actor/critic causal backbones
 make the boundaries directly testable. Shared features would deliberately
 receive both objectives and require another analysis.
 
-An exact conditional KL penalty at collected states anchors the initial actor.
+An exact conditional KL penalty at collected states anchors the initial actor;
+the positive coefficient $\beta$ weights that penalty separately from $L_\pi$.
 Collection and current/old/reference scoring use identical finite support.
 One fresh actor step per rollout starts at ratios one: clipping has not reached
 its flat region. This isolates advantage/critic behavior, not PPO epoch reuse
@@ -432,7 +507,7 @@ The [lab guide](../labs/12-language-generation-as-a-policy.md),
 reproduction and evidence boundaries.
 
 1. Derive the score-function gradient and explain why reward is detached.
-2. Derive $p_i(r_i-J)$ and interpret a positive reward with a negative gradient.
+2. Derive $p_i(R_i-J)$ and interpret a positive reward with a negative gradient.
 3. Prove the action-independent baseline identity and give a biased counterexample.
 4. Derive the variance-optimal scalar baseline; why need it differ from expected reward?
 5. Derive the self-inclusion factor for a group mean and explain RLOO's independence condition.

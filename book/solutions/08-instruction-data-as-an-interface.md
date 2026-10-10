@@ -10,7 +10,7 @@ At training time include the completed answer. At generation time include contex
 
 ## 2. First assistant target
 
-The ASSISTANT header's logit predicts the first assistant body token. In an unshifted ownership array, mark that body token as supervised. Then align logits at positions $0,\ldots,T-2$ with labels at $1,\ldots,T-1$.
+The ASSISTANT header's logit predicts the first assistant body token. In an unshifted ownership array, mark that body token as supervised. Then align logits at positions $0,\ldots,n-2$ with labels at $1,\ldots,n-1$.
 
 Do not mark the preceding header merely because its logit supplies the prediction. Ownership concerns the target being taught. The notebook prints the exact producing-position/target pairs; this catches an off-by-one error that a target-count check can miss.
 
@@ -73,14 +73,6 @@ Write: “Four symbolic copy requests demonstrate role serialization, loss align
 
 State authorship, release license status, template, stopping marker, padding, rejection policy and grouping. Preserve the generator and hashes. A data card should make misuse of the evidence difficult, not advertise a dataset more broadly than its design supports.
 
-## Notebook pathway
-
-- [Roles and masks](../../notebooks/day-11/01_roles_templates_and_masks.ipynb).
-- [Padding and packing boundaries](../../notebooks/day-11/02_padding_packing_boundaries.ipynb).
-- [Mixtures and cards](../../notebooks/day-11/03_mixtures_and_data_cards.ipynb).
-- [Teacher attempts and matched rejection SFT](../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb).
-
-The corresponding plots display target alignment, actual visibility matrices and supervised-token shares.
 
 ## 11. Acceptance is not ranking
 
@@ -112,7 +104,7 @@ wall time, teacher quality, or broad-method superiority.
 ## 14. Global coverage
 
 The top twelve correct candidates include six two-word and six three-word
-responses. Correctness ties plus shorter-answer preference make global top6
+responses. Correctness ties plus shorter-answer preference make global top 6
 select the six short prompts, giving coverage $6/12=0.5$ and no three-word
 examples. One candidate per prompt retains all twelve prompts by construction.
 Different global $K$ values have different example budgets; their coverage plots
@@ -136,3 +128,12 @@ teacher performs text transformations, so its recorded units are serialized
 words and measured elapsed seconds with zero model forwards/API calls. Student
 generation separately records actual symbolic tokens and full-prefix model
 positions. Neither unit is a pretrained inference bill.
+
+## Notebook pathway
+
+- [Roles and masks](../../notebooks/day-11/01_roles_templates_and_masks.ipynb).
+- [Padding and packing boundaries](../../notebooks/day-11/02_padding_packing_boundaries.ipynb).
+- [Mixtures and cards](../../notebooks/day-11/03_mixtures_and_data_cards.ipynb).
+- [Teacher attempts and matched rejection SFT](../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb).
+
+The corresponding plots display target alignment, actual visibility matrices and supervised-token shares.

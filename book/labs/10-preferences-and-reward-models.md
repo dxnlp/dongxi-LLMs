@@ -1,82 +1,42 @@
-# Chapter 10 — Preference and Reward Laboratories
+# Lab 10 — Preferences and Reward Models
 
-Use a Python environment with PyTorch and Matplotlib, plus Jupyter if opening
-the notebooks. Mac Studio is the ordinary CPU learning lane; these checks also
-run on Spark CPU. No model/data download, credential, or inference server is
-needed. The feature microscope uses `reward_model_lab.py`; the collection
-microscope uses `preference_audit.py`, original authored texts and explicitly
-simulated judge observations. Neither is human feedback collection.
+Machine: isolated CPU course kernel on Mac or Spark, offline.
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).
+Prerequisites: Chapter 7 instrument identity; sigmoid, likelihood and source groups.
+Deliverable: A preference/reward audit separating judgment direction, calibration, shortcuts and transfer.
 
-| Day | Session | Prediction and controlled change |
-|---|---|---|
-| 15 | [Bradley–Terry margin](../../notebooks/day-15/01_bradley_terry_margin.ipynb) | Predict signs; change score offsets, vote fraction, and margin |
-| 15 | [Disagreement and calibration](../../notebooks/day-15/02_disagreement_and_calibration.ipynb) | Predict a noisy optimum; stretch margins without changing ranks |
-| 15 | [Preference collection and judges](../../notebooks/day-15/03_preference_collection_and_judges.ipynb) | Swap blind displays, retain failed verdicts, perturb verbosity/injection and audit source weighting |
-| 16 | [Reward shortcut audit](../../notebooks/day-16/01_reward_model_bias_audit.ipynb) | Compare confounded versus balanced nuisance features on an independent population |
-| 16 | [Text reward and process labels](../../notebooks/day-16/03_text_reward_and_process_labels.ipynb) | Train token-sequence heads, move padding/EOS, audit encoding independence, inspect negative transfer/calibration and separate terminal/step supervision |
+Read the [chapter](../chapters/10-preferences-and-reward-models.md) and use the
+[worked solutions](../solutions/10-preferences-and-reward-models.md) after attempting each exercise.
+Write each prediction before executing the reference. Numerical checkpoints use
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may
+change the result. References and interpretations remain adjacent to the attempt.
 
-The first notebook connects scalar gradients to the shared reward model. The
-second distinguishes ranking from probability quality. The third measures a
-distribution intervention and retains the adversarial failure. Every exercise
-has an adjacent runnable reference, labeled plots, and an interpretation. Saved
-figures are reference outputs; rerunning a cell regenerates the current values.
+| Notebook | Question / prediction before reveal | Checkpoint on the declared fixture | One intervention | Evidence boundary |
+|---|---|---|---|---|
+| [Preference margin](../../notebooks/day-15/01_bradley_terry_margin.ipynb) | Predict: Will adding a common reward offset change pair preference? | Probability is sigmoid(chosen−rejected); loss gradient is sigmoid(margin)−1; common offsets cancel. | Change vote fraction or relative margin. | Relative scores do not identify an absolute reward level. |
+| [Disagreement and calibration](../../notebooks/day-15/02_disagreement_and_calibration.ipynb) | Predict: Can correct ordering coexist with miscalibrated probabilities? | Positive score stretching preserves the 0.5 decision boundary; inverse scaling restores this fixture calibration. | Stretch margins while keeping rankings fixed. | Synthetic vote probabilities are not human consensus. |
+| [Collection audit · extension](../../notebooks/day-15/03_preference_collection_and_judges.ipynb) | Predict: Will swapping a blind display change the chosen candidate identity? | Retain 24 pairs, 484 judgments and four failures; swaps map sides while candidate identity survives. | Perturb verbosity/injection and preserve ties/abstentions. | Simulated judges are not independent human annotations. |
+| [Reward shortcuts](../../notebooks/day-16/01_reward_model_bias_audit.ipynb) | Predict: Can a low training objective hide nuisance dependence? | Worse-answer win probability is about 0.962504 confounded versus 0.136947 balanced on the declared adversary. | Vary length with quality fixed. | Features are authored; this is not a text-understanding benchmark. |
+| [Text reward and process labels · extension](../../notebooks/day-16/03_text_reward_and_process_labels.ipynb) | Predict: Will distinct text always receive distinct encoded input? | Original word encoding has four held-out collisions; character encoding separates them; frozen reload is exact. | Move padding/EOS or compare the separately specified character arm. | Closing collisions does not establish robust reward transfer. |
 
-Reproduce from the course root:
+Inspect all seeds and the [collection ledger](../../experiments/reports/2026-10-04-preference-audit.md). The [word-reward](../../experiments/reports/2026-10-04-text-reward.md) and [character intervention](../../experiments/reports/2026-10-04-text-reward-character.md) remain separate measured arms. Character distinctions remove an encoding collision; their retained failures prevent a reward-transfer claim.
 
-```bash
-PYTHONPATH=src OMP_NUM_THREADS=1 python scripts/run_preference_policy_cpu.py
-PYTHONPATH=src python -m dongxi_llms.preference_audit --fixture fixtures/preference-audit/pairs.json
-PYTHONPATH=src OMP_NUM_THREADS=1 python -m dongxi_llms.text_reward_lab --fixture fixtures/text-reward/records.json
-python scripts/verify_course_notebooks.py --days 15 16 --kernel dgx-spark-native --export-figures
-```
+Retain a short explanation of the intervention, observed change and claim it
+does not establish. The deliverable should connect these explanations into one
+defensible argument, with source/report links rather than an execution-only checklist.
 
-The runner prints a deterministic JSON evidence object; it does not overwrite
-the historical report. The [predeclared specification](../../experiments/specs/2026-10-04-preference-policy-cpu.md)
-and [report](../../experiments/reports/2026-10-04-preference-policy-cpu.md) describe
-the actual fixture and measurement. Reading or running these material checks
-does not assess learner mastery. A neural reward-model Spark extension should
-start with a small independently labeled pair set, frozen source groups,
-endpoint-mask tests, and an explicit rubric; no such model-scale run is claimed.
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
 
-For the collection audit, the [specification](../../experiments/specs/2026-10-04-preference-audit.md)
-and [measured report](../../experiments/reports/2026-10-04-preference-audit.md)
-retain 484 observations, including every malformed verdict and simulated
-transport failure. `--output NEW.json` exports a new full raw ledger and refuses
-to overwrite old evidence. Six exact source groups, their family/sibling split
-contracts and equal-source pair weights are explicit; no semantic near-duplicate
-detector is claimed. Optional human or live-AI collection requires separate
-authority, content/privacy terms and independently reviewed held-out labels.
-
-The [text-model specification](../../experiments/specs/2026-10-04-text-reward.md)
-and [three-seed report](../../experiments/reports/2026-10-04-text-reward.md)
-retain ordinary and nuisance pair predictions, calibration bins, terminal/step
-predictions and unknown-token failures. The predeclared seed 1601
-[frozen preference export](../../fixtures/text-reward/frozen-preference-seed1601.json)
-is a complete JSON-only historical tiny checkpoint, not
-a pretrained model. `load_frozen` validates identity/shapes and offers detached
-CPU `score(prompt, completion)` and `score_many` without reward gradients.
-Use new `--output`/`--frozen-export` paths to retain a new run; old evidence
-cannot be overwritten by the runner.
-
-The separately [specified character arm](../../experiments/specs/2026-10-04-text-reward-vocabulary-intervention.md)
-preserves the original word artifacts and runs pre-fit pair/swap/source/STEP-
-prefix gates. Its [measured report](../../experiments/reports/2026-10-04-text-reward-character.md)
-retains all three seeds' failed heldout predictions despite fitted training
-objectives. Distinct inputs close the encoding-collision requirement, not a
-robust reward-learning claim. For a new run, choose fresh output/export paths:
+From the repository root, use the isolated environment/kernel described in
+[Appendix D](../appendices/d-reproduction-and-environments.md):
 
 ```bash
-PYTHONPATH=src OMP_NUM_THREADS=1 python -m dongxi_llms.char_reward_lab \
-  --fixture fixtures/text-reward/records.json \
-  --protocol experiments/specs/2026-10-04-text-reward-vocabulary-intervention.md \
-  --output NEW_CHARACTER_RESULTS.json --frozen-export NEW_CHARACTER_REWARD.json
+.venv-course/bin/python scripts/verify_course_notebooks.py --days 15 16 --kernel dongxi-course --expected-prefix .venv-course
 ```
 
-`load_char_reward` validates the fixed ASCII encoding and numeric state and
-can enforce an externally expected file/interface hash. The seed 1611 export
-is an imperfect detached scalar proxy, not a factual-quality promise. The
-extended notebook has twelve complete code cells and eight explanatory
-previews. It distinguishes exact saved-state reload from cross-version
-retraining; the first historical-word equality failure remains recorded.
-Fresh execution preserves source/learner cells. Use an isolated locked kernel,
-not a notebook server; the new character previews are additive indices 06–08.
+The verifier retains executed copies and identities in a new directory. Source
+notebooks and learner attempts remain intact. Exact runner/replay/export commands
+and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
+
+</details>

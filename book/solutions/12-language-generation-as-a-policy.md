@@ -16,7 +16,7 @@ derive the extra term before deciding how to detach it.
 ## 2. Relative reward
 
 The softmax derivative gives
-$\partial J/\partial z_i=\sum_a p_a r_a(\mathbf1[a=i]-p_i)=p_i(r_i-J)$.
+$\partial J/\partial z_i=\sum_a p_a R_a(\mathbf1[a=i]-p_i)=p_i(R_i-J)$.
 A reward one answer has a negative gradient when expected reward exceeds one.
 Gradient ascent then moves mass toward better alternatives. The score need not
 be negative in an absolute sense to be relatively undesirable.
@@ -24,7 +24,7 @@ be negative in an absolute sense to be relatively undesirable.
 ## 3. A valid and invalid baseline
 
 For action-independent $b$, the baseline contribution is
-$b\sum_a\nabla p_a=b\nabla1=0$. For $b(a)=r_a$, every sample's advantage
+$b\sum_a\nabla p_a=b\nabla1=0$. For $b(a)=R_a$, every sample's advantage
 is zero, so the estimator vanishes even if the true gradient is nonzero.
 Detaching that baseline does not fix the statistical bias: dependence on the
 sampled action is the issue.
@@ -41,7 +41,7 @@ an optimal neural state-value baseline.
 
 ## 5. Group self-inclusion
 
-$R_i-\bar R=(G-1)(R_i-b_{-i})/G$. Under iid conditional samples, the RLOO
+$R_i-\bar R=(G-1)\hat A_i/G$, where $\hat A_i=R_i-b_{-i}$. Under iid conditional samples, the RLOO
 mean has the true gradient expectation, while inclusive mean centering scales
 it by $(G-1)/G$. Rescaling restores the same estimator. Coupled samples or
 division by a reward-dependent standard deviation require another analysis.
@@ -111,10 +111,11 @@ checks should a new controlled optimization comparison be proposed.
 
 ## 13. Lambda endpoints with a cap
 
-At lambda zero, $\hat A_t=\delta_t$ and $\hat G_t=r_t+\gamma c_tV(s_{t+1})$.
+For one response, $\hat A_t$ abbreviates $\hat A_{i,t}$. At lambda zero,
+$\hat A_t=\delta_t$ and $\hat G_t=R_t+\gamma c_tV_\psi(s_{t+1})$.
 At lambda one, intermediate values cancel, leaving observed discounted rewards
-plus the final value after a nonterminal cap. Two zero-reward actions, gamma0.9
-and bootstrap1.2 give returns0.972/1.08. Fully observed Monte Carlo targets
+plus the final value after a nonterminal cap. Two zero-reward actions, gamma 0.9
+and bootstrap 1.2 give returns 0.972/1.08. Fully observed Monte Carlo targets
 require true termination; a cap does not supply future experience.
 
 ## 14. EOS is an event and padding is not
@@ -138,7 +139,7 @@ updates move policy representations indirectly. Separate backbones isolate it.
 Training pairs used plain/fancy styles. Bare colors and repeated markers visit
 text outside those comparisons. Tiny pair loss establishes fit on records,
 not reliable extrapolation. Balanced oracle rows chose constant blue and
-achieved only0.5 quality. Oracle values do not repair a reward or shortcut.
+achieved only 0.5 quality. Oracle values do not repair a reward or shortcut.
 
 ## 17. Compare quantities with their clocks
 

@@ -1,0 +1,330 @@
+{
+  "scope": "Chapters 1\u20133 and corresponding solutions",
+  "relocations": [
+    {
+      "source": "book/chapters/01-evidence-before-optimization.md",
+      "heading": "1.5 Actual DPO deadline and RLVR cleanup cases",
+      "destination": "book/appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision",
+      "text": "The later [DPO recovery case](../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md)\nmakes this distinction concrete. Two independent children finish two updates\nwith exit 0, but the fresh-process resume hits its 600-second deadline while\nsaving recovery state. Available memory remains above the reserve; that does\nnot rescue the failed time/recovery criterion. The native exit is unknown and\na cleanup error remains recorded. Preserve failed work and missing evidence\ninstead of calling the overall replay successful because its first two\nchildren ran. A separately declared CPU-threading fix must earn its own pass.\n\nThe [G4 recovery cleanup case](../../experiments/reports/2026-10-05-native-rlvr-recovery-cleanup.md)\ngoes further: all three native processes exit 0, yet the supervisor's required\nowned-descendant cleanup acknowledgment times out. Exact final comparison is\nnot reached, so the experiment still lacks recovery acceptance. Finding those\nPIDs absent later does not rewrite the original receipt. A controller-only\nimport correction and any fresh retry need their own evidence while retaining\nthe first attempt's work. \u201cThe model process finished\u201d and \u201cevery required\nexperimental condition passed\u201d remain different claims."
+    },
+    {
+      "source": "book/chapters/01-evidence-before-optimization.md",
+      "heading": "1.10 Interface implementation, manifests and adapter-export chronology",
+      "destination": "book/appendices/d-reproduction-and-environments.md#supervised-fine-tuning-state-and-adapter-exports",
+      "text": "The course's [interface implementation](../../src/dongxi_llms/run_identity.py)\nchecks the serialized fast-tokenizer encoding plus vocabulary, wrapper settings,\nspecial IDs, template and stops. It refuses vocabulary-only checks for unsupported\nslow/custom tokenizers. A legitimate local HF save/reload passes; an equal-sized\ntoken swap, changed normalization, changed stop or template fails. An older\ncheckpoint without this fingerprint requires an explicit audited legacy adoption.\nThat establishes its *actual saved semantics*, not proof of an old upstream revision.\n\nThree records serve different purposes:\n\n| Record | Question it answers | What it does not establish |\n|---|---|---|\n| Declared immutable upstream revision | Which source was requested? | That arbitrary local files actually came from that commit |\n| Actual file hashes and interface fingerprint | Which bytes and supported token meanings were used? | Their provenance, quality or every custom-tokenizer behavior |\n| Invocation manifest and failure journal | Which code/environment/command/stages were observed? | Completed training merely because a record exists |\n\nThe manifest records Git revision and dirty state, source and input hashes,\nPython/packages, a selected environment-lock hash, device/driver information,\ncommand and objective configuration. A lock hash identifies the file; it does not\nprove every installed package was resolved from it. Known credential fields are\nredacted, and credential environment variables are not collected.\n\nKeep volatile run IDs, timestamps and failure stages outside stable recovery\nconfiguration. Otherwise an identical restart would fail equality because it\noccurs later. Changed code, data, tokenizer semantics or objectives should not\nsilently count as the same recipe. SFT preserves invocation identity even when a\nhardware check fails before loading. Every invocation, including a restart, writes\nto a new empty directory so an incompatible resume cannot overwrite another run.\nDPO verifies the saved parent tokenizer against its genealogy and the proposed\ndownstream tokenizer before training.\n\nAn adapter introduces another boundary: it is not a full model. The explicit\n[local merge utility](../../src/dongxi_llms/checkpoint_merge.py) checks the pinned\nbase declaration, recorded base bytes when available, and tokenizer interface,\nthen exports a new full checkpoint with genealogy. A tiny random CPU model and a\nnonzero LoRA adapter pass merge/reload parity tests. This validates that mechanism,\nnot a large Qwen merge or Spark training. See the\n[identity report](../../experiments/reports/2026-10-04-run-identity.md)."
+    },
+    {
+      "source": "book/chapters/02-text-tokens-and-embeddings.md",
+      "heading": "2.8 Detailed output-coverage failure accounting",
+      "destination": "book/appendices/d-reproduction-and-environments.md#policy-reference-and-pending-rollout-identity",
+      "text": "A later [measured decoder-coverage failure](../../learning_artifacts/day-02-text-tokens-and-embeddings/output-vocabulary-and-decoder-coverage.md)\nturns that boundary into a concrete inference case. The separately pinned\nQwen3-0.6B-Base cache likewise configures 151,936 output rows with 151,669\nmapped tokenizer IDs. In full-support temperature-one sampling, one continuation\nselects ID151768 as its 24th action. That address is within the configured model\nrows, but has no tokenizer mapping. The adapter retains the full IDs and\nlikelihoods, records a decode error, and stops the invocation without silently\nfiltering the vocabulary. Both 32/128-cap runs retain 40 records and 60 missing\nplanned responses; neither is an accuracy score over 100 completed answers.\n\nThis is not an unfamiliar input word, an embedding-index overflow or a failure\nof byte-level input coverage. It is an output-interface failure. The two caps\nshare the same seed and 24-action trajectory, so they are not independent\nestimates of rare-event frequency. A future valid-ID mask would define a\ndifferent sampling support and distribution; it cannot retroactively repair\nthese recorded results. Chapter 13 keeps the failed conditions separate from\ncomplete reasoning measurements."
+    },
+    {
+      "source": "book/chapters/02-text-tokens-and-embeddings.md",
+      "heading": "2.10 Platform-specific reproduction commands",
+      "destination": "book/appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision",
+      "text": "Run them with the recorded platform environment:\n\n```bash\nPYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python \\\n  -m dongxi_llms.tokenization_lab --local-files-only\n\nPYTHONPATH=src uv run \\\n  --with 'transformers==5.16.1' --with 'tokenizers==0.23.1' \\\n  --with 'regex==2026.1.15' --with 'pyyaml==6.0.1' \\\n  python -m dongxi_llms.tokenizer_mechanics_lab --local-files-only\n\nPYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python \\\n  -m dongxi_llms.embedding_gradient_lab\n\nPYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python \\\n  -m dongxi_llms.qwen_embedding_inspection\n```"
+    }
+  ],
+  "exercises": [
+    {
+      "path": "book/chapters/01-evidence-before-optimization.md",
+      "original_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "current_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "ids_preserved": true,
+      "sha256": "8544a748b855964f1cedcd2b121dbd40ef28ac00db7b2cbc93f1471903779324",
+      "old_lines": 567,
+      "new_lines": 532
+    },
+    {
+      "path": "book/chapters/02-text-tokens-and-embeddings.md",
+      "original_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "current_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "ids_preserved": true,
+      "sha256": "0b037a007518e4e03e74a4ffbbacc3ce8feef6f7909bae4d5500b848321fb120",
+      "old_lines": 982,
+      "new_lines": 972
+    },
+    {
+      "path": "book/chapters/03-learning-the-next-token.md",
+      "original_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "current_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "ids_preserved": true,
+      "sha256": "a6e6c617ea16f9e5bee8a361483111886c6a9351ac660034116efda48a498e78",
+      "old_lines": 1017,
+      "new_lines": 1032
+    },
+    {
+      "path": "book/solutions/01-evidence-before-optimization.md",
+      "original_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "current_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "ids_preserved": true,
+      "sha256": "b84f005050bcf98d857f6c120c2aa4abec9ac1e578257fb7b7114647dc0b0713",
+      "old_lines": 116,
+      "new_lines": 122
+    },
+    {
+      "path": "book/solutions/02-text-tokens-and-embeddings.md",
+      "original_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "current_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "ids_preserved": true,
+      "sha256": "1703eb583daa907ee871e18de6e12d5384c5bde3cf20c5b706acccd72e41ac32",
+      "old_lines": 327,
+      "new_lines": 331
+    },
+    {
+      "path": "book/solutions/03-learning-the-next-token.md",
+      "original_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "current_exercise_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "ids_preserved": true,
+      "sha256": "d3d28363fe3a41cff759332886046ad92debfed42695ddcae069a987b6f2c87a",
+      "old_lines": 368,
+      "new_lines": 369
+    }
+  ],
+  "notation": [
+    "n for mathematical sequence length, D for width; code API names T/E_in/W_out retained",
+    "V_m/V_t remain explicit in Chapter2 where their mismatch is the mechanism",
+    "Stored W_out[V,D] and row h@W_out.T; gradients g.T@h and g@W_out",
+    "Chapter1 dataset identity uses mathcal D and configuration mathcal K rather than width D, learning rate eta or model parameters theta"
+  ],
+  "preserved_evidence": [
+    "Conjunctive smoke/recovery success",
+    "Eight-ID token swap/normalization example",
+    "Actual unmapped output ID151768, valid output row rather than input byte failure",
+    "70/30 trajectory, entropy floor, logit gap and source-bound conditions"
+  ],
+  "checks": {
+    "math_source": "54 Markdown files, 1428 expressions, zero issues at this review boundary; root final-source verification supersedes global counts",
+    "prose_owned_files": "Zero mechanical and narrative findings across all18 owned files; depth-foundations-prose-review.json retains offsets/hashes",
+    "diff_check": "git diff --check passed for18 owned chapter/solution files",
+    "local_link_targets": "All local destination files exist across18 owned chapter/solution files",
+    "exercise_ids": "Original chapter and solution IDs preserved; every chapter ID has the same solution ID",
+    "python_examples": "All5 existing Python fences across Chapter1\u20133 and solutions are byte-identical to the immutable baseline",
+    "output_head_algebra": {
+      "interpreter": "/tmp/dongxi-book-editorial.fBhWhc/venv/bin/python",
+      "mode": "Bounded CPU editorial algebra check; float64",
+      "state_shape": [
+        4
+      ],
+      "stored_weight_shape": [
+        3,
+        4
+      ],
+      "logit_shape": [
+        3
+      ],
+      "autograd_equalities": {
+        "W_gradient_equals_g_outer_h": true,
+        "state_gradient_equals_g_times_W": true,
+        "bias_gradient_equals_g": true
+      },
+      "scope": "One random linear head and one cross-entropy target; no model training or capability evidence"
+    }
+  },
+  "exercise_solution_pairs": [
+    {
+      "chapter": "book/chapters/01-evidence-before-optimization.md",
+      "solutions": "book/solutions/01-evidence-before-optimization.md",
+      "ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "one_to_one": true
+    },
+    {
+      "chapter": "book/chapters/02-text-tokens-and-embeddings.md",
+      "solutions": "book/solutions/02-text-tokens-and-embeddings.md",
+      "ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "one_to_one": true
+    },
+    {
+      "chapter": "book/chapters/03-learning-the-next-token.md",
+      "solutions": "book/solutions/03-learning-the-next-token.md",
+      "ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "one_to_one": true
+    }
+  ],
+  "notes": [
+    "Source relocation contexts are the mechanically repaired pre-editorial passages; immutable source-before retains original revision bytes",
+    "Ch1 interface fixture contains local random weights and requires no pretrained weights; root integration correction preserved",
+    "Existing Python/API and archived-report names are retained with canonical mathematical mappings"
+  ]
+}

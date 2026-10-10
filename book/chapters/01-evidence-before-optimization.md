@@ -34,13 +34,18 @@ After completing this chapter, you should be able to:
 - interpret system, cgroup, and CUDA memory measurements on a unified-memory
   machine without adding overlapping values.
 
+**Prerequisites:** ordinary Python and a basic distinction between a model,
+a training objective and a measurement. No large-model execution is required
+to work through this chapter's evidence questions.
+
 The practical reproduction instructions live in
 [Appendix A](../appendices/a-laboratory-setup.md). The complete experiment contract
 and evidence remain in the companion repository.
 
-The [three Day1 notebooks](../../notebooks/day-01/README.md) make the evidence
+The [four Day 1 notebooks](../../notebooks/day-01/README.md) make the evidence
 standard executable: canonical run identity, deliberately failed smoke criteria,
-and a read of the actual later TinyStories result. They use CPU computations
+a read of the actual later TinyStories result, and a checkpoint/tokenizer
+interface audit. They use CPU computations
 and stored reports, with adjacent explanations and useful plots.
 
 ## 1.2 An experiment produces measurements, not conclusions
@@ -101,7 +106,7 @@ important habit is to name what a metric measures instead of calling it “bette
 useful experiment identity is a tuple:
 
 $$
-\mathcal{E} = (C, L, H, M, D, \theta, s),
+\mathcal{E} = (C, L, H, M, \mathcal D, \mathcal K, s),
 $$
 
 where:
@@ -110,8 +115,8 @@ where:
 - $L$ is the locked software environment;
 - $H$ is the relevant hardware and system identity;
 - $M$ is the model and exact model revision;
-- $D$ is the dataset, revision, split, and selection procedure;
-- $\theta$ is the full experiment configuration;
+- $\mathcal D$ is the dataset, revision, split, and selection procedure;
+- $\mathcal K$ is the full experiment configuration, separate from model parameters;
 - $s$ is the collection of random seeds.
 
 The result should also retain its outputs and measurements. Without them, we know
@@ -231,23 +236,11 @@ the experiment fails its overall success criteria.
 This prevents a common form of hindsight bias: redefining success around whichever
 number looks favorable after the run.
 
-The later [DPO recovery case](../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md)
-makes this distinction concrete. Two independent children finish two updates
-with exit0, but the fresh-process resume hits its600-second deadline while
-saving recovery state. Available memory remains above the reserve; that does
-not rescue the failed time/recovery criterion. The native exit is unknown and
-a cleanup error remains recorded. Preserve failed work and missing evidence
-instead of calling the overall replay successful because its first two
-children ran. A separately declared CPU-threading fix must earn its own pass.
-
-The [G4 recovery cleanup case](../../experiments/reports/2026-10-05-native-rlvr-recovery-cleanup.md)
-goes further: all three native processes exit0, yet the supervisor's required
-owned-descendant cleanup acknowledgment times out. Exact final comparison is
-not reached, so the experiment still lacks recovery acceptance. Finding those
-PIDs absent later does not rewrite the original receipt. A controller-only
-import correction and any fresh retry need their own evidence while retaining
-the first attempt's work. “The model process finished” and “every required
-experimental condition passed” remain different claims.
+The same principle applies to recovery: native child processes can finish
+successfully while a required deadline, final-state comparison or supervised
+cleanup condition fails. Preserve the passing observations and the failed
+overall result. [Appendix D](../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision)
+links the actual recovery cases and their unchanged failure records.
 
 ### Controlled comparisons
 
@@ -434,70 +427,42 @@ This pattern keeps model development attached to decisions rather than dashboard
 
 ## 1.10 A checkpoint is more than its tensor shapes
 
-Suppose two tokenizers each contain eight IDs. In the first, ID2 means `cat` and
-ID3 means `dog`; in the second, those meanings are exchanged. Both can index an
-eight-row embedding table. Both can feed a model whose output has eight logits.
-Neither dimension check notices that the second tokenizer asks the model to read
-and predict different symbols.
+Suppose two tokenizers each contain eight IDs. In one, IDs 2 and 3 mean `cat`
+and `dog`; in the other, those meanings are exchanged. Both fit an eight-row
+embedding and an eight-logit output. Shape checks pass while the new interface
+asks the checkpoint to read and predict different symbols.
 
-This is an interface failure, not an optimization failure. A checkpoint trained
-to associate row2 with `cat` does not acquire a different meaning because a new
-tokenizer labels that row `dog`. Later, an SFT checkpoint will become a parent for
-DPO or reinforcement learning. Preserving token meanings preserves the experiment.
+This is an interface failure. A checkpoint's learned association with row 2
+does not change when a new tokenizer calls that row `dog`. Preserve token
+meanings when a supervised checkpoint becomes a parent for another objective.
 
-Even equality of the complete vocabulary mapping is insufficient. One tokenizer
-may lowercase input while another preserves case; identical vocabularies can then
-encode `CAT` differently. BPE merge rules, normalization, pre-tokenization,
-post-processing, decoding and added-token behavior also participate in the
-boundary. Special-token IDs, the actual chat template and generation stops must
-remain explicit. Runtime padding/truncation buffers are excluded from the semantic
-fingerprint; the chosen training padding/truncation policy remains a configuration
-control.
+The vocabulary mapping is necessary but insufficient. Identical mappings can
+encode `CAT` differently if normalization changes. Merge ranks, pre-tokenization,
+post-processing, decoding, added-token behavior, special IDs, chat templates
+and generation stops also belong to the supported semantic interface. Runtime
+padding buffers are operational state; the training padding/truncation policy
+is a scientific configuration choice.
 
-The course's [interface implementation](../../src/dongxi_llms/run_identity.py)
-checks the serialized fast-tokenizer encoding plus vocabulary, wrapper settings,
-special IDs, template and stops. It refuses vocabulary-only checks for unsupported
-slow/custom tokenizers. A legitimate local HF save/reload passes; an equal-sized
-token swap, changed normalization, changed stop or template fails. An older
-checkpoint without this fingerprint requires an explicit audited legacy adoption.
-That establishes its *actual saved semantics*, not proof of an old upstream revision.
+Keep three questions separate: which upstream revision was requested, which
+actual bytes and encoding rules were used, and which computation occurred.
+A declared revision cannot authenticate arbitrary local files. A byte or
+interface fingerprint cannot establish quality or recover missing provenance.
+For an older checkpoint without an interface record, explicit audited adoption
+can record its actual saved semantics while leaving its original source unproven.
 
-Three records serve different purposes:
-
-| Record | Question it answers | What it does not establish |
-|---|---|---|
-| Declared immutable upstream revision | Which source was requested? | That arbitrary local files actually came from that commit |
-| Actual file hashes and interface fingerprint | Which bytes and supported token meanings were used? | Their provenance, quality or every custom-tokenizer behavior |
-| Invocation manifest and failure journal | Which code/environment/command/stages were observed? | Completed training merely because a record exists |
-
-The manifest records Git revision and dirty state, source and input hashes,
-Python/packages, a selected environment-lock hash, device/driver information,
-command and objective configuration. A lock hash identifies the file; it does not
-prove every installed package was resolved from it. Known credential fields are
-redacted, and credential environment variables are not collected.
-
-Keep volatile run IDs, timestamps and failure stages outside stable recovery
-configuration. Otherwise an identical restart would fail equality because it
-occurs later. Changed code, data, tokenizer semantics or objectives should not
-silently count as the same recipe. SFT preserves invocation identity even when a
-hardware check fails before loading. Every invocation, including a restart, writes
-to a new empty directory so an incompatible resume cannot overwrite another run.
-DPO verifies the saved parent tokenizer against its genealogy and the proposed
-downstream tokenizer before training.
-
-An adapter introduces another boundary: it is not a full model. The explicit
-[local merge utility](../../src/dongxi_llms/checkpoint_merge.py) checks the pinned
-base declaration, recorded base bytes when available, and tokenizer interface,
-then exports a new full checkpoint with genealogy. A tiny random CPU model and a
-nonzero LoRA adapter pass merge/reload parity tests. This validates that mechanism,
-not a large Qwen merge or Spark training. See the
-[identity report](../../experiments/reports/2026-10-04-run-identity.md).
-
-Try the [interface notebook](../../notebooks/day-01/04_checkpoint_interface.ipynb)
-before the handoff exercises. It builds a local eight-ID fixture, without weights
-or Hub downloads.
+The [interface notebook](../../notebooks/day-01/04_checkpoint_interface.ipynb)
+builds a local eight-ID fixture without pretrained weights or downloads. Compare unchanged
+save/reload with swapped meanings and changed normalization before considering
+a downstream handoff. [Appendix D](../appendices/d-reproduction-and-environments.md#supervised-fine-tuning-state-and-adapter-exports)
+provides manifests, validation controls and adapter-export details; Chapter 9
+develops the training and numerical handoff mechanisms.
 
 ## 1.11 Exercises
+
+Questions 1–7 develop the core evidence argument. Questions 8–9 are optional
+evidence-reading extensions: use section 1.10 and
+[Appendix D](../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision)
+for their interface/recovery context. Their original numbers remain stable.
 
 1. A run reports losses `1.9`, `1.7`, and `1.8`, then saves a checkpoint. Classify
    each statement as an observation, supported interpretation, or unsupported
@@ -527,7 +492,7 @@ or Hub downloads.
    and sequence length 1024. State the independent variable, two dependent
    variables, and at least four controlled variables.
 
-7. A model and a new tokenizer have the same vocabulary size, but IDs2 and3 have
+7. A model and a new tokenizer have the same vocabulary size, but IDs 2 and 3 have
    exchanged meanings. Why can loading succeed while the handoff is invalid?
    What check catches an unchanged vocabulary with a changed normalizer?
 
@@ -535,9 +500,9 @@ or Hub downloads.
    interface fingerprint, and what remains unproven? Should an invocation
    timestamp be part of recovery configuration equality?
 
-9. Two children finish a replay experiment with exit0, but its fresh resume
+9. Two children finish a replay experiment with exit 0, but its fresh resume
    hits the external deadline above the memory reserve. Why is the overall
-   replay still failed? Is the outer adapter's exit1 the native child's exit?
+   replay still failed? Is the outer adapter's exit 1 the native child's exit?
 
 Attempt the exercises before reading the
 [solutions](../solutions/01-evidence-before-optimization.md).

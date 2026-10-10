@@ -32,10 +32,11 @@ development loss fell substantially, and its samples gained recognizable story
 structure. Yet some stories repeated familiar phrases or exchanged speaker roles
 without explanation. We retain those outputs because they create a better
 learning problem than a gallery of the nicest samples. The completed-run evidence
-is used in Chapter 6; subsequent CPU demonstrations are labeled separately from
-future pretrained-model experiments.
+is used in Chapter 6. Later chapters pair CPU demonstrations with separately
+identified native SFT, preference and RLVR results; genuinely unrun extensions
+remain proposals. Each scale retains its own controls and limitations.
 
-The learning schedule is28 days; the narrative is15 chapters. Those numbers serve
+The learning schedule is 28 days; the narrative is 15 chapters. Those numbers serve
 different purposes. A day organizes practice and a tangible deliverable. A chapter
 builds one argument, often synthesizing several days. The material can be studied
 more slowly. The schedule is an organizational route, not a promise of mastery

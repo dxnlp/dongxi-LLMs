@@ -6,7 +6,7 @@ The [lab route](../labs/11-direct-preference-optimization.md) links the runnable
 ## 1. Exponential tilt and support
 
 Differentiate the Lagrangian with respect to $\pi_y$:
-$r_y-\beta(\log(\pi_y/\pi_{\text{ref},y})+1)+\lambda=0$.
+$r_y-\beta(\log(\pi_y/\pi_{\mathrm{ref},y})+1)+\lambda=0$.
 Exponentiation gives a reference weight times $\exp(r_y/\beta)$ times a
 shared constant; normalization determines $Z$. Positive reference support,
 finite reward, positive beta, and an unrestricted probability simplex establish
@@ -16,14 +16,14 @@ finite forward KL.
 
 ## 2. Partition cancellation
 
-The reconstructed reward is $\beta\log(\pi/\pi_{\text{ref}})+\beta\log Z(x)$.
+The reconstructed reward is $\beta\log(\pi/\pi_{\mathrm{ref}})+\beta\log Z(x)$.
 Both answers share $x$, so subtracting rewards removes $\log Z(x)$. Responses
 to different prompts generally have different partition terms, so the same
 pairwise cancellation does not justify arbitrary cross-prompt reward comparisons.
 
 ## 3. Log-probability derivatives
 
-Let $m=\beta(c-l-c_{\text{ref}}+l_{\text{ref}})$ and
+Let $m=\beta(c-l-c_{\mathrm{ref}}+l_{\mathrm{ref}})$ and
 $L=\mathrm{softplus}(m)-qm$. The derivatives are
 $\beta(\sigma(m)-q)$ for $c$ and its negative for $l$. At policy/reference
 equality with a hard winning pair, they are $-\beta/2$ and $\beta/2$.
@@ -96,12 +96,12 @@ comparison and its confidence intervals.
 
 ## 11. Explicit auxiliary gradients
 
-Global chosen-token NLL is $-\sum_i c_i/\sum_i T_{w,i}$, so its derivative
-with respect to any $c_i$ is $-1/\sum_i T_{w,i}$. Multiply by alpha and add
+Global chosen-token NLL is $-\sum_i c_i/\sum_i n_{w,i}$, so its derivative
+with respect to any $c_i$ is $-1/\sum_i n_{w,i}$. Multiply by $\lambda_{\mathrm{SFT}}$ and add
 the mean-pair derivative $\beta(\sigma(m_i)-1)/B$. The counts are fixed data,
 not differentiable policy outputs. Rehearsal adds a separate parameter
-gradient and remains present when gamma is nonzero, even if alpha=0.
-Only alpha=gamma=0 recovers ordinary DPO; the independent parameter-gradient
+gradient and remains present when gamma is nonzero, even if $\lambda_{\mathrm{SFT}}=0$.
+Only $\lambda_{\mathrm{SFT}}=\gamma=0$ recovers ordinary DPO; the independent parameter-gradient
 tests verify exact recovery and the explicit combined expression.
 
 ## 12. More supervision can teach the wrong thing
@@ -168,9 +168,9 @@ recovery from a matching index trace.
 ## 16. Recover the chosen objective, not its unspent allowance
 
 The numerical trajectory contains six completed updates, but the failed earlier
-attempt also reserved a full window. Restoring update2 is not refunding that
+attempt also reserved a full window. Restoring update 2 is not refunding that
 attempt: the same physical journal retains seven reserved updates,56 chosen
-targets and336 input positions versus six completed updates,48 targets and288
+targets and 336 input positions versus six completed updates,48 targets and 288
 positions. The [two fresh-process tests](../../experiments/reports/2026-10-05-chosen-sft-accounted-recovery.md)
 recover exact weights, Adam, RNG, history and next replacement draws.
 
@@ -185,17 +185,17 @@ make the legacy CLI accounted or supply pretrained/GPU quality evidence.
 
 The later [actual native replay](../../experiments/reports/2026-10-05-native-chosen-replay.md)
 supplies pretrained recovery evidence at two updates, not a quality pass. Its
-source trajectory contains40 chosen labels/266 policy positions, while source
-plus fresh resumed tail physically presents60/400. Both independent generation
-panels remain0/4 correct with4/4 natural stops. Do not add validation reservations
+source trajectory contains 40 chosen labels/266 policy positions, while source
+plus fresh resumed tail physically presents 60/400. Both independent generation
+panels remain 0/4 correct with 4/4 natural stops. Do not add validation reservations
 to those training counts or substitute this recovery state for a fresh pilot.
 
 ## 17. A pairwise winner is not necessarily the generated answer
 
-The actual100-update pilots match parent, replacement draws, chosen IDs/masks
-and2,047 chosen targets. They do not match rejected supervision, objective
+The actual 100-update pilots match parent, replacement draws, chosen IDs/masks
+and 2,047 chosen targets. They do not match rejected supervision, objective
 reduction, full forward geometry or reference work. DPO additionally scores
-1,600 rejected targets and makes800 reference training forwards. Chosen-only's
+1,600 rejected targets and makes 800 reference training forwards. Chosen-only's
 diagnostic reference forwards belong to validation, not its training objective.
 
 A favorable reference-relative margin means that the chosen/rejected odds
@@ -209,7 +209,7 @@ as an omitted object name, even when both fail the unchanged strict contract.
 The [native report](../../experiments/reports/2026-10-05-native-preference-comparison.md)
 retains the own-run FP32/BF16-autocast 0/4→4/4 chosen-only and 0/4→1/4 DPO
 panels. The separately accepted common comparison observes the same location
-counts with BF16-loaded greedy64 generation. Both retain 120/120 original
+counts with BF16-loaded greedy 64 generation. Both retain 120/120 original
 instruction answers; both keep the same five correct reasoning IDs and add
 only `math-10`, changing the annotated diagnostic from 5/20 to 6/20. All responses
 stop naturally, with no caps or item-level correctness loss in these panels.

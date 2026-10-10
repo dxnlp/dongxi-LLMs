@@ -31,11 +31,6 @@ preprocessing step; it will be an inspectable part of the model.
 
 ## 2.1 Learning outcomes
 
-The [three Day2 notebooks](../../notebooks/day-02/README.md) trace English-trained
-byte BPE on unseen Chinese, vocabulary/sequence cost, and embedding-gradient
-paths. Their original toy encoder is labeled separately from the measured
-production-tokenizer comparisons below; no model download is required.
-
 After completing this chapter, you should be able to:
 
 - distinguish written words, grapheme clusters, Unicode code points, UTF-8 bytes,
@@ -55,6 +50,15 @@ After completing this chapter, you should be able to:
 - distinguish attention masks, loss masks, padding, and semantic end tokens;
 - interpret the verified Qwen3 tokenizer and embedding dimensions without
   inventing a rationale for unassigned model rows.
+
+**Prerequisites:** Chapter 1's evidence distinctions, Python lists/tensors,
+and the idea that trainable parameters receive gradients from a scalar loss.
+The mechanisms below introduce tokenization and embeddings from first principles.
+
+The [three Day 2 notebooks](../../notebooks/day-02/README.md) trace English-trained
+byte BPE on unseen Chinese, vocabulary/sequence cost, and embedding-gradient
+paths. Their original toy encoder is labeled separately from the measured
+production-tokenizer comparisons below; no model download is required.
 
 Chapter 1's evidence discipline remains active: predictions precede measurements,
 observations remain separate from interpretations, and a worked example does not
@@ -399,7 +403,7 @@ or variation across domains—not one sentence per language.
 ### Vocabulary size trades rows against sequence positions
 
 A tokenizer with fewer learned pieces tends to leave more text decomposed into
-bytes or short fragments. That increases token sequence length $T$. More
+bytes or short fragments. That increases token sequence length $n$. More
 positions mean more transformer work, more autoregressive generation steps, more
 KV-cache entries, and—under full attention—more position pairs.
 
@@ -414,7 +418,7 @@ larger vocabulary  → wider embedding/output tables and more candidate scores
 
 “Often” matters. A large vocabulary allocated mainly to other languages or
 domains can compress the target text worse than a smaller specialized one.
-Chapter 3 makes the $T$-versus-$V_m$ computation explicit when it constructs the
+Chapter 3 makes the $n$-versus-$V_m$ computation explicit when it constructs the
 vocabulary-wide logit tensor.
 
 ## 2.5 Embeddings turn addresses into vectors
@@ -422,13 +426,13 @@ vocabulary-wide logit tensor.
 A token ID is an address, not a learned semantic vector. Let:
 
 - $V_m$ be the model's embedding-row count;
-- $d$ be the embedding width;
-- $E \in \mathbb{R}^{V_m \times d}$ be the trainable embedding table.
+- $D$ be the embedding width;
+- $E \in \mathbb{R}^{V_m \times D}$ be the trainable embedding table.
 
-For token IDs $I \in \{0,\ldots,V_m-1\}^{B \times T}$, lookup produces:
+For token IDs $I \in \{0,\ldots,V_m-1\}^{B \times n}$, lookup produces:
 
 $$
-X = E[I], \qquad X \in \mathbb{R}^{B \times T \times d}.
+X = E[I], \qquad X \in \mathbb{R}^{B \times n \times D}.
 $$
 
 For example:
@@ -517,8 +521,8 @@ We need three levels:
 3. **Contextual hidden state:** a position-specific vector constructed by the
    transformer from the causally available sequence.
 
-For a hidden tensor $H \in \mathbb{R}^{B \times T \times d}$, we use lowercase
-$h = H[b,t,:] \in \mathbb{R}^d$ for one position's contextual state. With input
+For a hidden tensor $H \in \mathbb{R}^{B \times n \times D}$, we use lowercase
+$h = H[b,t,:] \in \mathbb{R}^D$ for one position's contextual state. With input
 `[cat, sat]`, the final position can be summarized as:
 
 $$
@@ -590,7 +594,13 @@ embedding table and the transformations that consume it.
 
 ### Weight tying couples reading and predicting
 
-An untied language model has a separate output matrix $W_{out}$. A tied model
+Hidden states are row vectors throughout the book. The stored output weight
+$W_{\mathrm{out}}$ has shape $[V_m,D]$, so an untied head computes
+$z=hW_{\mathrm{out}}^\top$. With tying, that stored parameter is the embedding
+table $E$. Legacy notebook variables retain their names; an API's sequence-length
+`T` means $n$ in the mathematical notation here.
+
+An untied language model has a separate output matrix $W_{\mathrm{out}}$. A tied model
 reuses $E$:
 
 $$
@@ -690,23 +700,16 @@ This example also sharpens our notation: tokenizer entry count $V_t$ and model
 row count $V_m$ can differ. Treating both casually as “the vocabulary size” can
 hide a real interface boundary.
 
-A later [measured decoder-coverage failure](../../learning_artifacts/day-02-text-tokens-and-embeddings/output-vocabulary-and-decoder-coverage.md)
-turns that boundary into a concrete inference case. The separately pinned
-Qwen3-0.6B-Base cache likewise configures 151,936 output rows with 151,669
-mapped tokenizer IDs. In full-support temperature-one sampling, one continuation
-selects ID151768 as its 24th action. That address is within the configured model
-rows, but has no tokenizer mapping. The adapter retains the full IDs and
-likelihoods, records a decode error, and stops the invocation without silently
-filtering the vocabulary. Both 32/128-cap runs retain 40 records and 60 missing
-planned responses; neither is an accuracy score over 100 completed answers.
-
-This is not an unfamiliar input word, an embedding-index overflow or a failure
-of byte-level input coverage. It is an output-interface failure. The two caps
-share the same seed and 24-action trajectory, so they are not independent
-estimates of rare-event frequency. A future valid-ID mask would define a
-different sampling support and distribution; it cannot retroactively repair
-these recorded results. Chapter13 keeps the failed conditions separate from
-complete reasoning measurements.
+The [measured decoder-coverage failure](../../learning_artifacts/day-02-text-tokens-and-embeddings/output-vocabulary-and-decoder-coverage.md)
+turns this into an output-interface case: full-support sampling from the pinned
+Base checkpoint chooses unmapped ID 151768 as its 24th action. It is a valid
+model row, yet the tokenizer cannot decode it. This is neither an unfamiliar
+input word nor an embedding-index overflow. Input byte coverage does not
+guarantee coverage of every model output row. Masking unassigned rows would
+change the sampling distribution and cannot repair the historical record.
+Chapter 13 develops the incomplete-panel evidence and the same-seed cap
+comparison; [Appendix D](../appendices/d-reproduction-and-environments.md#policy-reference-and-pending-rollout-identity)
+links the retained failure protocol.
 
 ## 2.9 Masks define different learning boundaries
 
@@ -815,23 +818,10 @@ The chapter's empirical claims come from four small, inspectable artifacts:
 | [Embedding gradient paths](../../experiments/reports/2026-08-31-embedding-gradient-paths.md) | Repeated accumulation, tied/untied routing, response-only masking | Semantic quality, convergence, or Qwen-specific gradient magnitudes |
 | [Qwen3 embedding interface](../../experiments/reports/2026-08-31-qwen3-embedding-inspection.md) | Actual shapes, tokenizer boundary, logits width, and runtime tying | Design rationale or hardware benefit |
 
-Run them with the recorded platform environment:
-
-```bash
-PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python \
-  -m dongxi_llms.tokenization_lab --local-files-only
-
-PYTHONPATH=src uv run \
-  --with 'transformers==5.16.1' --with 'tokenizers==0.23.1' \
-  --with 'regex==2026.1.15' --with 'pyyaml==6.0.1' \
-  python -m dongxi_llms.tokenizer_mechanics_lab --local-files-only
-
-PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python \
-  -m dongxi_llms.embedding_gradient_lab
-
-PYTHONPATH=src /home/dongxi/dgx-spark-dongxi/.venv/bin/python \
-  -m dongxi_llms.qwen_embedding_inspection
-```
+Use the [guided lab](../labs/02-text-tokens-and-embeddings.md) for the CPU
+notebook route and [Appendix A](../appendices/a-laboratory-setup.md) for environment
+setup. Platform-specific inspection commands and recorded environments belong
+to [Appendix D](../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision).
 
 The embedding lab deliberately uses tiny controlled computations instead of a
 full transformer where thousands of parameters would obscure the graph. Its
@@ -964,7 +954,7 @@ only under the tokenizer that defined the model's embedding rows. Their numeric
 magnitudes and distances have no linguistic meaning; a consistent permutation
 of IDs and matching parameter rows preserves the model's function.
 
-Embedding lookup maps `[B,T]` IDs to `[B,T,d]` starting vectors. The transformer
+Embedding lookup maps $[B,n]$ IDs to $[B,n,D]$ starting vectors. The transformer
 then constructs position- and context-dependent hidden states under a causal
 information boundary. Next-token loss trains the table end to end. Repeated
 lookups accumulate gradients into shared rows, and tied output weights add a

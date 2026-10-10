@@ -1,0 +1,824 @@
+{
+  "scope": "Static candidate inventory; requires content review, not a mastery or runnable-solution pass",
+  "rows": [
+    {
+      "path": "notebooks/day-01/01_experiment_identity.ipynb",
+      "candidates": [
+        {
+          "cell": 8,
+          "text": "Integration checkpoint: describe which facts live in a specification, which in the environment manifest, and which can only come from the report. Reference: intended parameters belong in the specification; captured software identity belongs in the manifest; measured exit code, loss, runtime and minimum memory belong in the report. Read Chapter 1's actual smoke report to test the distinction. This session proves identity sensitivity, not language competence.",
+          "next_code": null
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-01/02_smoke_criteria_and_claims.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-01/03_read_a_real_run.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-01/04_checkpoint_interface.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-02/01_byte_bpe_training_and_encoding.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-02/02_vocabulary_and_sequence_cost.ipynb",
+      "candidates": [
+        {
+          "cell": 8,
+          "text": "Integration checkpoint: could reducing V accidentally make one story exceed a fixed 1024-token context? Reference: yes, if the tokenizer emits more pieces. Context is measured in the model's tokens, not words or characters; changing tokenization changes how much text the same T holds.",
+          "next_code": null
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-02/03_embedding_gradient_paths.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-03/01_logits_softmax_nll.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-03/02_causal_shift_and_masks.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-03/03_distribution_learning.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-04/01_causal_attention_forward.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-04/02_attention_gradients_and_failures.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-04/03_kv_cache_equivalence.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-05/01_embeddings_and_positions.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-05/02_multi_head_attention.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-05/03_residual_stream.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-05/04_layernorm_and_placement.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-05/05_positionwise_mlp.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-05/06_assemble_decoder.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-05/07_one_batch_learning.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-06/01_rmsnorm_and_swiglu.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-06/02_rotary_positions.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-06/03_gqa_qknorm_and_costs.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-07/01_recurrent_depth.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-07/02_architecture_defense.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-08/01_data_batches_and_token_budget.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-08/02_adamw_schedule_and_stability.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-09/01_read_training_clocks.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-09/02_masking_and_padding_control.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-09/03_story_quality_and_decoding.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-10/01_metrics_and_contracts.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-10/02_paired_uncertainty.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-10/03_slices_and_contamination.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise1 Where may the gold answer enter\n\nTrace an item through generation, parsing, selection and evaluation. Which box may compare the candidate with the reference? Could a likelihood selector be highly confident yet choose the wrong answer?\n\nReference: generation and selection never receive a reference through their declared views. The independent evaluator labels every candidate after the decision. Any-correct availability is useful diagnosis but is not a deployable selector.",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "## Exercise2 Does fitting remove the sampling problem\n\nBefore revealing the measured grid, predict what can remain wrong after the model learns six training sources. A new operand position, unseen instruction ID and new task family are separately frozen slices. Does repeating a strongly favored wrong answer create eight opportunities to correct it?\n\nReference: use all three fixed80-update histories. Green cells below mean correct, one-integer, naturally terminated outputs under the independent evaluator; gray means invalid and brown means supported wrong. The selector never sees these colors.",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "## Exercise3 Availability is not selection\n\nReuse prefixes1,2,4,8 of each saved pool. Should any-correct availability decrease when a nested prefix grows? Should majority or likelihood selection also be monotonic?\n\nReference: any-correct is a set-containment event and is monotonic for these nested pools. A selector can switch to a wrong candidate as new votes arrive. Mean log probability includes EOS and is not a truth score. The plot uses only the four predeclared source-heldout items, not training examples.",
+          "next_code": 9
+        },
+        {
+          "cell": 11,
+          "text": "## Exercise4 Equal attempts are not equal token work\n\nA failed attempt that emits three repeated numerals costs more output actions than immediate EOS. Suppose a complete attempt exceeds the remaining token budget. May we use it anyway, skip it for a cheaper later answer, or stop and charge it?\n\nReference: this protocol charges and rejects the first whole-attempt overshoot and stops there. It is retrospective prefix replay, not token-level interruptible decoding. All selector arms pay the protocol's mandatory path rescoring; this is not an optimized first-answer serving baseline.",
+          "next_code": 12
+        },
+        {
+          "cell": 14,
+          "text": "## Exercise5 What kind of diversity matters\n\nEight independently seeded draws may still repeat one wrong answer. Conversely, two identical strings can result from independent draws; deleting duplicates changes the voting estimator. What do correctness agreement, wrong-answer agreement and output diversity each tell us?\n\nReference: the covariance below is across the18 fixed items at each sample ordinal. Source siblings remain related. A zero-variance ordinal has undefined correlation (gray), not correlation0. This is descriptive evidence about the frozen panel, not proof that samples satisfy or",
+          "next_code": 15
+        },
+        {
+          "cell": 17,
+          "text": "## Exercise6 Duplicate rules change the estimator\n\nUse the actual seed10052 training failure. Compare counting every independently sampled vote, counting one vote per distinct answer, and using the likelihood ranker. What happens if gold fields are attached to the records?\n\nReference: strict views must discard the fields and retain the same decision. The unique-support control weights0 and1 equally when both occur, reducing to earliest support in a tie; it is not a generally better self-consistency estimator. The longest-output selector is deliberately degenerate here because every eligible co",
+          "next_code": 18
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-11/01_roles_templates_and_masks.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-11/02_padding_packing_boundaries.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-11/03_mixtures_and_data_cards.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb",
+      "candidates": [
+        {
+          "cell": 7,
+          "text": "Exercise: inspect the retained `attempts.jsonl` retry after a teacher error. The retry emits a duplicate correct final answer, so it has execution cost but supplies no additional unique candidate. Unsupported symbols remain in raw text even though their symbolic IDs are unavailable.\n\n![Saved rejection and candidate audit](../figures/chapter-08/day-11-04_teacher_attempts_and_matched_rejection_sft-02.png)",
+          "next_code": 9
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-13/01_tiny_assistant_training.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-15/01_bradley_terry_margin.ipynb",
+      "candidates": [
+        {
+          "cell": 5,
+          "text": "## Exercise 1: implement the loss mentally, then inspect the reference\n\nWrite a prediction about the derivative at margins \u22123, 0, and +3 for a winner target. The stable implementation uses softplus rather than log(sigmoid).\n",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "**Read the figure:** probability increases with margin; loss decreases; the signed derivative approaches zero as the winner becomes likely. The gradient is a direction for a scalar margin, before shared-parameter Jacobians.\n\n## Exercise 2: gauge versus confidence\n\nPredict which transformation changes preference probability: add 50 to both scores, or multiply both by 2. Then run the reference and alter the original scores.\n",
+          "next_code": 9
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-15/02_disagreement_and_calibration.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1: conflicting votes\n\nSeven of ten repeated judgments prefer the first answer. Predict whether the best score margin should be infinite, zero, or finite. Explain why zero expected gradient need not mean zero loss.\n",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "**Solution:** the finite margin is log(7/3). Opposing labels balance in expectation at probability .7, leaving vote entropy. The dashed lines are analytical targets, not fitted trend lines.\n\n## Exercise 2: keep ranks, change confidence\n\nStretch every true margin by 3. Predict the effect on ranking and probability quality. This simulator knows the population probabilities, so it can show calibration without sampling labels.\n",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "**Read the figure:** the stretched model is overconfident even though every rank is unchanged. Expected binary Brier includes Bernoulli variance; it is not simply squared distance to the soft target.\n\n## Exercise 3: repair confidence, then identify a limit\n\nPredict which positive temperature reverses the margin stretch. Would that also repair wrong rankings?\n",
+          "next_code": 9
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-15/03_preference_collection_and_judges.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## 1 An answer is not its display slot\n\nThe first story explicitly puts the ball in a red box. Before revealing the reference: if the correct answer moves from slot A to slot B, should the canonical winner change? What information must the collector preserve so a reward learner does not accidentally receive the opposite label?\n\nExercise: inspect the blind display, then change `display_swapped` and `raw_slot` together. Keep the same underlying answer selected. The next cell is a complete runnable reference; you can modify its controls directly.",
+          "next_code": 3
+        },
+        {
+          "cell": 12,
+          "text": "## 3 Many rows do not mean many independent questions\n\nThe box story supplies three conversational turns; every base pair also has two nuisance variants. If every pair has equal loss weight, which source gets three times the influence of an ordinary one-turn source?\n\nExercise: compare row-weighted agreement with equal-source agreement. Then deliberately move one box turn to the test split. Should a source-aware audit allow it? The complete references follow.",
+          "next_code": 13
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-16/01_reward_model_bias_audit.ipynb",
+      "candidates": [
+        {
+          "cell": 5,
+          "text": "**Solution:** highly correlated features let the confounded arm spread credit across nuisance coordinates. The balanced distribution supplies contrasts that identify the intended signal. Good training loss is insufficient to detect the shortcut.\n\n## Exercise 2: challenge the scores\n\nPredict which model rewards a substantively worse first answer with length and format differences +3. Change one nuisance coordinate at a time. The following plot uses the fitted weights, not an imagined failure.\n",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "**Read the figure:** crossing .5 means the model reverses the intended quality comparison. This varies length while holding quality \u22121 and format +3. Change the held-fixed values and regenerate the plot.\n\n## Exercise 3: independent validation\n\nCompare training NLL with NLL on independently varied features. Explain which distribution each metric describes.\n",
+          "next_code": 9
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-17/01_kl_regularized_optimum.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1: probability movement\n\nA reference favors a familiar answer. Reward favors another. Predict what happens as beta approaches zero or becomes large. Then inspect the exact optimizer rather than taking a noisy training run as the answer.\n",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "**Read the figure:** larger beta moves the optimum toward the reference; smaller beta favors the highest reward. This is a fixed-reward comparison, not the initial DPO gradient's beta scaling.\n\n## Exercise 2: prove stationarity numerically\n\nAt the optimum, reward minus beta times log-ratio-plus-one should be the same for every answer. Why is the shared constant allowed?\n",
+          "next_code": 6
+        },
+        {
+          "cell": 7,
+          "text": "**Solution:** the probability-sum constraint supplies one Lagrange multiplier. It makes the unconstrained derivative the same across coordinates instead of forcing every coordinate derivative to zero.\n\n## Exercise 3: partition cancellation and gauge\n\nAdd 50 to all rewards. Predict what changes in the policy and pair probabilities.\n",
+          "next_code": 8
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-17/02_sequence_likelihood_and_masks.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1: align the target boundary\n\nFor `[prompt, prompt, A, EOS, PAD]`, which state predicts A? Predict the response-target mask after shifting once. The heatmap labels token positions, not linguistic characters.\n",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "**Solution:** A is predicted from the final prompt state. EOS is a scored target if included in the response convention. The prompt remains context even though its labels do not enter the response sum. Padding attention and completion loss masks serve different purposes.\n\n## Exercise 2: inspect masked gradients\n\nWill unscored predictive logits receive a direct likelihood gradient? Will this imply prompt embeddings cannot receive gradients in a transformer?\n",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "**Solution:** these independent leaf logits have zero direct gradient outside the score mask. In a transformer, answer states attend to prompt representations, so the prompt embeddings can receive indirect gradients. This leaf-logit exercise does not contradict that path.\n\n## Exercise 3: sum versus average\n\nAt equal token probabilities, why do the two sequences have different sums and equal averages? Would replacing sums with averages preserve ordinary DPO's sequence-distribution derivation?\n",
+          "next_code": 9
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-18/01_dpo_controlled_comparison.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1: compare the complete response space\n\nTwo categorical contexts have three possible answers. Predict what flipping every preference should do. Compare a direct SFT demonstration control, while remembering it has different information.\n",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "**Solution:** flipped labels are a judgment-direction control. SFT is a demonstration control. Their raw loss values measure different targets, so plotting them does not make a lower cross-method loss a quality ranking. Exact enumerated reward and KL provide separate measurements in this known simulator.\n\n## Exercise 2: use an actual decoder\n\nSix symbolic prompts prefer A over B. EOS enters both response scores. Predict whether increasing the relative margin must increase P(A) for an unseen prompt. The following performs real CPU neural optimization and keeps its negative outcomes.\n",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "**Read the figure:** the left plot is an independent absolute answer-probability metric; the right plot is the trained relative pair diagnostic. They answer different questions. This fixture has one block and twelve symbolic IDs; it does not evaluate English.\n\n## Exercise 3: construct the ratio counterexample\n\nChosen probability falls from .2 to .1; rejected falls from .1 to .01. Does the reference-relative pair margin improve? Where must the remaining mass go?\n",
+          "next_code": 9
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb",
+      "candidates": []
+    },
+    {
+      "path": "notebooks/day-19/01_exact_reinforce_gradient.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1: a rewarded answer can still lose probability\n\nThe three rewards are 0, 1, and 3. Predict whether reward 1 necessarily receives a positive gradient. Then compare automatic differentiation with p times reward-minus-expectation.\n",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "**Solution:** reward is interpreted relative to the policy's expected reward. The optimizer maximizes the expectation, so gradient ascent decreases a below-average action even when its absolute reward is positive.\n\n## Exercise 2: sample-gradient distribution\n\nCan a sample point away from the exact expectation? Predict which action gives a large update. Enumerate rather than relying on one Monte Carlo batch.\n",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "**Read the figure:** each solid line is one possible sampled gradient, and the dashed line is its probability-weighted mean. Unbiasedness is a statement about the mean, not a guarantee about each update.\n\n## Exercise 3: implement the sign and detachment contract\n\nIf action 2 receives reward 3, should the minimized loss be plus or minus reward times log-probability?\n",
+          "next_code": 9
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-20/01_baselines_and_rloo.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1: choose a baseline\n\nDoes every action-independent baseline reduce variance? Predict what baseline 8 will do compared with 0 and 1.3. Each expectation below is exactly enumerated.\n",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "**Solution:** action independence preserves the mean, but an inaccurate baseline can increase variance. The minimum need not occur at expected reward because score-vector norms weight actions differently.\n\n## Exercise 2: leave out the current sample\n\nFor G=3 iid samples, predict whether inclusive mean centering and leave-one-out centering have the same expected gradient.\n",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "**Read the figure:** RLOO matches the exact mean. Inclusive centering scales it by two thirds; its smaller variance must be interpreted with that altered mean. Scaling it back restores the same leave-one-out estimator.\n\n## Exercise 3: zero advantages and a biased baseline\n\nCan a group have zero signal even though the population rewards differ? What happens if the baseline is the sampled reward itself?\n",
+          "next_code": 9
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-20/02_ppo_clipping_and_kl.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1: the clipping direction\n\nFor positive advantage, which excessive movement stops earning benefit? What changes for negative advantage? Plot the actual clipped objective, then inspect its derivative.\n",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "**Solution:** clipping flattens already-favorable excessive changes; harmful changes remain penalized. It does not clip every ratio's gradient symmetrically and does not impose a global KL constraint.\n\n## Exercise 2: KL estimator means and tails\n\nWhich estimator can be negative on one sample? Which nonnegative estimator is generally biased? All action probabilities are positive here.\n",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "**Read the figure:** k1 has signed samples; k2 squares them and generally changes the expectation; k3 adds a zero-mean term under full common support. Its variance is measured here, not guaranteed lower for every pair of distributions.\n\n## Exercise 3: rare support and sequence ratios\n\nMake current-policy mass on action 0 tiny while reference mass stays large. Predict the k3 variance. Also compare token-ratio multiplication with a single token ratio.\n",
+          "next_code": 9
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1 \u2014 matching logits do not guarantee matching probabilities\n\nPredict the collected probabilities. The order is temperature \u2192 top-k \u2192 renormalize \u2192 top-p \u2192 renormalize. Ties use smaller action IDs first; top-p retains the action crossing the threshold. Our target will deliberately use the **same fixed support but temperature 1**, whereas behavior uses temperature 0.5. Should its target/behavior ratios be one?\n\nA support mask does not encode temperature. Do not call these settings merely display options.",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "## Exercise 2 \u2014 a wrong denominator changes value and gradient\n\nFor one fixed state, target reward is $J=\\sum_a t_\\theta(a)R(a)$. With frozen behavior $b$ covering target support, exact importance enumeration is $\\sum_a b(a)[t_\\theta(a)/b(a)]R(a)$.\n\nPredict whether replacing $b$ in the denominator with raw model p preserves J. Freeze both collection and target support; gradients flow through current target logits, not through the recorded behavior or reward. The analytical conditional-softmax gradient is $t_i(R_i-J)$ on its support and zero outside it. This is an unclipped single-state expecta",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "## Exercise 3 \u2014 missing support is missing evidence\n\nNow declare the target to be raw full-support p. Action 2 has mass 0.15 and reward 4 but cannot be generated by b. Can a retained mask repair this original objective without changing it? What is the excluded contribution to expected reward?\n\nAnswer extraction, group filtering and importance clipping do not recreate unsampled actions.",
+          "next_code": 9
+        },
+        {
+          "cell": 11,
+          "text": "## Exercise 4 \u2014 equal KL estimator values do not imply equal gradients\n\nWith raw current p and frozen raw reference q, $D_{\\mathrm{KL}}(p\\Vert q)=\\sum_a p(a)\\log[p(a)/q(a)]$.\n\nAt a fresh state, k1 is log(p/q) and k3 is q/p \u2212 1 + log(p/q). Both have the correct expectation under p when support is shared. If the sampled action distribution is held fixed at $b=p_0$ during autodiff, should either sample formula automatically reproduce the gradient of the **full** KL? The state distribution here is fixed; we are isolating the action distribution.\n\nPredict before viewing the gradient panel. A value ",
+          "next_code": 12
+        },
+        {
+          "cell": 14,
+          "text": "## Exercise 5 \u2014 EOS is an action; a cap is a boundary\n\nOne row produces EOS; another runs out of its three-token budget. Padding uses the same ID as EOS. Which positions receive policy loss? Which boundary permits bootstrapping for a continuing-task critic? That permission is a task-modeling convention, not a claim that this notebook trains a critic.\n\nPredict the mask. Only generated stop IDs terminate; a stop inside the prompt or padding must not. Loss masking says which actions are scored, not which earlier states can influence them.",
+          "next_code": 15
+        },
+        {
+          "cell": 17,
+          "text": "## Exercise 6 \u2014 identify the gradient boundaries\n\nCurrent target logits must receive gradients; recorded old/behavior probabilities, advantages and frozen reference weights must not. Padding may contain meaningless likelihood placeholders. Should zero times NaN be trusted to remove their effect?",
+          "next_code": 18
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1 \u2014 which model should a gradient update?\n\nPredict whether the actor loss should update the critic or reward head. Is detaching an advantage the same as ensuring it was computed before the sampled action? Why not?\n\nThe diagram is schematic. Its tensor shapes describe the actual separate causal models; it is not measured attention or a shared-backbone architecture.",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "## Exercise 2 \u2014 did the trajectory end, or did observation end?\n\nOne row earns terminal reward 2 at EOS. The other is observed for two zero-reward actions, then capped with continuation value 1.2. Predict its lambda-one targets at gamma 0.9. What happens if we falsely mark that cap terminal?",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "## Exercise 3 \u2014 run a genuine two-update actor and learned critic\n\nPredict which parameter families will receive gradients. This reference reloads an actual fitted reward with its expected external file identity. It is a separate two-update mechanism check, not the forty-update experiment or a selected favorable checkpoint.",
+          "next_code": 9
+        },
+        {
+          "cell": 11,
+          "text": "## Exercise 4 \u2014 did mean proxy improvement buy independent quality?\n\nBefore revealing the curves, predict whether oracle values can rescue reward extrapolation. Every arm uses the same three actor seeds and sampled-path budget. The reward model was fitted on styled comparisons, while the actor may emit bare colors or repeat style words.",
+          "next_code": 12
+        },
+        {
+          "cell": 14,
+          "text": "## Exercise 5 \u2014 keep every failure in the denominator\n\nPredict whether adding the fourth-position forced EOS repairs an answer with two repeated style words. Compare the actual final greedy scores across training, calibration, held-out test and controls. There are only two prompts per withheld slice; these values do not establish broad transfer.",
+          "next_code": 15
+        },
+        {
+          "cell": 17,
+          "text": "## Exercise 6 \u2014 what did the reward never learn from pairs?\n\nInspect raw saved-model proxy scores for bare red/blue and styled variants on the original red-cup training source. Predict whether the balanced reward necessarily treats bare colors like its styled training responses. No policy gold label is used to select an answer here; this is a diagnostic.",
+          "next_code": 18
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-21/01_policy_algorithm_comparison.ipynb",
+      "candidates": [
+        {
+          "cell": 5,
+          "text": "**Read the figure:** left aligns sampled-completion budget; right exposes optimizer-work differences. Shading is the min/max of three seeds, not a confidence interval. PPO's oracle pre-rollout value deliberately removes critic error. It must not be presented as a learned-value result.\n\n## Exercise 2: report the contract\n\nWhich algorithm has more gradient work under the same 3,840 sampled completions? Does a higher score here establish a better LLM algorithm?\n",
+          "next_code": 6
+        },
+        {
+          "cell": 7,
+          "text": "**Solution:** the task and sampling budget are matched; PPO reuses each batch and takes 480 rather than 160 gradient passes. There is no unseen prompt split because separate logits memorize each context's best action. Conclusions concern the declared finite task and this budget.\n\n## Exercise 3: connect the learning methods\n\nExplain what supplied each target: an external demonstration, a recorded pair judgment, or a sampled outcome. Then change G from 4 to 2 in one method and report the new sample budget, rather than silently calling it the same comparison.\n",
+          "next_code": 8
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-22/01_group_advantages.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Both constant groups lose their relative comparison: all centered values are zero. The mixed group retains opposite directions. This is a policy-signal result; the KL term or optimizer momentum can still change parameters.\n\nExercise: compare population and sample standard deviation at G2 and G4. Predict which gives the larger magnitude.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-22/02_token_ratios_kl.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Reference explanation: positive advantages stop gaining at the upper boundary; negative ones stop gaining at the lower boundary. Movement in the unfavorable direction remains penalized. The plot describes a sampled objective, not a hard constraint on the whole distribution.\n\nExercise: derive the exact forward-KL gradient p_i(log(p_i/q_i)-KL). Test that the frozen reference receives no gradient.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-22/03_objective_weighting_and_filtering.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1 Which response receives more weight\n\nOne response has one action and another has three. Both get the same positive advantage. Would averaging all valid tokens be equivalent to averaging inside each response first? What if a fixed denominator counts the declared cap rather than actual length?\n\nReference: the coefficients below are exact controlled numbers, not learned attention. They multiply the clipped surrogate, so they directly change its derivative.",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "## Exercise 2 A zero loss can still move shared weights\n\nThe policy is the same initial tiny decoder in every row. It genuinely samples EOS/0/1 under a three-action syntax grammar; no correct answer or EOS is supplied. The proxy combines answer-only correctness, complete one-numeral format and a deliberately questionable verbosity bonus. Independent quality requires the correct numeral followed by EOS.\n\nPredict whether changing reduction can change a decoder parameter gradient even when every initial importance ratio is one. Will component-before-aggregation normalization necessarily agree wit",
+          "next_code": 6
+        },
+        {
+          "cell": 10,
+          "text": "## Exercise 3 Clipping is directional\n\nA positive advantage should stop receiving additional encouragement above the upper boundary. A negative advantage should stop receiving additional encouragement below the lower boundary. Does enlarging only the upper clip affect both cases equally?\n\nThe next arrays are constructed log probabilities with ratios 0.6, 0.9, 1.1, 1.3 and 1.6. They are not model outputs. The actual initial model comparison has ratio one and inactive clipping.",
+          "next_code": 11
+        },
+        {
+          "cell": 13,
+          "text": "## Exercise 4 Rejecting groups does not make decoding free\n\nWe retry only prompts with no mixed independent-quality group, at most three groups per prompt. Every all-wrong or all-correct rejected group remains in the raw ledger. This experiment is separate from the objective comparison, which always uses the original first-attempt pool.\n\nPredict whether equal selected response counts imply equal collection cost.",
+          "next_code": 14
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-23/01_decoder_rlvr.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Reading guide: reward belongs to sampled training rollouts, KL is exact over vocabulary at those visited states, and constant-group fraction diagnoses relative signal availability. None is itself the held-out score.\n\nExercise: hold the initialization, prompt schedule and update count fixed, change G4 to G8, and compare quality and actual valid response-token cost.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-23/02_verifier_contract.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Reference explanation: substring credit accepts malformed competing answers. Strict parsing makes formatting an explicit task constraint; it may reject a mathematically valid explanation outside that constraint.\n\nExercise: add one true positive, one ambiguous answer and one Unicode edge case. Require EOS for token verification.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-24/01_reward_hacking.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Reading guide: the proxy curves use different reward definitions, while strict accuracy uses one common criterion. The broken policy's rising proxy can accompany falling correctness.\n\nExercise: derive dJ/dz_i = p_i(R_i-J) and explain why the highest proxy action is favored.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-24/02_length_entropy_diagnostics.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Reference explanation: response means give each response0.5; token means give0.2 and0.8. Entropy declines whether the favored action is correct or incorrect.\n\nExercise: construct two policies with identical entropy but different strict accuracy.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-25/01_rollout_versions_and_budget.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Reading guide: throughput128 tokens/s is an illustrative control, not a Spark measurement. The same6-second learner becomes a smaller fraction as rollout work grows.\n\nExercise: intentionally allow lag1, reject a tokenizer mismatch, then compare doubled generation rate with halved learner time.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise 1 Which states are reused\n\nWhen one short row finishes, should its cached keys remain in every later model call? Why must each remaining row keep its own position count rather than using its new batch index?\n\nThe drawing below is structure, not measured attention or throughput. Both the whole path and the attention close-up preserve token, head and feature axes.\n",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "## Exercise 2 Can EOS also be padding\n\nToken 0 is both EOS and PAD here. Predict which zeros are observations and which are dummy storage. Then compare batch outputs against genuinely unpadded single rows.\n\nChange a padding ID while keeping its mask false. Then set all positions to zero. Why is that a different intervention from merely shifting every Q and K by the same RoPE offset?\n",
+          "next_code": 6
+        },
+        {
+          "cell": 8,
+          "text": "## Exercise 3 Did fewer projected positions imply faster execution\n\nPredict which of single/full, batch/full, single/cache and batch/cache has the most padded work. Does lower forwarded-position count guarantee lower wall time? Reveal the four actual paths and a separate forced stopping control.\n",
+          "next_code": 9
+        },
+        {
+          "cell": 11,
+          "text": "## Exercise 4 Is the next sample already determined by the model weights\n\nInterrupt after two global draws. Predict what is missing if you save only weights: which row is active, which prefixes were consumed, and which random draw comes next?\n\nThe reference below saves trusted local data-only state with an external byte digest. Never use this cell to load an arbitrary downloaded checkpoint.\n",
+          "next_code": 12
+        },
+        {
+          "cell": 14,
+          "text": "## Exercise 5 The process stopped after collecting a rollout\n\nShould resume sample a new rollout or apply the one already collected? Run a real two-stage tiny RLVR update, then inspect all fixed-budget DPO/RLVR recovery controls. The objective is recovery equivalence, not learning success.\n",
+          "next_code": 15
+        },
+        {
+          "cell": 19,
+          "text": "## Exercise 6 Can checking a sampler accidentally change the experiment?\n\nPredict what happens when a checkpoint verifier redraws the historical source IDs. Must those checks use the live training generator? Compare private replay with the intentionally broken live-generator check below. This is a bounded CPU RNG microscope, not a model run or proof that the production snapshot reader is fully budgeted.\n\nThe fixed example has three completed updates, two draws per update and five possible source IDs. Change `completed_updates` only after predicting how the private replay count changes. Why doe",
+          "next_code": 20
+        },
+        {
+          "cell": 22,
+          "text": "## Exercise7 \u2014 reading a checkpoint must not be a free retry\n\n**Predict:** two successful loads produce identical weights. A third load reads the same bytes but its semantic callback rejects the state. After reopening the journal from the checkpoint's older receipt, should a fourth load receive a fresh allowance? Why must the receipt live outside the tensor payload?\n\nThe following microscope really saves, inspects and loads a tiny CPU tensor through the shared reader. Its separate I/O allowance permits three load attempts. It deliberately rejects the third callback, reopens the same physical j",
+          "next_code": 23
+        },
+        {
+          "cell": 25,
+          "text": "## Exercise8 \u2014 two applied updates do not identify the whole boundary\n\n**Predict:** two snapshots both contain exactly two applied policy updates. One already holds the next sampled group; the other does not. Should their first resumed action, source cursor and sampling RNG advance be identical? Can the later rejected read be erased when the older snapshot is restored?\n\nThis microscope uses the original random tiny local Qwen geometry and native RLVR functions:16-token authored alphabet, group3, cap4, horizon4, seed2323, AdamW0.008, population advantages and temperature1/full-support sampling.",
+          "next_code": 26
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-26/01_temperature_distillation.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Reading guide: loss uses training temperature2; the displayed probabilities use inference temperature1. Dashed lines are the fixed teacher distribution.\n\nExercise: compare analytical gradients at T1,T2,T4, with and without the T\u00b2 multiplier.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-26/02_selection_and_sampling.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Reference explanation: oracle availability asks whether a correct answer exists; a deployed ranker must identify it. The ranker in this simulator increasingly selects its favored wrong class.\n\nExercise: test majority ties and estimate rejection cost if acceptance is0.1 rather than0.5.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-26/03_response_level_distillation.ipynb",
+      "candidates": [
+        {
+          "cell": 3,
+          "text": "## 1. The supervision boundary\n\nExercise: which logit predicts the first STEP? Where does EOS receive loss? Does masking the prompt remove the prompt\u2019s influence on the answer?\n\nReference: the final prompt position predicts STEP after one causal shift. EOS is a response target, not padding. The earlier prompt prediction logits have no direct loss, but their representations can receive gradients through later response computations. The structural map below is a schematic, not measured inference latency.",
+          "next_code": 4
+        },
+        {
+          "cell": 5,
+          "text": "## 2. A fresh teacher \u2192 response \u2192 student replay\n\nExercise: would picking the teacher\u2019s most correct response be the same experiment as taking the first well-formed response?\n\nReference: no. Gold-dependent selection changes the teacher-data distribution. The adapter below selects first format-eligible fulltrace, without checking arithmetic correctness. If any source has no eligible record, both student arms are blocked; no gold repair. The historical run happened to select 18 correct traces across all three seeds. Wrong well-formed responses remain eligible by contract, checked later with an ",
+          "next_code": 6
+        },
+        {
+          "cell": 9,
+          "text": "Reference: these curves establish that the fixed train responses were learned. They cannot alone establish new-source arithmetic, unseen instruction behavior, causal rationale faithfulness, or a general advantage of longer supervision.\n\n## 4. Final answer versus complete printed trace\n\nExercise: why is joint-trace success zero for the answer-only arm even when its final answers are correct? Should that make its answer-only contract a failure?\n\nReference: no printed step is provided under its trained short-response contract. The missing trace is not secretly a correct step or an observed wrong ",
+          "next_code": 10
+        },
+        {
+          "cell": 13,
+          "text": "Reference: the teacher produces 80 wrong-step/right-answer and 24 valid-step/wrong-answer generations; the complete-response student produces 26 and15. These are actual held-out/train evaluation outputs. A verified printed total is evidence about its text only. It does not prove that total caused the answer or corresponds to an internal reasoning state.\n\n## 6. Selection does not remove the need to grade steps\n\nExercise: can majority-final voting improve final accuracy while choosing a wrong-step/right-answer response? Is mean model log-probability a quality judge?\n\nReference: both selectors se",
+          "next_code": 14
+        },
+        {
+          "cell": 15,
+          "text": "## 7. Costs belong to both sides of distillation\n\nExercise: if the student is smaller, can we infer that collecting its training data was free\u2014or that it will be faster in deployment?\n\nReference: teacher fitting and720 teacher-data actions occurred before the student fits. Both arms use80 updates per campaign, but five versus three supervised tokens per source produce 2,400 versus1,440 target presentations. Parameter counts prove a smaller architecture only. The uncached CPU prefix work here is not serving latency.\n\n![Separate teacher and student work budgets](../figures/chapter-15/day-26-03_r",
+          "next_code": 16
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-26/04_critique_revision_and_acceptance.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## 1. Draw the control boundary before inspecting accuracy\n\nExercise: where would a hidden reference leak make the system look artificially good? Does accepting a tie mean the answer remains the same?\n\nReference: the critique sees only a whitelisted question and current draft. The revision sees that draft plus a symbolic critique. The acceptance gate checks one binary token followed by EOS; it accepts different well-formed values as a tie. Only the evaluator sees the reference. Stop after an identical **accepted** token path or two rounds, never after a correct grade.\n\nThe schematic below is s",
+          "next_code": 3
+        },
+        {
+          "cell": 8,
+          "text": "## 4. Compare what is finally delivered\n\nExercise: does a higher replay success count demonstrate a better reasoning model? What did REPAIR actually learn?\n\nReference: it learned nothing. REPAIR keeps the first observed binary token, or defaults to zero, and supplies EOS. It can recover a task answer from a previously invalid path or create a wrong answer that now obeys the format. The model candidates were already collected and are not conditioned on critiques. The two panels cannot be merged into one claimed accuracy.\n\nNo-critique spends fewer tokens. Independent majority uses the same froze",
+          "next_code": 9
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-26/05_student_prefix_and_teacher_context.ipynb",
+      "candidates": [
+        {
+          "cell": 3,
+          "text": "## 1. Which information belongs to which model?\n\nExercise: draw the student\u2019s input when the question is `A B` and it has generated `C`. May we append the correct answer `B A` during evaluation?\n\nReference: the input is `BOS REVERSE A B C`, even though C is wrong. Only the training teacher may see the separately recorded hint. Independent evaluation generates from the question alone, then a scorer checks the output. A sampled HINT token is an invalid ordinary output, not access to the private answer.",
+          "next_code": 4
+        },
+        {
+          "cell": 5,
+          "text": "## 2. A fresh fixed-seed prefix intervention\n\nExercise: should offline and student-prefix arms be compared by optimizer updates alone? What happens to their number of states when the student stops early?\n\nReference: early EOS supplies the state that sampled EOS, but no post-EOS states. Caps retain only states actually visited; they do not invent an EOS. Global valid-state means therefore have different denominators and collection costs. The replay below uses the predeclared recipe, not held-out tuning.\n\n![Observed wrong-prefix state fractions](../figures/chapter-15/day-26-05_student_prefix_and",
+          "next_code": 6
+        },
+        {
+          "cell": 7,
+          "text": "Reference: solid lines have hints in teacher targets; dashed lines do not. Every seed is plotted. A wrong-prefix state is a property of the observed history, not a label that the loss ignores. The authored no-hint teacher has a deliberately specified recovery failure, so its behavior cannot stand in for a real teacher\u2019s ability.\n\n## 3. Hold the state fixed before changing KL direction\n\nAt the same observed state $s$, use forward $D_{KL}(q_s\\|p_\\theta)$ or reverse $D_{KL}(p_\\theta\\|q_s)$. Teacher targets are detached in both. Their student-logit gradients differ:\n\n$$\n\\nabla_z D_{KL}(q\\|p)=p-q,\n",
+          "next_code": 8
+        },
+        {
+          "cell": 11,
+          "text": "## 5. No privileged hint at evaluation\n\nExercise: is a correct final symbol sufficient if the first symbol is wrong? Could a lower training loss establish successful unseen-pair reversal?\n\nReference: all evaluation responses are generated from the question alone. Whole-response success requires both reversed letters and natural EOS. Final-symbol correctness and format are distinct diagnostics. Three held-out source groups with eight draws each give only24 attempts/arm/seed; this is not a broad reasoning benchmark.\n\n![Question-only held-out generation outcomes](../figures/chapter-15/day-26-05_s",
+          "next_code": 12
+        },
+        {
+          "cell": 15,
+          "text": "## 7. Missing support and skipped work\n\nExercise: if the student assigns positive probability where the teacher has zero, which KL direction is infinite? Does this problem occur in our deliberately full-support training teacher?\n\nReference: reverse KL is infinite in that exact control. Forward KL ignores zero teacher-weight terms. Actual training targets allocate0.2/7 to every other token; no support floor or infinity is quietly repaired. The control\u2019s infinity is represented as a descriptive JSON status, not invalid numeric JSON.\n\nA group with a generation exception is really skipped and its ",
+          "next_code": 16
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-27/01_genealogy_and_frozen_panel.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Reference explanation: shared ancestry helps identify training changes; common evaluation identity helps identify a controlled comparison. Neither verifies score accuracy or panel appropriateness.\n\nExercise: create a cycle, an unknown parent and a changed evaluation identity; predict each failure.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-28/01_defense_and_release_gate.ipynb",
+      "candidates": [
+        {
+          "cell": 4,
+          "text": "Reading guide: these booleans are an illustrative case, not the actual repository release audit. The gate identifies missing evidence rather than inventing it.\n\nExercise: write a claim that CPU mechanisms justify and one claim requiring Qwen measurements. Fix the fixture only after stating what external evidence each missing item would need.",
+          "next_code": 5
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-16/03_text_reward_and_process_labels.ipynb",
+      "candidates": [
+        {
+          "cell": 5,
+          "text": "## 2 Last valid means a position, not the sequence length\n\nExercise: move padding from the right to the left. Should the score change for unchanged text? Would `mask.sum(-1)-1` still identify EOS? Change the shorter completion in `texts` and inspect the mask/endpoint plot.\n\nThe complete reference checks actual scalar values and all intermediate hidden states for finite numbers. Position IDs count valid tokens rather than raw array columns.",
+          "next_code": 6
+        },
+        {
+          "cell": 11,
+          "text": "## 4 A correct conclusion can follow a false step\n\nExercise: compare these four authored traces: valid step/correct answer, invalid step/correct answer, valid step/wrong answer and invalid step/wrong answer. Would a single final-answer label tell the process model which equation was valid?\n\nStep targets occur only on `<step>` marker positions. The terminal outcome target occurs at final EOS. Neither is an expected future return; a value critic would have a different target contract.",
+          "next_code": 12
+        },
+        {
+          "cell": 16,
+          "text": "## 5 Same substance does not guarantee the same reward\n\nExercise: take the exact correct answer, then add a heading or redundant sentence. Under a factual-answer rubric both are equally acceptable, so the declared binary approximation has target 0.5. Will the learned reward margin necessarily be zero?\n\nThe adjacent reference visualizes every source rather than hiding failures behind an average. A half target is a binary approximation to a tie, not an independent three-outcome tie model.",
+          "next_code": 17
+        },
+        {
+          "cell": 25,
+          "text": "## 8 The missing information was necessary, not sufficient\n\nExercise: explain why the character model can fit its training comparisons while still assigning a confidently wrong preference on a different object. Run the predeclared seed 1611 reference; do not add updates after inspecting the test results. All three experiment seeds are shown, including failures.\n",
+          "next_code": 26
+        },
+        {
+          "cell": 31,
+          "text": "## 10 Freeze the new interface without rewriting the old evidence\n\nExercise: why must the new reward have its own file/interface identity even though its decoder width and head shape match the word model? Change a future final answer and inspect the earlier marker scores. Then try an unsupported character and observe explicit rejection rather than an unknown ID.\n",
+          "next_code": 32
+        }
+      ]
+    },
+    {
+      "path": "notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb",
+      "candidates": [
+        {
+          "cell": 2,
+          "text": "## Exercise1 \u2014 what exactly is known to be solvable?\n\nThe control asks whether a sum of two nonnegative numerals is positive: answer0/1, then EOS. It has a fixed arithmetic oracle. Input is `[BOS, instruction, numeral_a, numeral_b]`; the English question is metadata, not language parsed by the decoder. No answer or reference is injected into its prompt.\n\nPredict what would happen if we only trained a table indexed by the problem key. Could it fit training rows while all unseen keys remain unchanged? Why should that not count as reasoning transfer?\n\nAlso predict the split risks: new-template ro",
+          "next_code": 3
+        },
+        {
+          "cell": 5,
+          "text": "## Exercise2 \u2014 predict genuine sequence learning without a saturated warm-start\n\nPredeclared seeds2301/2302/2303,120 updates each, four prompts\u00d716 responses, two-token cap, no SFT. The first position permits0/1; the next permits0/1/EOS. EOS is genuinely sampled, receives the loss and can fail to appear. Recomputed log probabilities use the same syntax support as collection; this is not raw-vocabulary PPO.\n\nWill increasing average success force every one of the four training items to improve? The positive examples outnumber the single zero-sum case. Predict the failure mode before revealing the",
+          "next_code": 6
+        },
+        {
+          "cell": 10,
+          "text": "## Exercise3 \u2014 inspect the minority failure and the held-out slices\n\nWhat could a score of0.5 on four odd-sum prompts mean? A policy returning1 for everything could receive that score without learning oddness. Before looking at the heatmap, predict whether training success alone warrants a family-transfer claim. Inspect actual responses, not only the average.",
+          "next_code": 11
+        },
+        {
+          "cell": 13,
+          "text": "## Exercise4 \u2014 a correct numeral can still be an incomplete trajectory\n\nThe cap is part of the task. Predict what happens when cap2 becomes cap1. The common mathematical grader can mark the numeral correct while complete-path reward stays zero because EOS has not been emitted. Separately remove the grammar: raw vocabulary decoding is a different answer-producing system with different support, not a fair proof of training progress under unchanged conditions.",
+          "next_code": 14
+        },
+        {
+          "cell": 16,
+          "text": "## Exercise5 \u2014 construct an oracle, then explain why lookup learning is weak evidence\n\nAn independently fixed arithmetic oracle can solve every authored item. A table can memorize the four training keys, but new keys use an untouched row. Predict their probability before running the adjacent reference. Why is this exact-expectation fitting arm not a substitute for the sampled decoder arm?",
+          "next_code": 17
+        },
+        {
+          "cell": 19,
+          "text": "## Exercise6 \u2014 which comparison changes weights, and which changes inference?\n\nA base checkpoint and its instruct descendant have different actual weights. Toggling a supported thinking flag on one instruct checkpoint can change its template, output path and token cost without changing those weights. Raw/base, chat/instruct and thinking support must be recorded independently. Is a long correct-looking trace evidence its intermediate steps caused the answer?",
+          "next_code": 20
+        }
+      ]
+    }
+  ]
+}

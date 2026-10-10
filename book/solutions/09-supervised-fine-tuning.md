@@ -1,22 +1,22 @@
 # Worked solutions — Supervised Fine-Tuning
 
-These answers accompany [Chapter 9](../chapters/09-supervised-fine-tuning.md) and the four Days 12–14 notebooks. The executed evidence concerns CPU mechanisms and seen symbolic requests; real Qwen results remain proposed.
+These answers accompany [Chapter 9](../chapters/09-supervised-fine-tuning.md) and the four Days 12–14 notebooks. The CPU mechanisms, seen symbolic requests and native 0.6B held-out-value comparison are measured. The proposed 1.7B transfer remains unexecuted.
 
 ## 1. Conditional sequence NLL
 
 The assistant response factorizes causally:
 
 $$
-p_\theta(a\mid c)=\prod_t p_\theta(a_t\mid c,a_{<t}).
+p_\theta(y\mid x)=\prod_t p_\theta(y_t\mid x,y_{<t}).
 $$
 
 Apply negative natural logs to get a sum of token surprise. Sum across demonstrations and divide by the total supervised count for a token-mean objective. Include the intended ending in the response targets. The logarithm does not choose the most likely token; it scores the demonstrated token's probability.
 
 ## 2. Shapes
 
-Input IDs and full labels are $[B,T]$; logits are $[B,T,V]$; hidden states are $[B,T,D]$; the output weight is $[V,D]$. Ownership and padding masks are $[B,T]$. After one shift, logits are $[B,T-1,V]$ and target labels are $[B,T-1]$.
+Input IDs and full labels are $[B,n]$; logits are $[B,n,V]$; hidden states are $[B,n,D]$; the output weight is $[V,D]$. Ownership and padding masks are $[B,n]$. After one shift, logits are $[B,n-1,V]$ and target labels are $[B,n-1]$.
 
-Flattening for cross-entropy produces $[B(T-1),V]$ logits and $[B(T-1)]$ labels. This preserves the vocabulary axis. A tensor with correct dimensions can still have a wrong shift, so print position/target identities in addition to shapes.
+Flattening for cross-entropy produces $[B(n-1),V]$ logits and $[B(n-1)]$ labels. This preserves the vocabulary axis. A tensor with correct dimensions can still have a wrong shift, so print position/target identities in addition to shapes.
 
 ## 3. Prompt gradient path
 
@@ -92,9 +92,15 @@ The source-hashed [CPU report](../../experiments/reports/2026-10-04-evaluation-a
 
 The adapter model stores 6,504 total parameters, of which 384 train; the full model stores/trains 6,120. Do not turn this outcome into a broad claim that full SFT always outperforms LoRA.
 
+## Distillation forward-reading extension
+
+Exercises 13–16 use Chapter 15's response-level distillation argument and
+[Day 26 notebook](../../notebooks/day-26/03_response_level_distillation.ipynb).
+The exercise IDs and retained measured outcomes below remain unchanged.
+
 ## 13. Response supervision versus a teacher distribution
 
-An actual emitted response supplies target IDs. Sequence NLL pushes the student toward each observed target under the demonstrated prefix. It does not reveal the teacher's probabilities for alternative tokens. Forward KL needs the teacher distribution, an aligned vocabulary and a declared temperature; the existing three-logit $T^2$ microscope remains a separate mechanism lesson.
+An actual emitted response supplies target IDs. Sequence NLL pushes the student toward each observed target under the demonstrated prefix. It does not reveal the teacher's probabilities for alternative tokens. Forward KL needs the teacher distribution, an aligned vocabulary and a declared temperature; the existing three-logit $\tau^2$ microscope remains a separate mechanism lesson.
 
 A teacher can emit a wrong but well-formed response. Response NLL still imitates that response unless a separately declared review/filter intervention changes the dataset. It cannot infer semantic truth simply because the example came from a larger model.
 
@@ -116,6 +122,11 @@ The two student arms use the same six parent responses, same initial weights and
 
 Across three campaigns, the teacher incurs 360 fitting updates and 144 data-generation attempts totaling 720 actions and 4,320 uncached prefix positions. Student fitting and 1,728 common evaluation attempts are additional work. Parameter counts, generation prefixes and local wall timers must not be conflated with optimized deployment latency. The [actual report](../../experiments/reports/2026-10-04-response-distillation.md) provides each boundary and retains the negative held-out slices.
 
+## Evidence-reading extension
+
+Exercise 17 keeps the conceptual durable-boundary question. Operational snapshot
+and merge details are linked from [Appendix D](../appendices/d-reproduction-and-environments.md#supervised-fine-tuning-state-and-adapter-exports).
+
 ## 17. Committed state versus a journal attempt
 
 If the update 3 snapshot did not commit, update 2 is the last durable training
@@ -132,8 +143,8 @@ Neither local branch proves CUDA/BF16 or pretrained recovery.
 
 ## 18. Lower NLL, but no exact or naturally ended responses
 
-The native20-update profile's development NLL fell from4.061965 to1.100189,
-while both generation panels remained0/8 exact answers and0/8 message-end stops.
+The native 20-update profile's development NLL fell from 4.061965 to 1.100189,
+while both generation panels remained 0/8 exact answers and 0/8 message-end stops.
 That is successful execution and measured likelihood improvement, not successful
 assistant behavior. Teacher forcing evaluates each gold target under the gold
 prefix; greedy free generation conditions on its own choices. A target can
@@ -141,12 +152,12 @@ gain probability without becoming the largest logit. Once another token wins,
 the continuation can enter contexts not represented by the demonstration.
 
 The end marker was supervised, but did not win in these sampled trajectories.
-All responses exhausted64 tokens, so termination failure remains explicit.
+All responses exhausted 64 tokens, so termination failure remains explicit.
 Do not repair the generated text, remove awkward tokens or select a nicer decode
 to turn a fixed negative result into a positive one. Use the already declared
 longer comparison with unchanged evaluation, and retain the short profile as
 resource evidence. The [raw report](../../experiments/reports/2026-10-05-native-base-profile.md)
-separates the455 training targets from720 evaluation target presentations.
+separates the 455 training targets from 720 evaluation target presentations.
 
 ## 19. A controlled recipe is not a universal method ranking
 
@@ -157,12 +168,12 @@ teacher-forced likelihood but failed whole-response completion. Safe exits and
 five committed snapshots establish execution, not quality.
 
 The separate [actual publication comparison](../../experiments/reports/native-assistant-comparison-20261005-run-02/README.md)
-now observes120/120 strict whole decoded answers and120/120 natural message-end
-stops for full400, versus0/120 answers/stops and120 caps for both unchanged Base
-and explicitly merged LoRA400. There are40 copy,40 reverse and40 extract items
-over40 held-out lexical-value groups; each family shows the same contrast.
-Generation uses common prompt token IDs, original template, greedy seed1010,
-context512, cap64 and BF16. Every actual producer exits0 without response errors.
+now observes 120/120 strict whole decoded answers and 120/120 natural message-end
+stops for full400, versus 0/120 answers/stops and 120 caps for both unchanged Base
+and explicitly merged LoRA400. There are 40 copy,40 reverse and 40 extract items
+over 40 held-out lexical-value groups; each family shows the same contrast.
+Generation uses common prompt token IDs, original template, greedy seed 1010,
+context 512, cap 64 and BF16. Every actual producer exits 0 without response errors.
 
 Generic parser correctness agrees here, but its case-folded text rule is not
 the strict case-sensitive rule. Every response passes `format_policy=any`,
@@ -171,9 +182,9 @@ evidence that an answer is correct or naturally ended. Neither rule extracts a
 favorable prefix. Raw generated stop tokens are retained; only the terminal
 special token is excluded from decoded scoring content.
 
-The2,000-draw seed1010 paired bootstrap samples the40 original source groups,
-retaining their120 aligned greedy item/sample IDs. Full−Base is+100 percentage
-points with interval[+100,+100]; LoRA−Base is0[0,0]; LoRA−full is−100[−100,−100].
+The 2,000-draw seed 1010 paired bootstrap samples the 40 original source groups,
+retaining their 120 aligned greedy item/sample IDs. Full−Base is+100 percentage
+points with interval[+100,+100]; LoRA−Base is 0[0,0]; LoRA−full is−100[−100,−100].
 Every group has constant outcomes, so these descriptive intervals are
 degenerate. They do not measure variation over training seeds, learning rates,
 new task templates or genuinely different assistant domains. The physical
@@ -185,17 +196,17 @@ target-module choice; the one common recipe does not optimize either method.
 One seed provides no between-run variability estimate. Shared synthetic task
 templates limit both the eight development prompts and the separately measured
 held-out-value publication panel; neither establishes broad instruction
-generalization. Development NLL falls from4.061965 to0.000276425 for full and
-to1.320048 for LoRA, but those teacher-forced60-item observations do not replace
-the generated120-item results. The adapter's lower NLL and failed whole answers
+generalization. Development NLL falls from 4.061965 to 0.000276425 for full and
+to 1.320048 for LoRA, but those teacher-forced 60-item observations do not replace
+the generated 120-item results. The adapter's lower NLL and failed whole answers
 are compatible measurements, not a contradiction. The [actual comparison report](../../experiments/reports/2026-10-05-native-sft400-comparison.md)
 also distinguishes labels, padded positions, measured seconds and overlapping
 snapshot cost counters.
 
-For example, full400 emits760 tokens and processes29,720 full-prefix forward
-positions; Base and LoRA each emit7,680 and process515,840. The difference partly
+For example, full400 emits 760 tokens and processes 29,720 full-prefix forward
+positions; Base and LoRA each emit 7,680 and process 515,840. The difference partly
 follows from correct short stopping, not an optimized inference-engine speed
-advantage. Summed response-attempt times are27.540/159.574/157.873 seconds for
+advantage. Summed response-attempt times are 27.540/159.574/157.873 seconds for
 full/Base/LoRA and have a different boundary from external supervision. FP32
 names the verified LoRA merge/storage; all publication generation is BF16.
 A passed merge/reload identity check does not imply favorable task scores or

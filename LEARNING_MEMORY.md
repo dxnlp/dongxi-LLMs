@@ -1,5 +1,17 @@
 # Learning Memory and Production Queue
 
+Book editorial production, 2026-10-10: the learner requested autonomous
+implementation of all phases in the [editorial plan](docs/BOOK_EDITORIAL_PLAN.md)
+on the verified Spark execution host. The
+[new editorial record](experiments/reports/2026-10-10-book-editorial-pass.md)
+indexes relocation/exercise mappings, strengthened chapter evidence, all registered
+lab routes and notebook contracts. All six phases are complete: 1,558 local
+tests and all 76 fresh notebooks pass on the frozen editorial source;
+the earlier eighteen-package receipts remain evidence for their own revision.
+Learner Day 9, canonical model code, measured failures and notebook learner/code
+cells are preserved. Existing animation candidates receive an editorial mechanism
+extension only; no production or publication follows from this index entry.
+
 User's CI preference,2026-10-05: remove the course GitHub Actions workflow.
 Use local CPU/notebook verification; do not recreate hosted course CI unless
 explicitly requested. Earlier goal-closure receipts retain their historical

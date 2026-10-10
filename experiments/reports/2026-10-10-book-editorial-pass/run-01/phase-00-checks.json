@@ -1,0 +1,34 @@
+{
+  "phase": 0,
+  "mode": "source checks; no notebook/model execution",
+  "book_scanner_before": "scanner-baseline-v1.1.json",
+  "book_scanner_after": "scanner-after-mechanical-v1.1.json",
+  "mechanical_after": 0,
+  "repairs": "mechanical-repairs.json",
+  "checker_tests": {
+    "command": "/tmp/dongxi-book-editorial.fBhWhc/venv/bin/python -m unittest discover -s tests -p test_book_prose.py -v",
+    "exit_code": 0,
+    "tests_passed": 10
+  },
+  "math": {
+    "command": "python3 scripts/check_book_math.py",
+    "exit_code": 0,
+    "files": 54,
+    "expressions": 1294,
+    "issues": 0
+  },
+  "integrity": {
+    "command": "python3 scripts/check_course_integrity.py --json",
+    "exit_code": 0,
+    "problems": [],
+    "chapters": 15,
+    "days": 28,
+    "registered_notebooks": 76,
+    "appendices": 4
+  },
+  "preservation": {
+    "all_notebook_files": 86,
+    "changed_code_records": []
+  },
+  "scope": "Actual Phase0 source/checker evidence; chapter rewrites/final references not included"
+}

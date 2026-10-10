@@ -6,6 +6,15 @@ An instruction dataset is therefore a behavioral specification expressed as sequ
 
 Day 11 uses [roles and serialization](../../notebooks/day-11/01_roles_templates_and_masks.ipynb), [padding and packing](../../notebooks/day-11/02_padding_packing_boundaries.ipynb), and [mixtures and provenance](../../notebooks/day-11/03_mixtures_and_data_cards.ipynb). Follow the [lab guide](../labs/08-instruction-data-as-an-interface.md); [worked solutions](../solutions/08-instruction-data-as-an-interface.md) explain each exercise.
 
+## What you should be able to explain
+
+- Trace messages through IDs, target ownership and one causal label shift.
+- Distinguish supervision, attention visibility and parameter freezing.
+- Audit padding, packing, mixture exposure and teacher selection before training.
+
+**Prerequisites:** tokenization from Chapter 2, causal attention from Chapters 4–5,
+and source-group evaluation contracts from Chapter 7.
+
 ## 8.1 Begin with the user's desired behavior
 
 Consider three examples: copy one word, reverse two words, and return an object with a required key. They all concern instruction following, but they require different output structure. A dataset with only copy tasks cannot establish a general assistant. A dataset with only beautifully formatted answers might teach presentation while leaving factual mistakes untouched.
@@ -44,9 +53,20 @@ x_{b,t}, & m_{b,t}=1\ \text{and}\ a_{b,t}=1,\\
 \end{cases}
 $$
 
-The sentinel $-100$ is an implementation convention for ignored labels, not a token ID. For logits $Z\in\mathbb{R}^{B\times T\times V}$, train using $Z[:,:-1,:]$ against $\ell[:,1:]$. Shift exactly once. Some high-level model APIs shift labels internally; the transparent teaching module performs the shift itself. Combining both shifts predicts two positions ahead.
+The sentinel $-100$ is an implementation convention for ignored labels, not a token ID. For logits $Z\in\mathbb{R}^{B\times n\times V}$, train using $Z[:,:-1,:]$ against $\ell[:,1:]$. Shift exactly once. Some high-level model APIs shift labels internally; the transparent teaching module performs the shift itself. Combining both shifts predicts two positions ahead.
 
 In the symbolic example, the final assistant body “red” and its END marker are supervised. The ASSISTANT header is ignored. The logit at the header predicts “red”; the logit at “red” predicts END. The target belongs to the assistant even though the producing position may be the header.
+
+### Read the target ownership
+
+![Assistant body and END ownership across the symbolic transcript](../../notebooks/figures/chapter-08/day-11-01_roles_templates_and_masks-02.png)
+
+Columns are serialized tokens; the two rows show target and label ownership.
+The symbolic IDs are `[1, 2, 16, 17, 5, 3, 10, 6, 5, 4, 6, 5]` and the
+unshifted labels are `[-100, -100, -100, -100, -100, -100, -100, -100, -100,
+-100, 6, 5]` for this saved reference. The notebook prints both arrays and
+the producing-position/target pairs; rerun it to inspect changes. Removing END
+changes direct supervision without removing the prompt's forward context.
 
 ## 8.4 Assistant-only loss still teaches from the prompt
 
@@ -68,7 +88,7 @@ The fixture keeps all sequences within a small bound. The Spark runner rejects e
 
 ## 8.6 Padding is not an instruction
 
-Batches contain different lengths. Padding creates a rectangular tensor $X\in\mathbb{N}^{B\times T}$. Padded labels must be ignored and padded context must be masked appropriately. The attention-validity mask is separate from the supervision mask because valid user context is visible even when its labels are ignored.
+Batches contain different lengths. Padding creates a rectangular tensor $X\in\mathbb{N}^{B\times n}$. Padded labels must be ignored and padded context must be masked appropriately. The attention-validity mask is separate from the supervision mask because valid user context is visible even when its labels are ignored.
 
 Our right-padded microscope has no future influence on earlier real positions under a causal decoder. Its padding loss is still explicitly ignored. A production model should receive the actual attention mask; left padding changes position handling and generation conventions and requires an independent equivalence check.
 
@@ -92,6 +112,17 @@ Packing also creates an accidental cross-boundary next-token target unless the f
 
 The notebook visualizes ordinary causal visibility beside segment-isolated visibility. Change one segment ID and observe precisely which information paths open. No production packing backend is claimed by this schematic alone.
 
+### Compare the information paths
+
+![Ordinary causal visibility versus segment-isolated visibility for nine positions](../../notebooks/figures/chapter-08/day-11-02_padding_packing_boundaries-02.png)
+
+Both matrices are $9\times9$: rows are receiving/query positions and columns
+are source/key positions. Five positions belong to segment zero and four to
+segment one. The lower-left block is visible under the ordinary triangle and
+blocked by the isolated mask. Change one segment ID in the notebook and track
+exactly which context paths appear; this figure is a mask computation, not
+evidence of a production packing backend.
+
 ## 8.8 Mixture weights need a unit
 
 Suppose half the sampled examples belong to short-answer tasks and half to explanation tasks. Short answers average ten supervised tokens; explanations average ninety. Under a global token mean, explanation tokens contribute approximately 90% of the objective, although example sampling is balanced.
@@ -107,6 +138,15 @@ To target equal supervised-token shares, one possible sampling strategy chooses 
 Report examples, input tokens, assistant tokens and source proportions separately. A high fraction of explanation tokens is not necessarily bad; it becomes a problem when it contradicts the intended interface. Use an evaluation slice for concise-output instructions to see whether the behavior transfers.
 
 Data-mixture changes and learning-rate changes should be tested separately when diagnosing a regression. If both change, a resulting score cannot identify the cause.
+
+### Count the objective's exposure
+
+![Equal example shares yield 10 percent short-answer and 90 percent explanation-token shares](../../notebooks/figures/chapter-08/day-11-03_mixtures_and_data_cards-02.png)
+
+The vertical axis is a fraction. Example share is one half for both families;
+supervised-token share is 0.1 versus 0.9 for mean lengths 10 and 90. Change the
+lengths or sampler in the notebook and recompute the denominator. Equal example
+counts do not by themselves equalize loss pressure.
 
 ## 8.9 Provenance survives preprocessing
 
@@ -124,7 +164,7 @@ A compact acceptance audit checks that every example contains permitted roles, a
 
 The automatic audit can verify syntax and alignment; a human or task verifier still needs to check whether the answer obeys the instruction. A well-formed wrong answer is a powerful wrong lesson.
 
-The next chapter assumes these contracts are fixed. It derives the objective and follows the answer gradient through the whole decoder, then compares full tuning with a constrained low-rank update. Its actual CPU experiment teaches mechanics; its separately specified Spark run tests a real pretrained base model.
+The accepted dataset is now an explicit interface contract: IDs, visibility, labels, endings and source membership must agree.
 
 ## 8.11 A teacher response is an attempt before it is a demonstration
 
@@ -146,7 +186,7 @@ produce wrong answers, empty text, unsupported symbols, long answers, a missing
 END and an actual local exception. It is not a pretrained model or an API. The
 recorded text-serialization costs are therefore not language-model inference
 tokens, API charges or GPU throughput. This small teacher makes the accounting
-visible before a real, separately authorized teacher is substituted.
+visible before a real, separately specified teacher is substituted.
 
 Retries have distinct identities but share their originating source. If a retry
 repeats the same correct answer, it consumed another execution without adding
@@ -155,18 +195,11 @@ request disappear merely because a later request succeeded.
 
 ## 8.12 Resumption and filtering preserve the rejected evidence
 
-A resumable adapter must distinguish an execution from a committed result. The
-laboratory records execution starts, writes result lines with content digests,
-and synchronizes them before proceeding. Reopening the same frozen journal
-rejects duplicate committed identities and changed contracts. A single-writer
-lock prevents two collectors from independently appending the same attempt.
-
-A crash can leave an uncommitted final suffix. Explicit recovery first saves its
-exact bytes and a reason, then removes only that suffix. Complete corrupt lines
-are refused rather than quietly erased. An execution that started but never
-committed may physically run again; the repeated start and unknown lost cost
-remain visible. “No duplicate committed records” is not an exactly-once API-call
-guarantee or a production crash-recovery proof.
+An interrupted teacher call may run again without creating an independent
+demonstration. Keep failed and rejected attempts alongside committed results,
+and distinguish unique saved records from exactly-once physical execution.
+The collector's locks and explicit crash controls are described in
+[Appendix D](../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence).
 
 Next separate acceptance from ranking. This lesson's acceptance policy rejects
 format, length, stopping, unsupported IDs, source leakage and within-prompt
@@ -200,8 +233,8 @@ per prompt, preserving prompt coverage. Neither can query the held-out panel.
 A global top-$K$ ranking over all pools solves a different problem. It can spend
 several selections on one source or omit an entire difficulty slice. Define
 prompt coverage as the fraction of training prompts represented at least once.
-In this fixture global top6 covers only six of twelve prompts, all two-word
-tasks, because correctness ties favor shorter answers. Global top12 covers all
+In this fixture global top 6 covers only six of twelve prompts, all two-word
+tasks, because correctness ties favor shorter answers. Global top 12 covers all
 twelve. These are separate coverage audits at different sample budgets, not
 additional matched student results.
 
@@ -272,8 +305,15 @@ programmatic control alone establishes no pretrained-model transfer.
 11. Explain why the format filter deliberately retains wrong answers in a top-versus-random experiment.
 12. Distinguish a unique committed attempt from an exactly-once physical execution after interruption.
 13. Identify what the 42-versus-46 target counts do and do not control at eighty updates.
-14. Explain why a shorter-answer tie-break can remove the harder slice under global top6 but not one-per-prompt selection.
+14. Explain why a shorter-answer tie-break can remove the harder slice under global top 6 but not one-per-prompt selection.
 15. Interpret a very low selected-dataset NLL alongside zero held-out control accuracy.
 16. Describe how to audit an unsupported response without deleting its raw text or claiming token costs that the programmatic teacher never incurred.
 
 The [worked solutions](../solutions/08-instruction-data-as-an-interface.md) include executable checks and an interpretation of each failure.
+
+## What follows
+
+The next chapter derives the objective and follows answer gradients through the
+whole decoder, then compares full tuning with a constrained low-rank update.
+Its CPU fixture teaches mechanics; its retained real-model comparison measures
+narrow held-out-value instruction behavior under the audited interface.

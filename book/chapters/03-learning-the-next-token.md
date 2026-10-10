@@ -17,13 +17,13 @@ embeddings.
 The complete path is:
 
 ```text
-token IDs [B,T]
-   → embeddings [B,T,D]
-   → contextual hidden states [B,T,D]
+token IDs [B,n]
+   → embeddings [B,n,D]
+   → contextual hidden states [B,n,D]
    → output projection
-   → logits [B,T,V]
-   → probabilities [B,T,V]
-   → shifted targets [B,T-1]
+   → logits [B,n,V]
+   → probabilities [B,n,V]
+   → shifted targets [B,n-1]
    → masked mean loss
    → gradients
    → parameter updates
@@ -55,7 +55,7 @@ After completing this chapter, you should be able to:
 - explain how greedy decoding, sampling, temperature, top-$k$, and top-$p$
   convert a distribution into one token ID;
 - derive one-hot cross-entropy and the exact logit gradient $p-q$;
-- route that gradient through the output head into $W$, $b$, and $h$;
+- route that gradient through the output head into $W_{\mathrm{out}}$, $b$, and $h$;
 - explain how repeated one-hot targets learn a non-one-hot distribution;
 - separate irreducible entropy from reducible KL mismatch;
 - derive sequence NLL, mean token loss, and perplexity, including their
@@ -74,14 +74,14 @@ bounded observations, and neither alone establishes broad language capability.
 Let:
 
 - $B$ be batch size;
-- $T$ be sequence length in tokens;
+- $n$ be sequence length in tokens;
 - $D$ be hidden width;
 - $V$ be the model's output-vocabulary dimension.
 
 The transformer produces:
 
 $$
-H\in\mathbb{R}^{B\times T\times D}.
+H\in\mathbb{R}^{B\times n\times D}.
 $$
 
 For one batch item and position, write:
@@ -90,10 +90,11 @@ $$
 h=H[b,t,:]\in\mathbb{R}^{D}.
 $$
 
-The output head contains one row for every candidate token ID:
+Treat the state $h$ and output $z$ as row vectors. The output head contains
+one stored row for every candidate token ID:
 
 $$
-W_{out}\in\mathbb{R}^{V\times D},
+W_{\mathrm{out}}\in\mathbb{R}^{V\times D},
 \qquad
 b\in\mathbb{R}^{V}.
 $$
@@ -101,7 +102,7 @@ $$
 It computes:
 
 $$
-z=W_{out}h+b,
+z=hW_{\mathrm{out}}^\top+b,
 \qquad
 z\in\mathbb{R}^{V}.
 $$
@@ -109,7 +110,7 @@ $$
 For candidate ID $i$:
 
 $$
-z_i=W_{out,i}\cdot h+b_i.
+z_i=W_{\mathrm{out},i}\cdot h+b_i.
 $$
 
 $z_i$ is a **logit**: a raw compatibility score between this context and token
@@ -125,8 +126,11 @@ output at that position: V logits, one for every candidate ID
 ```
 
 If $V=10{,}000$, one position emits 10,000 logits. A sequence emits one such row
-at every position, giving `[B,T,V]`. During teacher-forced training, many rows can
-be supervised in parallel. During cached generation, the decoder normally uses
+at every position, giving `[B,T,V]` in the existing code, where `T` means $n$.
+**Teacher forcing**
+supplies the recorded preceding tokens at each training prediction; causal
+attention prevents future-token visibility. This lets many supervised rows be
+computed in parallel. During cached generation, the decoder normally uses
 only the newest position's `[V]` row to choose the next token.
 
 ### The coordinates are token IDs
@@ -150,13 +154,18 @@ among the printed ID numbers.
 
 ### The output head is large for a reason
 
+The stored output matrix uses
+the `torch.nn.Linear(D, V).weight` layout $[V,D]$; `lm_head(hidden)` applies
+`hidden @ lm_head.weight.T`. Existing notebook code uses `T` for sequence
+length, which corresponds to $n$ here. These API names remain unchanged.
+
 Dense projection across all positions can be written:
 
 $$
-Z_{[B,T,V]}=H_{[B,T,D]}W_{out,[V,D]}^\top.
+Z_{[B,n,V]}=H_{[B,n,D]}W_{\mathrm{out},[V,D]}^\top.
 $$
 
-Its arithmetic scales approximately as $BTDV$, and the matrix contains $VD$
+Its arithmetic scales approximately as $BnDV$, and the matrix contains $VD$
 weights when untied. Chapter 2's pinned Qwen3-0.6B interface had $D=1024$ and
 $V=151{,}936$. Its tied embedding/output matrix contains 155,582,464 values, and
 one dense vocabulary projection performs roughly 155.6 million
@@ -164,7 +173,7 @@ multiply-accumulates per position. Tying avoids a second matrix of that size; it
 does not remove the projection computation.
 
 Vocabulary design therefore creates a systems trade-off. A smaller vocabulary
-can leave text split into more tokens, increasing $T$, transformer positions,
+can leave text split into more tokens, increasing $n$, transformer positions,
 autoregressive steps, and KV-cache use. A larger vocabulary increases
 embedding/output cost through $V$ and may allocate many rows to rare pieces. A
 rough full-sequence decomposition is:
@@ -172,7 +181,7 @@ rough full-sequence decomposition is:
 $$
 \text{cost}
 \approx
-c_1LTD^2+c_2LT^2D+c_3TDV,
+c_1LnD^2+c_2Ln^2D+c_3nDV,
 $$
 
 where $L$ is layer count and the constants hide implementation details. The
@@ -335,9 +344,9 @@ the unfiltered model distribution in its cross-entropy objective.
 For a causal model, the probability of a token sequence follows the chain rule:
 
 $$
-P(x_0,\ldots,x_{T-1})
+P(x_0,\ldots,x_{n-1})
 =
-\prod_{t=0}^{T-1}P(x_t\mid x_{<t}).
+\prod_{t=0}^{n-1}P(x_t\mid x_{<t}).
 $$
 
 The initial term may be conditioned on a beginning token or another declared
@@ -346,15 +355,15 @@ and makes it difficult to see which token caused trouble. Logs turn the product
 into a sum:
 
 $$
-\log P(x_{0:T-1})
+\log P(x_{0:n-1})
 =
-\sum_{t=0}^{T-1}\log P(x_t\mid x_{<t}).
+\sum_{t=0}^{n-1}\log P(x_t\mid x_{<t}).
 $$
 
 Negative log-likelihood, or NLL, is:
 
 $$
-\mathrm{NLL}(x_{0:T-1})
+\mathrm{NLL}(x_{0:n-1})
 =
 -\sum_t\log P(x_t\mid x_{<t}).
 $$
@@ -487,19 +496,19 @@ probability.
 ### From logit correction to model learning
 
 Logits are intermediate activations, not normally optimizer parameters. For
-$z=W_{out}h+b$, write $g=p-q$. The chain rule gives:
+$z=hW_{\mathrm{out}}^\top+b$, write $g=p-q$. The chain rule gives:
 
 $$
 \frac{\partial L}{\partial b}=g,
 \qquad
-\frac{\partial L}{\partial W_{out}}=gh^\top,
+\frac{\partial L}{\partial W_{\mathrm{out}}}=g^\top h,
 \qquad
-\frac{\partial L}{\partial h}=W_{out}^\top g.
+\frac{\partial L}{\partial h}=gW_{\mathrm{out}}.
 $$
 
 The output rows learn how to recognize contexts that support their candidate
 tokens. The target row moves toward the current state under a simple SGD update;
-high-probability wrong rows move away. Meanwhile, $W_{out}^\top g$ sends a
+high-probability wrong rows move away. Meanwhile, $gW_{\mathrm{out}}$ sends a
 blended error signal into the transformer, asking it to construct a more useful
 context representation next time. Backpropagation distributes that signal
 through every operation that created $h$.
@@ -591,6 +600,12 @@ Falling training loss with rising held-out loss is therefore evidence of
 overfitting under a fixed evaluation contract.
 
 ## 3.8 Controlled experiment: two logits learn 70/30
+
+**Reader prediction:** every target is one-hot, but the same context has two
+different observed continuations. Should the learned model become deterministic?
+Should its best mean loss be zero? Explain what should balance at the optimum
+before revealing the measured trajectory. This exercise does not replace the
+historical specification's pre-run hypotheses.
 
 We tested the distribution-learning claim with the smallest transparent system:
 
@@ -731,7 +746,7 @@ The state at position $t$ may use $x_{\le t}$ and predicts $x_{t+1}$:
 
 $$
 y_t=x_{t+1},
-\qquad 0\le t<T-1.
+\qquad 0\le t<n-1.
 $$
 
 Explicit alignment is:
@@ -762,7 +777,7 @@ semantic alignment nor causal validity.
 
 Training can process all positions in parallel because the full sequence is
 available while the causal mask blocks future visibility. Each position receives
-the real preceding tokens. This is teacher forcing.
+the real preceding tokens: the teacher-forcing convention introduced in section 3.2.
 
 Generation is different. The model appends its own selected token and consumes
 that altered prefix on the next step. One poor or merely unusual choice can move
@@ -932,7 +947,7 @@ Visible prompt computations can remain ancestors of supervised answer losses.
 
 ## 3.14 Exercises
 
-1. **The complete tensor bridge.** For $B=2$, $T=5$, $D=8$, and $V=10{,}000$,
+1. **The complete tensor bridge.** For $B=2$, $n=5$, $D=8$, and $V=10{,}000$,
    state the shapes of input IDs, embeddings, final hidden states, logits,
    shifted logits, and shifted integer labels. Explain why the label does not
    need shape `[V]`.
@@ -950,8 +965,8 @@ Visible prompt computations can remain ancestors of supervised answer losses.
    gradient sign from optimizer motion and explain why class 0 receives more
    correction than class 2.
 
-5. **From logits into parameters.** Starting from $z=Wh+b$ and $g=p-q$, give
-   the gradients for $W$, $b$, and $h$. Explain what the output head and the
+5. **From logits into parameters.** Starting from $z=hW_{\mathrm{out}}^\top+b$
+   and $g=p-q$, give the gradients for $W_{\mathrm{out}}$, $b$, and $h$. Explain what the output head and the
    transformer learn from their respective gradients.
 
 6. **Nonzero loss, zero expected gradient.** For a 70/30 target distribution,

@@ -6,20 +6,32 @@ indices; their numerical distances do not express linguistic similarity.
 
 | Symbol | Meaning | Typical shape |
 |---|---|---|
-| $B,T,V,D$ | Batch, sequence length, vocabulary, residual width | Scalar dimensions |
-| $X$ | Residual states at all input positions | $[B,T,D]$ |
+| $B,n,V,D$ | Batch, sequence length, vocabulary, residual width | Scalar dimensions |
+| $X$ | Residual states at all input positions | $[B,n,D]$ |
 | $E$ | Input embedding table | $[V,D]$ |
+| $W_{\mathrm{out}}$ | Stored vocabulary head; $z_t=h_tW_{\mathrm{out}}^\top$ | $[V,D]$ |
 | $h_t,z_t,p_t$ | Contextual state, logits, probabilities | $[D]$, $[V]$, $[V]$ |
 | $q_t$ | Target distribution, often one-hot | $[V]$ |
-| $H,d_k$ | Attention heads and head width | Scalar dimensions |
-| $Q,K,V_{mathrm{attn}}$ | Queries, keys and attention values | $[B,H,T,d_k]$ |
-| $m_t$ | Valid-target or completion-loss mask | $[B,T]$ |
+| $H,d_h$ | Attention heads and query/key head width | Scalar dimensions |
+| $Q,K,V_{\mathrm{val}}$ | Queries, keys and attention values | $[B,H,n,d_h]$ when value width matches |
+| $m_t$ | Valid-target or completion-loss mask | $[B,n]$ |
 | $\pi_\theta,\pi_{\mathrm{ref}},\pi_{\mathrm{old}}$ | Current, reference and rollout policies | Conditional distributions |
-| $r,R,A$ | Reward score, return and advantage | Scalar or rollout/token arrays |
+| $x,y$ | Context and response | Token sequences |
+| $r_\phi(x,y),R(x,y)$ | Learned reward and environment/verifier reward | Scalars |
+| $\hat A_i,\hat A_{i,t}$ | Response-level and token-level advantage | Response/token arrays |
+| $\tau,\Delta t_{\mathrm{update}}$ | Temperature and update duration | Scalar; duration has time units |
+| $\beta$ | KL coefficient; its direction is named with the objective | Scalar |
+| $\alpha_{\mathrm{LoRA}}$ | LoRA scaling numerator | Scalar |
+| $\lambda_{\mathrm{SFT}},\lambda_H,\lambda_{\mathrm{KD}}$ | Chosen-NLL, entropy and distillation weights | Scalars |
+| $\delta_t,\epsilon_{\mathrm{adv}}$ | TD residual and advantage-normalization stabilizer | Scalar/token arrays; scalar |
 | $G$ | Number of completions per prompt in grouped optimization | Scalar |
 
 The attention value tensor uses a subscript here to avoid confusing it with
 vocabulary size. A chapter can use another local symbol after defining it.
+Archived figures and Python APIs may call sequence length `T`, head width
+`d_k` or `d`, and distillation temperature `T`. Their local mappings are
+stated in the chapters; the symbols above do not change code or measurements.
+Chapter 2 distinguishes tokenizer entries $V_t$ from model output rows $V_m$.
 An output table may be tied to $E$; unique parameter storage is then counted
 once even though the parameter has two computational paths.
 

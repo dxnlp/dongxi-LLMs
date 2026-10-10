@@ -1,34 +1,40 @@
 # Lab 4 — Attention and the Causal Information Boundary
 
-Machine: CPU on Mac or Spark, offline. Use the declared Torch/Matplotlib course
-kernel. Read [the chapter](../chapters/04-attention-and-the-causal-information-boundary.md) and attempt
-[the worked exercises](../solutions/04-attention-and-the-causal-information-boundary.md) alongside this route.
+Machine: isolated CPU course kernel on Mac or Spark, offline.
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).
+Prerequisites: Chapters 2–3; matrix multiplication, softmax and chain rule.
+Deliverable: A causal dependency diagram and a cache failure explained by its changed context.
 
-The [Day4 route](../../notebooks/day-04/README.md) traces Q/K/V, causal gradients
-and cached equivalence. Predict whether replacing the final token changes an
-earlier representation, then inspect scores, masks, attention probabilities and
-value mixtures. Routing probabilities are not value content.
+Read the [chapter](../chapters/04-attention-and-the-causal-information-boundary.md) and use the
+[worked solutions](../solutions/04-attention-and-the-causal-information-boundary.md) after attempting each exercise.
+Write each prediction before executing the reference. Numerical checkpoints use
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may
+change the result. References and interpretations remain adjacent to the attempt.
 
-Compare correct and deliberately broken masks. Trace gradients into Q/K/V and
-distinguish routing from content paths. Increasing key dimension changes raw
-score spread; scaling stabilizes it under the stated assumptions, not universally.
+| Notebook | Question / prediction before reveal | Checkpoint on the declared fixture | One intervention | Evidence boundary |
+|---|---|---|---|---|
+| [Causal retrieval](../../notebooks/day-04/01_causal_attention_forward.ipynb) | Predict: Will a changed final token alter earlier outputs? | Rows sum to one; forbidden weights are zero; earlier causal outputs agree within the declared tolerance. | Use the unmasked or late-mask variant. | Attention weights alone do not explain the whole output. |
+| [Routing and content gradients](../../notebooks/day-04/02_attention_gradients_and_failures.ipynb) | Predict: Can routing and value paths receive different credit? | Manual/autograd errors are below 1e-12; forbidden-score gradient is zero. | Detach Q/K routing or value content separately. | The IID scaling control is not a statement about learned representations. |
+| [KV-cache identity](../../notebooks/day-04/03_kv_cache_equivalence.ipynb) | Predict: Will a stale prefix preserve next-token logits? | Correct replay agrees within 1e-12; stale-prefix error is about 1.80691; final logical payload is 768 bytes. | Change an earlier prefix while reusing its cache. | Logical work and payload are not latency or peak memory. |
 
-Compare full-prefix and cached decoding with the same unchanged prefix.
-Plot cache growth and numerical error. A causal earlier state does not depend on
-future arrivals; different prompt contexts do not share a cache just because
-they contain the same token.
+Use the [attention/cache report](../../experiments/reports/2026-09-05-attention-gradients-cache.md) for the fixed stale-prefix case. In every figure distinguish forbidden edges, allowed near-zero weights and measured numerical error.
 
-Deliver a causal dependency sketch and one failure that invalidates the cache
-equivalence claim. This is not an inference-throughput benchmark.
-Implementation: [causal_attention_lab.py](../../src/dongxi_llms/causal_attention_lab.py)
-and [attention_evidence.py](../../src/dongxi_llms/attention_evidence.py).
-Checks: `PYTHONPATH=src python -m unittest discover -s tests -p test_causal_attention_lab.py`.
+Retain a short explanation of the intervention, observed change and claim it
+does not establish. The deliverable should connect these explanations into one
+defensible argument, with source/report links rather than an execution-only checklist.
 
-Fresh reference execution from the repository root:
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+
+From the repository root, use the isolated environment/kernel described in
+[Appendix D](../appendices/d-reproduction-and-environments.md):
 
 ```bash
-python scripts/verify_course_notebooks.py --days 4 --kernel dgx-spark-native --export-figures
+.venv-course/bin/python scripts/verify_course_notebooks.py --days 4 --kernel dongxi-course --expected-prefix .venv-course
 ```
 
-A passing reference verifies declared mechanism properties, not broad model
-capability or independently assessed learner mastery.
+The verifier retains executed copies and identities in a new directory. Source
+notebooks and learner attempts remain intact. Exact runner/replay/export commands
+and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
+
+</details>

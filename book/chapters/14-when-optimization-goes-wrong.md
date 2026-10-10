@@ -128,7 +128,32 @@ Prompt-token entropy, padded rows and EOS-dominated tails answer different
 questions. The entropy of a marginal mixture can also differ from average
 conditional entropy over prompts.
 
-An entropy bonus $\alpha H(p)$ encourages broader distributions locally. It
+### A measured entropy trace still needs a population
+
+**Reader prediction.** If training-state entropy falls while sampled reward
+reaches one, must held-out accuracy improve? Predict what the same model can
+confidently get wrong before reading the retained CPU observation.
+
+The [CPU decoder report](../../experiments/reports/2026-10-04-grpo-diagnostics-distillation.json)
+records post-update entropy over valid positions on each actual collected
+training group. These are the first and final updates of both predeclared arms,
+not favorable checkpoints selected from the middle of the curve.
+
+| Group size | Update | Post-update entropy, nats | Mean valid response length | Collected mean reward |
+|---:|---:|---:|---:|---:|
+|4|1|0.075326|2.0000|0.875|
+|4|12|0.025820|2.0000|1.000|
+|8|1|0.095885|2.0625|0.875|
+|8|12|0.020264|2.0000|1.000|
+
+The one-layer symbolic decoder uses seed 2223, a 60-update warm start and twelve
+RL updates. Both arms still score 0/4 on the independent held-out arithmetic pairs
+before and after RL. Low entropy at trained prefixes is consequently compatible
+with held-out failure. The two arms also consume different rollout counts; this
+trace neither ranks group sizes at equal compute nor measures natural-language
+reasoning. Mean length includes the sampled EOS and excludes post-stop padding.
+
+An entropy bonus $\lambda_H H(p)$ encourages broader distributions locally. It
 does not make low-probability actions useful. On a strict syntax task it can
 increase invalid outputs; on a nearly saturated task it can trade correctness
 for exploration. Compare valid fraction, correctness and diversity along with
@@ -143,9 +168,9 @@ basic GRPO runner samples at temperature 1 with no top-k or top-p restriction.
 
 ### Three distributions, not three names for one vector
 
-A model says an action has probability0.30. A sampler lowers temperature,
+A model says an action has probability 0.30. A sampler lowers temperature,
 removes unlikely actions and renormalizes. The action ID has not changed, but
-its probability has. An update that divides by0.30 anyway is not using a
+its probability has. An update that divides by 0.30 anyway is not using a
 record of what generated that action. This can alter an otherwise finite,
 apparently healthy gradient.
 
@@ -174,7 +199,7 @@ t_\theta(a)=\frac{\boldsymbol{1}_{a\in S}e^{z_a^\theta/\tau_t}}
 \rho(a)=\frac{t_\theta(a)}{b(a)}.
 $$
 
-Matching logits and support do not imply ratio1: temperature and renormalization
+Matching logits and support do not imply ratio 1: temperature and renormalization
 must match too. Fixing support defines a local conditional objective, not a
 derivative through a discontinuous top-k/top-p choice. Recomputing its support
 after an update is a different procedure with different boundary behavior.
@@ -197,17 +222,30 @@ trajectory weights require their own objective and correction.
 
 ### Missing support is missing evidence
 
+**Reader prediction.** Holding logits fixed, does lowering temperature and
+removing support reduce entropy because the model learned anything? Which
+probability should appear in the importance-ratio denominator?
+
+![Raw, behavior and conditional target probabilities](../../notebooks/figures/chapter-12/day-20-03_behavior_probabilities_and_support-01.png)
+
+Read each group of bars at the same action ID. The absent action 2 bar reflects
+support removal; the orange-versus-blue difference reflects collection rules.
+These are retained finite-fixture probabilities from the notebook and
+[sampling-support report](../../experiments/reports/2026-10-04-sampling-support.md),
+not a measured training trajectory. The figure's `T` denotes the temperature
+written as $\tau$ in this chapter.
+
 The [original CPU microscope](../../src/dongxi_llms/sampling_likelihood_lab.py)
-starts with raw probabilities0.55,0.30,0.15 and rewards0,1,4. Temperature0.5,
-top-k2 and top-p0.9 produce behavior approximately0.7707,0.2293,0. A declared
-temperature-one target on its retained support is approximately0.6471,0.3529,0.
-Correct denominators recover expected reward0.352941; raw model denominators
-produce0.269764. The [measured report](../../experiments/reports/2026-10-04-sampling-support.md)
+starts with raw probabilities 0.55,0.30,0.15 and rewards 0,1,4. Temperature 0.5,
+top-k 2 and top-p 0.9 produce behavior approximately 0.7707,0.2293,0. A declared
+temperature-one target on its retained support is approximately 0.6471,0.3529,0.
+Correct denominators recover expected reward 0.352941; raw model denominators
+produce 0.269764. The [measured report](../../experiments/reports/2026-10-04-sampling-support.md)
 retains both gradient vectors, rather than inferring correctness from a
 plausible scalar loss. These are finite fixture measurements, not LLM results.
 
-Now ask this collector to optimize the original full-support target. Action2
-has target mass0.15 and contributes0.60 to expected reward, but cannot be
+Now ask this collector to optimize the original full-support target. Action 2
+has target mass 0.15 and contributes 0.60 to expected reward, but cannot be
 sampled. The importance routine rejects this missing support. Zeroing its
 ratio would silently omit that contribution. A retained mask cannot repair
 the original objective; it can help define a different, conditional objective.
@@ -277,8 +315,8 @@ target probabilities remain differentiable. Select valid positions before
 likelihood arithmetic: zero times a padded NaN is still NaN. A token mask must
 still be shifted/sliced once to align the logits predicting those tokens.
 
-Use [Day20's probability notebook](../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb)
-as the bridge from Chapter12 policy ratios to this failure analysis. Its six
+Use [Day 20's probability notebook](../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb)
+as the bridge from Chapter 12 policy ratios to this failure analysis. Its six
 prediction/reference exercises show probabilities, wrong-denominator gradients,
 missing support, KL-gradient differences, masks and detachment. Execution
 verifies finite mathematics and record integrity, not Mac setup, model-scale
@@ -329,6 +367,19 @@ marker can become an apparent failure. Conversely, a substring-based checker
 may reward a long response that lists many possible answers. Treat response
 length caps as part of the experimental contract; changing them changes both
 computation and the answer distribution.
+
+**Reader prediction.** Keep both response gradients fixed. Does replacing a
+response mean with a token mean only multiply the whole parameter gradient by
+one constant? Predict the 2-versus-8-token weighting before inspecting actual
+matched-rollout derivatives.
+
+![Gradient norms on the same retained rollouts](../../notebooks/figures/chapter-13/day-22-03_objective_weighting_and_filtering-02.png)
+
+Bars compare decoder-gradient norms with the same responses and unchanged
+weights. Colors retain three fixed seeds. The horizontal labels separate
+component construction (`center`, `total`, `component`) from reduction
+(`response`, `token`, `fixed`). A norm changes magnitude; direction must be
+checked separately. These one-update derivatives do not rank trained policies.
 
 The [matched-rollout objective notebook](../../notebooks/day-22/03_objective_weighting_and_filtering.ipynb)
 compares these pressures on the same generated responses and unchanged decoder
@@ -401,18 +452,18 @@ harmless. Those require integration checks with the actual engine.
 
 ## 14.7 Generation can dominate the budget
 
-For $B$ prompts, group size $G$, average valid response length $T$ and useful
+For $B$ prompts, group size $G$, average valid response length $n$ and useful
 generation rate $q$, a first projected synchronous budget is
 
 $$
-N= BGT,\qquad
-\tau_{\mathrm{update}}\approx N/q+
-\tau_{\mathrm{verify}}+\tau_{\mathrm{learn}}+\tau_{\mathrm{sync}}.
+N= BGn,\qquad
+\Delta t_{\mathrm{update}}\approx N/q+
+\Delta t_{\mathrm{verify}}+\Delta t_{\mathrm{learn}}+\Delta t_{\mathrm{sync}}.
 $$
 
 The estimate ignores queuing and changes in throughput with batch geometry. It
 is labeled projected. The lab's default 128 tokens/s is an illustrative control,
-not a Spark benchmark. Vary $G$ and $T$, then inspect how the same 6-second learner
+not a Spark benchmark. Vary $G$ and $n$, then inspect how the same 6-second optimizer
 step becomes a small fraction of total elapsed time. A faster backward pass
 may barely change throughput if generation dominates.
 
@@ -440,432 +491,102 @@ positions follow each row's valid prefix, while an emitted EOS is a real action
 even when its ID also serves as padding. Finished rows leave the active cache;
 a cap ends collection without inventing EOS.
 
-Under one fixed greedy panel the four paths emit the same12 useful actions.
-Sequential uncached processing forwards66 positions; batched uncached forwards
-90, including24 padding positions. Sequential caching forwards21; batched
-caching27, including6 padding positions. Selected log probabilities match to
+Under one fixed greedy panel the four paths emit the same 12 useful actions.
+Sequential uncached processing forwards 66 positions; batched uncached forwards
+90, including 24 padding positions. Sequential caching forwards 21; batched
+caching 27, including 6 padding positions. Selected log probabilities match to
 the declared tolerance. Those counts isolate saved prefix work, not FLOPs or
 latency. Cached batching is slightly slower on this tiny CPU workload; Python
 bookkeeping and small kernels can outweigh the work reduction. Do not carry
 that timing, or an assumed batching speedup, into a Spark serving claim.
 
 For $L$ layers, active batch $B$, compact KV heads $H_{\mathrm{kv}}$, physical
-cache length $S$, head width $d$ and element bytes $b$, tensor payload is
+cache length $S$, head width $d_h$ and element bytes $b$, tensor payload is
 
 $$
-M_{\mathrm{KV}}=2LBH_{\mathrm{kv}}Sdb.
+M_{\mathrm{KV}}=2LBH_{\mathrm{kv}}Sd_hb.
 $$
 
-The factor2 counts keys and values. This excludes allocator overhead,
+The factor 2 counts keys and values. This excludes allocator overhead,
 snapshots, query-head expansion, activations and model/optimizer storage. Our
 explicit tensor counts test this formula; they are not a device-memory profile.
 
 ## 14.8 Monitoring should distinguish incidents from causes
 
-The [diagnostic module](../../src/dongxi_llms/optimization_diagnostics_lab.py)
-returns reasons to investigate: nonfinite loss, exhausted host reserve, policy
-lag, low entropy, high declared KL or disagreement between reward and evaluation.
-Thresholds are pedagogical configuration values, not universally valid limits.
-Do not let a green dashboard substitute for a checked process exit, complete
-checkpoint or frozen evaluation.
+A nonfinite loss, low entropy, high KL or exhausted memory reserve is a reason
+to investigate. It is not a complete causal explanation. Keep the first failing
+invariant, the current policy/interface identity and a bounded output sample.
+A successful leader exit also does not establish that its workers stopped or
+that its final record was durably retained.
 
-Write an incident table with time, policy version, prompt group, measurements,
-first failing invariant, hypothesis, intervention and outcome. Preserve the
-failure checkpoint and a bounded response sample. Recovery must restore model,
-optimizer, scheduler, RNG, sampler position and reference identity; otherwise
-it is a new trajectory from related weights. Replaying the same sample schedule
-can distinguish a recovery bug from expected stochastic variation.
+| Incident | First question | Controlled next check |
+|---|---|---|
+| Reward rises; independent correctness falls | Did the proxy exploit a checker weakness? | Grade retained outputs under a frozen independent verifier |
+| Entropy falls | Successful concentration or repeated failure? | Inspect rewards, valid outputs and diversity at the same states |
+| KL jumps | Real policy movement or bad alignment/behavior probabilities? | Recompute a small fixed group and verify masks and ratios |
+| Useful throughput falls | Longer rollouts, padding or slower kernels? | Separate valid actions, forwarded positions and observed time |
+| Leader finishes; invocation fails | Missing acknowledgment or incomplete worker shutdown? | Inspect durable terminal evidence and observed worker ownership |
 
-### Recovery must replay the pending update, not collect a new one
+### Recovery preserves the pending observation
 
-The cache reference also performs real tiny DPO and verifier-reward updates.
-It interrupts after completed updates and separately after collection but
-before optimization. Restoring weights, Adam, frozen reference, data cursor,
-RNG, version and pending rollout reproduces the retained trajectory in the same
-CPU environment. A restored pending rollout is consumed before any new sample
-is collected. Omitting applicable optimizer/cursor/RNG state supplies controlled
-divergences. This tests these isolated interfaces, not recovery in the optional
-pretrained Spark runners.
+An optimizer-boundary snapshot must retain model, optimizer, scheduler where
+used, RNG, data position and reference identity. After collection but before
+optimization it must also retain the already generated group and its old-policy
+likelihoods. Consume that pending group once before collecting another. Replacing
+it with a fresh draw changes the observation and can change the gradient.
 
-Source review found a more basic failure: the initial state-digest encoding
-omitted dictionary boundaries, so two differently nested states could serialize
-identically before hashing. A SHA256 label cannot repair ambiguous input
-serialization. Version2 uses typed length-framed containers and tensor
-dtype/shape/bytes, rejects obsolete contracts before deserialization, and keeps
-all historical reports unchanged. The migration compares actual saved
-policy/reference/Adam/data tensors and numerical actions, not rewritten old
-hash strings. The [independent recovery verification](../../experiments/reports/2026-10-04-batched-cache-recovery-root-verification.json)
-records that bridge. Local byte checks are still not external authentication
-or a sandbox for hostile checkpoint inputs.
-
-Byte identity must also preserve the actual tensor representation. Direct
-numerical conversion to NumPy fails for BF16 in the inspected environment.
-Flattening a contiguous tensor and viewing its payload as bytes fixes the dense
-serialization boundary without converting its numerical dtype. The
-[follow-up check](../../experiments/reports/2026-10-05-recovery-tensor-bytes.md)
-preserves all13 archived snapshot identities and their CPU continuations; this
-is not evidence that a BF16 pretrained training trajectory can be recovered.
-
-### Safe shutdown is a separate outcome
-
-A leader process can exit0 while a worker still runs. Consequently, record the
-leader's actual exit and the shutdown condition separately. The
-[owned-worker controls](../../experiments/reports/2026-10-05-owned-workers-and-disk-guards.md)
-demonstrate that failure: a successful leader leaves a TERM-ignoring worker,
-which the supervisor identifies and stops. Another worker starts an independent
-session, so a process-group signal alone cannot reach it. Retained PID/create-time
-handles permit cleanup of that discovered worker without adopting unrelated
-processes from a conflict scan. Unknown status is not proof of death.
-
-Disk controls have similarly distinct meanings. A hard per-file size limit does
-not limit the sum of many files. Our fixed writers separately demonstrate a
-SIGXFSZ exit at one file's limit and a sampled aggregate-byte stop. The latter can
-overshoot between samples; free filesystem bytes, logical artifact bytes and a
-hard filesystem quota are not interchangeable. Failure of the observer or its
-journal must not prevent cleanup. Independent fault controls exercise denied
-inspection, a denied TERM attempt and continued KILL/reap/closure.
-
-These are bounded cooperative CPU controls, not a production launcher or cgroup
-sandbox. Sampled discovery can miss rapid reparenting; a process-group identity
-check cannot eliminate every check/signal race. The
-[runner-owned recovery plan](../../docs/PRODUCTION_RECOVERY_PLAN.md) keeps approved
-pretrained/CUDA/BF16 snapshot replay and Spark containment gates open. Passing a deliberately
-failing fixture means the control caught that failure, not that a model trained
-successfully.
-
-### The deadline must not wait for the observer
-
-A training loop's runtime check only runs when control returns from a model
-operation. If that operation hangs, the next check never happens. Moving the
-check to a parent process helps, but introduces another failure: the parent can
-itself hang while sampling memory, reading a partial probe response or flushing
-its incident log. A timeout written in configuration is not an enforced deadline.
-
-Keep the deadline loop independent of those operations. Bound observation and
-logging separately, retain their failures, then stop and reap only the owned
-invocation. A successful leader exit must not silently certify its remaining
-workers. Process shutdown and durable evidence are distinct outcomes: killing
-the job cannot guarantee that a failed filesystem stored the final receipt.
-
-The [native-profile verification contract](../../experiments/specs/2026-10-05-native-profile-watchdog.md)
-turns these ideas into deliberately failing, inert CPU controls for the same
-controller intended to wrap one pinned SFT profile. It does not authorize that
-profile. Sampled host memory, conservative conflict inspection and bounded owned
-cleanup still do not prove continuous memory safety, GPU idleness, a hard disk
-quota or containment of hostile unobserved descendants.
-
-The [first native DPO recovery attempt](../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md)
-shows why those distinctions matter in a real model run. Its two independent
-two-update children exit0, but the fresh completed1→2 child reaches its
-600-second external deadline. Externally sampled available memory stays above
-the25GiB reserve; that does not change the observed stop reason into memory
-exhaustion or a nonfinite-gradient diagnosis. The receipt also retains an
-owned-leader reap timeout and an unknown native exit. The adapter's exit1
-cannot fill that missing field. A later absent PID is a later observation,
-not a retroactive clean shutdown.
-
-The second attempt retains an even sharper distinction. With actual CPU8
-thread witnesses, its resumed update2, committed saves, validation, generation
-and policy export exist. Yet its final `result.json` does not: the child again
-reaches the deadline, with an unknown native exit and reap timeout. A durable
-numerical boundary is necessary for recovery; it is not a whole-job success
-receipt. Keep both attempts' work, failures and intermediate artifacts.
-
-### A later complete replay does not repair the earlier receipts
-
-The predeclared third attempt passes its own gate. It retains the selected
-full400 parent, original 8/4/4 location fixtures, DPO beta 0.1, learning rate 5e-7,
-seed 1818, accumulation 4, length 512, generation cap 64 and checkpoint cadence 1.
-Policy/reference weights remain FP32 with BF16 CUDA autocast. Actual stdout
-witnesses report OMP=8, Torch intra-op 8/inter-op 1 and four complete-file hash
-workers in the three native children and the separately supervised CPU
-comparison.
-
-| Actual run03 invocation | Child seconds, rounded to six decimals | Minimum sampled available bytes | Outcome |
-|---|---:|---:|---|
-| Independent clean2 |319.773992|95,734,423,552|Completed, native exit 0|
-| Source2 retaining completed1 |296.337269|96,150,581,248|Completed, native exit 0|
-| Fresh completed1→2 resume |392.908058|86,374,494,208|Completed, native exit 0|
-| CPU three-way state comparison |127.596575|101,931,466,752|Completed, comparison exit 0|
-
-Each invocation keeps its own 600-second external guard and 25 GiB sampled
-reserve. This is not a 600-second ceiling on the entire serial campaign. The
-[report](../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md#run-03-whole-child-recovery-and-comparison-pass)
-distinguishes child time, supervisor time and the separately retained outer
-launcher observation. Point-sampled memory is not continuous safety.
-
-The CPU comparison admits the three final payload reads under their original
-shared I/O journals, then compares the typed numerical components: policy,
-Adam state, frozen reference, Torch/CUDA and sampler RNG, sample history,
-counters, schema and completed cursor. All ten component identities agree;
-the original reference remains unchanged and the resumed numerical metric tail
-matches update2. Operational prefixes need not match. The source and resume
-share a work journal retaining three actual optimizer updates—two in the source,
-one repeated after restoring completed1—even though each final numerical state
-has cursor2. Comparison reads add I/O spending rather than disappearing because
-the weights agree.
-
-The implementation change concerns scheduling, not weaker validation.
-`hash_workers=1` remains the default serial inventory path. The explicit four-worker path
-hashes independent files with at most four outstanding digest tasks/file
-descriptors and 1-MiB buffers. Every inventory invocation and complete-file SHA,
-no-follow/type/ownership, cap, missing-file, hardlink and race check remains;
-errors retain the original order and submitted workers drain on failure. There
-is no metadata checksum cache or omitted repeated check. Worker count is an
-execution setting, not a changed scientific contract or replenished allowance.
-
-Run03 establishes this local, bounded completed1→2 recovery, including actual
-whole-child exits and comparison. It does not prove a causal hashing speedup:
-the earlier deadline-capped attempts and this complete run are not a matched
-performance experiment. All retained before/after location panels still have
-0/4 strict exact answers despite 4/4 declared natural stops; stopping is not
-correctness. Nor does this replay complete pilot100, independent preference
-quality, Mac recovery, physical quotas or hostile-process containment. Technical
-recovery and useful preference behavior remain different claims.
+The [tiny CPU cache/recovery reference](../../experiments/reports/2026-10-04-batched-cache-recovery.md)
+tests completed and post-collection boundaries, with omitted-state controls.
+Later [native replay evidence](../../experiments/reports/2026-10-05-native-reasoning-rlvr-evidence.md)
+answers a different platform/model question. Neither recovery result implies
+better generated answers. Same-environment exact replay also does not promise
+bitwise equivalence across software versions or execution hosts.
 
 ### A bounded update is not a bounded job
 
-Suppose a DPO recipe promises 100 updates, four accumulated pairs per update,
-and sequence length at most 512. The usual update geometry gives 204,800 positions.
-But the actual loop scores both chosen and rejected sequences under both policy
-and reference. After its one-token input/target shift, the corresponding upper
-bound is 817,600 logical input positions across the two networks. Neither bound
-includes baseline/final evaluation, generation, failed attempts or replay. Neither
-is a FLOP count, and activation recomputation can add backward dispatches.
-
-Distinguish three records rather than forcing all costs into a token counter:
+A DPO recipe with 100 updates, four accumulated pairs per update and maximum
+sequence length 512 gives 204,800 positions by ordinary update geometry. The
+chosen/rejected branches and policy/reference scoring instead admit an upper
+bound of 817,600 logical input positions after the one-token causal shift.
+Baseline/final evaluation, generation, verification, failed attempts and replay
+are still additional work. Neither count is a FLOP estimate.
 
 | Record | What it protects or measures | What it does not establish |
 |---|---|---|
-| Whole-operation reservation | Enough declared capacity before a complete update, evaluation or generation attempt | Exact work inside a failed library call |
-| Known successful/partial work | Completed calls, input positions, targets and emitted tokens that were actually observed | FLOPs, total GPU time or unseen partial execution |
-| Durable cumulative ledger | Earlier attempts remain charged when a new output directory resumes old optimizer state | Authentication against an adversarial writer or cross-host replay |
+| Whole-operation reservation | Capacity before a complete update, evaluation or generation attempt | Exact work inside a failed library call |
+| Known successful/partial work | Observed calls, input positions, targets and emitted tokens | FLOPs, total GPU time or unseen partial execution |
+| Durable cumulative ledger | Earlier attempts remain charged after numerical recovery | Adversarial authentication or cross-host accounting |
 
-An operation crossing any configured dimension must be refused **before** its
-sampler or forward pass runs. Dropping the longest response to fit the remaining
-budget would change the training population. Shortening accumulation would change
-the update. A conservative reservation can charge more than ultimately observed;
-record that difference instead of pretending its upper bound was measured work.
+Refuse an operation before its sampler or forward pass when the whole declared
+operation cannot fit. Dropping long responses to use the remaining budget changes
+the training population; shortening accumulation changes the update. Record a
+conservative bound separately from the smaller actual work it may admit.
 
-This also changes the meaning of recovery. A checkpoint can restore a policy
-from update 3 while its separate durable work journal already records an attempted
-update 4. Retrying 4 consumes additional capacity. Restoring the journal to the
-checkpoint's old cursor would erase an attempt that genuinely happened. Keep the
-snapshot's trusted prefix and replay the journal's retained later entries. A new
-output folder is not a new allowance.
+A checkpoint can restore update 3 while a durable work record already contains
+an attempted update 4. Retrying 4 costs additional capacity. Numerical rollback
+must not erase physical history. Storage also has a peak: the previous snapshot,
+new partial payload and publication markers can coexist. A per-file limit does
+not establish a total experiment storage quota.
 
-Storage has the same peak-versus-final distinction. While saving a new snapshot,
-the previous snapshot, partial new payload, temporary marker and published marker
-may coexist. Reserve bytes and directory entries before creating those files;
-retain the charge for failed partials. A cooperative writer can enforce its own
-envelope, but arbitrary library exports and child writes require a separately
-tested physical aggregate quota. An accounting class cannot manufacture that
-backend.
+### Supervision and scientific evidence have different boundaries
 
-### Replaying randomness for a check is not resampling the experiment
+A deadline must remain responsive even when a memory observer, logger or worker
+blocks. Durable completion, actual leader exit and worker shutdown are separate
+observations. The retained [deadline diagnosis](../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md)
+and [RLVR outcomes](../../experiments/reports/2026-10-05-native-reasoning-rlvr-evidence.md)
+show why saving a valid numerical snapshot does not retroactively pass a failed
+invocation. Preserve failed attempts when a fresh replay or export check succeeds.
 
-Suppose a DPO checkpoint records $u$ completed updates and $a$ accumulated
-pairs per update. Its retained sampler history should agree with $ua$ draws
-from the declared seeded stream. A validator can replay those draws using a
-temporary generator. The private replay consumes verification work, but it
-does not advance the live training sampler or invent new training examples.
-After validation, restore the saved live sampler state; the next training draw
-must remain the next draw of the original trajectory.
+Logical budgets protect declared work, while physical quotas and worker cleanup
+require measured platform behavior. An authored positive backend fixture proves
+a validator accepts that fixture, not that a host enforced a resource boundary.
+Read implementation-specific snapshot, hashing, receipt and shutdown details in
+[Appendix D](../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision).
 
-This is why a single "random draws" counter is ambiguous. Separate training
-draws from verification draws. Likewise, a save may validate its state once,
-while a load callback and a subsequent restore function each validate the same
-state. If both calls execute, count both panels. Their numerical outcome can
-agree while their cumulative work differs. Budget tests should spy on the actual
-calls and compare the resulting weights, optimizer moments, reference and sampler,
-not merely assert that a descriptive validation field exists.
-
-### A callback cannot reserve work that happened before it
-
-The shared reader first verifies expected bytes, performs a restricted tensor
-load and scans a bounded state tree. Only then does it invoke the runner's
-semantic validator. Reserving a history or RNG panel at that callback protects
-those later checks; it does not retroactively charge the earlier byte hashing,
-deserialization or generic finite scans. Explicit file envelopes are useful,
-but remain distinct from a work ledger and a hostile-input sandbox.
-
-There is a dependency to resolve before pre-read reservation. A resumed journal
-must be bound to a trusted prefix before granting more work. If the only prefix
-is inside the checkpoint, finding it already requires reading the checkpoint.
-The reader boundary therefore needs an independently retained prefix
-receipt, checked against the same physical journal and scientific contract
-before the expensive read. The separate shared I/O ledger now provides that
-source path; its
-[CPU verification record](../../experiments/reports/2026-10-05-snapshot-io-readiness.md)
-separates released checks from work still being verified. The
-[checkpoint-inspection plan](../../docs/SNAPSHOT_INSPECTION_BUDGET_PLAN.md)
-keeps its original dependency and acceptance rules. Neither path resets an old allowance nor proves cross-machine
-recovery.
-
-### Identical restored weights do not make the next read free
-
-Consider the [Day25 reader microscope](../../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb).
-It saves one tiny tensor, inspects its bytes and loads it twice. Both successful
-loads return identical weights. A third load reads the same payload and performs
-the generic checks, but a deliberately rejecting callback prevents acceptance.
-The I/O allowance permits three load attempts. After reopening the journal from
-the checkpoint's older pre-save receipt, the fourth load is still refused.
-Numerical sameness does not erase an operation or make a failed check free.
-
-The trust and cost order is deliberately asymmetric:
-
-```text
-small independently retained receipt
-    → bind the same physical journals, retaining their later spending
-    → reserve the complete shared operation
-    → verify payload bytes → restricted load → bounded generic checks
-    → compare payload with receipt → runner semantic checks → apply state
-```
-
-The adjacent commit marker is not the independent expectation. Nor can a prefix
-hidden inside the checkpoint authorize work already performed to find it.
-Identity collection must respect the same order: hashing the entire resume
-payload as an ordinary input before admission would bypass this boundary even
-if the later `load_snapshot` call were correctly guarded.
-
-A save has another ordering constraint. Its payload records the I/O prefix
-immediately before the save reservation. The save's completion belongs in later
-journal history and an independently retained receipt. Trying to serialize that
-completion inside its own already-written payload creates a circular dependency.
-An interrupted publication can leave bytes or a marker; preserve them and the
-failure rather than inventing a completed external receipt.
-
-File size alone is not the generic-check envelope. A repeated/expanded tensor
-view can have few stored bytes but many logical elements, and repeated aliases
-can require several clones. Reserve declared nodes, elements, primitive bytes,
-clone bytes and serialization bytes separately. Check tensor elements **and
-bytes** before finite scans or cloning, and accumulate visits across all phases
-of one operation. These are cooperative logical units, not exact CPU operations,
-deserializer allocation containment or a sandbox for hostile checkpoints.
-
-### A recovery schedule belongs beside the training schedule
-
-Let $C$ contain the deduplicated initial, periodic and final commit cursors.
-Let $S_c$, $I_c$ and $L_c$ be whole-operation save, inspect and load cost vectors,
-and $D$ the declared final diagnostic-load count. The separate
-[fixture calculator](../../src/dongxi_llms/snapshot_io_schedule.py) uses
-
-$$
-W_{\mathrm{fresh}}=\sum_{c\in C}S_c+D L_U,
-$$
-
-$$
-W_{\mathrm{resume}}(k)=I_k+L_k+S_k+\sum_{c\in C,\ c>k}S_c+D L_U.
-$$
-
-The resumed path inspects and loads its parent, then commits the restored
-boundary into the new invocation before continuing. A second semantic validation
-during restore is not a second payload load; count each actual operation in its
-own ledger. For complete-attempt capacity $A$, an allowance can combine fresh
-work with $(A-1)$ times a **componentwise** maximum of declared resumed vectors.
-That conservative envelope need not describe any one measured trajectory, and
-it does not authorize the attempts. Keep the original model/semantic limits
-unchanged rather than silently appending or refilling dimensions.
-
-### A pending pool changes the publication schedule
-
-The completed-only calculator must not be silently reused for native RLVR.
-Its lifecycle publishes an initial boundary, every complete collected pool and
-every applied update. For $U$ total updates, let $C_u$ denote the completed
-boundary after update $u$ and $P_u$ the next collected pool while only $u$
-updates have been applied. Fresh execution saves $C_0$ and the alternating
-sequence $P_0,C_1,\ldots,P_{U-1},C_U$: $1+2U$ saves.
-
-A restart republishes its restored boundary into the new invocation. Resuming
-$C_k$ requires a new collection before application; resuming $P_k$ already has
-that observation. The source-derived save counts are
-
-$$
-N_{\mathrm{completed}}(k)=1+2(U-k),\qquad
-N_{\mathrm{pending}}(k)=2+2(U-k-1),\quad 0\leq k<U.
-$$
-
-The pending path saves restored $P_k$, applies it without recollection, saves
-$C_{k+1}$ and then resumes the alternating sequence. Each resume also performs
-its separately admitted inspect and load. Saving only a trained weights cursor
-would omit both the retained observation and its publication cost. A completed
-terminal boundary $C_U$ can be republished without more updates; $P_U$ is
-invalid and must refuse before journal opening or model allocation.
-
-[Day25 Exercise8](../../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb)
-is a smaller controlled microscope: manually publish one boundary per phase,
-retain a rejected load, reopen both same physical journals and compare the
-first native application. Its actual counts must not be relabeled as the full
-lifecycle algebra. Both arms recover the same original tiny trajectory; only
-the completed arm needs another collection before its first resumed update.
-Logical reservations, realized actions and successful operations remain
-different quantities. None establishes pretrained quality, physical containment,
-cross-machine equivalence or permission to launch an external experiment.
-
-### Checking recovery can itself consume work
-
-There is a subtle third question after “Were the weights restored?” and “Was the
-spending preserved?”: what work is required to establish that the recovered
-state is valid? A pending RLVR pool contains old selected-token likelihoods. A
-fresh forward can verify them against the retained collecting policy. Replaying
-its sampling trace can require additional temporary-generator draws. These are
-not new training examples or optimizer updates, but they still consume work.
-Reserve verification before it runs; restoring an older snapshot must not refund
-the verification either. The RLVR CPU source controls explicitly charge its
-recovery likelihood/RNG checks. The current
-[SFT](../../experiments/reports/2026-10-05-sft-semantic-validation-work.md) and
-[DPO](../../experiments/reports/2026-10-05-dpo-recovery-validation-budget.md)
-schemas also charge each actual runner-owned history/tensor/RNG semantic panel,
-including repeated callbacks and restore checks. Their original scientific caps
-remain unchanged; old budget schemas refuse rather than infer an upgrade.
-The shared reader's hashing/loading/tree checks and save cloning/serialization
-use a separate explicit nine-dimensional I/O contract, not those runner units.
-Bootstrap/journal processing, caller state capture, application, inventory hashes
-and other outputs remain named exclusions. None supplies a physical
-quota, a complete CPU-work bound or pretrained recovery evidence.
-
-Likewise, “generation positions” needs a computation contract. The SFT observer
-keeps its original cached greedy decoding; the DPO and basic RLVR observers keep
-their original uncached paths. An uncached worst-case envelope can safely reserve
-capacity for cached SFT without becoming its measured count. Record the actual
-cached input positions separately. Changing the generation algorithm to make a
-budget test pass would change what the test compares.
-
-The [actual DPO snapshot integration](../../experiments/reports/2026-10-05-dpo-snapshot-artifacts.md)
-provides a concrete storage bridge. Its numerical snapshot carries an old artifact
-journal prefix, while the live ledger keeps later snapshots and an eight-byte
-failed file charged at its full256-byte reservation. Fresh replay restores
-update3 and finishes6 without deleting those files. A separate joint control
-ends with ten update allowances charged for a six-update numerical trajectory.
-Both differences are expected history, not corrupted counters. Snapshot coverage
-does not cover HF exports, metrics or arbitrary child writes.
-
-Before using a compiled stage, connect its declared recipe to **actual encoded
-lengths and masks**, all evaluation panels and an explicit retry allowance. A
-length ceiling alone does not approve the resulting work vector. A byte-pinned
-record of supplied encodings also does not prove that the live tokenizer produced
-them: the runner must independently re-encode and compare. Finally, the bytes
-parsed as caps must match the input evidence; hashing a changed file later would
-document a different input. These are distinct integrity and authorization gates,
-not a reason to infer approval from a well-formed JSON file.
-
-Finally, a configuration claiming a private cgroup, quota or observer timeout is
-not evidence that the platform enforced it. The
-[preflight interface](../../src/dongxi_llms/production_preflight.py) checks two
-fresh, consistently owned observations and treats missing backends, incomplete
-GPU-owner inspection and failed drain as refusals. Its
-[CPU control](../../experiments/specs/2026-10-05-production-preflight.md) uses only
-authored observations. Even its positive receipt says non-production and cannot
-launch anything. Real platform adapters, continuously bounded observers and
-authorized model runs remain separate gates in the
-[supervisor plan](../../docs/PRODUCTION_SUPERVISOR_PLAN.md).
-
-The monitoring questions become concrete: Did useful target throughput fall
-because responses grew? Did zero-variance groups rise because correctness
-saturated? Did proxy reward improve while an independent evaluator declined?
-Did the verifier change mid-run? Did ratios explode before clipping? Each asks
-for a different measurement. Chapter 15 uses these records to decide what can
-be defended at release time.
+Monitoring should ultimately answer mechanism questions: did responses grow,
+did groups become uniformly correct or uniformly wrong, did an evaluator change,
+or did ratios become extreme? Pair the alert with the relevant measurement and
+one stated intervention. Chapter 15 turns those records into a technical defense.
 
 ## 14.9 Deep questions
 
@@ -886,25 +607,48 @@ be defended at release time.
 15. When can rehearsal improvement be continued learning rather than evidence of prevented forgetting?
 16. Why can a cached batch forward fewer positions but take longer on a tiny CPU model?
 17. What must happen first when resuming a snapshot taken after rollout collection but before its update?
-18. Why is a strong hash insufficient if two different states share its serialization?
-19. Why can a leader exit0 while the overall shutdown condition fails?
-20. Why does a hard per-file limit fail to provide a total experiment disk quota?
-21. Why can 204,800 positions of DPO update geometry exclude most logical forward work?
-22. Why must an attempted update after a snapshot remain charged when that snapshot is restored?
-23. Why can the final checkpoint fit an artifact cap while its safe publication cannot?
-24. Why is validating a mock backend receipt different from proving real platform enforcement?
-25. Why can checking a recovered pending pool spend work even without a new optimizer update?
-26. Why do actual encoded lengths make a budget more useful without making it authorized?
-27. How can cached generation use an uncached reservation without misreporting its work?
-28. Why does budgeted snapshot publication not establish a whole-output disk quota?
-29. How can replaying sampler draws validate a checkpoint without changing the training trajectory?
-30. Why cannot a work prefix stored only inside a checkpoint authorize the work required to read it?
-31. Why cannot a checkpoint payload contain its own completed save charge, and what should recovery do with later save failures?
-32. Why does a guarded loader fail to bound pre-read work if identity collection already hashed the checkpoint? What should be bound instead?
-33. Why do completed and pending RLVR snapshots with the same applied-update cursor require different first actions and save schedules? Can a pre-validation saved work prefix still retain later validation charges?
-34. Why can an external runtime check still fail if its resource observer or incident logger blocks? What must remain uncertain after a logging failure?
-35. How can bounded parallel file hashing preserve a recovery contract, and why are a completed snapshot, a whole-child exit and a three-way replay comparison still different claims?
+
+### Systems applications
+
+The following questions retain their original exercise IDs. Their receipt and
+implementation details continue in the evidence-reading guide.
+
+18. Why cannot a strong hash distinguish different states that share an ambiguous
+    serialization? Separate a representation failure from a hash collision.
+19. Why can a successful leader exit still leave the overall invocation incomplete?
+20. Why is a per-file limit insufficient evidence of a total storage quota?
+21. Why does ordinary DPO update geometry omit policy/reference and chosen/rejected scoring work?
+22. Why must an attempted update after a snapshot remain charged when numerical state is restored?
+23. Why can the final checkpoint fit a budget while its safe publication needs more space?
+24. Why is a valid authored backend fixture different from measured platform enforcement?
+25. Why does validating a retained pending pool consume work even when it changes
+    no optimizer state and collects no new training responses?
+26. Why do actual encoded lengths improve a proposed budget without establishing
+    that the complete job fits every declared boundary?
+27. How can a conservative reservation exceed the actual cached generation work without becoming its measured count?
+28. Why does a budget for snapshot writes leave other job output paths outside
+    its storage guarantee?
+29. How can a temporary sampler replay check saved history without advancing the
+    live training sampler? Which operations still count as work?
+30. Why must the evidence allowing snapshot inspection be available before reading
+    the payload, rather than only inside it?
+31. Why cannot a checkpoint contain its own future completed-save charge? What
+    happens to work spent after its saved boundary when it is restored?
+32. Why must a work boundary cover preliminary identity hashing as well as the
+    eventual payload load?
+33. Why do completed and pending snapshots at the same applied-update cursor
+    require different next actions? Can later validation work remain charged?
+34. Why can a blocked observer or logger defeat a deadline? Which completion
+    claims remain uncertain after logging fails?
+35. Why are a completed numerical snapshot, a successful whole-child exit and an
+    accepted replay comparison separate claims?
+
+The [evidence-reading extensions](../solutions/14-when-optimization-goes-wrong.md#evidence-reading-extensions)
+retain the original implementation-specific clauses and worked answers for
+18–35, including serialization formats, exact encoded budgets, I/O schedules,
+parallel hashing and supervisor receipts. The questions above retain their
+general mechanism and evidence reasoning.
 
 [Worked answers](../solutions/14-when-optimization-goes-wrong.md) and the
-[Day 24–25 notebook route](../labs/14-when-optimization-goes-wrong.md) include
-the reward exploit, reduction audit, version contract and bounded system budget.
+[Day 24–25 notebook route](../labs/14-when-optimization-goes-wrong.md) connect
+these questions to the reward exploit, reduction audit and bounded budget.

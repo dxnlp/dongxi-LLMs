@@ -88,14 +88,14 @@ correctness evidence and alternate explanations checked.
 
 ## 11. Three probability distributions and a support boundary
 
-Raw probabilities are0.55,0.30,0.15. Behavior uses temperature0.5, top-k2 and
-top-p0.9, so it normalizes the squared first two probabilities: approximately
+Raw probabilities are 0.55,0.30,0.15. Behavior uses temperature 0.5, top-k 2 and
+top-p 0.9, so it normalizes the squared first two probabilities: approximately
 0.770701,0.229299,0. The declared temperature-one conditional target instead
-normalizes0.55,0.30:0.647059,0.352941,0. Its target/behavior ratios are about
-0.839572 and1.539216, not1. The same source logits and retained mask do not
-encode the same temperature. A matched temperature0.5 target gives ratio1.
+normalizes 0.55,0.30:0.647059,0.352941,0. Its target/behavior ratios are about
+0.839572 and 1.539216, not 1. The same source logits and retained mask do not
+encode the same temperature. A matched temperature 0.5 target gives ratio 1.
 
-For rewards0,1,4, the conditional target's exact expectation is0.352941.
+For rewards 0,1,4, the conditional target's exact expectation is 0.352941.
 Enumeration with the actual behavior denominator agrees, including the
 gradient `[−0.228374,+0.228374,0]`. Substituting raw model denominators gives
 0.269764 and gradient `[−0.174553,+0.174553,0]`: a different objective.
@@ -103,8 +103,8 @@ The analytical gradient is $t_i(R_i-J)/\tau_t$ on fixed support. The
 [adjacent runnable reference](../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb)
 tests this identity before plotting the measured vectors.
 
-The original full-support target requires action2, which behavior never emits.
-Its probability mass0.15 contributes0.60 to expected reward. No finite ratio
+The original full-support target requires action 2, which behavior never emits.
+Its probability mass 0.15 contributes 0.60 to expected reward. No finite ratio
 can recover that contribution from this collector. Preserve the raw objective
 by changing collection to cover it, or explicitly change to a conditional
 objective. Silently applying the old mask is not the former repair. This
@@ -117,11 +117,11 @@ Under positive shared full support, $\mathbb{E}_p[k_1]$ and
 $\mathbb{E}_p[k_3]$ equal $D_{\mathrm{KL}}(p\Vert q)$ because the extra
 $q/p-1$ term has expectation zero. Freezing collected actions at $b=p_0$ while
 differentiating only $k$ omits the derivative of their action distribution.
-At the fresh point, frozen $k_1$ has expected gradient0 and frozen $k_3$ has
+At the fresh point, frozen $k_1$ has expected gradient 0 and frozen $k_3$ has
 gradient $p-q$. Exact forward KL has gradient
 $p_i[\log(p_i/q_i)-D_{\mathrm{KL}}]$ instead.
 
-In the finite fixture all five forward values are0.299160737nats. Exact KL
+In the finite fixture all five forward values are 0.299160737nats. Exact KL
 gradient is approximately `[+0.391842,−0.242996,−0.148846]`; frozen $k_1$
 is all zero and frozen $k_3$ gives `[+0.350000,−0.200000,−0.150000]`.
 Differentiating the complete importance-weighted expectation
@@ -157,7 +157,7 @@ Removing an encoded collision means the model can now represent the two inputs
 differently. It does not require their learned scores to rank them correctly.
 The word experiment establishes a representation-level impossibility; the
 character intervention removes it while preserving the raw fixtures and
-predeclared test population. Its three held-out ranking accuracies remain0.5.
+predeclared test population. Its three held-out ranking accuracies remain 0.5.
 The legitimate conclusion is that collisions were not the only limitation.
 Training fit and calibration improvements do not supply the missing ranking
 evidence. Sample size, shortcut learning and unseen patterns remain possible
@@ -192,7 +192,7 @@ retention guarantee.
 
 Caching avoids repeated prefix projections and attention work; batching adds
 rectangular padding and changes kernel geometry. On the tiny CPU reference,
-cached batching forwards27 rather than90 positions but its additional Python
+cached batching forwards 27 rather than 90 positions but its additional Python
 bookkeeping and small kernels can outweigh that reduction in wall time. The
 counts are not FLOPs and the timing is not a GPU serving benchmark. Measure
 IDs, likelihoods, useful output, padding, tensor payload and actual time under
@@ -208,12 +208,39 @@ cursor can skip data. The isolated CPU reference checks completed and pending
 boundaries for tiny DPO/RLVR and preserves omitted-state divergences. It does
 not establish resume in a pretrained Spark runner.
 
+## Evidence-reading extensions
+
+The chapter retains general systems questions 18–35. This guide preserves
+their original detailed questions and numbering, so implementation-specific
+checks remain reachable after narrative extraction.
+[Appendix D](../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision)
+provides the common checkpoint/supervision framework.
+
+18. Why is a strong hash insufficient if two different states share its serialization?
+19. Why can a leader exit 0 while the overall shutdown condition fails?
+20. Why does a hard per-file limit fail to provide a total experiment disk quota?
+21. Why can 204,800 positions of DPO update geometry exclude most logical forward work?
+22. Why must an attempted update after a snapshot remain charged when that snapshot is restored?
+23. Why can the final checkpoint fit an artifact cap while its safe publication cannot?
+24. Why is validating a mock backend receipt different from proving real platform enforcement?
+25. Why can checking a recovered pending pool spend work even without a new optimizer update?
+26. Why do actual encoded lengths make a budget more useful without making it authorized?
+27. How can cached generation use an uncached reservation without misreporting its work?
+28. Why does budgeted snapshot publication not establish a whole-output disk quota?
+29. How can replaying sampler draws validate a checkpoint without changing the training trajectory?
+30. Why cannot a work prefix stored only inside a checkpoint authorize the work required to read it?
+31. Why cannot a checkpoint payload contain its own completed save charge, and what should recovery do with later save failures?
+32. Why does a guarded loader fail to bound pre-read work if identity collection already hashed the checkpoint? What should be bound instead?
+33. Why do completed and pending RLVR snapshots with the same applied-update cursor require different first actions and save schedules? Can a pre-validation saved work prefix still retain later validation charges?
+34. Why can an external runtime check still fail if its resource observer or incident logger blocks? What must remain uncertain after a logging failure?
+35. How can bounded parallel file hashing preserve a recovery contract, and why are a completed snapshot, a whole-child exit and a three-way replay comparison still different claims?
+
 ## 18. Hash the state, not an ambiguous flattened description
 
 Without dictionary boundaries, a key can appear to belong to an inner or outer
 mapping while contributing the same byte stream. A cryptographic hash receives
 identical bytes and must return identical digests; this is not a SHA256 collision.
-Version2 encodes types, container counts, byte lengths and tensor shape/dtype/
+Version 2 encodes types, container counts, byte lengths and tensor shape/dtype/
 payload. Historical identities remain historical, and actual tensor-byte and
 numerical comparisons bridge the migration. The digest still is not external
 authentication, and trusted local checkpoint loading is not a hostile-input
@@ -222,7 +249,7 @@ sandbox.
 ## 19. A leader exit does not describe its workers
 
 A leader may return successfully before an owned worker exits. Save the actual
-leader code0, but fail the shutdown criterion while a worker remains live or
+leader code 0, but fail the shutdown criterion while a worker remains live or
 uninspectable. A group signal reaches same-group processes; an independently-
 sessioned worker requires its retained identity-safe handle. Never adopt an
 unrelated PID merely because a conflict scanner reports it. The
@@ -282,7 +309,7 @@ A real readiness gate needs a separately authorized private backend, actual
 ownership and membership observations, hard aggregate storage enforcement,
 independent deadlines, bounded observer/cleanup behavior and GPU clearance.
 Even that does not guarantee global host memory against unrelated jobs. Preserve
-the25GiB reserve and label samples rather than calling them continuous minima.
+the 25GiB reserve and label samples rather than calling them continuous minima.
 
 ## 25. Verification has a computational path
 
@@ -302,7 +329,7 @@ schedule expose work that update geometry omits. But a supplied observation is
 not authenticated tokenization; a live runner must reproduce it with the pinned
 tokenizer/template/source. Even a reproduced requirement is not permission to
 spend it. Require a separately retained full-vector budget decision and approved
-stage. Do not silently interpret the old204,800 geometry as permission for a
+stage. Do not silently interpret the old 204,800 geometry as permission for a
 larger four-branch job plus evaluation. Fixture receipts remain fixture-only.
 
 ## 27. A conservative upper bound is not the measured path
@@ -345,7 +372,7 @@ before deserialization. Reserving in the semantic callback therefore covers late
 checks, not the earlier byte verification, restricted load and generic finite/tree
 scans. A separately retained bounded receipt can supply the pre-read expectation,
 but its identity, same-journal binding and retained later charges need actual
-ordering/failure tests. The separate shared I/O source and Day25 microscope
+ordering/failure tests. The separate shared I/O source and Day 25 microscope
 exercise that boundary; physical and pretrained claims still require their own
 evidence. Never create a new journal to bypass
 the dependency, trust an unverified adjacent marker, or infer cross-host recovery
@@ -392,7 +419,7 @@ publication and failed-read suffixes. A smaller prefix inside a valid payload
 does not refund spending. Nor does recovery require rewriting the historical
 payload to include a completion that happened after serialization.
 
-The Exercise8 microscope manually saves one boundary per arm, then actually
+The Exercise 8 microscope manually saves one boundary per arm, then actually
 inspects and performs two loads, of which one deliberately rejects its callback.
 It is not the full lifecycle. Compare its actual arrays/IDs and first resumed
 collection count: completed adds one, pending adds zero; both recover the same
@@ -416,7 +443,7 @@ Inert failure controls test that mechanism; they do not demonstrate a successful
 pretrained profile or continuous physical-resource enforcement.
 
 The [first native DPO deadline case](../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md)
-is separate actual evidence. Its clean and source children exit0, while fresh
+is separate actual evidence. Its clean and source children exit 0, while fresh
 resume reaches 600.683331 supervisor seconds with an unknown native exit and a
 recorded reap timeout. Keep all three observations. The adapter returns 1;
 substituting that for the missing native exit would falsify the receipt.
@@ -424,10 +451,10 @@ Above-reserve sampled memory does not establish continuous safety or diagnose
 the deadline as memory exhaustion. A new configured retry must pass its own
 recovery and shutdown checks without erasing the old failure or its spent work.
 
-Run02 also fails that gate despite actual CPU8 witnesses and a durable update2,
+Run 02 also fails that gate despite actual CPU 8 witnesses and a durable update 2,
 validation/generation and export. Its final result is missing. Later absent
 processes or readable snapshots do not recover the original null native exit.
-Run03 supplies new completed exit-0 receipts for all three native children and
+Run 03 supplies new completed exit-0 receipts for all three native children and
 the CPU comparison under the unchanged 600-second guard per invocation; it does
 not retroactively change either failure. Its resumed child time is 392.908058170
 seconds, whereas its supervisor interval is 392.957157330 seconds. The outer
@@ -449,22 +476,22 @@ Snapshot completion proves a durable numerical boundary. A whole-child exit
 also requires later diagnostics, identity/integrity checks, final result and
 supervisor cleanup to finish. The separate CPU comparison then admits the final
 clean/source/resumed reads and compares all ten typed numerical components.
-For actual run03, those identities and the update2 metric tail match, while
+For actual run 03, those identities and the update 2 metric tail match, while
 the frozen reference remains unchanged. This is stronger than matching three
-export directories or finding update2 in a journal.
+export directories or finding update 2 in a journal.
 
 Numerical equality does not require equal cost prefixes. The source's two
-updates plus the resumed repetition of update2 remain three updates in the
+updates plus the resumed repetition of update 2 remain three updates in the
 shared physical work journal, not two. CPU comparison inspect/load operations
 also remain charged. Independent component hashing and artifact inventory
-hashing are named exclusions from DPO19/I/O9, protected by the bounded external
+hashing are named exclusions from `DPO19`/I/O 9, protected by the bounded external
 invocations rather than mislabelled as fully ledgered CPU work. Inventory hashes
 remain within their invocation's time boundary; independent component hashing
 remains within the separate CPU comparison boundary. No counters here measure
 FLOPs or physical disk traffic.
 
 The [actual report](../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md#run-03-whole-child-recovery-and-comparison-pass)
-therefore supports local completed1→2 recovery within these invocation bounds.
+therefore supports local completed 1→2 recovery within these invocation bounds.
 It does not isolate a causal speedup, supply a 100-update pilot result or prove
 independent assistant/preference quality. Retain both earlier failures, their
 null native exits, all spent work and partial/intermediate artifacts.

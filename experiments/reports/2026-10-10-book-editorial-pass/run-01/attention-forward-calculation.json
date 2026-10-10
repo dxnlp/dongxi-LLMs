@@ -1,0 +1,109 @@
+{
+  "scope": "Newly calculated illustrative CPU fixture, not an empirical model result",
+  "q": [
+    [
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0
+    ],
+    [
+      1.0,
+      1.0
+    ]
+  ],
+  "k": [
+    [
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      1.0
+    ],
+    [
+      1.0,
+      1.0
+    ]
+  ],
+  "values": [
+    [
+      1.0,
+      2.0
+    ],
+    [
+      3.0,
+      0.0
+    ],
+    [
+      0.0,
+      4.0
+    ]
+  ],
+  "scores": [
+    [
+      0.7071067811865475,
+      0.0,
+      0.7071067811865475
+    ],
+    [
+      0.0,
+      0.7071067811865475,
+      0.7071067811865475
+    ],
+    [
+      0.7071067811865475,
+      0.7071067811865475,
+      1.414213562373095
+    ]
+  ],
+  "weights": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.3302384506733431,
+      0.6697615493266569,
+      0.0
+    ],
+    [
+      0.2482550782577231,
+      0.2482550782577231,
+      0.5034898434845538
+    ]
+  ],
+  "outputs": [
+    [
+      1.0,
+      2.0
+    ],
+    [
+      2.3395230986533138,
+      0.6604769013466862
+    ],
+    [
+      0.9930203130308924,
+      2.5104695304536615
+    ]
+  ],
+  "regeneration": "Run the Ch4 \u00a74.7 implementation with q=k=torch.tensor([[1.,0.],[0.,1.],[1.,1.]],dtype=torch.float64); v=torch.tensor([[1.,2.],[3.,0.],[0.,4.]],dtype=torch.float64).",
+  "independent_canonical_check": {
+    "implementation": "src/dongxi_llms/causal_attention_lab.py:attention_trace",
+    "source_sha256": "9da0e3e55d1264d2bf82c4c7cf01c617eddb1a90f0a426bb733610c872eeb8bb",
+    "dtype": "torch.float64",
+    "device": "cpu",
+    "checks": [
+      "weights and outputs within absolute1e-15 of independent stdlib calculation",
+      "final-value perturbation changes only final output"
+    ],
+    "status": "passed"
+  },
+  "regeneration_command": "PYTHONPATH=src .venv-course/bin/python experiments/reports/2026-10-10-book-editorial-pass/run-01/attention_forward_reference.py",
+  "actual_verification_command": "PYTHONPATH=src /tmp/dongxi-book-editorial.fBhWhc/venv/bin/python experiments/reports/2026-10-10-book-editorial-pass/run-01/attention_forward_reference.py",
+  "actual_exit_code": 0,
+  "reference_source_sha256": "af99d8dd85863186634a2940ad7cac075b1dfaf57a96a4b058aa147348d09a38"
+}

@@ -1,6 +1,6 @@
 # Chapter 5 — Building a Modern Decoder
 
-## Foundation: from contextual states to a trainable model
+## Part A — From contextual states to a trainable model
 
 Attention explains how one position can retrieve information from its legal
 context. It does not, by itself, explain an entire language model. We still
@@ -8,12 +8,12 @@ need a representation to carry through the network, transformations that make
 use of retrieved information, and a way to connect the result to next-token
 learning.
 
-This chapter builds that connection. Its foundation, developed through Day 5,
+This chapter builds that connection. Part A
 uses learned absolute positions, ordinary multi-head attention, LayerNorm, and
 a GELU feed-forward network. It is a complete small baseline, not yet the full
-modern architecture. The Day 6 continuation begins at Section 5.11 and develops
+modern architecture. Part B begins at Section 5.11 and develops
 RMSNorm, SwiGLU, RoPE, grouped-query attention, Q/K normalization, cost accounting,
-and recurrent depth as a design axis. The Day 7 synthesis, beginning at Section
+and recurrent depth as a design axis. Part C, beginning at Section
 5.23, brings these parts together into an architecture defense: trace the actual
 computation, diagnose failures, and design an evidence-bearing comparison.
 The frontier section is optional; no trained recurrence comparison is claimed.
@@ -51,21 +51,24 @@ Keep the axes distinct:
 | Symbol | Meaning | Baseline value |
 |---|---|---:|
 | $B$ | Number of sequences in a batch | 2 |
-| $T$ | Input positions per sequence | 6 |
+| $n$ | Input positions per sequence | 6 |
 | $V$ | Vocabulary size | 16 |
 | $D$ | Residual-stream feature width | 16 |
 | $H$ | Attention heads | 4 |
-| $d$ | Features per head | 4 |
+| $d_h$ | Features per head | 4 |
 | $F$ | MLP intermediate feature width | 32 |
 | $L$ | Number of decoder blocks | 2 |
+
+The notebook API and archived figures use `T` for sequence length and `d`
+for head width; the prose uses $n$ and $d_h$ for the same dimensions.
 
 The small vocabulary is a teaching choice: IDs range from 0 to 15. These
 integers have no supplied word mapping and are not intended to tokenize real
 language. The vocabulary size is neither the sentence length nor the feature
 width, even though two of the numbers happen to equal 16.
 
-The main tensor path is $[B,T]\to[B,T,D]\to[B,T,V]$. Inside a block, feature
-width can temporarily change, but each branch must return $[B,T,D]$ so its
+The main tensor path is $[B,n]\to[B,n,D]\to[B,n,V]$. Inside a block, feature
+width can temporarily change, but each branch must return $[B,n,D]$ so its
 update can be added to the stream.
 
 ## 5.2 Give each position a starting representation
@@ -132,33 +135,33 @@ particular heads reliably own linguistic jobs.
 For head $r$, suppressing the batch dimension:
 
 $$
-Q_r=XW_{Q,r},\quad K_r=XW_{K,r},\quad V_r=XW_{V,r},
+Q_r=XW_{Q,r},\quad K_r=XW_{K,r},\quad V_{\mathrm{val},r}=XW_{V,r},
 $$
 
 $$
 A_r=\mathrm{softmax}_{\text{sources}}
-\left(\frac{Q_rK_r^\top}{\sqrt d}+C\right),\qquad O_r=A_rV_r.
+\left(\frac{Q_rK_r^\top}{\sqrt{d_h}}+C\right),\qquad O_r=A_rV_{\mathrm{val},r}.
 $$
 
-Here $C_{t,s}=0$ when $s\le t$ and $-\infty$ otherwise. The symbol $V_r$
+Here $C_{t,s}=0$ when $s\le t$ and $-\infty$ otherwise. The symbol $V_{\mathrm{val},r}$
 means value activations, not the vocabulary size $V$. Softmax acts on the
 scores; values bypass softmax and supply the content being mixed.
 
-Each $W_{Q,r},W_{K,r},W_{V,r}$ has mathematical shape $[D,d]$. Implementations
+Each $W_{Q,r},W_{K,r},W_{V,r}$ has mathematical shape $[D,d_h]$. Implementations
 can combine all heads into one larger projection and then reshape its output.
 That is a computational organization, not a requirement for separate Python
 modules per head.
 
 | Attention boundary | Shape |
 |---|---|
-| Incoming states | $[B,T,D]$ |
-| Projected and split Q, K, V | $[B,H,T,d]$ |
-| Source weights | $[B,H,T,T]$ |
-| Value mixtures | $[B,H,T,d]$ |
-| Concatenated heads | $[B,T,Hd]$ |
-| Output after $W_O\in\mathbb R^{Hd\times D}$ | $[B,T,D]$ |
+| Incoming states | $[B,n,D]$ |
+| Projected and split Q, K, V | $[B,H,n,d_h]$ |
+| Source weights | $[B,H,n,n]$ |
+| Value mixtures | $[B,H,n,d_h]$ |
+| Concatenated heads | $[B,n,Hd_h]$ |
+| Output after $W_O\in\mathbb R^{Hd_h\times D}$ | $[B,n,D]$ |
 
-Our baseline chooses $Hd=D$. Heads do not divide the sentence into different
+Our baseline chooses $Hd_h=D$. Heads do not divide the sentence into different
 token groups: every head can attend to the legal prefix at every position.
 Concatenation joins feature slices, not time positions.
 
@@ -192,7 +195,7 @@ identical and the update rule preserves their symmetry, they can remain
 duplicates. Conversely, initially different heads can become redundant. The
 ordinary objective contains no guarantee of unique specialization.
 
-More heads are therefore not automatically better. At fixed $D=Hd$, increasing
+More heads are therefore not automatically better. At fixed $D=Hd_h$, increasing
 $H$ narrows each head. It changes the balance between the number of mixtures and
 the feature capacity of each mixture.
 
@@ -287,7 +290,7 @@ not recover the original per-token mean and magnitude. Nor must the final
 output after those adjustments have zero mean or unit variance.
 
 These learned parameters are shared across positions. The **statistics** are
-computed separately at each position. For $[B,T,D]$, normalize over $D$—not
+computed separately at each position. For $[B,n,D]$, normalize over $D$—not
 over tokens or across the batch. Using full-sequence time-axis statistics can
 let a future token affect an earlier state, even if attention is correctly
 masked. Causality must hold throughout the model, not only inside softmax.
@@ -341,7 +344,7 @@ $$
 $$
 
 Using row-vector mathematics, $W_{\rm up}:[D,F]$ and $W_{\rm down}:[F,D]$.
-The state shape follows $[B,T,16]\to[B,T,32]\to[B,T,16]$. Expansion creates
+The state shape follows $[B,n,16]\to[B,n,32]\to[B,n,16]$. Expansion creates
 learned combinations of features, not copies of the input and not new token
 positions. GELU acts elementwise; the final projection recombines the resulting
 features into a same-width update.
@@ -384,7 +387,7 @@ $$
 ![A pre-norm decoder block with separate attention and MLP updates and their residual bypasses.](../../notebooks/figures/chapter-05/day-05-06_assemble_decoder-architecture-detail.png)
 
 The two normalization modules have separate learned parameters. The MLP reads
-the state after attention's update. Both additions preserve $[B,T,D]$.
+the state after attention's update. Both additions preserve $[B,n,D]$.
 Stacking blocks repeats these roles with separate parameters in each baseline
 block. Parameter sharing across depth is a later, explicitly different design.
 
@@ -392,7 +395,7 @@ After the stack, let $h_{b,t}$ be one final normalized state. A vocabulary head
 produces:
 
 $$
-z_{b,t}=h_{b,t}W_{\rm vocab},\qquad W_{\rm vocab}\in\mathbb R^{D\times V}.
+z_{b,t}=h_{b,t}W_{\mathrm{out}}^\top,\qquad W_{\mathrm{out}}\in\mathbb R^{V\times D}.
 $$
 
 This is one logit for each vocabulary entry, predicting the next token at that
@@ -406,7 +409,7 @@ to $V$ candidate scores. Neither the token ID's value nor the feature index
 in a hidden state is itself a probability.
 
 Our default baseline ties input and output weights, so
-$W_{\rm vocab}=E^\top$. The same stored parameter serves as a lookup table and
+$W_{\mathrm{out}}=E$. The same stored parameter serves as a lookup table and
 a classifier matrix. Copying equal numbers into a separate parameter is not
 tying: separate copies can subsequently receive different gradients and updates.
 With true tying, backward adds contributions from both uses into $E$.
@@ -527,7 +530,7 @@ It reports mean cross-entropy decreasing from 2.774792432785034 to
 0.0007856183219701052 and training-token accuracy reaching 1.0. The later
 [visual verification](../../experiments/reports/2026-09-07-decoder-architecture-visuals.md)
 reproduced those values. These are stored measurements, not a new run or a
-claim about the learner's notebook output.
+claim about a reader's independently executed notebook.
 
 ![Recorded one-batch loss trajectory and initial versus final output probabilities.](../../notebooks/figures/chapter-05/day-05-07_one_batch_learning-visual-learning.png)
 
@@ -601,18 +604,20 @@ handling inside attention, and GQA changes key/value sharing. None should be
 introduced as an unexplained replacement acronym. Each needs a controlled
 comparison and explicit parameter, compute, and memory accounting.
 
-The [modern companion notebooks](../labs/05-building-a-modern-decoder.md#change-one-mechanism-at-a-time)
+The [modern companion notebooks](../labs/05-building-a-modern-decoder.md)
 support the continuation below. The baseline gives us something precise to
 change; the architecture defense will ask whether those changes are justified.
 
+## Part B — Modern decoder mechanisms
+
 ## 5.11 Modernize mechanisms, not just names
 
-The Day 6 question is not “Which acronyms should a decoder contain?” It is:
+The modern-design question is not “Which acronyms should a decoder contain?” It is:
 **Which operation should change, for what reason, and at what cost?** The
 next-token contract and residual-stream interface remain the same while we
 change how the branches read, transform, and share information.
 
-| Role | Day 5 baseline | Day 6 teaching variant |
+| Role | Part A baseline | Part B modern variant |
 |---|---|---|
 | Prepare branch inputs | LayerNorm | RMSNorm |
 | Transform position-wise features | Two-projection GELU MLP | Three-projection SwiGLU |
@@ -644,7 +649,7 @@ $$
 There is no mean subtraction and no learned additive bias in this variant.
 The scale $\gamma\in\mathbb R^D$ is shared across token positions; the RMS
 statistic is computed separately for each token. The output shape stays
-$[B,T,D]$, and pre-norm placement leaves the skip path unchanged.
+$[B,n,D]$, and pre-norm placement leaves the skip path unchanged.
 
 To see the distinction, set learned scales to one and LayerNorm biases to zero.
 Ignoring epsilon only for this arithmetic illustration:
@@ -701,7 +706,7 @@ $$
 \mathrm{SwiGLU}(X)=(g\odot c)W_{\rm down}.
 $$
 
-Both $c$ and $g$ have shape $[B,T,F]$; the down projection returns $[B,T,D]$.
+Both $c$ and $g$ have shape $[B,n,F]$; the down projection returns $[B,n,D]$.
 Think of one branch proposing feature values and the other modulating them
 based on the same contextual state. These labels describe computational roles,
 not a guarantee that individual coordinates are interpretable concepts.
@@ -770,7 +775,7 @@ The notebook uses angles in radians rather than forcing a 90-degree step.
 
 Our implementation groups adjacent coordinates into pairs. Pair $j$ at
 position $m$ rotates by $m\omega_j$, with
-$\omega_j=10000^{-2j/d}$ for $j=0,\ldots,d/2-1$. Head width must therefore
+$\omega_j=10000^{-2j/d_h}$ for $j=0,\ldots,d_h/2-1$. Head width must therefore
 be even. Different pairs rotate at different rates; position zero is the
 identity. These frequencies are deterministic configuration, not a learned
 position table. The Q/K projections remain learned.
@@ -863,7 +868,7 @@ from a dummy zero on its left. Testing `token != pad_id` would erase real data.
 
 The original decoder's learned modules are reused by an isolated ragged
 wrapper; its historical implementation is not silently changed. At prefill,
-compact K/V has shape $[B,H_{kv},S,d]$ in every layer. Decode adds one key and
+compact K/V has shape $[B,H_{kv},S,d_h]$ in every layer. Decode adds one key and
 value per active row at that row's continuing position. Old keys retain their
 rotations. Once a row emits EOS or reaches its cap, later model calls omit
 that row while preserving its request ID, prefix and sampler state. Compaction
@@ -909,28 +914,24 @@ reproduces the exact next draw and complete trajectory on the same CPU
 environment. An explicitly requested full-prefix cache rebuild is checked
 separately to a tolerance; this is not a general bitwise rebuilding promise.
 
-Prefix, parameter bytes/version, token/template/position/support contract and
-precision belong to cache identity. A new policy version must not relabel old
-behavior likelihoods. The loader checks an independently expected contract
-and external byte digest before data-only tensor deserialization. A sidecar
-supplied by an untrusted sender is not authentication, and bounded trusted
-local snapshots are not an adversarial checkpoint sandbox.
+Prefix, parameter version, token/template/position/support contract and
+precision belong to cache identity. A new policy version cannot relabel old
+behavior likelihoods. A cache is a continuation under that identity, rather
+than a portable copy of an arbitrary prefix's next-token distribution.
 
-Training recovery needs more state again. The lab's actual tiny DPO and sampled
-RLVR sessions save policy/reference weights, Adam state, shuffle/data cursor,
-rollout and Torch RNGs, completed versions, history and a pending collected
-batch if interrupted before its update. Resume applies that same retained
-rollout before collecting another. Two fixed seeds and six primary updates
-per objective reproduce losses, next batches and final parameter bytes from
-both completed and post-collection boundaries. Applicable omitted-state
-controls diverge; DPO's unused rollout RNG is honestly marked not applicable.
-
-This is a recovery result, not a quality improvement or proof that the optional
-pretrained Spark runners support resume. Their model-scale recovery remains
-pending. The [full report](../../experiments/reports/2026-10-04-batched-cache-recovery.md)
-preserves cap failures, interruptions, rejected identities, actual work and
-all recovery branches. Day 25 returns to this contract when connecting rollout
-engines to changing policies; Chapter 6 next develops training-system state.
+Training continuation adds optimizer history, data order and any already
+collected pending batch. Applying the retained rollout before collecting a
+replacement preserves the observation; Chapter 13 develops that mechanism.
+The [tiny recovery report](../../experiments/reports/2026-10-04-batched-cache-recovery.md)
+retains both seeds, six updates per objective, successful replay and omitted-state
+controls. Later [native SFT](../../experiments/reports/2026-10-05-native-sft-replay.md),
+[DPO](../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md) and
+[RLVR](../../experiments/reports/2026-10-05-native-rlvr-recovery-cleanup.md)
+reports supply separate model-scale recovery evidence, including failures;
+the earlier tiny fixture alone proves no pretrained result. Snapshot validation
+and recovery operations are explained in
+[Appendix D](../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision).
+Chapter 6 next develops training-system state.
 
 ## 5.16 GQA: keep several questions, share source representations
 
@@ -951,12 +952,12 @@ With $r=H_q/H_{kv}$ and group index $g(h)=\lfloor h/r\rfloor$:
 
 $$
 A_h=\mathrm{softmax}
-\left(\frac{Q_hK_{g(h)}^\top}{\sqrt d}+C\right),\qquad
-O_h=A_hV_{g(h)}.
+\left(\frac{Q_hK_{g(h)}^\top}{\sqrt{d_h}}+C\right),\qquad
+O_h=A_hV_{\mathrm{val},g(h)}.
 $$
 
-Queries have shape $[B,H_q,T,d]$; compact K/V have $[B,H_{kv},S,d]$; attention
-weights still have $[B,H_q,T,S]$. Full-sequence execution uses $S=T$, whereas
+Queries have shape $[B,H_q,n,d_h]$; compact K/V have $[B,H_{kv},S,d_h]$; attention
+weights still have $[B,H_q,n,S]$. Full-sequence execution uses $S=n$, whereas
 decoding includes cached source positions. $H_{kv}=H_q$ recovers ordinary MHA;
 $H_{kv}=1$ is multi-query attention.
 
@@ -975,19 +976,19 @@ mathematical equivalence test with a serving-speed benchmark.
 ## 5.17 Q/K normalization is not one universal formula
 
 Recall that multiplying both Q and K by 10 multiplies their raw dot products by
-100. The $1/\sqrt d$ factor does not undo input-dependent magnitude growth.
+100. The $1/\sqrt{d_h}$ factor does not undo input-dependent magnitude growth.
 Normalizing projected Q/K can reduce that sensitivity before softmax.
 
 Our explicitly defined variant does the following in each attention layer:
 
 1. Project and split Q and K into heads.
-2. RMS-normalize each head vector over its $d$ coordinates.
+2. RMS-normalize each head vector over its $d_h$ coordinates.
 3. Apply learned Q and K feature scales.
-4. Apply RoPE, compute dot products, and retain division by $\sqrt d$.
+4. Apply RoPE, compute dot products, and retain division by $\sqrt{d_h}$.
 
-The two learned scale vectors each have shape $[d]$ and are broadcast across
-heads and positions within the layer. Thus the lab adds $2d$ parameters per
-layer, not $d(H_q+H_{kv})$. “Per-head normalization” here describes where
+The two learned scale vectors each have shape $[d_h]$ and are broadcast across
+heads and positions within the layer. Thus the lab adds $2d_h$ parameters per
+layer, not $d_h(H_q+H_{kv})$. “Per-head normalization” here describes where
 statistics are computed, not a separate scale vector for every head.
 
 The [original QKNorm paper](https://arxiv.org/abs/2010.04245) instead describes
@@ -996,8 +997,8 @@ division. Do not treat its reported results as a measurement of our different
 RMS-based implementation.
 
 Even with unit feature scales, RMS normalization is not unit-L2 normalization:
-for negligible epsilon a $d$-coordinate RMS-normalized vector has L2 length
-$\sqrt d$. With learned coordinate scales, scores are not simply cosine
+for negligible epsilon a $d_h$-coordinate RMS-normalized vector has L2 length
+$\sqrt{d_h}$. With learned coordinate scales, scores are not simply cosine
 similarities. Epsilon makes positive-rescaling invariance approximate. Moreover,
 featurewise scaling and rotation need not commute, so the declared order—Q/K
 normalization before RoPE—is part of the model definition.
@@ -1019,8 +1020,8 @@ For our bias-free modern projections, attention stores:
 
 $$
 P_{\rm attn}
-=DH_qd+DH_{kv}d+DH_{kv}d+H_qdD
-=2Dd(H_q+H_{kv}).
+=DH_qd_h+DH_{kv}d_h+DH_{kv}d_h+H_qd_hD
+=2Dd_h(H_q+H_{kv}).
 $$
 
 The four terms correspond to Q, K, V, and the attention output projection.
@@ -1030,7 +1031,7 @@ With $L$ blocks, tied embeddings, no learned position table, and final RMSNorm:
 
 $$
 P_{\rm total}=VD+
-L\left[2Dd(H_q+H_{kv})+3DF+2D+2dI_{qk}\right]+D.
+L\left[2Dd_h(H_q+H_{kv})+3DF+2D+2d_hI_{qk}\right]+D.
 $$
 
 Untying the vocabulary head adds another $VD$. Biases or another normalization
@@ -1043,7 +1044,7 @@ If each cached element occupies $b_e$ bytes, retained length is $S$, and batch
 size is $B$, compact keys and values require:
 
 $$
-\boxed{M_{\rm KV}=2LBH_{kv}Sd\,b_e.}
+\boxed{M_{\rm KV}=2LBH_{kv}Sd_h\,b_e.}
 $$
 
 The factor 2 is for K and V. This is tensor payload, excluding allocation
@@ -1051,7 +1052,7 @@ overhead, metadata, temporary expansion, and other model memory. Reducing
 $H_{kv}$ by half halves this payload under fixed other factors; it does not
 halve model weights or total runtime memory.
 
-As a hypothetical sizing example, $L=24,B=1,S=4096,H_{kv}=8,d=64,b_e=2$
+As a hypothetical sizing example, $L=24,B=1,S=4096,H_{kv}=8,d_h=64,b_e=2$
 gives 201,326,592 bytes, or 192 MiB. With four KV heads it gives 96 MiB.
 Those are calculated payloads, not observed device-memory readings.
 
@@ -1065,27 +1066,27 @@ complete training-memory estimate.
 
 ### Dense forward matrix-multiply FLOPs
 
-Count a multiply-add as two operations. For full-sequence attention at $S=T$:
+Count a multiply-add as two operations. For full-sequence attention at $S=n$:
 
 $$
 F_{\rm block}
-=4BTDd(H_q+H_{kv})+4BH_qT^2d+6BTDF.
+=4BnDd_h(H_q+H_{kv})+4BH_qn^2d_h+6BnDF.
 $$
 
 The terms count projections, the score/value matrix multiplications, and
-SwiGLU's three projections. The vocabulary head adds $2BTDV$ once after the
+SwiGLU's three projections. The vocabulary head adds $2BnDV$ once after the
 stack. The estimate excludes normalization, softmax, nonlinearities, masking,
 embedding lookup, backward, and other work. It counts the score matrices as
 dense even though future entries are masked.
 
 GQA reduces the K/V projection terms, but $H_q$ query distributions remain in
 the quadratic term. During one-token decoding, the score/value products instead
-scale as approximately $4BH_qSd$ per layer: fewer queries, but a growing source
+scale as approximately $4BH_qSd_h$ per layer: fewer queries, but a growing source
 length. Neither expression directly predicts latency, which also depends on
 memory traffic, kernel implementation, hardware, and batching.
 
 The [recorded tiny-model comparison](../../experiments/reports/2026-09-06-decoder-notebooks.md)
-uses $B=2,T=6,L=2,D=16,H_q=4,d=4,F=32$, tied embeddings, Q/K norm, and
+uses $B=2,n=6,L=2,D=16,H_q=4,d_h=4,F=32$, tied embeddings, Q/K norm, and
 float64 cache elements:
 
 | KV heads | Unique parameters | Compact KV bytes | Estimated dense forward matmul FLOPs |
@@ -1152,9 +1153,9 @@ rechecked 2026-09-07, provides a useful shape contrast:
 | Vocabulary entries | 151,936 |
 | RoPE base | 1,000,000 |
 
-Here $H_qd=2048$, not $D=1024$. In PyTorch storage convention the query
+Here $H_qd_h=2048$, not $D=1024$. In PyTorch storage convention the query
 projection therefore has shape `[2048,1024]`, and the attention output
-projection `[1024,2048]`. The projections connect different widths; $D=H_qd$
+projection `[1024,2048]`. The projections connect different widths; $D=H_qd_h$
 was a baseline choice, not a universal law. The config also enables tied
 embeddings. These fields support a configuration comparison, not a claim that
 our RoPE layout or implementation can load Qwen weights.
@@ -1162,7 +1163,7 @@ our RoPE layout or implementation can load Qwen weights.
 ### Candidate model sizes are designs, not allocated models
 
 Notebook 3 defines three accounting-only candidates with vocabulary 16,000,
-$d=64$, $H_{kv}=2$, tied embeddings, Q/K norm, and a configured context limit
+$d_h=64$, $H_{kv}=2$, tied embeddings, Q/K norm, and a configured context limit
 of 2,048. It uses the formula above without allocating the larger models:
 
 | Target scale | $D$ | $L$ | $H_q$ | $F$ | Calculated parameters |
@@ -1236,7 +1237,7 @@ memory, and fixed samples under the declared contract.
 
 ## 5.21 Modern-decoder exercises
 
-Continue the Day 5 exercise numbering. [Worked answers](../solutions/05-decoder-notebook-solutions.md#day-6-modern-decoder--worked-conceptual-solutions)
+Continue the Part A exercise numbering. [Worked answers](../solutions/05-decoder-notebook-solutions.md#day-6-modern-decoder--worked-conceptual-solutions)
 and the three notebooks support each question.
 
 13. Why do LayerNorm and RMSNorm treat a common feature offset differently?
@@ -1256,7 +1257,7 @@ and the three notebooks support each question.
     one independently learned scale vector for every head here?
 21. What does halving KV heads do to cache payload, total parameters, and
     dense score/value arithmetic? Which statements require a benchmark?
-22. Why can $D$ differ from $H_qd$? What evidence does the pinned config provide,
+22. Why can $D$ differ from $H_qd_h$? What evidence does the pinned config provide,
     and what does it not establish about checkpoint compatibility?
 23. Does a 100M parameter estimate establish that a training run fits memory?
     What must be added to the accounting before selecting a candidate?
@@ -1287,12 +1288,14 @@ failures, and write a comparison proposal. Study it before the optional
 recurrent-depth notebook. Runnable worked solutions support the exercise; they
 do not replace your explanation or execute the proposed training comparison.
 
+## Part C — Defend the architecture
+
 ## 5.23 Read the model as a connected argument
 
 An architecture diagram says what should connect. A trace asks whether the
 implementation actually makes those connections. Begin with a small enough
 model that every boundary can be inspected: the defense notebook uses two
-blocks, residual width $D=16$, four query heads, two KV heads, head width $d=4$,
+blocks, residual width $D=16$, four query heads, two KV heads, head width $d_h=4$,
 and SwiGLU width $F=32$. Its batch has two sequences of six token IDs and its
 vocabulary has sixteen entries. These are teaching dimensions, not claims about
 the size of a useful language model.
@@ -1497,6 +1500,9 @@ acronyms or lengthy arithmetic.
     rebuilding. Which prefix, weight, interface and RNG identities matter?
 34. A rollout was collected before interruption but its optimizer update did
     not run. Why is recollecting it different from applying the saved rollout?
+    Follow the [pending-observation explanation](13-group-relative-policy-optimization.md#1371-a-pending-rollout-is-already-an-experimental-observation)
+    and the [worked answer](../solutions/05-decoder-notebook-solutions.md#34-pending-data-belongs-to-its-behavior-policy).
+    Snapshot/loader operations belong to [Appendix D](../appendices/d-reproduction-and-environments.md#policy-reference-and-pending-rollout-identity).
 
 ## 5.27 From architecture to controlled pretraining
 

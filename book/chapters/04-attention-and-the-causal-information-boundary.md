@@ -52,10 +52,10 @@ complete treatment in Chapter 5.
 
 ## 4.2 One position has three roles
 
-Let X contain the incoming representations at T positions, each with D features:
+Let X contain the incoming representations at n positions, each with D features:
 
 $$
-X\in\mathbb{R}^{T\times D}.
+X\in\mathbb{R}^{n\times D}.
 $$
 
 These are continuous representations, not token IDs. At the first attention
@@ -65,11 +65,11 @@ At deeper layers they already incorporate earlier layer computations.
 Each position has three learned projections:
 
 $$
-Q=XW_Q,\qquad K=XW_K,\qquad V=XW_V.
+Q=XW_Q,\qquad K=XW_K,\qquad V_{\mathrm{val}}=XW_V.
 $$
 
-The query q_i represents the receiving position's matching criteria. A source's
-key k_j represents what that receiver can match against. Its value v_j is the
+The query $q_i$ represents the receiving position's matching criteria. A source's
+key $k_j$ represents what that receiver can match against. Its value $v_j$ is the
 message returned when that source receives weight.
 
 The retrieval analogy helps explain the roles, but a query need not encode a
@@ -85,21 +85,22 @@ need not equal j's interest in i.
 
 | Object | Shape | Meaning |
 |---|---|---|
-| X | [T,D] | Incoming feature rows |
-| W_Q, W_K | [D,d_k] | Matching projections |
-| W_V | [D,d_v] | Message projection |
-| Q, K | [T,d_k] | One query/key per position |
-| V | [T,d_v] | One value per position |
-| QKᵀ | [T,T] | Receiver-by-source scores |
-| A | [T,T] | Receiver-by-source weights |
-| O=AV | [T,d_v] | Retrieved output features |
+| $X$ | $[n,D]$ | Incoming feature rows |
+| $W_Q,W_K$ | $[D,d_h]$ | Matching projections |
+| $W_V$ | $[D,d_v]$ | Message projection |
+| $Q,K$ | $[n,d_h]$ | One query/key per position |
+| $V_{\mathrm{val}}$ | $[n,d_v]$ | One value per position |
+| $QK^\top$ | $[n,n]$ | Receiver-by-source scores |
+| $A$ | $[n,n]$ | Receiver-by-source weights |
+| $O=AV_{\mathrm{val}}$ | $[n,d_v]$ | Retrieved output features |
 
 Q and K require compatible feature widths for the dot product. The value width
-d_v may differ. Adding a batch axis gives [B,T,d_k] and [B,T,d_v]; multiple
+$d_v$ may differ. Adding a batch axis gives $[B,n,d_h]$ and $[B,n,d_v]$; multiple
 heads add another axis in Chapter 5.
 
-The symbol V here denotes the value matrix. It is not the vocabulary size from
-Chapter 3; when both are needed, write N_vocab for vocabulary size.
+The value matrix is $V_{\mathrm{val}}$; vocabulary size remains $V$ as
+in Chapter 3. The implementation uses `v` for these value activations and
+`d_k` for the query/key width denoted $d_h$ here.
 
 ## 4.3 Dot products are learned compatibility scores
 
@@ -125,10 +126,10 @@ q_i k_j^\top=\|q_i\|\,\|k_j\|\cos\theta.
 $$
 
 Both direction and magnitude contribute. Dot-product attention is therefore not
-automatically cosine similarity. Nor is its score symmetric: W_QW_Kᵀ need
+automatically cosine similarity. Nor is its score symmetric: $W_QW_K^\top$ need
 not be symmetric.
 
-Collecting all queries and keys gives S=QKᵀ. Row i contains a single receiver's
+Collecting all queries and keys gives $S=QK^\top$. Row i contains a single receiver's
 scores over source positions; column j shows how different receivers score one
 source. Confusing these axes can produce a matrix of the expected shape that
 implements the wrong information flow.
@@ -145,24 +146,24 @@ $$
 =\mathbb{E}[q_m^2]\mathbb{E}[k_m^2]=1.
 $$
 
-The score sums d_k such products:
+The score sums $d_h$ such products:
 
 $$
-s=\sum_{m=1}^{d_k}q_mk_m,\qquad
-\mathrm{Var}(s)=d_k,\qquad
-\mathrm{Std}(s)=\sqrt{d_k}.
+s=\sum_{m=1}^{d_h}q_mk_m,\qquad
+\mathrm{Var}(s)=d_h,\qquad
+\mathrm{Std}(s)=\sqrt{d_h}.
 $$
 
 Positive and negative contributions partly cancel; the standard deviation grows
 as the square root, not linearly with width. Thus
 
 $$
-\mathrm{Var}\left(\frac{s}{\sqrt{d_k}}\right)=1.
+\mathrm{Var}\left(\frac{s}{\sqrt{d_h}}\right)=1.
 $$
 
 Without this correction, wider random heads tend to create wider score gaps.
 Softmax exponentiates those gaps, producing concentrated distributions even
-without stronger learned evidence. Scaling by sqrt(d_k) controls this initial
+without stronger learned evidence. Scaling by $\sqrt{d_h}$ controls this initial
 spread. This is the scaled dot-product mechanism introduced in
 [*Attention Is All You Need*](https://arxiv.org/abs/1706.03762).
 
@@ -174,7 +175,7 @@ J_{ij}=a_i(\mathbf{1}[i=j]-a_j).
 $$
 
 As a approaches a one-hot vector, these entries approach zero. Its trace,
-1−Σ_i a_i², offers a simple measure of local softmax sensitivity. It is not
+$1-\sum_i a_i^2$, offers a simple measure of local softmax sensitivity. It is not
 itself a downstream loss gradient.
 
 This does not contradict Chapter 3's strong p−q gradient for a confidently wrong
@@ -185,7 +186,7 @@ the same cancellation cannot be assumed.
 
 The IID assumptions explain the scaling rule, not every trained attention
 distribution. Learned magnitudes, correlations, normalization, and positional
-transformations affect actual score statistics. Dividing by sqrt(d_k) does not
+transformations affect actual score statistics. Dividing by $\sqrt{d_h}$ does not
 guarantee unit variance or prevent every saturated row.
 
 ## 4.5 Causality belongs inside normalization
@@ -206,7 +207,7 @@ $$
 Scaled, masked scores and weights are
 
 $$
-R=\frac{QK^\top}{\sqrt{d_k}}+M,\qquad
+R=\frac{QK^\top}{\sqrt{d_h}}+M,\qquad
 A=\mathrm{softmax}_{\mathrm{row}}(R).
 $$
 
@@ -303,7 +304,7 @@ discard their outputs. Do not treat NaNs as masked information.
 The output for receiver i is
 
 $$
-o_i=\sum_{j\le i}a_{ij}v_j,\qquad O=AV.
+o_i=\sum_{j\le i}a_{ij}v_j,\qquad O=AV_{\mathrm{val}}.
 $$
 
 With nonnegative weights summing to one, a single head's output lies in the
@@ -326,11 +327,12 @@ To reconnect with Chapter 3:
 $$
 O \longrightarrow \text{later decoder computation}
 \longrightarrow h_i
-\longrightarrow z_i=h_iW_{\mathrm{out}}+b
+\longrightarrow z_i=h_iW_{\mathrm{out}}^\top+b
 \longrightarrow p_i=\mathrm{softmax}(z_i).
 $$
 
-A's columns index source positions. The final vocabulary logits' columns index
+$A$'s columns index source positions. The stored vocabulary head has
+shape $[V,D]$, so the row state multiplies its transpose. The final vocabulary logits' columns index
 candidate output tokens. These are different competitions with different axes.
 
 ## 4.7 A transparent implementation
@@ -350,6 +352,55 @@ weights = torch.softmax(masked, dim=-1)
 output = weights @ v
 ~~~
 
+### Work through three positions
+
+**Reader prediction.** The third position will match both earlier keys equally.
+Will its output be the average of their two values, or can its own value dominate?
+Which rows would change if only the final value were perturbed?
+
+This is a newly calculated teaching fixture, not a model measurement. Set
+$d_h=d_v=2$ and use the already projected rows
+
+$$
+Q=K=\begin{bmatrix}1&0\\0&1\\1&1\end{bmatrix},\qquad
+V_{\mathrm{val}}=\begin{bmatrix}1&2\\3&0\\0&4\end{bmatrix}.
+$$
+
+Divide the query-key products by $\sqrt{2}$, mask forbidden sources, and
+normalize each row. With $a=1/\sqrt{2}$, the masked score matrix is
+
+$$
+R=\begin{bmatrix}a&-\infty&-\infty\\0&a&-\infty\\a&a&2a\end{bmatrix}.
+$$
+
+| Receiving position | Weights over sources 1, 2, 3 | Retrieved value coordinates |
+|---|---|---|
+| 1 | $[1,0,0]$ | $[1,2]$ |
+| 2 | $[0.330238,0.669762,0]$ | $[2.339523,0.660477]$ |
+| 3 | $[0.248255,0.248255,0.503490]$ | $[0.993020,2.510470]$ |
+
+The third row puts more than half its weight on itself: matching two earlier
+keys equally does not remove self-attention. Its output is
+$0.248255[1,2]+0.248255[3,0]+0.503490[0,4]$, rounded here to six decimals.
+The first row has only one legal source, so its normalized weight is one
+regardless of the size of its finite score. These rows are already projected;
+start the preceding implementation at its `scores` line after assigning them
+to `q`, `k` and `v`. Equivalently, run the canonical trace directly:
+
+```python
+from dongxi_llms.causal_attention_lab import attention_trace
+q = k = torch.tensor([[1., 0.], [0., 1.], [1., 1.]], dtype=torch.float64)
+v = torch.tensor([[1., 2.], [3., 0.], [0., 4.]], dtype=torch.float64)
+trace = attention_trace(q, k, v)
+print(trace["weights"], trace["output"])
+```
+
+Then change the final value to $[100,-100]$. The first two
+outputs remain unchanged; the third changes. This isolates value mixing and
+causality, without claims about learned linguistic retrieval. The
+[calculation receipt](../../experiments/reports/2026-10-10-book-editorial-pass/run-01/attention-forward-calculation.json)
+retains full precision and the regeneration command.
+
 Use replacement or an additive mask constructed directly. Multiplying a binary
 mask by negative infinity creates 0×(−∞), which is NaN.
 
@@ -360,7 +411,7 @@ A correct implementation should satisfy:
 
 1. nonnegative weights and row sums one before dropout;
 2. zero weights at forbidden positions;
-3. agreement between AV and an explicit allowed-source sum;
+3. agreement between $AV_{\mathrm{val}}$ and an explicit allowed-source sum;
 4. unchanged prefix outputs when only future inputs change;
 5. agreement with an independently implemented reference at a declared tolerance.
 
@@ -371,28 +422,28 @@ matters for cached decoding. Consult the
 [SDPA reference](https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html)
 rather than transferring a boolean mask convention by name alone.
 
-For dense full-sequence attention, the two main products QKᵀ and AV cost on
-the order of T²d_k and T²d_v. Explicitly storing A costs T² elements per head.
-The Q/K/V projections add costs proportional to TD times the projected widths.
+For dense full-sequence attention, the products $QK^\top$ and $AV_{\mathrm{val}}$
+cost on the order of $n^2d_h$ and $n^2d_v$. Explicitly storing $A$ costs $n^2$
+elements per head. Projections add costs proportional to $nD$ times their widths.
 Fused implementations may avoid materializing the whole score matrix; the small
 implementation intentionally retains it for inspection.
 
 ## 4.8 How one loss teaches routing and content
 
-Let a downstream next-token loss L send derivative G_O=∂L/∂O into attention.
-Because O=AV,
+Let a downstream next-token loss $L$ send derivative $G_O=\partial L/\partial O$ into attention.
+Because $O=AV_{\mathrm{val}}$,
 
 $$
-dO=(dA)V+A(dV).
+dO=(dA)V_{\mathrm{val}}+A(dV_{\mathrm{val}}).
 $$
 
 The chain rule separates the two paths:
 
 $$
-G_A=G_OV^\top,\qquad G_V=A^\top G_O.
+G_A=G_OV_{\mathrm{val}}^\top,\qquad G_V=A^\top G_O.
 $$
 
-G_V changes the messages that sources transmit. G_A says how the downstream
+Write $G_V=\partial L/\partial V_{\mathrm{val}}$. This derivative changes the messages that sources transmit. $G_A$ says how the downstream
 loss would respond to changing the routing weights, given those messages.
 
 For one softmax row a with incoming derivative g,
@@ -410,7 +461,7 @@ G_R=A\odot\left(G_A-
 \mathrm{rowsum}(A\odot G_A)\right),
 $$
 
-where the [T,1] row sum broadcasts across sources. Forbidden entries have zero
+where the $[n,1]$ row sum broadcasts across sources. Forbidden entries have zero
 weight and zero score gradient. M is fixed, so it has no learned update.
 
 For one receiver, this has a useful interpretation. Let g be its output
@@ -429,8 +480,8 @@ so this local routing gradient vanishes. The value projections can still learn.
 Through scaled dot products,
 
 $$
-G_Q=\frac{G_RK}{\sqrt{d_k}},\qquad
-G_K=\frac{G_R^\top Q}{\sqrt{d_k}}.
+G_Q=\frac{G_RK}{\sqrt{d_h}},\qquad
+G_K=\frac{G_R^\top Q}{\sqrt{d_h}}.
 $$
 
 Through the learned projections,
@@ -466,7 +517,7 @@ future information in the current forward pass.
 
 Replacing A with A.detach() preserves forward values but disconnects the
 routing gradient. In the isolated head, W_Q and W_K lose their paths while
-W_V still receives credit. Detaching V instead removes W_V's path while Q/K
+W_V still receives credit. Detaching $V_{\mathrm{val}}$ instead removes W_V's path while Q/K
 can learn which fixed messages to retrieve.
 
 These statements assume independently parameterized projections and no extra
@@ -476,19 +527,19 @@ one cross-entropy target, and finite differences of the projection weights.
 ## 4.9 What an attention map does and does not explain
 
 A shows routing coefficients inside a computation. To determine even the head's
-output, one also needs V. Different weight patterns may produce the same result.
+output, one also needs $V_{\mathrm{val}}$. Different weight patterns may produce the same result.
 
 Let v_1=[2,0], v_2=[0,2], and v_3=[1,1]. Then both
 
 $$
-[0.4,0.4,0.2]V=[1,1],\qquad
-[0.1,0.1,0.8]V=[1,1].
+[0.4,0.4,0.2]V_{\mathrm{val}}=[1,1],\qquad
+[0.1,0.1,0.8]V_{\mathrm{val}}=[1,1].
 $$
 
-More generally, if δV=0 and both a and a+δ are valid distributions,
+More generally, if $\delta V_{\mathrm{val}}=0$ and both $a$ and $a+\delta$ are valid distributions,
 
 $$
-(a+\delta)V=aV.
+(a+\delta)V_{\mathrm{val}}=aV_{\mathrm{val}}.
 $$
 
 A complete model adds other heads, residual paths, projections, and later
@@ -509,12 +560,12 @@ q_t=x_tW_Q,\quad k_t=x_tW_K,\quad v_t=x_tW_V,
 $$
 
 $$
-K_{\le t}=[K_{<t};k_t],\qquad V_{\le t}=[V_{<t};v_t],
+K_{\le t}=[K_{<t};k_t],\qquad V_{\mathrm{val},\le t}=[V_{\mathrm{val},<t};v_t],
 $$
 
 $$
 o_t=\mathrm{softmax}\left(
-\frac{q_tK_{\le t}^{\top}}{\sqrt{d_k}}\right)V_{\le t}.
+\frac{q_tK_{\le t}^{\top}}{\sqrt{d_h}}\right)V_{\mathrm{val},\le t}.
 $$
 
 The new query reads stored source keys and values. The old queries have already
@@ -559,11 +610,11 @@ backward, which is a different purpose. The cache does not add learned knowledge
 For equal-width keys and values, a simple logical-storage model is
 
 $$
-\text{KV bytes}=2BLTH_{\mathrm{KV}}d_hb,
+\text{KV bytes}=2BLnH_{\mathrm{KV}}d_hb,
 $$
 
-where B is batch size, L is layer count, T is retained positions,
-H_KV is KV heads per layer, d_h is head width, and b is bytes per scalar.
+where $B$ is batch size, $L$ is layer count, and $n$ is retained positions;
+$H_{\mathrm{KV}}$ is KV heads per layer, $d_h$ is head width, and $b$ is bytes per scalar.
 Unequal key/value widths require summing their sizes separately.
 
 This formula counts payload, not allocation overhead, padding, fragmentation,
@@ -591,7 +642,7 @@ version being used before treating a particular setting as universal.
 ## 4.12 Three companion notebooks and their evidence
 
 These are executable sections of the chapter. Each includes prediction prompts,
-optional learner code, adjacent runnable reference solutions, and explanations.
+optional practice cells, adjacent runnable reference solutions, and explanations.
 They can also be read as worked lessons before returning to hands-on study.
 
 | Session | Main question | Evidence |
@@ -617,7 +668,7 @@ records the following CPU float64 observations:
 
 In the IID scaling simulation, head widths 8, 64, and 512 produced:
 
-| d_k | Raw score std. | Scaled score std. | Raw entropy (nats) | Scaled entropy (nats) |
+| d_h | Raw score std. | Scaled score std. | Raw entropy (nats) | Scaled entropy (nats) |
 |---:|---:|---:|---:|---:|
 | 8 | 2.84406 | 1.00553 | 1.24229 | 2.35528 |
 | 64 | 7.98888 | 0.99861 | 0.42197 | 2.36165 |
@@ -630,12 +681,12 @@ The cache fixture uses two single-head residual attention layers with width
 four and an arbitrary five-class head. It omits a full decoder's normalization,
 MLP, and positional encoding. Replaying six fixed input rows with a two-row
 prefill requires 12 cached versus 40 uncached layer-position projections for
-each of K and V. Final logical cache storage is 768 bytes. This is neither a
+each of K and $V_{\mathrm{val}}$. Final logical cache storage is 768 bytes. This is neither a
 measured speedup nor a model-quality result.
 
 ## 4.13 Exercises
 
-1. **Shapes and meaning.** For T=5, D=8, d_k=4, and d_v=3, give every shape
+1. **Shapes and meaning.** For $n=5,D=8,d_h=4,d_v=3$, give every shape
    from X through O. Which axis indexes vocabulary candidates?
 2. **Directed retrieval.** Explain why q_i k_jᵀ need not equal q_j k_iᵀ,
    even though both projections come from X.
@@ -645,7 +696,7 @@ measured speedup nor a model-quality result.
    source is forbidden. When can post-softmax renormalization repair masking?
 5. **Future intervention.** Change only “river” to “road.” Explain the outputs
    at “crossed” and at the changed position. State the assumptions.
-6. **Backward credit.** Derive G_V and G_A from O=AV, then trace the path to X.
+6. **Backward credit.** Derive $G_V$ and $G_A$ from $O=AV_{\mathrm{val}}$, then trace the path to $X$.
    Can an earlier prompt position receive gradients with zero direct loss?
 7. **Detach and saturation.** Explain the two detach interventions. Reconcile
    attention saturation with the p−q gradient for vocabulary cross-entropy.

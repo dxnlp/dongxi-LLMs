@@ -11,6 +11,29 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### Editorial mechanism extensions — existing candidates, 2026-10-10
+
+- Source: agent, automatic opportunity check during the book editorial goal.
+  Reuse CAND-ANIM-008 (causal retrieval), 019 (checkpoint state), 022 (paired
+  evaluation), 023 (supervised masks), 026 (policy gradients), and 003/018
+  (updates and learning-rate steps); no duplicate candidate or new production
+  packet is created.
+- Canonical mechanisms: $A=\mathrm{softmax}_{\mathrm{row}}(QK^\top/\sqrt{d_h}+M)$
+  followed by $AV_{\mathrm{val}}$; valid-token summed NLL divided by total
+  targets; detached response/token advantages with current/old/reference roles;
+  pending observations replayed before new collection; matched exposure
+  beside unequal gradient work and separate weight ancestry.
+- Evidence state: Chapter 4 adds a calculated three-position fixture. Chapters
+  6–15 reuse retained CPU curves, gradients, generated outputs and native
+  comparisons, including caps, zero-reward groups and failed supervision.
+  These are editorial explanations of existing evidence, not new training
+  measurements, learner mastery or rendered animation.
+- Production dependency: the existing candidate packets, stable chapter
+  derivations and explicit production approval; animation ownership remains
+  Mac Studio. This extension is proposed and unrendered. The
+  [editorial record](../../experiments/reports/2026-10-10-book-editorial-pass.md)
+  binds the source review separately from historical reports.
+
 ### README previews — existing candidates 001, 008 and 027, 2026-10-05
 
 - Source: user requested beautiful, relevant README GIFs and explicitly allowed

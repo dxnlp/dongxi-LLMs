@@ -82,9 +82,9 @@ one checkpoint's outputs. The adversarial fixtures expose each boundary.
 ## 12. Answer format and stopping are independent
 
 For “return only one integer,” `Final answer: 4` can have correct arithmetic,
-invalid format and a max-token stop. Record answer correctness1, format0 and
-natural termination0, with truncation1. Under our declared metric,
-`task_success` is correctness AND format, hence0. It does not secretly require
+invalid format and a max-token stop. Record answer correctness 1, format 0 and
+natural termination 0, with truncation 1. Under our declared metric,
+`task_success` is correctness AND format, hence 0. It does not secretly require
 natural termination; a different deployment requirement needs a different metric.
 
 Retain raw text, token IDs/counts if measured, and the actual stop reason. A
@@ -120,7 +120,7 @@ before trusting a real inference-time comparison.
 ## 15. Preserve the stop action without grading its spelling
 
 The model chose two actions: the token for `4` and EOS. Keep both IDs, their
-likelihoods and generation cost2. Raw decoding preserves the EOS spelling;
+likelihoods and generation cost 2. Raw decoding preserves the EOS spelling;
 the frozen grading-text policy decodes only the prefix before that final
 declared stop. The answer can then satisfy a one-integer format without erasing
 termination evidence. No other token or explanation is trimmed. A max-token or
@@ -148,7 +148,7 @@ replay; scripted stop and failure controls are separately labeled.
 
 A correct candidate already in $C_N$ remains in every longer nested prefix, so
 the any-correct event cannot become false. Majority counts can change: three
-correct0 votes lose to five wrong1 votes in the actual seed10052 `train-11`
+correct 0 votes lose to five wrong 1 votes in the actual seed 10052 `train-11`
 pool. A selector returning one candidate satisfies $d_N\le o_N$, but may not
 find the available correct answer. An oracle seeing correctness labels is not
 the same selector. The worked notebook keeps oracle results in evaluator inputs,
@@ -160,7 +160,7 @@ Independent coordinates can produce identical strings. Their repeated frequency
 is part of majority voting under the declared sampling process. Copies of one
 stored sample ID are not new draws and are rejected by the candidate-pool
 contract. Counting one vote per distinct answer instead removes frequency
-information: with binary support both0 and1 get one vote, so the stable rule
+information: with binary support both 0 and 1 get one vote, so the stable rule
 returns the earliest eligible answer. This is a different estimator, not a
 universal correction for correlated mistakes.
 
@@ -194,13 +194,19 @@ establish optimized serving latency, equal total compute or broad reasoning
 improvement. The actual tiny lesson deliberately retains negative seeds and
 source/template/family failures.
 
+## Evidence-reading and operational extensions
+
+Exercises 21–23 retain their original IDs. Their conceptual evidence boundaries
+are unchanged; exporter and rating-consumer commands belong to the linked lab
+and [Appendix D](../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence).
+
 ## 21. A reproducible summary does not invent a model event
 
 The authored panel supports its actual item/source-group coverage, frozen
 contract, accepted/rejected parses, per-task metrics, retained errors and paired
 group resampling. Its input hashes identify the exact fixture bytes. They do
 not establish a model forward, token count, device measurement, checkpoint
-weight digest, training genealogy, approval or independent behavior review.
+weight digest, training genealogy, execution or independent behavior review.
 Missing measurements remain unknown, not zero.
 
 Run the export command in [Lab 7](../labs/07-evaluation-is-a-contract.md) into a
@@ -214,15 +220,15 @@ for a pretrained evaluation or a broader safety assessment.
 
 ## 22. Preserve proxy success and whole-response failure
 
-The automatic SFT score1/15 is correct under the frozen phrase rubric: its
+The automatic SFT score 1/15 is correct under the frozen phrase rubric: its
 `benign-a` response contains the required strings and no forbidden string.
 The whole text also contains repeated `.nasa` fragments, an unfinished final
-sentence and a measured64-token cap stop. Those facts are not erased by the
+sentence and a measured 64-token cap stop. Those facts are not erased by the
 pass. A separate review should inspect every retained response, distinguish
 the useful fragment from a completed helpful answer and state its own review
 criteria and independence limits. It is not human agreement or broad safety.
 
-Keep the original automatic0/15 versus1/15 comparison, its grouped uncertainty
+Keep the original automatic 0/15 versus 1/15 comparison, its grouped uncertainty
 and both panels'0/15 natural-stop rates. Do not change the rubric after seeing
 this checkpoint's failure or treat its score as semantic helpfulness. A stricter
 next contract may be useful, but needs its own identity and selection history.
@@ -242,10 +248,10 @@ those properties.
 
 The [rating lab](../labs/07-evaluation-is-a-contract.md) prepares authored
 controls with two empty rating templates. Evaluating without rating files must
-report awaiting ratings and null paired scores/intervals, not0, an assumed1 or
+report awaiting ratings and null paired scores/intervals, not 0, an assumed 1 or
 a claimed trained-model tie. If ratings later disagree, preserve each original
 decision and use only the declared adjudication policy. Reject a changed text
-digest, duplicate ID or score outside0/1/2 instead of quietly repairing it.
+digest, duplicate ID or score outside 0/1/2 instead of quietly repairing it.
 
 Pair checkpoints only at the same declared update/recipe and resample the
 twelve source-opening groups, carrying both arms together. Sampling seeds and
@@ -258,19 +264,19 @@ The authored fixtures verify the consumer, not real model quality or human
 annotation agreement.
 
 The later [actual rating replay](../../experiments/reports/native-story-publication-20261005-01/ratings-evaluation-01/report.json)
-contains192 individually assessed continuations from each of two anonymous
-AI instances, no abstentions and56 candidates with an axis disagreement.
+contains 192 individually assessed continuations from each of two anonymous
+AI instances, no abstentions and 56 candidates with an axis disagreement.
 Apply the already frozen two-rater mean; do not renegotiate an unfavorable
-score after revealing the arms. At update400, the control's45/48 natural EOS
-stops coexist with narrative-ending mean0.0208/2. EOS proves a stop, not a
-resolved story. Its grammar mean0.0729/2 also keeps lower NLL separate from
+score after revealing the arms. At update 400, the control's 45/48 natural EOS
+stops coexist with narrative-ending mean 0.0208/2. EOS proves a stop, not a
+resolved story. Its grammar mean 0.0729/2 also keeps lower NLL separate from
 readable generation. The half-rate arm's higher repetition mean does not
 override its lower consistency/causality/grammar scores. Initial random text's
-repetition1.5/2 is another warning against an unspecified overall average.
+repetition 1.5/2 is another warning against an unspecified overall average.
 
-Resample twelve openings, not96 independent rater/recipe observations. Retain
-all288 missing later cells and their null scores; no completed400 comparison
-can stand in for absent4000/8000/14000 results. This is actual AI review of
+Resample twelve openings, not 96 independent rater/recipe observations. Retain
+all 288 missing later cells and their null scores; no completed 400 comparison
+can stand in for absent 4000/8000/14000 results. This is actual AI review of
 actual model text, not human review or a new training-seed sweep.
 
 ## Notebook pathway

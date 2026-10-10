@@ -20,12 +20,21 @@ must survive interruption**. It combines the Day 8 mechanisms with the completed
 run. The case study tests the difference between a finished process, improved
 next-token prediction, and reliable story generation.
 
+## What you should be able to explain
+
+- Define a valid-target objective and preserve it through accumulation and updates.
+- Distinguish successful exposure, processed positions and attempted work.
+- Restore the next update and interpret loss beside complete generated stories.
+
+**Prerequisites:** the decoder and cross-entropy from Chapters 3–5; ordinary
+Python/PyTorch tensors and the difference between forward computation and gradients.
+
 ## 6.1 The questions a recipe must answer
 
 A recipe is not merely a list of hyperparameters. It should let another person
 reconstruct both the computation and its interpretation. What does one token
 count mean? Which predictions contribute to the loss? When does the optimizer
-step? What is held fixed during validation? What exactly is restored after a
+step? What is held fixed during development? What exactly is restored after a
 failure? Which success conditions are safety checks, and which concern quality?
 
 The [three companion notebooks](../../notebooks/day-08/README.md) follow one
@@ -36,11 +45,11 @@ document identity and split
   → token IDs and shifted windows
   → logits, summed NLL, valid-target count
   → accumulated gradient, clipping, AdamW update
-  → fixed validation and recoverable training state
+  → fixed development evaluation and recoverable training state
 ```
 
 The data fixture consists of ten original sentences authored in this repository:
-eight training documents and two validation documents. It is deliberately small
+eight training documents and two development documents. It is deliberately small
 enough to inspect. It is not a benchmark or a representative sample of human
 language. The modern Chapter 5 decoder remains the model; we change the system
 around it rather than hiding the mechanism behind a large training framework.
@@ -55,7 +64,7 @@ Filtering changes the distribution being learned, so it belongs in the recipe,
 not merely in a preprocessing script nobody records.
 
 Split documents before constructing overlapping examples. If neighboring
-windows from the same document enter both training and validation, a validation
+windows from the same document enter both training and development, a development
 score may partly measure recognition of previously exposed text. Document-level
 splitting closes that route but does not eliminate duplicated documents,
 paraphrases, shared sources, or benchmark contamination. Those require additional
@@ -90,7 +99,7 @@ byte-level foundation discussed in Chapter 2, without learned merges.
 For each document we create `[BOS] + bytes + [EOS]`. Inputs omit the final token;
 labels omit the first. Thus every byte and the ending EOS is predicted once.
 BOS provides context but is not a target. The loss receives logits of shape
-$[B,T,V]$ and integer labels of shape $[B,T]$. It does not shift them a second
+$[B,n,V]$ and integer labels of shape $[B,n]$. It does not shift them a second
 time. Remember that a vocabulary-sized output is produced at every training
 position, even though there is only one observed target ID at that position.
 
@@ -130,24 +139,24 @@ into it. A zero loss mask alone would not make arbitrary padding invisible.
 
 ## 6.5 A run has several clocks
 
-Let a microbatch contain $b$ windows of length $T$. Accumulate gradients over
+Let a microbatch contain $b$ windows of length $n$. Accumulate gradients over
 $A$ microbatches before an optimizer update, using $R$ data-parallel ranks. If
 every position is a valid target, one update accounts for
 
 $$
-N_{\mathrm{update}}=bTAR.
+N_{\mathrm{update}}=bnAR.
 $$
 
 For $S$ such updates, the target presentation budget is
 
 $$
-N_{\mathrm{run}}=SbTAR.
+N_{\mathrm{run}}=SbnAR.
 $$
 
 These are exact only under the full-valid-position assumption. Padding, ignored
 prompt positions, variable lengths, or a partial accumulation window change the
 count. The runtime should count valid labels explicitly. Our 24-update,
-single-rank recipe uses $b=1$, $T=16$, and $A=2$: 768 processed positions is a
+single-rank recipe uses $b=1$, $n=16$, and $A=2$: 768 processed positions is a
 ceiling on supervised targets, not a promise that all 768 carry loss.
 
 Track optimizer updates, processed positions, valid target presentations, and
@@ -158,10 +167,10 @@ saying which counter is being used makes comparisons ambiguous.
 There is another clock when work can fail or be repeated: the allowance already
 reserved for attempts. Completed training exposure tells us what successfully
 reached the optimizer boundary. It does not include a failed backward pass,
-repeated validation or the growing prefixes processed during story generation.
+repeated development or the growing prefixes processed during story generation.
 Those activities consume work without becoming new completed training targets.
 The [native two-clock companion](../../experiments/reports/2026-10-05-story-work-lesson.md)
-and evidence-lab6 make that distinction measurable without the full corpus.
+and evidence-lab 6 make that distinction measurable without the full corpus.
 
 ### A target budget is an update-boundary contract
 
@@ -191,11 +200,10 @@ unchanged in the tested CPU controls. Current physical-position totals are
 measured from input tensor sizes; an explicitly marked legacy-shaped fixture
 derives its initial total from fixed geometry instead.
 
-The new option is a source-level guard, not a new Spark experiment. It does not
-make a half-executed optimizer step transactional, authenticate arbitrary
-checkpoint edits, enforce a physical-position quota or establish story quality.
-The [adjacent evidence lab](../labs/06-reading-a-pretraining-run.md#5-can-a-budget-leave-unused-targets)
-lets you inspect the boundary without loading a corpus or model.
+This CPU result verifies refusal at an update boundary, not transactionality
+inside a partly executed optimizer step or improved stories. [Appendix D](../appendices/d-reproduction-and-environments.md#budget-boundaries-and-spent-work)
+records the operational controls; the [evidence lab](../labs/06-reading-a-pretraining-run.md)
+lets you inspect the mechanism without a model or corpus.
 
 Shuffling is also state. Each window appears once in an epoch, but order matters
 because the parameters and AdamW moments change between updates. Our stream
@@ -389,16 +397,20 @@ activations do not automatically halve all persistent memory categories.
 
 On Spark, distinguish GPU allocated/reserved/peak measurements from host
 `MemAvailable` in the unified-memory environment. Retain the platform's
-20–25 GiB host reserve and verify it during an approved run. A parameter-count
+20–25 GiB host reserve and verify it during a bounded run. A parameter-count
 estimate alone does not establish that a model fits safely.
 
 Measure throughput with a named denominator: processed positions/s and valid
 targets/s answer different questions. State whether timing includes compilation,
-warmup, validation, checkpointing and data loading. Accelerator timing also
+warmup, development, checkpointing and data loading. Accelerator timing also
 requires appropriate synchronization. The CPU smoke verification is not a
 GPU throughput benchmark; section 6.15 separately reports actual Spark timings.
 
-## 6.11 Validation measures a fixed prediction problem
+## 6.11 Development measures a fixed prediction problem
+
+Historical code and reports sometimes call this split `validation`. In this
+book it is a development set when repeatedly used to inspect or select recipes;
+the original field names and measured values retain their historical identity.
 
 Held-out loss should use a fixed split, tokenizer, alignment, context policy,
 mask and reduction. Sum the valid targets' NLL across the corpus, then divide
@@ -418,7 +430,7 @@ Neither curve must decrease monotonically. A tiny finite loss can coexist with
 data leakage; a nonzero loss can coexist with successful learning of uncertainty,
 as Chapter 3 established.
 
-Validation used repeatedly to select recipes is itself part of development.
+Development used repeatedly to select recipes is itself part of development.
 Preserve a separate final test contract when making an eventual generalization
 claim. Samples add qualitative evidence but do not replace fixed quantitative
 evaluation or justify selecting only favorable generations.
@@ -463,8 +475,8 @@ of silently extending this lab's exact-equality claim.
 Imagine completing a nine-target update and saving it. The next eight-target
 update fails after entering computation. Restoring the saved weights makes the
 eight targets available for another attempt, but does not erase the failed
-attempt's cost. If the retry succeeds, completed training exposure is17 targets;
-the three admitted groups reserved25 target places. These are different answers
+attempt's cost. If the retry succeeds, completed training exposure is 17 targets;
+the three admitted groups reserved 25 target places. These are different answers
 to different questions, not inconsistent measurements.
 
 For a vector of declared logical-work units, let $\mathbf{c}_j$ be the whole
@@ -483,39 +495,23 @@ calls and known partial work separately. Early EOS may use less than the reserve
 generation ceiling; that observation does not refund the admitted operation.
 These logical counters are not measured FLOPs or a hard memory/disk quota.
 
-The checkpoint therefore freezes the numerical state and attests one prefix of
-a separate persistent work journal. Recovery binds that prefix to the same
-physical journal and retains its later reservations. A small independently
-retained receipt must supply this expectation before the tensor payload is read;
-otherwise the reader would need to do work to discover whether it has permission
-to do that work. Changing the output directory cannot refill the allowance.
-
-Refusing a whole update before computation leaves the original stream, gradients,
-LR, mode and weights unchanged. Failure after computation starts is different:
-an optimizer may have changed only some parameters. Mark that session unusable
-and restore a fresh session from a previously completed boundary; never save the
-half-mutated state as a completed update. Repeated evaluation, sampling and
-activation panels also need their own reservations. They remain observations,
-not successful training exposure.
-
-The [story work specification](../../experiments/specs/2026-10-05-story-persistent-work.md)
-defines the local source boundary without changing the prediction objective.
-The existing Day9 clocks notebook adds a small actual-runner companion to this
-thought experiment. Its tiny CPU checks do not extend the September GPU recovery
-claim, establish coherence, or cover data preparation, byte I/O, serialization,
-backward recomputation, all outputs or physical containment. The shared
-snapshot/I/O9 system used by later chapters is a separate interface, not an
-automatic migration of the historical story checkpoints.
+Refusal before computation and failure during computation are different.
+The former preserves the numerical state and data stream. After a partly
+executed optimizer step, restore a fresh session from the last completed
+boundary; never treat half-mutated weights as a completed update. A restored
+checkpoint does not refund the work of later failed attempts. [Appendix D](../appendices/d-reproduction-and-environments.md#budget-boundaries-and-spent-work)
+retains journal binding and snapshot implementation details. The local CPU
+evidence does not extend the historical GPU replay to another backend.
 
 ## 6.13 From understanding to a bounded experiment
 
 The [Day 8 specification](../../experiments/specs/2026-09-09-day8-bounded-pretraining.md)
 fixed an executable CPU control and separated it from a later Spark candidate.
 It names the data, model, token budget, optimizer, schedule, clipping, precision,
-validation, recovery, time boundary and failure criteria. Its tiny run establishes
+development, recovery, time boundary and failure criteria. Its tiny run establishes
 mechanical evidence. At that stage the GPU candidate still needed a real corpus
-decision, profiling, safety measurements and explicit execution approval.
-Sections 6.14–6.21 describe the subsequent authorized runs and their results.
+decision, profiling, safety measurements and an explicit execution boundary.
+Sections 6.14–6.21 describe the subsequent measured runs and their results.
 
 Before Day 9, be able to explain why each field is needed. A successful process
 exit is necessary evidence of completion, not sufficient evidence that every
@@ -570,7 +566,7 @@ training documents matching held-out content under that policy. This establishes
 a specific exact-match safeguard, not freedom from paraphrases or near-duplicate
 contamination.
 
-An earlier preparation attempt rejected the validation file's undelimited final
+An earlier preparation attempt rejected the development file's undelimited final
 story. The successful preparation verified the complete raw files against their
 pinned hashes before accepting end-of-file as the final boundary. This is an
 example of repairing an ingestion assumption without quietly accepting an
@@ -578,7 +574,7 @@ unverified partial download. The failed attempt remains in the launch record.
 
 At every observation, evaluation used the same seeded selection of 512 held-out
 windows: 107,264 valid targets. It did **not** evaluate the entire prepared
-validation split. Repeated inspection makes this a development measurement, not
+development split. Repeated inspection makes this a development measurement, not
 an untouched final test.
 
 ## 6.15 What did the budget actually buy?
@@ -674,7 +670,7 @@ not repair the earlier inconsistency.
 
 The final temperature-0.8 sample begins “The rabbit was very minding his long
 body” and later says the rabbit “decided to weather.” Both modes must remain in
-the evidence. The greedy sample's stronger opening does not authorize hiding
+the evidence. The greedy sample's stronger opening does not justify hiding
 the malformed sampled language.
 
 A careful conclusion is therefore two-part: fixed-development prediction
@@ -714,7 +710,7 @@ reliable behavior, not whether a locally computed loss forbids coherence.
 
 ## 6.18 Diagnosis: does repetition mean overfitting?
 
-During interactive use, the learner observed repeated “big and scary”
+During interactive use, interactive inspection revealed repeated “big and scary”
 descriptions and suspected overfitting. This is a valuable diagnostic question
 because several mechanisms can produce the same surface symptom.
 
@@ -729,7 +725,7 @@ because several mechanisms can produce the same surface symptom.
 Four backend requests with the same assumed opening and different
 temperature/seed combinations produced four different continuations. This
 establishes that those controls affected the backend in those probes. It does
-not reproduce the learner's unknown exact browser inputs or prove the browser
+not reproduce the unknown exact browser inputs or prove the browser
 submitted every intended change.
 
 The mean online training loss over the last 500 updates was 1.661964; the final
@@ -749,7 +745,7 @@ with cause not uniquely identified**. Do not treat dropout, repetition
 penalties or more training as established repairs before testing the hypothesis
 each intervention is supposed to address. The
 [diagnostic record](../../learning_artifacts/day-09-pretraining-run-and-diagnosis/repetition-versus-overfitting.md)
-separates the learner's observation, actual probes and unresolved questions.
+separates the initial observation, actual probes and unresolved questions.
 
 ## 6.19 Sampling controls are experimental controls
 
@@ -782,120 +778,91 @@ comparisons unless that difference is accounted for.
 
 ## 6.20 From a finished process to a defensible conclusion
 
-A monitoring interface is useful because it brings evidence together. Its
-appearance is not evidence itself. Distinguish at least four questions:
+The historical September run completed 14,000 updates with finite measurements
+and the recorded memory safeguards. Fixed-development NLL fell from 10.9049 to
+1.6743. Its inspected generations still contain repetition and inconsistent
+events. Process completion, better likelihood and coherent stories therefore
+remain three separate claims; the historical baseline had no systematic blinded
+coherence measurement.
 
-1. **Did the computation finish?** Check the actual process status and completed
-   update counter. Here, all 14,000 updates completed and the child exited zero.
-2. **Did it remain within the recorded safeguards?** Inspect the memory guard,
-   finite measurements and safety record. Here, the sampled reserve stayed above
-   its threshold and no guard abort was recorded.
-3. **Did prediction improve?** Compare the same development targets. Here, their
-   mean NLL fell from 10.9049 to 1.6743.
-4. **Did the desired behavior become reliable?** Evaluate complete stories
-   against explicit criteria. Here, inspected outputs retain meaningful errors,
-   and a systematic coherence evaluation is still missing.
+Recovery is another distinct claim. The preflight smoke demonstrated exact
+next-update replay in its tested environment. A saved final checkpoint does
+not itself establish another interruption-and-resume test at that state.
 
-Recovery is a separate claim again. The preflight smoke test demonstrated exact
-next-update replay in its tested environment. Having saved the final large-run
-checkpoint does not by itself demonstrate a new interruption-and-resume test at
-that final state.
+The [Day 9 references](../../notebooks/day-09/README.md) plot measured clocks/loss,
+test document-isolated packing and inspect stored stories. The
+[evidence lab](../labs/06-reading-a-pretraining-run.md) reads compact saved
+measurements without starting training. The follow-up below uses fresh paired
+weights, rather than treating the September final model as its control.
 
-The [evidence-reading lab](../labs/06-reading-a-pretraining-run.md) makes this
-analysis reproducible from compact JSON without starting training, loading model
-weights, or running a dashboard. The Day8 notebooks remain the mechanism
-companions for accumulation, optimization and recovery. The
-[three Day9 sessions](../../notebooks/day-09/README.md) now plot measured clocks
-and loss, verify document-isolated packing boundaries, and inspect complete
-stored stories with decoding settings visible. These CPU references complement
-the standard-library evidence lab.
+## 6.21 The same exposure can produce different early trajectories
 
-The production follow-up now freezes twelve publication openings separately
-from the three repeatedly inspected development prompts. A
-[bounded audit of the actual pinned corpus](../../experiments/reports/2026-10-05-story-panel-audit.md)
-reconstructs the original retained splits and finds no exact whole-story,
-prefix or substring matches for those twelve openings. A declared lexical
-opening-overlap check stays below its threshold; the historical rabbit
-development prompt has a retained near-match. These observations inspect
-specific overlap definitions, not all semantic contamination or memorization.
-They do not score stories or demonstrate a changed training recipe.
+**Reader prediction:** halve both peak and floor learning rates while preserving
+the seed, data order, batch, windows, masks and schedule horizon. At update 400,
+must a lower fixed-target NLL imply more coherent stories or more natural EOS?
+Separate those predictions before reading the observations.
 
-At that historical baseline boundary, the next step was to apply the frozen
-story-evaluation contract and defend one controlled training comparison.
-Section6.21 now supplies a fresh matched early learning-rate intervention,
-actual continuations and separate AI reviews; the learner's own defense remains
-unassessed. Chapter7's blinded consumer still distinguishes its authored empty
-controls from those actual reviews. The brief preflight batch-size
-profiles are systems measurements, not a demonstrated improvement in story
-learning. Sampling probes also do not satisfy the roadmap's requested trained
-comparison in scale, data or recipe. The later trained intervention supplies
-that comparison's first400 boundary, not its full scheduled horizon or broad
-storytelling competence. Writing the chapter does not demonstrate mastery.
-
-## 6.21 A completed tranche and an unfinished schedule
-
-The follow-up now runs a matched learning-rate intervention from fresh weights:
-original peak/floor rates versus half of both, with the same seed, data order,
-windows, masks and effective batch. Its
-[first-tranche report](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
-records actual execution, the measured publication panel and its missing later
-checkpoints.
-
-The requested stop is400 updates, but the learning-rate schedule still has its
-original14,000-update horizon and200-update warmup. These are different clocks.
-Changing the horizon to400 would accelerate decay and create a different
-intervention. Keeping the horizon fixed lets the two arms compare the same early
-part of their intended learning trajectories without claiming final convergence.
-
-Both children exited zero after400 updates,1,389,548 valid training targets
-and6,553,600 processed training positions each. Each completion record says both
-`requested_stop_reached=true` and `schedule_complete=false`. There is no
-contradiction: it completed the requested experiment boundary, not the whole
-training schedule. Their separate acceptance receipts and same-exposure curves
-now exist. A control receipt cannot supply another arm's results, and lower
-batch loss cannot supply a rubric score.
-
-The follow-up measures three different outcomes rather than treating them as
-interchangeable:
+The [retained first-400 report](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
+compares fresh control and half-rate weights, not continuations of the historical
+September baseline. Both use seed 909, context 1,024 and effective batch 16.
+Control peak/floor rates are 0.0003/0.00003; the other arm halves both. Warmup
+remains 200 updates and decay retains its 14,000-update horizon. Ending the
+measurement at 400 does not compress that schedule into 400 updates.
 
 | Update-400 observation | Control | Half learning rate |
 |---|---:|---:|
-| Fixed development NLL |3.388772|3.652813|
-| Natural EOS stops in 48 continuations |45|25|
-| Two-reader mean ending score, on a 0–2 scale |0.020833|0|
+| Completed optimizer updates | 400 | 400 |
+| Successful valid training targets | 1,389,548 | 1,389,548 |
+| Processed training positions | 6,553,600 | 6,553,600 |
+| Fixed development NLL | 3.388772 | 3.652813 |
+| Natural EOS stops, out of 48 continuations | 45 | 25 |
+| Token-cap stops, out of 48 continuations | 3 | 23 |
 
-The NLL compares the same 64 development windows and 13,132 valid targets;
-the separate 64 training-source windows contain 13,285 valid targets. Neither
-measure covers its whole split. Control predicts this fixed development slice
-better at update 400, but 45 EOS stops do not mean 45 coherent endings. EOS
-answers “did generation terminate?”; the ending rubric asks whether the events
-resolve meaningfully. Publication uses automatic causal SDPA with BF16 forward
-autocast, not the deterministic MATH-only entry used for training/recovery.
+The NLL uses the same 64 development windows and 13,132 valid targets. The
+separate 64 training-source windows contain 13,285 targets; neither measurement
+is whole-split loss. The requested stop was reached, while the 14,000-update
+schedule remains unfinished.
 
-Four publication children produce 192 actual continuations: twelve openings
-times four decoding recipes at each available initialization/update-400
-checkpoint. Two fresh, separately blinded AI instances score all 192, with
-56 candidate-level disagreements retained and averaged by the declared policy.
-These are actual AI judgments, not human consensus. The rubric remains
-five-dimensional. Initialization receives a repetition score of 1.5 but zero
-on grammar, entity consistency, causal continuity and ending: avoiding a loop
-is not the same as writing a story. Control's update-400 causal continuity mean
-is 0.197917 versus half-rate's 0.093750, while half-rate scores higher on freedom
-from repetition. Neither is established as a reliable coherent storyteller.
+![Measured batch NLL against valid-target exposure and learning rate against update](../../experiments/reports/native-story-first400-figures/learning-curves.png)
 
-Paired percentile intervals resample twelve source openings, carrying their
-four decoding settings together, with 800 draws and seed 1010. They describe
-this small one-greedy/three-sampled mixture, not 48 independent source stories,
-between-training-seed uncertainty or a general ranking of decoding strategies.
-The raw [ratings report](../../experiments/reports/native-story-publication-20261005-01/ratings-evaluation-01/report.json)
-retains each dimension, recipe and reader rather than hiding them in one score.
+The left panel aligns successful label exposure. The right shows the preserved
+warmup/decay horizon. Online batch loss uses changing weights and batches; it
+does not replace the fixed-checkpoint NLL table or a coherence instrument.
 
-Predetermined later checkpoints leave 288 of the original 480 cells missing.
-Missing quality is not zero quality, and a curve through available checkpoints
-is not a forecast for the rest. Even after a matched early comparison exists, it cannot
-identify the better final model or estimate between-training-seed variability.
-The earlier September run remains a distinct baseline, not a substitute control
-for this fresh paired intervention.
+The example-selection rule below is the first source opening under greedy
+decoding at update 400 in each arm. These are shortened exact prefixes of the
+[retained continuations](../../experiments/reports/native-story-publication-20261005-01/records.jsonl):
+
+**Control, `control-update-000400-story-01-d0`:** `natural-eos`, 216 generated tokens.
+
+```text
+ She was very excited to see the sun. She saw a big, a big, a bird. She wanted to see what was. She saw a big, a bird. She saw a big, a bird. She was very happy. She wanted to help the bird.
+She saw a big, a bird. She saw a bird. She was sc
+[excerpt ends; full record retained]
+```
+
+**Half rate, `half-lr-update-000400-story-01-d0`:** `token-cap`, 256 generated tokens.
+
+```text
+ She was very excited to go to the park. She saw a big, a big, a little girl named Lily. She was very excited to go to the park. She saw a big, a little girl named Lily said, "I can't be a big, but I can't be a big, but you can be a big, so
+[excerpt ends; full record retained]
+```
+
+Control predicts the fixed slice better and more often chooses EOS, but the
+excerpts already show repeated fragments and unstable events. Chapter 7's
+[five-axis story instrument](07-evaluation-is-a-contract.md#717-story-coherence-needs-a-separate-rating-instrument)
+is the single home for the supplied rubric results. It keeps meaningful endings
+separate from EOS and preserves two AI readers' disagreements.
+
+Twelve openings and four decoding settings at initialization/update 400 produce
+192 actual continuations. Later checkpoints account for 288 missing cells of
+the planned 480; missing quality is not zero or a forecast. The publication
+forwards use BF16 autocast and automatic causal SDPA, separately from the
+deterministic MATH-only training/recovery entry. The paired intervals describe
+this small fixed recipe mixture, not between-training-seed variation or a
+general final-model ranking. Neither arm is established as a reliable coherent
+storyteller. [Appendix D](../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence)
+links the execution, corpus audit and retained measurement boundaries.
 
 ## Exercises
 
@@ -903,17 +870,17 @@ Use explanations and small interventions, not arithmetic speed. Adjacent
 notebook references and the [worked solutions](../solutions/06-pretraining-as-a-controlled-system.md)
 provide complete reasoning.
 
-1. Why can document-level splitting still leave validation contamination?
+1. Why can document-level splitting still leave development contamination?
 2. If shorter windows preserve the target count, what learning condition changes?
 3. Explain why EOS, a loss mask, and an attention boundary are not interchangeable.
-4. What does $SbTAR$ count when some labels are ignored? What does it not count?
+4. What does $SbnAR$ count when some labels are ignored? What does it not count?
 5. Derive the contribution of a short microbatch to a valid-token mean objective.
 6. Why can AdamW move a parameter against the newest gradient's suggested direction?
 7. What changes when accumulation doubles but the update-based schedule stays fixed?
 8. Why clip after accumulation, and why is that not a guarantee against NaNs?
 9. Explain how BF16 can avoid FP16 overflow yet lose more detail near 1.
 10. Why does a 16-bytes-per-parameter ledger not prove that a run fits on Spark?
-11. How would you test that changing validation batch size preserves the metric?
+11. How would you test that changing development batch size preserves the metric?
 12. Design two separate recovery failures: same data but missing moments; same
     saved weights but missing data position. What observations distinguish them?
 
@@ -930,17 +897,17 @@ provide complete reasoning.
     Which success claims does EOS support, and which does it leave unanswered?
 18. Design one next experiment with a stated hypothesis, controlled variables,
     budget, measurements and failure condition. Distinguish proposing it from
-    having authorization or evidence to run it.
+    establishing its execution or outcome.
 19. Why can a valid-target cap leave a positive unused allowance? What state
     must remain unchanged when an accumulation group is refused?
 20. After restoring a nine-target checkpoint and retrying a failed eight-target
-    update, why can successful exposure be17 while reserved work is25? What
+    update, why can successful exposure be 17 while reserved work is 25? What
     should happen if the next complete attempt does not fit, or if AdamW fails
     after changing only some parameters?
-21. A child exits zero at its requested400-update boundary while reporting
+21. A child exits zero at its requested 400-update boundary while reporting
     `schedule_complete=false`. Is the experiment unsuccessful? What changes if
-    its learning-rate horizon was silently shortened from14,000 to400? Which
-    claims remain unsupported even after both matched arms finish400 updates?
+    its learning-rate horizon was silently shortened from 14,000 to 400? Which
+    claims remain unsupported even after both matched arms finish 400 updates?
 
 ## What follows
 

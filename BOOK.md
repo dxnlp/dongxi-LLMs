@@ -29,6 +29,14 @@ and from learner mastery.
 
 ## Reference comparison and improvement goal
 
+The [editorial implementation plan](docs/BOOK_EDITORIAL_PLAN.md), requested
+2026-10-10, improves the completed draft's narrative, evidence presentation,
+laboratory routes and notation. Its [implementation record](experiments/reports/2026-10-10-book-editorial-pass.md)
+keeps each phase's verification separate from the earlier course-upgrade receipts.
+All six editorial phases are verified: 1,558 local tests and all 76 fresh
+notebooks pass, with original code and historical evidence preserved. The
+chapter/day route and learner's Day 9 position remain unchanged.
+
 The [pinned RLHF Book and Reasoning From Scratch audit](docs/REFERENCE_REPOSITORY_AUDIT.md)
 identified the missing bridge between numerical mechanisms and realistic
 post-training evidence. The [eighteen-package plan](docs/COURSE_IMPROVEMENT_PLAN.md)

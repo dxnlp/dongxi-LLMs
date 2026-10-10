@@ -5,6 +5,7 @@ Runnable references immediately follow predictions in the [notebooks](../labs/10
 
 ## 1. Soft-target gradients
 
+For the fixed prompt, $r_a=r_\phi(x,a)$ and $r_b=r_\phi(x,b)$.
 Writing $L=\mathrm{softplus}(r_a-r_b)-q(r_a-r_b)$ gives
 $\partial L/\partial r_a=\sigma(r_a-r_b)-q$ and the opposite derivative
 for $r_b$. When the predicted probability is below the observed preference

@@ -6,21 +6,28 @@ The main chapters supply motivation, examples and controlled experiments.
 ## B.1 Vectors, matrices and batches
 
 A row-vector convention keeps the decoder equations close to tensor code.
-States $X\in\mathbb{R}^{B\times T\times D}$ multiplied by a projection
-$W\in\mathbb{R}^{D\times V}$ produce logits of shape $[B,T,V]$.
-PyTorch's `nn.Linear(D,V)` stores its weight as $[V,D]$ and applies its transpose.
+States $X\in\mathbb{R}^{B\times n\times D}$ multiply the transpose of the stored
+head $W_{\mathrm{out}}\in\mathbb{R}^{V\times D}$ to produce logits of shape
+$[B,n,V]$: $Z=XW_{\mathrm{out}}^\top$.
+PyTorch's `nn.Linear(D,V)` uses exactly that stored $[V,D]$ layout.
+An equivalent mathematical projection of shape $[D,V]$ is
+$W_{\mathrm{out}}^\top$, rather than a differently stored parameter.
 Confusing the stored layout with the mathematical layout is a common source
 of shape mistakes.
 
 A reshape only changes how entries are indexed; a permutation changes axis
-order. Splitting $[B,T,Hd]$ into $[B,T,H,d]$ and transposing gives
-$[B,H,T,d]$. The last two axes of the key tensor are transposed for the query-key
+order. Splitting $[B,n,Hd_h]$ into $[B,n,H,d_h]$ and transposing gives
+$[B,H,n,d_h]$. The last two axes of the key tensor are transposed for the query-key
 matrix product. A contiguous copy may be required before another reshape.
 
 Broadcasting supplies omitted leading axes, but does not certify their meaning.
-A causal $[T,T]$ mask can broadcast across batch and head dimensions. A completion
-$[B,T]$ mask cannot be applied to vocabulary logits without an explicit expanded
+A causal $[n,n]$ mask can broadcast across batch and head dimensions. A completion
+$[B,n]$ mask cannot be applied to vocabulary logits without an explicit expanded
 axis or a loss reduction. Inspect the semantic axis as well as the size.
+Legacy code uses `T` for $n$ and `d`/`d_k` for $d_h$; attention values use
+$V_{\mathrm{val}}$, while $V$ remains vocabulary size. The complete shared
+[symbol table](../front-matter/notation.md) also separates temperature,
+duration, reward sources and objective coefficients.
 
 ## B.2 Log probabilities and objective reduction
 
@@ -49,7 +56,7 @@ objectives unless explicitly designed and justified.
 ## B.3 Gradients and optimizer updates
 
 A gradient measures local loss sensitivity. For $L=\sum_j x_j$, each partial
-derivative is1 because changing one coordinate by a small amount changes the
+derivative is 1 because changing one coordinate by a small amount changes the
 sum by that same amount. For $L=x^2$, the derivative is $2x$; it depends on the
 current parameter value.
 

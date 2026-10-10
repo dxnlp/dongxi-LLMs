@@ -1,8 +1,18 @@
 # 7. Evaluation Is a Contract
 
-A model continues a story without spelling errors, yet changes the main character's name halfway through. Another model has lower validation loss but repeatedly returns a paragraph when the user asks for one word. Which is better? The question has no answer until we name the work we want the model to do, the population of inputs, and the rules for judging its outputs.
+A model continues a story without spelling errors, yet changes the main character's name halfway through. Another model has lower development loss but repeatedly returns a paragraph when the user asks for one word. Which is better? The question has no answer until we name the work we want the model to do, the population of inputs, and the rules for judging its outputs.
 
-Chapter 6 established evidence about prediction on TinyStories. Its completed run improved fixed-development NLL, while inspected generations still contained repetition and inconsistencies. This chapter makes the next decision possible: define behavior precisely enough to compare before choosing another training intervention. Day 10 supplies four executable companions: [metrics](../../notebooks/day-10/01_metrics_and_contracts.ipynb), [uncertainty](../../notebooks/day-10/02_paired_uncertainty.ipynb), [slices and leakage](../../notebooks/day-10/03_slices_and_contamination.ipynb), and [mathematical grading and response replay](../../notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb). The [lab guide](../labs/07-evaluation-is-a-contract.md) and [worked answers](../solutions/07-evaluation-is-a-contract.md) extend the argument.
+Chapter 6 established evidence about prediction on TinyStories. Its completed run improved fixed-development NLL, while inspected generations still contained repetition and inconsistencies. This chapter makes the next decision possible: define behavior precisely enough to compare before choosing another training intervention. Day 10 begins with four executable companions: [metrics](../../notebooks/day-10/01_metrics_and_contracts.ipynb), [uncertainty](../../notebooks/day-10/02_paired_uncertainty.ipynb), [slices and leakage](../../notebooks/day-10/03_slices_and_contamination.ipynb), and [mathematical grading and response replay](../../notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb). The [lab guide](../labs/07-evaluation-is-a-contract.md) and [worked answers](../solutions/07-evaluation-is-a-contract.md) extend the argument.
+
+## What you should be able to explain
+
+- Define an input-to-score contract and separate correctness, format and stopping.
+- Compare aligned responses with source-group uncertainty and explicit coverage.
+- Distinguish oracle candidate availability from a deployable selection decision.
+- Defend a behavioral rubric without treating a phrase match or EOS as coherence.
+
+**Prerequisites:** sequence likelihood and sampling from Chapter 3; the training
+and held-out measurement boundaries from Chapter 6.
 
 ## 7.1 Name a capability that can fail
 
@@ -117,7 +127,7 @@ Leakage can enter through evaluation infrastructure too. A retrieved document ma
 
 The CPU route has four stages. First inspect accepted strings and verify metric edge cases. Then compare aligned fixture panels with paired uncertainty. Inspect slices and contamination, then replay complete responses through a frozen mathematical grader. Each notebook puts an explanation and runnable reference answer immediately after the prediction.
 
-For the campaign route, the [experiment specification](../../experiments/specs/2026-10-04-evaluation-and-sft-course.md) declares a fixed development suite and a separately frozen publication suite. The later [actual120-item publication comparison](../../experiments/reports/2026-10-05-native-sft400-comparison.md) measures unchanged Base, fresh full400 and merged LoRA400 under the same prompts and decoding. Those held-out values still use three shared training task templates; they do not establish transfer to arbitrary instructions. A distinct actual Base/short-SFT development replay supplies model events for the smaller mathematical/behavioral instrument in section7.16. Keep its15-item results separate from the120-item publication test. The original CPU report supplies evidence only for the metric, masking and optimization mechanisms.
+For the campaign route, the [experiment specification](../../experiments/specs/2026-10-04-evaluation-and-sft-course.md) declares a fixed development suite and a separately frozen publication suite. The later [actual 120-item publication comparison](../../experiments/reports/2026-10-05-native-sft400-comparison.md) measures unchanged Base, fresh full400 and merged LoRA400 under the same prompts and decoding. Those held-out values still use three shared training task templates; they do not establish transfer to arbitrary instructions. A distinct actual Base/short-SFT development replay supplies model events for the smaller mathematical/behavioral instrument in section 7.16. Keep its 15-item results separate from the 120-item publication test. The original CPU report supplies evidence only for the metric, masking and optimization mechanisms.
 
 Before training, answer: what observation would cause us to reject the recipe? A decline in held-out format validity might be unacceptable even if response NLL improves. A confidence interval that is too broad might justify collecting more evaluation items. A parser disagreement might justify improving the instrument before changing model weights.
 
@@ -129,6 +139,8 @@ number found anywhere can fail in the other direction: “Perhaps 1; perhaps 2�
 does not supply one unambiguous answer. A stronger instrument separates four
 questions: where is the claimed answer, is its expression supported, does it
 equal the reference, and does the response obey the required interface?
+
+### Supported equivalence and instrument coverage
 
 Our independent [bounded grader](../../src/dongxi_llms/reasoning_evaluation.py)
 extracts one balanced box or one explicit `Final answer:` line; without either,
@@ -160,6 +172,8 @@ them. The parser never calls `eval`, runs generated programs or asks an
 unbounded symbolic engine to simplify arbitrary text. The exact limits and
 [reviewed adversarial cases](../../fixtures/reasoning-evaluation/README.md)
 are part of its reproducible definition.
+
+### Correctness, format and termination
 
 Correctness and formatting also remain separate. Unsupported grammar does not
 automatically fail an unconstrained format criterion: the grader can lack
@@ -196,6 +210,8 @@ membership and JSON validity. The
 preserves those failures, an ambiguous answer, unsupported grammar and a
 simulated execution error. No model generation or token-cost measurement occurs.
 
+### Preserve the estimand when resampling groups
+
 Related items must remain paired and grouped. If source group $g$ contains
 $n_g$ aligned item/sample differences $d_{gj}$, a cluster-bootstrap draw
 resamples groups with replacement and computes
@@ -223,7 +239,7 @@ correctness flags. The reusable `candidate_view` returns generation metadata
 without those fields, even when passed a graded record. Selection uses the
 declared ranker or voting rule; evaluation happens afterward. The local generation
 adapter below connects the instrument to actual HF forward calls. Its later
-pretrained Base/short-SFT comparison is recorded separately in section7.16;
+pretrained Base/short-SFT comparison is recorded separately in section 7.16;
 authored response panels never become pretrained evidence retrospectively.
 
 ## 7.12 A model event must survive the trip to a score
@@ -237,6 +253,8 @@ weights load, the chosen tokenizer must match both the frozen interface and the
 one saved with the checkpoint. Equal vocabulary sizes cannot establish this.
 Actual local file digests identify bytes; a model's familiar name does not.
 
+### Bind likelihoods to the actual sampling rule
+
 Raw completion and chat evaluation serialize different inputs. Chat also records
 the explicit thinking-template keyword and verifies rendered-text tokenization
 against the template's direct tokenization. Passing `enable_thinking` is an
@@ -245,6 +263,8 @@ Greedy chooses a maximum logit; stochastic sampling uses the frozen temperature
 and top-k/top-p transformation. A greedy contract rejects sampling settings it
 would otherwise ignore. Each item's sample seed derives from its stable item ID
 and sample coordinate, not its position in the execution loop.
+
+### Retain the stopping action
 
 Every generated action remains in the token ledger, including a stopping token.
 The complete raw decode preserves special tokens. A separately declared
@@ -275,14 +295,12 @@ The adapter separates attempted from completed forwards and records wall time;
 offline grading consumes zero additional model scoring tokens. This is an
 evidence microscope, not an optimized KV-cache inference benchmark.
 
-Each invocation uses a new output directory with append-only, flushed records
-and progress events. An interruption leaves saved partial evidence, not a promise
-of exact resume. Input bytes are checked again after generation; mutations
-invalidate the invocation while retaining its outputs. The
-[bounded adapter report](../../experiments/reports/2026-10-04-reasoning-generation-adapter.md)
-verifies real CPU forward calls from an original tiny random HF model and separate
-scripted failure controls. That establishes an executable measurement path,
-not pretrained reasoning ability, independent human agreement or GPU readiness.
+An interrupted run can leave useful partial evidence without establishing
+exact resume. The [bounded adapter report](../../experiments/reports/2026-10-04-reasoning-generation-adapter.md)
+tests original random-model CPU forwards and scripted failure cases;
+[Appendix D](../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence)
+records its output and identity checks. These verify the measurement path,
+not pretrained reasoning or independent human agreement.
 
 ## 7.13 A correct candidate is not yet a correct decision
 
@@ -311,14 +329,16 @@ outrank a correct one.
 The [actual candidate lesson](../../notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb)
 connects this distinction to real causal forwards from the original tiny
 symbolic decoder. Three fixed seeds each supply an initial policy and a
-train-only fixed80-update policy. Eighteen original items cover training,
+train-only fixed 80-update policy. Eighteen original items cover training,
 held-out sources, their alias-template siblings and an unseen task family.
 Each policy genuinely samples eight EOS/0/1 paths per item, with immediate EOS,
 repeated numerals and caps allowed. Its English strings are descriptions, not
 model-parsed language; success here is not natural-language reasoning evidence.
 
+### Candidate supply and selector behavior
+
 First-attempt, majority, unique-answer-support and likelihood selectors reuse
-the same prefixes1,2,4,8. Unsupported or malformed outputs cannot vote, but
+the same prefixes 1,2,4,8. Unsupported or malformed outputs cannot vote, but
 remain in attempt and cost denominators. Independent draws with identical
 strings still count as repeated votes; copying a stored record is not a new
 draw. Ties choose the earliest eligible sample. Counting each distinct answer
@@ -328,14 +348,16 @@ The constructed longest-output control is also deliberately weak: every
 eligible answer has one numeral and EOS, so length cannot distinguish them.
 It supplies no measured evidence of verbosity-ranking damage.
 
+### Likelihood is a ranker, not a truth label
+
 The likelihood ranker uses the mean conditional action log probability,
 including EOS:
 
 $$
-r(c)=\frac{1}{T_c}\sum_{t=1}^{T_c}\log p_\theta(c_t\mid x,c_{<t}).
+s_{\mathrm{lik}}(c)=\frac{1}{n_c}\sum_{t=1}^{n_c}\log p_\theta(c_t\mid x,c_{<t}).
 $$
 
-Here $T_c$ counts generated actions including the chosen EOS. The fitted policy
+Here $n_c$ counts generated actions including the chosen EOS. The fitted policy
 supplies learned probabilities, not a separately trained correctness judge.
 Length normalization addresses one scoring convention; it does not turn
 likelihood into truth. The strict candidate view removes gold fields even when
@@ -343,11 +365,11 @@ the evaluator keeps them in a separate ledger. The selector's code and input
 contract, not a reassuring name, enforce that separation.
 
 In the [measured CPU panel](../../experiments/reports/2026-10-04-inference-selection.md),
-seed10052's training item `train-11` produces answers1,0,0,1,1,1,1,0, while the
-reference is0. Availability is1 and majority success is0. Fitting also increases
+seed 10052's training item `train-11` produces answers 1,0,0,1,1,1,1,0, while the
+reference is 0. Availability is 1 and majority success is 0. Fitting also increases
 within-pool raw repetition, while unseen-family majority success at eight
-attempts is0.50,0.00,0.00 for the three final policies. The four-item family slice
-is imbalanced: a constructed constant1 reference control scores0.75. No learned
+attempts is 0.50,0.00,0.00 for the three final policies. The four-item family slice
+is imbalanced: a constructed constant 1 reference control scores 0.75. No learned
 reasoning or general inference-scaling benefit follows from these results.
 
 ## 7.14 Failed attempts belong in the compute budget
@@ -357,10 +379,10 @@ action; a repeated-numeral cap can consume three and still supply no usable
 answer. Prompt processing and path scoring consume additional model work.
 Keep generated actions, rescored actions and forward input positions distinct.
 With an uncached loop, three actions after a four-token prompt require forwards
-over4,5,6 positions. Their sum15 is not the output-token count3, and neither is
+over 4,5,6 positions. Their sum 15 is not the output-token count 3, and neither is
 a FLOP estimate.
 
-The lesson records all864 candidates and1736 generated actions. Its token-cap
+The lesson records all 864 candidates and 1736 generated actions. Its token-cap
 controls accept only complete attempts that fit the remaining cap. If the next
 attempt crosses the boundary, that generated attempt is charged but rejected
 from selection, and replay stops. It cannot skip ahead for a cheaper correct
@@ -369,18 +391,16 @@ exact token-level interruption policy. Equal caps can yield unequal accepted
 attempts, actual actions, prompt positions and time.
 
 For one final policy, majority success on the fixed full panel declines from
-0.388889 at cap6 to0.333333 at cap12, while oracle availability stays0.388889.
+0.388889 at cap 6 to 0.333333 at cap 12, while oracle availability stays 0.388889.
 Extra budget changes votes rather than guaranteeing a better decision. These
 descriptive scores include training items and grouped siblings; a population
 capability claim would require a larger independent final suite.
 
-Per-attempt first-forward, later decode, path-rescoring and host wall times are
-measured separately. The notebook's accuracy–token–time plots sum observed
-attempt costs plus retrospective selector time. They are not optimized adaptive
-service measurements. Every selector is charged the protocol's mandatory
-likelihood-rescoring work, although a production first-answer implementation
-could omit it. Replay records lacking measured timing must report it unknown,
-not zero or an estimate from character count.
+The accuracy–token–time plots use observed attempt costs plus retrospective
+selector time, rather than an adaptive production service. Mandatory rescoring
+is charged to every selector under this protocol. [Appendix D](../appendices/d-reproduction-and-environments.md#budget-boundaries-and-spent-work)
+defines these timers and counters. Unknown timing remains unknown, rather than
+zero or an estimate from characters.
 
 Finally, measure diversity and errors rather than assuming fresh seeds make
 all mistakes unrelated. Record distinct answers and strings, wrong-answer
@@ -420,10 +440,14 @@ look like a complete planned panel, and unavailable measurements must not be
 printed as zero. A paired interval requires aligned item/sample coverage and
 the declared source groups. A model card may link that analysis, but cannot
 repair unpaired data. The [lab](../labs/07-evaluation-is-a-contract.md) shows the
-export route; final capability and cost defense waits for the actual approved
-experiments.
+export route. Capability and cost claims require the corresponding actual
+experiment records, rather than the export alone.
 
 ## 7.16 A real response can pass a weak rubric and still fail the user
+
+**Reader prediction:** a response contains both phrases required by an
+automatic rubric, repeats corrupted text and ends mid-sentence. Should the
+phrase score, whole-response usefulness and natural termination agree?
 
 The [actual development replay](../../experiments/reports/2026-10-05-pretrained-evaluation-replay.md)
 uses the unchanged fifteen-item, fourteen-source-group instrument with two
@@ -433,14 +457,21 @@ twenty-update full-SFT profile. One fixed template, greedy decoding and a
 stop reason and complete text. Offline grading uses the original rules,
 not rules adjusted to favor the observed responses.
 
-Base receives0/15 automatic passes; short SFT receives1/15. Both have12/15
-format-valid records,0/15 natural stops and15/15 truncations. Their paired
-source-group interval for the automatic score difference is[0,0.214286].
-These are real model measurements, but a small authored development population
+| Frozen fifteen-item development observation | Base | Short SFT, 20 updates |
+|---|---:|---:|
+| Automatic passes | 0/15 | 1/15 |
+| Format-valid records | 12/15 | 12/15 |
+| Natural stops | 0/15 | 0/15 |
+| Truncated responses | 15/15 | 15/15 |
+
+The paired source-group interval for the automatic-score difference is
+[0, 0.214286]. These are real model measurements, but a small authored development population
 does not become a general reasoning benchmark because its outputs are genuine.
 Nor does a successful generation-process exit mean that its answers succeeded.
-Most instrument items have an unconstrained `any` format policy, so12/15
+Most instrument items have an unconstrained `any` format policy, so 12/15
 format-valid records are not twelve clean or helpful answers.
+
+### Read the proxy-success case
 
 Inspect the SFT `benign-a` answer. It includes the rubric's `terminate` and
 `task manager` phrases, but repeats `.nasa` fragments and ends mid-sentence.
@@ -456,23 +487,25 @@ named next evaluation contract, not a silent repair of this comparison.
 Likewise, the parser's `UNSUPPORTED` status reports its own bounded grammar;
 it cannot by itself diagnose the model's mathematical knowledge.
 
-The two panels cost1,920 generated actions and94,656 full-prefix forward
+The two panels cost 1,920 generated actions and 94,656 full-prefix forward
 positions. These are separate units because this transparent adapter has no
-KV cache. Both externally supervised processes exit0; every answer still
+KV cache. Both externally supervised processes exit 0; every answer still
 reaches its output cap. The readable card indexes the raw evidence rather
 than certifying training genealogy, independent human agreement or safety.
-This instrument case and Chapter9's lower-NLL/failed-generation case connect
+This instrument case and Chapter 9's lower-NLL/failed-generation case connect
 measurement choices to the next training decision without inventing a quality
-gain, using the publication test or advancing the learner's day.
+gain, using the publication test or claiming broader capability.
 
 ## 7.17 Story coherence needs a separate rating instrument
 
 A copy/extraction score cannot answer whether a story preserves its characters,
 causal links and ending. The original campaign therefore freezes twelve story
-openings, five independent0–2 rubric dimensions and four decoding recipes.
-Greedy and three seeded temperature0.8 continuations supply repeated views of
+openings, five independent 0–2 rubric dimensions and four decoding recipes.
+Greedy and three seeded temperature 0.8 continuations supply repeated views of
 an opening, not four independent opening populations. Predetermined checkpoints
 keep an attractive story from choosing its own comparison point.
+
+### Rate and pair the complete delivered response
 
 The [story-rating consumer](../../src/dongxi_llms/story_rubric.py) now turns that
 contract into two artifacts. Reviewers receive a shuffled anonymous packet
@@ -486,14 +519,14 @@ successful human blinding.
 For each continuation, retain grammar, entity/object consistency, causal
 continuity, repetition and ending separately. A readable story can contradict
 an object's location; a consistent story can still loop without resolving its
-setup. An output stopped by a256-token cap is the actual incomplete response
+setup. An output stopped by a 256-token cap is the actual incomplete response
 being rated. Do not silently discard it or invent its ending. Natural EOS and
 narrative resolution remain different measurements.
 
 Two ratings can disagree. Preserve both and apply only the adjudication policy
 declared before review. A mean score is a declared summary, not evidence of
 agreement. Missing responses, abstentions and absent reviews remain visible
-in coverage; a missing checkpoint does not receive0 or a flattering inferred
+in coverage; a missing checkpoint does not receive 0 or a flattering inferred
 score. Reject changed packet hashes, unknown/duplicate IDs and invalid rubric
 values before computing any comparison.
 
@@ -516,15 +549,15 @@ cannot prove all semantic contamination absent. The frozen publication panel
 must not choose learning rate, decoder or checkpoint. Implementing this
 instrument does not fabricate a trained comparison.
 
-The [actual first400 comparison](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
+The [actual first 400 comparison](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
 now supplies that separate evidence. Two fresh anonymous AI instances each read
-all192 continuations from the four available checkpoints. They received only
+all 192 continuations from the four available checkpoints. They received only
 the public packet and rubric, not the arm codebook or one another's judgments.
-The frozen two-rater mean preserves56 continuations with at least one axis
+The frozen two-rater mean preserves 56 continuations with at least one axis
 disagreement; neither reader abstained. Separate instances do not establish
 independent underlying models, human agreement or perfectly successful blinding.
 
-| Observed at update400 | Control | Half learning rate |
+| Observed at update 400 | Control | Half learning rate |
 |---|---:|---:|
 | Grammar mean,0–2 |0.0729|0.0000|
 | Entity/object consistency mean,0–2 |0.2604|0.1458|
@@ -533,21 +566,21 @@ independent underlying models, human agreement or perfectly successful blinding.
 | Narrative ending mean,0–2 |0.0208|0.0000|
 | Natural EOS |45/48|25/48|
 
-Each mean uses48 continuations and two supplied judgments, not96 independent
+Each mean uses 48 continuations and two supplied judgments, not 96 independent
 stories. Both models remain poor by this rubric despite their lower NLL and
 many natural stops. The half-rate arm has a slightly higher mean repetition
 score but lower means on the other axes; no single overall winner is defined.
-The initial random checkpoints receive repetition1.5 while grammar/continuity
+The initial random checkpoints receive repetition 1.5 while grammar/continuity
 are zero: absence of repetitive loops is not competence.
 
 The [retained rating report](../../experiments/reports/native-story-publication-20261005-01/ratings-evaluation-01/report.json)
-keeps both raw ratings, recipe slices and the frozen800-draw seed1010 paired
+keeps both raw ratings, recipe slices and the frozen 800-draw seed 1010 paired
 resampling. It carries four recipes together within each of twelve source
 openings. Its intervals describe these supplied ratings and sampled openings,
 not training-seed variability or a general population of human judgments.
-The288 cells at later checkpoints remain missing, with null scores and
+The 288 cells at later checkpoints remain missing, with null scores and
 incomplete paired comparisons. Completing this bounded comparison does not
-complete the original14,000-update training schedule.
+complete the original 14,000-update training schedule.
 
 ## 7.18 Exercises and transition
 
@@ -571,8 +604,8 @@ complete the original14,000-update training schedule.
 18. Explain how eight independently sampled duplicate strings differ from eight copies of one response record. What changes when each distinct answer receives one vote?
 19. A generated three-action candidate exceeds a token budget with only two actions remaining. State the accepted pool, charged work and rejected-boundary rule without peeking ahead.
 20. Does a higher mean sequence log probability imply a more correct answer? Which additional measurements are needed before claiming inference-time compute helps?
-21. Export the authored response panel as an evaluation card. Which fields can the replay support, which remain unknown, and why would renaming the checkpoint to Qwen invalidate the claim?
+21. Which fields can an authored response-panel replay support, which remain unknown, and why would renaming its checkpoint to Qwen invalidate the claim? The [evidence-reading guide](../solutions/07-evaluation-is-a-contract.md#21-a-reproducible-summary-does-not-invent-a-model-event) supplies the original card-export task.
 22. In the real Base/short-SFT replay, a response earns a phrase-rubric pass but repeats artifacts and ends mid-sentence. Which measurements remain valid, what should independent review add, and why must the original score not be silently replaced?
-23. Two arms each have four continuations per opening and two raters. Which objects should be blinded, retained and paired? Run the empty-rating control and explain why neither a missing review nor an absent checkpoint should become a score.
+23. Two arms each have four continuations per opening and two raters. Which objects should be blinded, retained and paired? Why should neither a missing review nor an absent checkpoint become a score? The [evidence-reading guide](../solutions/07-evaluation-is-a-contract.md#23-blind-records-without-inventing-reviews) supplies the empty-rating control.
 
 [Worked solutions](../solutions/07-evaluation-is-a-contract.md) give reasoning, implementation and evidence limits. The next chapter turns behavioral requirements into training examples. Its data engineering choices must preserve this evaluation contract, because a well-executed optimizer can faithfully learn a badly specified interface.

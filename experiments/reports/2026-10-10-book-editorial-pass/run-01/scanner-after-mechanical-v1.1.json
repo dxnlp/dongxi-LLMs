@@ -1,0 +1,1254 @@
+{
+  "scanner_version": "1.1",
+  "scanner_sha256": "6708ec2991de34ee6b41fd2a8ad6e01ecf1f58bc62895b211423afddaabf651b",
+  "book_root": "/home/dongxi/dongxi_ai/Dongxi_LLMs/book",
+  "sections": [
+    "chapters",
+    "labs",
+    "solutions",
+    "front-matter",
+    "appendices"
+  ],
+  "exclusions": [
+    "fenced and inline code",
+    "math",
+    "HTML comments and attributes",
+    "link targets and reference identifiers",
+    "bare URLs",
+    "documented model/precision/unit/version identifiers"
+  ],
+  "counting_units": "matches and distinct path/line pairs",
+  "identifier_pattern": "(?:Qwen\\d*(?:\\.\\d+)?(?:-[A-Za-z0-9.]+)*|GPT-?\\d+(?:\\.[\\d]+)?|DeepSeek-R\\d+|(?:BF|FP|INT|UTF|utf|float|int)\\d+|sm_\\d+|(?:ID|id)\\d+|G[48]|Full400|full400|LoRA400|Chosen100|DPO100|SHA256|ARM64|L2|2[dD]|3[dD]|(?:v\\d+)(?:\\.\\d+)*(?:[a-z]\\d*)?|\\d+(?:\\.\\d+)?(?:KiB|MiB|GiB|TiB|KB|MB|GB|TB|B|kB|ns|us|ms|s|Hz|kHz|MHz|GHz|FLOPs|TFLOPs|nats|M|k))\\Z",
+  "unit_pattern": "(?:KiB|MiB|GiB|TiB|KB|MB|GB|TB|B|kB|ns|us|ms|s|Hz|kHz|MHz|GHz|FLOPs|TFLOPs|nats|M|k)",
+  "narrative_patterns": {
+    "task-or-run-id": "\\b(?:DXI-\\d+|ANIM-[A-Za-z0-9-]+|CAND-[A-Za-z0-9-]+|X-[A-Za-z0-9-]+-\\d+|run-\\d+|recovery\\d+|pilot\\d+)\\b",
+    "policy-or-session-date": "(?<!\\d)\\d{4}-\\d{2}-\\d{2}(?!\\d)",
+    "session-status": "\\b(?:the learner|learner mastery|does not advance|authoriz\\w*|authoris\\w*|approv\\w*)\\b",
+    "machine-path": "/home/dongxi(?:/[^\\s<>]*)?"
+  },
+  "counts": {
+    "mechanical": {
+      "matches": 0,
+      "affected_lines": 0
+    },
+    "narrative": {
+      "matches": 32,
+      "affected_lines": 32
+    }
+  },
+  "exempted_counts": {
+    "matches": 0,
+    "affected_lines": 0
+  },
+  "unused_exemptions": [],
+  "files": [
+    {
+      "path": "book/chapters/01-evidence-before-optimization.md",
+      "sha256": "823ba4981ca7485d75b022eef5caecc58840baebbe49fc9734e24416d8ef02b4",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/chapters/02-text-tokens-and-embeddings.md",
+      "sha256": "ef965e47d276153f6ca8b376fbcd03b674968fc52cc0152b7b25763a047d4956",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/chapters/03-learning-the-next-token.md",
+      "sha256": "67833302f41e794af8bf1db541bc91fb293363215a709d32d564bf729374d251",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/chapters/04-attention-and-the-causal-information-boundary.md",
+      "sha256": "b3d594f079be8372cf2c2ac8abff3bc9974c4df35af3750ad68e0ffcdeeffedb",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/chapters/05-building-a-modern-decoder.md",
+      "sha256": "cd0ad712d5c408a70553fcade269e193b3d9ac0776c48a6b515655a2093f70c0",
+      "findings": [
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 530,
+          "column": 13,
+          "start": 24663,
+          "end": 24674,
+          "match": "the learner",
+          "context": "claim about the learner's notebook output.",
+          "path": "book/chapters/05-building-a-modern-decoder.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "policy-or-session-date",
+          "line": 1143,
+          "column": 11,
+          "start": 56022,
+          "end": 56032,
+          "match": "2026-09-07",
+          "context": "rechecked 2026-09-07, provides a useful shape contrast:",
+          "path": "book/chapters/05-building-a-modern-decoder.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "policy-or-session-date",
+          "line": 1182,
+          "column": 20,
+          "start": 57738,
+          "end": 57748,
+          "match": "2026-09-07",
+          "context": "Evidence snapshot: 2026-09-07. After understanding a block, we can ask whether",
+          "path": "book/chapters/05-building-a-modern-decoder.md"
+        }
+      ],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 3,
+          "affected_lines": 3
+        }
+      }
+    },
+    {
+      "path": "book/chapters/06-pretraining-as-a-controlled-system.md",
+      "sha256": "876cec29052cd685db0e3867ff16b41a12d037e5d474a279eaa9a59cd36886e0",
+      "findings": [
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 392,
+          "column": 48,
+          "start": 19825,
+          "end": 19833,
+          "match": "approved",
+          "context": "20\u201325 GiB host reserve and verify it during an approved run. A parameter-count",
+          "path": "book/chapters/06-pretraining-as-a-controlled-system.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 517,
+          "column": 65,
+          "start": 27316,
+          "end": 27324,
+          "match": "approval",
+          "context": "decision, profiling, safety measurements and explicit execution approval.",
+          "path": "book/chapters/06-pretraining-as-a-controlled-system.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 518,
+          "column": 44,
+          "start": 27369,
+          "end": 27379,
+          "match": "authorized",
+          "context": "Sections 6.14\u20136.21 describe the subsequent authorized runs and their results.",
+          "path": "book/chapters/06-pretraining-as-a-controlled-system.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 677,
+          "column": 61,
+          "start": 35783,
+          "end": 35792,
+          "match": "authorize",
+          "context": "the evidence. The greedy sample's stronger opening does not authorize hiding",
+          "path": "book/chapters/06-pretraining-as-a-controlled-system.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 717,
+          "column": 25,
+          "start": 37872,
+          "end": 37883,
+          "match": "the learner",
+          "context": "During interactive use, the learner observed repeated \u201cbig and scary\u201d",
+          "path": "book/chapters/06-pretraining-as-a-controlled-system.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 732,
+          "column": 15,
+          "start": 39205,
+          "end": 39216,
+          "match": "the learner",
+          "context": "not reproduce the learner's unknown exact browser inputs or prove the browser",
+          "path": "book/chapters/06-pretraining-as-a-controlled-system.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 752,
+          "column": 11,
+          "start": 40440,
+          "end": 40451,
+          "match": "the learner",
+          "context": "separates the learner's observation, actual probes and unresolved questions.",
+          "path": "book/chapters/06-pretraining-as-a-controlled-system.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 826,
+          "column": 47,
+          "start": 44788,
+          "end": 44799,
+          "match": "the learner",
+          "context": "actual continuations and separate AI reviews; the learner's own defense remains",
+          "path": "book/chapters/06-pretraining-as-a-controlled-system.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 933,
+          "column": 12,
+          "start": 51553,
+          "end": 51566,
+          "match": "authorization",
+          "context": "    having authorization or evidence to run it.",
+          "path": "book/chapters/06-pretraining-as-a-controlled-system.md"
+        }
+      ],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 9,
+          "affected_lines": 9
+        }
+      }
+    },
+    {
+      "path": "book/chapters/07-evaluation-is-a-contract.md",
+      "sha256": "d80eba1e703f2bb45045c5c8cf2ff3c9dee562de2fc8a4e8269a5045d06bb73c",
+      "findings": [
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 423,
+          "column": 70,
+          "start": 32750,
+          "end": 32758,
+          "match": "approved",
+          "context": "export route; final capability and cost defense waits for the actual approved",
+          "path": "book/chapters/07-evaluation-is-a-contract.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 466,
+          "column": 47,
+          "start": 35442,
+          "end": 35453,
+          "match": "the learner",
+          "context": "gain, using the publication test or advancing the learner's day.",
+          "path": "book/chapters/07-evaluation-is-a-contract.md"
+        }
+      ],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 2,
+          "affected_lines": 2
+        }
+      }
+    },
+    {
+      "path": "book/chapters/08-instruction-data-as-an-interface.md",
+      "sha256": "d5447dae8fab01603f2a90dd5e91063ac309ca2195bb237b849ddd934a0b5064",
+      "findings": [
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 149,
+          "column": 35,
+          "start": 15733,
+          "end": 15743,
+          "match": "authorized",
+          "context": "visible before a real, separately authorized teacher is substituted.",
+          "path": "book/chapters/08-instruction-data-as-an-interface.md"
+        }
+      ],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 1,
+          "affected_lines": 1
+        }
+      }
+    },
+    {
+      "path": "book/chapters/09-supervised-fine-tuning.md",
+      "sha256": "efdd1ba763d027be4780d747fe190fb52f91fc248536b690a800283dd1f528fb",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/chapters/10-preferences-and-reward-models.md",
+      "sha256": "d3913d7571b5e4f28e8fa039e97bcc0de2253499f0504ab993952e0d8dfb3abf",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/chapters/11-direct-preference-optimization.md",
+      "sha256": "342bdca7392ef4b5535aa87ff4e92438e3643c5d21b3aa31ad0c121958869db0",
+      "findings": [
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 422,
+          "column": 58,
+          "start": 23081,
+          "end": 23089,
+          "match": "approval",
+          "context": "pretrained quality; the intended Spark control, resource approval and accounted",
+          "path": "book/chapters/11-direct-preference-optimization.md"
+        }
+      ],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 1,
+          "affected_lines": 1
+        }
+      }
+    },
+    {
+      "path": "book/chapters/12-language-generation-as-a-policy.md",
+      "sha256": "38558b425eab581d10ad9d2699fa0bbd9ff57d15befe741b5f16f0c81427999a",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/chapters/13-group-relative-policy-optimization.md",
+      "sha256": "bae62c347b06c7fa79d2b7ca27d764bd715ed1d93b3ef570ab10fed961156142",
+      "findings": [
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 361,
+          "column": 62,
+          "start": 19735,
+          "end": 19744,
+          "match": "authorize",
+          "context": "publication work. Neither allowance can replace the other or authorize a retry.",
+          "path": "book/chapters/13-group-relative-policy-optimization.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 478,
+          "column": 18,
+          "start": 27007,
+          "end": 27015,
+          "match": "approved",
+          "context": "for a separately approved pretrained experiment.",
+          "path": "book/chapters/13-group-relative-policy-optimization.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 663,
+          "column": 15,
+          "start": 39722,
+          "end": 39735,
+          "match": "authorization",
+          "context": "evidence, not authorization for its dependent pilot.",
+          "path": "book/chapters/13-group-relative-policy-optimization.md"
+        }
+      ],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 3,
+          "affected_lines": 3
+        }
+      }
+    },
+    {
+      "path": "book/chapters/14-when-optimization-goes-wrong.md",
+      "sha256": "69da5fb470d1363904e26968f3b5518aa650f8f9402ad431997dca8b5e6948ba",
+      "findings": [
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 531,
+          "column": 76,
+          "start": 29659,
+          "end": 29667,
+          "match": "approved",
+          "context": "[runner-owned recovery plan](../../docs/PRODUCTION_RECOVERY_PLAN.md) keeps approved",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 552,
+          "column": 65,
+          "start": 30936,
+          "end": 30945,
+          "match": "authorize",
+          "context": "controller intended to wrap one pinned SFT profile. It does not authorize that",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 671,
+          "column": 1,
+          "start": 38700,
+          "end": 38716,
+          "match": "does not advance",
+          "context": "does not advance the live training sampler or invent new training examples.",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 726,
+          "column": 30,
+          "start": 41906,
+          "end": 41915,
+          "match": "authorize",
+          "context": "hidden inside the checkpoint authorize work already performed to find it.",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 767,
+          "column": 13,
+          "start": 44131,
+          "end": 44140,
+          "match": "authorize",
+          "context": "it does not authorize the attempts. Keep the original model/semantic limits",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 845,
+          "column": 31,
+          "start": 48989,
+          "end": 48996,
+          "match": "approve",
+          "context": "length ceiling alone does not approve the resulting work vector. A byte-pinned",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 849,
+          "column": 62,
+          "start": 49340,
+          "end": 49353,
+          "match": "authorization",
+          "context": "document a different input. These are distinct integrity and authorization gates,",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 850,
+          "column": 23,
+          "start": 49383,
+          "end": 49391,
+          "match": "approval",
+          "context": "not a reason to infer approval from a well-formed JSON file.",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 860,
+          "column": 1,
+          "start": 50006,
+          "end": 50016,
+          "match": "authorized",
+          "context": "authorized model runs remain separate gates in the",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 897,
+          "column": 79,
+          "start": 52731,
+          "end": 52741,
+          "match": "authorized",
+          "context": "26. Why do actual encoded lengths make a budget more useful without making it authorized?",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 901,
+          "column": 62,
+          "start": 53077,
+          "end": 53086,
+          "match": "authorize",
+          "context": "30. Why cannot a work prefix stored only inside a checkpoint authorize the work required to read it?",
+          "path": "book/chapters/14-when-optimization-goes-wrong.md"
+        }
+      ],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 11,
+          "affected_lines": 11
+        }
+      }
+    },
+    {
+      "path": "book/chapters/15-distill-evaluate-and-defend.md",
+      "sha256": "d483d63ed3eb0e1b88ecd11ab3bf0e28128cc393f19dabf71a6f69e6a001f505",
+      "findings": [
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 209,
+          "column": 1,
+          "start": 12148,
+          "end": 12156,
+          "match": "approved",
+          "context": "approved real-model adapter later.",
+          "path": "book/chapters/15-distill-evaluate-and-defend.md"
+        },
+        {
+          "group": "narrative",
+          "rule": "session-status",
+          "line": 692,
+          "column": 67,
+          "start": 40978,
+          "end": 40989,
+          "match": "the learner",
+          "context": "publishing or tagging a public release is a separate action under the learner's",
+          "path": "book/chapters/15-distill-evaluate-and-defend.md"
+        }
+      ],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 2,
+          "affected_lines": 2
+        }
+      }
+    },
+    {
+      "path": "book/labs/01-evidence-before-optimization.md",
+      "sha256": "983e389215ad22db4c7f8554508ed7b6796d1fd6701620c88ea083c2c5df97d8",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/02-text-tokens-and-embeddings.md",
+      "sha256": "54ecd4e0a5611c0e294e4192b9057b9348c699b2589cc8f1d17a4d096fd87f66",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/03-learning-the-next-token.md",
+      "sha256": "5e5b6725fd66db427d9471623654938caf7abc94e3e634ac94dc98db375f2758",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/04-attention-and-the-causal-information-boundary.md",
+      "sha256": "73b459f2a3ea847b6a7cbe8feca13a8f2e48bca0190007128c31a302b9ec7587",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/05-building-a-modern-decoder.md",
+      "sha256": "2dcfe2114e21614605ba2cc86504bafc86d3fb310715a45e16989e90cc02fd90",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/06-pretraining-as-a-controlled-system.md",
+      "sha256": "79cda22b56033d59fdb0d192155d3d952cbce1cff710abeb60fdb4ac771a0a66",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/06-reading-a-pretraining-run.md",
+      "sha256": "4beb09b681a84727666e9a3cc1e0fed70864485f1b5148fb19cc312b407293ac",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/07-evaluation-is-a-contract.md",
+      "sha256": "3a3d225f21d76280ddd60dd34c605f8d45177d361160c387b86c5ff0d2fa811d",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/08-instruction-data-as-an-interface.md",
+      "sha256": "6c25978536dba5174c30da7d0cfd61543d867dc92caae319aa8325a344812d8d",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/09-supervised-fine-tuning.md",
+      "sha256": "0123b753a145445c7091f5552308d38bcd08230e57202727d5eb796a8972274c",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/10-preferences-and-reward-models.md",
+      "sha256": "5abac901c6f4040039ffb25fa37ed617637def0cd4c800bd98416afa77f38a0b",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/11-direct-preference-optimization.md",
+      "sha256": "1644c28e4073a4c5ab5cc9d6a8298a7e8fb7944ff4a64f64b3b0f0f00c508af8",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/12-language-generation-as-a-policy.md",
+      "sha256": "b1fc05da9dfcb2d6432b111a576be04ef6a0da325175f3eff745ad1bd5f5f5e5",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/13-group-relative-policy-optimization.md",
+      "sha256": "f73af9642d95ae9aaf37432ceb66f378b456e998ea1a10bd55f3c06ded44799c",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/14-when-optimization-goes-wrong.md",
+      "sha256": "fb2951f26adabc2ceeaeec20bd5b92c1d198b82f5777463cc07863be2a50b828",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/labs/15-distill-evaluate-and-defend.md",
+      "sha256": "c5cc73cbf8eba2aaee8f662a98adca51ceba9bb037cf1026bed7d93b5454a0c3",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/01-evidence-before-optimization.md",
+      "sha256": "c98e7f455544df7067ccc3d0ee738624d21d3d772175bbc621867452644e50cb",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/02-text-tokens-and-embeddings.md",
+      "sha256": "913aa20a12e3654090661a9ff10f9518853f578f64742c38ecab8b43f9787705",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/03-learning-the-next-token.md",
+      "sha256": "18b0205bdfd4a309a32f800866d988020b9ffb8c2bd1c45ddf7c2da882604faf",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/04-attention-and-the-causal-information-boundary.md",
+      "sha256": "2685acec1dd2fc698e7c954f71f8fec0ac058e3f853c9545d92b38d6161f435a",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/05-decoder-notebook-solutions.md",
+      "sha256": "a7b2860d242616a07a01c1904a562dcc294dbe81911eb30cc1b8cffc71a093d0",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/06-pretraining-as-a-controlled-system.md",
+      "sha256": "49b3642c6bda4df7805471f157ea686bd9019c93416ff4f34186994021cf9779",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/07-evaluation-is-a-contract.md",
+      "sha256": "01f83fd2e10e0657c9e3f2f2c2fc2f59c0518155558b3985ffc33845b7a5732b",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/08-instruction-data-as-an-interface.md",
+      "sha256": "3931e9d7cfe401ba063119067e852862e6be0d7c0bc01c2b098f3505b9ee367f",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/09-supervised-fine-tuning.md",
+      "sha256": "d9fd8e48db7fbf49c5b11dd4a1f03dd5d663567769a057bca2f5e1a364ad206b",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/10-preferences-and-reward-models.md",
+      "sha256": "dc6d2d85d83b2d3bcb415ca300d010c2363d5d44581d897bcd9ec021025a5642",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/11-direct-preference-optimization.md",
+      "sha256": "6039e2ccb44f638437b8c2aeb2b629bfdd0c8826a059487d3e322bf5549a3b11",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/12-language-generation-as-a-policy.md",
+      "sha256": "ac3990914f1800ee2ff8131c9ea734894167e4f818a2d6a45c0053f0f3d46bd1",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/13-group-relative-policy-optimization.md",
+      "sha256": "fabfdb3eb0591a35ebdf3721015e4d55de3121c3a5c3a000a30cf834ee531ccf",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/14-when-optimization-goes-wrong.md",
+      "sha256": "fd07771bd6eddd363d70c2dfaa2ed2532a0fafd13310feaf09eb5391c66e521c",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/solutions/15-distill-evaluate-and-defend.md",
+      "sha256": "dcb701e345424ad935d0cfed2a20eeec98a33886f078011b714d3c7d290d2c18",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/front-matter/how-to-use.md",
+      "sha256": "5501194aadc08ebe650aed6cf9f87dbd5c03ebb84e8f9b305f412f01fc0b6b7b",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/front-matter/notation.md",
+      "sha256": "438df417a615ecd58f34d03b9fc674d075aa02476b1ff960384e18afc9ec2501",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/front-matter/preface.md",
+      "sha256": "b58c1ba2e473cd3ae3ce686afc08424471663747c788ea7083f41eb6bd7ef1a8",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/appendices/a-laboratory-setup.md",
+      "sha256": "63587e04b9e596cac89194f6db4b8690724e6c779ad188562549acae24e410bc",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/appendices/b-mathematical-and-tensor-notation.md",
+      "sha256": "917d9204c2988d9bc7c6c3021bb649beb77745cde7f35f396aa9398475f99397",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/appendices/c-evaluation-and-experiment-templates.md",
+      "sha256": "0a3e2fe746a41e467cd0e87aa91853f85e7becf20a78bfbffb711f1c2a5564c5",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    },
+    {
+      "path": "book/appendices/d-reproduction-and-environments.md",
+      "sha256": "4f16753dace9d2c5f821ac29d4236a9e4c05fe1ca07204f10bafff950c43c130",
+      "findings": [],
+      "exempted": [],
+      "counts": {
+        "mechanical": {
+          "matches": 0,
+          "affected_lines": 0
+        },
+        "narrative": {
+          "matches": 0,
+          "affected_lines": 0
+        }
+      }
+    }
+  ]
+}

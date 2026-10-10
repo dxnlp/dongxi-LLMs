@@ -1,8 +1,8 @@
 # How to Use the Book and Companion Repository
 
-Start with the preface and Chapter 1. Chapters2–5 develop a common decoder;
-Chapters6–9 use it to explain training, evaluation and SFT. Chapters10–13 introduce
-preferences and policy optimization. Chapters14–15 diagnose failures and assemble
+Start with the preface and Chapter 1. Chapters 2–5 develop a common decoder;
+Chapters 6–9 use it to explain training, evaluation and SFT. Chapters 10–13 introduce
+preferences and policy optimization. Chapters 14–15 diagnose failures and assemble
 the final comparison. The [28-day route](../../docs/COURSE_SEQUENCE.md) links
 every day's material and practical work.
 
@@ -40,7 +40,7 @@ Three execution modes are available:
 | Bounded model experiment | Measure learning and resources under a fixed cap | Spark |
 | Saved-evidence analysis | Reproduce a reported comparison without its weights | Either machine |
 
-Use AppendixD for environment and verification commands. The CPU route avoids
+Use [Appendix D](../appendices/d-reproduction-and-environments.md) for environment and verification commands. The CPU route avoids
 Hub downloads. Spark extensions record model revisions, data identity, objective,
 batch geometry, stop conditions and memory reserve. Their specifications are
 study material even before their executions are approved or measured.

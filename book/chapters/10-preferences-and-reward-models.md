@@ -39,7 +39,7 @@ constructing the record, not only the intended lesson.
 ## 10.2 From two scores to one preference probability
 
 Let $r_\phi(x,y)$ be a real-valued score from a parameterized model. Fix one
-prompt and suppress $x$ briefly. Give each completion a positive strength
+prompt and write $r_y=r_\phi(x,y)$ briefly. Give each completion a positive strength
 $s_y=\exp(r_y)$. If a comparison allocates probability in proportion to strength,
 then
 
@@ -98,7 +98,7 @@ inside a large training library.
 
 Suppose ten independent judgments favor $a$ seven times and $b$ three times.
 Under a repeated identical comparison and the binary model, the empirical
-target is $q=.7$. Minimizing expected likelihood gives
+target is $q=0.7$. Minimizing expected likelihood gives
 
 $$
 \sigma(\Delta^*)=q,\qquad
@@ -120,7 +120,7 @@ alternatives. Strong cyclic judgments cannot generally be represented exactly
 by one score per answer. This is a model limitation, not a reason to delete
 awkward labels until the dataset looks consistent.
 
-Ties require a declared convention. A soft $q=.5$ says the model should predict
+Ties require a declared convention. A soft $q=0.5$ says the model should predict
 an even binary choice; it does not model a separate “equally good” event. If
 ties are frequent and meaningful, use a model with an explicit tie outcome or
 retain them for analysis. Abstention because the judge cannot assess a response
@@ -129,7 +129,7 @@ is a different event and should not automatically become a half-win label.
 ## 10.5 Reward has a gauge
 
 For any function $c(x)$, replacing every score for one prompt by
-$r'(x,y)=r(x,y)+c(x)$ leaves all within-prompt differences unchanged. Preferences
+$r'_\phi(x,y)=r_\phi(x,y)+c(x)$ leaves all within-prompt differences unchanged. Preferences
 cannot identify the absolute origin of the reward. An intercept shared by the
 two answers has zero gradient under pure pairwise loss. Adding fifty to every
 score therefore says nothing about improvement.
@@ -175,7 +175,7 @@ explicit, without claiming pretrained reward quality or general arithmetic.
 
 Split by prompt or source group before forming answer pairs. Splitting individual
 pairs can put the same prompt, near-duplicate answer, or generation family in
-both training and validation. Randomly swapping presentation order is valuable,
+both training and development sets. Randomly swapping presentation order is valuable,
 but a swap is not a new independent example. Score both orders during audits
 to detect an order-dependent judge or preprocessing bug.
 
@@ -367,12 +367,8 @@ Chapter 7's contract: evaluation and training metrics must name what is counted.
 
 ## 10.13 Learning a reward from token sequences
 
-The linear shortcut model started with known features. It could expose a
-confound clearly, but it did not learn a text representation. The
-[text reward laboratory](../../notebooks/day-16/03_text_reward_and_process_labels.ipynb)
-now starts with token IDs for the prompt and response. An independently written
-one-block causal decoder maps them to contextual states, and a scalar head
-reads a chosen endpoint:
+The known-feature shortcut experiment made the confound readable. A text reward
+instead learns contextual states and reads one scalar from a chosen endpoint:
 
 $$
 H=f_\phi(x,y),\qquad
@@ -380,51 +376,42 @@ e=\max\{t:m_t=1\},\qquad
 r_\phi(x,y)=w^\top H_e+b.
 $$
 
-Here $m_t$ is the valid-token mask; $H$ has shape $[T,24]$ in the microscope,
-and the head returns one scalar. Batch tensors have shapes $[B,T]$ for IDs,
-$[B,T,24]$ for hidden states and $[B]$ for scores. Both comparison branches
-share the decoder and head. Their score gradients from section 10.3 therefore
-reach embeddings, Q/K/V projections, residual transformations and the head,
-not just a supplied quality coordinate.
+Here $m_t$ marks valid tokens, $H$ has shape $[n,24]$, and a batch has ID shape
+$[B,n]$, hidden-state shape $[B,n,24]$ and score shape $[B]$. Both answers share
+the decoder and scalar head, so preference gradients reach the whole backbone.
+The [canonical text reward](../../src/dongxi_llms/text_reward_lab.py) reads:
 
-The endpoint index is a position, not a length. With right padding it can
-equal `mask.sum(-1)-1`; with left padding that expression is generally wrong.
-Select the maximum valid array index and give actual tokens position IDs that
-count valid positions. Otherwise, shifting padding changes the positional
-signal of unchanged text. Reject all-padding rows. Padded queries may have no
-legal attention keys, so avoid an all-negative-infinity softmax and explicitly
-zero their contributions. The tests check finite hidden states and gradients,
-left/right padding parity and invariance to extra padding.
+```python
+def token_scores(self, ids, mask):
+    return self.head(self.hidden(ids, mask)).squeeze(-1)
 
-EOS is a semantic convention. The reference includes EOS and scores its
-contextual state. A no-EOS variant scores the last completion token instead.
-Neither is universally correct; a reward-trained model expects its own
-convention. The collator and frozen interface record that choice along with
-token meanings, normalization, separators and the unknown-token policy. An
-EOS state can summarize the entire response because attention carries earlier
-content into it. Backpropagation therefore reaches earlier words even though
-the scalar is read only once.
+def forward(self, ids, mask):
+    scores = self.token_scores(ids, mask)
+    return scores.gather(1, last_valid_indices(mask)[:, None]).squeeze(1)
+```
 
-The [measured experiment](../../experiments/reports/2026-10-04-text-reward.md)
-fits twelve original color-comparison source groups with three predeclared
-seeds. All three rank the four held-out matched-length/matched-format pairs
-correctly. Raw source groups are disjoint, but an encoding audit finds that
-all four baseline test pairs duplicate calibration inputs: unseen nouns
-“box” and “book” both become `<unk>`. Training and test encodings remain
-disjoint. The apparent test success therefore does not establish independent
-calibration generalization. When both answers receive headings, ranking
-becomes 0.5, 1.0, 0.5 across the
-same seeds; making incorrect answers longer also exposes one failure. Even
-equal-substance answers receive sharply different scores under some formatting
-changes. These nuisance cases remain in the report.
+`last_valid_indices` selects the maximum valid array position and rejects an
+all-padding row. `mask.sum(-1)-1` works for right padding but fails for left
+padding. Valid-token position IDs and zero padded-query contributions preserve
+left/right parity and finite gradients. EOS is the declared endpoint here;
+a no-EOS variant scores the last answer token. Earlier words still receive
+gradients through the endpoint's causal context.
 
-Calibration is measured separately with NLL, Brier scores and counted
-reliability bins. Temperature is chosen from a frozen grid using only four
-calibration sources, then tested without refitting. It sharpens the ordinary
-comparison probabilities but cannot repair ranking inversions or certify a
-new format. For authored tie approximations, the binary target is one half;
-the expected Bernoulli Brier score retains a minimum of one quarter. This is
-not an observed human-preference calibration claim or an explicit tie model.
+The [three-seed experiment](../../experiments/reports/2026-10-04-text-reward.md)
+fits twelve original color-comparison groups. All seeds rank the four ordinary
+held-out matched pairs correctly, yet “box” and “book” both become `<unk>`:
+all four test encodings duplicate calibration inputs. Training/test encodings
+remain distinct, but this apparent success cannot establish independent
+calibration generalization. Adding headings yields ranking accuracies
+0.5, 1.0, 0.5; making wrong answers longer also exposes a failure. Formatting
+changes can shift scores even when substance is unchanged.
+
+Calibration is a different measurement. A frozen temperature grid uses only
+four calibration sources; held-out NLL, Brier and counted reliability bins
+expose confidence. Temperature can change probabilities without repairing a
+ranking inversion. Authored tie targets use probability one half, whose expected
+Bernoulli Brier minimum is one quarter. These are synthetic targets, not measured
+human preference frequencies or an explicit tie model.
 
 ## 10.14 Outcome labels and process labels supervise different questions
 
@@ -460,48 +447,38 @@ target: a critic in Chapter 12 estimates expected future reward under a policy,
 whereas this process label judges a displayed equality under an annotation
 rubric. A useful-looking scalar does not make those meanings interchangeable.
 
-The training traces exercise one-step and two-step boundaries and all four
-terminal/local correctness combinations. Yet the held-out outcome and step
+One-step/two-step traces include all four terminal/local correctness combinations. Yet the held-out outcome and step
 classifiers each reach only 0.5 accuracy for all three seeds. The report exposes
 a concrete reason: numbers 7 and 8 are absent from the training vocabulary and
 both become the same unknown ID. Opposite labels can therefore have identical
 encoded inputs. No classifier can distinguish those records from that
 representation alone. High confidence in those failed predictions is retained,
-not explained away as successful reasoning. The separately specified character
-intervention below tests this distinction without replacing the failed run.
+not explained away as successful reasoning. The character intervention below tests this diagnosis while retaining the failed run.
 
 ## 10.15 Freeze the reward before optimizing a policy
 
-The original word-token experiment freezes the predeclared seed 1601
-preference model, irrespective of which seed looks best on a nuisance slice.
-Its [frozen JSON export](../../fixtures/text-reward/frozen-preference-seed1601.json)
-contains every numeric weight, config, ordered vocabulary, encoding rules,
-special IDs, EOS/endpoint policy and input/source-group identities. Loading
-checks the payload hash, complete state shapes and the expected tokenizer
-interface from Chapter 1, then disables parameter gradients. Saving tensor
-dimensions alone would not detect a same-size vocabulary permutation.
+Freeze the predeclared seed 1601 word-token reward regardless of which seed
+looks best on a nuisance slice. The [saved numeric export](../../fixtures/text-reward/frozen-preference-seed1601.json)
+preserves weights, ordered token meanings, preprocessing, special IDs and the
+EOS/endpoint policy. Equal tensor dimensions alone cannot detect a vocabulary
+permutation. The loader disables reward gradients; exact saved-state score
+equality is measured in the tested environment.
 
-The adapter offers a raw detached score for a prompt/completion pair and
-batched CPU scoring. Unknown words follow the explicitly recorded policy;
-overlength inputs fail instead of being silently truncated. A payload's
-self-hash detects inconsistent edits, not malicious recomputation of all
-metadata. A separately expected file/interface identity remains the trust
-boundary. Exact save/reload score equality is measured, not assumed.
-
-Freezing fixes the proxy during the next experiment; it does not make the
-proxy true. Keep independent factual measurements while optimizing it, and
-preserve responses that gain reward through headings, repetition or other
-nuisances. The known-feature shortcut lesson remains intact because it isolates
-a different failure mechanism. Neither microscope replaces an independently
-reviewed, profiled pretrained reward campaign.
+Freezing holds a proxy fixed without making it true. Retain independent factual
+checks and responses rewarded for headings, repetition or other nuisances.
+[Appendix D](../appendices/d-reproduction-and-environments.md#policy-reference-and-pending-rollout-identity)
+records export/identity boundaries. Neither the known-feature nor the text
+microscope establishes pretrained reward quality.
 
 ## 10.16 Preserve information before asking for generalization
 
 An unknown token can erase a distinction before the neural network has any
 opportunity to learn it. That explains why two differently labeled arithmetic
 traces could have identical word-token inputs; it does not imply that restoring
-the distinction will make the learned rule correct. The
-[character intervention](../../experiments/reports/2026-10-04-text-reward-character.md)
+the distinction will make the learned rule correct. **Reader prediction:** if distinct digits now receive distinct IDs, must the
+model learn the arithmetic rule?
+
+The [character intervention](../../experiments/reports/2026-10-04-text-reward-character.md)
 keeps the original raw fixture, but uses a separately fixed printable ASCII
 alphabet. Spaces and punctuation remain characters. Unsupported input is
 rejected before casefolding, not silently mapped to UNK. SEP, STEP and EOS keep
@@ -513,7 +490,7 @@ supervised STEP markers. Different raw source IDs cannot license equal encoded
 inputs across splits. Repeated equal-label prefixes inside one source remain
 related observations. Arbitrary shared short prefixes such as the first letter
 of “Compute” are not contamination; the full supervised context is the unit
-being checked. The new arm has no cross-source/split collisions among 55
+being checked. The character arm has no cross-source/split collisions among 55
 baseline, nuisance and trace records. Exact-input separation still does not
 establish semantic independence or a large evaluation population.
 
@@ -521,9 +498,8 @@ The same real decoder/head design now processes character sequences. Its
 100-entry alphabet and frozen 160-position bound give 11,185 parameters;
 training remains float64 CPU, with 120 preference updates and 80 each for
 terminal/process models. Seeds 1611, 1612 and 1613 are fixed in advance, and
-seed 1611 is exported before its test evaluation. The word arm's shorter
-sequences and position table remain intact, so this is not an equal-compute
-test of tokenizer superiority.
+seed 1611 is exported before its test evaluation. The word arm remains intact; differing sequence lengths and position tables
+prevent an equal-compute tokenizer-superiority claim.
 
 All three training objectives fit. Nevertheless, ordinary held-out ranking is
 only 0.5 for every seed. Terminal accuracy is 0, 0.5, 0; local-step accuracy is
@@ -541,7 +517,7 @@ overconfidence; it cannot reverse a learned ordering. With only four source
 questions, counted bins matter more than the apparent smoothness of a plot.
 These authored labels are not calibrated human preference frequencies.
 
-The [new frozen character export](../../fixtures/text-reward/frozen-char-preference-seed1611.json)
+The [frozen character export](../../fixtures/text-reward/frozen-char-preference-seed1611.json)
 has its own complete numeric state, protocol, source, encoding and endpoint
 identity. Exact reload compares the same saved state in the same environment.
 Fresh retraining under a newer Torch version is a different reproducibility
@@ -569,7 +545,7 @@ to distinguish predictions from results.
 2. What does adding a prompt-specific constant to all rewards change? What does multiplying rewards by two change?
 3. Why can a well-trained preference model have nonzero minimum loss on repeated judgments?
 4. Construct cyclic preferences and explain the restriction imposed by one score per answer.
-5. Design a split that prevents a prompt with many candidate pairs from leaking into validation.
+5. Design a split that prevents a prompt with many candidate pairs from leaking into the development set.
 6. Explain how two models can have identical pair accuracy and different Brier scores.
 7. Why should calibration temperature be fitted on a different split from final evaluation?
 8. Diagnose a reward model that likes longer incorrect answers. What would distinguish intended style from a shortcut?

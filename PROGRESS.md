@@ -4,6 +4,20 @@ This file is the operational source of truth for resuming work. Update it at the
 
 ## Current position
 
+- Book editorial goal, 2026-10-10: complete. All Phases 0–5 of the
+  [revised plan](docs/BOOK_EDITORIAL_PLAN.md) are verified in the
+  [editorial record](experiments/reports/2026-10-10-book-editorial-pass.md).
+  The final isolated CPU run on `spark-aa66` passed 1,558 tests and all
+  76 fresh notebooks: 535 executed cells, 210 images and
+  4 preserved unfinished learner cells. Frozen-source hashes,
+  all 338 reviewed prompt pairs, reader/visual review and 5,056 unchanged
+  historical evidence identities are recorded in the new completion receipt.
+  Earlier course-upgrade receipts remain separate. The 15-chapter/28-day route,
+  learner Day 9, original notebook code/learner work and model results are unchanged.
+  No model campaign or publication occurred. Next learning action: resume the
+  requested Day 9 discussion on Spark, with coherent short English stories as
+  DongxiGPT's first objective, using the retained measured evidence.
+
 - README media maintenance, 2026-10-05, Mac Studio: user requested relevant GIFs
   and allowed new animations. `ANIM-README-001` adds next-token decoding, causal
   attention and group-relative reward loops with chapter/notebook links. Editable
