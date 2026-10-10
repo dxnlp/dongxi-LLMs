@@ -4,6 +4,22 @@ This file is the operational source of truth for resuming work. Update it at the
 
 ## Current position
 
+- Book foundations goal, 2026-10-10: complete. The learner requested improving
+  explanatory depth and reading experience across all fifteen chapters.
+  The [revised foundations plan](docs/BOOK_FOUNDATIONS_PLAN.md) classifies real
+  gaps, develops connected worked examples and replaces size/style quotas with
+  reader outcomes. The original proposal and baseline identities are retained
+  in the [new record](experiments/reports/2026-10-10-book-foundations-pass.md).
+  All fifteen chapters and shared guides are independently accepted. The new
+  isolated Spark CPU panel passes 1,558 tests and all 76 fresh notebooks:
+  535 executed reference cells, 210 images and four preserved unfinished cells.
+  All 5,893 protected baseline files and original exercise mappings remain
+  intact. New numerical/reader/source receipts describe this revision; earlier
+  receipts remain unchanged. Next learning action: resume the requested Day 9
+  discussion on Spark using the retained English-story evidence, with coherent
+  short stories as DongxiGPT's first objective. Production closure does not
+  advance learner progress or authorize a new model campaign or publication.
+
 - Book editorial goal, 2026-10-10: complete. All Phases 0–5 of the
   [revised plan](docs/BOOK_EDITORIAL_PLAN.md) are verified in the
   [editorial record](experiments/reports/2026-10-10-book-editorial-pass.md).

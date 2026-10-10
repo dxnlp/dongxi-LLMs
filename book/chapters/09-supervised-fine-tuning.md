@@ -2,7 +2,7 @@
 
 A pretrained decoder can continue text without reliably answering a request. Supervised fine-tuning supplies demonstrations of the conditional behavior we want: given this conversation, produce this response and stop at this boundary. The model remains a next-token predictor. We change the distribution of contexts, the targets receiving loss, and often which parameters can move.
 
-This chapter spans Days 12–14. It combines the [objective and gradient notebook](../../notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb), [accumulation and restart notebook](../../notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb), [bounded training notebook](../../notebooks/day-13/01_tiny_assistant_training.ipynb), and [full versus LoRA notebook](../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb). The [lab guide](../labs/09-supervised-fine-tuning.md) provides the run order; [worked solutions](../solutions/09-supervised-fine-tuning.md) explain the deep questions.
+This chapter spans Days 12–14. It combines the [objective and gradient notebook](../../notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb), [accumulation and restart notebook](../../notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb), [bounded training notebook](../../notebooks/day-13/01_tiny_assistant_training.ipynb), and [full versus low-rank adaptation (LoRA) notebook](../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb). The [lab guide](../labs/09-supervised-fine-tuning.md) provides the run order; [worked solutions](../solutions/09-supervised-fine-tuning.md) explain the deep questions.
 
 ## What you should be able to explain
 
@@ -11,6 +11,63 @@ This chapter spans Days 12–14. It combines the [objective and gradient noteboo
 - Compare full tuning and LoRA while separating likelihood, whole-answer correctness and stopping.
 
 **Prerequisites:** causal decoding and cross-entropy from Chapters 3–5, the evaluation contract from Chapter 7, and role ownership/label alignment from Chapter 8.
+
+### Begin with the answer the user actually receives
+
+The retained real-model comparison gives us a concrete puzzle. Base, full SFT
+and merged LoRA receive the same held-out request, template and greedy decoding
+contract. Both fitted arms had improved their teacher-forced answer NLL. Read
+one complete response before asking what the loss teaches.
+
+**Reader prediction:** if a model begins with the requested word, has it learned
+this interface? What must happen at the next state for the response to succeed?
+
+### Read one aligned response, including how it stopped
+
+The selection rule is the first held-out item, `test-100-copy`, in each retained
+panel. Its request is `Reply with exactly this word: item100`; the expected
+whole answer is `item100`. The following are exact `response_text` records,
+not a favorable prefix extracted for scoring:
+
+**Base:** [max_tokens, 64 generated actions](../../experiments/reports/native-assistant-publication-20261005-base-run-01/generation/responses.jsonl).
+
+```text
+Reply with exactly this word: item101 ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇
+```
+
+**Full400:** [turn_stop, 5 generated actions](../../experiments/reports/native-assistant-publication-20261005-full400-run-01/generation/responses.jsonl).
+
+```text
+item100
+```
+
+**Merged LoRA400:** [max_tokens, 64 generated actions](../../experiments/reports/native-assistant-publication-20261005-lora400-fp32-run-01/generation/responses.jsonl).
+
+```text
+item100 dólairement
+Follow the requested output format exactly.完整热
+.REACTuser
+reply with exactly this word: item100 dólairement
+.REACTassistant
+item100 dólairement
+.REACTuser
+reply with exactly this word: item100 dólairement
+.REACTassistant
+item10
+```
+
+Full400 chooses the requested value and the natural turn-ending action.
+LoRA starts with the requested value, then continues into unwanted content;
+Base gives another value and continues. The correct prefix is insufficient
+under the frozen whole-answer rule. All emitted stop IDs and capped text remain
+in the raw records. This example explains the table; the entire panel supplies
+the denominator and the result.
+
+We will trace how pressure on content and ending passes through a particular
+set of trainable parameters, while generation follows the resulting policy's
+own trajectory.
+The complete 120-item panel and its narrow transfer boundary appear in §9.9;
+this first item was selected by its fixed order, not because it looked striking.
 
 ## 9.1 What transfers from pretraining?
 
@@ -21,6 +78,37 @@ A model that already knows a fact may answer it correctly after learning when to
 Model naming matters. The official [Qwen3-0.6B-Base card](https://huggingface.co/Qwen/Qwen3-0.6B-Base) describes a base checkpoint; [Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B) is a separately released post-trained model. Fine-tuning the latter is useful continued adaptation, but does not test a first base-to-assistant transition. Record exact revisions so the comparison cannot change when a repository updates.
 
 Our CPU model begins randomly initialized. Its task is deliberately tiny: map four symbolic copy requests to a word and END. Its results verify optimization and gradient mechanics. A real base-to-assistant claim belongs to the separately specified Spark experiment.
+
+### The next training signal changes the question
+
+Here is the generic reading route through the remaining chapters. Arrows denote
+possible teaching choices, rather than the ancestry of every measured model:
+
+```mermaid
+flowchart LR
+  B["Base: continuation patterns"] --> S["SFT: demonstrated response + ending"]
+  S --> P["Preferences: compare two responses"]
+  P --> D["DPO: fit reference-relative pair odds"]
+  P --> R["Reward model: score fresh responses"]
+  R --> U["Policy update: weight sampled choices"]
+  S --> V["Verifier: test a sampled response"]
+  V --> U
+  D --> T["Teacher data or probabilities → student"]
+  U --> T
+```
+
+A demonstration says what to produce. A comparison says which of two responses
+is preferred. A learned reward or verifier supplies a scalar on a fresh sample.
+A teacher can supply selected text or a conditional probability vector. These
+signals constrain different things, even when every training loop eventually
+calls `backward()` on log probabilities. Evaluation asks the independent
+question of what the fitted system actually delivers.
+
+An SFT checkpoint commonly supplies a frozen reference for subsequent preference
+or policy training, but a reference is a declared choice. The actual native
+DPO comparison starts from this chapter's full-SFT parent; the native RLVR
+campaign starts from an independently acquired Instruct model. The exact roots
+remain in [Chapter 15's genealogy](15-distill-evaluate-and-defend.md#1510-the-checkpoint-genealogy-is-part-of-the-claim).
 
 ## 9.2 Derive the supervised objective
 
@@ -54,7 +142,63 @@ $$
 
 At a directly ignored prediction position, this gradient is zero. At an answer prediction, the observed target gets upward pressure through gradient descent and competing logits get downward pressure. The hidden state, output head and earlier context receive gradients according to the chain rule. The equation gives a derivative with respect to logits; actual parameter updates depend on the entire computation and optimizer.
 
+### Follow the word and its ending through one loss
+
+Reduce the vocabulary to three outcomes for this arithmetic microscope:
+`red`, `blue`, END. This is an illustrative categorical calculation using the
+canonical loss helper, separate from the symbolic model's full vocabulary and
+the retained Qwen outputs. Suppose the two relevant prediction rows are:
+
+| State producing the prediction | Probabilities: red, blue, END | Demonstrated next target | NLL, nats |
+|---|---|---|---:|
+| After the assistant header |(0.6, 0.3, 0.1)|red|0.510826|
+| After demonstrated `red` |(0.2, 0.3, 0.5)|END|0.693147|
+
+The complete demonstrated answer has probability $0.6\times0.5=0.3$.
+Its summed NLL is $-\log(0.3)=1.203973$; the two-target mean is $0.601986$.
+These are different units: a sequence loss and nats per supervised target.
+The prompt supplies the first state but contributes no direct target here.
+
+**Reader prediction:** remove only END from supervision. Will a lower reported
+mean NLL now mean that stopping improved?
+
+**Reference reasoning:** the remaining loss is $-\log(0.6)=0.510826$, which is
+lower because we removed the harder target. No update or generation occurred.
+The direct logit gradients under the original two-target mean are
+$(-0.2,0.15,0.05)$ at the first row and $(0.1,0.15,-0.25)$ at the second.
+Gradient descent favors `red` at the header and END after `red`. Removing END
+makes the second row's direct gradient zero; the first row's gradient doubles
+because its denominator changes from two targets to one. Loss masking changes
+both which corrections exist and how the surviving corrections are weighted.
+
+The [existing loss helper](../../src/dongxi_llms/sft_lab.py) reproduces this
+calculation with one shift. The final row is an unscored post-END position:
+
+```python
+import torch
+from dongxi_llms.sft_lab import token_loss_sum
+probabilities = torch.tensor([
+    [[0.6, 0.3, 0.1], [0.2, 0.3, 0.5], [1/3, 1/3, 1/3]]
+], dtype=torch.float64)
+logits = probabilities.log().requires_grad_()
+labels = torch.tensor([[-100, 0, 2]])  # header, red, END
+total, count = token_loss_sum(logits, labels)
+(total / count).backward()
+print(float(total.detach() / count), logits.grad)
+```
+
+Change `labels[0, 2]` to `-100`, reset the leaf logits and recompute. This
+deliberate broken variant explains why learning a correct prefix is weaker
+than learning the complete response. It does not attribute the measured LoRA
+failure to missing END labels: that real recipe included its ending targets.
+
 An example-mean objective instead averages $L_j/n_j$ across examples. This weights each conversation equally even when answer lengths differ. Choose intentionally and retain the denominator in logs; the two objectives need not prefer the same parameters.
+
+For answers with two and eight scored targets, a global token mean gives the
+long answer eight of ten target positions; an example mean gives each answer
+half the weight after averaging within it. Neither knows whether length means
+useful explanation or unwanted verbosity. Chapter 8's 10/90 exposure figure
+shows the same weighting mechanism at the data-mixture level.
 
 ## 9.3 Gradients reach the shared decoder
 
@@ -254,6 +398,45 @@ The [LoRA paper](https://arxiv.org/abs/2106.09685) introduces this parameterizat
 
 For row-batch input $X$, compute $XW_0^\top+\frac{\alpha_{\mathrm{LoRA}}}{r}(XA^\top)B^\top$. The notebook compares this with a merged matrix and verifies equality. The microscopic adapter targets Q and V projections only. This is a declared design, not a universal optimal target set.
 
+### What the rank restriction buys, and what it excludes
+
+Each column of $B$ is one output direction. The corresponding row of $A$
+computes how strongly an input uses that direction. Their product can combine
+at most $r$ independent output directions for this matrix update. With
+$d_{\mathrm{in}}=d_{\mathrm{out}}=1024$ and $r=8$, the adapter has 16,384
+trainable scalars versus 1,048,576 in the full matrix. This reduces the
+trainable state while requiring the desired correction to pass through those
+factorized directions. A whole network can contain many adapted matrices;
+the matrix rank bound is not a rank bound on the network's behavior.
+
+**Reader prediction:** initialize both factors to zero instead of only $B$.
+Does that make a safer unchanged starting policy?
+
+**Reference reasoning:** it makes the first-order adapter unable to start.
+For gradient $G_W=\partial L/\partial W$, the two paths are
+
+$$
+\frac{\partial L}{\partial A}=\frac{\alpha_{\mathrm{LoRA}}}{r}B^\top G_W,
+\qquad
+\frac{\partial L}{\partial B}=\frac{\alpha_{\mathrm{LoRA}}}{r}G_WA^\top.
+$$
+
+Both vanish if both factors are zero. Random $A$ with zero $B$ keeps the
+initial function unchanged while supplying directions through which $B$ can
+begin learning. After $B$ moves, $A$ can receive signal too. The Day 14
+[initialization and merge reference](../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb)
+checks this asymmetry directly. The factor $\alpha_{\mathrm{LoRA}}/r$ scales
+the correction and its gradients; changing rank or scale is a recipe change,
+not a guarantee of proportionally stronger useful adaptation.
+
+Return now to `item100`. Full tuning can directly move the embedding and
+output layers as well as the attention paths. The measured Q/V-only adapter
+must change its content and stopping behavior through those selected paths.
+That makes update-space constraints a plausible question to investigate.
+The fixed common learning rate, rank, module choice and single seed also vary
+the outcome's possibilities, so this comparison does not isolate rank as the
+cause. The next section puts the same outputs in their complete denominator.
+
 ## 9.9 Compare recipes under named constraints
 
 A full-versus-LoRA comparison changes capacity, optimizer state and often preferred learning rate. Using the same learning rate is a useful mechanism control, but may not give each method its best recipe. Conversely, tuning LoRA extensively while giving full tuning one attempt is an unequal selection budget.
@@ -313,46 +496,8 @@ remain stored; a correct prefix followed by unwanted text is not repaired.
 | Full-prefix forward input positions |515,840|29,720|515,840|
 
 
-### Read one aligned response, including how it stopped
-
-The selection rule is the first held-out item, `test-100-copy`, in each retained
-panel. Its request is `Reply with exactly this word: item100`; the expected
-whole answer is `item100`. The following are exact `response_text` records,
-not a favorable prefix extracted for scoring:
-
-**Base:** [max_tokens, 64 generated actions](../../experiments/reports/native-assistant-publication-20261005-base-run-01/generation/responses.jsonl).
-
-```text
-Reply with exactly this word: item101 ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇
-```
-
-**Full400:** [turn_stop, 5 generated actions](../../experiments/reports/native-assistant-publication-20261005-full400-run-01/generation/responses.jsonl).
-
-```text
-item100
-```
-
-**Merged LoRA400:** [max_tokens, 64 generated actions](../../experiments/reports/native-assistant-publication-20261005-lora400-fp32-run-01/generation/responses.jsonl).
-
-```text
-item100 dólairement
-Follow the requested output format exactly.完整热
-.REACTuser
-reply with exactly this word: item100 dólairement
-.REACTassistant
-item100 dólairement
-.REACTuser
-reply with exactly this word: item100 dólairement
-.REACTassistant
-item10
-```
-
-Full400 chooses the requested value and the natural turn-ending action.
-LoRA starts with the requested value, then continues into unwanted content;
-Base gives another value and continues. The correct prefix is insufficient
-under the frozen whole-answer rule. All emitted stop IDs and capped text remain
-in the raw records. This example explains the table; the entire panel supplies
-the denominator and the result.
+The first aligned response near this chapter's opening shows why correct
+content and natural stopping are both needed to interpret these totals.
 
 Each task family has 40/40 strict successes for full400 and 0/40 for the other
 two policies; all producers completed with no response errors. The generic

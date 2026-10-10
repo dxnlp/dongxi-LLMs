@@ -66,7 +66,8 @@ both contribute. A parameter absent from the current lookup can still receive
 output-classifier gradient. A zero local loss does not eliminate gradients from
 later dependent predictions.
 
-For softmax probabilities and a normalized target distribution,
+For unscaled cross-entropy $L=-\sum_jq_j\log p_j$, with
+$p=\mathrm{softmax}(z)$ and a fixed normalized target distribution $q$,
 
 $$
 \frac{\partial L}{\partial z_i}=p_i-q_i.
@@ -89,6 +90,14 @@ estimator. The derivative enters through the log-probability of the sampled
 trajectory. Tiny enumerable policies allow comparison against the exact
 expected-reward gradient; language models normally need sampling.
 
+Two checks answer different questions. **Statistical independence:** can the
+baseline depend on the pre-action state without depending on the action whose
+score it weights? **Graph independence:** does the actor loss treat that baseline
+as fixed when differentiating? Detaching an action-dependent reward as its own
+baseline still produces zero advantage. A pre-action learned value can be
+statistically valid while accidentally adding an unwanted gradient through its
+parameters if it is left attached. Chapter 12 works through these distinctions.
+
 ## B.5 Probabilities, KL and support
 
 For distributions $p,q$ on a common finite support,
@@ -103,6 +112,20 @@ condition. An exact categorical sum, a single sampled log ratio, and a
 nonnegative transformed ratio estimator have different sample variance and
 different gradient interpretations. The policy chapters identify each one.
 
+KL is an average log-probability discrepancy weighted by its first argument.
+For $p=(0.8,0.2)$ and $q=(0.5,0.5)$,
+
+$$
+D_{\mathrm{KL}}(p\Vert q)=0.8\log1.6+0.2\log0.4\approx0.1927,
+\qquad
+D_{\mathrm{KL}}(q\Vert p)=0.5\log0.625+0.5\log2.5\approx0.2231.
+$$
+
+The distributions are unchanged; the averaging weights change. Individual log
+ratios can be negative even though their KL average is nonnegative. Chapter 3
+derives the entropy/cross-entropy relationship, and Chapter 11 identifies which
+distribution supplies the weights in a policy/reference penalty.
+
 ## B.6 Numerical checks
 
 Check tensor shape before broadcasting, use float64 for tiny finite-difference
@@ -115,3 +138,66 @@ A failed finite-difference check can come from an incorrect derivation, step
 size, dtype or nondifferentiable boundary. Investigate that discrepancy rather
 than widening tolerance until it disappears. A passing check supports the tested
 mechanism and input domain, not arbitrary numerical scale or backend behavior.
+
+## B.7 Architecture operations at a glance
+
+For one feature vector $x\in\mathbb{R}^D$, let
+$\mu=D^{-1}\sum_i x_i$ and
+$v=D^{-1}\sum_i(x_i-\mu)^2$. With learned feature scale $\gamma_i$,
+offset $\beta_i$ and positive stabilizer $\epsilon$,
+
+$$
+\mathrm{LayerNorm}(x)_i=\gamma_i\frac{x_i-\mu}{\sqrt{v+\epsilon}}+\beta_i,
+\qquad
+\mathrm{RMSNorm}(x)_i=\gamma_i\frac{x_i}{\sqrt{D^{-1}\sum_jx_j^2+\epsilon}}.
+$$
+
+Both normalize over the feature axis at one position; neither uses batch-wide
+statistics. RMSNorm does not subtract the feature mean; scaling can still
+change it. The residual update
+$x'=x+f(x)$ preserves an identity path alongside the learned branch. Placement
+and the branch Jacobian determine how that path combines with normalization;
+the formulas alone do not establish optimization stability. Chapter 5 supplies
+numeric vectors, branch maps and the baseline/modern architecture comparison.
+
+RoPE rotates coordinate pairs rather than adding a learned position-table row.
+For a column pair $u\in\mathbb{R}^2$ at position $m$ and angular frequency
+$\omega$, write
+
+$$
+R_{m\omega}u=
+\begin{bmatrix}\cos(m\omega)&-\sin(m\omega)\\
+\sin(m\omega)&\cos(m\omega)\end{bmatrix}u.
+$$
+
+Different pairs use different frequencies. Applying these rotations to queries
+and keys makes their dot product depend on relative displacement, because
+$R_{m\omega}^\top R_{n\omega}=R_{(n-m)\omega}$. This column-pair expression is
+equivalent to the row-vector implementation after transposing the rotation.
+Keep position offsets consistent when reusing cached keys. Chapter 5 develops
+the derivation and the deliberately broken cache example.
+
+## B.8 Optimizer state changes the update
+
+Adam stores an exponentially weighted signed gradient $m_t$ and squared
+gradient $v_t$, each with the parameter's shape. For zero-initialized moments,
+
+$$
+m_t=\beta_1m_{t-1}+(1-\beta_1)g_t,\qquad
+v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2,
+$$
+
+$$
+\widehat m_t=\frac{m_t}{1-\beta_1^t},\qquad
+\widehat v_t=\frac{v_t}{1-\beta_2^t},\qquad
+\theta_t=(1-\eta_t\lambda_{\mathrm{wd}})\theta_{t-1}
+-\eta_t\frac{\widehat m_t}{\sqrt{\widehat v_t}+\epsilon_{\mathrm{Adam}}}.
+$$
+
+The square root rescales each coordinate by its recent gradient magnitude;
+$v_t$ is not a mean-subtracted variance estimate. Bias correction compensates
+for initial zero moments. AdamW applies the displayed shrinkage separately from
+the adaptive gradient term. Betas, epsilon, decay groups and the learning-rate
+schedule are part of the recipe. Chapter 6 traces their effects numerically;
+the optimizer state explains why the same current gradient can produce different
+updates after different histories.

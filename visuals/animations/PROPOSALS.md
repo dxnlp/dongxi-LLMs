@@ -11,6 +11,29 @@ same proposal is not repeatedly rediscovered.
 
 ## Candidate queue
 
+### Foundations teaching extensions — existing candidates, 2026-10-10
+
+- Source: agent, automatic mathematical opportunity check during
+  `BOOK-FOUNDATIONS-2026-10`. Extend existing candidates 001–005 (prediction
+  and learning), 008/013–016 (retrieval, residuals, norms and positions),
+  018 (optimizer updates), 022/023 (evaluation and supervision), and
+  025–029 (preferences, policy gradients, groups and teacher transfer).
+  Reuse their packets; this is candidate capture rather than a new commission.
+- Canonical mechanisms: an illustrative prefix follows categorical lookup,
+  contextualization and $\nabla_zL=p-q$; the same response-level reward fixture
+  follows $\nabla_zJ=p\odot(R-J)$, detached baselines, current/old likelihood
+  ratios and sign-dependent clipping. Group centering and random scaling remain
+  distinct from an action-independent baseline. Teacher targets retain their
+  prefix distribution, temperature and gradient contract.
+- Evidence state: deeper book explanations reuse existing executable sources,
+  saved reference plots and retained empirical failures. New small numeric
+  fixtures receive independent bounded calculations in the
+  [foundations record](../../experiments/reports/2026-10-10-book-foundations-pass.md).
+  No new model-scale outcomes or learner assessments are implied.
+- Production dependency: stable chapter examples, the existing candidate
+  packets and explicit media approval. Animation production remains on
+  Mac Studio. These extensions are proposed and unrendered.
+
 ### Editorial mechanism extensions — existing candidates, 2026-10-10
 
 - Source: agent, automatic opportunity check during the book editorial goal.

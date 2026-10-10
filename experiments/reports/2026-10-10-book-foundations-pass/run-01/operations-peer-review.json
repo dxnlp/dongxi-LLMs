@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "goal_id": "BOOK-FOUNDATIONS-2026-10",
+  "reviewer": "editorial_operations",
+  "status": "accepted",
+  "base_commit": "b722d59cfc115ceca20d5e15b566d972d389737b",
+  "reviewed_utc": "2026-10-10T20:47:21.677033+00:00",
+  "scope": "Independent read-only technical and narrative review of Chapters 1–5 and shared preface, how-to-use, notation, Appendix B and reader guide. Authoring of these sources belongs to depth/root. No reviewed lesson source or notebook was modified by this reviewer.",
+  "reviewed_sources": [
+    {
+      "path": "book/chapters/01-evidence-before-optimization.md",
+      "sha256": "c689a87d4c47f1a639bdff6d81832ec0a3390cd9c2cf8ac965f39c1ff6901772",
+      "bytes": 27798
+    },
+    {
+      "path": "book/chapters/02-text-tokens-and-embeddings.md",
+      "sha256": "7acc57faf0019c51a102f1f9999eae029b37d85b2c8d682baa0fecce10a815a5",
+      "bytes": 44759
+    },
+    {
+      "path": "book/chapters/03-learning-the-next-token.md",
+      "sha256": "c604743d8015799df605bd0c7e6f8748fffdd568d1af5407fc20918d8cf38a03",
+      "bytes": 41665
+    },
+    {
+      "path": "book/chapters/04-attention-and-the-causal-information-boundary.md",
+      "sha256": "1d33d17989884a49795a640b82a3babf8470b200cf951cd29e9e2f4e7a68eb6b",
+      "bytes": 34896
+    },
+    {
+      "path": "book/chapters/05-building-a-modern-decoder.md",
+      "sha256": "8f32583beb16b6bc3b033a2f97ebae4d410c69f6cfd1cc1175718d852b818556",
+      "bytes": 87520
+    },
+    {
+      "path": "book/front-matter/preface.md",
+      "sha256": "44d42fa6dadd16a3e9ec9f0d23fad4cd952c33a3a0b7ed5f58bafafe3ce9fbec",
+      "bytes": 4764
+    },
+    {
+      "path": "book/front-matter/how-to-use.md",
+      "sha256": "92dc1e5a56ee14c7a1eddd8dc1b40c0e8b3ae4df42c034feaad7836fd641fbf2",
+      "bytes": 4827
+    },
+    {
+      "path": "book/front-matter/notation.md",
+      "sha256": "0839cd63a5a2d16a2b831b9542951c677225eaa513041bc7ba9e91ebbb9673ba",
+      "bytes": 7242
+    },
+    {
+      "path": "book/appendices/b-mathematical-and-tensor-notation.md",
+      "sha256": "460d390e94acbcfdf92d66843bb36e42252ef4fe892dea140cd55d21cbaafbbe",
+      "bytes": 9301
+    },
+    {
+      "path": "book/README.md",
+      "sha256": "12ed39460b4426cb92bf0b667bc87ba5dea1706267383f18ef14e55f70ca2858",
+      "bytes": 5113
+    }
+  ],
+  "author_identity_check": {
+    "chapter_hashes_match_depth_edits": true,
+    "numerical_source_hash_matches_depth_edits": true,
+    "numerical_output_hash_matches_depth_edits": true
+  },
+  "method": [
+    "Read final new explanations in their chapter context, compare against the original-to-final prose changes and retained mechanisms/evidence, and follow the connecting example across chapter boundaries.",
+    "Independently inspect definitions, derivative direction, tensor orientation, support conditions, arithmetic and interpretation against canonical modules and the actual bounded numerical source/results. This peer receipt records source review and arithmetic consistency, not a new execution of the author numerical script.",
+    "Visually inspect the four promoted depth figures and compare their axes, fixed fixtures and measured/computed scope to the adjoining captions.",
+    "Inspect final shared guides and first-use prerequisites, including the two corrected Appendix B conditions; bind all accepted source bytes with SHA256."
+  ],
+  "chapter_findings": [
+    {
+      "chapter": 1,
+      "path": "book/chapters/01-evidence-before-optimization.md",
+      "sections": [
+        "1.2",
+        "1.4",
+        "1.7"
+      ],
+      "lines": {
+        "claim_decision": 85,
+        "state_ledger": 366
+      },
+      "result": "accepted",
+      "observations": [
+        "The saved-checkpoint intervention separates exit status, numerical execution, checkpoint readability and behavioral claims; a mean negative log-likelihood is correctly connected to geometric-mean assigned target probability.",
+        "The FP32 associativity example has outcomes 1 and 0 under the two declared addition orders. The million-parameter state ledger correctly separates FP32/BF16 storage, two FP32 Adam moments and optional master copies; calculated decimal MB do not become measured Qwen peaks.",
+        "New material leads toward a concrete token prediction without changing the historical smoke outcomes or promoting execution into capability evidence."
+      ]
+    },
+    {
+      "chapter": 2,
+      "path": "book/chapters/02-text-tokens-and-embeddings.md",
+      "sections": [
+        "2.5",
+        "2.6",
+        "2.9"
+      ],
+      "lines": {
+        "row_trace": 464,
+        "mask_gradient": 836
+      },
+      "result": "accepted",
+      "observations": [
+        "The explicit mapping of the pet saw the to [2,5,3,2] gives lookup shape [1,4,2] and repeats the same stored row at positions 0 and 3. Position/context are introduced as the later sources of difference.",
+        "The artificial sum-of-lookups objective is labeled separately from a language-model loss. Its repeated-row gradient and SGD update match the declared two-coordinate table; changing only the final ID exchanges row multiplicities.",
+        "Input lookup, tied-output-classifier gradient and future-dependent prompt gradients remain separate mechanisms. The reused response-only gradient figure has a different fixed row fixture and does not redefine the illustrative word mapping."
+      ]
+    },
+    {
+      "chapter": 3,
+      "path": "book/chapters/03-learning-the-next-token.md",
+      "sections": [
+        "3.3",
+        "3.5",
+        "3.6",
+        "3.7"
+      ],
+      "lines": {
+        "parameter_update": 551,
+        "entropy_kl": 663
+      },
+      "result": "accepted",
+      "observations": [
+        "The [cat,dog,slept] three-class example is expressly a complete teaching classifier, rather than a renamed or renormalized slice of the six-word model. The row-vector projection uses stored [V,D] weights and g^T h for their gradient.",
+        "At logits [2,1,-1], dog probability 0.259496, loss 1.349012 and the stated SGD update with hidden state/bias fixed yield dog probability 0.287557 and loss 1.246336. The stated hidden gradient is [0.635146,0]; the changed-target signs are correct.",
+        "The conditional chain example multiplies to 0.1 and has total NLL 2.302585, mean 0.767528. Entropy/KL explain a positive irreducible population loss with zero expected gradient. The 70/30 table and support-aware nonnegativity proof are consistent; sampled one-hot labels are distinguished from the population target distribution."
+      ]
+    },
+    {
+      "chapter": 4,
+      "path": "book/chapters/04-attention-and-the-causal-information-boundary.md",
+      "sections": [
+        "4.3",
+        "4.4",
+        "4.5",
+        "4.7",
+        "4.8"
+      ],
+      "lines": {
+        "soft_lookup": 140,
+        "routing": 481
+      },
+      "result": "accepted",
+      "observations": [
+        "The same-prefix next-token problem gives a reason to retrieve earlier information while blocking the future answer. Finite one-hot key matching is correctly a soft mixture; the hard limit requires a unique maximum and is distinct from tied maxima.",
+        "The assigned [8,-8] score intervention and division by sqrt(64) produce the stated unscaled/scaled probabilities; it is not presented as a consequence of the random-score variance assumption.",
+        "The three-position forward calculation now consistently uses zero-based row labels. The value-dependent routing derivative for row 1 has signs [-0.442362,+0.442362], so descent shifts weight toward the lower first-coordinate value; identical allowed values remove this local routing signal.",
+        "Future invariance and the four-position masking preview separate causal visibility from loss grading and gradient detachment. Stored projection layouts and mathematical [D,d] row-vector maps are distinguished."
+      ]
+    },
+    {
+      "chapter": 5,
+      "path": "book/chapters/05-building-a-modern-decoder.md",
+      "sections": [
+        "5.4",
+        "5.5",
+        "5.6",
+        "5.7",
+        "5.19"
+      ],
+      "lines": {
+        "complete_trace": 482,
+        "qwen_accounting": 1245
+      },
+      "result": "accepted",
+      "observations": [
+        "The residual, norm and MLP explanations connect transformations of the same state. Adding a common feature offset is removed from the LayerNorm branch reading while the local residual bypass keeps it; later final normalization can remove it. Zeroing both learned branch output projections (including biases) makes the pre-norm block exactly identity.",
+        "GELU is defined as u Phi(u), and the displayed values at -1,0,1 correctly describe a smooth nonlinear transform including a negative contribution. It is not a literal binary feature gate.",
+        "The seed-505 decoder trace states FP32 initialization followed by double conversion, sample-standard-deviation convention and the coincident D=V=16 axis sizes. Manual composition agrees with the declared full forward path; neither norm scale nor tensor spread is described as learned language.",
+        "The pinned Qwen accounting includes shared Q/K RMS scale vectors, tied vocabulary storage and exact 596,049,920 unique parameters. The 751,632,384 serialized element count and historical same-revision runtime tying are kept distinct from unique storage, raw BF16 payload and process peak memory. No fresh weight loading is claimed."
+      ]
+    }
+  ],
+  "shared_findings": [
+    {
+      "paths": [
+        "book/front-matter/preface.md",
+        "book/front-matter/how-to-use.md",
+        "book/front-matter/notation.md",
+        "book/README.md"
+      ],
+      "result": "accepted",
+      "observations": [
+        "Reader prerequisites are named as Python, arrays and basic derivatives; the first worked examples define their additional local probability/optimization terms.",
+        "Three recurring examples are explicitly illustrative. The guides do not imply that all measured checkpoints descend from one generic teaching lineage.",
+        "The notation table and chapter equations use row contextual states, [V,D] stored vocabulary heads and transposes consistently. Architecture projections with mathematical [D,d] shape explain the implementation layout distinction.",
+        "Loss masks, additive attention masks and detachment are separately named. Archived fixture symbols and local roles for q, beta, lambda, temperatures and token budgets are stated rather than silently conflated.",
+        "Saved previews are fixed observations and regeneration uses current state; mechanism references, measured model runs, unexecuted extensions and learner readiness/mastery are separate evidence levels."
+      ]
+    },
+    {
+      "path": "book/appendices/b-mathematical-and-tensor-notation.md",
+      "result": "accepted_after_wording_corrections",
+      "observations": [
+        "The final p-q identity now explicitly belongs to unscaled cross-entropy with a fixed normalized target, avoiding accidental use for other KL or temperature derivatives.",
+        "RMSNorm is now described as not subtracting the feature mean, with scaling allowed to change it. Other displayed shape, masking, KL-support, RoPE orientation and AdamW formulas remain consistent with their chapter uses."
+      ]
+    }
+  ],
+  "figures": [
+    {
+      "path": "notebooks/figures/chapter-02/day-02-03_embedding_gradient_paths-01.png",
+      "sha256": "86be5bddafab3a0ef69bbc526ca9a83da11db6a5bb1efaccf1d3fff3b24c3f96",
+      "visual_review": "accepted",
+      "reading": "Prompt lookup rows 1 and 2 have nonzero measured input-table gradient under response-only local loss. The caption keeps these vocabulary row IDs separate from the illustrative six-word mapping."
+    },
+    {
+      "path": "notebooks/figures/chapter-03/day-03-01_logits_softmax_nll-01.png",
+      "sha256": "136384a28135cdfd9a170296bd1b99241497002aea94faa35f8fe68accacf275",
+      "visual_review": "accepted",
+      "reading": "Probabilities at logits [2,1,-1], signed dog-target p-q and the fixed-other-scores dog-logit intervention agree with the numerical update. Score intervention is not presented as a full parameter-training trajectory."
+    },
+    {
+      "path": "notebooks/figures/chapter-04/day-04-01_causal_attention_forward-01.png",
+      "sha256": "f4e28e4b95f7eeb2c711d8d588e7fa332c2a772c90a12ffc80e36ac00c90bb19",
+      "visual_review": "accepted",
+      "reading": "Four-position preview distinguishes causal, post-softmax masking and zero-score masking. Future perturbation changes only its own output for the causal implementation and earlier outputs for broken variants; this is distinguished from the three-position worked arithmetic."
+    },
+    {
+      "path": "notebooks/figures/chapter-05/day-05-03_residual_stream-visual-gradient-add.png",
+      "sha256": "8eeefec7cac9dd58594103cc42dedfb0e89e79ba72426c96f414fc96d67ccc44",
+      "visual_review": "accepted",
+      "reading": "Skip, branch and total arrows depict the first two coordinates of the backward sum. Projection warning and caption prevent the two-dimensional slice from being described as the full gradient or semantic directions."
+    }
+  ],
+  "numerical_sources": [
+    {
+      "path": "experiments/reports/2026-10-10-book-foundations-pass/run-01/depth-calculations.py",
+      "sha256": "d6ca2c8719b8baf49ae51e034f350d496940c2bee5650efdd54a6e58cb4dcdc3",
+      "role": "Actual author bounded-CPU calculation source; reviewed, not newly executed in this peer review."
+    },
+    {
+      "path": "experiments/reports/2026-10-10-book-foundations-pass/run-01/depth-calculations.json",
+      "sha256": "1b760eabd8070ca57f1f6c6d95b3fe1393456e2ec701dee51abeb12858404f98",
+      "role": "Actual author output used for arithmetic/source consistency."
+    }
+  ],
+  "resolved_issues": [
+    {
+      "path": "book/appendices/b-mathematical-and-tensor-notation.md",
+      "line": 69,
+      "issue": "The p-q derivative shorthand initially omitted objective and fixed-target conditions.",
+      "resolution": "Root explicitly added unscaled cross-entropy and fixed normalized q. Final text reread and hash-bound."
+    },
+    {
+      "path": "book/appendices/b-mathematical-and-tensor-notation.md",
+      "line": 155,
+      "issue": "RMSNorm leaves the mean component in place could imply preservation of the numerical mean.",
+      "resolution": "Root changed to does not subtract the feature mean; scaling can still change it. Final text reread and hash-bound."
+    }
+  ],
+  "open_issues": [],
+  "limits": [
+    "This peer review does not establish learner mastery, new model capability, actual Mac portability or publication permission.",
+    "The final all-notebook execution and global source-freeze checks belong to the root verification panel; no notebook was edited or executed by this reviewer for this receipt."
+  ]
+}

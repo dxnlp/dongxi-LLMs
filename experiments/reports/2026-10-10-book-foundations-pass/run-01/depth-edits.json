@@ -1,0 +1,410 @@
+{
+  "schema_version": 1,
+  "goal_id": "BOOK-FOUNDATIONS-2026-10",
+  "base_commit": "b722d59cfc115ceca20d5e15b566d972d389737b",
+  "scope": "Chapters1\u20135 authoring and their existing guides; code, notebooks, labs and historical reports unchanged",
+  "chapters": [
+    {
+      "chapter": 1,
+      "path": "book/chapters/01-evidence-before-optimization.md",
+      "baseline_sha256": "8544a748b855964f1cedcd2b121dbd40ef28ac00db7b2cbc93f1471903779324",
+      "final_sha256": "c689a87d4c47f1a639bdff6d81832ec0a3390cd9c2cf8ac965f39c1ff6901772",
+      "driving_question": "What would a successful run actually establish?",
+      "gaps_solved": [
+        "Missing sized state ledger; compressed evidence decision and numerical reproducibility explanation"
+      ],
+      "material_reused": [
+        "Hypothetical log, original conjunction criterion, three-step Qwen smoke and checkpoint-interface notebook"
+      ],
+      "edited_sections": [
+        "1.2 claim decision / loss units",
+        "1.3 configuration terms",
+        "1.4 FP32 reduction order",
+        "1.7 storage ledger"
+      ],
+      "numeric_receipt_keys": [
+        "memory",
+        "reduction_order"
+      ],
+      "controlled_change": "Keep losses fixed but make the checkpoint unreadable; change only the declared tensor storage policy.",
+      "figures": [],
+      "transition": "Chapter 2 makes the token prediction whose error the loss records explicit.",
+      "original_exercise_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "original_exercise_sections_byte_preserved": true,
+      "solution_path": "book/solutions/01-evidence-before-optimization.md",
+      "solution_sha256": "b84f005050bcf98d857f6c120c2aa4abec9ac1e578257fb7b7114647dc0b0713",
+      "solution_unchanged_and_mapping_preserved": true,
+      "reader_acceptance": {
+        "why_operation_needed": true,
+        "trace_with_units_shapes": true,
+        "prediction_and_adjacent_reference": true,
+        "controlled_change_explained": true,
+        "mechanism_vs_empirical_boundary": true,
+        "transition_and_companion_route": true
+      },
+      "review_level": "Author content review; not observed learner mastery",
+      "remaining_limitations": [
+        "Toy computations do not establish language capability or train a new Qwen model.",
+        "Saved figures retain their original reference identity; fresh all-notebook execution belongs to the parent verification panel."
+      ]
+    },
+    {
+      "chapter": 2,
+      "path": "book/chapters/02-text-tokens-and-embeddings.md",
+      "baseline_sha256": "0b037a007518e4e03e74a4ffbbacc3ce8feef6f7909bae4d5500b848321fb120",
+      "final_sha256": "7acc57faf0019c51a102f1f9999eae029b37d85b2c8d682baa0fecce10a815a5",
+      "driving_question": "How can categorical IDs become trainable representations?",
+      "gaps_solved": [
+        "Poorly connected lookup, repeated-gradient and contextual-state mechanisms"
+      ],
+      "material_reused": [
+        "Repeated lookup fixture and gradient lab; existing byte BPE; historical response-only gradient measurements"
+      ],
+      "edited_sections": [
+        "opening illustrative prefix",
+        "2.5 explicit row lookup / SGD update",
+        "2.9 prompt gradient figure"
+      ],
+      "numeric_receipt_keys": [
+        "embedding"
+      ],
+      "controlled_change": "Change only final prefix ID 2 to 5, exchanging gradient multiplicities of the shared rows.",
+      "figures": [
+        "notebooks/figures/chapter-02/day-02-03_embedding_gradient_paths-01.png"
+      ],
+      "transition": "Chapter 3 replaces the artificial sum objective with the actual next-token objective.",
+      "original_exercise_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "original_exercise_sections_byte_preserved": true,
+      "solution_path": "book/solutions/02-text-tokens-and-embeddings.md",
+      "solution_sha256": "1703eb583daa907ee871e18de6e12d5384c5bde3cf20c5b706acccd72e41ac32",
+      "solution_unchanged_and_mapping_preserved": true,
+      "reader_acceptance": {
+        "why_operation_needed": true,
+        "trace_with_units_shapes": true,
+        "prediction_and_adjacent_reference": true,
+        "controlled_change_explained": true,
+        "mechanism_vs_empirical_boundary": true,
+        "transition_and_companion_route": true
+      },
+      "review_level": "Author content review; not observed learner mastery",
+      "remaining_limitations": [
+        "Toy computations do not establish language capability or train a new Qwen model.",
+        "Saved figures retain their original reference identity; fresh all-notebook execution belongs to the parent verification panel."
+      ]
+    },
+    {
+      "chapter": 3,
+      "path": "book/chapters/03-learning-the-next-token.md",
+      "baseline_sha256": "a6e6c617ea16f9e5bee8a361483111886c6a9351ac660034116efda48a498e78",
+      "final_sha256": "c604743d8015799df605bd0c7e6f8748fffdd568d1af5407fc20918d8cf38a03",
+      "driving_question": "How can positive loss coexist with zero expected gradient?",
+      "gaps_solved": [
+        "Compressed foundational entropy/KL terms; no numeric output-weight update; disconnected log loss and parameter mechanism"
+      ],
+      "material_reused": [
+        "Existing three-logit softmax notebook, p-q derivation, 70/30 population and historical measured distribution-learning experiment"
+      ],
+      "edited_sections": [
+        "opening positive-loss puzzle",
+        "3.3 categorical probability / log-odds",
+        "3.5 chain-probability arithmetic / nats",
+        "3.6 worked row update / reused figure",
+        "3.7 entropy-KL definitions / proof / table"
+      ],
+      "numeric_receipt_keys": [
+        "output_head",
+        "chain_probability",
+        "entropy_kl"
+      ],
+      "controlled_change": "Change only observed target dog to cat with fixed scores; compare 50/50,70/30,90/10 predictions under the same 70/30 target law.",
+      "figures": [
+        "notebooks/figures/chapter-03/day-03-01_logits_softmax_nll-01.png"
+      ],
+      "transition": "Chapter 4 explains how the contextual state acquires allowed information.",
+      "original_exercise_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "original_exercise_sections_byte_preserved": true,
+      "solution_path": "book/solutions/03-learning-the-next-token.md",
+      "solution_sha256": "d3d28363fe3a41cff759332886046ad92debfed42695ddcae069a987b6f2c87a",
+      "solution_unchanged_and_mapping_preserved": true,
+      "reader_acceptance": {
+        "why_operation_needed": true,
+        "trace_with_units_shapes": true,
+        "prediction_and_adjacent_reference": true,
+        "controlled_change_explained": true,
+        "mechanism_vs_empirical_boundary": true,
+        "transition_and_companion_route": true
+      },
+      "review_level": "Author content review; not observed learner mastery",
+      "remaining_limitations": [
+        "Toy computations do not establish language capability or train a new Qwen model.",
+        "Saved figures retain their original reference identity; fresh all-notebook execution belongs to the parent verification panel."
+      ]
+    },
+    {
+      "chapter": 4,
+      "path": "book/chapters/04-attention-and-the-causal-information-boundary.md",
+      "baseline_sha256": "a4e4ac0be93444c77c2b68f1cf514906136d786009ac4ab9a45667a909b8905d",
+      "final_sha256": "1d33d17989884a49795a640b82a3babf8470b200cf951cd29e9e2f4e7a68eb6b",
+      "driving_question": "How does a position retrieve useful past information without seeing its answer?",
+      "gaps_solved": [
+        "Poorly connected motivation and numerical fixture; finite-soft lookup versus hard limit unspecified; numeric routing-gradient interpretation absent"
+      ],
+      "material_reused": [
+        "Existing complete three-position forward calculation, causal_attention_lab, broken-mask notebook and full gradient derivation"
+      ],
+      "edited_sections": [
+        "opening same-prefix retrieval problem",
+        "4.3 finite one-hot query-scale control",
+        "4.4 assigned score scaling",
+        "4.5 future intervention / reused figure",
+        "4.7 zero-based fixture table labels",
+        "4.8 numeric value-dependent routing gradient"
+      ],
+      "numeric_receipt_keys": [
+        "attention"
+      ],
+      "controlled_change": "Scale only receiving query; perturb final value; set two allowed values equal; compare causal and broken-mask future interventions.",
+      "figures": [
+        "notebooks/figures/chapter-04/day-04-01_causal_attention_forward-01.png"
+      ],
+      "transition": "Chapter 5 assembles routing, nonlinear computation and residual state updates.",
+      "original_exercise_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "original_exercise_sections_byte_preserved": true,
+      "solution_path": "book/solutions/04-attention-and-the-causal-information-boundary.md",
+      "solution_sha256": "6b6eedf8bdce99e722e471d532ea6a9211b6439ada3839934a72a24a2f9cce72",
+      "solution_unchanged_and_mapping_preserved": true,
+      "reader_acceptance": {
+        "why_operation_needed": true,
+        "trace_with_units_shapes": true,
+        "prediction_and_adjacent_reference": true,
+        "controlled_change_explained": true,
+        "mechanism_vs_empirical_boundary": true,
+        "transition_and_companion_route": true
+      },
+      "review_level": "Author content review; not observed learner mastery",
+      "remaining_limitations": [
+        "Toy computations do not establish language capability or train a new Qwen model.",
+        "Saved figures retain their original reference identity; fresh all-notebook execution belongs to the parent verification panel."
+      ]
+    },
+    {
+      "chapter": 5,
+      "path": "book/chapters/05-building-a-modern-decoder.md",
+      "baseline_sha256": "843c7cf942e181d9d676ac7c4cf32ac006008c2ab46d41ab217141104138dcaa",
+      "final_sha256": "8f32583beb16b6bc3b033a2f97ebae4d410c69f6cfd1cc1175718d852b818556",
+      "driving_question": "Why does composing these operations produce a decoder?",
+      "gaps_solved": [
+        "Compressed whole-model causal synthesis; GELU term undefined; exact pinned-Qwen component shares not surfaced"
+      ],
+      "material_reused": [
+        "Existing complete block equations, residual and norm companion, assembly notebook, architecture maps and analytical parameter helper"
+      ],
+      "edited_sections": [
+        "opening composition question",
+        "5.4 residual backward figure",
+        "5.5 common-offset and zero-branch controls",
+        "5.6 GELU definition / numeric nonlinearity",
+        "5.7 complete seeded forward trace and branch removal",
+        "5.19 pinned Qwen exact parameter budget"
+      ],
+      "numeric_receipt_keys": [
+        "decoder",
+        "qwen_configuration_accounting"
+      ],
+      "controlled_change": "Zero both learned branch output projections in copied first block; add common coordinate offset before LayerNorm; untie vocabulary head in accounting.",
+      "figures": [
+        "notebooks/figures/chapter-05/day-05-03_residual_stream-visual-gradient-add.png"
+      ],
+      "transition": "Chapter 6 separates fitting this mechanism from controlled pretraining and held-out improvement.",
+      "original_exercise_ids": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "original_exercise_sections_byte_preserved": true,
+      "solution_path": "book/solutions/05-decoder-notebook-solutions.md",
+      "solution_sha256": "0db572208daeaf6f2e53f35fea9e05ac373220920ca076be59d8496e9515e08b",
+      "solution_unchanged_and_mapping_preserved": true,
+      "reader_acceptance": {
+        "why_operation_needed": true,
+        "trace_with_units_shapes": true,
+        "prediction_and_adjacent_reference": true,
+        "controlled_change_explained": true,
+        "mechanism_vs_empirical_boundary": true,
+        "transition_and_companion_route": true
+      },
+      "review_level": "Author content review; not observed learner mastery",
+      "remaining_limitations": [
+        "Toy computations do not establish language capability or train a new Qwen model.",
+        "Saved figures retain their original reference identity; fresh all-notebook execution belongs to the parent verification panel."
+      ]
+    }
+  ],
+  "verification": {
+    "calculation_source": "experiments/reports/2026-10-10-book-foundations-pass/run-01/depth-calculations.py",
+    "calculation_source_sha256": "d6ca2c8719b8baf49ae51e034f350d496940c2bee5650efdd54a6e58cb4dcdc3",
+    "calculation_output": "experiments/reports/2026-10-10-book-foundations-pass/run-01/depth-calculations.json",
+    "calculation_output_sha256": "1b760eabd8070ca57f1f6c6d95b3fe1393456e2ec701dee51abeb12858404f98",
+    "actual_command": "PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python experiments/reports/2026-10-10-book-foundations-pass/run-01/depth-calculations.py",
+    "exit_code": 0,
+    "numeric_scope": "Bounded CPU tensor arithmetic and tiny untrained forward references; no new model-scale experiment.",
+    "book_math_command": "python3 scripts/check_book_math.py",
+    "book_math_exit_code": 0,
+    "book_math_receipt": "54 Markdown files, 1807 math expressions, 0 issues at author check; parent binds final global revision",
+    "git_diff_check_exit_code": 0,
+    "protected_notebooks_compared": 76,
+    "notebook_byte_changes": [],
+    "exercise_ids_preserved": 79
+  },
+  "figures": [
+    {
+      "asset": "notebooks/figures/chapter-02/day-02-03_embedding_gradient_paths-01.png",
+      "asset_sha256": "86be5bddafab3a0ef69bbc526ca9a83da11db6a5bb1efaccf1d3fff3b24c3f96",
+      "asset_bytes_unchanged_from_baseline": true,
+      "notebook_source": "notebooks/day-02/03_embedding_gradient_paths.ipynb",
+      "notebook_source_sha256": "1b8581fdde4a7f782d6e32bc839214e37455e5ab58b1d35c09aa91c112922f7e",
+      "modules": {
+        "src/dongxi_llms/embedding_gradient_lab.py": "c1260811474072dec7c847bd9ca0c485007e504b9a51b74c4f3affd1135968f4"
+      },
+      "regeneration_command": "python scripts/verify_course_notebooks.py --days 2 --kernel <isolated-cpu-kernel> --output /tmp/chapter-02-figures --export-figures",
+      "command_boundary": "Documented regeneration only; this task did not overwrite assets or execute notebook sources.",
+      "visual_review": "Existing PNG inspected; labels readable, caption/reading guide agree with the plotted quantities.",
+      "reading_guide": "Plot code near end; response_only_loss_demo fixed measurements; horizontal axis vocabulary rows."
+    },
+    {
+      "asset": "notebooks/figures/chapter-03/day-03-01_logits_softmax_nll-01.png",
+      "asset_sha256": "136384a28135cdfd9a170296bd1b99241497002aea94faa35f8fe68accacf275",
+      "asset_bytes_unchanged_from_baseline": true,
+      "notebook_source": "notebooks/day-03/01_logits_softmax_nll.ipynb",
+      "notebook_source_sha256": "937ec4d15fa2ce97c6a560377af9860bf5ee6fa0e4359d1703a7a2e67b276980",
+      "modules": {},
+      "regeneration_command": "python scripts/verify_course_notebooks.py --days 3 --kernel <isolated-cpu-kernel> --output /tmp/chapter-03-figures --export-figures",
+      "command_boundary": "Documented regeneration only; this task did not overwrite assets or execute notebook sources.",
+      "visual_review": "Existing PNG inspected; labels readable, caption/reading guide agree with the plotted quantities.",
+      "reading_guide": "Code cell38: probabilities/label, signed derivative, dog-logit sweep. Original figure remains a fixed preview."
+    },
+    {
+      "asset": "notebooks/figures/chapter-04/day-04-01_causal_attention_forward-01.png",
+      "asset_sha256": "f4e28e4b95f7eeb2c711d8d588e7fa332c2a772c90a12ffc80e36ac00c90bb19",
+      "asset_bytes_unchanged_from_baseline": true,
+      "notebook_source": "notebooks/day-04/01_causal_attention_forward.ipynb",
+      "notebook_source_sha256": "2f6b0ebe6a1d0d2c3e83a29a6251fb5703ede7ac8bf36731b35476f1e357bc94",
+      "modules": {
+        "src/dongxi_llms/causal_attention_lab.py": "9da0e3e55d1264d2bf82c4c7cf01c617eddb1a90f0a426bb733610c872eeb8bb"
+      },
+      "regeneration_command": "python scripts/verify_course_notebooks.py --days 4 --kernel <isolated-cpu-kernel> --output /tmp/chapter-04-figures --export-figures",
+      "command_boundary": "Documented regeneration only; this task did not overwrite assets or execute notebook sources.",
+      "visual_review": "Existing PNG inspected; labels readable, caption/reading guide agree with the plotted quantities.",
+      "reading_guide": "Code near end: correct versus two broken modes and final-input perturbation. Original four-position fixture distinguished from three-position arithmetic."
+    },
+    {
+      "asset": "notebooks/figures/chapter-05/day-05-03_residual_stream-visual-gradient-add.png",
+      "asset_sha256": "8eeefec7cac9dd58594103cc42dedfb0e89e79ba72426c96f414fc96d67ccc44",
+      "asset_bytes_unchanged_from_baseline": true,
+      "notebook_source": "notebooks/day-05/03_residual_stream.ipynb",
+      "notebook_source_sha256": "1edf700006c941e39fd6dfee76e600ddcb36eb69b49b131ca989f2609ecb3f77",
+      "modules": {
+        "src/dongxi_llms/decoder_visuals.py": "836d6a47b65922531f36e87242789a19c58163af2b975d15daae8ea8a06f5860"
+      },
+      "regeneration_command": "python scripts/verify_course_notebooks.py --days 5 --kernel <isolated-cpu-kernel> --output /tmp/chapter-05-figures --export-figures",
+      "command_boundary": "Documented regeneration only; this task did not overwrite assets or execute notebook sources.",
+      "visual_review": "Existing PNG inspected; labels readable, caption/reading guide agree with the plotted quantities.",
+      "reading_guide": "Code cell20: viz.vectors(probe[0,0],(probe@weight.T)[0,0],...) ; first two coordinates explicitly a projection."
+    }
+  ],
+  "technical_resolutions": [
+    {
+      "issue": "Qwen header has a separately serialized head despite tied runtime parameter",
+      "resolution": "Unique-parameter sum labeled calculation; serialized elements separately recorded with immutable revision/header hash; historical actual runtime tying linked to 2026-08-31 same-revision inspection."
+    },
+    {
+      "issue": "Existing attention fixture used one-based row labels despite chapter zero-based convention",
+      "resolution": "Labels changed to 0, 1, 2 and gradient example uses row 1; no numeric values or historical receipt changed."
+    },
+    {
+      "issue": "Foundational shorthand obscured nats, entropy, KL, SGD and GELU",
+      "resolution": "Define in core chapter at mechanism use; KL direction and support conventions beside proof."
+    }
+  ],
+  "status": "Chapters1\u20135 substantive authoring complete; independent peer/global execution review pending parent."
+}

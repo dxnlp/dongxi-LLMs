@@ -14,6 +14,11 @@ targets. Their examples may arrive in different orders. One may resume AdamW's
 history while the other restores only the weights. The model is only one state
 inside a larger process.
 
+The more surprising disagreement can occur inside one run: its held-out loss
+falls while a generated story changes the speaker, repeats a description and
+ends without resolving its problem. We need to understand both the machinery
+that moved the parameters and the measurement that calls the result better.
+
 This chapter develops that process as an explicit contract: **what data enters,
 what objective is computed, how parameters change, what is measured, and what
 must survive interruption**. It combines the Day 8 mechanisms with the completed Day 9 TinyStories learning
@@ -279,12 +284,27 @@ $$
 \widehat v_t=\frac{v_t}{1-\beta_2^t}.
 $$
 
+Why those divisors? If every gradient equals a constant $g$ and $m_0=0$,
+the geometric series gives $m_t=(1-\beta_1^t)g$. The uncorrected moment
+underestimates even this constant input. Dividing by $1-\beta_1^t$ restores
+$g$; the same argument restores $g^2$ from $v_t$. Bias correction addresses
+zero initialization, not every source of error in a changing gradient history.
+
 For the unfused, non-AMSGrad variant used here, the update is
 
 $$
 \theta_t=(1-\eta_t\lambda)\theta_{t-1}
 -\eta_t\frac{\widehat m_t}{\sqrt{\widehat v_t}+\epsilon}.
 $$
+
+The denominator converts the remembered signed gradient into a change relative
+to that coordinate's remembered magnitude. At the first step, with gradients
+$[1,0.01]$, zero moments, $\eta=0.01$ and no decay, corrected Adam changes
+both coordinates by approximately −0.01. SGD changes them by −0.01 and
+−0.0001. The second coordinate's smaller raw gradient does not automatically
+make its normalized update smaller. This first-step calculation ignores only
+the negligible effect of $\epsilon=10^{-8}$; later updates depend on history.
+It explains the mechanism, not which optimizer wins after a fair tuning budget.
 
 The decay term shrinks the old parameter separately from the gradient moments.
 This is why AdamW's decoupled weight decay is not simply “add an L2 gradient
@@ -297,6 +317,33 @@ in its previous direction. Likewise, a zero current gradient does not imply
 zero movement: past moments or weight decay can still matter. An absent gradient
 (`grad=None`) is a distinct implementation case, not interchangeable with an
 explicit zero tensor.
+
+**Reader prediction.** A scalar gradient reverses from +1 to −0.1. Does Adam
+immediately reverse its update? Use $\beta_1=0.9$, $\beta_2=0.999$,
+$\eta=0.01$, zero initial moments and no decay:
+
+| Update | Current gradient | First moment $m_t$ | Corrected first moment | Parameter change |
+|---:|---:|---:|---:|---:|
+| 1 | +1 | 0.100 | 1.000000 | −0.010000 |
+| 2 | +1 | 0.190 | 1.000000 | −0.010000 |
+| 3 | −0.1 | 0.161 | 0.594096 | −0.007260 |
+
+The third first moment is $0.9(0.19)+0.1(-0.1)=0.161$. Its corrected
+second moment is approximately 0.669670, so the remembered direction remains
+positive and the minimized-loss update remains negative. SGD would instead
+add 0.001 on that third gradient. The
+[existing sign-reversal cell](../../notebooks/day-08/02_adamw_schedule_and_stability.ipynb)
+executes this recurrence. Change the number or strength of the negative
+gradients and predict when the first moment crosses zero.
+
+![Measured embedding gradient and SGD versus AdamW coordinate changes](../../notebooks/figures/chapter-06/02-optimizer.png)
+
+The [saved optimizer plot](../../src/dongxi_llms/pretraining_visuals.py)
+uses the companion's actual small-decoder embedding gradient, not our scalar
+table. Match each coordinate across the panels: the raw gradient and parameter
+change are different quantities. The source fixture includes declared decay;
+equal numerical learning rates expose that distinction rather than a quality
+ranking. Regenerate through the [Day 8 optimizer companion](../../notebooks/day-08/02_adamw_schedule_and_stability.ipynb).
 
 Notebook 2 checks a hand-written recurrence against PyTorch using an actual
 decoder embedding gradient. The tests also check several sequential updates.
@@ -317,7 +364,10 @@ will improve at every step.
 
 Warmup gradually introduces the intended update scale while parameters and
 optimizer statistics are adjusting. It may improve stability; it is not a repair
-for leaked labels, invalid data, or nonfinite arithmetic. Later decay reduces
+for leaked labels, invalid data, or nonfinite arithmetic. Corrected Adam moments
+do not make the early network states or noisy gradient estimates stationary;
+warmup is a separate recipe intervention, not a second correction of the same
+zero-initialization bias. Later decay reduces
 the rate as the allocated optimization budget is consumed.
 
 For one-based update number $u$, warmup length $W$, total updates $S$, peak
@@ -336,11 +386,51 @@ not proposed defaults for a larger model. The schedule ticks once per optimizer
 update, not once per microbatch. In code the input is the number of already
 completed updates; the notebook makes the conversion explicit.
 
+The first update uses $0.01/3\approx0.003333$, the third reaches 0.01,
+and the twenty-fourth reaches 0.001. A schedule indexed by microbatches would
+reach these points before the declared number of parameter changes when
+accumulation is enabled. Holding the batch stream fixed and changing only
+the schedule clock is therefore a substantive perturbation.
+
 If the effective batch doubles, the same update-based warmup now consumes twice
 as many full-valid targets. A token-based schedule would express a different
 invariant. The right comparison begins by deciding what should remain equal:
 updates, token exposure, compute, wall time, or some combination with explicit
 trade-offs.
+
+### Regularization changes the problem we optimize
+
+Generalization asks how learned predictions or behavior transfer to declared
+unseen inputs. Overfitting is the pattern in which fitting the training data
+continues while performance on an appropriate held-out population deteriorates.
+A large train/development gap can also reflect different populations or
+measurement conventions, so compare a fixed checkpoint under matched scoring
+before attributing it to training duration.
+
+Weight decay discourages large stored parameters through the shrinkage already
+shown. With $\theta=2$, $\eta=0.01$, $\lambda=0.1$ and an explicit zero
+gradient and fresh moments, decoupled decay gives $\theta'=1.998$.
+Adding an L2 gradient $\lambda\theta=0.2$ to a fresh Adam step instead gives
+approximately 1.99: the adaptive denominator transforms the penalty too.
+These are different updates, even though both can be described as penalties
+on parameter magnitude. This fixture decays all trainable parameters; excluding
+norm scales, biases or embeddings is a separately declared grouping choice.
+
+Dropout randomly suppresses selected activations during training and rescales
+the survivors under its chosen convention. It changes the computation seen
+by each training example; affected layers use their evaluation behavior at
+measurement time. Our transparent decoder omits dropout. Adding it would be
+a new intervention whose effects need evidence, rather than an automatic
+remedy for a repetitive story.
+
+Minibatches supply another source of variation: their mean gradient estimates
+the declared corpus objective without using every target on every update.
+Changing batch size changes that noise, the number of updates per exposure,
+and sometimes which documents travel together. An epoch means one pass through
+the selected training corpus; repeated epochs add presentations, not new
+independent examples. Regularization, sampling and stopping must be evaluated
+against the capability we actually want, which is why the loss measurement
+and story case later in this chapter remain separate.
 
 ## 6.9 Clipping and precision: safeguards with boundaries
 
@@ -429,6 +519,16 @@ measurement times, so their gap is not a pure estimate of generalization error.
 Neither curve must decrease monotonically. A tiny finite loss can coexist with
 data leakage; a nonzero loss can coexist with successful learning of uncertainty,
 as Chapter 3 established.
+
+![Training-batch and held-out NLL plotted with their distinct measurement times](../../notebooks/figures/chapter-06/03-validation.png)
+
+Read the two labels before subtracting the curves. The
+[validation-plot source](../../src/dongxi_llms/pretraining_visuals.py)
+deliberately labels training before the update and development after it;
+the [Day 8 reference](../../notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb)
+regenerates this small fixture. A rising held-out curve beside a falling
+matched training curve would motivate an overfitting hypothesis, but this
+particular unmatched gap is not that controlled measurement.
 
 Development used repeatedly to select recipes is itself part of development.
 Preserve a separate final test contract when making an eventual generalization
@@ -678,6 +778,26 @@ improved substantially, and the inspected completions show more recognizable
 English story structure than initialization. Reliable narrative coherence
 has not been established. There is no scored, blinded story-quality evaluation
 or repeated training-seed comparison in this run.
+
+### Follow the evidence to a training decision
+
+**Reader prediction.** Which intervention is justified by these samples alone:
+more dropout, a repetition penalty, a larger model, or another measured
+comparison? Follow the responses rather than treating the loss as a verdict.
+
+| Question | What the retained evidence answers | What it leaves open |
+|---|---|---|
+| Did fixed-prefix prediction improve? | The declared development NLL falls from 10.9049 to 1.6743 | Which individual narrative skills improved |
+| Did generation terminate? | The cited greedy continuation emits EOS | Whether its ending resolves a consistent plot |
+| Did the characters stay consistent? | The cited bear/protection role change lacks a coherent explanation | How often this happens across frozen prompts |
+| Was the symptom caused by overfitting? | Repetition and malformed language occur in inspected outputs | A matched train/development gap and causal repair |
+
+The useful next decision is to make character identity and causal continuity
+scorable across fixed prompts, then compare one declared change. Section 6.18
+separates possible causes; Chapter 7 builds that measurement. A repetition
+penalty targets repeated token selection during decoding. Dropout changes
+training computation. More exposure changes the fitted parameters. They
+address different hypotheses and should not be bundled into one alleged cure.
 
 ## 6.17 Why lower loss does not guarantee a coherent plot
 

@@ -82,12 +82,42 @@ configuration → execution → recorded observations → bounded interpretation
 The last arrow is where many errors occur. An interpretation should not contain
 more certainty or scope than the observations can carry.
 
+### Decide which claim the log can carry
+
+**Reader prediction.** Keep those three losses and exit status unchanged, but
+suppose the saved checkpoint cannot be reopened. Did the experiment succeed?
+The answer depends on the contract: a forward/backward execution check may pass,
+while a training-and-save check fails. A favorable number cannot replace a
+missing required observation.
+
+Read the same log through three progressively stronger questions:
+
+| Proposed claim | Evidence needed beyond the printed losses | Decision from this log alone |
+|---|---|---|
+| The process returned normally | Its actual exit status and complete record | Supported by the stated status |
+| The intended training path works | Correct data and loss construction, expected updates, numerical checks, required saved outputs | Only partly supported |
+| The model performs better on new requests | A declared held-out comparison, aligned scoring and representative responses | Unanswered |
+
+This is a useful decision procedure: name the claim, list what could falsify it,
+then ask whether those observations exist. A checkpoint is evidence that bytes
+were saved; reopening it with the intended tokenizer tests a different property.
+Likewise, a loss curve measures the chosen objective; a behavioral comparison
+tests whether that objective delivered the desired result. We will follow one
+small text sequence through the model in Chapters 2–6, then return to this gap
+between prediction error and useful behavior in Chapter 7.
+
 ### Loss is not capability
 
 Training loss answers a narrow question: how well does the current model predict
 the selected training tokens under the selected objective? It does not directly
 answer whether the model follows instructions better, solves new problems, becomes
 more truthful, or retains earlier capabilities.
+
+The common next-token loss is a negative natural logarithm, measured in **nats**.
+It penalizes assigning little probability to an observed continuation. Chapter 3
+will derive both that loss and its gradient. For a mean over many target tokens,
+exponentiating its negative gives their geometric-mean assigned probability,
+not the probability of every token and not a task success rate.
 
 Even a perfectly measured reduction in training loss can coexist with:
 
@@ -168,6 +198,17 @@ should record:
 
 These fields define the computation. Omitting them makes comparisons ambiguous.
 
+Here **precision** names the numerical storage and computation choices, such as
+32-bit floating point (FP32) or 16-bit brain floating point (BF16). An attention
+backend is the implementation used for the model's information-mixing operation.
+A **microbatch** is the examples processed by one forward/backward pass;
+gradient accumulation combines several such passes before one optimizer update.
+Gradient checkpointing trades extra recomputation for storing fewer intermediate
+activations. It differs from saving a model checkpoint to disk. The optimizer
+uses gradients to change parameters, while its schedule changes the update size
+over time. These names specify costs and behavior; later chapters expose their
+mechanisms.
+
 ## 1.4 Reproducibility is larger than a seed
 
 A pseudorandom seed selects a repeatable stream for a particular random-number
@@ -191,6 +232,12 @@ $$
 in finite precision. Two correct parallel reduction orders can therefore produce
 slightly different values. During many optimization steps, small numerical
 differences can lead to visibly different trajectories.
+
+For a concrete FP32 example, set $a=10^8$, $b=-10^8$, and $c=1$.
+Computing $(a+b)+c$ gives 1, while $a+(b+c)$ gives 0: at that magnitude,
+adding 1 to $b$ rounds back to $b$. The mathematical sum is the same; the
+intermediate rounding differs. Fixing the random seed cannot fix a reduction
+order that the execution backend changes.
 
 In this book, **repeatability** means rerunning the recorded procedure in the same
 controlled environment, while **reproducibility** means independently recreating
@@ -315,6 +362,41 @@ Some terms are nearly fixed for a given model; activations and temporary buffers
 depend on batch geometry, sequence length, attention implementation, and
 checkpointing. This is why multiplying a batch-1 peak by eight is not a reliable
 prediction for batch size 8.
+
+### Size the state before interpreting a peak
+
+**Reader prediction.** A model has one million trainable parameters. Its FP32
+weights occupy four million bytes. Does an AdamW training step therefore need
+only four million bytes for model state?
+
+No. Under the explicitly chosen policy of FP32 weights, FP32 gradients and two
+FP32 optimizer moment buffers, the persistent ledger is:
+
+| State | Bytes per parameter | Bytes for one million parameters |
+|---|---:|---:|
+| Weights | 4 | 4,000,000 |
+| Gradients | 4 | 4,000,000 |
+| First moment: smoothed gradient history | 4 | 4,000,000 |
+| Second moment: smoothed squared-gradient history | 4 | 4,000,000 |
+| Total of these four terms | 16 | 16,000,000 |
+
+These are decimal bytes, before activations, temporary buffers and runtime
+overhead. Moment buffers may be allocated lazily at the first update, so a
+forward-only observation can miss a cost that appears during training.
+
+Now change only the declared storage policy: BF16 weights and gradients use two
+bytes each, with the same FP32 moments. Those four terms become 12,000,000
+bytes. If that implementation also keeps an FP32 master copy of the weights,
+add another 4,000,000 bytes. A “BF16 run” therefore does not identify the whole
+memory budget. Inspect the actual optimizer and master-copy policy. The example
+is arithmetic about stated storage choices; it does not assert how the later
+Qwen smoke trainer stores every tensor.
+
+This ledger explains the next experiment. Increasing the microbatch leaves
+the parameter and moment counts fixed while increasing much of the activation
+work. Increasing sequence length changes both stored states and attention
+work. The measured peak combines those effects; the ledger tells us which
+terms to investigate rather than scaling the entire peak blindly.
 
 We preserve three views:
 

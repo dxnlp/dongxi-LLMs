@@ -14,6 +14,14 @@ observed target. That comparison produces a scalar loss. Backpropagation then
 turns the loss back into corrections for the output head, transformer, and
 embeddings.
 
+There is a surprise at the end of this path. If the same available context
+continues with `dog` seven times out of ten and `cat` three times, the best
+probability prediction still has positive average loss. Each individual example
+still asks for a correction, yet the average correction is zero. How can the
+model have finished learning this distribution while remaining uncertain? We
+will first trace one target through a parameter update, then explain that
+balance.
+
 The complete path is:
 
 ```text
@@ -210,6 +218,20 @@ other candidate. Increasing one candidate's logit can lower another candidate's
 probability even if the second logit does not change, because all candidates
 share the denominator.
 
+“Categorical” means that one outcome is selected from a discrete candidate set.
+The nonnegative probabilities sum to one across mutually exclusive candidates;
+they are not independent yes/no confidence scores. Softmax uses positive
+exponentials so negative logits remain valid scores, then divides by their sum.
+Its ratios have a particularly useful form:
+
+$$
+\frac{p_i}{p_j}=e^{z_i-z_j},\qquad
+\log\frac{p_i}{p_j}=z_i-z_j.
+$$
+
+A logit gap is therefore a log probability ratio. The normalization creates
+competition; exponentiation alone does not conserve probability mass.
+
 For logits `[2,1,-1]`, exponentiation produces relative positive weights:
 
 ```text
@@ -379,6 +401,16 @@ loss. An unlikely observed token contributes much more. As $p_y\to0$, the loss
 diverges, strongly rejecting a model that declares an observed outcome
 impossible.
 
+Natural logarithms express surprise in **nats**. For an illustrative three-token
+continuation, suppose its successive observed-target probabilities are 0.5,
+0.25 and 0.8 under their respective prefixes. They need not be independent:
+each is conditional on the preceding tokens. The sequence probability is
+$0.5\times0.25\times0.8=0.1$, the total NLL is $-\log0.1=2.302585$ nats,
+and the mean is $0.767528$ nats per target. Their geometric-mean assigned
+probability is $e^{-0.767528}\approx0.464159$, different from every one of the
+three token probabilities. The mask and the sum-versus-mean convention determine
+which quantity a reported “loss” represents.
+
 Stable target NLL can be computed directly from logits:
 
 $$
@@ -516,6 +548,72 @@ through every operation that created $h$.
 One example therefore does not store a correction in a disposable logit. It
 changes reusable parameters and can affect many other contexts.
 
+### Carry one prediction through an actual parameter update
+
+Return to Chapter 2's illustrative prefix “the pet saw the,” with observed next
+piece `dog`. To inspect the output operation, temporarily use a three-candidate
+classifier with rows ordered `[cat, dog, slept]`, exactly as in the softmax
+notebook. This is a complete three-class teaching distribution, separate from
+the six-entry toy tokenizer; it is not the normalized shortlist of a larger
+model. Hold the contextual state fixed at $h=[1,0]$ and assign:
+
+$$
+W_{\mathrm{out}}=\begin{bmatrix}2&0\\1&0\\-1&0\end{bmatrix},\qquad
+b=[0,0,0].
+$$
+
+The row-vector projection gives the familiar logits $[2,1,-1]$.
+**Reader prediction.** `cat` wins the score competition, but `dog` is the
+observed target. Which row should move most, and in which direction?
+
+The one-hot target is $q=[0,1,0]$. Its probability is 0.259496, so the loss
+is 1.349012 nats. The complete correction is:
+
+| Candidate | $p_i$ | $q_i$ | $g_i=p_i-q_i$ | First coordinate of output row after SGD |
+|---|---:|---:|---:|---:|
+| `cat` | 0.705385 | 0 | 0.705385 | 1.929462 |
+| `dog` | 0.259496 | 1 | -0.740504 | 1.074050 |
+| `slept` | 0.035119 | 0 | 0.035119 | -1.003512 |
+
+The last column uses $W_{\mathrm{out}}\leftarrow W_{\mathrm{out}}-0.1g^\top h$;
+the second coordinate stays zero. We update only these rows, holding $h$ and
+$b$ fixed to isolate the output-weight path. Recomputing the prediction gives
+$p_{\mathrm{dog}}=0.287557$ and loss 1.246336 nats. The wrong leading row
+moves down, the observed row moves up, and even the low-probability wrong row
+participates. The hidden-state gradient before this update is
+$gW_{\mathrm{out}}=[0.635146,0]$; in a whole model it would also flow into
+the operations that constructed $h$.
+
+```python
+import torch
+from torch.nn import functional as F
+
+h = torch.tensor([1., 0.], dtype=torch.float64)
+w = torch.tensor([[2., 0.], [1., 0.], [-1., 0.]],
+                 dtype=torch.float64, requires_grad=True)
+loss = F.cross_entropy((h @ w.T)[None], torch.tensor([1]))
+gradient, = torch.autograd.grad(loss, w)
+updated = w.detach() - 0.1 * gradient
+print((h @ updated.T).softmax(-1))
+```
+
+Change only the observed target to `cat`, leaving scores and parameters fixed.
+The gradient becomes $[-0.294615,0.259496,0.035119]$: the same prediction now
+asks to strengthen its leading row. A gradient is an error relative to an
+observed target, not a judgment about the score vector in isolation. Repeat
+these target-dependent corrections with different observed continuations and
+we reach the distribution-learning question that opened the chapter.
+
+![The three-candidate prediction favors cat, the observed target is dog, and the signed logit gradient lowers cat while raising dog; the right panel varies only the dog score.](../../notebooks/figures/chapter-03/day-03-01_logits_softmax_nll-01.png)
+
+Read the middle panel as derivatives, so gradient descent moves opposite each
+bar. The right panel holds the other scores fixed: a higher `dog` score lowers
+its NLL smoothly. Its horizontal axis is a logit, not a probability. Source:
+[Day 3's logits notebook](../../notebooks/day-03/01_logits_softmax_nll.ipynb).
+The [saved-preview workflow](../../docs/NOTEBOOK_VISUALS.md#reference-previews-versus-live-plots)
+with `--days 3` regenerates the figure. The new parameter arithmetic above is
+retained in the [calculation receipt](../../experiments/reports/2026-10-10-book-foundations-pass/run-01/depth-calculations.json).
+
 ## 3.7 How one-hot observations teach a distribution
 
 Suppose indistinguishable instances of one context continue with `dog` 70% of
@@ -562,10 +660,28 @@ $$
 Individual minibatches can therefore keep producing noisy gradients near the
 optimum even though the population gradient vanishes.
 
-### Entropy is not model error
+### Separate unavoidable uncertainty from mismatch
 
-Let $q$ now denote the population target distribution and $p$ the model. Add and
-subtract the target's own log term:
+Let $q$ now denote the population target distribution and $p$ the model; it no
+longer denotes one example's one-hot label. **Entropy** is the average surprise
+of outcomes drawn from $q$ when predicted by $q$ itself:
+
+$$
+H(q)=-\sum_iq_i\log q_i.
+$$
+
+It is zero for a certain outcome and positive when multiple outcomes can occur.
+**Cross-entropy**, $H(q,p)=-\sum_iq_i\log p_i$, is their average surprise under
+the model's prediction. **Kullback–Leibler divergence**, or KL, is the excess
+surprise caused by that mismatch:
+
+$$
+D_{KL}(q\|p)=\sum_iq_i\log\frac{q_i}{p_i}.
+$$
+
+The direction matters: the expectation weights outcomes by $q$, and reversing
+the arguments generally changes the answer. Add and subtract the target's own
+log term to connect all three quantities:
 
 $$
 \begin{aligned}
@@ -577,11 +693,38 @@ H(q,p)
 \end{aligned}
 $$
 
-$H(q)$ is uncertainty in the data. The model cannot reduce it. The nonnegative
-KL term measures mismatch and reaches zero when $p=q$ on the relevant support.
-Thus a perfectly calibrated model can have positive cross-entropy. Zero expected
-gradient plus positive loss can represent successful learning rather than an
-optimizer failure.
+$H(q)$ is uncertainty under the declared conditioning information. Improving
+the prediction for that fixed context cannot reduce it. With $q=[0.7,0.3]$,
+the decomposition exposes why extra confidence can hurt:
+
+| Model $p$ | Entropy $H(q)$ | KL mismatch $D_{KL}(q\|p)$ | Cross-entropy $H(q,p)$ |
+|---|---:|---:|---:|
+| $[0.5,0.5]$ | 0.610864 | 0.082283 | 0.693147 |
+| $[0.7,0.3]$ | 0.610864 | 0 | 0.610864 |
+| $[0.9,0.1]$ | 0.610864 | 0.153664 | 0.764528 |
+
+All entries use natural logs, in nats per target. The last prediction makes
+the common `dog` outcome less surprising but assigns too little mass to the
+`cat` outcomes that still occur 30% of the time. Their larger penalties more
+than erase the gain. Confidence and calibration are different properties.
+
+Why is KL nonnegative? For positive probabilities, use
+$-\log u\geq1-u$ with $u=p_i/q_i$ and sum with weights $q_i$:
+
+$$
+\sum_iq_i\log\frac{q_i}{p_i}
+\geq\sum_i(q_i-p_i)=0.
+$$
+
+Equality holds at matching distributions. More generally use
+$0\log(0/p_i)=0$; if $q_i>0$ but $p_i=0$, the divergence is infinite. Summing
+the same inequality only over $q$'s support—the outcomes with positive
+probability—gives a lower bound
+$1-\sum_{i:q_i>0}p_i\geq0$, so the conclusion still holds when some target
+probabilities are zero. This is why a perfectly calibrated model can have
+positive cross-entropy: only the mismatch vanishes. Zero expected gradient
+plus positive loss can represent successful learning rather than an optimizer
+failure.
 
 ### The model sees samples, not $q$
 

@@ -11,6 +11,13 @@ did it cost? Days 26–28 connect inference selection, distillation and final
 evaluation. The capstone is a defensible model-development account whose
 executable evidence supports a bounded model claim.
 
+Return to the assistant's short answer. We could ask it once, generate several
+candidates and choose one, or train a student on the selected answers. All
+three can change what a user receives, but only the last changes the student's
+weights. Even then, the lesson depends on what we keep: a complete answer and
+ending, a single final token, or a teacher distribution at each prefix. This
+chapter follows those choices from selection to the student's actual objective.
+
 ## 15.1 One model, several answer-producing systems
 
 A checkpoint does not uniquely specify an answer. The prompt template, sampling
@@ -205,7 +212,7 @@ as a Chapter 8 bridge before distillation. Its journal prevents duplicate commit
 attempts on resume, not duplicate physical execution after an uncommitted crash.
 The latter can repeat and has a visible unknown lost-cost boundary. Programmatic
 serialized words and elapsed time are also not LLM inference tokens or API
-billing. Keep those boundaries when replacing the fixture teacher with an
+billing. Keep those boundaries when replacing the fixture teacher with a
 specified real-model adapter later.
 
 ## 15.5 Hard responses and soft distributions
@@ -215,12 +222,56 @@ selected position, the observed target is one-hot. Distribution distillation
 instead provides probabilities for several vocabulary outcomes at the same
 prefix. These alternatives communicate different information.
 
+The hard-response path is Chapter 9's SFT objective with a new source of
+demonstrations. Once selection has chosen the teacher text, each next token is
+a target and the student's loss is its negative log probability. The teacher's
+other candidates and uncertainty are absent from that update unless we retain
+them separately. This can be useful: a student learns to deliver the selected
+behavior without generating and ranking the whole teacher pool at inference.
+But the selection rule has become part of the training-data generator.
+
 Soft targets can express that two tokens are both plausible, reducing the
 pressure to treat an unobserved alternative as equally wrong as every other
 token. This connects to Chapter 3's distinction between one observed continuation
 and the full conditional language distribution. Soft targets can also preserve
 the teacher's mistakes and biases. A teacher probability is a teaching signal,
 not ground truth.
+
+### One teacher, two different lessons
+
+Use the [existing three-logit teacher](../../src/dongxi_llms/distillation_lab.py)
+$u=(2,0.5,-1)$ at temperature one. Its probabilities are approximately
+$q=(0.785597,0.175290,0.039113)$. Compare two forms of supervision at the same
+prefix for a student starting uniformly:
+
+| Teaching signal | Target used by the student | Student-logit loss gradient |
+|---|---|---|
+| One selected teacher token: outcome 0 |(1, 0, 0)|(-0.666667, 0.333333, 0.333333)|
+| Frozen teacher distribution |(0.785597, 0.175290, 0.039113)|(-0.452264, 0.158043, 0.294221)|
+
+Both updates favor outcome 0 under gradient descent. The hard target gives
+equal direct pressure against the two unobserved outcomes. The soft target
+distinguishes them: outcome 1 deserves more retained probability than outcome 2.
+The scalar losses are not directly comparable quality scores, because KL
+subtracts the teacher's constant entropy while hard-token NLL does not.
+
+**Reader prediction:** after the student becomes concentrated at
+$(0.9,0.05,0.05)$, must the soft loss still increase outcome 0 because the
+teacher's most likely token is 0?
+
+**Reference reasoning:** the residual is $p-q$. Outcome 0 is now overrepresented
+relative to the teacher, so its logit derivative is positive. Outcome 1 is
+underrepresented, so its derivative is negative and descent raises its logit.
+Soft-target fitting asks for the distribution, rather than unlimited certainty
+in its argmax. The same vocabulary coordinate can name a plausible alternative,
+a stylistic habit or a teacher error; probability alone does not certify
+semantic similarity or correctness.
+
+Reproduce the comparison with `distillation_loss(student_logits,
+teacher_logits, temperature=1)` and Chapter 9's token-NLL helper. Change only
+the student logits to the logarithms of $(0.9,0.05,0.05)$ to inspect the
+second correction. These are finite gradient calculations, separate from the
+generating neural students evaluated below.
 
 The student and teacher must refer to the same outcome vocabulary for a direct
 token-distribution KL. Matching token IDs from different tokenizers is invalid.
@@ -283,6 +334,20 @@ p_i^{(\tau)}=\frac{e^{z_i/\tau}}{\sum_j e^{z_j/\tau}},\qquad
 q_i^{(\tau)}=\frac{e^{u_i/\tau}}{\sum_j e^{u_j/\tau}}.
 $$
 
+Temperature divides logit differences before normalization. For the same
+teacher $u=(2,0.5,-1)$, the targets change as follows:
+
+| Temperature | Teacher probabilities: outcomes 0, 1, 2 |
+|---:|---|
+|1|(0.785597, 0.175290, 0.039113)|
+|2|(0.589798, 0.278601, 0.131602)|
+|4|(0.463037, 0.318240, 0.218723)|
+
+The ordering stays the same while more mass reaches the tail. This exposes
+relative preferences beyond the top token, but also changes the distribution
+we ask the student to fit. Temperature supplies a teaching choice, rather than
+extra correctness information.
+
 The distribution-distillation term is
 
 $$
@@ -292,7 +357,17 @@ $$
 
 Teacher probabilities are detached. The entropy of $q$ is constant with respect
 to student parameters, so minimizing this KL has the same student gradient as
-minimizing soft-target cross-entropy. Chain differentiation gives
+minimizing soft-target cross-entropy. First differentiate each student
+log-softmax coordinate:
+
+$$
+\frac{\partial\log p_j^{(\tau)}}{\partial z_i}
+=\frac{\mathbf{1}\{i=j\}-p_i^{(\tau)}}{\tau}.
+$$
+
+Only the $-\tau^2\sum_jq_j^{(\tau)}\log p_j^{(\tau)}$ part depends on the
+student. Weighting the derivative above by the detached teacher probabilities
+and using $\sum_jq_j^{(\tau)}=1$ produces
 
 $$
 \frac{\partial L_{\mathrm{KD}}}{\partial z_i}
@@ -306,11 +381,29 @@ gradient shrinkage. It does not make every temperature produce the same
 gradient or require that inference use the training temperature. The classical
 motivation is described in [Hinton et al.](https://arxiv.org/abs/1503.02531).
 
+**Controlled change:** retain the same teacher and zero student logits, but
+remove the $\tau^2$ factor. Predict how the first logit's correction changes
+between temperatures one and four.
+
+**Reference reasoning:** at temperature one its derivative is $-0.452264$
+with either convention. At temperature four it is $-0.032426$ without scaling
+and $-0.518814$ with scaling. The unscaled correction shrinks from both the
+explicit $1/\tau$ and the flatter target. The scaled correction is substantial
+but differs from its temperature-one value. [Day 26's temperature reference](../../notebooks/day-26/01_temperature_distillation.ipynb)
+checks every component against the analytical residual for temperatures 1, 2
+and 4 while verifying that the teacher receives no gradient.
+
 A mixed objective may use
 
 $$
 L=\lambda_{\mathrm{KD}} L_{\mathrm{KD}}+(1-\lambda_{\mathrm{KD}})L_{\mathrm{hard}},\quad 0\le\lambda_{\mathrm{KD}}\le1.
 $$
+
+At $\lambda_{\mathrm{KD}}=1$, only the teacher-distribution term supplies
+correction; at zero, only hard targets do. Intermediate values blend their
+gradients. Changing temperature or reduction changes the terms' scale, so the
+coefficient alone is not a percentage of “knowledge transferred.” Inspect the
+two gradient contributions at the same student state.
 
 Declare whether each term is averaged over tokens or sequences, which positions
 are valid and what data each term uses. The scaling changes their relative
@@ -332,6 +425,15 @@ The [measured scaled KL](../../experiments/reports/2026-10-04-grpo-diagnostics-d
 falls from 0.657134229 to approximately $9.77\times10^{-8}$ at $\tau=2$.
 This is a successful fit to the specified teacher distribution. The report
 retains both probability vectors so the claim can be checked beyond one loss.
+
+![Scaled teacher-to-student KL decreases while three student probabilities approach the fixed teacher at inference temperature one](../../notebooks/figures/chapter-15/day-26-01_temperature_distillation-01.png)
+
+The left panel plots the temperature-two training objective on a logarithmic
+axis. The right panel evaluates the logits at temperature one; the dotted
+lines are the teacher's corresponding probabilities. Read the matching vectors
+alongside the falling loss. Both panels are regenerated by the existing
+temperature notebook's 80-update three-logit reference. No autoregressive
+student or held-out language task is represented by this plot.
 
 It does not verify a smaller neural network's representation capacity, reasoning
 transfer, deployment speed, robustness or acceptable regression. A real
@@ -405,6 +507,11 @@ answer count rise.
 
 ## 15.9 What histories does the teacher teach on?
 
+So far we held the prefix fixed. In a sequence model, it is part of the lesson.
+Teacher-produced text supplies teacher-produced histories. During deployment,
+the student also visits histories created by its own errors. A perfect fit to
+teacher targets at one set of states can leave those other states unconstrained.
+
 KL direction and prefix source are independent choices. Let a state $s$ be the
 question plus generated history, $q(\cdot\mid s)$ the frozen teacher distribution
 and $p_\theta(\cdot\mid s)$ the student. Offline trajectories supply one state
@@ -416,9 +523,13 @@ L_F(s)=\sum_i q_i(s)\log\frac{q_i(s)}{p_i(s)},\qquad
 L_R(s)=\sum_i p_i(s)\log\frac{p_i(s)}{q_i(s)}.
 $$
 
-Forward KL asks the student to cover teacher probability. Reverse KL also
-weights outcomes by the student's current probability, so its correction is not
-the same $p-q$ residual. At temperature 1, with full positive support and
+Forward KL weights the discrepancy by teacher probability. Reverse KL weights
+it by the student's probability, so its correction is not the same $p-q$
+residual. If the student can freely represent the complete teacher vector at
+this fixed state, both objectives minimize at $p=q$. Different compromises
+arise when the student is constrained or shares parameters across states; a
+different KL direction alone does not prove that a fitted neural policy must
+cover or discard a particular mode. At temperature 1, with full positive support and
 $\ell_i=\log(p_i/q_i)$, the student-logit derivatives are
 
 $$
@@ -430,6 +541,29 @@ $$
 Teacher targets are detached and coordinates must denote the same vocabulary
 outcomes. Zero teacher support can make reverse KL infinite. Adding an arbitrary
 floor would change the objective rather than resolve that fact.
+
+![Fixed-state teacher and student scoring with separate prefix collection and private teacher context](../../notebooks/figures/chapter-15/day-26-05_student_prefix_and_teacher_context-01.png)
+
+Follow the top path from question and observed history to the neural student's
+next-token vector. The lower path produces the detached teacher target; its
+training-only hint never enters the student. The prefix can come from a frozen
+pool or a fresh student rollout. This structural diagram is generated by the
+[student-prefix notebook](../../notebooks/day-26/05_student_prefix_and_teacher_context.ipynb),
+and identifies three independent choices: visited states, teacher context and
+conditional loss geometry.
+
+**Reader prediction:** on the authored task `reverse A B`, the student has
+already emitted the wrong first token `C`. Does asking the teacher at this new
+prefix necessarily supply a helpful correction?
+
+**Reference reasoning:** the finite teacher in this companion deliberately
+repeats a wrong-prefix symbol. Without a hint, it assigns probability 0.8 to
+`C`. With the private intended sequence `[B, A]`, it assigns probability 0.8
+to `A`, the target for the next position. Each other vocabulary outcome has
+probability $0.2/7$. The hint changes what the teacher teaches at the same
+visited state; it does not erase the student's already emitted wrong `C`.
+This example is an authored conditional rule checked by `teacher_distribution`,
+not a claim that a real teacher reliably recovers from arbitrary mistakes.
 
 ### Sampling student states is not differentiating their occupancy
 
@@ -480,6 +614,22 @@ $$
 D_{\mathrm{KL}}(q\Vert p)=D_{\mathrm{KL}}(q_{\mathrm{bucket}}\Vert
 p_{\mathrm{bucket}})+q_TD_{\mathrm{KL}}(q(\cdot\mid T)\Vert p(\cdot\mid T)).
 $$
+
+To see the missing detail, write $q_i=q_T\bar q_i$ and $p_i=p_T\bar p_i$
+for $i\in T$, with $\bar q$ and $\bar p$ normalized inside the tail. Its
+contribution splits into
+
+$$
+\sum_{i\in T}q_i\log\frac{q_i}{p_i}
+=q_T\log\frac{q_T}{p_T}
++q_T\sum_{i\in T}\bar q_i\log\frac{\bar q_i}{\bar p_i}.
+$$
+
+The first term is the bucket's mass comparison; the second compares how the
+mass is distributed within it. The retained outcomes contribute identically
+to full and bucketed KL. This derivation assumes positive tail masses and
+defined conditionals; the implementation's zero-support controls below keep
+their separate contracts.
 
 Reverse KL has the corresponding $p_T$-weighted conditional term. This is an
 exact decomposition, not a guarantee that bucket and full gradients agree.

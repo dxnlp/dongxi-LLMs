@@ -1,0 +1,428 @@
+{
+  "scope": "Finite CPU teaching calculations and existing reference reproduction; no GPU or new model campaign",
+  "python": "/tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python",
+  "python_version": "3.12.14",
+  "torch": "2.14.1+cpu",
+  "device": "cpu",
+  "ch08": {
+    "ids": [
+      1,
+      2,
+      16,
+      17,
+      5,
+      3,
+      10,
+      6,
+      5,
+      4,
+      6,
+      5
+    ],
+    "labels": [
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      -100,
+      6,
+      5
+    ],
+    "scored_producer_target_positions": [
+      [
+        9,
+        10
+      ],
+      [
+        10,
+        11
+      ]
+    ],
+    "same_red_id_ownership": [
+      [
+        7,
+        "user",
+        false
+      ],
+      [
+        10,
+        "assistant",
+        true
+      ]
+    ],
+    "input_positions": 12,
+    "shifted_scored_targets": 2,
+    "mixture_share": [
+      0.1,
+      0.9
+    ]
+  },
+  "ch09": {
+    "probabilities": [
+      [
+        [
+          0.6,
+          0.3,
+          0.1
+        ],
+        [
+          0.2,
+          0.3,
+          0.5
+        ],
+        [
+          0.3333333333333333,
+          0.3333333333333333,
+          0.3333333333333333
+        ]
+      ]
+    ],
+    "labels": [
+      [
+        -100,
+        0,
+        2
+      ]
+    ],
+    "loss_sum": 1.203972804325936,
+    "target_count": 2,
+    "mean_nll": 0.601986402162968,
+    "token_nll": [
+      0.5108256237659907,
+      0.6931471805599453
+    ],
+    "logit_gradient": [
+      [
+        [
+          -0.2,
+          0.15,
+          0.05000000000000001
+        ],
+        [
+          0.10000000000000003,
+          0.15000000000000002,
+          -0.24999999999999994
+        ],
+        [
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    ],
+    "without_end": {
+      "mean_nll": 0.5108256237659907,
+      "target_count": 1,
+      "logit_gradient": [
+        [
+          [
+            -0.4,
+            0.3,
+            0.10000000000000002
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      ]
+    },
+    "lora_1024_rank8": {
+      "base": 1048576,
+      "adapter": 16384
+    },
+    "lora_initialization": {
+      "a_gradient_norm": 0.0,
+      "b_gradient_norm": 0.11789912730455399,
+      "base_gradient_absent": true
+    },
+    "merge_assertion": "passed",
+    "both_lora_factors_zero_gradient_assertion": "passed",
+    "complete_answer_probability": 0.3
+  },
+  "ch10": {
+    "scores": [
+      0.4,
+      -0.6
+    ],
+    "margin": 1.0,
+    "preference_probability": 0.7310585786300049,
+    "hard_loss": 0.31326168751822286,
+    "hard_score_gradients": [
+      -0.2689414213699951,
+      0.2689414213699951
+    ],
+    "soft_q_07": {
+      "loss": 0.6132616875182229,
+      "score_gradients": [
+        0.03105857863000494,
+        -0.03105857863000494
+      ],
+      "optimal_margin": 0.8472978603872037
+    },
+    "reward_reference": {
+      "confounded": {
+        "weights": [
+          0.6558978716018705,
+          0.6493007859212913,
+          0.6511022052745514
+        ],
+        "train_nll": 0.46664298668247095,
+        "validation_nll": 0.6529132986905999,
+        "adversarial_first_win_probability": 0.9625042577040702
+      },
+      "balanced": {
+        "weights": [
+          1.8553880930285784,
+          -1.7845670585156363e-05,
+          0.004854212186455453
+        ],
+        "train_nll": 0.4671653057954894,
+        "validation_nll": 0.48099465814594927,
+        "adversarial_first_win_probability": 0.13694736872867358
+      }
+    }
+  },
+  "ch11": {
+    "reference": [
+      0.6,
+      0.3,
+      0.1
+    ],
+    "reward": [
+      0.0,
+      0.5,
+      1.0
+    ],
+    "beta": 0.5,
+    "unnormalized_weight": [
+      0.6,
+      0.8154845485377135,
+      0.7389056098930651
+    ],
+    "partition": 2.1543901584307785,
+    "optimal_policy": [
+      0.2785010865613264,
+      0.37852222140287656,
+      0.34297669203579706
+    ],
+    "stationarity": [
+      -0.1162461528102583,
+      -0.1162461528102583,
+      -0.1162461528102583
+    ],
+    "reward_offset_assertion": "passed",
+    "beta_1_policy": [
+      0.4390957494968201,
+      0.3619732510347112,
+      0.19893099946846857
+    ],
+    "counterexample": [
+      {
+        "probability": [
+          0.2,
+          0.1,
+          0.7
+        ],
+        "pair_odds": 2.0,
+        "margin": 0.0,
+        "loss": 0.6931471805599453,
+        "selected_score_derivatives": [
+          -0.25,
+          0.25
+        ]
+      },
+      {
+        "probability": [
+          0.1,
+          0.01,
+          0.89
+        ],
+        "pair_odds": 10.0,
+        "margin": 0.80471895621705,
+        "loss": 0.3696400494024986,
+        "selected_score_derivatives": [
+          -0.15450849718747367,
+          0.15450849718747367
+        ]
+      }
+    ]
+  },
+  "ch15": {
+    "teacher_logits": [
+      [
+        2.0,
+        0.5,
+        -1.0
+      ]
+    ],
+    "temperature_rows": [
+      {
+        "temperature": 1.0,
+        "scaled": false,
+        "teacher_probability": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ],
+        "loss": 0.4770276839888353,
+        "student_logit_gradient": [
+          -0.45226370125594256,
+          0.15804294119329662,
+          0.29422076006264586
+        ]
+      },
+      {
+        "temperature": 1.0,
+        "scaled": true,
+        "teacher_probability": [
+          0.7855970345892759,
+          0.1752903921400367,
+          0.039112573270687456
+        ],
+        "loss": 0.4770276839888353,
+        "student_logit_gradient": [
+          -0.45226370125594256,
+          0.15804294119329662,
+          0.29422076006264586
+        ]
+      },
+      {
+        "temperature": 2.0,
+        "scaled": false,
+        "teacher_probability": [
+          0.5897976636568125,
+          0.27860068919627295,
+          0.13160164714691433
+        ],
+        "loss": 0.1642835571952236,
+        "student_logit_gradient": [
+          -0.12823216516173966,
+          0.027366322068530152,
+          0.10086584309320949
+        ]
+      },
+      {
+        "temperature": 2.0,
+        "scaled": true,
+        "teacher_probability": [
+          0.5897976636568125,
+          0.27860068919627295,
+          0.13160164714691433
+        ],
+        "loss": 0.6571342287808944,
+        "student_logit_gradient": [
+          -0.5129286606469586,
+          0.10946528827412061,
+          0.40346337237283797
+        ]
+      },
+      {
+        "temperature": 4.0,
+        "scaled": false,
+        "teacher_probability": [
+          0.4630367419657945,
+          0.3182401884393924,
+          0.21872306959481305
+        ],
+        "loss": 0.04528104406039271,
+        "student_logit_gradient": [
+          -0.03242585215811529,
+          0.003773286223485231,
+          0.028652565934630052
+        ]
+      },
+      {
+        "temperature": 4.0,
+        "scaled": true,
+        "teacher_probability": [
+          0.4630367419657945,
+          0.3182401884393924,
+          0.21872306959481305
+        ],
+        "loss": 0.7244967049662834,
+        "student_logit_gradient": [
+          -0.5188136345298446,
+          0.060372579575763696,
+          0.45844105495408083
+        ]
+      }
+    ],
+    "hard_token0_gradient": [
+      -0.6666666666666667,
+      0.3333333333333333,
+      0.3333333333333333
+    ],
+    "teacher_gradient_absent": true,
+    "concentrated_student_probability": [
+      0.8999999999999999,
+      0.05,
+      0.05
+    ],
+    "concentrated_soft_gradient": [
+      0.11440296541072403,
+      -0.12529039214003668,
+      0.01088742672931256
+    ],
+    "wrong_prefix_teacher": {
+      "symbol_ids": [
+        5,
+        6
+      ],
+      "past": [
+        7
+      ],
+      "ordinary": [
+        0.028571428571428574,
+        0.028571428571428574,
+        0.028571428571428574,
+        0.028571428571428574,
+        0.028571428571428574,
+        0.028571428571428574,
+        0.028571428571428574,
+        0.8
+      ],
+      "hint": [
+        0.028571428571428574,
+        0.028571428571428574,
+        0.028571428571428574,
+        0.028571428571428574,
+        0.028571428571428574,
+        0.8,
+        0.028571428571428574,
+        0.028571428571428574
+      ],
+      "ordinary_highest_id": 7,
+      "hint_highest_id": 5
+    },
+    "tail_decomposition": {
+      "full": 0.21116690823202483,
+      "bucket": 0.0,
+      "lost_detail": 0.2111669082320248,
+      "tail_student_mass": 0.4,
+      "tail_teacher_mass": 0.4
+    }
+  },
+  "source_sha256": {
+    "src/dongxi_llms/instruction_data_lab.py": "7a1b4d174c61f0cba8377b8e5f2f5708b04b519226194d8c0c90b4ee78b4e4ed",
+    "src/dongxi_llms/sft_lab.py": "0016e5795828b386e6e86571505545b68c46095d8d8e001916f1e3d778ae372e",
+    "src/dongxi_llms/reward_model_lab.py": "90334d384afb3a521ecd68867b25f88597b148b65b81090a340cc101bb403107",
+    "src/dongxi_llms/dpo_lab.py": "ac87d6c439f0a7ca21ca46c6c70854cdef0980f4e51d6da095440764252cad5e",
+    "src/dongxi_llms/distillation_lab.py": "1bb80abc3b9135d92577dcf827c3f5237e23ceb45759d7fd155a103380bc7c8c",
+    "src/dongxi_llms/student_prefix_lab.py": "022ec2957c1a42cb867a3f51e5f21190dd971a43b97ce52f147d83655653d828"
+  },
+  "status": "passed"
+}
+
+--- stderr ---

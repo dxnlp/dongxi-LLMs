@@ -1,0 +1,121 @@
+{
+  "scope": "Root visual reading review, separate from numerical correctness and source lint",
+  "promoted_figures": [
+    {
+      "chapter": "book/chapters/02-text-tokens-and-embeddings.md",
+      "path": "notebooks/figures/chapter-02/day-02-03_embedding_gradient_paths-01.png",
+      "sha256": "86be5bddafab3a0ef69bbc526ca9a83da11db6a5bb1efaccf1d3fff3b24c3f96",
+      "alt": "Response-only loss gives nonzero embedding-row gradient norms at the two visible prompt rows, 1 and 2, as well as response row 3."
+    },
+    {
+      "chapter": "book/chapters/03-learning-the-next-token.md",
+      "path": "notebooks/figures/chapter-03/day-03-01_logits_softmax_nll-01.png",
+      "sha256": "136384a28135cdfd9a170296bd1b99241497002aea94faa35f8fe68accacf275",
+      "alt": "The three-candidate prediction favors cat, the observed target is dog, and the signed logit gradient lowers cat while raising dog; the right panel varies only the dog score."
+    },
+    {
+      "chapter": "book/chapters/04-attention-and-the-causal-information-boundary.md",
+      "path": "notebooks/figures/chapter-04/day-04-01_causal_attention_forward-01.png",
+      "sha256": "f4e28e4b95f7eeb2c711d8d588e7fa332c2a772c90a12ffc80e36ac00c90bb19",
+      "alt": "Correct causal masking gives a triangular weight map and zero earlier-output change after a future perturbation; post-softmax masking and zero-filled scores fail that invariance."
+    },
+    {
+      "chapter": "book/chapters/05-building-a-modern-decoder.md",
+      "path": "notebooks/figures/chapter-05/day-05-03_residual_stream-visual-gradient-add.png",
+      "sha256": "8eeefec7cac9dd58594103cc42dedfb0e89e79ba72426c96f414fc96d67ccc44",
+      "alt": "The first two coordinates of the residual backward contributions: the direct skip gradient and branch gradient add to the total input gradient."
+    },
+    {
+      "chapter": "book/chapters/06-pretraining-as-a-controlled-system.md",
+      "path": "notebooks/figures/chapter-06/02-optimizer.png",
+      "sha256": "806c0cf64684947c470f886f6eadd26871dc38b219ecc1e1f407c24a1c5c5c10",
+      "alt": "Measured embedding gradient and SGD versus AdamW coordinate changes"
+    },
+    {
+      "chapter": "book/chapters/06-pretraining-as-a-controlled-system.md",
+      "path": "notebooks/figures/chapter-06/03-validation.png",
+      "sha256": "0cff4a68953eb18cf94cbfeecc9ca27c963b3f47c938a0ee9c042c1da4567f1c",
+      "alt": "Training-batch and held-out NLL plotted with their distinct measurement times"
+    },
+    {
+      "chapter": "book/chapters/07-evaluation-is-a-contract.md",
+      "path": "notebooks/figures/chapter-07/day-10-02_paired_uncertainty-03.png",
+      "sha256": "70fc7971bad5ac0f5dc98b5484c25930fc6761376cdf577a79c55d4ea2d40f3f",
+      "alt": "Paired bootstrap distribution of mean score changes on the forty-item fixture"
+    },
+    {
+      "chapter": "book/chapters/10-preferences-and-reward-models.md",
+      "path": "notebooks/figures/chapter-10/day-15-01_bradley_terry_margin-02.png",
+      "sha256": "7ba9eab4d470bf752f7d2c92b354fa9a6a7be31833dda17ae848efb21cae894d",
+      "alt": "Bradley\u2013Terry preference probability, winner NLL and margin gradient across score differences"
+    },
+    {
+      "chapter": "book/chapters/10-preferences-and-reward-models.md",
+      "path": "notebooks/figures/chapter-10/day-16-01_reward_model_bias_audit-02.png",
+      "sha256": "3de1ea2b19069b2a4f7edd62b3258bcd109391d081f5d1c9984b3a4b6c961376",
+      "alt": "Probability that a worse answer wins as its length advantage grows for confounded and balanced linear reward models"
+    },
+    {
+      "chapter": "book/chapters/11-direct-preference-optimization.md",
+      "path": "notebooks/figures/chapter-11/day-17-01_kl_regularized_optimum-01.png",
+      "sha256": "3191135f18d4c3fca5f6f2c664a1d1d14c80c2a1c968cf4bf74a31ea1de7bfd9",
+      "alt": "Optimal probabilities of three complete answers against beta for a fixed reference and fixed rewards"
+    },
+    {
+      "chapter": "book/chapters/12-language-generation-as-a-policy.md",
+      "path": "notebooks/figures/chapter-12/day-20-01_baselines_and_rloo-01.png",
+      "sha256": "367430c480ea6b9132320e923746a293379062b4cf0380c8ac0871b34fe75018",
+      "alt": "Exact sampled-gradient covariance trace as the detached baseline changes"
+    },
+    {
+      "chapter": "book/chapters/12-language-generation-as-a-policy.md",
+      "path": "notebooks/figures/chapter-12/day-20-02_ppo_clipping_and_kl-01.png",
+      "sha256": "60b141d976369ee85bdd04c4c7316f09f317b95e434392f2960d7ead300b9291",
+      "alt": "PPO surrogate versus probability ratio for positive and negative advantages"
+    },
+    {
+      "chapter": "book/chapters/13-group-relative-policy-optimization.md",
+      "path": "notebooks/figures/chapter-13/day-22-01_group_advantages-01.png",
+      "sha256": "eb5bfce131cfc4e73e1231f904fc61dac9fa5d97e1d3b1759398c0e69d117f1c",
+      "alt": "Mixed, all-success and all-failure groups and their relative advantages"
+    },
+    {
+      "chapter": "book/chapters/14-when-optimization-goes-wrong.md",
+      "path": "notebooks/figures/chapter-14/day-24-01_reward_hacking-01.png",
+      "sha256": "528b06040e9c4f85ba133ee564692df5d9c7efd93d1111cfda15550befbad9ac",
+      "alt": "Each arm's programmed reward and independent strict accuracy under identical-start updates"
+    },
+    {
+      "chapter": "book/chapters/15-distill-evaluate-and-defend.md",
+      "path": "notebooks/figures/chapter-15/day-26-01_temperature_distillation-01.png",
+      "sha256": "d10b2f5c0ac6096abcf14311aaaea2b3cdbc2ebf3ffc1fb48f1582b4bc6c8a08",
+      "alt": "Scaled teacher-to-student KL decreases while three student probabilities approach the fixed teacher at inference temperature one"
+    },
+    {
+      "chapter": "book/chapters/15-distill-evaluate-and-defend.md",
+      "path": "notebooks/figures/chapter-15/day-26-05_student_prefix_and_teacher_context-01.png",
+      "sha256": "365c753709fec12f1eb21a64a4c129053382ba95993dadf1905fea50b2b589e2",
+      "alt": "Fixed-state teacher and student scoring with separate prefix collection and private teacher context"
+    }
+  ],
+  "contact_sheet_sha256": "b039f6a2c8c6a6d145d58ec7e2fb1313c2b04370c650b55899e2819003dfbc0d",
+  "inspection": "Viewed complete 16-panel contact sheet. Opened residual-vector, signed PPO-clipping and teacher/student-prefix diagrams at full available resolution. Other promoted figures additionally inspected by their author; independent peers review captions and provenance.",
+  "checks": [
+    "Axes, coordinate/position roles and curve identities agree with adjacent reading guides",
+    "Residual plot explicitly projects two coordinates",
+    "PPO positive and negative advantage panels retain different clipping behavior",
+    "Teacher/student diagram separates visited prefix, private teacher hint and detached target",
+    "Synthetic calculations and structural diagrams are identified separately from model-training evidence"
+  ],
+  "equation_preview": {
+    "path": "experiments/reports/2026-10-10-book-foundations-pass/run-01/equation-preview.png",
+    "sha256": "d63df60aacc4a78c0f7473dd3b4b83f589989a3c4502ba1c22351409d0ee4dbc",
+    "inspection": "Seven representative mechanisms viewed after regeneration with local Matplotlib MathText; symbols, superscripts, clipping and rotation readable"
+  },
+  "limitations": [
+    "Contact sheet is a review artifact, not a new scientific figure",
+    "MathText is local typesetting evidence; no browser/GitHub live-render check or MathJax run is claimed",
+    "Readability judgments are agent review, not reader or learner study"
+  ],
+  "status": "passed"
+}

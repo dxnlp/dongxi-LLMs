@@ -1,0 +1,1037 @@
+{
+  "schema_version": 1,
+  "goal_id": "BOOK-FOUNDATIONS-2026-10",
+  "base_commit": "b722d59cfc115ceca20d5e15b566d972d389737b",
+  "status": "author-complete; local checks passed; final independent integration verification belongs to root",
+  "scope": "Only chapters 6,7,12,13,14 and this new receipt; no changed solutions needed, numbered exercises unchanged.",
+  "chapters": [
+    {
+      "chapter": 6,
+      "path": "book/chapters/06-pretraining-as-a-controlled-system.md",
+      "source_sha256": "f523a2c866895dd6866802b666cc31fc0a71b75f4db25f6ba612f3cf1e8fe96b",
+      "baseline_sha256": "616fba649e34feac849a6ba6e046360b461bf8e180121869818903971836a2ae",
+      "question": "What can a falling training curve conceal?",
+      "gap": "Compressed optimizer intuition and regularization; disconnected loss-versus-delivered-story diagnosis.",
+      "reused": [
+        "src/dongxi_llms/pretraining_lab.py",
+        "src/dongxi_llms/pretraining_visuals.py",
+        "notebooks/day-08/02_adamw_schedule_and_stability.ipynb",
+        "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb",
+        "experiments/reports/2026-09-14-tinystories-learning-result.md",
+        "learning_artifacts/day-09-pretraining-run-and-diagnosis/repetition-versus-overfitting.md"
+      ],
+      "example": "Constant-gradient bias correction, two-coordinate Adam normalization, the existing three-gradient sign reversal, decoupled versus L2-adapted shrinkage, and actual character/ending evidence.",
+      "controlled_change": "Reverse gradient history; change the schedule clock; separate dropout, decoding penalty and additional exposure as different hypotheses.",
+      "transition": "The held-out loss and actual story disagree on what improved; Chapter 7 defines the missing behavioral measurement.",
+      "limits": "Scalar numerical fixtures explain update mechanics; existing unmatched train/development traces do not measure a matched generalization gap; no proposed repetition cure is recorded as proven.",
+      "exercise_ids_preserved": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "numbered_exercise_text_unchanged": true,
+      "local_checks": {
+        "math_expressions": 65,
+        "math_issues": [],
+        "prose_findings": [],
+        "local_target_issues": []
+      },
+      "figures": [
+        {
+          "path": "notebooks/figures/chapter-06/02-optimizer.png",
+          "sha256": "806c0cf64684947c470f886f6eadd26871dc38b219ecc1e1f407c24a1c5c5c10",
+          "source_notebook": "notebooks/day-08/02_adamw_schedule_and_stability.ipynb",
+          "notebook_sha256": "eab7c432e3d112a4100ce3dacb0cb2842718b24b8914109b4e2eaffab949e6c9",
+          "helper_source_hashes": {
+            "src/dongxi_llms/pretraining_visuals.py": "cfd4169cf963da74c4edb69d4a75fbf08a641e0a0ab4bb9e82fd45a9812855fa",
+            "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197"
+          },
+          "reading_guide": "Match embedding coordinates across raw gradient and update panels; equal numerical learning rates are not a tuned optimizer ranking.",
+          "manual_image_review": "Inspected saved full image against caption, source plot and adjacent reading guide.",
+          "regeneration_command_template": [
+            "<isolated-python>",
+            "scripts/verify_course_notebooks.py",
+            "--kernel",
+            "<temporary-CPU-kernel>",
+            "--expected-prefix",
+            "<isolated-environment>",
+            "--notebooks",
+            "notebooks/day-08/02_adamw_schedule_and_stability.ipynb"
+          ],
+          "new_asset": false
+        },
+        {
+          "path": "notebooks/figures/chapter-06/03-validation.png",
+          "sha256": "0cff4a68953eb18cf94cbfeecc9ca27c963b3f47c938a0ee9c042c1da4567f1c",
+          "source_notebook": "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb",
+          "notebook_sha256": "c54c503a40756a796651b899ec245a9d801ce9912de8c820a1310d25e58e946b",
+          "helper_source_hashes": {
+            "src/dongxi_llms/pretraining_visuals.py": "cfd4169cf963da74c4edb69d4a75fbf08a641e0a0ab4bb9e82fd45a9812855fa",
+            "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197"
+          },
+          "reading_guide": "Read population and timing labels before interpreting the two losses.",
+          "manual_image_review": "Inspected saved full image against caption, source plot and adjacent reading guide.",
+          "regeneration_command_template": [
+            "<isolated-python>",
+            "scripts/verify_course_notebooks.py",
+            "--kernel",
+            "<temporary-CPU-kernel>",
+            "--expected-prefix",
+            "<isolated-environment>",
+            "--notebooks",
+            "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb"
+          ],
+          "new_asset": false
+        }
+      ],
+      "reused_source_hashes": {
+        "src/dongxi_llms/pretraining_lab.py": "bf416c06b0cd1b0995b78a5e447424aa2294b46f7f91e98daa1ef8e4ed9dd197",
+        "src/dongxi_llms/pretraining_visuals.py": "cfd4169cf963da74c4edb69d4a75fbf08a641e0a0ab4bb9e82fd45a9812855fa",
+        "notebooks/day-08/02_adamw_schedule_and_stability.ipynb": "eab7c432e3d112a4100ce3dacb0cb2842718b24b8914109b4e2eaffab949e6c9",
+        "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb": "c54c503a40756a796651b899ec245a9d801ce9912de8c820a1310d25e58e946b",
+        "experiments/reports/2026-09-14-tinystories-learning-result.md": "44ca21cbba137f18712e375d21f49de68c54cc84969f7844d31ee51d57a28233",
+        "learning_artifacts/day-09-pretraining-run-and-diagnosis/repetition-versus-overfitting.md": "b0e167f550a82ada13e7acbe724d85004d27cd0bb4dd87910f28f7429cbde172"
+      }
+    },
+    {
+      "chapter": 7,
+      "path": "book/chapters/07-evaluation-is-a-contract.md",
+      "source_sha256": "7213b9889d6f156687fe45a8ffabea651064b3c66dab17a0cd9691f0018f6cc3",
+      "baseline_sha256": "741f1c505c6ee1ec42432a747ac664c13e07b0ea0993ba71f35563b68ccb9cd2",
+      "question": "How do we decide whether behavior improved?",
+      "gap": "Pairing and uncertainty were defined but not followed through a concrete decision, regression count and slice weighting.",
+      "reused": [
+        "src/dongxi_llms/evaluation_lab.py",
+        "notebooks/day-10/02_paired_uncertainty.ipynb",
+        "experiments/reports/2026-10-05-native-story-first400-comparison.md"
+      ],
+      "example": "Existing 40-item fixture: 25 versus 28 successes, 10 fixes and 7 regressions, +0.075 paired difference with declared resampling interval [-0.125,0.275], and reversed macro/micro conclusions.",
+      "controlled_change": "Reverse B rows without an identity join: totals stay equal but disagreement counts and bootstrap interval change; alter slice weighting while preserving all scores.",
+      "transition": "A delivered response can improve one property while worsening another; the existing story rubric and SFT interface chapters make the criterion explicit.",
+      "limits": "Authored fixture scores are not model measurements. Python and NumPy seeded finite bootstrap draws are distinguished. Actual AI story judgments retain coverage and independence limitations.",
+      "exercise_ids_preserved": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "numbered_exercise_text_unchanged": true,
+      "local_checks": {
+        "math_expressions": 45,
+        "math_issues": [],
+        "prose_findings": [],
+        "local_target_issues": []
+      },
+      "figures": [
+        {
+          "path": "notebooks/figures/chapter-07/day-10-02_paired_uncertainty-03.png",
+          "sha256": "70fc7971bad5ac0f5dc98b5484c25930fc6761376cdf577a79c55d4ea2d40f3f",
+          "source_notebook": "notebooks/day-10/02_paired_uncertainty.ipynb",
+          "notebook_sha256": "115b75ff3442b4c0bc36584e898d4dbd89a178cf411fbcebbf0eec106c1d10cc",
+          "helper_source_hashes": {
+            "src/dongxi_llms/evaluation_lab.py": "75ffea74bc308180f94a180a6e90afd3bfe69095c20b64fd8ed002a6f137dddd"
+          },
+          "reading_guide": "Horizontal axis is paired B minus A; the histogram uses its declared NumPy sampler.",
+          "manual_image_review": "Inspected saved full image against caption, source plot and adjacent reading guide.",
+          "regeneration_command_template": [
+            "<isolated-python>",
+            "scripts/verify_course_notebooks.py",
+            "--kernel",
+            "<temporary-CPU-kernel>",
+            "--expected-prefix",
+            "<isolated-environment>",
+            "--notebooks",
+            "notebooks/day-10/02_paired_uncertainty.ipynb"
+          ],
+          "new_asset": false
+        }
+      ],
+      "reused_source_hashes": {
+        "src/dongxi_llms/evaluation_lab.py": "75ffea74bc308180f94a180a6e90afd3bfe69095c20b64fd8ed002a6f137dddd",
+        "notebooks/day-10/02_paired_uncertainty.ipynb": "115b75ff3442b4c0bc36584e898d4dbd89a178cf411fbcebbf0eec106c1d10cc",
+        "experiments/reports/2026-10-05-native-story-first400-comparison.md": "42910c610c568256518d31dd8513cdf6217da14b409a5c8321f28a3463258342"
+      }
+    },
+    {
+      "chapter": 12,
+      "path": "book/chapters/12-language-generation-as-a-policy.md",
+      "source_sha256": "a91f95c14dd4e30aaac602e5d7268049a518c8bca517689dd8b6e2b1beb479ca",
+      "baseline_sha256": "1de81e9b0e41f8de9029628b450904775092b8bf404fd1621501f7abdf488c7b",
+      "question": "How does a final reward change the next-token policy?",
+      "gap": "The individual mathematical mechanisms were present, but lacked a sustained reward-to-update case, numerical baseline noise, clipping decision and sequential credit trace.",
+      "reused": [
+        "src/dongxi_llms/policy_gradient_lab.py",
+        "src/dongxi_llms/critic_policy_lab.py",
+        "notebooks/day-19/01_exact_reinforce_gradient.ipynb",
+        "notebooks/day-20/01_baselines_and_rloo.ipynb",
+        "notebooks/day-20/02_ppo_clipping_and_kl.ipynb",
+        "notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb"
+      ],
+      "example": "Illustrative responses 4 / The answer is 5 / 5 with p=[0.5,0.3,0.2], R=[0,1,2]; exact gradient, sampled directions, three baseline covariance traces, G4 self-inclusion, importance correction, signed clipping and completed three-action GAE.",
+      "controlled_change": "Change only one reward or add a common offset; change the detached baseline; reuse against a new distribution; vary advantage sign and lambda.",
+      "transition": "Reward, estimator noise, sampling reuse, local clipping and critic targets are distinct choices; Chapter 13 asks what remains without a learned critic in an all-wrong group.",
+      "limits": "The new response distribution is a calculated teaching fixture, not generated LLM evidence. Saved baseline figures use their original declared fixture. Critics need not match actor size; clipping has no global KL guarantee.",
+      "exercise_ids_preserved": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "numbered_exercise_text_unchanged": true,
+      "local_checks": {
+        "math_expressions": 175,
+        "math_issues": [],
+        "prose_findings": [],
+        "local_target_issues": []
+      },
+      "figures": [
+        {
+          "path": "notebooks/figures/chapter-12/day-20-01_baselines_and_rloo-01.png",
+          "sha256": "367430c480ea6b9132320e923746a293379062b4cf0380c8ac0871b34fe75018",
+          "source_notebook": "notebooks/day-20/01_baselines_and_rloo.ipynb",
+          "notebook_sha256": "5d783f3fa3b9f63bdf672e3a0d1a377e91cf3721b33c21773ba7c81fd38cb1e6",
+          "helper_source_hashes": {
+            "src/dongxi_llms/policy_gradient_lab.py": "488b1e8a5b2cda712bab4fde265afc33e9babb710970841dd563b8cd56776355"
+          },
+          "reading_guide": "Baseline changes covariance trace; original plot inputs differ explicitly from the chapter illustration.",
+          "manual_image_review": "Inspected saved full image against caption, source plot and adjacent reading guide.",
+          "regeneration_command_template": [
+            "<isolated-python>",
+            "scripts/verify_course_notebooks.py",
+            "--kernel",
+            "<temporary-CPU-kernel>",
+            "--expected-prefix",
+            "<isolated-environment>",
+            "--notebooks",
+            "notebooks/day-20/01_baselines_and_rloo.ipynb"
+          ],
+          "new_asset": false
+        },
+        {
+          "path": "notebooks/figures/chapter-12/day-20-02_ppo_clipping_and_kl-01.png",
+          "sha256": "60b141d976369ee85bdd04c4c7316f09f317b95e434392f2960d7ead300b9291",
+          "source_notebook": "notebooks/day-20/02_ppo_clipping_and_kl.ipynb",
+          "notebook_sha256": "960940320d1faca81ba8ce2a52348263d951845393b588c44a52c846fac4253a",
+          "helper_source_hashes": {
+            "src/dongxi_llms/policy_gradient_lab.py": "488b1e8a5b2cda712bab4fde265afc33e9babb710970841dd563b8cd56776355"
+          },
+          "reading_guide": "The favorable flat region switches sides with advantage sign.",
+          "manual_image_review": "Inspected saved full image against caption, source plot and adjacent reading guide.",
+          "regeneration_command_template": [
+            "<isolated-python>",
+            "scripts/verify_course_notebooks.py",
+            "--kernel",
+            "<temporary-CPU-kernel>",
+            "--expected-prefix",
+            "<isolated-environment>",
+            "--notebooks",
+            "notebooks/day-20/02_ppo_clipping_and_kl.ipynb"
+          ],
+          "new_asset": false
+        }
+      ],
+      "reused_source_hashes": {
+        "src/dongxi_llms/policy_gradient_lab.py": "488b1e8a5b2cda712bab4fde265afc33e9babb710970841dd563b8cd56776355",
+        "src/dongxi_llms/critic_policy_lab.py": "fbd9c062bdc45008fae5bc968e5811f1d5ca6302054dddbb1a7520b7e930ccff",
+        "notebooks/day-19/01_exact_reinforce_gradient.ipynb": "3555af1599e6d27fdbc7847038900d85233d532bf47fa670ad4b4c6d2863374a",
+        "notebooks/day-20/01_baselines_and_rloo.ipynb": "5d783f3fa3b9f63bdf672e3a0d1a377e91cf3721b33c21773ba7c81fd38cb1e6",
+        "notebooks/day-20/02_ppo_clipping_and_kl.ipynb": "960940320d1faca81ba8ce2a52348263d951845393b588c44a52c846fac4253a",
+        "notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb": "648b375883eb6b35992f40064b387b724d7917ebd7913862d0d8721c4488abcc"
+      }
+    },
+    {
+      "chapter": 13,
+      "path": "book/chapters/13-group-relative-policy-optimization.md",
+      "source_sha256": "a6d8beda55b4c56d28d14de79e8c17025ea2ed357a48e3d7556490fb03db20c2",
+      "baseline_sha256": "df26a1bc5f5ffec2561a059221f03f0ec2eb5a24b15c9ea4b352a825b8a4fcdf",
+      "question": "Why can all-wrong groups give zero learning signal?",
+      "gap": "Existing centering/scaling formula needed complete response-to-token accounting and a visible constant-group intervention.",
+      "reused": [
+        "src/dongxi_llms/grpo_lab.py",
+        "src/dongxi_llms/policy_gradient_lab.py",
+        "notebooks/day-22/01_group_advantages.ipynb",
+        "notebooks/day-22/02_token_ratios_kl.ipynb",
+        "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/acceptance.json"
+      ],
+      "example": "Possible illustrative strict group [0,0,1,1], teaching-token lengths [2,5,2,2], normalized advantages and selected-score coefficients; all-success/all-failure zero signals; p=0.1 independent group exposure and signed clipping.",
+      "controlled_change": "Hold tokens/likelihoods fixed and replace rewards by all zero or all one; swap population and sample std; increase group size under a declared iid assumption.",
+      "transition": "The native constant group makes changed weights insufficient evidence of reward learning; Chapter 14 distinguishes measurement, exploration and accounting failures.",
+      "limits": "Teaching token counts are not Qwen encodings. Epsilon perturbations are rounded explicitly. A mean can estimate behavior-policy value without an unbiased self-centered gradient; standardization adds dependence. k3 variance is not universally lower.",
+      "exercise_ids_preserved": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "numbered_exercise_text_unchanged": true,
+      "local_checks": {
+        "math_expressions": 83,
+        "math_issues": [],
+        "prose_findings": [],
+        "local_target_issues": []
+      },
+      "figures": [
+        {
+          "path": "notebooks/figures/chapter-13/day-22-01_group_advantages-01.png",
+          "sha256": "eb5bfce131cfc4e73e1231f904fc61dac9fa5d97e1d3b1759398c0e69d117f1c",
+          "source_notebook": "notebooks/day-22/01_group_advantages.ipynb",
+          "notebook_sha256": "45748676e5d101648e4d1de352f06c874c803e55ff0e88026347ff7f3c3b74c3",
+          "helper_source_hashes": {
+            "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911"
+          },
+          "reading_guide": "All-success and all-failure zero lines coincide despite opposite correctness.",
+          "manual_image_review": "Inspected saved full image against caption, source plot and adjacent reading guide.",
+          "regeneration_command_template": [
+            "<isolated-python>",
+            "scripts/verify_course_notebooks.py",
+            "--kernel",
+            "<temporary-CPU-kernel>",
+            "--expected-prefix",
+            "<isolated-environment>",
+            "--notebooks",
+            "notebooks/day-22/01_group_advantages.ipynb"
+          ],
+          "new_asset": false
+        }
+      ],
+      "reused_source_hashes": {
+        "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+        "src/dongxi_llms/policy_gradient_lab.py": "488b1e8a5b2cda712bab4fde265afc33e9babb710970841dd563b8cd56776355",
+        "notebooks/day-22/01_group_advantages.ipynb": "45748676e5d101648e4d1de352f06c874c803e55ff0e88026347ff7f3c3b74c3",
+        "notebooks/day-22/02_token_ratios_kl.ipynb": "657c3c89649f86605a797e9c5aa9f31ab18b618bff818b4db0ce8b200d450596",
+        "experiments/reports/native-rlvr-g8-pilot-20261005-run-01/acceptance.json": "b0931afdc86894631f2df9721bbed541e82d0ae0c7068f341955c4cd11798a94"
+      }
+    },
+    {
+      "chapter": 14,
+      "path": "book/chapters/14-when-optimization-goes-wrong.md",
+      "source_sha256": "4331bd4df240112a7a718692f44ddef9b02988b93babc687778581721bb47bb6",
+      "baseline_sha256": "d1cb81c14c96bf3cf89483c0e36da21f303d3e21c532f065f6ddd06e03cb380b",
+      "question": "Which mechanism caused the apparent improvement to fail?",
+      "gap": "Many valid diagnostics needed a causal decision connecting the earliest failed invariant to its intervention.",
+      "reused": [
+        "src/dongxi_llms/optimization_diagnostics_lab.py",
+        "src/dongxi_llms/sampling_likelihood_lab.py",
+        "notebooks/day-24/01_reward_hacking.ipynb",
+        "notebooks/day-20/03_behavior_probabilities_and_support.ipynb",
+        "experiments/reports/2026-10-04-grpo-diagnostics-distillation.md",
+        "experiments/reports/2026-10-05-native-reasoning-rlvr-evidence.md"
+      ],
+      "example": "First proxy update and strict counterfactual gradient; entropy-preserving permutations with different correctness; limited alternative exposure; equal KL values and three distinct derivatives; actual native cap comparison.",
+      "controlled_change": "Hold logits fixed while changing reward or collector; enumerate one KL prefix under declared gradient contracts; hold checkpoint fixed while reading separate cap contracts.",
+      "transition": "A useful failure analysis preserves the original negative records and distinguishes proxy success, trained-state saturation, absent relative signal and delivery budget before teacher transfer.",
+      "limits": "The strict-reward plot restarts from the original logits and uses its own objective. Proposed diagnostic interventions are predictions, not fresh model outcomes. Low entropy is concentration, not correctness; old native counts are not relabeled.",
+      "exercise_ids_preserved": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "numbered_exercise_text_unchanged": true,
+      "local_checks": {
+        "math_expressions": 71,
+        "math_issues": [],
+        "prose_findings": [],
+        "local_target_issues": []
+      },
+      "figures": [
+        {
+          "path": "notebooks/figures/chapter-14/day-24-01_reward_hacking-01.png",
+          "sha256": "528b06040e9c4f85ba133ee564692df5d9c7efd93d1111cfda15550befbad9ac",
+          "source_notebook": "notebooks/day-24/01_reward_hacking.ipynb",
+          "notebook_sha256": "915ec04932d0952a742ff6d19c4f493a528665e7fd49086f11b08a1fce5a85e8",
+          "helper_source_hashes": {
+            "src/dongxi_llms/optimization_diagnostics_lab.py": "b7feb4704606e4cd3c62d1a361c19234b818c4b10ddf5d590db46b231ec1330e"
+          },
+          "reading_guide": "Each arm has its own programmed reward; strict restart is not rescue of the hacked checkpoint.",
+          "manual_image_review": "Inspected saved full image against caption, source plot and adjacent reading guide.",
+          "regeneration_command_template": [
+            "<isolated-python>",
+            "scripts/verify_course_notebooks.py",
+            "--kernel",
+            "<temporary-CPU-kernel>",
+            "--expected-prefix",
+            "<isolated-environment>",
+            "--notebooks",
+            "notebooks/day-24/01_reward_hacking.ipynb"
+          ],
+          "new_asset": false
+        }
+      ],
+      "reused_source_hashes": {
+        "src/dongxi_llms/optimization_diagnostics_lab.py": "b7feb4704606e4cd3c62d1a361c19234b818c4b10ddf5d590db46b231ec1330e",
+        "src/dongxi_llms/sampling_likelihood_lab.py": "94b739b009d83c387735bf91d4abf4ba108d01df255520fff2943ae7e7ce4c32",
+        "notebooks/day-24/01_reward_hacking.ipynb": "915ec04932d0952a742ff6d19c4f493a528665e7fd49086f11b08a1fce5a85e8",
+        "notebooks/day-20/03_behavior_probabilities_and_support.ipynb": "58fd86b72602a881b3de3110f064a622b16988900423d56ea24b58930946766b",
+        "experiments/reports/2026-10-04-grpo-diagnostics-distillation.md": "e3cd40ebaebca2c954eef23f3bca73d9a69b8c7ae6e78023254fb767939e5653",
+        "experiments/reports/2026-10-05-native-reasoning-rlvr-evidence.md": "c6c3ff076e1ccdac766d8663289869d31231902bce89e0dbfc15dbcad57ba5e3"
+      }
+    }
+  ],
+  "numerical_verification": {
+    "command": "PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python /tmp/dongxi-foundations-routes-numerics.py",
+    "exit_code": 0,
+    "program_source": "import collections,json,math,platform,sys,time\nimport torch\nfrom dongxi_llms import policy_gradient_lab as pg,pretraining_lab as pre,evaluation_lab as ev,grpo_lab as gr,critic_policy_lab as cp\nstarted=time.monotonic();torch.set_num_threads(1);D=torch.float64\nT=lambda x:torch.tensor(x,dtype=D)\ndef close(a,b):torch.testing.assert_close(T(a),T(b),atol=1e-12,rtol=1e-10)\ndef policy_gradient(p,r):\n J=sum(x*y for x,y in zip(p,r));return J,[x*(y-J) for x,y in zip(p,r)]\ndef independent_moments(p,r,b):\n samples=[[(r[a]-b)*((a==i)-p[i]) for i in range(len(p))] for a in range(len(p))]\n mean=[sum(p[a]*samples[a][i] for a in range(len(p))) for i in range(len(p))]\n variance=sum(p[a]*sum((x-m)**2 for x,m in zip(samples[a],mean)) for a in range(len(p)))\n return dict(samples=samples,mean=mean,variance_trace=variance)\nout={};p=T([.5,.3,.2]);r=T([0.,1.,2.]);z=p.log().requires_grad_();J=(z.softmax(-1)*r).sum();g,=torch.autograd.grad(J,z)\nJ0,g0=policy_gradient(p.tolist(),r.tolist());close(g,g0);close(pg.exact_gradient(z.detach(),r),g0)\nvariants={}\nfor rr in [[0,1,4],[5,6,7],[1,1,1]]:\n jj,gg=policy_gradient(p.tolist(),rr);close(pg.exact_gradient(z.detach(),T(rr)),gg);weights=[float(p[i])*math.exp(.1*gg[i]) for i in range(3)];normalized=[w/sum(weights) for w in weights];close((z.detach()+.1*T(gg)).softmax(-1),normalized);variants[str(rr)]=dict(expected_reward=jj,gradient=gg,probabilities_after_eta01=normalized)\nbaseline_weights=[float(p[i])*math.exp(.1*g0[i]) for i in range(3)];baseline_updated=[w/sum(baseline_weights) for w in baseline_weights];close((z.detach()+.1*T(g0)).softmax(-1),baseline_updated)\nmoments={}\nfor b in [0.,.7,5.]:\n manual=independent_moments(p.tolist(),r.tolist(),b);canonical=pg.estimator_moments(z.detach(),r,T(b));close(canonical['mean'],manual['mean']);close(canonical['variance_trace'],manual['variance_trace']);moments[str(b)]=manual\nscore_norms=[sum(((i==a)-float(p[i]))**2 for i in range(3)) for a in range(3)];num=sum(float(p[a]*r[a])*score_norms[a] for a in range(3));den=sum(float(p[a])*score_norms[a] for a in range(3))\ninc=pg.group_estimator_moments(z.detach(),r,group=4,leave_one_out=False);loo=pg.group_estimator_moments(z.detach(),r,group=4);close(inc['mean'],g*.75);close(loo['mean'],g)\nout['policy']=dict(expected_reward=J0,ascent_gradient=g.tolist(),logit_ascent_eta01=(g*.1).tolist(),probabilities_after_eta01=baseline_updated,variants=variants,baseline_moments=moments,score_norms=score_norms,optimal_baseline=dict(numerator=num,denominator=den,value=num/den),inclusive_G4=inc['mean'].tolist(),rloo_G4=loo['mean'].tolist())\nratio=T([1.3,.7,1.3,.7]).requires_grad_();adv=T([1,1,-1,-1]);ss=pg.ppo_surrogate(ratio,adv);ss.sum().backward();close(ss,[1.2,.7,-1.3,-.8]);close(ratio.grad,[0,1,-1,0]);pn=T([.4,.3,.3]);close((p*(pn/p)*r).sum(),.9);benefit=(p*pg.ppo_surrogate(pn/p,r-.7)).sum();close(benefit,.122)\nout['ppo']=dict(surrogate=ss.detach().tolist(),ratio_slopes=ratio.grad.tolist(),ratios=(pn/p).tolist(),current_expected_reward=float((pn*r).sum()),clipped_expected_advantage=float(benefit),unclipped_expected_advantage=float((pn*r).sum())-.7,four_token_ratio=1.1**4)\ntheta=T([1]);m=T([0]);v=T([0]);history=[];ind_m=ind_v=0.;ind_theta=1.\nfor step,gg in enumerate([1.,1.,-.1],1):\n old=theta.clone();theta,m,v=pre.adamw_reference(theta,T([gg]),m,v,step,.01,decay=0.)\n ind_m=.9*ind_m+.1*gg;ind_v=.999*ind_v+.001*gg*gg;delta=-.01*(ind_m/(1-.9**step))/(math.sqrt(ind_v/(1-.999**step))+1e-8);ind_theta+=delta;close(theta,[ind_theta]);history.append(dict(step=step,gradient=gg,m=float(m[0]),v=float(v[0]),mhat=float(m[0]/(1-.9**step)),vhat=float(v[0]/(1-.999**step)),parameter_delta=float((theta-old)[0])))\ngg=T([1,.01]);delta,_,_=pre.adamw_reference(T([0,0]),gg,T([0,0]),T([0,0]),1,.01,decay=0.)\npdecay,_,_=pre.adamw_reference(T([2]),T([0]),T([0]),T([0]),1,.01,decay=.1);pl2,_,_=pre.adamw_reference(T([2]),T([.2]),T([0]),T([0]),1,.01,decay=0.);close(pdecay,[1.998]);close(pl2,[1.9900000005]);rates=[pre.learning_rate(i) for i in [0,2,23]];close(rates,[.01/3,.01,.001])\nout['optimizer']=dict(sign_reversal=history,two_coordinate_adam_delta=delta.tolist(),sgd_delta=(-.01*gg).tolist(),decoupled_theta=float(pdecay[0]),l2_first_adam_theta=float(pl2[0]),rates_u1u3u24=rates)\nrows=ev.evaluation_fixture();a=[int(x['a']) for x in rows];b=[int(x['b']) for x in rows];dis=dict(collections.Counter(f'{x}{y}' for x,y in zip(a,b)));assert dis=={'00':5,'11':18,'01':10,'10':7};delta,interval=ev.paired_bootstrap(a,b,draws=2000,seed=1010);close(delta,.075);close(interval,[-.125,.275]);slices={s:dict(n=sum(x['slice']==s for x in rows),a=sum(x['a'] for x in rows if x['slice']==s),b=sum(x['b'] for x in rows if x['slice']==s)) for s in ['common','rare-format']};macro=[sum(s[k]/s['n'] for s in slices.values())/2 for k in ['a','b']];reordered=list(reversed(b))\nout['evaluation']=dict(totals=dict(a=sum(a),b=sum(b),n=len(a)),disagreements=dis,paired_bootstrap=dict(delta=delta,interval=interval,draws=2000,seed=1010,sampler='Python random.Random'),slices=slices,macro_accuracies=macro,wilson_10of10=ev.wilson_interval(10,10),mispaired_reversed_b=dict(totals_unchanged=sum(reordered)==sum(b),disagreements=dict(collections.Counter(f'{x}{y}' for x,y in zip(a,reordered))),bootstrap=ev.paired_bootstrap(a,reordered)))\nrs=T([[0,0,1,1],[1,1,1,1],[0,0,0,0]]);aa=gr.group_advantages(rs);close(aa[0],[-.5/(.5+1e-8)]*2+[.5/(.5+1e-8)]*2);assert torch.equal(aa[1:],torch.zeros_like(aa[1:]));lengths=[2,5,2,2];mask=torch.arange(5)[None,:]<torch.tensor(lengths)[:,None];logp=T([[-.7]*5]*4).requires_grad_();loss=gr.clipped_objective(logp,logp.detach(),aa[0],mask);loss.backward();expected=-aa[0][:,None]/(4*mask.sum(-1)[:,None])*mask;close(logp.grad,expected);close(loss.detach(),0.)\nzeros={}\nfor val in [0.,1.]:\n xx=logp.detach().clone().requires_grad_();ll=gr.clipped_objective(xx,xx.detach(),gr.group_advantages(torch.full((1,4),val,dtype=D))[0],mask);ll.backward();assert torch.equal(xx.grad,torch.zeros_like(xx));zeros[str(val)]=dict(loss=float(ll.detach()),max_abs_gradient=float(xx.grad.abs().max()))\nrr=T([1.05,.9,1.4]);ss=pg.ppo_surrogate(rr,torch.ones_like(rr));close(ss,[1.05,.9,1.2]);out['groups']=dict(rewards=rs.tolist(),advantages=aa.tolist(),sample_std_advantages=((rs[0]-.5)/rs[0].std(correction=1)).tolist(),rloo=pg.rloo_advantages(rs[0]).tolist(),lengths=lengths,valid_tokens=int(mask.sum()),fresh_loss=float(loss.detach()),selected_score_gradients=logp.grad.tolist(),constant_groups=zeros,token_surrogate=ss.tolist(),token_mean=float(ss.mean()),iid_p01={str(G):dict(all_wrong=.9**G,mixed=1-.9**G-.1**G) for G in [4,8]})\nrew=T([[0,0,1]]);vv=T([[.4,.5,.8]]);valid=torch.ones((1,3),dtype=torch.bool);terminal=torch.tensor([[False,False,True]]);out['gae']={}\nfor lam in [0.,.95,1.]:\n d=[0+.9*.5-.4,0+.9*.8-.5,1-.8];av=[0.]*3\n for i in reversed(range(3)):av[i]=d[i]+(.9*lam*av[i+1] if i<2 else 0.)\n actual=cp.gae_targets(rew,vv,valid,terminal,T([0]),gamma=.9,lam=lam);close(actual['td'],[d]);close(actual['advantages'],[av]);close(actual['targets'],[[a+v for a,v in zip(av,vv[0].tolist())]]);out['gae'][str(lam)]={k:v.tolist() for k,v in actual.items()}\nq=T([.2,.3,.5]);zz=p.log().requires_grad_();pp=zz.softmax(-1);d=pp.log()-q.log();k3=q/pp-1+d;f1=(p*d).sum();f3=(p*k3).sum();exact=(pp*d).sum();grad1,=torch.autograd.grad(f1,zz,retain_graph=True);grad3,=torch.autograd.grad(f3,zz,retain_graph=True);grade,=torch.autograd.grad(exact,zz);D0=sum(x*math.log(x/y) for x,y in zip(p.tolist(),q.tolist()));manual=[x*(math.log(x/y)-D0) for x,y in zip(p.tolist(),q.tolist())];close(f1.detach(),D0);close(f3.detach(),D0);close(exact.detach(),D0);close(grad1,[0,0,0]);close(grad3,p-q);close(grade,manual)\nuni=T([1/3]*3);proxy=T([1,2,0]);truth=T([1,0,0]);gp=uni*(proxy-(uni*proxy).sum());gt=uni*(truth-(uni*truth).sum());close(gp,[0,1/3,-1/3]);close(gt,[2/9,-1/9,-1/9]);prob=(.4*gp).softmax(-1)\nout['diagnosis']=dict(kl_value=D0,frozen_k1_gradient=grad1.tolist(),frozen_k3_gradient=grad3.tolist(),exact_kl_gradient=grade.tolist(),proxy_gradient=gp.tolist(),strict_gradient=gt.tolist(),first_proxy_update_logits=(.4*gp).tolist(),first_proxy_update_probabilities=prob.tolist(),entropy_uniform=math.log(3),entropy_sharp=-sum(x*math.log(x) for x in [.9,.05,.05]),ten_draw_exposure_probability=1-.99**10)\nout['execution']=dict(status='passed',mode='bounded CPU calculations and existing finite APIs; no model training',python=sys.version.split()[0],torch=torch.__version__,host=platform.node(),platform=platform.platform(),elapsed_seconds=time.monotonic()-started)\nprint(json.dumps(out,indent=2))\n",
+    "program_sha256": "7b53de15d819ad6889ac98f7ee827adcae9081520416305247555b0afd40778e",
+    "stdout": {
+      "policy": {
+        "expected_reward": 0.7,
+        "ascent_gradient": [
+          -0.35000000000000014,
+          0.08999999999999994,
+          0.26000000000000006
+        ],
+        "logit_ascent_eta01": [
+          -0.03500000000000002,
+          0.008999999999999994,
+          0.02600000000000001
+        ],
+        "probabilities_after_eta01": [
+          0.48729405634007156,
+          0.30552821431043403,
+          0.2071777293494944
+        ],
+        "variants": {
+          "[0, 1, 4]": {
+            "expected_reward": 1.1,
+            "gradient": [
+              -0.55,
+              -0.030000000000000027,
+              0.58
+            ],
+            "probabilities_after_eta01": [
+              0.48079738083466683,
+              0.30387617882111895,
+              0.21532644034421422
+            ]
+          },
+          "[5, 6, 7]": {
+            "expected_reward": 5.7,
+            "gradient": [
+              -0.3500000000000001,
+              0.08999999999999994,
+              0.25999999999999995
+            ],
+            "probabilities_after_eta01": [
+              0.48729405634007156,
+              0.30552821431043403,
+              0.2071777293494944
+            ]
+          },
+          "[1, 1, 1]": {
+            "expected_reward": 1.0,
+            "gradient": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "probabilities_after_eta01": [
+              0.5,
+              0.3,
+              0.2
+            ]
+          }
+        },
+        "baseline_moments": {
+          "0.0": {
+            "samples": [
+              [
+                0.0,
+                -0.0,
+                -0.0
+              ],
+              [
+                -0.5,
+                0.7,
+                -0.2
+              ],
+              [
+                -1.0,
+                -0.6,
+                1.6
+              ]
+            ],
+            "mean": [
+              -0.35,
+              0.09,
+              0.26000000000000006
+            ],
+            "variance_trace": 0.8198000000000001
+          },
+          "0.7": {
+            "samples": [
+              [
+                -0.35,
+                0.21,
+                0.13999999999999999
+              ],
+              [
+                -0.15000000000000002,
+                0.21000000000000002,
+                -0.06000000000000001
+              ],
+              [
+                -0.65,
+                -0.39,
+                1.04
+              ]
+            ],
+            "mean": [
+              -0.35,
+              0.08999999999999998,
+              0.26
+            ],
+            "variance_trace": 0.24720000000000003
+          },
+          "5.0": {
+            "samples": [
+              [
+                -2.5,
+                1.5,
+                1.0
+              ],
+              [
+                2.0,
+                -2.8,
+                0.8
+              ],
+              [
+                1.5,
+                0.8999999999999999,
+                -2.4000000000000004
+              ]
+            ],
+            "mean": [
+              -0.35,
+              0.09000000000000002,
+              0.2599999999999999
+            ],
+            "variance_trace": 10.0598
+          }
+        },
+        "score_norms": [
+          0.38,
+          0.7799999999999999,
+          0.9800000000000001
+        ],
+        "optimal_baseline": {
+          "numerator": 0.626,
+          "denominator": 0.62,
+          "value": 1.0096774193548388
+        },
+        "inclusive_G4": [
+          -0.2625000000000002,
+          0.06750000000000002,
+          0.19500000000000017
+        ],
+        "rloo_G4": [
+          -0.35000000000000026,
+          0.09000000000000002,
+          0.26000000000000023
+        ]
+      },
+      "ppo": {
+        "surrogate": [
+          1.2,
+          0.7,
+          -1.3,
+          -0.8
+        ],
+        "ratio_slopes": [
+          0.0,
+          1.0,
+          -1.0,
+          0.0
+        ],
+        "ratios": [
+          0.8,
+          1.0,
+          1.4999999999999998
+        ],
+        "current_expected_reward": 0.8999999999999999,
+        "clipped_expected_advantage": 0.1220000000000001,
+        "unclipped_expected_advantage": 0.19999999999999996,
+        "four_token_ratio": 1.4641000000000004
+      },
+      "optimizer": {
+        "sign_reversal": [
+          {
+            "step": 1,
+            "gradient": 1.0,
+            "m": 0.09999999999999998,
+            "v": 0.0010000000000000009,
+            "mhat": 1.0,
+            "vhat": 1.0,
+            "parameter_delta": -0.0099999999
+          },
+          {
+            "step": 2,
+            "gradient": 1.0,
+            "m": 0.18999999999999995,
+            "v": 0.0019990000000000016,
+            "mhat": 1.0,
+            "vhat": 1.0000000000000142,
+            "parameter_delta": -0.00999999989999989
+          },
+          {
+            "step": 3,
+            "gradient": -0.1,
+            "m": 0.16099999999999995,
+            "v": 0.0020070010000000017,
+            "mhat": 0.5940959409594097,
+            "vhat": 0.6696697798899641,
+            "parameter_delta": -0.007259826292114746
+          }
+        ],
+        "two_coordinate_adam_delta": [
+          -0.009999999900000002,
+          -0.009999990000010001
+        ],
+        "sgd_delta": [
+          -0.01,
+          -0.0001
+        ],
+        "decoupled_theta": 1.998,
+        "l2_first_adam_theta": 1.9900000005,
+        "rates_u1u3u24": [
+          0.0033333333333333335,
+          0.01,
+          0.001
+        ]
+      },
+      "evaluation": {
+        "totals": {
+          "a": 25,
+          "b": 28,
+          "n": 40
+        },
+        "disagreements": {
+          "00": 5,
+          "11": 18,
+          "01": 10,
+          "10": 7
+        },
+        "paired_bootstrap": {
+          "delta": 0.075,
+          "interval": [
+            -0.125,
+            0.275
+          ],
+          "draws": 2000,
+          "seed": 1010,
+          "sampler": "Python random.Random"
+        },
+        "slices": {
+          "common": {
+            "n": 30,
+            "a": 20,
+            "b": 26
+          },
+          "rare-format": {
+            "n": 10,
+            "a": 5,
+            "b": 2
+          }
+        },
+        "macro_accuracies": [
+          0.5833333333333333,
+          0.5333333333333333
+        ],
+        "wilson_10of10": [
+          0.7224672001371107,
+          0.9999999999999999
+        ],
+        "mispaired_reversed_b": {
+          "totals_unchanged": true,
+          "disagreements": {
+            "00": 4,
+            "10": 8,
+            "01": 11,
+            "11": 17
+          },
+          "bootstrap": [
+            0.075,
+            [
+              -0.15,
+              0.275
+            ]
+          ]
+        }
+      },
+      "groups": {
+        "rewards": [
+          [
+            0.0,
+            0.0,
+            1.0,
+            1.0
+          ],
+          [
+            1.0,
+            1.0,
+            1.0,
+            1.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "advantages": [
+          [
+            -0.9999999800000003,
+            -0.9999999800000003,
+            0.9999999800000003,
+            0.9999999800000003
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "sample_std_advantages": [
+          -0.8660254037844387,
+          -0.8660254037844387,
+          0.8660254037844387,
+          0.8660254037844387
+        ],
+        "rloo": [
+          -0.6666666666666666,
+          -0.6666666666666666,
+          0.6666666666666667,
+          0.6666666666666667
+        ],
+        "lengths": [
+          2,
+          5,
+          2,
+          2
+        ],
+        "valid_tokens": 11,
+        "fresh_loss": 2.7755575615628914e-17,
+        "selected_score_gradients": [
+          [
+            0.12499999750000004,
+            0.12499999750000004,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.04999999900000002,
+            0.04999999900000002,
+            0.04999999900000002,
+            0.04999999900000002,
+            0.04999999900000002
+          ],
+          [
+            -0.12499999750000004,
+            -0.12499999750000004,
+            -0.0,
+            -0.0,
+            -0.0
+          ],
+          [
+            -0.12499999750000004,
+            -0.12499999750000004,
+            -0.0,
+            -0.0,
+            -0.0
+          ]
+        ],
+        "constant_groups": {
+          "0.0": {
+            "loss": -0.0,
+            "max_abs_gradient": 0.0
+          },
+          "1.0": {
+            "loss": -0.0,
+            "max_abs_gradient": 0.0
+          }
+        },
+        "token_surrogate": [
+          1.05,
+          0.9,
+          1.2
+        ],
+        "token_mean": 1.05,
+        "iid_p01": {
+          "4": {
+            "all_wrong": 0.6561,
+            "mixed": 0.3438
+          },
+          "8": {
+            "all_wrong": 0.4304672100000001,
+            "mixed": 0.5695327799999998
+          }
+        }
+      },
+      "gae": {
+        "0.0": {
+          "td": [
+            [
+              0.04999999999999999,
+              0.22000000000000008,
+              0.19999999999999996
+            ]
+          ],
+          "advantages": [
+            [
+              0.04999999999999999,
+              0.22000000000000008,
+              0.19999999999999996
+            ]
+          ],
+          "targets": [
+            [
+              0.45,
+              0.7200000000000001,
+              1.0
+            ]
+          ]
+        },
+        "0.95": {
+          "td": [
+            [
+              0.04999999999999999,
+              0.22000000000000008,
+              0.19999999999999996
+            ]
+          ],
+          "advantages": [
+            [
+              0.384305,
+              0.391,
+              0.19999999999999996
+            ]
+          ],
+          "targets": [
+            [
+              0.784305,
+              0.891,
+              1.0
+            ]
+          ]
+        },
+        "1.0": {
+          "td": [
+            [
+              0.04999999999999999,
+              0.22000000000000008,
+              0.19999999999999996
+            ]
+          ],
+          "advantages": [
+            [
+              0.41000000000000003,
+              0.4,
+              0.19999999999999996
+            ]
+          ],
+          "targets": [
+            [
+              0.81,
+              0.9,
+              1.0
+            ]
+          ]
+        }
+      },
+      "diagnosis": {
+        "kl_value": 0.27488721956224654,
+        "frozen_k1_gradient": [
+          -1.1102230246251568e-16,
+          0.0,
+          -4.4408920985006276e-17
+        ],
+        "frozen_k3_gradient": [
+          0.29999999999999993,
+          -7.660538869913582e-17,
+          -0.2999999999999998
+        ],
+        "exact_kl_gradient": [
+          0.32070175615595425,
+          -0.08246616586867402,
+          -0.23823559028728036
+        ],
+        "proxy_gradient": [
+          0.0,
+          0.3333333333333333,
+          -0.3333333333333333
+        ],
+        "strict_gradient": [
+          0.22222222222222224,
+          -0.1111111111111111,
+          -0.1111111111111111
+        ],
+        "first_proxy_update_logits": [
+          0.0,
+          0.13333333333333333,
+          -0.13333333333333333
+        ],
+        "first_proxy_update_probabilities": [
+          0.33136676757152317,
+          0.378629878632374,
+          0.2900033537961028
+        ],
+        "entropy_uniform": 1.0986122886681098,
+        "entropy_sharp": 0.39439769144744274,
+        "ten_draw_exposure_probability": 0.09561792499119559
+      },
+      "execution": {
+        "status": "passed",
+        "mode": "bounded CPU calculations and existing finite APIs; no model training",
+        "python": "3.12.14",
+        "torch": "2.14.1+cpu",
+        "host": "spark-aa66",
+        "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+        "elapsed_seconds": 0.22801599698141217
+      }
+    },
+    "stdout_sha256": "6a465ee6187696d67580dafa3a5ad1220e870a986392976df718dbaa42209404",
+    "stderr": "/tmp/dongxi-foundations-routes-numerics.py:5: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).\n  T=lambda x:torch.tensor(x,dtype=D)\n/tmp/dongxi-foundations-routes-numerics.py:5: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.detach().clone() or sourceTensor.detach().clone().requires_grad_(True), rather than torch.tensor(sourceTensor).\n  T=lambda x:torch.tensor(x,dtype=D)\n",
+    "revision": 2,
+    "retained_initial_receipt": {
+      "path": "experiments/reports/2026-10-10-book-foundations-pass/run-01/routes-numerics-v1.json",
+      "sha256": "c6799ee6430d65e722c6353d4ff78ebf9d2c9f7bb7e7849e630e9fbcab0cdf75"
+    }
+  },
+  "preservation": {
+    "tracked_notebook_full_bytes_checked": 76,
+    "tracked_notebook_changes": [],
+    "ignored_checkpoint_full_bytes_checked": 10,
+    "ignored_checkpoint_changes": [],
+    "numbered_exercises_preserved": 121
+  },
+  "limits": [
+    "Author review and parent feedback are not observed learner understanding.",
+    "Saved figures retain their original evidence identities; no new figure pixels were generated.",
+    "This is bounded numerical/API verification, not the final frozen full course reference execution.",
+    "Math source lint and manual image review do not prove GitHub browser rendering."
+  ],
+  "peer_corrections": [
+    {
+      "chapter": 12,
+      "finding": "Question about normalized probability was answered only with logit gradient.",
+      "change": "Added independently recomputed normalized eta0.1 distributions; expanded PPO on first use.",
+      "numeric_receipt": "numerical_verification.stdout.policy.probabilities_after_eta01 and variants.[0, 1, 4].probabilities_after_eta01"
+    },
+    {
+      "chapter": 13,
+      "finding": "Constant reward control could imply frozen wrong strings pass an unchanged strict verifier.",
+      "change": "Labeled rows counterfactual reward substitutions; distinguished genuinely all-success responses."
+    }
+  ]
+}

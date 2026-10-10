@@ -1,0 +1,554 @@
+{
+  "scope": "Illustrative CPU arithmetic; no new capability or model-training evidence",
+  "environment": {
+    "python": "3.12.14",
+    "torch": "2.14.1+cpu",
+    "device": "cpu",
+    "arithmetic_dtype": "float64 except declared controls"
+  },
+  "memory": {
+    "parameters": 1000000,
+    "fp32_adamw_bytes": {
+      "weights": 4000000,
+      "gradients": 4000000,
+      "first_moment": 4000000,
+      "second_moment": 4000000,
+      "total": 16000000
+    },
+    "bf16_weights_gradients_fp32_moments_no_master_bytes": 12000000,
+    "same_with_fp32_master_bytes": 16000000
+  },
+  "reduction_order": {
+    "left": 1.0,
+    "right": 0.0
+  },
+  "embedding": {
+    "ids": [
+      2,
+      5,
+      3,
+      2
+    ],
+    "lookup": [
+      [
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        0.0
+      ]
+    ],
+    "gradient": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        2.0,
+        2.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0
+      ]
+    ],
+    "after_sgd_eta_0_1": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        2.0,
+        1.0
+      ],
+      [
+        0.8,
+        -0.2
+      ],
+      [
+        0.9,
+        0.9
+      ],
+      [
+        -1.0,
+        0.0
+      ],
+      [
+        -0.1,
+        0.9
+      ]
+    ],
+    "existing_repeated_lookup_reference": {
+      "input_ids_shape": [
+        1,
+        3
+      ],
+      "lookup_output_shape": [
+        1,
+        3,
+        4
+      ],
+      "nonzero_gradient_rows": [
+        2,
+        5
+      ],
+      "row_2_gradient": [
+        2.0,
+        2.0,
+        2.0,
+        2.0
+      ],
+      "row_5_gradient": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ]
+    },
+    "changed_final_id_gradient": [
+      [
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0
+      ],
+      [
+        2.0,
+        2.0
+      ]
+    ]
+  },
+  "output_head": {
+    "h": [
+      1.0,
+      0.0
+    ],
+    "w": [
+      [
+        2.0,
+        0.0
+      ],
+      [
+        1.0,
+        0.0
+      ],
+      [
+        -1.0,
+        0.0
+      ]
+    ],
+    "z": [
+      2.0,
+      1.0,
+      -1.0
+    ],
+    "p": [
+      0.7053845126982412,
+      0.25949646034241913,
+      0.03511902695933973
+    ],
+    "loss": 1.3490122167681864,
+    "logit_gradient": [
+      0.7053845126982412,
+      -0.7405035396575809,
+      0.03511902695933973
+    ],
+    "weight_gradient": [
+      [
+        0.7053845126982412,
+        0.0
+      ],
+      [
+        -0.7405035396575809,
+        0.0
+      ],
+      [
+        0.03511902695933973,
+        0.0
+      ]
+    ],
+    "hidden_gradient": [
+      0.6351464587795618,
+      0.0
+    ],
+    "eta": 0.1,
+    "updated_w": [
+      [
+        1.9294615487301758,
+        0.0
+      ],
+      [
+        1.074050353965758,
+        0.0
+      ],
+      [
+        -1.003511902695934,
+        0.0
+      ]
+    ],
+    "updated_logits": [
+      1.9294615487301758,
+      1.074050353965758,
+      -1.003511902695934
+    ],
+    "updated_p": [
+      0.6764312433074611,
+      0.2875565716312904,
+      0.03601218506124857
+    ],
+    "updated_loss": 1.2463356672101396,
+    "changed_target_cat_gradient": [
+      -0.2946154873017588,
+      0.25949646034241913,
+      0.03511902695933973
+    ]
+  },
+  "chain_probability": {
+    "conditional_probabilities": [
+      0.5,
+      0.25,
+      0.8
+    ],
+    "product": 0.1,
+    "sum_nll": 2.3025850929940455,
+    "mean_nll": 0.7675283643313485,
+    "geometric_mean_target_probability": 0.4641588833612779
+  },
+  "entropy_kl": {
+    "q": [
+      0.7,
+      0.3
+    ],
+    "entropy": 0.6108643020548935,
+    "candidates": [
+      {
+        "p": [
+          0.5,
+          0.5
+        ],
+        "cross_entropy": 0.6931471805599453,
+        "kl": 0.08228287850505173
+      },
+      {
+        "p": [
+          0.7,
+          0.3
+        ],
+        "cross_entropy": 0.6108643020548935,
+        "kl": 0.0
+      },
+      {
+        "p": [
+          0.9,
+          0.1
+        ],
+        "cross_entropy": 0.764527888858692,
+        "kl": 0.1536635868037985
+      }
+    ]
+  },
+  "attention": {
+    "weights": [
+      [
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.33023845067334306,
+        0.6697615493266569,
+        0.0
+      ],
+      [
+        0.24825507825772308,
+        0.24825507825772308,
+        0.5034898434845538
+      ]
+    ],
+    "output": [
+      [
+        1.0,
+        2.0
+      ],
+      [
+        2.3395230986533138,
+        0.6604769013466861
+      ],
+      [
+        0.9930203130308923,
+        2.5104695304536615
+      ]
+    ],
+    "changed_final_value_output": [
+      [
+        1.0,
+        2.0
+      ],
+      [
+        2.3395230986533138,
+        0.6604769013466861
+      ],
+      [
+        51.34200466148628,
+        -49.85247419193994
+      ]
+    ],
+    "row_2_first_coordinate_score_gradient": [
+      -0.442362032740426,
+      0.44236203274042607
+    ],
+    "manual_gradient_max_error": 0.0,
+    "hard_lookup_control": [
+      {
+        "alpha": 1.0,
+        "weights": [
+          0.47108307700876034,
+          0.26445846149561975,
+          0.26445846149561975
+        ]
+      },
+      {
+        "alpha": 4.0,
+        "weights": [
+          0.8342778481558409,
+          0.08286107592207959,
+          0.08286107592207959
+        ]
+      },
+      {
+        "alpha": 16.0,
+        "weights": [
+          0.9998054169956606,
+          9.729150216966916e-05,
+          9.729150216966916e-05
+        ]
+      }
+    ],
+    "identical_values_score_gradient": [
+      0.0,
+      0.0
+    ],
+    "scaled_score_control": {
+      "unscaled_scores": [
+        8.0,
+        -8.0
+      ],
+      "unscaled_weights": [
+        0.9999998874648379,
+        1.12535162055095e-07
+      ],
+      "scaled_scores": [
+        1.0,
+        -1.0
+      ],
+      "scaled_weights": [
+        0.8807970779778823,
+        0.11920292202211755
+      ]
+    }
+  },
+  "decoder": {
+    "seed": 505,
+    "construction": "float32 initialization followed by double(), matching Day 5 notebook",
+    "forward_trace": [
+      {
+        "stage": "token + position",
+        "shape": [
+          2,
+          6,
+          16
+        ],
+        "sample_std": 0.025661437200241565
+      },
+      {
+        "stage": "block 0",
+        "shape": [
+          2,
+          6,
+          16
+        ],
+        "sample_std": 0.026124267920693924
+      },
+      {
+        "stage": "block 1",
+        "shape": [
+          2,
+          6,
+          16
+        ],
+        "sample_std": 0.027007322945823076
+      },
+      {
+        "stage": "final LayerNorm",
+        "shape": [
+          2,
+          6,
+          16
+        ],
+        "sample_std": 0.9949261231192981
+      },
+      {
+        "stage": "vocabulary head",
+        "shape": [
+          2,
+          6,
+          16
+        ],
+        "sample_std": 0.10945981792594668
+      }
+    ],
+    "assembled_forward_max_error": 0.0,
+    "zero_branches_input_max_error": 0.0,
+    "layer_norm": {
+      "input": [
+        10.0,
+        20.0,
+        30.0,
+        40.0
+      ],
+      "population_variance": 125.0,
+      "output": [
+        -1.3416407328342457,
+        -0.4472135776114152,
+        0.4472135776114152,
+        1.3416407328342457
+      ],
+      "common_offset_max_error": 0.0
+    },
+    "gelu": {
+      "inputs": [
+        -1.0,
+        0.0,
+        1.0
+      ],
+      "outputs": [
+        -0.15865525393145702,
+        0.0,
+        0.841344746068543
+      ]
+    }
+  },
+  "qwen_configuration_accounting": {
+    "unique_parameters": 596049920,
+    "component_parameters": {
+      "tied_embedding_and_head": 155582464,
+      "attention_projections": 176160768,
+      "gated_mlps": 264241152,
+      "block_rms_scales": 57344,
+      "qk_rms_scales": 7168,
+      "final_rms_scale": 1024
+    },
+    "component_sum_equals_analytical": true,
+    "mlp_fraction": 0.4433205057724024,
+    "bf16_raw_parameter_bytes": 1192099840,
+    "untied_additional_parameters": 155582464,
+    "untied_additional_bf16_mib": 296.75,
+    "evidence_level": "Calculation from config and architecture shapes; no new Qwen model loaded",
+    "pinned_source": {
+      "model": "Qwen/Qwen3-0.6B",
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "config_url": "https://huggingface.co/Qwen/Qwen3-0.6B/raw/c1899de289a04d12100db370d81485cdf75e47ca/config.json",
+      "local_snapshot": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+      "config_sha256": "660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd",
+      "config": {
+        "architectures": [
+          "Qwen3ForCausalLM"
+        ],
+        "attention_bias": false,
+        "attention_dropout": 0.0,
+        "bos_token_id": 151643,
+        "eos_token_id": 151645,
+        "head_dim": 128,
+        "hidden_act": "silu",
+        "hidden_size": 1024,
+        "initializer_range": 0.02,
+        "intermediate_size": 3072,
+        "max_position_embeddings": 40960,
+        "max_window_layers": 28,
+        "model_type": "qwen3",
+        "num_attention_heads": 16,
+        "num_hidden_layers": 28,
+        "num_key_value_heads": 8,
+        "rms_norm_eps": 1e-06,
+        "rope_scaling": null,
+        "rope_theta": 1000000,
+        "sliding_window": null,
+        "tie_word_embeddings": true,
+        "torch_dtype": "bfloat16",
+        "transformers_version": "4.51.0",
+        "use_cache": true,
+        "use_sliding_window": false,
+        "vocab_size": 151936
+      },
+      "header_size_bytes": 35552,
+      "header_sha256": "399d16f500e925c7e923fe05966c6df6862ab64da60916843119e802f1801bca",
+      "serialized_tensor_count": 311,
+      "serialized_elements_including_separate_head": 751632384,
+      "serialized_dtype_set": [
+        "BF16"
+      ],
+      "q_norm_shape": [
+        128
+      ],
+      "k_norm_shape": [
+        128
+      ],
+      "embedding_shape": [
+        151936,
+        1024
+      ],
+      "separately_stored_head_shape": [
+        151936,
+        1024
+      ],
+      "file_bytes": 1503300328,
+      "new_read_scope": "JSON config and safetensors header only; no tensor payload or runtime aliasing inspection",
+      "historical_runtime_tying_evidence": "experiments/reports/2026-08-31-qwen3-embedding-inspection.md",
+      "historical_runtime_tying_same_revision": true,
+      "historical_runtime_tying_report_sha256": "8e1519f3fe57933f4c0d4bbd8eecea10a3525e8205c6d1b5b6b8faecdc4b720f"
+    }
+  },
+  "source_sha256": {
+    "src/dongxi_llms/causal_attention_lab.py": "9da0e3e55d1264d2bf82c4c7cf01c617eddb1a90f0a426bb733610c872eeb8bb",
+    "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826",
+    "src/dongxi_llms/embedding_gradient_lab.py": "c1260811474072dec7c847bd9ca0c485007e504b9a51b74c4f3affd1135968f4",
+    "notebooks/day-03/01_logits_softmax_nll.ipynb": "937ec4d15fa2ce97c6a560377af9860bf5ee6fa0e4359d1703a7a2e67b276980",
+    "notebooks/day-03/03_distribution_learning.ipynb": "504910c283196a1d4702006068ea2ef93b497293818e9a9d5c1a9b5a73d9ad56",
+    "notebooks/day-05/06_assemble_decoder.ipynb": "6c0e285cba1a3dd57dbd54074c4bcc306fa461f0f1d144c75a77620b454f0f17"
+  }
+}

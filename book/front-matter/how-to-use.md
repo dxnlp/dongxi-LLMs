@@ -6,6 +6,20 @@ preferences and policy optimization. Chapters 14–15 diagnose failures and asse
 the final comparison. The [28-day route](../../docs/COURSE_SEQUENCE.md) links
 every day's material and practical work.
 
+Read a chapter for its central question before treating it as a collection of
+definitions. Follow the worked example until you can identify the input, the
+operation and the consequence. At a prediction, pause long enough to say what
+you expect and why; the reference reasoning follows nearby. Then choose the
+companion session that changes that assumption. You can read the argument and
+inspect its saved evidence without executing a model training run.
+
+Some examples recur with different roles. A token distribution first explains
+prediction loss, later becomes a policy, and eventually becomes a teacher's
+target. An instruction response first defines an interface, then becomes a
+training target and an evaluation item. Each chapter names the new role and
+the distribution or gradient boundary it changes. Follow that change rather
+than assuming that a familiar-looking equation has the same meaning everywhere.
+
 For a lesson, first read its motivating question. Write a prediction in ordinary
 language before executing the reference. A useful prediction says which quantity
 will change, why, and what would contradict your explanation. It need not contain

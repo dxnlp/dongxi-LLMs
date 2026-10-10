@@ -7,6 +7,13 @@ source of information unused: a reader can often recognize a better story
 without being able to write an ideal one. This chapter asks how that comparison
 becomes a trainable signal, and what the resulting scalar actually measures.
 
+Chapter 9 followed a demonstration through its answer and ending. Now imagine
+that we have two generated responses, neither quite the demonstration we would
+write. A comparison can still say which better serves the request. That changes
+the form of the supervision: we observe a relation between responses, rather
+than a token-by-token ideal answer. We will first make that relation numerical,
+then ask what happens when correctness and polish travel together in the data.
+
 The prerequisites are next-token likelihood, gradient descent, and the evaluation
 contract from Chapter 7. By the end, the reader should be able to derive a
 pairwise preference likelihood, fit a transparent reward model, audit its
@@ -54,6 +61,13 @@ $a$; a large magnitude expresses confidence under the model. The use of
 pairwise likelihoods for language-model reward fitting follows the formulation
 in [the DPO paper's preliminaries](https://arxiv.org/html/2305.18290v3#S3).
 
+Why use a difference? The same response can win against a poor answer and lose
+against a better one. A reusable scalar score lets us compare it with either;
+the pair determines how the scores interact. Exponentiating turns real scores
+into positive strengths, and their ratio is $\exp(r_a-r_b)$. This is a model
+of judgments with a particular odds structure, rather than a claim that every
+human comparison must obey it.
+
 Now record $q=P_{\text{labels}}(a\succ b)$. A hard selection has $q=1$ or $0$;
 aggregated repeated votes can give a fraction. The negative log-likelihood is
 
@@ -61,6 +75,14 @@ $$
 L(\Delta,q)=-q\log\sigma(\Delta)-(1-q)\log(1-\sigma(\Delta))
 =\mathrm{softplus}(\Delta)-q\Delta.
 $$
+
+The identity is easier to reproduce after defining
+$\mathrm{softplus}(\Delta)=\log(1+e^\Delta)$:
+$\log\sigma(\Delta)=\Delta-\mathrm{softplus}(\Delta)$ and
+$\log(1-\sigma(\Delta))=-\mathrm{softplus}(\Delta)$.
+Substitute these two expressions into the binary loss. The two softplus weights
+add to one; the remaining term is $-q\Delta$. This form also connects the
+pairwise loss to the cross-entropy machinery we already know.
 
 Use a stable binary-cross-entropy-with-logits implementation. Computing the
 sigmoid, then taking logarithms, can turn extreme but finite scores into
@@ -94,6 +116,47 @@ first treats scores as independent leaves, then replaces them with
 $r_\phi=w^\top f(x,y)$. It makes this distinction visible rather than hiding it
 inside a large training library.
 
+### Work one judgment through the correction
+
+Use the existing [margin notebook](../../notebooks/day-15/01_bradley_terry_margin.ipynb)
+scores $r_a=0.4$ and $r_b=-0.6$. Their margin is one, so the model predicts
+$P(a\succ b)=0.731059$. With a hard label favoring $a$, the loss is
+$-\log(0.731059)=0.313262$ nats. The score derivatives are $-0.268941$
+and $+0.268941$: gradient descent raises the first leaf score and lowers the
+second. Only their difference determines this pair's probability.
+
+**Reader prediction:** keep the scores but replace the hard winner with seven
+votes for $a$ and three for $b$. Should training make the margin still larger?
+
+**Reference reasoning:** the target is now $q=0.7$. The first score derivative
+becomes $0.731059-0.7=+0.031059$, with the opposite derivative for the second.
+Descent slightly reduces the margin: the model is already more confident than
+the observed vote fraction. Its optimum is $\log(0.7/0.3)=0.847298$, a
+positive finite margin. Label disagreement changes the desired confidence,
+rather than merely slowing a demand for certainty.
+
+```python
+import torch
+from dongxi_llms.reward_model_lab import bt_loss
+a = torch.tensor([0.4], dtype=torch.float64, requires_grad=True)
+b = torch.tensor([-0.6], dtype=torch.float64, requires_grad=True)
+loss = bt_loss(a, b, preference=torch.tensor([0.7], dtype=torch.float64))
+print(float(loss.detach()), torch.autograd.grad(loss, (a, b)))
+```
+
+Change the preference to one while keeping both score leaves fixed. This
+isolates the label's effect on the gradient. Adding the same offset to both
+scores instead changes neither margin nor loss; §10.5 explains that freedom.
+
+![Bradley–Terry preference probability, winner NLL and margin gradient across score differences](../../notebooks/figures/chapter-10/day-15-01_bradley_terry_margin-02.png)
+
+The horizontal coordinate is the same score difference in all three panels.
+At zero the model is undecided and receives a substantial correction. Far to
+the right it is confident and the hard-winner gradient approaches zero.
+These are exact scalar computations, not measured judge accuracy. The source
+is the notebook's margin-sweep reference; execute that companion in a fresh
+copy using [Appendix D](../appendices/d-reproduction-and-environments.md).
+
 ## 10.4 Disagreement carries information
 
 Suppose ten independent judgments favor $a$ seven times and $b$ three times.
@@ -119,6 +182,15 @@ also imposes structure: its implied pair odds satisfy additive log-odds across
 alternatives. Strong cyclic judgments cannot generally be represented exactly
 by one score per answer. This is a model limitation, not a reason to delete
 awkward labels until the dataset looks consistent.
+
+For a concrete cycle at one prompt, suppose judgments require $a\succ b$,
+$b\succ c$ and $c\succ a$, each with probability above one half. A scalar
+model then requires $r_a-r_b>0$, $r_b-r_c>0$ and $r_c-r_a>0$. Adding the
+three left sides gives zero, while the three required positive differences
+would have a positive sum. No choice of these three scores can satisfy all
+three demands. A pair-conditioned classifier can express richer relations,
+but would give up this reusable single-score representation. The choice is
+about which judgment structure we intend to model.
 
 Ties require a declared convention. A soft $q=0.5$ says the model should predict
 an even binary choice; it does not model a separate “equally good” event. If
@@ -162,6 +234,13 @@ requires an attention-mask-aware index. Padding at a fixed maximum index is not
 the answer's end. Whether EOS is included, whether the chat template adds a
 turn-ending token, and whether the reward head sees the prompt must be frozen
 in the data contract.
+
+The endpoint head makes the learned score useful beyond the original pairs.
+We can generate a fresh completion, pass its prompt and complete answer through
+the same backbone, and read one scalar at the declared endpoint. The pairwise
+loss trains this scoring function by contrasting two such forwards. It does
+not turn its scalar into a probability of correctness; only a specified
+comparison and sigmoid produce a preference probability.
 
 Both answer branches contribute gradients to shared parameters. A language-model
 initialization can supply representations, but the scalar head must still learn
@@ -226,6 +305,41 @@ identify the intended coordinate more clearly. The report preserves all
 coefficients, learning curves, held-out NLL, probability calibration, and the
 adversarial prediction. These are measured properties of the synthetic model,
 not empirical claims about Qwen or human judges.
+
+### A good fit can leave the important question unidentified
+
+In the confounded data, a quality improvement nearly always accompanies more
+length and polish. The optimizer can explain the judgments using any of those
+correlated coordinates. Its low loss cannot tell us which explanation will
+survive when a long, polished answer is wrong.
+
+The [retained finite reference](../../experiments/reports/2026-10-04-preference-policy-cpu.json)
+and the existing `reward_comparison()` helper make that ambiguity visible:
+
+| Fitted arm | Quality coefficient | Length coefficient | Format coefficient | Probability worse polished answer wins |
+|---|---:|---:|---:|---:|
+| Confounded |0.655898|0.649301|0.651102|0.962504|
+| Balanced |1.855388|-0.000018|0.004854|0.136947|
+
+The adversarial difference vector is $(-1,3,3)$: the first answer is worse on
+quality, but longer and more polished. Multiplying it by the confounded weights
+gives a positive comparison margin; the balanced weights give a negative one.
+The same loss and fitting budget therefore produce very different extrapolation
+because the training examples supplied different identifying contrasts.
+
+**Controlled change:** hold quality at minus one and format at three, then
+vary only the length difference. Predict which fitted scorer changes its
+decision before reading the notebook's sweep:
+
+![Probability that a worse answer wins as its length advantage grows for confounded and balanced linear reward models](../../notebooks/figures/chapter-10/day-16-01_reward_model_bias_audit-02.png)
+
+The dashed line is an even preference. The confounded curve crosses it as
+length increases; the balanced curve remains below it because its length
+coefficient is nearly zero. This source-backed plot is regenerated by
+[Day 16's adversarial sweep](../../notebooks/day-16/01_reward_model_bias_audit.ipynb).
+The coordinates are authored synthetic features, so the result isolates a
+mechanism of confounding rather than demonstrating that a particular real
+judge prefers verbosity.
 
 The mechanism generalizes as a diagnostic question: when reward improves,
 which feature changed? Audit matched-length pairs, matched-format pairs,

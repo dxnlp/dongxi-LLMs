@@ -1,0 +1,488 @@
+{
+  "schema_version": 1,
+  "goal_id": "BOOK-FOUNDATIONS-2026-10",
+  "base_commit": "b722d59cfc115ceca20d5e15b566d972d389737b",
+  "reviewer": "editorial_routes",
+  "status": "accepted",
+  "scope": "Independent read-only review of Chapters8,9,10,11,15 and changed solution11; authors applied the two minor corrections. No other-author file edited by this reviewer.",
+  "sources": [
+    {
+      "path": "book/chapters/08-instruction-data-as-an-interface.md",
+      "sha256": "ff6a72dbe87a1574e4fb31aa7a09316e8fc8cebe179ba64b951f911d1a132d47",
+      "math_expressions": 31,
+      "math_issues": [],
+      "prose_findings": [],
+      "original_numbered_exercise_texts_preserved": true,
+      "original_display_equations_preserved": true,
+      "numbered_exercises": 16,
+      "accepted": true
+    },
+    {
+      "path": "book/chapters/09-supervised-fine-tuning.md",
+      "sha256": "07e7e8da8c23d3c310bf425ad014100f22030c4df8e479d56d24293142cfae05",
+      "math_expressions": 60,
+      "math_issues": [],
+      "prose_findings": [],
+      "original_numbered_exercise_texts_preserved": true,
+      "original_display_equations_preserved": true,
+      "numbered_exercises": 19,
+      "accepted": true
+    },
+    {
+      "path": "book/chapters/10-preferences-and-reward-models.md",
+      "sha256": "ad2499edfecbfcae129c77014a55841e606ed3c39d0eb8edc21c050f54852886",
+      "math_expressions": 77,
+      "math_issues": [],
+      "prose_findings": [],
+      "original_numbered_exercise_texts_preserved": true,
+      "original_display_equations_preserved": true,
+      "numbered_exercises": 22,
+      "accepted": true
+    },
+    {
+      "path": "book/chapters/11-direct-preference-optimization.md",
+      "sha256": "55f0971f6c526196e0f35ddd121d4b2967e30574a7239a684a19eed538706fa6",
+      "math_expressions": 66,
+      "math_issues": [],
+      "prose_findings": [],
+      "original_numbered_exercise_texts_preserved": true,
+      "original_display_equations_preserved": true,
+      "numbered_exercises": 17,
+      "accepted": true
+    },
+    {
+      "path": "book/chapters/15-distill-evaluate-and-defend.md",
+      "sha256": "07eec83921a02d8668feca34ceb18ff3aa3568091114fb537e987b564aead394",
+      "math_expressions": 82,
+      "math_issues": [],
+      "prose_findings": [],
+      "original_numbered_exercise_texts_preserved": true,
+      "original_display_equations_preserved": true,
+      "numbered_exercises": 23,
+      "accepted": true
+    },
+    {
+      "path": "book/solutions/11-direct-preference-optimization.md",
+      "sha256": "19b1c82364280e9437a8d6fba86d81923394e7588714638f50925252ba2c4239",
+      "math_expressions": 25,
+      "math_issues": [],
+      "prose_findings": [],
+      "original_numbered_exercise_texts_preserved": true,
+      "original_display_equations_preserved": true,
+      "numbered_exercises": 0,
+      "accepted": true
+    }
+  ],
+  "chapter_findings": [
+    {
+      "chapter": 8,
+      "accepted": true,
+      "basis": "Motivating copy-red case follows serialization, target ownership, single label shift and independent packing. Encoder IDs and positions independently checked. Attention visibility, supervision and parameter freezing remain distinct."
+    },
+    {
+      "chapter": 9,
+      "accepted": true,
+      "basis": "Exact first item100 response texts/stops checked against all three raw retained records. Masked END loss/gradients and LoRA shape/factor derivatives independently recomputed. Broken END control explicitly differs from the actual LoRA recipe; observed failure is not assigned an unsupported cause."
+    },
+    {
+      "chapter": 10,
+      "accepted": true,
+      "basis": "BT hard and soft score derivatives, finite soft-vote optimum, reward gauge and cyclic limitation are sound. Confounded/balanced adversarial probabilities recomputed from retained report weights; plot holds quality/format fixed while varying length."
+    },
+    {
+      "chapter": 11,
+      "accepted": true,
+      "basis": "Stationarity derivative, common partition factor and beta-controlled finite optimum checked. Constructed three-answer DPO counterexample improves relative odds while both probabilities fall; fixed third mass removes the freedom. Solution11 has the same numbers and illustration boundary."
+    },
+    {
+      "chapter": 15,
+      "accepted": true,
+      "basis": "Hard versus soft target gradients and temperature1/2/4 tables checked independently. Scaled KL derivative equals tau*(p-q), with explicit missing-scaling control. Wrong-prefix private-hint example matches authored teacher_distribution and does not claim repair of the already emitted token. Selection, response NLL and conditional distribution KL remain distinct."
+    }
+  ],
+  "issues": [],
+  "resolved_issues": [
+    {
+      "path": "book/chapters/09-supervised-fine-tuning.md",
+      "severity": "minor",
+      "finding": "LoRA first appeared long before its expansion in section9.8.",
+      "resolution": "Author expanded first visible occurrence to low-rank adaptation (LoRA).",
+      "status": "resolved-and-reviewed"
+    },
+    {
+      "path": "book/chapters/15-distill-evaluate-and-defend.md",
+      "severity": "minor",
+      "finding": "Article typo: an specified real-model adapter.",
+      "resolution": "Author changed it to a specified real-model adapter.",
+      "status": "resolved-and-reviewed"
+    }
+  ],
+  "figures": [
+    {
+      "path": "notebooks/figures/chapter-10/day-15-01_bradley_terry_margin-02.png",
+      "sha256": "7ba9eab4d470bf752f7d2c92b354fa9a6a7be31833dda17ae848efb21cae894d",
+      "source_notebook": "notebooks/day-15/01_bradley_terry_margin.ipynb",
+      "source_notebook_sha256": "7b537035d2be9b7a87548abf8de513237bd132cfdc84b4c0ca0721219409e131",
+      "source_cell_index": 7,
+      "source_cell_id": "day15-cell05",
+      "review": "Visually inspected; axes and caption agree. Existing asset/source unchanged; no regeneration claimed."
+    },
+    {
+      "path": "notebooks/figures/chapter-10/day-16-01_reward_model_bias_audit-02.png",
+      "sha256": "3de1ea2b19069b2a4f7edd62b3258bcd109391d081f5d1c9984b3a4b6c961376",
+      "source_notebook": "notebooks/day-16/01_reward_model_bias_audit.ipynb",
+      "source_notebook_sha256": "63bf5ddd953ffae282c136296eae843059bc4fec1030608fb3c6afa050b817ef",
+      "source_cell_index": 9,
+      "source_cell_id": "day16-cell05",
+      "review": "Visually inspected; axes and caption agree. Existing asset/source unchanged; no regeneration claimed."
+    },
+    {
+      "path": "notebooks/figures/chapter-11/day-17-01_kl_regularized_optimum-01.png",
+      "sha256": "3191135f18d4c3fca5f6f2c664a1d1d14c80c2a1c968cf4bf74a31ea1de7bfd9",
+      "source_notebook": "notebooks/day-17/01_kl_regularized_optimum.ipynb",
+      "source_notebook_sha256": "8ac44e274e38581e65481f3594f88d81225b15d14aa2017b743124c1334613eb",
+      "source_cell_index": 4,
+      "source_cell_id": "day17-cell03",
+      "review": "Visually inspected; axes and caption agree. Existing asset/source unchanged; no regeneration claimed."
+    },
+    {
+      "path": "notebooks/figures/chapter-15/day-26-01_temperature_distillation-01.png",
+      "sha256": "d10b2f5c0ac6096abcf14311aaaea2b3cdbc2ebf3ffc1fb48f1582b4bc6c8a08",
+      "source_notebook": "notebooks/day-26/01_temperature_distillation.ipynb",
+      "source_notebook_sha256": "f864ade43c6d1886405e402daaa2a2680ca242d6d389d8bea42d56add0e96ac9",
+      "source_cell_index": 4,
+      "source_cell_id": "day26-01-2",
+      "review": "Visually inspected; axes and caption agree. Existing asset/source unchanged; no regeneration claimed."
+    },
+    {
+      "path": "notebooks/figures/chapter-15/day-26-05_student_prefix_and_teacher_context-01.png",
+      "sha256": "365c753709fec12f1eb21a64a4c129053382ba95993dadf1905fea50b2b589e2",
+      "source_notebook": "notebooks/day-26/05_student_prefix_and_teacher_context.ipynb",
+      "source_notebook_sha256": "4243484a8902e02faac3595f2d096ca5d6b7c42bfbf249ddb34f3b2ec5731882",
+      "source_cell_index": 4,
+      "source_cell_id": "student-prefix-4",
+      "review": "Visually inspected; axes and caption agree. Existing asset/source unchanged; no regeneration claimed."
+    },
+    {
+      "path": "notebooks/figures/chapter-08/day-11-01_roles_templates_and_masks-02.png",
+      "sha256": "9044cc1ca7a8653f0831a74834a4457a2b5a25ebc515ee808f0f9e93725797b6",
+      "review": "Visually inspected alongside chapter captions: twelve-token assistant ownership, nine-position 5/4 packing, or 10/90 supervised-token mixture. Existing figure unchanged."
+    },
+    {
+      "path": "notebooks/figures/chapter-08/day-11-02_padding_packing_boundaries-02.png",
+      "sha256": "c89f68fdbc4878b61867eef9a1a03899dcbe3fa820fb1a4023807500ac90ab3b",
+      "review": "Visually inspected alongside chapter captions: twelve-token assistant ownership, nine-position 5/4 packing, or 10/90 supervised-token mixture. Existing figure unchanged."
+    },
+    {
+      "path": "notebooks/figures/chapter-08/day-11-03_mixtures_and_data_cards-02.png",
+      "sha256": "2b174b3c3eb6885bb1c6cf64531b796527dcc1a1133df91d6c870982157528dc",
+      "review": "Visually inspected alongside chapter captions: twelve-token assistant ownership, nine-position 5/4 packing, or 10/90 supervised-token mixture. Existing figure unchanged."
+    }
+  ],
+  "numerical_verification": {
+    "command": "PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python /tmp/dongxi-foundations-routes-peer.py",
+    "exit_code": 0,
+    "program_source": "import hashlib,json,math,platform,re,time\nfrom pathlib import Path\nimport torch\nfrom dongxi_llms.instruction_data_lab import encode_messages\nfrom dongxi_llms.student_prefix_lab import teacher_distribution,A,B,C\nstarted=time.monotonic();torch.set_num_threads(1);D=torch.float64\ndef close(a,b):torch.testing.assert_close(torch.as_tensor(a,dtype=D),torch.as_tensor(b,dtype=D),atol=1e-12,rtol=1e-10)\nout={}\nconversation=encode_messages([{'role':'system','content':'short answer'},{'role':'user','content':'copy red'},{'role':'assistant','content':'red'}])\nassert list(conversation.ids)==[1,2,16,17,5,3,10,6,5,4,6,5]\nassert [i for i,x in enumerate(conversation.supervised) if x]==[10,11]\nout['ownership']={'ids':conversation.ids,'supervised_target_positions':[10,11],'producing_positions':[9,10]}\np=torch.tensor([[.6,.3,.1],[.2,.3,.5],[1/3]*3],dtype=D)\nz=p.log().requires_grad_();loss=(-z.log_softmax(-1)[0,0]-z.log_softmax(-1)[1,2])/2\ngradient,=torch.autograd.grad(loss,z);close(gradient,[[-.2,.15,.05],[.1,.15,-.25],[0,0,0]])\nzz=p.log().requires_grad_();broken=-zz.log_softmax(-1)[0,0];g2,=torch.autograd.grad(broken,zz);close(g2,[[-.4,.3,.1],[0,0,0],[0,0,0]])\nout['sft']={'complete_mean_nll':float(loss.detach()),'gradient':gradient.tolist(),'without_END_nll':float(broken.detach()),'without_END_gradient':g2.tolist()}\naa=torch.tensor([[.2,-.4,.8],[.3,.5,-.1]],dtype=D,requires_grad=True)\nbb=torch.tensor([[.6,-.2],[-.1,.7]],dtype=D,requires_grad=True)\ngw=torch.tensor([[.1,-.3,.4],[.5,.2,-.6]],dtype=D)\nfactor=4/2;objective=(factor*(bb@aa)*gw).sum();ga,gb=torch.autograd.grad(objective,(aa,bb));close(ga,factor*bb.T@gw);close(gb,factor*gw@aa.T)\nfor zeros in ['B','both']:\n a=(aa.detach() if zeros=='B' else torch.zeros_like(aa)).requires_grad_();b=torch.zeros_like(bb).requires_grad_();oa=(factor*(b@a)*gw).sum();g_a,g_b=torch.autograd.grad(oa,(a,b));assert torch.equal(g_a,torch.zeros_like(g_a));assert (not torch.equal(g_b,torch.zeros_like(g_b))) if zeros=='B' else torch.equal(g_b,torch.zeros_like(g_b))\nout['lora']={'A_gradient':ga.tolist(),'B_gradient':gb.tolist(),'rank8_1024_parameter_counts':[2*8*1024,1024**2],'zero_B_only_A_gradient_zero':True,'both_zero_both_gradients_zero':True}\nsigmoid=lambda x:1/(1+math.exp(-x));prob=sigmoid(1)\nreport=json.loads(Path('experiments/reports/2026-10-04-preference-policy-cpu.json').read_text());scorers={}\nfor name in ['confounded','balanced']:\n weights=report['reward'][name]['weights'];margin=sum(x*y for x,y in zip(weights,[-1,3,3]));scorers[name]={'weights':weights,'margin':margin,'adversarial_probability':sigmoid(margin)}\nclose([scorers['confounded']['adversarial_probability'],scorers['balanced']['adversarial_probability']],[.9625042577209881,.13694736872407448])\nout['BT']={'probability':prob,'hard_loss':-math.log(prob),'hard_score_gradients':[prob-1,1-prob],'soft_score_gradients':[prob-.7,.7-prob],'soft_optimal_margin':math.log(.7/.3),'retained_scorers':scorers}\nq=[.6,.3,.1];r=[0,.5,1];opt={}\nfor beta in [.5,1]:\n weights=[a*math.exp(b/beta) for a,b in zip(q,r)];norm=sum(weights);pi=[w/norm for w in weights];stationarity=[reward-beta*(math.log(p/ref)+1) for p,ref,reward in zip(pi,q,r)];close(stationarity,[stationarity[0]]*3);opt[str(beta)]={'weights':weights,'Z':norm,'policy':pi,'stationarity_without_multiplier':stationarity}\nmargin=.5*math.log((.1/.01)/(.2/.1));out['DPO']={'optima':opt,'three_answer_margin':margin,'three_answer_loss':math.log1p(math.exp(-margin)),'initial_loss':math.log(2),'initial_and_changed_odds':[2,10]}\ntemps={};teacher=torch.tensor([2,.5,-1],dtype=D)\nfor tau in [1,2,4]:\n q=torch.softmax(teacher/tau,-1);student=torch.zeros(3,dtype=D,requires_grad=True);logp=torch.log_softmax(student/tau,-1);loss=tau**2*(q*(q.log()-logp)).sum();grad,=torch.autograd.grad(loss,student);close(grad,tau*(torch.full_like(q,1/3)-q));temps[str(tau)]={'teacher_probabilities':q.tolist(),'scaled_gradient':grad.tolist(),'unscaled_gradient':(grad/tau**2).tolist()}\nordinary=teacher_distribution([A,B],[C]);hinted=teacher_distribution([A,B],[C],hint=[B,A]);assert ordinary.argmax().item()==C and hinted.argmax().item()==A;close(ordinary[C],.8);close(hinted[A],.8)\nout['distillation']={'temperatures':temps,'hard_gradient':[-2/3,1/3,1/3],'wrong_prefix':{'symbol_ids':[A,B],'past':[C],'ordinary_target':ordinary.argmax().item(),'hinted_target':hinted.argmax().item(),'target_probability':.8,'other_probability':.2/7}}\nchapter=Path('book/chapters/09-supervised-fine-tuning.md').read_text();snippets=re.findall(r'```text\\n(.*?)\\n```',chapter,re.S)[:3];records=[]\nfor folder,snippet,reason,count in zip(['base','full400','lora400-fp32'],snippets,['max_tokens','turn_stop','max_tokens'],[64,5,64]):\n path=Path(f'experiments/reports/native-assistant-publication-20261005-{folder}-run-01/generation/responses.jsonl');row=json.loads(path.read_text().splitlines()[0]);assert row['item_id']=='test-100-copy' and row['response_text']==snippet and row['stop_reason']==reason and row['generated_tokens']==count\n records.append({'path':str(path),'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'selected_item':row['item_id'],'response_sha256':row['response_text_sha256'],'stop_reason':reason,'generated_tokens':count})\nout['actual_responses']=records\nout['execution']={'status':'passed','python':platform.python_version(),'torch':torch.__version__,'elapsed_seconds':time.monotonic()-started,'boundary':'Bounded arithmetic/autograd/source replay; no decoder training or new model run.'}\nprint(json.dumps(out,indent=2))\n",
+    "program_sha256": "5f9de44c81298441bde2ada7b5c9eec8b5fb33942f42f9d14e46934c1dfd6549",
+    "stdout": {
+      "ownership": {
+        "ids": [
+          1,
+          2,
+          16,
+          17,
+          5,
+          3,
+          10,
+          6,
+          5,
+          4,
+          6,
+          5
+        ],
+        "supervised_target_positions": [
+          10,
+          11
+        ],
+        "producing_positions": [
+          9,
+          10
+        ]
+      },
+      "sft": {
+        "complete_mean_nll": 0.601986402162968,
+        "gradient": [
+          [
+            -0.2,
+            0.15,
+            0.05000000000000001
+          ],
+          [
+            0.10000000000000003,
+            0.15000000000000002,
+            -0.24999999999999994
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ],
+        "without_END_nll": 0.5108256237659907,
+        "without_END_gradient": [
+          [
+            -0.4,
+            0.3,
+            0.10000000000000002
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0
+          ]
+        ]
+      },
+      "lora": {
+        "A_gradient": [
+          [
+            0.01999999999999999,
+            -0.39999999999999997,
+            0.6
+          ],
+          [
+            0.6599999999999999,
+            0.39999999999999997,
+            -1.0
+          ]
+        ],
+        "B_gradient": [
+          [
+            0.9200000000000002,
+            -0.32
+          ],
+          [
+            -0.92,
+            0.62
+          ]
+        ],
+        "rank8_1024_parameter_counts": [
+          16384,
+          1048576
+        ],
+        "zero_B_only_A_gradient_zero": true,
+        "both_zero_both_gradients_zero": true
+      },
+      "BT": {
+        "probability": 0.7310585786300049,
+        "hard_loss": 0.3132616875182228,
+        "hard_score_gradients": [
+          -0.2689414213699951,
+          0.2689414213699951
+        ],
+        "soft_score_gradients": [
+          0.03105857863000494,
+          -0.03105857863000494
+        ],
+        "soft_optimal_margin": 0.8472978603872037,
+        "retained_scorers": {
+          "confounded": {
+            "weights": [
+              0.6558978716018705,
+              0.6493007859212913,
+              0.6511022052745514
+            ],
+            "margin": 3.2453111019856573,
+            "adversarial_probability": 0.9625042577040702
+          },
+          "balanced": {
+            "weights": [
+              1.8553880930285782,
+              -1.784567058515729e-05,
+              0.004854212186455457
+            ],
+            "margin": -1.8408789934809673,
+            "adversarial_probability": 0.1369473687286736
+          }
+        }
+      },
+      "DPO": {
+        "optima": {
+          "0.5": {
+            "weights": [
+              0.6,
+              0.8154845485377135,
+              0.7389056098930651
+            ],
+            "Z": 2.1543901584307785,
+            "policy": [
+              0.27850108656132644,
+              0.37852222140287656,
+              0.342976692035797
+            ],
+            "stationarity_without_multiplier": [
+              -0.11624615281025841,
+              -0.1162461528102583,
+              -0.1162461528102583
+            ]
+          },
+          "1": {
+            "weights": [
+              0.6,
+              0.4946163812100384,
+              0.27182818284590454
+            ],
+            "Z": 1.3664445640559428,
+            "policy": [
+              0.43909574949682023,
+              0.3619732510347113,
+              0.19893099946846857
+            ],
+            "stationarity_without_multiplier": [
+              -0.6877878422701034,
+              -0.6877878422701034,
+              -0.6877878422701031
+            ]
+          }
+        },
+        "three_answer_margin": 0.8047189562170501,
+        "three_answer_loss": 0.3696400494024986,
+        "initial_loss": 0.6931471805599453,
+        "initial_and_changed_odds": [
+          2,
+          10
+        ]
+      },
+      "distillation": {
+        "temperatures": {
+          "1": {
+            "teacher_probabilities": [
+              0.7855970345892759,
+              0.1752903921400367,
+              0.039112573270687456
+            ],
+            "scaled_gradient": [
+              -0.45226370125594256,
+              0.15804294119329662,
+              0.29422076006264586
+            ],
+            "unscaled_gradient": [
+              -0.45226370125594256,
+              0.15804294119329662,
+              0.29422076006264586
+            ]
+          },
+          "2": {
+            "teacher_probabilities": [
+              0.5897976636568125,
+              0.27860068919627295,
+              0.13160164714691433
+            ],
+            "scaled_gradient": [
+              -0.5129286606469585,
+              0.10946528827412057,
+              0.4034633723728378
+            ],
+            "unscaled_gradient": [
+              -0.12823216516173963,
+              0.027366322068530142,
+              0.10086584309320945
+            ]
+          },
+          "4": {
+            "teacher_probabilities": [
+              0.4630367419657945,
+              0.3182401884393924,
+              0.21872306959481305
+            ],
+            "scaled_gradient": [
+              -0.5188136345298447,
+              0.06037257957576355,
+              0.4584410549540809
+            ],
+            "unscaled_gradient": [
+              -0.0324258521581153,
+              0.003773286223485222,
+              0.028652565934630055
+            ]
+          }
+        },
+        "hard_gradient": [
+          -0.6666666666666666,
+          0.3333333333333333,
+          0.3333333333333333
+        ],
+        "wrong_prefix": {
+          "symbol_ids": [
+            5,
+            6
+          ],
+          "past": [
+            7
+          ],
+          "ordinary_target": 7,
+          "hinted_target": 5,
+          "target_probability": 0.8,
+          "other_probability": 0.028571428571428574
+        }
+      },
+      "actual_responses": [
+        {
+          "path": "experiments/reports/native-assistant-publication-20261005-base-run-01/generation/responses.jsonl",
+          "sha256": "7d46cf72a53436540e686669823e1ab462e4b9e14b2a6a654228daee34971328",
+          "selected_item": "test-100-copy",
+          "response_sha256": "6d1bf1a2b53fa5db13964178a8d9ebe13cd349183fe9f001ee4152cba35407cf",
+          "stop_reason": "max_tokens",
+          "generated_tokens": 64
+        },
+        {
+          "path": "experiments/reports/native-assistant-publication-20261005-full400-run-01/generation/responses.jsonl",
+          "sha256": "c1f1fe84a07ab24ad418d6da1ab35ce0fdfbbed7b08860a5a5a15e525f0059d2",
+          "selected_item": "test-100-copy",
+          "response_sha256": "eace7f28685c2f7defb11d83a837e3f53f5973305a83a35533f21f4d607be8d6",
+          "stop_reason": "turn_stop",
+          "generated_tokens": 5
+        },
+        {
+          "path": "experiments/reports/native-assistant-publication-20261005-lora400-fp32-run-01/generation/responses.jsonl",
+          "sha256": "701f1eedd42818176dd74b260ee538db18a34a6677ce08b6711a1e82a7832227",
+          "selected_item": "test-100-copy",
+          "response_sha256": "d771c13694a850ee85c91a8b5eb1dd42dbf35bc0a557e88e26174fbf04937d2c",
+          "stop_reason": "max_tokens",
+          "generated_tokens": 64
+        }
+      ],
+      "execution": {
+        "status": "passed",
+        "python": "3.12.14",
+        "torch": "2.14.1+cpu",
+        "elapsed_seconds": 0.18257706507574767,
+        "boundary": "Bounded arithmetic/autograd/source replay; no decoder training or new model run."
+      }
+    },
+    "stdout_sha256": "037640f5fee7a5c3203c692452d61ddf770c35a2c00908ad3a5c27f5fa0328a0",
+    "stderr": "",
+    "source_modules_sha256": {
+      "src/dongxi_llms/instruction_data_lab.py": "7a1b4d174c61f0cba8377b8e5f2f5708b04b519226194d8c0c90b4ee78b4e4ed",
+      "src/dongxi_llms/student_prefix_lab.py": "022ec2957c1a42cb867a3f51e5f21190dd971a43b97ce52f147d83655653d828"
+    },
+    "author_numerical_receipt": {
+      "path": "experiments/reports/2026-10-10-book-foundations-pass/run-01/operations-numerical-results-v2.json",
+      "sha256": "b582c956eafe0aabc54f9c22190c86402054f60ac67a72cff2ad26c54bc10228"
+    },
+    "author_ledger": {
+      "path": "experiments/reports/2026-10-10-book-foundations-pass/run-01/operations-edits.json",
+      "sha256": "d7dcc11cad80d216e7524ceb3d982fe0c59817624393bfa02d4b6bccef3b8d56"
+    }
+  },
+  "limits": [
+    "This review verifies specific derivations, numbers, source identity and reader flow; it does not prove all scientific claims or learner comprehension.",
+    "Bounded arithmetic/autograd and retained-record checks only; no new decoder training, pretrained inference, notebook execution or model-scale campaign.",
+    "Eight existing figures inspected; no new assets or regenerated outputs claimed.",
+    "Final whole-book/suite/notebook orchestration and integration remain root-owned."
+  ]
+}

@@ -21,6 +21,26 @@ that transparency while introducing the practical constraints of real runs.
 The notebooks provide reference solutions next to each question so routine
 syntax does not become the main obstacle.
 
+Three examples carry the explanation. First, a short sequence becomes token
+IDs, learned vectors, contextual states and a distribution over the next token.
+We follow the loss backward to see what learning can change. Next, an assistant
+is asked to return one word. Choosing that word, producing the requested format
+and ending the turn become three concrete design problems. Finally, several
+possible answers receive different rewards. We ask how their probabilities
+should change, then investigate the noise and failure modes of learning from
+sampled answers. The small examples are explicitly illustrative; the measured
+model runs retain their own data and checkpoint histories.
+
+The questions become more interesting when a plausible explanation breaks.
+An unchanged average loss can conceal a concentrated error. A correct answer
+prefix can become a failed response when generation continues. A group of
+uniformly unsuccessful answers can supply no relative reward signal. Each
+chapter develops such a difficulty, gives you a prediction to make, and follows
+a computation far enough to explain the outcome. Equations describe that
+computation; plots expose a relationship or a controlled change. The companion
+notebooks let you replace an input or assumption and see which explanation
+survives.
+
 There are two scales of evidence. A tiny categorical policy can establish that
 a gradient formula agrees with enumeration. It cannot establish that the same
 algorithm improves a pretrained assistant. Conversely, a successful large run

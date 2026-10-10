@@ -10,7 +10,10 @@ Days 24–25 study failures as interventions rather than slogans. We deliberatel
 build an exploitable reward, repair it, compare length reductions, reject stale
 rollouts and estimate a rollout pipeline's cost. By the end, a “training is
 unstable” report should become a specific account of measurements, hypotheses,
-controls and evidence.
+controls and evidence. We will follow three different failures: the wrong
+measurement rewards a shortcut; the sampler removes useful alternatives;
+and the update differentiates a quantity different from the one its monitor
+reports. They can produce similar-looking curves and require different changes.
 
 ## 14.1 A real reward-hacking microscope
 
@@ -31,10 +34,27 @@ J(z)=\sum_a p_a R_a,\qquad
 $$
 
 The derivative follows from the same softmax Jacobian used for cross-entropy.
-Actions above expected reward gain probability under ascent; actions below it
-lose probability. At uniform initialization, the highest-reward malformed answer
-is favored. No noisy reward estimator, model-size limitation or distributed bug
-is needed to create the problem.
+Actions above expected reward receive positive logit pressure under ascent;
+actions below it receive negative pressure. The final probability changes
+also depend on how every other logit changes. At uniform initialization,
+the highest-reward malformed answer is favored. No noisy reward estimator,
+model-size limitation or distributed bug is needed to create the problem.
+
+**Reader prediction.** The correct answer receives positive reward. Can its
+probability still decline on the very first update? At $p=[1/3,1/3,1/3]$,
+the proxy mean is one and its ascent gradient is $[0,1/3,-1/3]$.
+With the source experiment's learning rate 0.4, the next logits are
+$[0,0.133333,-0.133333]$ and probabilities approximately
+$[0.331367,0.378630,0.290003]$. The correct answer's logit did not move,
+yet its probability fell from one third because the competing normalization
+changed. The malformed answer won the comparison the proxy actually defined.
+
+Change only the reward vector to strict correctness. At the same uniform
+initialization, its ascent gradient becomes $[2/9,-1/9,-1/9]$, explicitly
+favoring the sole correct action. Lowering the original learning rate would
+slow the proxy's wrong pressure; it would not turn that pressure into the
+strict gradient. This is the causal distinction between an objective failure
+and an update-scale failure.
 
 The [CPU experiment](../../src/dongxi_llms/optimization_diagnostics_lab.py)
 performs 60 actual SGD updates on these logits. It records expected proxy,
@@ -49,6 +69,16 @@ accuracy falls from 0.333333 to 0.016816. The paired strict-reward restart reach
 0.964428 accuracy. These numbers directly support the finite-policy mechanism:
 the optimizer can succeed at the proxy while failing at the task. They do not
 measure generalization or repair of any pretrained language model.
+
+![Each arm's programmed reward and independent strict accuracy under identical-start updates](../../notebooks/figures/chapter-14/day-24-01_reward_hacking-01.png)
+
+The [reward-hacking companion](../../notebooks/day-24/01_reward_hacking.ipynb)
+regenerates both panels with `hacking_experiment`. The left panel shows each
+arm's own programmed objective: broken proxy for one, strict reward for the
+other. Compare the same update within the broken arm across panels:
+improvement at its optimized scalar accompanies failure at the independent
+task. The strict-reward curve starts again from the same
+initial logits; it is not a measured rescue of the final hacked checkpoint.
 
 This mechanism is an example of optimizing an imperfect measurement. Research
 on learned reward overoptimization documents related failure under model-scale
@@ -112,6 +142,12 @@ simple arithmetic verifier can check final correctness; it cannot certify that
 every intermediate step in a rationale is valid or that the model used that
 rationale internally.
 
+This is the relevant form of Goodhart's observation: a measurement used as
+an optimization target can lose its usefulness as a proxy for the purpose
+that motivated it. In our example the optimizer needs no strategy or intent;
+the reward already encodes the shortcut. Fixing a finite checker removes
+this particular incentive, while new outputs can expose another boundary.
+
 ## 14.3 Entropy collapse: certainty can mean several things
 
 At a state, categorical entropy is
@@ -127,6 +163,31 @@ entropy over valid response positions and report which states produced it.
 Prompt-token entropy, padded rows and EOS-dominated tails answer different
 questions. The entropy of a marginal mixture can also differ from average
 conditional entropy over prompts.
+
+### Losing alternatives can look like gaining confidence
+
+For three actions, uniform probabilities have entropy $\log3\approx1.098612$
+nats. Probabilities $[0.9,0.05,0.05]$ have approximately 0.394398 nats.
+Permuting them to $[0.05,0.9,0.05]$ leaves entropy exactly unchanged.
+If action 0 is the only correct one, accuracy changes from 0.9 to 0.05.
+The entropy number measures concentration, not whether its favored action
+deserves that concentration.
+
+A positive sampled advantage supplies pressure toward the sampled choice.
+If a proxy repeatedly rewards one response, future samples increasingly
+return to it, exposing fewer alternatives. The resulting feedback can amplify
+an early shortcut. A strict binary task can instead become concentrated on
+a genuinely correct answer. The same low-entropy symptom therefore needs
+the independently graded responses beside it.
+
+**Controlled change.** Hold weights fixed and change only collection
+temperature or top-p. Sampling entropy and observed diversity can change
+without any training. Conversely, under a declared iid policy with only
+0.01 probability on the correct alternative, ten draws expose it at least
+once with probability $1-0.99^{10}\approx0.095618$. More samples cannot
+reliably repair a missing alternative at arbitrarily low probability or
+restore support that a truncating sampler removed. Before increasing group
+size, inspect whether the intended successful responses can actually appear.
 
 ### A measured entropy trace still needs a population
 
@@ -299,6 +360,25 @@ a recipe for every trajectory-KL or policy-gradient implementation. Declare
 whether an expression is a diagnostic or a chosen differentiable surrogate,
 its sampling distribution and its detached terms.
 
+For a concrete full-support example, set $p=[0.5,0.3,0.2]$ and
+$q=[0.2,0.3,0.5]$. Both statistics have mean
+$D_{\mathrm{KL}}(p\Vert q)=0.3\log2.5\approx0.274887$ nats.
+Their gradients under the contracts above are:
+
+| Differentiated expression at $b=p_0=p$ | Expected current-logit gradient |
+|---|---|
+| Fixed-sample $k_1$ | $[0,0,0]$ |
+| Fixed-sample $k_3$ | $[0.3,0,-0.3]$ |
+| Complete categorical forward KL | approximately $[0.320702,-0.082466,-0.238236]$ |
+
+The middle coordinate is the revealing one: current and reference probabilities
+both equal 0.3, yet changing that logit changes the other probabilities through
+normalization, so exact forward KL still has a nonzero derivative there.
+Differentiating the value printed by a monitor does not identify its intended
+regularizer. The [existing finite utility](../../src/dongxi_llms/sampling_likelihood_lab.py)
+and probability notebook compare these paths without sampling noise or
+a large-model run.
+
 ### Stops and gradient boundaries belong in the contract
 
 A sampled EOS is a response action and receives policy loss. Prompt tokens,
@@ -345,6 +425,43 @@ independently of length, and average KL can hide a few extreme prompts. Record
 quantiles, length-stratified summaries and representative high-KL cases when
 the data budget permits. Do not equate a sampled estimator's occasional negative
 value with proof that the true KL is negative.
+
+### Choose the intervention from the first failed mechanism
+
+Suppose reward improves while independent quality does not. Read a fixed
+sample of complete responses, then ask which computation first contradicts
+the intended experiment:
+
+| Observed failure | Mechanism to check | Controlled change and predicted result |
+|---|---|---|
+| Malformed answers earn more reward | Checker or learned reward mis-specifies success | Hold logits fixed and substitute the independently declared task scores; the reward-gradient direction should change |
+| Every group has the same strict reward | Relative advantages contain no within-group distinction | Inspect centered rewards before stepping; the relative policy derivative should vanish even if a KL derivative remains |
+| Diversity falls after sampler changes | Collection distribution or support changed | Hold logits fixed and restore the earlier collector; probability bars should change without a parameter update |
+| Importance ratios differ from one before a fresh update | Behavior denominator, temperature, support or alignment is inconsistent | Recompute the selected log probabilities under the actual collection rule; matching distributions should give one |
+| Printed KL agrees but parameter pressure differs | Frozen-sample and full-distribution gradient contracts differ | Enumerate one prefix and compare derivatives, not only scalar values |
+| Training reward saturates but unseen inputs fail | Fitted behavior may be restricted to training states | Score the same checkpoint on frozen source-separated items and retain both outcomes |
+
+These are hypotheses with predicted computational outcomes, not automatic
+diagnoses from a dashboard threshold. Repairing one invariant makes the next
+test interpretable; it does not establish that the whole model improved.
+
+The retained cases make that order matter. In the symbolic decoder, mixed
+training groups supplied signal and final training reward reached one, yet
+held-out arithmetic remained 0/4. In the native strict-format pilots, every
+training group had zero relative advantages despite many responses displaying
+correct arithmetic. They are different failures: training-set success without
+the desired transfer, and absent strict relative signal under the actual
+interface. Chapter 13 retains the original responses and denominators for both.
+Neither is explained merely by saying that more optimizer calls occurred.
+
+Changing native evaluation from cap 32 to cap 128 also changes delivered
+outcomes without changing the evaluated checkpoint's weights. The unchanged
+Instruct policy goes from 0/44 to 13/44 held-out sampled successes under those
+two contracts. More available output actions allow different completions;
+they do not demonstrate an RL learning gain. Preserve the strict grader's
+original negative records before proposing a separately defined formatting
+or extraction task. This keeps interface diagnosis from becoming retrospective
+parser rescue.
 
 ## 14.5 Length bias begins in a denominator
 

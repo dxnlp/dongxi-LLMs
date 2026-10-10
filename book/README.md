@@ -5,6 +5,12 @@ Read [the preface](front-matter/preface.md), [how to use the course](front-matte
 and [notation](front-matter/notation.md) first. The [day-by-day route](../docs/COURSE_SEQUENCE.md)
 connects prose, visual notebooks, experiments and a defensible daily artifact.
 
+The argument follows three connected problems: turn text into trainable
+predictions, turn fluent generation into a useful assistant interface, and turn
+judgments into policy improvements that survive evaluation. Worked examples
+carry these problems through the equations. Predictions and controlled changes
+help you explain the mechanism before judging a model result.
+
 ## Chapters and worked solutions
 
 | Chapter | Learning days | Canonical chapter | Worked solutions |

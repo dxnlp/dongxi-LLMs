@@ -48,6 +48,13 @@ that change. Shared transformer updates make such movements possible; independen
 generation evaluation is therefore needed. The tiny decoder experiment preserves
 an instance of this diagnostic tension rather than hiding it.
 
+With the first distribution as reference and $\beta=0.5$, the margin changes
+from zero to $0.5\log(10/2)=0.804719$ and hard-pair loss from 0.693147 to
+0.369640. The chapter's three-answer table makes the missing mass explicit.
+This is a constructed counterexample to what pair loss guarantees, rather
+than a measured training path. Keeping the third probability fixed would
+remove this freedom and force higher chosen probability for higher pair odds.
+
 ## 6. One causal shift
 
 For token positions `[prompt_0, prompt_1, A, EOS, PAD]`, model inputs are the

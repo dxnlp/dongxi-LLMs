@@ -89,11 +89,21 @@ $$
 
 For a nominal 95% interval, $z$ is approximately 1.96. Unlike the simplest normal approximation, this interval does not pretend zero observed failures establishes a zero failure rate. Ten successes out of ten still leave uncertainty about the underlying population. The confidence level refers to repeated interval construction; it is not a posterior probability that a fixed parameter lies in a particular computed interval.
 
+For ten successes out of ten, the interval is approximately $[0.7225,1]$.
+The lower endpoint is wide because only ten independent opportunities were
+observed. Copying those ten records repeatedly does not create more evidence.
+The [uncertainty companion](../../notebooks/day-10/02_paired_uncertainty.ipynb)
+shows both the sample-size calculation and that duplication failure.
+
 If many items share a document, author or problem template, independence at the item level is doubtful. Resample the independent groups, or explicitly narrow the interpretation to the fixed evaluated set. A hundred paraphrases of one question are not a hundred independent subject areas.
 
 ## 7.6 Compare models on aligned items
 
-Model A succeeds on 70% of a suite and model B on 73%. Separate score intervals discard useful information: perhaps both models fail on nearly the same items, or perhaps B fixes many A failures while creating new ones. Preserve item identifiers and compute differences on the same inputs.
+The [existing forty-item fixture](../../src/dongxi_llms/evaluation_lab.py)
+gives A 25 successes and B 28: 62.5% versus 70%. These are authored binary
+scores, not generated checkpoint results. Should we replace A? Separate score
+intervals discard useful information: which A failures did B fix, and which
+A successes did it lose? Preserve item identifiers and compare the same inputs.
 
 For per-item scores $a_j$ and $b_j$, define
 
@@ -102,6 +112,51 @@ d_j=b_j-a_j,\qquad \hat\Delta=\frac{1}{N}\sum_j d_j.
 $$
 
 The paired bootstrap samples item indices with replacement and recalculates $\hat\Delta$ for each resampled set. Percentile endpoints summarize the resampling distribution. Pairing retains shared item difficulty. Our implementation fixes the seed and number of draws; the notebook shows the full resampling distribution and its interval.
+
+### Account for the improvement before naming a winner
+
+**Reader prediction.** B has three more successes. Does that mean it only
+changed three answers for the better? The aligned records say otherwise:
+
+| A outcome | B outcome | Items | Per-item difference $d_j$ |
+|---|---|---:|---:|
+| Correct | Correct | 18 | 0 |
+| Wrong | Wrong | 5 | 0 |
+| Wrong | Correct | 10 | +1 |
+| Correct | Wrong | 7 | −1 |
+
+The net change is $(10-7)/40=0.075$, or 7.5 percentage points. Seventeen
+items changed outcome, and seven are regressions. A difference calculation
+contains the information the two totals concealed.
+
+To reproduce the resampling rather than treating “bootstrap” as a magic word:
+
+1. Keep each item's A and B scores together and compute its difference.
+2. Draw forty item indices with replacement from those same forty IDs.
+3. Average the differences at the drawn indices; duplicates are ordinary
+   resampling weights, not new observations.
+4. Repeat with a declared seed and draw count.
+5. Sort those means and read the declared percentile endpoints.
+
+The canonical `paired_bootstrap` uses Python's seeded sampler, 2,000 draws
+and seed 1010. It gives $\hat\Delta=0.075$ and interval $[-0.125,0.275]$
+for this fixture. The notebook additionally draws its histogram with a
+separately seeded NumPy sampler; finite-draw endpoints need not be identical.
+Neither construction resolves a population-wide gain here. The observed
+three-success gain remains an exact statement about the fixed forty records.
+
+![Paired bootstrap distribution of mean score changes on the forty-item fixture](../../notebooks/figures/chapter-07/day-10-02_paired_uncertainty-03.png)
+
+The [runnable plot](../../notebooks/day-10/02_paired_uncertainty.ipynb)
+marks zero and the observed difference. Read its horizontal axis as B minus
+A, not either model's accuracy. Draws on both sides of zero express the
+limited resolution of this authored example, not negative accuracy or a
+claim that the two systems are equivalent.
+
+**Controlled change.** Reorder B's records without aligning IDs. The totals
+remain 25 and 28, so the observed mean difference stays 0.075, but the apparent
+disagreements and resampling distribution can change. Equal suite length is
+therefore insufficient: pairing is an identity join, not a positional guess.
 
 This interval has limits. Few rare events, strong grouping or a selected evaluation population can make it uninformative or optimistic. Trying twenty recipes and reporting only the winning interval adds selection bias. Publish the candidates tested, reserve final confirmation data, and avoid interpreting an interval containing zero as proof of equality. It indicates that the evidence does not resolve the sign at the stated precision.
 
@@ -112,6 +167,22 @@ A benchmark contains frequent easy tasks and rare structured outputs. A recipe i
 Report the item count, denominator and uncertainty for each predeclared slice: task family, input length, language, reasoning depth, format constraint and source. Distinguish a micro-average over all items from a macro-average giving each slice equal weight. Neither is automatically right; the deployment distribution should inform the choice.
 
 Our fixture assigns two models to forty items and deliberately creates a rare-format regression. It demonstrates the accounting. It does not measure Qwen or DongxiGPT. Inspect the paired disagreement table, then a fixed sample of failures from each category. Select that sample by a documented rule, such as the first five identifiers per category. Attractive examples should not control the evaluation population.
+
+Here is the same comparison split by its declared task family:
+
+| Slice | Items | A correct | B correct | Change |
+|---|---:|---:|---:|---:|
+| Common | 30 | 20 | 26 | +20 percentage points |
+| Rare format | 10 | 5 | 2 | −30 percentage points |
+| All items, micro-average | 40 | 25 | 28 | +7.5 percentage points |
+
+Giving the two slice accuracies equal weight instead gives A approximately
+58.33% and B 53.33%, a five-point decrease. That macro-average is not a
+correction of the micro-average; it answers a different weighting question.
+If valid structured output is essential to the intended use, its decline
+can block replacement even when common-task performance rises. Declare that
+decision rule before evaluating candidates. The fixture supports explaining
+the trade-off, not selecting a real model.
 
 For stories, a fixed prompt grid should cover different characters, event structures and openings. Include unfamiliar openings alongside common “Once upon a time” prompts. Evaluate greedy and sampled decoding as separate settings. Have reviewers blind to checkpoint identity, retain disagreement, and show how token-limit truncation affects the ending rubric.
 
@@ -548,6 +619,11 @@ defined lexical near-overlap check can inspect the pinned training bytes but
 cannot prove all semantic contamination absent. The frozen publication panel
 must not choose learning rate, decoder or checkpoint. Implementing this
 instrument does not fabricate a trained comparison.
+
+For the actual story problem, the same decision now has richer scores rather
+than binary flags. Would fewer loops justify weaker grammar or less continuity?
+Keep that question open until the dimensions, paired units and stopping
+coverage have been read together.
 
 The [actual first 400 comparison](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
 now supplies that separate evidence. Two fresh anonymous AI instances each read

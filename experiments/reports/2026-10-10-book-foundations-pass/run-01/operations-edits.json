@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "goal_id": "BOOK-FOUNDATIONS-2026-10",
+  "status": "implemented_and_locally_verified",
+  "base_commit": "b722d59cfc115ceca20d5e15b566d972d389737b",
+  "owned_files": {
+    "book/chapters/08-instruction-data-as-an-interface.md": "ff6a72dbe87a1574e4fb31aa7a09316e8fc8cebe179ba64b951f911d1a132d47",
+    "book/chapters/09-supervised-fine-tuning.md": "07e7e8da8c23d3c310bf425ad014100f22030c4df8e479d56d24293142cfae05",
+    "book/chapters/10-preferences-and-reward-models.md": "ad2499edfecbfcae129c77014a55841e606ed3c39d0eb8edc21c050f54852886",
+    "book/chapters/11-direct-preference-optimization.md": "55f0971f6c526196e0f35ddd121d4b2967e30574a7239a684a19eed538706fa6",
+    "book/chapters/15-distill-evaluate-and-defend.md": "07eec83921a02d8668feca34ceb18ff3aa3568091114fb537e987b564aead394",
+    "book/solutions/11-direct-preference-optimization.md": "19b1c82364280e9437a8d6fba86d81923394e7588714638f50925252ba2c4239"
+  },
+  "chapters": [
+    {
+      "chapter": 8,
+      "question": "How does desired behavior become a training sequence?",
+      "diagnosed_gaps": [
+        "SFT purpose compressed behind audit rules",
+        "Template function and collator were assumed",
+        "Repeated red/END IDs obscure positional target ownership",
+        "Prompt masking and stopping need one controlled example"
+      ],
+      "changes": [
+        "Reworked opening around copy red → red → END",
+        "Added runnable existing encoder listing",
+        "Promoted repeated-ID producer/target table",
+        "Added adjacent prediction/reference reasoning for ownership and packed independence",
+        "Connected teacher/student synthetic data to later selection"
+      ],
+      "reuse": [
+        "src/dongxi_llms/instruction_data_lab.py:24 encode_messages / :43 collate / :82 instruction_fixture",
+        "Existing Day11 ownership, packing and10/90 mixture figures; no regenerated assets"
+      ],
+      "numeric_result_key": "ch08",
+      "controlled_change": "Remove the assistant END target, or allow cross-segment attention; interpretation distinguishes direct loss from shared/context gradients",
+      "limitations": [
+        "Symbolic IDs are not Qwen serialization",
+        "Full transcript supervision is a distinct objective, not automatically a broken assistant",
+        "A teacher response does not transfer its hidden computation"
+      ]
+    },
+    {
+      "chapter": 9,
+      "question": "Why can the right answer prefix still fail?",
+      "diagnosed_gaps": [
+        "Retained item100 responses were buried after implementation detail",
+        "Masked loss was general before a reader could trace an actual word and END",
+        "Low-rank restriction had equations but little causal picture"
+      ],
+      "changes": [
+        "Moved exact Base/Full400/LoRA raw response block forward with fixed-item rule intact",
+        "Added explicitly generic signal-flow Mermaid distinct from actual roots",
+        "Worked two-target NLL and logit gradients using canonical helper",
+        "Removed END in a controlled arithmetic variant",
+        "Explained low-rank directions and zero-B versus zero-both initialization with matrix derivatives"
+      ],
+      "reuse": [
+        "src/dongxi_llms/sft_lab.py:16 token_loss_sum / :26 LoRALinear",
+        "Day14 existing initialization/merge reference",
+        "Original native assistant generation responses.jsonl records and120-item panel"
+      ],
+      "numeric_result_key": "ch09",
+      "controlled_change": "Mask only END; double the surviving gradient denominator effect. Set both adapter factors zero: both gradients zero",
+      "limitations": [
+        "Three-outcome arithmetic is separate from symbolic22-ID and Qwen vocabularies",
+        "END supervision was present in actual LoRA recipe; the broken variant does not explain its measured failure",
+        "Fixed recipe does not isolate rank, target modules or learning rate as cause"
+      ]
+    },
+    {
+      "chapter": 10,
+      "question": "What can a comparison tell us that a demonstration cannot?",
+      "diagnosed_gaps": [
+        "Margin definition lacked a fully worked preference update",
+        "Softplus identity was compressed",
+        "Shortcut experiment described confounding without showing the actual identifying failure"
+      ],
+      "changes": [
+        "Connected demonstrations to pairwise relations",
+        "Derived stable BCE/softplus identity",
+        "Worked existing0.4/−0.6 scores and controlled hard-to70/30 label change",
+        "Added additive contradiction for a scalar preference cycle",
+        "Explained fresh-response reward use and endpoint head",
+        "Promoted retained confounded/balanced coefficients, adversarial probability and length sweep"
+      ],
+      "reuse": [
+        "src/dongxi_llms/reward_model_lab.py:6 bt_loss / :65 reward_comparison",
+        "notebooks/day-15/01_bradley_terry_margin.ipynb code7 and13",
+        "notebooks/day-16/01_reward_model_bias_audit.ipynb code4 and9",
+        "experiments/reports/2026-10-04-preference-policy-cpu.json reward rows"
+      ],
+      "numeric_result_key": "ch10",
+      "controlled_change": "Hold the score leaves fixed and change target from hard winner to0.7; hold quality/format fixed and vary length in existing sweep",
+      "limitations": [
+        "Synthetic quality/length/format are authored coordinates, not inferred real-story features",
+        "Preference probability is not success probability",
+        "Shared-network score movement need not equal independent leaf movement"
+      ]
+    },
+    {
+      "chapter": 11,
+      "question": "Can pair odds improve while both answers become less likely?",
+      "diagnosed_gaps": [
+        "Stationarity→exponential tilt skipped the shared multiplier and normalization steps",
+        "Reference and beta roles needed a concrete distribution",
+        "Third-answer likelihood shift was named without a worked main-text counterexample"
+      ],
+      "changes": [
+        "Expanded stationarity, exponentiation and normalization derivation",
+        "Promoted Day17 exact three-answer optimum and beta sweep",
+        "Explained offline four-score update and remaining judgment dependence",
+        "Worked preserved solution5 probabilities as a constructed three-answer counterexample",
+        "Distinguished bounded likelihoods from divergent separable margins and original reference from old behavior"
+      ],
+      "reuse": [
+        "src/dongxi_llms/dpo_lab.py:27 dpo_loss / :43 optimal_policy",
+        "Day17 reference(.6,.3,.1), rewards(0,.5,1), beta=.5 stationarity/gauge checks",
+        "Existing solution11 exercise5 probability vectors"
+      ],
+      "numeric_result_key": "ch11",
+      "controlled_change": "Increase fixed-reward beta from.5 to1; hold third-answer mass fixed to show why absolute chosen decrease then becomes impossible",
+      "limitations": [
+        "Constructed vectors are not an observed optimizer path",
+        "Finite unrestricted optimum does not certify neural training restraint",
+        "Frozen reference does not prevent separable pair margin divergence"
+      ]
+    },
+    {
+      "chapter": 15,
+      "question": "What does the student actually learn from a teacher?",
+      "diagnosed_gaps": [
+        "Selection was disconnected from the student objective",
+        "Hard/soft target distinction and temperature scale needed a worked gradient comparison",
+        "Prefix/context/loss geometry were correct but dense",
+        "Tail decomposition skipped its conditional-factorization step"
+      ],
+      "changes": [
+        "Connected assistant delivery, selection and changed student weights",
+        "Compared one selected token with existing teacher(2,.5,−1) distribution",
+        "Added concentrated-student correction and temperature target table",
+        "Expanded log-softmax-to-KD gradient step and unscaled comparison",
+        "Promoted existing fit plot and prefix/context structure diagram",
+        "Added authored wrong-prefix ordinary-versus-hint next-token example",
+        "Explained unrestricted forward/reverse common minimum and constrained compromises",
+        "Expanded tail conditional decomposition"
+      ],
+      "reuse": [
+        "src/dongxi_llms/distillation_lab.py:9 distillation_loss",
+        "Day26/01 existing teacher/temperatures and80-step reference",
+        "src/dongxi_llms/student_prefix_lab.py:125 teacher_distribution / topk_tail",
+        "Day26/05 existing wrong-prefix and tail fixtures"
+      ],
+      "numeric_result_key": "ch15",
+      "controlled_change": "Keep teacher fixed, concentrate student(.9,.05,.05); remove temperature-square scaling; change only teacher hint at fixed wrong prefix",
+      "limitations": [
+        "Soft probabilities do not guarantee semantic similarity or correctness",
+        "Teacher hint does not erase already emitted wrong token",
+        "Both unrestricted categorical KL directions minimize at equality",
+        "Visited-state conditional gradients do not include student occupancy gradients",
+        "No new model-scale transfer or generation evidence"
+      ]
+    }
+  ],
+  "numerical_verification": {
+    "command": "PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python experiments/reports/2026-10-10-book-foundations-pass/run-01/operations-numerical-check.py > experiments/reports/2026-10-10-book-foundations-pass/run-01/operations-numerical-results-v2.json 2> experiments/reports/2026-10-10-book-foundations-pass/run-01/operations-numerical-stderr-v2.log",
+    "exit_code": 0,
+    "script": "experiments/reports/2026-10-10-book-foundations-pass/run-01/operations-numerical-check.py",
+    "script_sha256": "8be2dd45be77ffc70436720383d407c2131bfb80760a4ee7f6d4d8206849fa29",
+    "result": "experiments/reports/2026-10-10-book-foundations-pass/run-01/operations-numerical-results-v2.json",
+    "result_sha256": "b582c956eafe0aabc54f9c22190c86402054f60ac67a72cff2ad26c54bc10228",
+    "stderr": "experiments/reports/2026-10-10-book-foundations-pass/run-01/operations-numerical-stderr-v2.log",
+    "stderr_bytes": 0,
+    "earlier_receipt_retained": "operations-numerical-results.json; before additional controlled cases, with scalar logging warning",
+    "scope": "Finite source calculations and existing reward reference only; no GPU, new models or campaigns"
+  },
+  "figures": [
+    {
+      "path": "notebooks/figures/chapter-10/day-15-01_bradley_terry_margin-02.png",
+      "sha256": "7ba9eab4d470bf752f7d2c92b354fa9a6a7be31833dda17ae848efb21cae894d",
+      "source_notebook": "notebooks/day-15/01_bradley_terry_margin.ipynb",
+      "source_cell_index": 7,
+      "source_cell_id": "day15-cell05",
+      "source_notebook_sha256": "7b537035d2be9b7a87548abf8de513237bd132cfdc84b4c0ca0721219409e131",
+      "regeneration_command": "JUPYTER_PATH=/tmp/dongxi-book-foundations.6j_z9po4/kernel/share/jupyter PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python scripts/verify_course_notebooks.py --notebooks notebooks/day-15/01_bradley_terry_margin.ipynb --kernel dongxi-book-foundations --expected-prefix /tmp/dongxi-book-foundations.6j_z9po4/venv --export-figures --output <new-empty-evidence-directory>",
+      "action": "Existing figure promoted; inspected visually; no asset regeneration by this agent"
+    },
+    {
+      "path": "notebooks/figures/chapter-10/day-16-01_reward_model_bias_audit-02.png",
+      "sha256": "3de1ea2b19069b2a4f7edd62b3258bcd109391d081f5d1c9984b3a4b6c961376",
+      "source_notebook": "notebooks/day-16/01_reward_model_bias_audit.ipynb",
+      "source_cell_index": 9,
+      "source_cell_id": "day16-cell05",
+      "source_notebook_sha256": "63bf5ddd953ffae282c136296eae843059bc4fec1030608fb3c6afa050b817ef",
+      "regeneration_command": "JUPYTER_PATH=/tmp/dongxi-book-foundations.6j_z9po4/kernel/share/jupyter PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python scripts/verify_course_notebooks.py --notebooks notebooks/day-16/01_reward_model_bias_audit.ipynb --kernel dongxi-book-foundations --expected-prefix /tmp/dongxi-book-foundations.6j_z9po4/venv --export-figures --output <new-empty-evidence-directory>",
+      "action": "Existing figure promoted; inspected visually; no asset regeneration by this agent"
+    },
+    {
+      "path": "notebooks/figures/chapter-11/day-17-01_kl_regularized_optimum-01.png",
+      "sha256": "3191135f18d4c3fca5f6f2c664a1d1d14c80c2a1c968cf4bf74a31ea1de7bfd9",
+      "source_notebook": "notebooks/day-17/01_kl_regularized_optimum.ipynb",
+      "source_cell_index": 4,
+      "source_cell_id": "day17-cell03",
+      "source_notebook_sha256": "8ac44e274e38581e65481f3594f88d81225b15d14aa2017b743124c1334613eb",
+      "regeneration_command": "JUPYTER_PATH=/tmp/dongxi-book-foundations.6j_z9po4/kernel/share/jupyter PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python scripts/verify_course_notebooks.py --notebooks notebooks/day-17/01_kl_regularized_optimum.ipynb --kernel dongxi-book-foundations --expected-prefix /tmp/dongxi-book-foundations.6j_z9po4/venv --export-figures --output <new-empty-evidence-directory>",
+      "action": "Existing figure promoted; inspected visually; no asset regeneration by this agent"
+    },
+    {
+      "path": "notebooks/figures/chapter-15/day-26-01_temperature_distillation-01.png",
+      "sha256": "d10b2f5c0ac6096abcf14311aaaea2b3cdbc2ebf3ffc1fb48f1582b4bc6c8a08",
+      "source_notebook": "notebooks/day-26/01_temperature_distillation.ipynb",
+      "source_cell_index": 4,
+      "source_cell_id": "day26-01-2",
+      "source_notebook_sha256": "f864ade43c6d1886405e402daaa2a2680ca242d6d389d8bea42d56add0e96ac9",
+      "regeneration_command": "JUPYTER_PATH=/tmp/dongxi-book-foundations.6j_z9po4/kernel/share/jupyter PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python scripts/verify_course_notebooks.py --notebooks notebooks/day-26/01_temperature_distillation.ipynb --kernel dongxi-book-foundations --expected-prefix /tmp/dongxi-book-foundations.6j_z9po4/venv --export-figures --output <new-empty-evidence-directory>",
+      "action": "Existing figure promoted; inspected visually; no asset regeneration by this agent"
+    },
+    {
+      "path": "notebooks/figures/chapter-15/day-26-05_student_prefix_and_teacher_context-01.png",
+      "sha256": "365c753709fec12f1eb21a64a4c129053382ba95993dadf1905fea50b2b589e2",
+      "source_notebook": "notebooks/day-26/05_student_prefix_and_teacher_context.ipynb",
+      "source_cell_index": 4,
+      "source_cell_id": "student-prefix-4",
+      "source_notebook_sha256": "4243484a8902e02faac3595f2d096ca5d6b7c42bfbf249ddb34f3b2ec5731882",
+      "regeneration_command": "JUPYTER_PATH=/tmp/dongxi-book-foundations.6j_z9po4/kernel/share/jupyter PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python scripts/verify_course_notebooks.py --notebooks notebooks/day-26/05_student_prefix_and_teacher_context.ipynb --kernel dongxi-book-foundations --expected-prefix /tmp/dongxi-book-foundations.6j_z9po4/venv --export-figures --output <new-empty-evidence-directory>",
+      "action": "Existing figure promoted; inspected visually; no asset regeneration by this agent"
+    }
+  ],
+  "local_checks": "experiments/reports/2026-10-10-book-foundations-pass/run-01/operations-local-checks.json",
+  "book_math_command": "python3 scripts/check_book_math.py",
+  "book_math_exit_code": 0,
+  "book_math_log": "experiments/reports/2026-10-10-book-foundations-pass/run-01/operations-book-math.log",
+  "preservation": {
+    "original_display_equations": true,
+    "original_numbered_exercise_text": true,
+    "source_notebooks_checked": 76,
+    "source_notebook_changes": [],
+    "code_labs_trackers_and_old_reports": "No agent writes"
+  },
+  "independent_review": {
+    "reviewer": "editorial_routes",
+    "status": "accepted",
+    "receipt": "experiments/reports/2026-10-10-book-foundations-pass/run-01/routes-peer-review.json",
+    "receipt_sha256": "373771eef53d1c38c26a4bf263b00183f72de4966d8b87f88287a6ae7712ebfc",
+    "scope": "Hash-bound source/figure review and independent arithmetic/autograd/raw-response replay; learner mastery not assessed."
+  },
+  "final_prose_corrections": [
+    {
+      "path": "book/chapters/09-supervised-fine-tuning.md",
+      "correction": "Expanded first reader-visible LoRA use to low-rank adaptation (LoRA)."
+    },
+    {
+      "path": "book/chapters/15-distill-evaluate-and-defend.md",
+      "correction": "Changed an specified to a specified."
+    }
+  ]
+}

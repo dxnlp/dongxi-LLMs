@@ -6,15 +6,18 @@ Chapter 3 began with a contextual hidden state and asked how it becomes a
 next-token prediction. We now examine how a position obtains information from
 other positions in the first place.
 
-Consider the illustrative sequence:
+Return to the illustrative prefix **“the pet saw the”**, whose observed next
+piece in Chapters 2–3 was `dog`. The final `the` retrieves the same initial
+embedding as the first `the`. If every position were processed independently
+with only that embedding, their next-token predictions would be identical.
+The later occurrence needs a way to use its history: `pet` and `saw` are already
+available; the answer `dog` is not. How can it retrieve useful past information
+without looking at the target it is supposed to predict?
 
-> The animal crossed the river.
-
-The representation at “crossed” can use the earlier words to help predict what
-comes next. During causal language modeling, it cannot inspect “river” to make
-that prediction. The representation at “river,” however, may use the entire
-prefix through its own position. These are two different prediction problems at
-two different locations in the same sequence.
+This exposes both needs at once. Earlier information must be able to influence
+the current state, and later information must be excluded. A model that reads
+the following `dog` during training could obtain a pleasing loss by answering
+a different, easier question. During generation that answer does not yet exist.
 
 Attention provides a trainable way for each position to retrieve information
 from allowed sources. Its design connects four questions: what should a
@@ -134,6 +137,31 @@ scores over source positions; column j shows how different receivers score one
 source. Confusing these axes can produce a matrix of the expected shape that
 implements the wrong information flow.
 
+### A matching address still gives a soft mixture
+
+The retrieval analogy can make attention sound like exact dictionary lookup.
+Test that impression before using it. Give three allowed sources one-hot keys
+$k_0=[1,0,0]$, $k_1=[0,1,0]$, $k_2=[0,0,1]$ and a receiving query
+$q=\alpha[1,0,0]$. Their scaled scores are
+$[\alpha/\sqrt{3},0,0]$.
+
+**Reader prediction.** At $\alpha=1$, does the matching key receive weight 1?
+No. Softmax gives positive mass to the two zero-score keys because $e^0=1$.
+
+| Query scale $\alpha$ | Weight on matching source | Weight on each other source |
+|---:|---:|---:|
+| 1 | 0.471083 | 0.264458 |
+| 4 | 0.834278 | 0.082861 |
+| 16 | 0.999805 | 0.000097 |
+
+The output remains a weighted combination of their value vectors at every
+finite scale. Increasing only the query scale approaches a hard lookup because
+this fixture has a unique largest score. If two allowed keys tie for the
+maximum, the large-scale limit shares mass between them. Exact hard retrieval
+is a limiting statement with a uniqueness condition, not a property of finite
+one-hot vectors. In learned attention, keeping a mixture can be useful: the
+current position may need information from several sources.
+
 ## 4.4 Why divide by the square root of the head width?
 
 Suppose the query and key coordinates are independent, have mean zero and
@@ -188,6 +216,15 @@ The IID assumptions explain the scaling rule, not every trained attention
 distribution. Learned magnitudes, correlations, normalization, and positional
 transformations affect actual score statistics. Dividing by $\sqrt{d_h}$ does not
 guarantee unit variance or prevent every saturated row.
+
+An authored two-source score row makes the size of the effect tangible. At
+$d_h=64$, dividing scores $[8,-8]$ by $\sqrt{64}=8$ changes the weights from
+approximately $[0.999999887,0.000000113]$ to $[0.880797,0.119203]$. The
+unscaled row has almost committed before it mixes the values. These assigned
+scores illustrate the softmax transformation; the variance calculation above
+does not say that every random 64-dimensional dot product equals 8 or -8.
+The companion's paired random-coordinate experiment measures the spread rather
+than confusing a standard deviation with an individual score.
 
 ## 4.5 Causality belongs inside normalization
 
@@ -278,14 +315,27 @@ X^{(A)}_{0:t}=X^{(B)}_{0:t}
 O^{(A)}_{0:t}=O^{(B)}_{0:t}.
 $$
 
-Changing “river” to “road” cannot change the earlier output at “crossed.” The
-fourth output may change because its own input changed. The earlier state helps
-predict that fourth input; it cannot depend on the answer it is supposed to
+Changing the later `dog` to `cat` cannot change the earlier output at the final
+`the`. The changed position's own output may change. The earlier state helps
+predict that following input; it cannot depend on the answer it is supposed to
 predict.
 
 This property assumes earlier layers have also respected causality. A mask
 cannot remove future information already hidden in X by a faulty upstream
 operation.
+
+![Correct causal masking gives a triangular weight map and zero earlier-output change after a future perturbation; post-softmax masking and zero-filled scores fail that invariance.](../../notebooks/figures/chapter-04/day-04-01_causal_attention_forward-01.png)
+
+The top panels show weights with receivers on rows and sources on columns.
+The lower panels change only the final input in the notebook's separate
+four-position numeric fixture. Correct masking leaves outputs 0–2 unchanged.
+Post-softmax masking can look triangular yet still leak through its denominator;
+zero-filled forbidden scores even retain future weights. Read both panels
+together: a plausible-looking map is weaker evidence than an intervention.
+Source: [Day 4's forward notebook](../../notebooks/day-04/01_causal_attention_forward.ipynb)
+and `attention_trace` in the transparent lab. The
+[saved-preview workflow](../../docs/NOTEBOOK_VISUALS.md#reference-previews-versus-live-plots)
+with `--days 4` regenerates this figure.
 
 ### Causal masks, padding masks, and loss masks
 
@@ -373,11 +423,11 @@ $$
 R=\begin{bmatrix}a&-\infty&-\infty\\0&a&-\infty\\a&a&2a\end{bmatrix}.
 $$
 
-| Receiving position | Weights over sources 1, 2, 3 | Retrieved value coordinates |
+| Receiving position | Weights over sources 0, 1, 2 | Retrieved value coordinates |
 |---|---|---|
-| 1 | $[1,0,0]$ | $[1,2]$ |
-| 2 | $[0.330238,0.669762,0]$ | $[2.339523,0.660477]$ |
-| 3 | $[0.248255,0.248255,0.503490]$ | $[0.993020,2.510470]$ |
+| 0 | $[1,0,0]$ | $[1,2]$ |
+| 1 | $[0.330238,0.669762,0]$ | $[2.339523,0.660477]$ |
+| 2 | $[0.248255,0.248255,0.503490]$ | $[0.993020,2.510470]$ |
 
 The third row puts more than half its weight on itself: matching two earlier
 keys equally does not remove self-attention. Its output is
@@ -476,6 +526,25 @@ Increasing a score redistributes weight toward its value and away from the
 current mixture. The loss evaluates that change through g. If all allowed
 values are identical, every v_j-o is zero: routing cannot change the output,
 so this local routing gradient vanishes. The value projections can still learn.
+
+Put numbers on that statement using receiving row 1 of the three-position
+fixture in §4.7. Its two legal values are $[1,2]$ and $[3,0]$, its weights
+are $[0.330238,0.669762]$, and its output is $[2.339523,0.660477]$.
+For the diagnostic objective $L=o_0$—the first output coordinate—the incoming
+gradient is $g=[1,0]$. The two score derivatives are approximately
+$[-0.442362,+0.442362]$. Increasing the first score would pull that output
+toward 1; increasing the second would pull it toward 3. Gradient descent on
+this diagnostic coordinate therefore favors the first source. A next-token
+loss supplies a different $g$ through the vocabulary head, but the same
+redistribution rule applies.
+
+Now make the two values identical while keeping the scores fixed. The
+weights stay different, yet the output no longer depends on their allocation
+and both score derivatives become zero. This controlled change separates
+learning **where to read** from learning **what to send**. The
+[calculation receipt](../../experiments/reports/2026-10-10-book-foundations-pass/run-01/depth-calculations.json)
+checks the numeric derivative against autograd; the gradient notebook continues
+through the actual query, key and value projections.
 
 Through scaled dot products,
 

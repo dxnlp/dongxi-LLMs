@@ -29,6 +29,14 @@ and from learner mastery.
 
 ## Reference comparison and improvement goal
 
+The [foundations and reader-experience plan](docs/BOOK_FOUNDATIONS_PLAN.md),
+authorized 2026-10-10, is implemented across all fifteen chapters around concrete
+questions, connected worked examples and controlled changes. The
+[foundations record](experiments/reports/2026-10-10-book-foundations-pass.md)
+records independent review, 1,558 passed CPU tests and all 76 fresh notebook
+references. Learner Day 9
+and the existing empirical campaign remain distinct from this teaching pass.
+
 The [editorial implementation plan](docs/BOOK_EDITORIAL_PLAN.md), requested
 2026-10-10, improves the completed draft's narrative, evidence presentation,
 laboratory routes and notation. Its [implementation record](experiments/reports/2026-10-10-book-editorial-pass.md)

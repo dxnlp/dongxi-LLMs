@@ -1,0 +1,513 @@
+{
+  "command": "PYTHONPATH=src CUDA_VISIBLE_DEVICES='' HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /tmp/dongxi-book-foundations.6j_z9po4/venv/bin/python /tmp/dongxi-foundations-routes-numerics.py",
+  "exit_code": 0,
+  "program_source": "import collections,json,math,platform,sys,time\nimport torch\nfrom dongxi_llms import policy_gradient_lab as pg,pretraining_lab as pre,evaluation_lab as ev,grpo_lab as gr,critic_policy_lab as cp\nstarted=time.monotonic();torch.set_num_threads(1);D=torch.float64\nT=lambda x:torch.tensor(x,dtype=D)\ndef close(a,b):torch.testing.assert_close(T(a),T(b),atol=1e-12,rtol=1e-10)\ndef policy_gradient(p,r):\n J=sum(x*y for x,y in zip(p,r));return J,[x*(y-J) for x,y in zip(p,r)]\ndef independent_moments(p,r,b):\n samples=[[(r[a]-b)*((a==i)-p[i]) for i in range(len(p))] for a in range(len(p))]\n mean=[sum(p[a]*samples[a][i] for a in range(len(p))) for i in range(len(p))]\n variance=sum(p[a]*sum((x-m)**2 for x,m in zip(samples[a],mean)) for a in range(len(p)))\n return dict(samples=samples,mean=mean,variance_trace=variance)\nout={};p=T([.5,.3,.2]);r=T([0.,1.,2.]);z=p.log().requires_grad_();J=(z.softmax(-1)*r).sum();g,=torch.autograd.grad(J,z)\nJ0,g0=policy_gradient(p.tolist(),r.tolist());close(g,g0);close(pg.exact_gradient(z.detach(),r),g0)\nvariants={}\nfor rr in [[0,1,4],[5,6,7],[1,1,1]]:\n jj,gg=policy_gradient(p.tolist(),rr);close(pg.exact_gradient(z.detach(),T(rr)),gg);variants[str(rr)]=dict(expected_reward=jj,gradient=gg)\nmoments={}\nfor b in [0.,.7,5.]:\n manual=independent_moments(p.tolist(),r.tolist(),b);canonical=pg.estimator_moments(z.detach(),r,T(b));close(canonical['mean'],manual['mean']);close(canonical['variance_trace'],manual['variance_trace']);moments[str(b)]=manual\nscore_norms=[sum(((i==a)-float(p[i]))**2 for i in range(3)) for a in range(3)];num=sum(float(p[a]*r[a])*score_norms[a] for a in range(3));den=sum(float(p[a])*score_norms[a] for a in range(3))\ninc=pg.group_estimator_moments(z.detach(),r,group=4,leave_one_out=False);loo=pg.group_estimator_moments(z.detach(),r,group=4);close(inc['mean'],g*.75);close(loo['mean'],g)\nout['policy']=dict(expected_reward=J0,ascent_gradient=g.tolist(),logit_ascent_eta01=(g*.1).tolist(),variants=variants,baseline_moments=moments,score_norms=score_norms,optimal_baseline=dict(numerator=num,denominator=den,value=num/den),inclusive_G4=inc['mean'].tolist(),rloo_G4=loo['mean'].tolist())\nratio=T([1.3,.7,1.3,.7]).requires_grad_();adv=T([1,1,-1,-1]);ss=pg.ppo_surrogate(ratio,adv);ss.sum().backward();close(ss,[1.2,.7,-1.3,-.8]);close(ratio.grad,[0,1,-1,0]);pn=T([.4,.3,.3]);close((p*(pn/p)*r).sum(),.9);benefit=(p*pg.ppo_surrogate(pn/p,r-.7)).sum();close(benefit,.122)\nout['ppo']=dict(surrogate=ss.detach().tolist(),ratio_slopes=ratio.grad.tolist(),ratios=(pn/p).tolist(),current_expected_reward=float((pn*r).sum()),clipped_expected_advantage=float(benefit),unclipped_expected_advantage=float((pn*r).sum())-.7,four_token_ratio=1.1**4)\ntheta=T([1]);m=T([0]);v=T([0]);history=[];ind_m=ind_v=0.;ind_theta=1.\nfor step,gg in enumerate([1.,1.,-.1],1):\n old=theta.clone();theta,m,v=pre.adamw_reference(theta,T([gg]),m,v,step,.01,decay=0.)\n ind_m=.9*ind_m+.1*gg;ind_v=.999*ind_v+.001*gg*gg;delta=-.01*(ind_m/(1-.9**step))/(math.sqrt(ind_v/(1-.999**step))+1e-8);ind_theta+=delta;close(theta,[ind_theta]);history.append(dict(step=step,gradient=gg,m=float(m[0]),v=float(v[0]),mhat=float(m[0]/(1-.9**step)),vhat=float(v[0]/(1-.999**step)),parameter_delta=float((theta-old)[0])))\ngg=T([1,.01]);delta,_,_=pre.adamw_reference(T([0,0]),gg,T([0,0]),T([0,0]),1,.01,decay=0.)\npdecay,_,_=pre.adamw_reference(T([2]),T([0]),T([0]),T([0]),1,.01,decay=.1);pl2,_,_=pre.adamw_reference(T([2]),T([.2]),T([0]),T([0]),1,.01,decay=0.);close(pdecay,[1.998]);close(pl2,[1.9900000005]);rates=[pre.learning_rate(i) for i in [0,2,23]];close(rates,[.01/3,.01,.001])\nout['optimizer']=dict(sign_reversal=history,two_coordinate_adam_delta=delta.tolist(),sgd_delta=(-.01*gg).tolist(),decoupled_theta=float(pdecay[0]),l2_first_adam_theta=float(pl2[0]),rates_u1u3u24=rates)\nrows=ev.evaluation_fixture();a=[int(x['a']) for x in rows];b=[int(x['b']) for x in rows];dis=dict(collections.Counter(f'{x}{y}' for x,y in zip(a,b)));assert dis=={'00':5,'11':18,'01':10,'10':7};delta,interval=ev.paired_bootstrap(a,b,draws=2000,seed=1010);close(delta,.075);close(interval,[-.125,.275]);slices={s:dict(n=sum(x['slice']==s for x in rows),a=sum(x['a'] for x in rows if x['slice']==s),b=sum(x['b'] for x in rows if x['slice']==s)) for s in ['common','rare-format']};macro=[sum(s[k]/s['n'] for s in slices.values())/2 for k in ['a','b']];reordered=list(reversed(b))\nout['evaluation']=dict(totals=dict(a=sum(a),b=sum(b),n=len(a)),disagreements=dis,paired_bootstrap=dict(delta=delta,interval=interval,draws=2000,seed=1010,sampler='Python random.Random'),slices=slices,macro_accuracies=macro,wilson_10of10=ev.wilson_interval(10,10),mispaired_reversed_b=dict(totals_unchanged=sum(reordered)==sum(b),disagreements=dict(collections.Counter(f'{x}{y}' for x,y in zip(a,reordered))),bootstrap=ev.paired_bootstrap(a,reordered)))\nrs=T([[0,0,1,1],[1,1,1,1],[0,0,0,0]]);aa=gr.group_advantages(rs);close(aa[0],[-.5/(.5+1e-8)]*2+[.5/(.5+1e-8)]*2);assert torch.equal(aa[1:],torch.zeros_like(aa[1:]));lengths=[2,5,2,2];mask=torch.arange(5)[None,:]<torch.tensor(lengths)[:,None];logp=T([[-.7]*5]*4).requires_grad_();loss=gr.clipped_objective(logp,logp.detach(),aa[0],mask);loss.backward();expected=-aa[0][:,None]/(4*mask.sum(-1)[:,None])*mask;close(logp.grad,expected);close(loss.detach(),0.)\nzeros={}\nfor val in [0.,1.]:\n xx=logp.detach().clone().requires_grad_();ll=gr.clipped_objective(xx,xx.detach(),gr.group_advantages(torch.full((1,4),val,dtype=D))[0],mask);ll.backward();assert torch.equal(xx.grad,torch.zeros_like(xx));zeros[str(val)]=dict(loss=float(ll.detach()),max_abs_gradient=float(xx.grad.abs().max()))\nrr=T([1.05,.9,1.4]);ss=pg.ppo_surrogate(rr,torch.ones_like(rr));close(ss,[1.05,.9,1.2]);out['groups']=dict(rewards=rs.tolist(),advantages=aa.tolist(),sample_std_advantages=((rs[0]-.5)/rs[0].std(correction=1)).tolist(),rloo=pg.rloo_advantages(rs[0]).tolist(),lengths=lengths,valid_tokens=int(mask.sum()),fresh_loss=float(loss.detach()),selected_score_gradients=logp.grad.tolist(),constant_groups=zeros,token_surrogate=ss.tolist(),token_mean=float(ss.mean()),iid_p01={str(G):dict(all_wrong=.9**G,mixed=1-.9**G-.1**G) for G in [4,8]})\nrew=T([[0,0,1]]);vv=T([[.4,.5,.8]]);valid=torch.ones((1,3),dtype=torch.bool);terminal=torch.tensor([[False,False,True]]);out['gae']={}\nfor lam in [0.,.95,1.]:\n d=[0+.9*.5-.4,0+.9*.8-.5,1-.8];av=[0.]*3\n for i in reversed(range(3)):av[i]=d[i]+(.9*lam*av[i+1] if i<2 else 0.)\n actual=cp.gae_targets(rew,vv,valid,terminal,T([0]),gamma=.9,lam=lam);close(actual['td'],[d]);close(actual['advantages'],[av]);close(actual['targets'],[[a+v for a,v in zip(av,vv[0].tolist())]]);out['gae'][str(lam)]={k:v.tolist() for k,v in actual.items()}\nq=T([.2,.3,.5]);zz=p.log().requires_grad_();pp=zz.softmax(-1);d=pp.log()-q.log();k3=q/pp-1+d;f1=(p*d).sum();f3=(p*k3).sum();exact=(pp*d).sum();grad1,=torch.autograd.grad(f1,zz,retain_graph=True);grad3,=torch.autograd.grad(f3,zz,retain_graph=True);grade,=torch.autograd.grad(exact,zz);D0=sum(x*math.log(x/y) for x,y in zip(p.tolist(),q.tolist()));manual=[x*(math.log(x/y)-D0) for x,y in zip(p.tolist(),q.tolist())];close(f1.detach(),D0);close(f3.detach(),D0);close(exact.detach(),D0);close(grad1,[0,0,0]);close(grad3,p-q);close(grade,manual)\nuni=T([1/3]*3);proxy=T([1,2,0]);truth=T([1,0,0]);gp=uni*(proxy-(uni*proxy).sum());gt=uni*(truth-(uni*truth).sum());close(gp,[0,1/3,-1/3]);close(gt,[2/9,-1/9,-1/9]);prob=(.4*gp).softmax(-1)\nout['diagnosis']=dict(kl_value=D0,frozen_k1_gradient=grad1.tolist(),frozen_k3_gradient=grad3.tolist(),exact_kl_gradient=grade.tolist(),proxy_gradient=gp.tolist(),strict_gradient=gt.tolist(),first_proxy_update_logits=(.4*gp).tolist(),first_proxy_update_probabilities=prob.tolist(),entropy_uniform=math.log(3),entropy_sharp=-sum(x*math.log(x) for x in [.9,.05,.05]),ten_draw_exposure_probability=1-.99**10)\nout['execution']=dict(status='passed',mode='bounded CPU calculations and existing finite APIs; no model training',python=sys.version.split()[0],torch=torch.__version__,host=platform.node(),platform=platform.platform(),elapsed_seconds=time.monotonic()-started)\nprint(json.dumps(out,indent=2))\n",
+  "program_sha256": "8bd9b91ee9f61c89c09d1fe473f0b686b6ad8de6d4aeade9c19bec9f996ff54b",
+  "stdout": {
+    "policy": {
+      "expected_reward": 0.7,
+      "ascent_gradient": [
+        -0.35000000000000014,
+        0.08999999999999994,
+        0.26000000000000006
+      ],
+      "logit_ascent_eta01": [
+        -0.03500000000000002,
+        0.008999999999999994,
+        0.02600000000000001
+      ],
+      "variants": {
+        "[0, 1, 4]": {
+          "expected_reward": 1.1,
+          "gradient": [
+            -0.55,
+            -0.030000000000000027,
+            0.58
+          ]
+        },
+        "[5, 6, 7]": {
+          "expected_reward": 5.7,
+          "gradient": [
+            -0.3500000000000001,
+            0.08999999999999994,
+            0.25999999999999995
+          ]
+        },
+        "[1, 1, 1]": {
+          "expected_reward": 1.0,
+          "gradient": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "baseline_moments": {
+        "0.0": {
+          "samples": [
+            [
+              0.0,
+              -0.0,
+              -0.0
+            ],
+            [
+              -0.5,
+              0.7,
+              -0.2
+            ],
+            [
+              -1.0,
+              -0.6,
+              1.6
+            ]
+          ],
+          "mean": [
+            -0.35,
+            0.09,
+            0.26000000000000006
+          ],
+          "variance_trace": 0.8198000000000001
+        },
+        "0.7": {
+          "samples": [
+            [
+              -0.35,
+              0.21,
+              0.13999999999999999
+            ],
+            [
+              -0.15000000000000002,
+              0.21000000000000002,
+              -0.06000000000000001
+            ],
+            [
+              -0.65,
+              -0.39,
+              1.04
+            ]
+          ],
+          "mean": [
+            -0.35,
+            0.08999999999999998,
+            0.26
+          ],
+          "variance_trace": 0.24720000000000003
+        },
+        "5.0": {
+          "samples": [
+            [
+              -2.5,
+              1.5,
+              1.0
+            ],
+            [
+              2.0,
+              -2.8,
+              0.8
+            ],
+            [
+              1.5,
+              0.8999999999999999,
+              -2.4000000000000004
+            ]
+          ],
+          "mean": [
+            -0.35,
+            0.09000000000000002,
+            0.2599999999999999
+          ],
+          "variance_trace": 10.0598
+        }
+      },
+      "score_norms": [
+        0.38,
+        0.7799999999999999,
+        0.9800000000000001
+      ],
+      "optimal_baseline": {
+        "numerator": 0.626,
+        "denominator": 0.62,
+        "value": 1.0096774193548388
+      },
+      "inclusive_G4": [
+        -0.2625000000000002,
+        0.06750000000000002,
+        0.19500000000000017
+      ],
+      "rloo_G4": [
+        -0.35000000000000026,
+        0.09000000000000002,
+        0.26000000000000023
+      ]
+    },
+    "ppo": {
+      "surrogate": [
+        1.2,
+        0.7,
+        -1.3,
+        -0.8
+      ],
+      "ratio_slopes": [
+        0.0,
+        1.0,
+        -1.0,
+        0.0
+      ],
+      "ratios": [
+        0.8,
+        1.0,
+        1.4999999999999998
+      ],
+      "current_expected_reward": 0.8999999999999999,
+      "clipped_expected_advantage": 0.1220000000000001,
+      "unclipped_expected_advantage": 0.19999999999999996,
+      "four_token_ratio": 1.4641000000000004
+    },
+    "optimizer": {
+      "sign_reversal": [
+        {
+          "step": 1,
+          "gradient": 1.0,
+          "m": 0.09999999999999998,
+          "v": 0.0010000000000000009,
+          "mhat": 1.0,
+          "vhat": 1.0,
+          "parameter_delta": -0.0099999999
+        },
+        {
+          "step": 2,
+          "gradient": 1.0,
+          "m": 0.18999999999999995,
+          "v": 0.0019990000000000016,
+          "mhat": 1.0,
+          "vhat": 1.0000000000000142,
+          "parameter_delta": -0.00999999989999989
+        },
+        {
+          "step": 3,
+          "gradient": -0.1,
+          "m": 0.16099999999999995,
+          "v": 0.0020070010000000017,
+          "mhat": 0.5940959409594097,
+          "vhat": 0.6696697798899641,
+          "parameter_delta": -0.007259826292114746
+        }
+      ],
+      "two_coordinate_adam_delta": [
+        -0.009999999900000002,
+        -0.009999990000010001
+      ],
+      "sgd_delta": [
+        -0.01,
+        -0.0001
+      ],
+      "decoupled_theta": 1.998,
+      "l2_first_adam_theta": 1.9900000005,
+      "rates_u1u3u24": [
+        0.0033333333333333335,
+        0.01,
+        0.001
+      ]
+    },
+    "evaluation": {
+      "totals": {
+        "a": 25,
+        "b": 28,
+        "n": 40
+      },
+      "disagreements": {
+        "00": 5,
+        "11": 18,
+        "01": 10,
+        "10": 7
+      },
+      "paired_bootstrap": {
+        "delta": 0.075,
+        "interval": [
+          -0.125,
+          0.275
+        ],
+        "draws": 2000,
+        "seed": 1010,
+        "sampler": "Python random.Random"
+      },
+      "slices": {
+        "common": {
+          "n": 30,
+          "a": 20,
+          "b": 26
+        },
+        "rare-format": {
+          "n": 10,
+          "a": 5,
+          "b": 2
+        }
+      },
+      "macro_accuracies": [
+        0.5833333333333333,
+        0.5333333333333333
+      ],
+      "wilson_10of10": [
+        0.7224672001371107,
+        0.9999999999999999
+      ],
+      "mispaired_reversed_b": {
+        "totals_unchanged": true,
+        "disagreements": {
+          "00": 4,
+          "10": 8,
+          "01": 11,
+          "11": 17
+        },
+        "bootstrap": [
+          0.075,
+          [
+            -0.15,
+            0.275
+          ]
+        ]
+      }
+    },
+    "groups": {
+      "rewards": [
+        [
+          0.0,
+          0.0,
+          1.0,
+          1.0
+        ],
+        [
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "advantages": [
+        [
+          -0.9999999800000003,
+          -0.9999999800000003,
+          0.9999999800000003,
+          0.9999999800000003
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "sample_std_advantages": [
+        -0.8660254037844387,
+        -0.8660254037844387,
+        0.8660254037844387,
+        0.8660254037844387
+      ],
+      "rloo": [
+        -0.6666666666666666,
+        -0.6666666666666666,
+        0.6666666666666667,
+        0.6666666666666667
+      ],
+      "lengths": [
+        2,
+        5,
+        2,
+        2
+      ],
+      "valid_tokens": 11,
+      "fresh_loss": 2.7755575615628914e-17,
+      "selected_score_gradients": [
+        [
+          0.12499999750000004,
+          0.12499999750000004,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.04999999900000002,
+          0.04999999900000002,
+          0.04999999900000002,
+          0.04999999900000002,
+          0.04999999900000002
+        ],
+        [
+          -0.12499999750000004,
+          -0.12499999750000004,
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        [
+          -0.12499999750000004,
+          -0.12499999750000004,
+          -0.0,
+          -0.0,
+          -0.0
+        ]
+      ],
+      "constant_groups": {
+        "0.0": {
+          "loss": -0.0,
+          "max_abs_gradient": 0.0
+        },
+        "1.0": {
+          "loss": -0.0,
+          "max_abs_gradient": 0.0
+        }
+      },
+      "token_surrogate": [
+        1.05,
+        0.9,
+        1.2
+      ],
+      "token_mean": 1.05,
+      "iid_p01": {
+        "4": {
+          "all_wrong": 0.6561,
+          "mixed": 0.3438
+        },
+        "8": {
+          "all_wrong": 0.4304672100000001,
+          "mixed": 0.5695327799999998
+        }
+      }
+    },
+    "gae": {
+      "0.0": {
+        "td": [
+          [
+            0.04999999999999999,
+            0.22000000000000008,
+            0.19999999999999996
+          ]
+        ],
+        "advantages": [
+          [
+            0.04999999999999999,
+            0.22000000000000008,
+            0.19999999999999996
+          ]
+        ],
+        "targets": [
+          [
+            0.45,
+            0.7200000000000001,
+            1.0
+          ]
+        ]
+      },
+      "0.95": {
+        "td": [
+          [
+            0.04999999999999999,
+            0.22000000000000008,
+            0.19999999999999996
+          ]
+        ],
+        "advantages": [
+          [
+            0.384305,
+            0.391,
+            0.19999999999999996
+          ]
+        ],
+        "targets": [
+          [
+            0.784305,
+            0.891,
+            1.0
+          ]
+        ]
+      },
+      "1.0": {
+        "td": [
+          [
+            0.04999999999999999,
+            0.22000000000000008,
+            0.19999999999999996
+          ]
+        ],
+        "advantages": [
+          [
+            0.41000000000000003,
+            0.4,
+            0.19999999999999996
+          ]
+        ],
+        "targets": [
+          [
+            0.81,
+            0.9,
+            1.0
+          ]
+        ]
+      }
+    },
+    "diagnosis": {
+      "kl_value": 0.27488721956224654,
+      "frozen_k1_gradient": [
+        -1.1102230246251568e-16,
+        0.0,
+        -4.4408920985006276e-17
+      ],
+      "frozen_k3_gradient": [
+        0.29999999999999993,
+        -7.660538869913582e-17,
+        -0.2999999999999998
+      ],
+      "exact_kl_gradient": [
+        0.32070175615595425,
+        -0.08246616586867402,
+        -0.23823559028728036
+      ],
+      "proxy_gradient": [
+        0.0,
+        0.3333333333333333,
+        -0.3333333333333333
+      ],
+      "strict_gradient": [
+        0.22222222222222224,
+        -0.1111111111111111,
+        -0.1111111111111111
+      ],
+      "first_proxy_update_logits": [
+        0.0,
+        0.13333333333333333,
+        -0.13333333333333333
+      ],
+      "first_proxy_update_probabilities": [
+        0.33136676757152317,
+        0.378629878632374,
+        0.2900033537961028
+      ],
+      "entropy_uniform": 1.0986122886681098,
+      "entropy_sharp": 0.39439769144744274,
+      "ten_draw_exposure_probability": 0.09561792499119559
+    },
+    "execution": {
+      "status": "passed",
+      "mode": "bounded CPU calculations and existing finite APIs; no model training",
+      "python": "3.12.14",
+      "torch": "2.14.1+cpu",
+      "host": "spark-aa66",
+      "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+      "elapsed_seconds": 0.22559372999239713
+    }
+  },
+  "stdout_sha256": "412263b1816782a67d63319cc2fc0be7e4cc5c5f9dbcf9e76c3d4d458f8eef0a",
+  "stderr": "Two Torch copy-construction warnings from the verification conversion helper; assertions passed and checked values use detached CPU float64 tensors."
+}

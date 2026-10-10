@@ -24,6 +24,20 @@ a group of mostly failures, but offers no comparison within a group where every
 answer succeeds. GRPO replaces a learned value baseline with group statistics;
 the original proposal is in [DeepSeekMath](https://arxiv.org/html/2402.03300v3#S4).
 
+The verifier supplies a task outcome rather than a preferred demonstration;
+this is reinforcement learning with verifiable rewards, or RLVR. It can
+avoid fitting a separate preference reward model when correctness is executable,
+but the checker now defines what improvement means. It need not verify every
+reasoning step or support every response format.
+
+Why compare answers instead of fitting a critic? Sampling several responses
+provides prompt-level outcome variation immediately. A critic would learn
+an expected return from states and could reuse information across prompts;
+it also needs fitting data, computation and an explicit architecture. That
+architecture can be a small head or network, not necessarily another entire
+language model. GRPO trades this learned prediction for a within-group
+comparison and pays for the additional sampled responses.
+
 We declare the course convention explicitly:
 
 $$
@@ -49,6 +63,39 @@ that a negative-advantage answer is factually false. All-correct groups give zer
 relative advantage. All-wrong groups do too. A critic could provide information
 across states that this particular relative estimator does not provide.
 
+### Follow a complete mixed group
+
+**Reader prediction.** Change Chapter 12's graded reward into strict success:
+accept only the bare integer `5`. Which successful token positions get
+positive pressure, and can the two failures still contribute?
+
+For this newly calculated illustration, tokens are the displayed words or
+integers plus EOS. They are an explicit teaching alphabet, not Qwen token
+counts. Consider this possible group of four independently sampled responses:
+
+| Response | Valid generated tokens | $R_i$ | $R_i-\bar R$ | Rounded $\hat A_i$ |
+|---:|---|---:|---:|---:|
+| 1 | `4`, EOS | 0 | −0.5 | −1 |
+| 2 | `The`, `answer`, `is`, `5`, EOS | 0 | −0.5 | −1 |
+| 3 | `5`, EOS | 1 | +0.5 | +1 |
+| 4 | `5`, EOS | 1 | +0.5 | +1 |
+
+The squared deviations are four copies of 0.25. Their population mean is
+0.25, giving $s=0.5$. With the declared $10^{-8}$ stabilizer the absolute
+advantage is approximately 0.99999998; the table rounds it to one. Independent
+sampling can legitimately produce identical successful strings. Copying one
+saved success twice would instead violate the independence assumption.
+
+![Mixed, all-success and all-failure groups and their relative advantages](../../notebooks/figures/chapter-13/day-22-01_group_advantages-01.png)
+
+The [original group notebook](../../notebooks/day-22/01_group_advantages.ipynb)
+uses the exact reward rows $[0,0,1,1]$, $[1,1,1,1]$ and $[0,0,0,0]$.
+Read the response index horizontally and signed advantage vertically.
+The two flat zero lines have opposite task outcomes, so advantage alone
+cannot tell us whether a group succeeded. Changing the same reward row
+to sample standard deviation gives approximately ±0.866025 instead of ±1;
+the signs survive while the update scale changes.
+
 ## 13.2 What normalization changes
 
 Subtracting a baseline and dividing by a standard deviation are different
@@ -67,6 +114,15 @@ sampled rewards, so this is no longer merely the same estimator with a fixed
 learning-rate rescaling. Chapter 12's baseline identities should not be silently
 extended to every normalized group estimator.
 
+There are two questions here. The iid group mean is an unbiased estimate
+of expected reward under the **behavior policy at this prompt**. Yet using
+that mean to weight its own response's score vector creates dependence.
+Value-estimate unbiasedness therefore does not imply policy-gradient
+unbiasedness. For our mixed group the RLOO advantages are
+$[-2/3,-2/3,2/3,2/3]$; inclusive centering gives
+$[-1/2,-1/2,1/2,1/2]$, exactly three quarters as large. Dividing either by
+the group's random standard deviation changes the statistical argument again.
+
 If a group is constant, its centered rewards are exactly zero. The implementation
 returns exact zero advantages rather than allowing $0/0$. Epsilon protects
 near-zero denominators; it cannot invent exploration. Track the fraction of
@@ -79,6 +135,15 @@ answers are failures is $(1-p)^G$. A larger group may expose an occasional succe
 but requires additional decoding. If outputs are effectively duplicates, the
 independence approximation exaggerates the benefit. Group size belongs in a
 cost-quality comparison, with actual generated token counts recorded.
+
+For a declared iid success probability $p=0.1$, four responses are all wrong
+with probability 0.6561; eight responses with probability approximately
+0.430467. A group has a nonconstant binary reward with probability
+$1-(1-p)^G-p^G$: approximately 0.3438 for four and 0.569533 for eight.
+More draws improve the chance of a comparison while roughly doubling
+collection work at unchanged response lengths. At $p=0$ they help neither
+signal nor correctness; at $p=1$ constant groups indicate success instead.
+Those are sampling calculations, not forecasts of the native pilot.
 
 ## 13.3 The objective we will implement
 
@@ -121,6 +186,47 @@ Updating weights changes the ratios. Several optimization epochs over the same
 rollouts make clipping more active and increase reliance on behavior-policy
 correction. Our readable baseline uses one update per freshly collected batch.
 
+### Turn relative rewards into token pressure
+
+Return to the four-response illustration. Set $\beta=0$ for this isolated
+policy-signal calculation and use a fresh behavior snapshot. Every ratio is
+one. The response means are $[-1,-1,+1,+1]$ to the displayed precision,
+so $J=0$ and $L=0$. The derivative is nevertheless informative:
+
+$$
+\frac{\partial L}{\partial\log\pi_\theta(y_{it}\mid s_{it})}
+=-\frac{\hat A_i}{Gn_i}.
+$$
+
+For response 1, each of its two valid tokens has coefficient approximately
++0.125. Response 2's five tokens each have +0.05. Responses 3 and 4 each
+have −0.125 per token. Minimization suppresses the failed responses'
+selected log probabilities and favors the successful ones, including their
+EOS. The total nominal weight is equal per response even though the second
+response is longer. Shared decoder parameters combine these paths, so those
+local coefficients are not guarantees about each final response probability.
+
+The [canonical clipped objective](../../src/dongxi_llms/grpo_lab.py)
+accepts selected log probabilities and a valid-token mask with precisely
+this reduction. The [token-ratio companion](../../notebooks/day-22/02_token_ratios_kl.ipynb)
+lets the reader inspect that loss independently of an entire training run.
+For one positive-advantage response with ratios $[1.05,0.9,1.4]$, clipping
+at 0.2 gives contributions $[1.05,0.9,1.2]$ and response mean 1.05.
+Only the last token's beneficial increase has reached its flat region.
+
+**Controlled change.** Counterfactually replace the reward row by all zeros, leaving tokens,
+lengths and old likelihoods unchanged. Every advantage and relative policy
+coefficient becomes zero. Replace it by all ones and the coefficients are
+also zero. These are reward substitutions that isolate the derivative;
+the original wrong strings still fail the unchanged bare-5 checker. A
+genuinely all-success group would require different responses and would
+also have zero relative advantages. Neither larger learning rate
+nor a smaller epsilon can manufacture a comparison from identical rewards.
+An exact KL penalty or remembered optimizer moments can still move weights;
+those movements need their own explanation rather than the label “learning
+from the verifier.” The retained native G8 example in §13.8.4 makes that
+distinction consequential.
+
 ## 13.4 KL values and KL gradients
 
 The reference policy $\pi_{\mathrm{ref}}$ is a fixed anchor. It differs from the
@@ -153,7 +259,10 @@ k_3(v)=\frac{q_v}{p_v}-\log\frac{q_v}{p_v}-1.
 $$
 
 When $v$ is sampled from $p$, its expectation is forward KL because
-$\sum_v p_v(q_v/p_v)=1$. This value identity does not mean that differentiating
+$\sum_v p_v(q_v/p_v)=1$ on common positive support. Its individual value
+is nonnegative, but its variance is not universally smaller than that of
+$\log(p_v/q_v)$; rare actions with large $q_v/p_v$ can have large tails.
+This value identity does not mean that differentiating
 the integrand while treating samples as fixed produces the gradient of the
 full expectation. Sampling from an old policy introduces another distribution
 change. A framework may deliberately choose a particular surrogate or

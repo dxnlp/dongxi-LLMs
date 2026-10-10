@@ -1,16 +1,23 @@
 # 12. Language Generation as a Policy
 
+The model answers `2 + 3 =` with `4`, `The answer is 5`, or `5`. A judge can
+distinguish these complete responses without supplying the desired token at
+every position. How does that final judgment reach the earlier choices that
+produced the answer? And if we generate the same responses once and train on
+them several times, when does their original probability cease to describe
+the policy being updated?
+
 Until now, training usually scored responses already present in a dataset.
-Generation makes a different object visible: a policy acts, observes its growing
-context, and eventually receives an outcome. A story can satisfy or violate a
-continuity rule. A program can pass or fail a test. A mathematical response can
-be checked against an answer. How can a scalar judgment of a sampled sequence
-change the probability of the choices that produced it?
+Here the policy supplies its own candidates. We will first make their reward
+and probability completely inspectable, then introduce the uncertainty hidden
+by that small example. A story-continuity judgment or a program test changes
+the source of reward; the reward-to-gradient mechanism remains the question.
 
 Days 19–21 derive and test that mechanism before adding a large rollout system.
 The prerequisites are autoregressive likelihood, the softmax gradient, and
 gradient descent. We will inspect an exact finite policy, prove when baselines
-preserve its gradient, examine leave-one-out rewards and PPO clipping, and
+preserve its gradient, examine leave-one-out rewards and proximal policy
+optimization (PPO) clipping, and
 compare estimators under explicit sampling and update budgets.
 
 ## 12.1 Tokens are actions; prefixes are states
@@ -75,6 +82,26 @@ distribution of sequences and their weights differ.
 
 ## 12.3 A categorical microscope with an exact answer
 
+Temporarily collapse each complete response into one action. This is a
+single-decision, or bandit, version of the problem; no claim about a model's
+language understanding follows from it. Use the following **illustrative**
+reward rule: correct arithmetic earns one point, and obeying the bare-integer
+format earns a second point only when the answer is correct.
+
+| Action | Complete response | Probability $p_i$ | Fixed reward $R_i$ | Contribution $p_iR_i$ |
+|---|---|---:|---:|---:|
+| 0 | `4` | 0.5 | 0 | 0 |
+| 1 | `The answer is 5` | 0.3 | 1 | 0.3 |
+| 2 | `5` | 0.2 | 2 | 0.4 |
+
+The mean reward is $J=0.7$. The numbers specify a distribution; they are not
+observed frequencies from a trained checkpoint. Logits $z_i=\log p_i$ produce
+exactly these probabilities under softmax.
+
+**Reader prediction.** The verbose answer earns positive reward. Should we
+always raise its probability? What if the bare answer's reward changes from
+two to four while all probabilities stay fixed?
+
 Use three complete answers with logits $z_i$, probabilities $p_i$, and fixed
 rewards $R_i$. Then $J=\sum_i p_i R_i$. Since
 $\partial\log p_a/\partial z_i=\mathbf{1}[a=i]-p_i$,
@@ -82,6 +109,31 @@ $\partial\log p_a/\partial z_i=\mathbf{1}[a=i]-p_i$,
 $$
 \frac{\partial J}{\partial z_i}=p_i(R_i-J).
 $$
+
+For our distribution this is
+
+$$
+\nabla_zJ=[0.5(0-0.7),\;0.3(1-0.7),\;0.2(2-0.7)]
+=[-0.35,0.09,0.26].
+$$
+
+Gradient ascent with learning rate 0.1 adds $[-0.035,0.009,0.026]$ to the
+logits. The coordinates sum to zero, reflecting softmax's insensitivity to
+a common logit shift. They are logit changes, not probability changes; we
+must renormalize to obtain the next distribution. A minimized actor loss
+has the opposite gradient, and gradient descent makes the same update.
+
+Increasing the last reward to four gives $J=1.1$ and gradient
+$[-0.55,-0.03,0.58]$. Now the reward-one response is below average: its logit
+receives negative pressure. After the stated learning-rate-0.1 update and
+softmax normalization, however, its probability still rises from 0.3 to
+approximately 0.303876, compared with 0.305528 under the original rewards.
+The first answer's logit falls more sharply, so the verbose answer gains
+probability despite its own falling logit. Thus positive reward alone does
+not determine either logit pressure or the normalized probability change.
+Adding five to **every** reward instead leaves
+the original gradient unchanged. The differences from mean reward, rather
+than an absolute zero point, determine this exact update.
 
 The correction depends on relative reward, not just whether reward is positive.
 An answer receiving reward one can lose probability if the policy's expected
@@ -96,9 +148,25 @@ normalization, and detachment errors. The notebook also plots individual sample
 vectors: a single update can point away from the expected direction even when
 the estimator is unbiased.
 
+For example, sampling action 1 alone gives
+$R_1(e_1-p)=[-0.5,0.7,-0.2]$. This sample suppresses action 2 even though the
+exact expected gradient favors it. Sampling action 2 gives $[-1,-0.6,1.6]$;
+sampling action 0 gives zero. Weighting these three vectors by 0.3, 0.2 and
+0.5 recovers $[-0.35,0.09,0.26]$. The disagreement is sampling noise, not
+an autograd error.
+
+The same operations are available in
+[`exact_gradient` and `estimator_moments`](../../src/dongxi_llms/policy_gradient_lab.py).
+The [Day 19 companion](../../notebooks/day-19/01_exact_reinforce_gradient.ipynb)
+uses another declared three-action fixture and compares enumeration with
+automatic differentiation. Change its reward vector before changing the
+learning rate: does the expected direction change as you predicted?
+
 ## 12.4 A baseline changes variance, not the expected gradient
 
-Subtract a value $b(x)$ independent of the sampled action:
+Subtract a value $b(x)$ independent of the sampled action. The return-minus-
+baseline difference is an advantage estimate: here it is $R-b$, a comparison
+with what this prompt was expected to achieve. Then
 
 $$
 \mathbb{E}[(R-b)\nabla\log\pi]
@@ -121,11 +189,51 @@ b^*=\frac{\mathbb{E}[R\|\nabla\log\pi\|^2]}{
 \mathbb{E}[\|\nabla\log\pi\|^2]}.
 $$
 
+In detail, write $s=\nabla\log\pi$. The mean gradient is independent of
+$b$, so only $\mathbb E[(R-b)^2\|s\|^2]$ matters to this minimization.
+Its derivative is $2b\mathbb E[\|s\|^2]-2\mathbb E[R\|s\|^2]$.
+Setting it to zero gives the displayed optimum when the denominator is positive.
+
 Expected reward is a useful baseline, but it need not equal this variance-optimal
 scalar. A wildly inaccurate yet action-independent baseline preserves expectation
 and can increase variance dramatically. The lab enumerates exact means and
 variances for several choices; it avoids mistaking one noisy batch for a theorem
 about variance reduction.
+
+### Keep the gradient, change the noise
+
+Return to $p=[0.5,0.3,0.2]$ and $R=[0,1,2]$. With baseline $b=J=0.7$, the
+three possible sampled ascent vectors become
+
+| Sampled action | $R_a-b$ | $(R_a-b)(e_a-p)$ |
+|---|---:|---|
+| 0 | −0.7 | $[-0.35,0.21,0.14]$ |
+| 1 | 0.3 | $[-0.15,0.21,-0.06]$ |
+| 2 | 1.3 | $[-0.65,-0.39,1.04]$ |
+
+Even a zero-reward response now supplies a useful comparison: it was worse
+than this prompt's expected outcome. The probability-weighted mean remains
+$[-0.35,0.09,0.26]$. Exact enumeration gives these covariance traces:
+
+| Detached scalar baseline | Mean ascent gradient | Covariance trace |
+|---:|---|---:|
+| 0 | $[-0.35,0.09,0.26]$ | 0.8198 |
+| 0.7 | $[-0.35,0.09,0.26]$ | 0.2472 |
+| 5 | $[-0.35,0.09,0.26]$ | 10.0598 |
+
+The score-vector squared norms here are $[0.38,0.78,0.98]$, so the scalar
+optimum is $b^*=0.626/0.62\approx1.009677$, rather than 0.7. Expected reward
+is a natural prediction target; the minimum-variance scalar additionally
+weights outcomes by their gradient magnitudes.
+
+![Exact sampled-gradient covariance trace as the detached baseline changes](../../notebooks/figures/chapter-12/day-20-01_baselines_and_rloo-01.png)
+
+The saved [baseline notebook](../../notebooks/day-20/01_baselines_and_rloo.ipynb)
+plots the same calculation for its original logits and rewards, not the
+numbers in our table. Read the horizontal coordinate as a baseline choice
+and the vertical coordinate as estimator noise, not task performance. Moving
+far from its minimum makes the noise worse while leaving the expected
+gradient unchanged. No optimizer tuning or model training is represented.
 
 An action-dependent “baseline” such as $b=R$ makes every advantage zero and
 erases learning. More subtly, the mean reward of a batch includes the sample
@@ -134,7 +242,10 @@ or otherwise justified.
 
 ## 12.5 RLOO and the self-inclusion factor
 
-For one prompt sample $G\ge2$ independent completions. Define
+For one prompt sample $G\ge2$ independent completions. An advantage estimate
+compares a realized return with a pre-action baseline: return minus baseline.
+For these complete responses, return is the fixed terminal reward, and the
+other responses provide the baseline. Define
 
 $$
 b_{-i}=\frac{1}{G-1}\sum_{j\ne i}R_j,
@@ -165,6 +276,15 @@ $(G-1)/G$. Multiplying by $G/(G-1)$ recovers the leave-one-out estimator. This
 is a precise finite-sample effect. Standardizing by a random sample standard
 deviation introduces another dependence and changes the estimator again; do
 not call it unbiased merely because the centered group sums to zero.
+
+To see where the factor comes from, let $s_i=\nabla\log\pi(y_i)$.
+In $\mathbb E[\bar R s_i]$, the own-reward term contributes
+$\nabla J/G$. Each other-reward term contributes zero because it is independent
+of $s_i$ and $\mathbb E[s_i]=0$. Thus
+$\mathbb E[(R_i-\bar R)s_i]=(1-1/G)\nabla J$.
+For $G=4$ our running example's inclusive-centered mean gradient is
+$[-0.2625,0.0675,0.195]$; RLOO restores $[-0.35,0.09,0.26]$ in expectation.
+This statement concerns all iid groups, not one observed group's usefulness.
 
 Independence needs actual independent sampling conditional on the prompt.
 Duplicating one completion, imposing a coupled diversity rule, or accidentally
@@ -200,6 +320,30 @@ optimization epochs. Replacing them with freshly recomputed current values
 changes the objective. Aggressive reuse makes the old state distribution less
 representative, even if a local clipping rule seems quiet.
 
+### What changes when we reuse the answers?
+
+Collection was **on-policy** when our three answers came from the distribution
+being differentiated. After an update, the saved answers come from an earlier
+policy: their reuse is **off-policy** relative to the new one. Keep the old
+probabilities $[0.5,0.3,0.2]$ and let the new probabilities be $[0.4,0.3,0.3]$.
+
+| Action | Old probability | Current probability | Current/old ratio | Old probability × ratio × reward |
+|---|---:|---:|---:|---:|
+| 0 | 0.5 | 0.4 | 0.8 | 0 |
+| 1 | 0.3 | 0.3 | 1.0 | 0.3 |
+| 2 | 0.2 | 0.3 | 1.5 | 0.6 |
+
+The weighted old-policy expectation is 0.9, exactly the current expected
+reward. Without the ratios it remains 0.7. In this one-state example every
+current action has old-policy support, so the correction is exact. It cannot
+create evidence about an action the collector never sampled.
+
+For a text trajectory, four token ratios of 1.1 already multiply to 1.4641.
+The [PPO/KL companion](../../notebooks/day-20/02_ppo_clipping_and_kl.ipynb)
+checks this product. More positions can magnify variation in trajectory
+weights. PPO's next step limits a local sampled incentive, rather than
+pretending that the growing product is always a useful estimator.
+
 The [Day 20 probability-accounting notebook](../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb)
 turns the coverage assumption into an exact counterexample. It keeps raw model,
 temperature/filter-transformed collector and declared update target separate.
@@ -226,6 +370,37 @@ Movement in a harmful direction is still penalized. The clipping is asymmetric
 with respect to advantage sign; it does not simply clamp every gradient to a
 fixed interval. The objective and multiple-epoch rollout reuse are introduced
 in [the PPO paper](https://arxiv.org/abs/1707.06347).
+
+**Reader prediction.** At $\epsilon=0.2$, is every ratio outside
+$[0.8,1.2]$ ignored? Evaluate both advantage signs before inspecting the table.
+
+| Advantage | Ratio | Unclipped product | Clipped surrogate | Slope with respect to ratio |
+|---:|---:|---:|---:|---:|
+| +1 | 1.3 | 1.3 | 1.2 | 0 |
+| +1 | 0.7 | 0.7 | 0.7 | +1 |
+| −1 | 1.3 | −1.3 | −1.3 | −1 |
+| −1 | 0.7 | −0.7 | −0.8 | 0 |
+
+Beneficial movement becomes flat beyond the appropriate boundary; harmful
+movement remains visible. A blanket clamp would miss the second and third
+rows. The value 0.2 is a declared lab choice, not a constant derived from
+the reward problem or a universal stable-update threshold.
+
+![PPO surrogate versus probability ratio for positive and negative advantages](../../notebooks/figures/chapter-12/day-20-02_ppo_clipping_and_kl-01.png)
+
+The [plot's runnable source](../../notebooks/day-20/02_ppo_clipping_and_kl.ipynb)
+uses advantages +1 and −1. Compare each solid curve with its unclipped dashed
+line; the flat region switches sides with the sign. These are objective
+schematics evaluated numerically, not measured learning curves.
+
+Our old-policy baseline gives advantages $[-0.7,0.3,1.3]$. With the changed
+distribution above, the unmodified expected ratio-weighted advantage is
+$0.9-0.7=0.2$. Clipping reduces it to
+$0.5(-0.56)+0.3(0.3)+0.2(1.56)=0.122$: the third action's ratio 1.5 receives
+no further benefit above 1.2. This is deliberately a modified objective.
+At the initial ratios one, the mean advantage and surrogate value are zero,
+yet their derivative is the nonzero policy gradient. A loss value alone
+cannot tell us whether learning signal exists.
 
 PPO commonly trains a value function to estimate returns and uses advantages
 derived from it. Value error, reward shaping, terminal handling, and padding
@@ -357,6 +532,14 @@ reward under the current policy. It does not judge the next token alone and
 must not see that action when constructing its baseline. Even a prefix with
 the correct color can continue into repetition or missing termination.
 
+The critic supplies an estimate before we discover which continuation occurs.
+Subtracting that prediction from the realized return gives an **advantage**: how much better
+or worse that continuation was than expected at this state. An exact tabular
+value, a small value head sharing actor features, or a separate network can
+play this role. A critic need not be another policy-sized model; architecture,
+shared gradient paths and fitting cost are separate choices. The local
+experiment uses separate small backbones to expose those paths.
+
 The critic parameters $\psi$ are separate from the learned reward parameters
 $\phi$. Let $R_t$ be the collected reward earned after action $a_t$. A frozen
 learned score $r_\phi(x,y)$ can supply a terminal $R_t$, while a verifier can
@@ -411,6 +594,39 @@ never observed beyond the cap. Smaller $\lambda$ trusts short value predictions
 more. Larger $\lambda$ uses more observed rewards but cannot recover experience
 never collected. “Use GAE” cannot replace checking what terminated and what
 was censored.
+
+### Give credit across three positions
+
+Consider a newly calculated, completed three-action trajectory. It earns
+$[0,0,1]$ and ends with EOS. Use $\gamma=0.9$, $\lambda=0.95$ and detached
+pre-action value predictions $[0.4,0.5,0.8]$; terminal continuation value is zero.
+
+| Position $t$ | Reward $R_t$ | Predicted value $V_t$ | TD residual $\delta_t$ | GAE $\hat A_t$ | Value target $\hat A_t+V_t$ |
+|---:|---:|---:|---:|---:|---:|
+| 0 | 0 | 0.4 | $0+0.9(0.5)-0.4=0.05$ | 0.384305 | 0.784305 |
+| 1 | 0 | 0.5 | $0+0.9(0.8)-0.5=0.22$ | 0.391000 | 0.891000 |
+| 2 | 1 | 0.8 | $1-0.8=0.20$ | 0.200000 | 1.000000 |
+
+Work backward: $\hat A_1=0.22+0.855(0.20)=0.391$ and
+$\hat A_0=0.05+0.855(0.391)=0.384305$. Thus the final reward influences
+earlier actions even though neither earned an immediate reward. The value
+predictions decide how surprising each transition is.
+
+**Controlled change.** Set $\lambda=0$: the targets are $[0.45,0.72,1]$,
+using only the next value estimate. Set $\lambda=1$: the completed-trajectory
+targets become $[0.81,0.9,1]$, the observed discounted returns. Our intermediate
+choice trades dependence on the imperfect critic against dependence on more
+sampled rewards. The discount 0.9 makes that arithmetic visible; a text task
+can choose $\gamma=1$ to value its eventual terminal reward without discount.
+These values are not suggested defaults for every task.
+
+Detach advantages in the actor loss and return targets in the critic loss.
+Otherwise the actor can change its supposedly fixed comparison through the
+critic computation, or the critic can chase a target that moves through its
+own gradient path. This computational separation does not itself establish
+that the predictions are accurate. The
+[learned-critic companion](../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb)
+provides runnable return/GAE and EOS/cap controls for that distinction.
 
 ## 12.12 Three separate gradient contracts
 
@@ -524,6 +740,12 @@ reproduction and evidence boundaries.
 16. How can a fitted pair reward mis-score bare or repeated-style policy responses?
 17. Compare critics without confusing rollout budget, critic work, prefix scores and quality.
 
-The key object is now a distribution over generated trajectories. Group-relative
-training will build on it, and complete rollout systems will make its costs and
-failure modes concrete.
+We began with a reward on three complete answers, then separated the expected
+gradient from the noisy sampled one. Baselines changed its noise; reuse required
+probability accounting; clipping changed its incentive; critics supplied
+state-level comparisons whose targets depend on termination. None of those
+operations made the reward a trustworthy definition of success.
+
+Chapter 13 now removes the learned critic and compares answers within a prompt
+group. The next question is sharp: if every sampled answer is equally wrong,
+where could a relative improvement signal come from?

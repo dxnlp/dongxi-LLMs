@@ -29,6 +29,21 @@ follow token IDs into an embedding table, and trace next-token supervision back
 into that table. By the end, “text becomes vectors” will no longer be a hidden
 preprocessing step; it will be an inspectable part of the model.
 
+Keep one illustrative sentence in view: **“the pet saw the dog.”** For a tiny
+word-level teaching tokenizer, declare the mapping below and ignore punctuation.
+This is an authored interface, separate from the measured Qwen tokenizer and
+the byte-BPE implementation we will inspect.
+
+| ID | 0 | 1 | 2 | 3 | 4 | 5 |
+|---|---|---|---|---|---|---|
+| Piece | `cat` | `dog` | `the` | `saw` | `slept` | `pet` |
+
+The prefix “the pet saw the” becomes `[2,5,3,2]`; its next observed target is
+ID 1, `dog`. How can the two occurrences of ID 2 start from the same vector yet
+help make different predictions? And how can training change that vector when
+the tokenizer's integer mapping is fixed? The lookup and gradient calculations
+below answer the second question. Contextual computation answers the first.
+
 ## 2.1 Learning outcomes
 
 After completing this chapter, you should be able to:
@@ -446,6 +461,26 @@ X.shape         = [2, 5, 8]
 Every ID becomes one length-8 vector, so lookup adds an embedding dimension
 rather than replacing the batch or sequence dimensions.
 
+### Follow the illustrative prefix into a table
+
+Reduce the width to $D=2$ so that every coordinate is visible. Assign the toy
+rows $E[2]=[1,0]$, $E[5]=[0,1]$ and $E[3]=[1,1]$. Lookup for one sequence
+has shape $[1,4,2]$ and reads:
+
+| Position | Piece / ID | Retrieved row |
+|---:|---|---|
+| 0 | `the` / 2 | $[1,0]$ |
+| 1 | `pet` / 5 | $[0,1]$ |
+| 2 | `saw` / 3 | $[1,1]$ |
+| 3 | `the` / 2 | $[1,0]$ |
+
+**Reader prediction.** If we exchange the two `the` positions, does lookup
+alone detect a change? No: the retrieved rows are identical. The lookup has no
+position argument. Later position information and access to earlier tokens
+allow the two occurrences to become different contextual states. These
+assigned coordinates expose indexing; neither axis has been learned to mean
+an English concept.
+
 Mathematically, selecting row $i$ is equivalent to multiplying a one-hot row
 vector by $E$:
 
@@ -499,6 +534,30 @@ gradient at row 5: [1, 1, 1, 1]
 Only rows 2 and 5 received a **direct lookup-path gradient** in that example. The
 qualification matters because the same table may also participate elsewhere in
 the model.
+
+We can carry the same mechanism through an update. For the four-position
+illustrative prefix, use the deliberately simple objective
+$L_{\mathrm{sum}}=\sum_{t,d}E[I_t,d]$. It is a microscope for parameter sharing,
+not a language-model loss. Each retrieved coordinate contributes derivative 1.
+The row gradients are therefore $[2,2]$ at row 2 and $[1,1]$ at rows 3 and 5;
+other rows receive zero. Plain stochastic gradient descent (SGD) subtracts a
+learning-rate-scaled gradient from each parameter. One step here,
+$E\leftarrow E-0.1\nabla_E L_{\mathrm{sum}}$,
+changes the selected rows to:
+
+| Shared row | Before | Gradient | After |
+|---|---|---|---|
+| 2: `the` | $[1,0]$ | $[2,2]$ | $[0.8,-0.2]$ |
+| 5: `pet` | $[0,1]$ | $[1,1]$ | $[-0.1,0.9]$ |
+| 3: `saw` | $[1,1]$ | $[1,1]$ | $[0.9,0.9]$ |
+
+Both `the` positions retrieve the updated row next time. The IDs did not change;
+the reusable representation did. Change only the final ID from 2 to 5 and
+predict the new gradients: row 2 receives $[1,1]$, row 5 receives $[2,2]$,
+and row 3 remains at $[1,1]$. Repetition determines accumulation, not the size
+of the printed ID. The same indexed sum and backward operation is runnable in
+[the repeated-lookup lab](../../src/dongxi_llms/embedding_gradient_lab.py);
+Chapter 3 replaces this artificial objective with next-token prediction.
 
 ## 2.6 An embedding is a starting point, not a finished meaning
 
@@ -801,6 +860,17 @@ The transparent lab used loss mask `[0, 0, 1]`: only the final response position
 contributed direct loss. That response assigned positive attention to both prompt
 positions, whose embedding rows received gradient norms `0.303322` and
 `0.668485`.
+
+![Response-only loss gives nonzero embedding-row gradient norms at the two visible prompt rows, 1 and 2, as well as response row 3.](../../notebooks/figures/chapter-02/day-02-03_embedding_gradient_paths-01.png)
+
+Read the horizontal axis as vocabulary rows, not sequence positions. The
+nonzero bars at rows 1 and 2 expose the dependency that a loss mask does not
+remove; their heights come from this fixed toy attention computation, not from
+Qwen training. The source is
+[Day 2's gradient-path notebook](../../notebooks/day-02/03_embedding_gradient_paths.ipynb)
+and `response_only_loss_demo` in the linked lab. Regenerate it with the
+[saved-preview workflow](../../docs/NOTEBOOK_VISUALS.md#reference-previews-versus-live-plots)
+selecting `--days 2`.
 
 Forward causality and backward credit assignment therefore point in opposite
 directions along the same allowed dependency: prompt information moves forward

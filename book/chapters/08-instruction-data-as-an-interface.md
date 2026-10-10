@@ -1,8 +1,25 @@
 # 8. Instruction Data as an Interface
 
-A user writes “Reply with one color.” The model answers “Here is a short story about a red balloon.” Its language may be fluent and its next-token loss may be low, yet it has failed the requested interface. Instruction tuning makes such interfaces part of the training distribution. The examples teach what an answer looks like, where it begins, whose words are context, and when it should end.
+A user writes “Reply with one color.” The model answers “Here is a short story
+about a red balloon.” The words are plausible, but the model has continued a
+conversation in a way the user did not request. How do we turn “answer briefly”
+from our intention into something a next-token predictor can learn?
 
-An instruction dataset is therefore a behavioral specification expressed as sequences. Its quality depends on more than the answer text. A wrong role marker, an incorrectly shifted mask, or contamination from the evaluation suite can change the experiment without changing a single natural-language answer.
+Supervised fine-tuning, or SFT, supplies demonstrations: a context and the
+response to produce after it. A pretrained base model already models language;
+these demonstrations can teach how to use that language through a particular
+interface. They can also introduce task associations, style and mistakes.
+Learning the interface and acquiring a new ability are separate questions.
+
+We will follow `copy red` → `red` → END through messages, token IDs and target
+ownership. The important object is the complete training sequence, including
+its boundary. Later chapters ask how comparisons and teacher responses change
+this lesson. This symbolic example connects the ideas; it is separate from the
+real checkpoint ancestry recorded in Chapter 15.
+
+An instruction dataset expresses desired behavior through sequences. A wrong
+role marker or shifted mask can change what it teaches without changing the
+visible answer. We must make those choices inspectable before optimizing them.
 
 Day 11 uses [roles and serialization](../../notebooks/day-11/01_roles_templates_and_masks.ipynb), [padding and packing](../../notebooks/day-11/02_padding_packing_boundaries.ipynb), and [mixtures and provenance](../../notebooks/day-11/03_mixtures_and_data_cards.ipynb). Follow the [lab guide](../labs/08-instruction-data-as-an-interface.md); [worked solutions](../solutions/08-instruction-data-as-an-interface.md) explain each exercise.
 
@@ -33,6 +50,32 @@ The symbolic notebook format is intentionally small:
 
 > BOS → SYSTEM → short answer → END → USER → copy red → END → ASSISTANT → red → END.
 
+Think of a template as a function from structured messages to this single
+sequence. It inserts the role and boundary tokens; the tokenizer supplies the
+IDs consumed by the decoder. The model then receives an ordinary causal
+sequence, with previous messages available as context. The roles acquire their
+meaning from the examples in which they occur, rather than from a separate
+instruction-following switch inside the attention layer.
+
+The [symbolic encoder](../../src/dongxi_llms/instruction_data_lab.py) makes
+that function small enough to inspect:
+
+```python
+from dongxi_llms.instruction_data_lab import encode_messages
+conversation = encode_messages([
+    {"role": "system", "content": "short answer"},
+    {"role": "user", "content": "copy red"},
+    {"role": "assistant", "content": "red"},
+])
+print(conversation.ids)
+print(conversation.supervised)
+```
+
+It returns both the sequence and the ownership decisions. A **collator** then
+combines several such examples into rectangular batch tensors, adding padding
+and preserving the decisions. Serialization answers “what sequence?”; collation
+answers “how can several sequences share one batch?”
+
 These labels denote discrete teaching IDs. They are not literal Qwen tokenization or an interchangeable industry standard. A real checkpoint's template can use distinct start and end markers, newlines, reasoning delimiters and tool structures. Inspect the actual decoded result from its pinned tokenizer.
 
 For training a complete assistant demonstration, use the full conversation without an extra unfinished generation prompt. For inference, append whatever assistant-start prefix the model expects. A template that already contains BOS or end tokens must not be followed by another automatic special-token insertion. If formatting text first and tokenizing separately, verify the equivalent direct-template path and control additional special tokens.
@@ -42,6 +85,18 @@ For training a complete assistant demonstration, use the full conversation witho
 The role header is not the same as its body. A useful supervision policy learns assistant body tokens and the assistant's termination marker, while treating system/user content and role headers as context. Other policies can also learn headers; the choice must be written and tested.
 
 Our encoder produces three aligned lists: token IDs, a boolean supervised flag, and a human-readable owner. The supervised flag is attached to the token being predicted. This detail matters when the model's logit at position $t$ predicts token $t+1$.
+
+**Reader prediction:** `red` occurs once in the user's request and once in the
+assistant's answer. Can the token ID alone tell us which occurrence to train?
+
+**Reference reasoning:** both occurrences have ID 6 in this fixture. Their
+roles and positions differ. Assistant-only supervision scores the answer's
+occurrence, leaving the request's occurrence available as context. This puts
+direct loss on the response we want the model to supply at inference. Full
+transcript supervision is a possible different objective: it also spends loss
+on reconstructing user and system text. Its effect depends on their lengths and
+the task, so masking is an objective choice rather than a rule that every
+unmasked prompt must cause a bad assistant.
 
 Let $x_{b,t}$ be the full conversation IDs, $m_{b,t}$ the ownership mask, and $a_{b,t}$ the padding-validity mask. Define labels
 
@@ -68,6 +123,20 @@ unshifted labels are `[-100, -100, -100, -100, -100, -100, -100, -100, -100,
 the producing-position/target pairs; rerun it to inspect changes. Removing END
 changes direct supervision without removing the prompt's forward context.
 
+Trace the repeated IDs using zero-based positions:
+
+| Target position and owner | Target ID | Producing logit position | Scored? |
+|---|---:|---:|---|
+| 7: user `red` |6|6: user `copy`|No|
+| 8: user END |5|7: user `red`|No|
+| 10: assistant `red` |6|9: ASSISTANT header|Yes|
+| 11: assistant END |5|10: assistant `red`|Yes|
+
+There are twelve input positions and two scored targets. The output at the
+ASSISTANT header is trained to predict `red`; the header itself is not a
+scored target. This distinction explains both the mask's shift and why the
+model needs the prompt even when the prompt receives no direct token loss.
+
 ## 8.4 Assistant-only loss still teaches from the prompt
 
 Ignoring a user token's direct loss does not remove it from the forward graph. Its embedding and hidden states can influence later assistant positions through causal attention. The answer loss can therefore update shared parameters and prompt embeddings through those paths.
@@ -79,6 +148,14 @@ This distinction links the present chapter to attention's causal boundary. An an
 ## 8.5 Termination is part of the demonstration
 
 A model that generates the right answer and continues indefinitely has not learned the complete interface. Include the intended assistant termination token as a supervised target. A maximum-token limit is a runtime cap, not the desired learned stopping behavior.
+
+**Controlled change:** remove only the assistant END target from our example.
+The answer text still reads `red`, but the two-part lesson becomes one part:
+produce the word. At the state after `red`, there is now no direct correction
+telling the model to end. Other examples and shared parameters may still affect
+that state; this change removes this example's stopping supervision. Chapter 9
+computes the corresponding loss and gradient, then compares it with a real
+model that prints the right prefix and keeps going.
 
 Do not assume a tokenizer's generic EOS ID equals every model's end-of-assistant marker. Inspect both template output and generation stop settings. Some formats distinguish a message end from conversation end. Suppressing all special tokens while inspecting text can hide whether the correct marker appeared, so retain raw IDs in the audit.
 
@@ -99,6 +176,15 @@ A useful audit shows IDs, owners, labels and masks in the same heatmap. The read
 ## 8.7 Packing changes the information boundary
 
 Packing several short conversations into one long sequence reduces padding. A naive concatenation with only a triangular causal mask lets a later conversation attend to all earlier ones. An EOS marker supplies a learned clue; it does not mathematically prevent information flow.
+
+**Reader prediction:** pack `copy red` and `copy blue` in that order. Would
+changing the first answer be permitted to change the second answer's logits?
+
+**Reference reasoning:** an ordinary causal triangle permits that influence.
+If the examples are intended to be independent, the second example should have
+the same available context as in its separate forward pass. The segment mask
+below makes that intended independence a computation we can check, instead of
+asking the model to learn it from an END marker.
 
 For independent conversations, assign a segment identifier $s_t$ to each position. An allowed-attention mask is
 
@@ -167,6 +253,15 @@ The automatic audit can verify syntax and alignment; a human or task verifier st
 The accepted dataset is now an explicit interface contract: IDs, visibility, labels, endings and source membership must agree.
 
 ## 8.11 A teacher response is an attempt before it is a demonstration
+
+Who writes the demonstrated answer? A person can supply it, or another model
+can generate candidates. In the latter case the generating system is the
+**teacher**, and the model trained on the selected responses is the **student**.
+The attraction is reusable supervision: generate and inspect examples, then
+train the student to produce the desired response with its own forward pass.
+The student learns the selected sequences, including their errors; it does
+not inherit the teacher's internal computation merely because the text looks
+good. We therefore need to distinguish generating, accepting and selecting.
 
 Teacher-generated data adds another interface before the one the student sees.
 A request is sent, an execution succeeds or fails, a response is parsed, and a

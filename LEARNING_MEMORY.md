@@ -1,5 +1,18 @@
 # Learning Memory and Production Queue
 
+Book foundations goal, 2026-10-10: complete. The learner requested autonomous
+improvement of explanatory depth and reader experience in all fifteen chapters.
+The [foundations plan](docs/BOOK_FOUNDATIONS_PLAN.md) and
+[new record](experiments/reports/2026-10-10-book-foundations-pass.md) preserve the
+baseline, reuse existing executable companions and distinguish teaching review
+from learner understanding. All fifteen chapters and shared guides passed
+independent source-bound review. Fresh isolated Spark verification passes
+1,558 tests and all 76 notebook references, with 535 executed cells and 210
+images. The 5,893 protected baseline files, original exercise mappings and
+four unfinished learner cells remain intact. The new record includes numerical
+replay, visual inspection and frozen-source checks; older evidence remains
+unchanged. Learner Day 9 and the coherent-English-story objective remain active.
+
 Book editorial production, 2026-10-10: the learner requested autonomous
 implementation of all phases in the [editorial plan](docs/BOOK_EDITORIAL_PLAN.md)
 on the verified Spark execution host. The
