@@ -1,0 +1,80 @@
+{
+  "utc": "2026-10-11T20:45:27.284526+00:00",
+  "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+  "python": "3.12.3",
+  "node": "v24.5.0",
+  "mathjax": "3.2.2",
+  "mathjax_packages": [
+    "base",
+    "ams",
+    "boldsymbol"
+  ],
+  "scope": "Focused presentation regression, book source/prose/navigation and local TeX-to-SVG syntax. Not a model experiment, hosted CI or browser-layout result.",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_book_math.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.12013655307237059,
+      "output": "verification-00.txt",
+      "output_sha256": "77ce2039b74bf36eacae3d55ee88288fcfb6e67828f6190a0eaf22c860ffb975"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_book_math.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.10915850789751858,
+      "output": "verification-01.txt",
+      "output_sha256": "31239ed4fa832a2e3cf2c438a0b324524850da0c5a8d1e107263c89a9ac9dfb5"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_book_prose.py",
+        "--strict-narrative"
+      ],
+      "exit_code": 0,
+      "seconds": 0.1940773109672591,
+      "output": "verification-02.txt",
+      "output_sha256": "9ef6bf19f6fe2247924ef2ac0c8ea2a60239d7e3e570a9140877b5ad39564c37"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_course_integrity.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.07403619796968997,
+      "output": "verification-03.txt",
+      "output_sha256": "48c029361a55e572ba8466f756f706f31e3e1b23aca441642ccac206fb85d61a"
+    },
+    {
+      "command": [
+        "/home/dongxi/.local/share/cursor-agent/versions/2026.10.01-e373342/node",
+        "scripts/check_book_math_render.cjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8129908299306408,
+      "output": "verification-04.txt",
+      "output_sha256": "244ea7050a961158a91b37521834175b6c0f8fccc7058cda73d5dc76b626b486"
+    }
+  ],
+  "renderer_lock_sha256": "885f3d2840c13cdf375ba9f7b46b496e019aa27a7ecc9ba9328a00d33b3a284c",
+  "source_sha256": {
+    "scripts/check_book_math.py": "09cc9cd7b786ea1b8b43c5b142147ac3b6cffa6e532a5b41a1b251c1ee5d7454",
+    "scripts/check_book_math_render.cjs": "460b556332e2b7283070dddfc629820e8155dae976e1a31564a3a84eab12f768",
+    "tests/test_book_math.py": "c488889c383245e2148f93ec3604b95a4dd61718a03be8912ddb7dc4e078cb37",
+    "docs/MATH_FORMATTING.md": "0185ccc81ce7659b0c4c1fd649f7fe60ca2d5ec5ae3893e390c7e0bcf051eb0c"
+  }
+}

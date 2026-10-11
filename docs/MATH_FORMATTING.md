@@ -6,11 +6,28 @@ source renders on GitHub.
 
 ## Authoring rules
 
-- Write inline math with `$...$`. GitHub also supports `$`-backtick-delimited
-  inline math when Markdown punctuation would otherwise interfere.
-- Write display math between standalone `$$` lines, with blank lines outside
-  the block and no blank paragraph inside it. Fenced `math` blocks are another
-  GitHub-supported form, but use the existing dollar style consistently.
+- Write inline math with dollar/backtick delimiters: `$` + backtick + TeX +
+  backtick + `$`, for example ``$`p_i-q_i`$``. Use this protected form
+  consistently, including formulas in headings, lists and table cells.
+  Ordinary `$...$` can lose escaped punctuation or remain literal when next
+  to a hyphen, as in `top-$k$`.
+- Inside a Markdown table, spell a single bar as `\vert` and a double bar as
+  `\Vert` instead of using a literal pipe, even in protected inline math.
+  GFM consumes table pipe escapes before the formula reaches the math client.
+  For example, write `D_{KL}(q\Vert p)` with a space after the control word.
+- Write display math in a fenced `math` block, with blank lines outside the
+  block. Do not add `$$` inside the fence. This keeps Markdown from treating a
+  standalone `=` as a heading underline, `*` as emphasis or `\\` as a Markdown
+  escape before MathJax receives the formula.
+- In display math, spell a less-than sign as `\lt`, with a separating space
+  before a following letter, for example `y_{\lt t}`. GitHub's math client
+  reparses its text through HTML, so a literal `<t` can be read as a tag.
+  Protected inline formulas can retain their original less-than signs.
+- End a physical display line's TeX row separator with a percent comment:
+  `\\%`. This prevents GitHub's Markdown serialization from adding a third
+  backslash and changing the next row's spacing. The comment ends at the
+  newline. Preserve the mathematical content; these two protective spellings
+  produce the same MathML as the original TeX.
 - Do not use `\(...\)` or `\[...\]` as Markdown math delimiters in the book.
 - Avoid `\operatorname` and its starred form: the learner encountered GitHub's
   forbidden-macro error. Use upright names such as `\mathrm{softmax}` and
@@ -36,13 +53,20 @@ python3 scripts/check_book_math.py
 python3 -m unittest discover -s tests -p test_book_math.py -v
 ```
 
-It excludes literal code examples, extracts inline/display math, and checks
-known macro/delimiter hazards, brace balance, and environment pairing. It is
+It excludes literal code examples, requires protected inline/display forms,
+extracts their TeX, and checks known macro/delimiter hazards, brace balance and
+environment pairing. Regression cases cover standalone equality lines,
+matrix row separators, display HTML reparsing, table pipe escapes, set/norm escapes,
+hyphen-adjacent math and multiple
+protected formulas separated by prose. It is
 not a complete Markdown or TeX parser, and does not claim to model every table,
 HTML, indentation, currency, or escape-sequence edge case.
 
 An optional independent rendering check converts every extracted expression to
-SVG using MathJax's base and AMS packages. With Node/npm available, install its
+SVG using MathJax's base, AMS and boldsymbol packages. The boldsymbol extension
+checks the book's existing indicator notation without rewriting its TeX;
+[MathJax documents its explicit loading](https://docs.mathjax.org/en/v3.2/input/tex/extensions/boldsymbol.html).
+With Node/npm available, install its
 historical pinned renderer only into a temporary tooling directory:
 
 ```bash
@@ -71,3 +95,16 @@ repository tests passed. A preliminary latex2mathml conversion accepted the
 expressions, but inspection exposed that converter's incomplete handling of
 `aligned`; the MathJax check is the rendering evidence used here instead.
 No GitHub live-page rendering result is claimed before these edits are published.
+
+## Markdown preprocessing repair — 2026-10-11
+
+The previous source check and TeX-only renderer could both pass while GitHub
+split an equation into a heading or stripped its escapes. The
+[repair record](../experiments/reports/2026-10-11-github-math-repair.md) separates
+actual GitHub Markdown preprocessing from local MathJax syntax conversion.
+All book display formulas now use `math` fences and all inline formulas use
+dollar/backtick delimiters. Twenty-four display expressions also use equivalent
+less-than commands or row-end comments for the observed client decoding.
+One inline table expression uses the equivalent double-bar command.
+All formula MathML and order are preserved; historical rendering receipts
+remain evidence for their own source revisions.

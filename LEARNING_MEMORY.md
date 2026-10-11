@@ -1,5 +1,19 @@
 # Learning Memory and Production Queue
 
+GitHub math repair, 2026-10-11: the learner reported a broken Chapter 3 mean-loss
+formula. GitHub Markdown interpreted its standalone equality as a heading and
+also stripped TeX escapes or left adjacent inline math literal. All fifteen
+chapters and affected solutions/notation now use protected math fences and
+dollar/backtick inline forms. Twenty-five formulas also use equivalent TeX
+spellings/comments to survive HTML decoding and table escapes; all 1,871
+formulas retain their original MathML and order in the pinned local comparison. The
+[repair record](experiments/reports/2026-10-11-github-math-repair.md) separates
+actual GitHub API preprocessing from local syntax rendering: all 1,871 formulas
+are recognized, all MathJax conversions and 15 regression tests pass. Actual API
+HTML replayed through the observed client decoding also matches all 1,871 original
+MathML outputs. This emulation is distinct from live browser layout. Existing experiment and notebook
+evidence remains historical and intact; learner Day 9 is unchanged.
+
 CS336 improvement goal, 2026-10-11: complete. The [plan](docs/CS336_IMPROVEMENT_PLAN.md)
 and [implementation record](experiments/reports/2026-10-11-cs336-upgrade.md) link
 six integrated assignments, all fifteen chapters/solutions, sixteen labs and

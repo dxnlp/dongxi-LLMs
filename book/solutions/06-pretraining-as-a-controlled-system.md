@@ -36,7 +36,7 @@ sources are in the future of every valid prefix position.
 
 ## 4. What the budget formula counts
 
-$SbnAR$ counts processed tensor positions under fixed full microbatches and
+$`SbnAR`$ counts processed tensor positions under fixed full microbatches and
 accumulation windows. It equals valid target presentations only if every
 position contributes to loss. With ignored labels, it is an upper bound on those
 targets. It never measures unique information: rereading the same corpus adds
@@ -46,15 +46,15 @@ reconciled with its actually consumed labels.
 
 ## 5. The short-microbatch contribution
 
-Let $\overline\ell_j$ be microbatch $j$'s mean over $n_j$ valid targets. The
+Let $`\overline\ell_j`$ be microbatch $`j`$'s mean over $`n_j`$ valid targets. The
 correct global mean is
 
-$$
+```math
 L=\sum_j\frac{n_j}{\sum_r n_r}\overline\ell_j.
-$$
+```
 
 The gradient has the same weights. For one target and sixteen targets, the
-weights are $1/17$ and $16/17$. Taking half of each mean overweights the single
+weights are $`1/17`$ and $`16/17`$. Taking half of each mean overweights the single
 target sixteenfold relative to each target in the larger microbatch. Backward
 each summed microbatch loss divided by the total valid count, with parameters
 held fixed until all contributions are accumulated. Notebook 1 verifies the
@@ -102,7 +102,7 @@ mixed-precision CUDA training.
 
 ## 10. Memory is more than persistent parameter state
 
-The $16P$ estimate includes FP32 weights, gradients and two Adam moments. It
+The $`16P`$ estimate includes FP32 weights, gradients and two Adam moments. It
 omits activation storage, attention intermediates, optimizer temporaries,
 allocator overhead and framework/process memory. Actual implementation choices
 can also change the ledger. On Spark, CPU and GPU activity share a constrained

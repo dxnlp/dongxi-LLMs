@@ -13,15 +13,15 @@ availability and actual selected accuracy separately, and include generation cos
 
 ## 2. Independence is a substantive assumption
 
-The formula $1-(1-p)^N$ assumes independent candidate correctness indicators with
-the same $p$. Shared prompts and a fixed policy do not guarantee independence of
+The formula $`1-(1-p)^N`$ assumes independent candidate correctness indicators with
+the same $`p`$. Shared prompts and a fixed policy do not guarantee independence of
 errors in a deployed system, especially with duplicated outputs or reused search
 paths. The finite simulator deliberately samples independently. Its formula is
 not an empirical law for a language model's correlated answers.
 
 ## 3. Winner's curse
 
-Selecting by $Q+e$ conditions on a high score. Among candidates with similar
+Selecting by $`Q+e`$ conditions on a high score. Among candidates with similar
 quality, those with positive scorer error are more likely to win. Unbiased error
 over the whole candidate pool can therefore become positive among winners.
 Use an evaluator independent of the selecting score and retain candidates so
@@ -47,16 +47,16 @@ teacher errors. Correctness requires a separate evaluation contract.
 
 ## 6. Temperature derivation
 
-For $L=\tau^2[-\sum_i q_i^{(\tau)}\log p_i^{(\tau)}]$ plus a teacher-only constant,
-differentiating log-softmax contributes $1/\tau$ and the soft-target residual:
+For $`L=\tau^2[-\sum_i q_i^{(\tau)}\log p_i^{(\tau)}]`$ plus a teacher-only constant,
+differentiating log-softmax contributes $`1/\tau`$ and the soft-target residual:
 
-$$
+```math
 \frac{\partial L}{\partial z_i}=\tau(p_i^{(\tau)}-q_i^{(\tau)}).
-$$
+```
 
-Without scaling the derivative is $(p_i^{(\tau)}-q_i^{(\tau)})/\tau$. At high temperature,
-the probability difference itself tends to shrink as $1/\tau$, so unscaled
-gradients shrink roughly as $1/\tau^2$ for fixed centered logits. The factor is a
+Without scaling the derivative is $`(p_i^{(\tau)}-q_i^{(\tau)})/\tau`$. At high temperature,
+the probability difference itself tends to shrink as $`1/\tau`$, so unscaled
+gradients shrink roughly as $`1/\tau^2`$ for fixed centered logits. The factor is a
 gradient-scale convention, not a guarantee of identical training across
 temperatures. The notebook checks analytical/autograd agreement at 1, 2, 4.
 
@@ -229,12 +229,12 @@ conditional-gradient checks or establish a universal ranking.
 
 ## 21. Collection does not automatically create an occupancy gradient
 
-For $J(\theta)=\sum_s d_\theta(s)L_\theta(s)$, the formal derivative contains
+For $`J(\theta)=\sum_s d_\theta(s)L_\theta(s)`$, the formal derivative contains
 
-$$
+```math
 \nabla_\theta J=\sum_s d_\theta(s)\nabla_\theta L_\theta(s)
 +\sum_s L_\theta(s)\nabla_\theta d_\theta(s).
-$$
+```
 
 The lab samples histories and treats them as fixed observations during backward.
 It estimates the first conditional term at collected states, not the second
@@ -249,7 +249,7 @@ unselected outcomes, weighted by teacher tail mass for forward KL or student
 tail mass for reverse KL. Equal retained entries and equal total tail mass make
 the bucket loss zero without making those conditional distributions equal.
 The full loss and its logit gradient may remain nonzero. The notebook checks
-mass/decomposition and this counterexample separately; at $k=V$ it recovers the
+mass/decomposition and this counterexample separately; at $`k=V`$ it recovers the
 full objective. Discarding or arbitrarily renormalizing the tail is a different
 operation and does not inherit the same identity.
 

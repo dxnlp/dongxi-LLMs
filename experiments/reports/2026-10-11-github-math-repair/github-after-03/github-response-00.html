@@ -1,0 +1,2560 @@
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-0</h1>
+<h1 dir="auto">Dongxi LLMs — Reader's Guide</h1>
+<p dir="auto">The complete teaching draft contains <strong>15 chapters across 28 learning days</strong>.<br>
+Read <a href="front-matter/preface.md">the preface</a>, <a href="front-matter/how-to-use.md">how to use the course</a><br>
+and <a href="front-matter/notation.md">notation</a> first. The <a href="../docs/COURSE_SEQUENCE.md">day-by-day route</a><br>
+connects prose, visual notebooks, experiments and a defensible daily artifact.</p>
+<p dir="auto">The argument follows three connected problems: turn text into trainable<br>
+predictions, turn fluent generation into a useful assistant interface, and turn<br>
+judgments into policy improvements that survive evaluation. Worked examples<br>
+carry these problems through the equations. Predictions and controlled changes<br>
+help you explain the mechanism before judging a model result.</p>
+<h2 dir="auto">Chapters and worked solutions</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="right">Chapter</th>
+<th>Learning days</th>
+<th>Canonical chapter</th>
+<th>Worked solutions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">1</td>
+<td>1</td>
+<td><a href="chapters/01-evidence-before-optimization.md">Evidence Before Optimization</a></td>
+<td><a href="solutions/01-evidence-before-optimization.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td>2</td>
+<td><a href="chapters/02-text-tokens-and-embeddings.md">Text, Tokens, and Embeddings</a></td>
+<td><a href="solutions/02-text-tokens-and-embeddings.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td>3</td>
+<td><a href="chapters/03-learning-the-next-token.md">Learning the Next Token</a></td>
+<td><a href="solutions/03-learning-the-next-token.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td>4</td>
+<td><a href="chapters/04-attention-and-the-causal-information-boundary.md">Attention and the Causal Information Boundary</a></td>
+<td><a href="solutions/04-attention-and-the-causal-information-boundary.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">5</td>
+<td>5–7</td>
+<td><a href="chapters/05-building-a-modern-decoder.md">Building a Modern Decoder</a></td>
+<td><a href="solutions/05-decoder-notebook-solutions.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">6</td>
+<td>8–9</td>
+<td><a href="chapters/06-pretraining-as-a-controlled-system.md">Pretraining as a Controlled System</a></td>
+<td><a href="solutions/06-pretraining-as-a-controlled-system.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">7</td>
+<td>10</td>
+<td><a href="chapters/07-evaluation-is-a-contract.md">Evaluation Is a Contract</a></td>
+<td><a href="solutions/07-evaluation-is-a-contract.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">8</td>
+<td>11</td>
+<td><a href="chapters/08-instruction-data-as-an-interface.md">Instruction Data as an Interface</a></td>
+<td><a href="solutions/08-instruction-data-as-an-interface.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">9</td>
+<td>12–14</td>
+<td><a href="chapters/09-supervised-fine-tuning.md">Supervised Fine-Tuning</a></td>
+<td><a href="solutions/09-supervised-fine-tuning.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td>15–16</td>
+<td><a href="chapters/10-preferences-and-reward-models.md">Preferences and Reward Models</a></td>
+<td><a href="solutions/10-preferences-and-reward-models.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">11</td>
+<td>17–18</td>
+<td><a href="chapters/11-direct-preference-optimization.md">Direct Preference Optimization</a></td>
+<td><a href="solutions/11-direct-preference-optimization.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">12</td>
+<td>19–21</td>
+<td><a href="chapters/12-language-generation-as-a-policy.md">Language Generation as a Policy</a></td>
+<td><a href="solutions/12-language-generation-as-a-policy.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">13</td>
+<td>22–23</td>
+<td><a href="chapters/13-group-relative-policy-optimization.md">Group-Relative Policy Optimization</a></td>
+<td><a href="solutions/13-group-relative-policy-optimization.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">14</td>
+<td>24–25</td>
+<td><a href="chapters/14-when-optimization-goes-wrong.md">When Optimization Goes Wrong</a></td>
+<td><a href="solutions/14-when-optimization-goes-wrong.md">Solutions</a></td>
+</tr>
+<tr>
+<td align="right">15</td>
+<td>26–28</td>
+<td><a href="chapters/15-distill-evaluate-and-defend.md">Distill, Evaluate, and Defend</a></td>
+<td><a href="solutions/15-distill-evaluate-and-defend.md">Solutions</a></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto">How the companions fit</h2>
+<p dir="auto">The chapter supplies the argument; the <a href="../notebooks/README.md">83 visual notebooks</a><br>
+make its mechanisms inspectable. Each exercise has adjacent runnable reference<br>
+answers, plots and interpretation boundaries. Reusable logic lives in <code class="notranslate">src/dongxi_llms/</code>,<br>
+not in copied notebook fragments. <a href="labs/">Companion labs</a> provide reproducible routes<br>
+through the later experimental sections. Specifications, measured reports and<br>
+model/data cards live under <code class="notranslate">experiments/</code>.</p>
+<p dir="auto">Numerical teaching experiments are bounded CPU references. Separate Spark<br>
+evidence includes the original TinyStories run, a matched 400-update story<br>
+comparison, Qwen3 full/LoRA SFT, chosen-only/DPO comparisons, and bounded<br>
+reasoning/RLVR runs. The <a href="../docs/EXPERIMENT_MATRIX.md">experiment matrix</a><br>
+distinguishes these measured outcomes from prepared protocols and unrun stages.<br>
+An original arithmetic fixture is a mechanism microscope, not a broad assistant<br>
+benchmark; optimizer execution does not imply reward-driven learning.<br>
+Material preparation does not advance the learner automatically beyond Day 9<br>
+or establish mastery.</p>
+<h2 dir="auto">Appendices</h2>
+<ul dir="auto">
+<li><a href="appendices/a-laboratory-setup.md">A — Laboratory setup</a></li>
+<li><a href="appendices/b-mathematical-and-tensor-notation.md">B — Mathematical and tensor notation</a></li>
+<li><a href="appendices/c-evaluation-and-experiment-templates.md">C — Evaluation and experiment templates</a></li>
+<li><a href="appendices/d-reproduction-and-environments.md">D — Reproduction and environments</a></li>
+</ul>
+<h2 dir="auto">Quality and publication boundaries</h2>
+<p dir="auto">The <a href="../docs/COURSE_BLUEPRINT.md">blueprint</a> defines teaching depth, prerequisites<br>
+and evidence levels. <a href="../docs/RELEASE_CHECKLIST.md">Release review</a> keeps material<br>
+readiness separate from model-quality claims, licensing and permission to publish.<br>
+Animation candidates have portable storyboards; production remains approval-gated<br>
+on Mac Studio. These do not count as rendered films.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-1</h1>
+<h1 dir="auto">Appendix A — Laboratory Setup and Reproducible Runs</h1>
+<p dir="auto">This appendix supports Chapter 1's Qwen3 smoke-test case study. It contains the<br>
+machine-specific procedure; the conceptual standard for experiments remains in<br>
+<a href="../chapters/01-evidence-before-optimization.md">Chapter 1</a>.</p>
+<p dir="auto">The commands target the NVIDIA DGX Spark used for this project. Treat the<br>
+<a href="https://github.com/dxnlp/dgx-spark-dongxi">DGX Spark platform repository</a> as the<br>
+current source for platform compatibility, locked environments, memory safeguards,<br>
+and troubleshooting. Do not assume these commands or versions apply unchanged to<br>
+another machine.</p>
+<h2 dir="auto">A.1 What belongs where</h2>
+<p dir="auto">The project separates four kinds of artifact:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Purpose</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Book prose</td>
+<td>Teach a durable argument</td>
+<td><code class="notranslate">book/</code></td>
+</tr>
+<tr>
+<td>Experiment specification</td>
+<td>Freeze the intended protocol before execution</td>
+<td><code class="notranslate">experiments/specs/</code></td>
+</tr>
+<tr>
+<td>Experiment report</td>
+<td>Preserve observations, interpretations, and limitations</td>
+<td><code class="notranslate">experiments/reports/</code></td>
+</tr>
+<tr>
+<td>Raw outputs</td>
+<td>Retain logs, telemetry, and model artifacts</td>
+<td>platform <code class="notranslate">outputs/</code> directory</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Machine and Python identities live in <code class="notranslate">manifests/</code>. Reusable course code belongs<br>
+in <code class="notranslate">src/dongxi_llms/</code>; notebooks narrate experiments but should import reusable<br>
+logic rather than duplicate it.</p>
+<h2 dir="auto">A.2 Safety boundary</h2>
+<p dir="auto">DGX Spark uses unified memory. Preserve at least 20–25 GiB for the operating<br>
+system, desktop, agents, and interactive work. Large jobs should execute in a<br>
+bounded cgroup and should not share the machine with an unnecessary inference<br>
+server.</p>
+<p dir="auto">Never discover capacity by intentionally driving the host to system OOM. Begin<br>
+with the smallest useful configuration and profile upward.</p>
+<p dir="auto">Before a material run:</p>
+<ol dir="auto">
+<li>identify processes you own and any concurrent model servers;</li>
+<li>record starting <code class="notranslate">MemAvailable</code>;</li>
+<li>confirm the job's cgroup memory and swap limits;</li>
+<li>sample whole-system and CUDA-visible memory during execution;</li>
+<li>stop before the system reserve is threatened.</li>
+</ol>
+<p dir="auto">The platform wrappers apply a 100 GiB job limit and disable swap within that job<br>
+scope by default. The host's normal swap configuration remains unchanged.</p>
+<p dir="auto">Set explicit repository paths once for the commands below. Replace the example<br>
+values when your clones live elsewhere:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">DONGXI_COURSE_REPO=/home/dongxi/dongxi_ai/Dongxi_LLMs
+DONGXI_PLATFORM_REPO=/home/dongxi/dgx-spark-dongxi</pre></div>
+<h2 dir="auto">A.3 Verify the host</h2>
+<p dir="auto">From the platform repository:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c1">cd</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_PLATFORM_REPO</span><span class="pl-pds">"</span></span>
+./scripts/check_system.sh</pre></div>
+<p dir="auto">Inspect the output rather than treating a zero exit code as the complete result.<br>
+The check should identify architecture, DGX OS, GPU and driver, CUDA toolkit,<br>
+Python prerequisites, usable and currently available memory, swap state, and tool<br>
+availability.</p>
+<p dir="auto">A warning may be acceptable; a failure needs to be understood before training.<br>
+Do not suppress warnings merely to make the setup look clean.</p>
+<h2 dir="auto">A.4 Recreate the native locked environment</h2>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c1">cd</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_PLATFORM_REPO</span><span class="pl-pds">"</span></span>
+./scripts/setup_native.sh</pre></div>
+<p dir="auto">The important evidence is not package installation alone. The verifier should<br>
+execute representative operations on the GPU, including BF16 scaled dot-product<br>
+attention with backward computation, a Triton kernel, and a compiled forward and<br>
+backward path.</p>
+<p dir="auto">The native environment is located at:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">$DONGXI_PLATFORM_REPO/.venv
+</code></pre>
+<p dir="auto">Keep workload-specific environments isolated. Installing packages manually into<br>
+this environment changes its identity and makes the existing lock insufficient to<br>
+describe it.</p>
+<h2 dir="auto">A.5 Capture the environment manifest</h2>
+<p dir="auto">The course repository includes a credential-free collector:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c1">cd</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_COURSE_REPO</span><span class="pl-pds">"</span></span>
+
+<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_PLATFORM_REPO</span>/.venv/bin/python<span class="pl-pds">"</span></span> \
+  scripts/capture_environment.py \
+  --lock-file <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_PLATFORM_REPO</span>/uv.lock<span class="pl-pds">"</span></span> \
+  --output manifests/YYYY-MM-DD-dgx-spark-native.json</pre></div>
+<p dir="auto">Inspect the result before committing it. It records:</p>
+<ul dir="auto">
+<li>code commit and dirty-worktree state;</li>
+<li>operating system, kernel, architecture, GPU, driver, and CUDA toolkit;</li>
+<li>total and currently available memory;</li>
+<li>interpreter and course-relevant package versions;</li>
+<li>lock-file path and SHA-256 hash;</li>
+<li>confirmation that hostname, username, and credentials were not collected.</li>
+</ul>
+<p dir="auto">Available memory in the manifest is context at capture time. The experiment report<br>
+must separately record starting and minimum available memory during the actual run.</p>
+<h2 dir="auto">A.6 Recreate the pinned trainer environment</h2>
+<p dir="auto">The Qwen3 SFT profile uses a separate pinned open-instruct checkout and environment:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c1">cd</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_PLATFORM_REPO</span><span class="pl-pds">"</span></span>
+./scripts/setup_open_instruct.sh</pre></div>
+<p dir="auto">The setup verifies the expected upstream revision, applies the recorded DGX Spark<br>
+compatibility patch, recreates the frozen environment, and runs representative GPU<br>
+operations inside the memory-safe scope.</p>
+<p dir="auto">Its environment is separate from the native environment:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">$DONGXI_PLATFORM_REPO/.venv-open-instruct
+</code></pre>
+<p dir="auto">Do not combine the two environments simply because both contain PyTorch and<br>
+Transformers. Their versions and purposes differ.</p>
+<p dir="auto">Capture a second manifest with the trainer interpreter and trainer lock:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c1">cd</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_COURSE_REPO</span><span class="pl-pds">"</span></span>
+
+<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_PLATFORM_REPO</span>/.venv-open-instruct/bin/python<span class="pl-pds">"</span></span> \
+  scripts/capture_environment.py \
+  --lock-file <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_PLATFORM_REPO</span>/.external/open-instruct/uv.lock<span class="pl-pds">"</span></span> \
+  --output manifests/YYYY-MM-DD-dgx-spark-open-instruct.json</pre></div>
+<p dir="auto">Record the trainer commit and compatibility-patch hash in the experiment<br>
+specification as well as the environment manifest.</p>
+<h2 dir="auto">A.7 Write the specification before the run</h2>
+<p dir="auto">Copy <code class="notranslate">experiments/specs/template.yaml</code> and fill every applicable identity and<br>
+configuration field. Resolve model and dataset revisions before execution. Define<br>
+success and failure criteria that can be decided from preserved outputs.</p>
+<p dir="auto">For the Chapter 1 case study, the completed contract is:</p>
+<p dir="auto"><a href="../../experiments/specs/2026-08-29-qwen3-0.6b-sft-smoke.yaml"><code class="notranslate">../../experiments/specs/2026-08-29-qwen3-0.6b-sft-smoke.yaml</code></a></p>
+<p dir="auto">Review these questions before launching:</p>
+<ul dir="auto">
+<li>Is the mode declared as smoke, learning, or reference?</li>
+<li>Is the hypothesis falsifiable?</li>
+<li>Are model, data, trainer, patch, and environment identities immutable?</li>
+<li>Are the batch geometry and sequence lengths explicit?</li>
+<li>Is the memory reserve a decision criterion rather than a vague intention?</li>
+<li>Are the claims this run cannot establish written down?</li>
+<li>Are output paths known and writable?</li>
+</ul>
+<p dir="auto">If a material field changes after review, update the planned specification before<br>
+execution. If the protocol changes during execution, preserve the deviation in the<br>
+report rather than rewriting history.</p>
+<h2 dir="auto">A.8 Execute the Qwen3 smoke profile</h2>
+<p dir="auto">From the platform repository:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate"><span class="pl-c1">cd</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_PLATFORM_REPO</span><span class="pl-pds">"</span></span>
+
+MAX_TRAIN_STEPS=3 PROFILE_SAMPLES=32 \
+  ./scripts/memory_profile_sft.sh 1 1 1024 Qwen/Qwen3-0.6B</pre></div>
+<p dir="auto">The positional values are:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">microbatch size = 1
+gradient accumulation = 1
+sequence length = 1024
+model = Qwen/Qwen3-0.6B
+</code></pre>
+<p dir="auto">The wrapper enters the memory-safe scope automatically and writes a timestamped<br>
+directory below:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">$DONGXI_PLATFORM_REPO/outputs/memory-profiles/sft/
+</code></pre>
+<p dir="auto">Do not infer success from the last visible progress bar. Preserve and inspect the<br>
+exit status, training log, memory summary, sampled telemetry, and output model.</p>
+<h2 dir="auto">A.9 Inspect the evidence</h2>
+<p dir="auto">For a selected run directory:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">run_dir=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$DONGXI_PLATFORM_REPO</span>/outputs/memory-profiles/sft/RUN_ID<span class="pl-pds">"</span></span>
+
+sed -n <span class="pl-s"><span class="pl-pds">'</span>1,120p<span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$run_dir</span>/summary.txt<span class="pl-pds">"</span></span>
+rg <span class="pl-s"><span class="pl-pds">'</span>Step: <span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$run_dir</span>/training.log<span class="pl-pds">"</span></span>
+find <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$run_dir</span>/model<span class="pl-pds">"</span></span> -maxdepth 1 -type f -printf <span class="pl-s"><span class="pl-pds">'</span>%f\t%s bytes\n<span class="pl-pds">'</span></span> <span class="pl-k">|</span> sort</pre></div>
+<p dir="auto">Derive starting and minimum available memory from the sampled system log:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">awk <span class="pl-s"><span class="pl-pds">'</span></span>
+<span class="pl-s">  NR == 2 { start = $3 }</span>
+<span class="pl-s">  NR &gt; 1 &amp;&amp; (minimum == 0 || $3 &lt; minimum) { minimum = $3 }</span>
+<span class="pl-s">  END {</span>
+<span class="pl-s">    printf "start_available_gib=%.2f\n", start / 1024 / 1024</span>
+<span class="pl-s">    printf "minimum_available_gib=%.2f\n", minimum / 1024 / 1024</span>
+<span class="pl-s">  }</span>
+<span class="pl-s"><span class="pl-pds">'</span></span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$run_dir</span>/system-memory.tsv<span class="pl-pds">"</span></span></pre></div>
+<p dir="auto">Check model and dataset cache revisions against the planned identities. A Hub<br>
+repository name without the resolved revision is not enough for the durable<br>
+report.</p>
+<h2 dir="auto">A.10 Write the report</h2>
+<p dir="auto">Copy <code class="notranslate">experiments/reports/template.md</code>. Preserve:</p>
+<ul dir="auto">
+<li>intended protocol and deviations;</li>
+<li>exact command and exit status;</li>
+<li>all decision measurements;</li>
+<li>representative output locations;</li>
+<li>observations separated from interpretations;</li>
+<li>failed criteria, warnings, and surprises;</li>
+<li>claims not established;</li>
+<li>the decision and exact next experiment.</li>
+</ul>
+<p dir="auto">The completed Chapter 1 report is:</p>
+<p dir="auto"><a href="../../experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md"><code class="notranslate">../../experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md</code></a></p>
+<p dir="auto">Raw model files remain in the gitignored output directory; the small durable report<br>
+links the evidence and carries the conclusion.</p>
+<h2 dir="auto">A.11 Reproduction checklist</h2>
+<p dir="auto">Before declaring the laboratory ready, confirm:</p>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Host check inspected, with failures resolved and warnings understood</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Locked environment recreated without ad hoc package changes</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Representative GPU forward, backward, and kernel paths executed</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Machine and Python manifest captured</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Model, data, trainer, code, patch, and lock revisions recorded</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Hypothesis and decision criteria written before execution</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Job launched inside the memory boundary</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Logs, three memory views, exit status, and outputs preserved</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Observations separated from interpretations</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Unsupported claims named explicitly</li>
+<li class="task-list-item"><input type="checkbox" id="" disabled="" class="task-list-item-checkbox" aria-label="Incomplete task"> Experiment report and exact next action recorded</li>
+</ul>
+<p dir="auto">Passing this checklist establishes a trustworthy starting point. It does not make<br>
+future experiments trustworthy automatically; each material run needs its own<br>
+identity, contract, evidence, and bounded conclusion.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-2</h1>
+<h1 dir="auto">Appendix B — Mathematical and Tensor Notation</h1>
+<p dir="auto">This appendix is a reference for checking a derivation or tensor operation.<br>
+The main chapters supply motivation, examples and controlled experiments.</p>
+<h2 dir="auto">B.1 Vectors, matrices and batches</h2>
+<p dir="auto">A row-vector convention keeps the decoder equations close to tensor code.<br>
+States <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$X\in\mathbb{R}^{B\times n\times D}$</math-renderer> multiply the transpose of the stored<br>
+head <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$W_{\mathrm{out}}\in\mathbb{R}^{V\times D}$</math-renderer> to produce logits of shape<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[B,n,V]$</math-renderer>: <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$Z=XW_{\mathrm{out}}^\top$</math-renderer>.<br>
+PyTorch's <code class="notranslate">nn.Linear(D,V)</code> uses exactly that stored <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[V,D]$</math-renderer> layout.<br>
+An equivalent mathematical projection of shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[D,V]$</math-renderer> is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$W_{\mathrm{out}}^\top$</math-renderer>, rather than a differently stored parameter.<br>
+Confusing the stored layout with the mathematical layout is a common source<br>
+of shape mistakes.</p>
+<p dir="auto">A reshape only changes how entries are indexed; a permutation changes axis<br>
+order. Splitting <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[B,n,Hd_h]$</math-renderer> into <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[B,n,H,d_h]$</math-renderer> and transposing gives<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[B,H,n,d_h]$</math-renderer>. The last two axes of the key tensor are transposed for the query-key<br>
+matrix product. A contiguous copy may be required before another reshape.</p>
+<p dir="auto">Broadcasting supplies omitted leading axes, but does not certify their meaning.<br>
+A causal <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[n,n]$</math-renderer> mask can broadcast across batch and head dimensions. A completion<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[B,n]$</math-renderer> mask cannot be applied to vocabulary logits without an explicit expanded<br>
+axis or a loss reduction. Inspect the semantic axis as well as the size.<br>
+Legacy code uses <code class="notranslate">T</code> for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$n$</math-renderer> and <code class="notranslate">d</code>/<code class="notranslate">d_k</code> for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$d_h$</math-renderer>; attention values use<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$V_{\mathrm{val}}$</math-renderer>, while <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$V$</math-renderer> remains vocabulary size. The complete shared<br>
+<a href="../front-matter/notation.md">symbol table</a> also separates temperature,<br>
+duration, reward sources and objective coefficients.</p>
+<h2 dir="auto">B.2 Log probabilities and objective reduction</h2>
+<p dir="auto">For vocabulary logits <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$z$</math-renderer> and target ID <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$y$</math-renderer>,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$\log p_y=z_y-\log\sum_j e^{z_j},\qquad L=-\log p_y.$$</math-renderer>
+<p dir="auto">Subtracting <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$\max_j z_j$</math-renderer> before exponentiation leaves probabilities unchanged<br>
+and reduces overflow risk. Use <code class="notranslate">log_softmax</code> or a stable <code class="notranslate">logsumexp</code> rather than<br>
+computing probabilities and taking their logarithm afterward.</p>
+<p dir="auto">For fixed nonnegative weights <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$m_t$</math-renderer>, the valid-target mean is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$L=\frac{\sum_t m_t\ell_t}{\sum_t m_t}.$$</math-renderer>
+<p dir="auto">The denominator must be positive. When accumulating several microbatches,<br>
+sum their losses and divide by the total valid count. Averaging unequal batch<br>
+means changes the objective. A sequence log-probability is instead a sum of<br>
+token log-probabilities; replacing it with a mean changes preference or policy<br>
+objectives unless explicitly designed and justified.</p>
+<h2 dir="auto">B.3 Gradients and optimizer updates</h2>
+<p dir="auto">A gradient measures local loss sensitivity. For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$L=\sum_j x_j$</math-renderer>, each partial<br>
+derivative is 1 because changing one coordinate by a small amount changes the<br>
+sum by that same amount. For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$L=x^2$</math-renderer>, the derivative is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$2x$</math-renderer>; it depends on the<br>
+current parameter value.</p>
+<p dir="auto">The chain rule adds contributions from every computational path to a shared<br>
+parameter. For a tied embedding/output table, input lookup and output projection<br>
+both contribute. A parameter absent from the current lookup can still receive<br>
+output-classifier gradient. A zero local loss does not eliminate gradients from<br>
+later dependent predictions.</p>
+<p dir="auto">For unscaled cross-entropy <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$L=-\sum_jq_j\log p_j$</math-renderer>, with<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$p=\mathrm{softmax}(z)$</math-renderer> and a fixed normalized target distribution <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$q$</math-renderer>,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$\frac{\partial L}{\partial z_i}=p_i-q_i.$$</math-renderer>
+<p dir="auto">This is the derivative with respect to the logits. Parameter updates also depend<br>
+on the Jacobian from parameters to logits and the optimizer's state. AdamW's<br>
+first and second moments change its update from plain gradient descent.</p>
+<h2 dir="auto">B.4 Stop-gradient and sampled histories</h2>
+<p dir="auto">Policy training needs explicit graph boundaries. Rewards, reference-policy<br>
+scores, old-policy probabilities and sampled actions are normally treated as<br>
+fixed when differentiating the current-policy surrogate. Detaching them is<br>
+part of the estimator, not a numerical convenience. If a baseline depends on<br>
+the sampled action, the usual unbiased-baseline argument does not apply.</p>
+<p dir="auto">Discrete sampling itself is not differentiated through in the score-function<br>
+estimator. The derivative enters through the log-probability of the sampled<br>
+trajectory. Tiny enumerable policies allow comparison against the exact<br>
+expected-reward gradient; language models normally need sampling.</p>
+<p dir="auto">Two checks answer different questions. <strong>Statistical independence:</strong> can the<br>
+baseline depend on the pre-action state without depending on the action whose<br>
+score it weights? <strong>Graph independence:</strong> does the actor loss treat that baseline<br>
+as fixed when differentiating? Detaching an action-dependent reward as its own<br>
+baseline still produces zero advantage. A pre-action learned value can be<br>
+statistically valid while accidentally adding an unwanted gradient through its<br>
+parameters if it is left attached. Chapter 12 works through these distinctions.</p>
+<h2 dir="auto">B.5 Probabilities, KL and support</h2>
+<p dir="auto">For distributions <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$p,q$</math-renderer> on a common finite support,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$D_{\mathrm{KL}}(p\Vert q)=\sum_i p_i\log\frac{p_i}{q_i}.$$</math-renderer>
+<p dir="auto">The direction matters. If <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$p_i&amp;gt;0$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$q_i=0$</math-renderer>, the forward KL is infinite.<br>
+Sampling estimates of a KL require a named sampling distribution and support<br>
+condition. An exact categorical sum, a single sampled log ratio, and a<br>
+nonnegative transformed ratio estimator have different sample variance and<br>
+different gradient interpretations. The policy chapters identify each one.</p>
+<p dir="auto">KL is an average log-probability discrepancy weighted by its first argument.<br>
+For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$p=(0.8,0.2)$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$q=(0.5,0.5)$</math-renderer>,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$D_{\mathrm{KL}}(p\Vert q)=0.8\log1.6+0.2\log0.4\approx0.1927,
+\qquad
+D_{\mathrm{KL}}(q\Vert p)=0.5\log0.625+0.5\log2.5\approx0.2231.$$</math-renderer>
+<p dir="auto">The distributions are unchanged; the averaging weights change. Individual log<br>
+ratios can be negative even though their KL average is nonnegative. Chapter 3<br>
+derives the entropy/cross-entropy relationship, and Chapter 11 identifies which<br>
+distribution supplies the weights in a policy/reference penalty.</p>
+<h2 dir="auto">B.6 Numerical checks</h2>
+<p dir="auto">Check tensor shape before broadcasting, use float64 for tiny finite-difference<br>
+or exact-enumeration comparisons, and state absolute/relative tolerances.<br>
+Tests should compare independent formulations: manual derivatives against<br>
+autograd, weighted accumulation against a combined batch, cached against<br>
+uncached decoding, or an empirical estimator against exact enumeration.</p>
+<p dir="auto">A failed finite-difference check can come from an incorrect derivation, step<br>
+size, dtype or nondifferentiable boundary. Investigate that discrepancy rather<br>
+than widening tolerance until it disappears. A passing check supports the tested<br>
+mechanism and input domain, not arbitrary numerical scale or backend behavior.</p>
+<h2 dir="auto">B.7 Architecture operations at a glance</h2>
+<p dir="auto">For one feature vector <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$x\in\mathbb{R}^D$</math-renderer>, let<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$\mu=D^{-1}\sum_i x_i$</math-renderer> and<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$v=D^{-1}\sum_i(x_i-\mu)^2$</math-renderer>. With learned feature scale <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$\gamma_i$</math-renderer>,<br>
+offset <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$\beta_i$</math-renderer> and positive stabilizer <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$\epsilon$</math-renderer>,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$\mathrm{LayerNorm}(x)_i=\gamma_i\frac{x_i-\mu}{\sqrt{v+\epsilon}}+\beta_i,
+\qquad
+\mathrm{RMSNorm}(x)_i=\gamma_i\frac{x_i}{\sqrt{D^{-1}\sum_jx_j^2+\epsilon}}.$$</math-renderer>
+<p dir="auto">Both normalize over the feature axis at one position; neither uses batch-wide<br>
+statistics. RMSNorm does not subtract the feature mean; scaling can still<br>
+change it. The residual update<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$x'=x+f(x)$</math-renderer> preserves an identity path alongside the learned branch. Placement<br>
+and the branch Jacobian determine how that path combines with normalization;<br>
+the formulas alone do not establish optimization stability. Chapter 5 supplies<br>
+numeric vectors, branch maps and the baseline/modern architecture comparison.</p>
+<p dir="auto">RoPE rotates coordinate pairs rather than adding a learned position-table row.<br>
+For a column pair <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$u\in\mathbb{R}^2$</math-renderer> at position <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$m$</math-renderer> and angular frequency<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$\omega$</math-renderer>, write</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$R_{m\omega}u=
+\begin{bmatrix}\cos(m\omega)&amp;-\sin(m\omega)\\%
+\sin(m\omega)&amp;\cos(m\omega)\end{bmatrix}u.$$</math-renderer>
+<p dir="auto">Different pairs use different frequencies. Applying these rotations to queries<br>
+and keys makes their dot product depend on relative displacement, because<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$R_{m\omega}^\top R_{n\omega}=R_{(n-m)\omega}$</math-renderer>. This column-pair expression is<br>
+equivalent to the row-vector implementation after transposing the rotation.<br>
+Keep position offsets consistent when reusing cached keys. Chapter 5 develops<br>
+the derivation and the deliberately broken cache example.</p>
+<h2 dir="auto">B.8 Optimizer state changes the update</h2>
+<p dir="auto">Adam stores an exponentially weighted signed gradient <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$m_t$</math-renderer> and squared<br>
+gradient <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$v_t$</math-renderer>, each with the parameter's shape. For zero-initialized moments,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$m_t=\beta_1m_{t-1}+(1-\beta_1)g_t,\qquad
+v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2,$$</math-renderer>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$\widehat m_t=\frac{m_t}{1-\beta_1^t},\qquad
+\widehat v_t=\frac{v_t}{1-\beta_2^t},\qquad
+\theta_t=(1-\eta_t\lambda_{\mathrm{wd}})\theta_{t-1}
+-\eta_t\frac{\widehat m_t}{\sqrt{\widehat v_t}+\epsilon_{\mathrm{Adam}}}.$$</math-renderer>
+<p dir="auto">The square root rescales each coordinate by its recent gradient magnitude;<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$v_t$</math-renderer> is not a mean-subtracted variance estimate. Bias correction compensates<br>
+for initial zero moments. AdamW applies the displayed shrinkage separately from<br>
+the adaptive gradient term. Betas, epsilon, decay groups and the learning-rate<br>
+schedule are part of the recipe. Chapter 6 traces their effects numerically;<br>
+the optimizer state explains why the same current gradient can produce different<br>
+updates after different histories.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-3</h1>
+<h1 dir="auto">Appendix C — Evaluation and Experiment Templates</h1>
+<p dir="auto">Use these forms to make a comparison reviewable before expensive execution.<br>
+They are reasoning aids; a filled form does not prove that its protocol was followed.</p>
+<h2 dir="auto">C.1 Capability contract</h2>
+<p dir="auto">Write the desired behavior as a decision on observable outputs. For storytelling,<br>
+separate sentence fluency, entity continuity, causal continuity, repetition and<br>
+termination. For arithmetic, define exact accepted answer syntax and whether<br>
+reasoning text may surround it. Specify parser failure as an outcome, not a<br>
+missing row that quietly disappears.</p>
+<p dir="auto">Record task population, split, prompt construction, tokenizer/template identity,<br>
+generation settings, seed policy, sample count, scoring rule and uncertainty<br>
+unit. If several completions share one prompt, independence at the prompt level<br>
+matters for uncertainty. Keep development and final-test identities separate.</p>
+<div class="highlight highlight-source-json" dir="auto"><pre class="notranslate">{
+  <span class="pl-ent">"capability"</span>: <span class="pl-s"><span class="pl-pds">"</span>exact answer to original procedural addition prompts<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"split_policy"</span>: <span class="pl-s"><span class="pl-pds">"</span>disjoint prompt identities and operand ranges<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"generation"</span>: {<span class="pl-ent">"method"</span>: <span class="pl-s"><span class="pl-pds">"</span>greedy<span class="pl-pds">"</span></span>, <span class="pl-ent">"maximum_new_tokens"</span>: <span class="pl-c1">32</span>},
+  <span class="pl-ent">"scoring"</span>: {<span class="pl-ent">"parser"</span>: <span class="pl-s"><span class="pl-pds">"</span>declared exact format<span class="pl-pds">"</span></span>, <span class="pl-ent">"invalid"</span>: <span class="pl-s"><span class="pl-pds">"</span>failure<span class="pl-pds">"</span></span>},
+  <span class="pl-ent">"comparison"</span>: <span class="pl-s"><span class="pl-pds">"</span>paired prompts, fixed scorer and decoding<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"uncertainty_unit"</span>: <span class="pl-s"><span class="pl-pds">"</span>prompt<span class="pl-pds">"</span></span>,
+  <span class="pl-ent">"status"</span>: <span class="pl-s"><span class="pl-pds">"</span>proposed; resolve fixture identity before execution<span class="pl-pds">"</span></span>
+}</pre></div>
+<p dir="auto">This example specifies an intended contract. It is not a claim that a Qwen<br>
+checkpoint has already been evaluated under it.</p>
+<h2 dir="auto">C.2 Experiment specification</h2>
+<p dir="auto">State the hypothesis, independent variable, controls, budget and failure condition.<br>
+Name what remains unequal when matching compute, parameters or elapsed time.<br>
+Record source hashes when work is uncommitted; a base commit alone cannot<br>
+identify code that has already changed locally.</p>
+<p dir="auto">Use <code class="notranslate">experiments/specs/template.yaml</code> and include model/tokenizer/data revisions,<br>
+optimizer/schedule, loss reduction, attention and padding policy, precision,<br>
+batch geometry, update/target clocks, evaluation, checkpoints and resource cap.<br>
+Declare the smallest useful smoke run before a learning run.</p>
+<h2 dir="auto">C.3 Result ledger</h2>
+<p dir="auto">The report records actual commands, actual exit status, completed work, environment,<br>
+measured resources, metric denominators, representative outputs and deviations.<br>
+Classify each conclusion by its evidence: observed, analytical, interpretation,<br>
+or untested hypothesis. Preserve failed controls and unfinished runs.</p>
+<p dir="auto">For a paired checkpoint comparison, retain a row for every prompt even when<br>
+generation times out or parsing fails. An improvement claim should identify<br>
+which metric, which slice, uncertainty and computational cost. Keep contrary<br>
+slices visible.</p>
+<h2 dir="auto">C.4 Checkpoint genealogy</h2>
+<p dir="auto">Record parent ID/hash, objective, data identity, code/environment, completed<br>
+updates/targets, adaptation method and evaluation contract. Name whether a<br>
+checkpoint resumes optimizer state or is used as weight initialization only.<br>
+Reference and rollout snapshots also need identities in preference/RL runs.</p>
+<p dir="auto">A model card should explain intended behavior, data provenance, measured results,<br>
+known failures, resource needs and limitations. Filling a card does not authorize<br>
+publishing weights; resolve licenses and the external release decision separately.</p>
+<h2 dir="auto">C.5 Review questions</h2>
+<p dir="auto">Before accepting a claim, ask: could a different denominator create this result?<br>
+Could the model see the answer in its input? Were outputs selected by quality?<br>
+Did a template or parser change? Were repeated development probes called tests?<br>
+Did a sampled reward become confused with independent task success? Would another<br>
+person know which file, checkpoint and environment to use?</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-4</h1>
+<h1 dir="auto">Appendix D — Reproduction Commands and Environments</h1>
+<p dir="auto">The book has a portable CPU route and a platform-specific Spark route. The<br>
+verified environment for the 2026-10-04 material build is recorded in its<br>
+verification report. A future installation should capture its own versions;<br>
+do not infer Mac binary compatibility from a Linux execution result.<br>
+The subsequent <a href="../../experiments/reports/2026-10-10-book-editorial-pass.md">editorial verification record</a><br>
+binds its own revised lessons and commands separately from the earlier receipts.</p>
+<h2 dir="auto">D.1 CPU learning environment</h2>
+<p dir="auto">Use a separate Python 3.12 environment for course teaching. It avoids the Mac's<br>
+system Python 3.9 and keeps installations separate from the Spark platform lock.<br>
+The canonical teaching route now uses <code class="notranslate">pyproject.toml</code> plus <code class="notranslate">uv.lock</code> instead of<br>
+the older range-only requirements file. Linux resolves Torch from an explicit<br>
+CPU index; Mac resolves its CPU wheel from PyPI. This follows the<br>
+<a href="https://docs.astral.sh/uv/guides/integration/pytorch/" rel="nofollow">official uv PyTorch integration</a>.<br>
+It deliberately does not inherit or replace Spark's GPU lock.</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">UV_PROJECT_ENVIRONMENT=.venv-course uv sync --locked --extra course --python 3.12 --no-python-downloads
+.venv-course/bin/python -m ipykernel install --prefix .course-kernel --name dongxi-course --display-name <span class="pl-s"><span class="pl-pds">"</span>Python (Dongxi CPU course)<span class="pl-pds">"</span></span></pre></div>
+<p dir="auto">Install Python 3.12 and uv first; these commands intentionally do not download<br>
+another interpreter. Set <code class="notranslate">JUPYTER_PATH</code> to the absolute<br>
+<code class="notranslate">.course-kernel/share/jupyter</code> directory so Jupyter discovers this project-local<br>
+kernel. A temporary-prefix kernel does not change the user's existing kernel.<br>
+Use a new environment path: exact synchronization may remove packages from its<br>
+target environment, so never point it at the shared Spark environment.<br>
+<code class="notranslate">--locked</code> rejects stale project metadata instead of silently changing the lock;<br>
+<code class="notranslate">--frozen</code> would omit that freshness check. See<br>
+<a href="https://docs.astral.sh/uv/concepts/projects/sync/" rel="nofollow">uv's locking and syncing contract</a>.<br>
+The older <code class="notranslate">notebooks/requirements-course.txt</code> remains an explicitly unlocked<br>
+compatibility route, not reproduction evidence. The<br>
+<a href="https://ipython.readthedocs.io/en/9.9.0/install/kernel_install.html" rel="nofollow">IPython kernel guide</a><br>
+explains why a virtual environment must be registered separately with Jupyter.</p>
+<p dir="auto">The <code class="notranslate">course</code> extra also includes Transformers/tokenizers/PEFT: CPU tests construct<br>
+tiny random local models and verify their serialization/adapter interfaces. They<br>
+do not acquire pretrained weights. Model-scale runners still require a<br>
+separately profiled and authorized environment. The foundation evidence lab<br>
+also has a standard-library-only route.</p>
+<h2 dir="auto">D.2 Execute without a notebook server</h2>
+<p dir="auto">From the repository root:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">PYTHONPATH=src .venv-course/bin/python -m unittest discover -s tests
+.venv-course/bin/python scripts/check_book_prose.py --strict-narrative
+.venv-course/bin/python scripts/check_book_math.py
+.venv-course/bin/python scripts/check_course_integrity.py
+.venv-course/bin/python scripts/check_notebook_contracts.py
+.venv-course/bin/python scripts/verify_course_notebooks.py --kernel dongxi-course</pre></div>
+<p dir="auto">To execute only a focused route, add <code class="notranslate">--days 10 11</code>. The verifier starts a fresh<br>
+kernel for each source notebook, applies CPU/offline settings, retains executed<br>
+copies and source hashes in a new output directory, and reports failed paths.<br>
+<code class="notranslate">--export-figures</code> additionally regenerates reference PNG files. It preserves<br>
+source notebook cells and learner edits. The<br>
+<a href="https://nbclient.readthedocs.io/en/latest/client.html" rel="nofollow">NBClient documentation</a><br>
+describes the execution, working-directory and timeout interfaces used here.</p>
+<p dir="auto">The notebook contract check binds each reviewed challenge to its prediction,<br>
+checkpoint, adjacent runnable reference and explanatory Markdown. It separately<br>
+checks preserved code objects, outputs, IDs and notebook metadata against the<br>
+editorial baseline. Its visible-heading rules and explicit pairing ledger<br>
+support the recorded content review; they cannot prove that an explanation is<br>
+correct or that an arbitrary implicit question has been discovered. Numerical<br>
+claims still need fresh execution and reader review.</p>
+<p dir="auto">The prose checker separates number/word spacing from narrative review. Spacing<br>
+checks cover chapters, laboratories, solutions, front matter and appendices.<br>
+Operational identifiers and session language are reviewed in conceptual chapters;<br>
+reproduction details remain legitimate in this appendix and the runbooks. Exact<br>
+contextual exemptions live in <code class="notranslate">scripts/book_prose_exemptions.json</code> with reasons.<br>
+The strict command checks resolved findings; <code class="notranslate">--json</code> exposes counts and source<br>
+locations for an editorial audit. It preserves literal code, math and link targets.</p>
+<p dir="auto">The <a href="../../docs/course_manifest.json">course manifest</a> declares each chapter,<br>
+daily index, notebook lane and dependency. <code class="notranslate">--notebooks</code> selects explicit<br>
+registered paths; <code class="notranslate">--lane extension</code> selects extensions without treating them<br>
+as additional days. Unknown selectors fail instead of returning an apparently<br>
+successful empty run. Integrity checks reject missing/empty artifacts,<br>
+day/chapter disagreement, unregistered notebooks and dependency cycles.</p>
+<p dir="auto">For the five-notebook acceptance panel plus all tests and source checks:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/run_cpu_verification.py --kernel dongxi-course --output outputs/cpu-check-01</pre></div>
+<p dir="auto">Choose a new empty output directory for every invocation. The orchestrator keeps<br>
+each command's actual exit, timeout, log hash and source identity, and continues<br>
+the independent checks after a failed test. Fresh notebooks record the actual<br>
+kernel interpreter/packages, not only the orchestrator's Python, and the<br>
+acceptance runner requires its kernel environment prefix to match. Two virtual<br>
+environments can link to the same Python binary without sharing dependencies.<br>
+Partial outputs<br>
+and errors remain visible. Timeouts stop that invocation's process group and<br>
+its detected descendant processes, including separately launched kernel<br>
+sessions; unrelated notebook servers are not targets.</p>
+<p dir="auto"><code class="notranslate">--full-notebooks --command-timeout 1800</code> explicitly selects the full registered<br>
+inventory; it is not implied by a passed small panel. Spark's default pre-notebook<br>
+reserve stays 25GiB. A small hosted CPU runner can explicitly use<br>
+<code class="notranslate">--host-reserve-gib 2</code> for these tiny references; that is not permission to<br>
+weaken the 25GiB model-scale Spark safety rule. On Mac the Linux <code class="notranslate">MemAvailable</code><br>
+probe is unavailable and is recorded as unknown, not as a passed measurement.</p>
+<p dir="auto">The matched-control CLI-success integration is deliberately scoped to Linux<br>
+with an observed 25 GiB reserve. On Mac or an ineligible small hosted VM, that<br>
+one test records a skip; its scientific/helper controls remain enabled. Return<br>
+the skip and its reason with the actual platform receipt rather than presenting<br>
+it as a passed model-runner check. The orchestrator's scope describes only its<br>
+recorded invocation platform, not reproduction on another machine.</p>
+<p dir="auto">The separate tiny story replay test now explicitly selects a portable teaching<br>
+policy: one labelled <code class="notranslate">psutil</code> available-memory sample with a 2GiB threshold.<br>
+It keeps both seeds and both checkpointing modes, including each real fresh<br>
+2-to-5 continuation and retained failed spending. Unknown, malformed or low<br>
+samples refuse the child; there is no blanket Mac skip. The helper's default<br>
+Linux 25GiB collector and the production runner's guard are unchanged. Its<br>
+<a href="../../experiments/reports/2026-10-05-native-profile-inspection/portable-story-verification.json">37-test Linux CPU verification</a><br>
+does not prove a Mac or hosted run, nor a continuous memory minimum.</p>
+<p dir="auto">On Spark, use this same isolated CPU teaching route for course verification.<br>
+The platform GPU interpreter and kernel belong to separately declared native<br>
+workloads; do not synchronize the course lock into that shared environment.<br>
+A successful verifier run is<br>
+material readiness evidence; learner practice and model-scale outcomes remain<br>
+separate records.</p>
+<h2 dir="auto">D.2.1 Local verification and platform evidence</h2>
+<p dir="auto">The course uses local verification. The learner requested removal of the<br>
+GitHub Actions workflow on 2026-10-05; do not recreate hosted CI without a new<br>
+explicit request. The local verifier, dependency lock and notebook route remain<br>
+available. Earlier workflow definitions and source hashes describe the tested<br>
+historical revision, not a requirement to keep hosted automation enabled.</p>
+<p dir="auto">A Linux CPU installation proves only the reported Linux panel; a separate Mac<br>
+run would still not transfer live kernels or checkpoints to the learner's Mac<br>
+Studio. The<br>
+<a href="../../experiments/specs/2026-10-04-course-reproduction.md">reproduction specification</a><br>
+fixes these scope distinctions before measurement.</p>
+<p dir="auto">Original DXI-17 criterion 3 requires separate platform evidence, not a successful<br>
+Mac run. Criterion 5 requires distinguishing workflow source and locally tested<br>
+commands from hosted execution, not a compulsory hosted success. The<br>
+<a href="../../experiments/reports/2026-10-05-platform-scope-reading.md">original-text review</a><br>
+preserves earlier, stronger Mac/hosted verification requests as parallel work;<br>
+it does not convert portable source checks into another platform's pass.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Platform or workflow</th>
+<th>Actual evidence</th>
+<th>Unobserved boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spark/Linux ARM64</td>
+<td>Earlier 2026-10-05 closure: 1,533 tests; all 76 fresh references, 539 code cells/535 executed/210 images/four preserved unfinished skips</td>
+<td>CPU/Linux evidence is not a Mac, hosted, inline-host learner or model-quality pass</td>
+</tr>
+<tr>
+<td>Mac</td>
+<td>Portable route and return-evidence packet</td>
+<td>Not executed/unverified in this task</td>
+</tr>
+<tr>
+<td>Hosted CI</td>
+<td>Workflow removed at the learner's request; earlier source evidence is historical</td>
+<td>Not required; do not recreate without an explicit request</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The final <a href="../../experiments/reports/2026-10-05-final-course-verification.md">current-source verification report</a>,<br>
+<a href="../../experiments/reports/2026-10-05-final-goal-cpu/run-01/tests.log">CPU test log</a><br>
+and <a href="../../experiments/reports/2026-10-05-final-goal-notebooks/run-01/manifest.json">full 76 fresh-kernel manifest</a><br>
+record the goal-closure snapshot before CI removal. Full 76 execution and the final test/<br>
+five-selected-reference orchestrator were separate runs on the same frozen<br>
+sources, not two all 76 executions. The <a href="../../experiments/reports/2026-10-05-final-original-criteria-signoff.md">signed original-criteria review</a><br>
+closes 18/18 bounded packages against 86 unchanged criteria/dependencies, not<br>
+another platform's execution or learner mastery. The model-free<br>
+<a href="../../experiments/reports/native-campaign-evidence-20261005-run-01/closing-bindings.json">archive closing receipt</a><br>
+retains 45 original stage rows/74 model-directed terminal receipts and failures. Its source<br>
+and measurement JSON does not transfer weights, raw corpus, virtual environments<br>
+or live kernels. Preclosure 15/18 documents stay immutable; later status projection<br>
+is separate from scientific archive identity.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-current-cpu-closure.md">earlier complete Linux panel</a><br>
+remains evidence for its own sealed revision. Its historical stronger<br>
+Mac/hosted-gate wording does not override the original criteria or establish<br>
+current-source verification after later executable edits. No host, package or<br>
+learner-completion status is changed by the commands in this appendix.<br>
+Before implementing a reproduction gap, check current upstream fixes and the<br>
+installed stack, reuse adequate existing tools and retire resolved/irrelevant<br>
+work. Historical memory-hang warnings do not authorize new monitoring machinery;<br>
+the standard finite-resource bounds above remain.</p>
+<h2 dir="auto">D.3 Existing measured GPU run</h2>
+<p dir="auto">The TinyStories <a href="../../docs/TINYSTORIES_PIPELINE.md">pipeline guide</a> and<br>
+<a href="../../experiments/reports/2026-09-14-tinystories-learning-result.md">completed report</a><br>
+describe the actual first learning run. It used pinned data/tokenizer revisions<br>
+and source hashes, with fresh model weights, a 14,000-update horizon and four-hour<br>
+cap. Analyze its portable JSON in the Day 9 notebooks without its raw checkpoint.</p>
+<p dir="auto">Reproduction of a model-scale run starts with a resource profile, not an<br>
+unqualified command copied into a fresh terminal. Preserve 25 GiB host reserve,<br>
+inspect concurrent model processes, and use the platform's bounded execution<br>
+mechanism. Actual GPU learning outcomes require their own reports.</p>
+<h2 dir="auto">D.4 Post-training experiment route</h2>
+<p dir="auto">Chapters 9,11 and 13 supply SFT, DPO and RLVR protocols. Their CPU integrations<br>
+test their objectives and graph boundaries. Optional model runners require<br>
+explicit model/checkpoint/tokenizer revisions, local data contracts, evaluation<br>
+panels and resource bounds. Read their corresponding lab guides before invoking<br>
+them. A config for an unexecuted pretrained comparison is not a measured model.</p>
+<p dir="auto">Record the parent checkpoint and objective. Full SFT and LoRA have different<br>
+trainable parameter counts; DPO needs a frozen reference; policy optimization<br>
+needs a named rollout policy and correct old/current/reference roles. Retain<br>
+CPU and CUDA RNG state, optimizer history, data position and schedule where<br>
+the declared resume contract requires them. Never trust arbitrary checkpoint<br>
+pickle files from an unverified source.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-rlvr-io-readiness.md">earlier CPU source checkpoint</a><br>
+passes 998 tests and six selected fresh references, not all 76 on another host.<br>
+Native SFT/DPO/RLVR recovery uses separate model/semantic and shared-I/O<br>
+journals with independently retained receipts before payload inspection.<br>
+The same physical journal retains later failed spending; copying receipts is<br>
+not cross-machine budget verification. Read the exact CLI/lab inputs before<br>
+running: incomplete caps are not inferred, and source readiness does not<br>
+authorize pretrained loading, GPU work or private physical-resource changes.</p>
+<h2 dir="auto">D.5 Return evidence and machine switches</h2>
+<p dir="auto">For every run, return a concise manifest: source identity, execution host,<br>
+interpreter/packages, configuration, data/model identities, actual exit status,<br>
+runtime, target/update counts, resource measurements and report path. Avoid<br>
+environment dumps that include credentials. Commit small evidence and source;<br>
+keep weights and raw dataset caches under ignored output paths.</p>
+<p dir="auto">The machine-switch phrases and <a href="../../docs/handoffs/CURRENT.md">handoff</a> preserve<br>
+the learning position. Repository synchronization does not synchronize a live<br>
+kernel, running process, credential or local checkpoint directory. A final<br>
+release additionally needs a scoped publication decision and its own review.</p>
+<p dir="auto">For the parallel, still-unexecuted Mac verification, use the<br>
+<a href="../../docs/handoffs/MAC_CPU_VERIFICATION.md">return-evidence packet</a>. A listed<br>
+Mac checkout is not command access or a platform pass. Earlier guidance treated<br>
+actual supported Mac execution as mandatory; that stronger interpretation is<br>
+historical and superseded by the original criterion 3 evidence-separation rule<br>
+above. Mac remains not executed/unverified and hosted CI remains not executed.<br>
+Neither is an added successful-run prerequisite for the authorized Spark<br>
+campaign or original upgrade signoff. Independent in-scope work can continue<br>
+without another routine approval question; final current-source Linux<br>
+verification and the dependent campaign defense still require actual evidence.</p>
+<h2 dir="auto">D.6 Checkpoints, recovery and job supervision</h2>
+<p dir="auto">A checkpoint is a claim about a boundary in computation. A useful manifest<br>
+names the parent weights, tokenizer and template, trainable parameter set,<br>
+objective, optimizer/data/RNG state and execution identity. Matching tensor<br>
+shapes alone does not preserve token meaning or a continuation. Chapter 1's<br>
+eight-ID example illustrates the semantic boundary; Chapters 5, 6, 9, 11 and<br>
+13 explain what the additional state means.</p>
+<p dir="auto">This section consolidates reproduction detail extracted from those chapters.<br>
+The unchanged reports retain exact manifests, failures, journal fields,<br>
+timings and commands; this reference does not replace their empirical record.</p>
+<h3 dir="auto">Budget boundaries and spent work</h3>
+<p dir="auto">Keep two clocks: accepted logical progress and physical work already spent.<br>
+An optimizer-update limit counts committed updates. A physical resource<br>
+journal also retains loading, failed attempts, generation, evaluation,<br>
+checkpointing and interrupted work. Resume must not refund that spending.<br>
+Similarly, a generated-token counter differs from valid training targets,<br>
+processed positions and unique source targets. Name each denominator.</p>
+<p dir="auto">Check a proposed update's complete geometry before doing the work. If it<br>
+cannot fit the remaining target/update budget, refusal should leave parameters,<br>
+optimizer history and data/RNG cursors unchanged. Deadline bounds require<br>
+checking later work too: a last evaluation or export can exceed a job cap<br>
+even after every optimizer update respected its limit. The<br>
+<a href="../../experiments/reports/2026-10-05-native-story-first400-comparison.md">matched story controls</a><br>
+and <a href="../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md">native recovery deadline report</a><br>
+show why accepted updates and accepted supervision are different claims.<br>
+Use the reports' actual source/config identities for reproduction.</p>
+<h3 dir="auto">Supervised fine-tuning state and adapter exports</h3>
+<p dir="auto">Saving a weight tensor is insufficient for exact training replay. Retain Adam<br>
+moments, schedule position, data order/cursor, CPU/CUDA RNGs and the committed<br>
+boundary under the declared replay contract. A checkpoint save must become<br>
+durable before it can be advertised as a recovery point; a file that exists<br>
+after a partial write is not automatically a committed snapshot. Payload<br>
+format, atomic replacement and digest verification remain implementation<br>
+details of the canonical runners, rather than new course infrastructure.</p>
+<p dir="auto">For LoRA, name both frozen base identity and adapter weights/configuration.<br>
+Export changes the representation of the update, so compare adapter and merged<br>
+paths under a declared dtype and tolerance. The retained comparison found a<br>
+BF16 merge mismatch and separately accepted an independently verified FP32<br>
+merge. Preserve both outcomes: a successful high-precision export does not<br>
+retroactively make the failed lower-precision one pass. See the<br>
+<a href="../../experiments/reports/2026-10-05-native-sft-replay.md">native SFT replay report</a>,<br>
+<a href="../../experiments/reports/native-assistant-comparison-20261005-run-02/README.md">assistant comparison</a><br>
+and <a href="../../docs/runbooks/sft_spark_runner.md">SFT runner guide</a>.</p>
+<h3 dir="auto">Policy reference and pending rollout identity</h3>
+<p dir="auto">DPO's reference is part of its objective. Replacing it with the latest policy<br>
+on resume changes the log-ratio baseline; recovering policy weights alone<br>
+does not recover the same optimization problem. A matched chosen-SFT control<br>
+also needs the same sampled examples, exposure and update geometry. See the<br>
+<a href="../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md">DPO recovery report</a><br>
+and <a href="../../docs/runbooks/dpo_spark_runner.md">runner guide</a>.</p>
+<p dir="auto">For sampled policy optimization, a collected pending rollout is already an<br>
+observation. Retain its tokens, old-policy identity and likelihoods, masks,<br>
+stops, rewards and applicable sampler state. Applying that same update before<br>
+collecting a new batch preserves the experimental history; resampling after<br>
+an interruption replaces it and spends more work. Old-policy likelihoods<br>
+determine importance ratios, while the fixed reference determines the KL<br>
+anchor. They are distinct even when their weights initially agree.<br>
+The <a href="../../experiments/reports/2026-10-04-batched-cache-recovery.md">tiny cache/recovery report</a><br>
+tests saved-cache replay separately from full-prefix rebuild at a tolerance;<br>
+the <a href="../../experiments/reports/2026-10-05-native-rlvr-recovery-cleanup.md">native RLVR recovery report</a><br>
+is separate model-scale evidence. Use the <a href="../../docs/runbooks/rlvr_runner.md">RLVR runner guide</a><br>
+for the operational route.</p>
+<p dir="auto">A local digest can detect altered bytes relative to an independently trusted<br>
+expected identity. A sidecar supplied by the same untrusted sender does not<br>
+authenticate a checkpoint. Data-only tensor loading narrows the interface,<br>
+but the bounded trusted local fixtures are not an adversarial sandbox. Never<br>
+load arbitrary pickle checkpoints to reproduce an example.</p>
+<h3 dir="auto">Supervision and durable evidence</h3>
+<p dir="auto">Scientific validity, exit status, cleanup and resource compliance form a<br>
+conjunction when the run contract requires all of them. A child exit of zero<br>
+does not imply the supervisor accepted the job. An unknown exit remains<br>
+unknown; a timeout, failed cleanup gate or missing response stays in the record.<br>
+The RLVR pilot evidence retains G4's failed supervision and separate export<br>
+closure alongside G8's accepted pilot. Six completed initial conditions and<br>
+two failed ones cannot be rewritten as eight completed comparisons.</p>
+<p dir="auto">Keep evaluation observations distinct from missing rows. Preserve the retained<br>
+response bytes, stop reason, behavior/target likelihood meanings, grading rule,<br>
+coverage and selection rule. The <a href="../../docs/runbooks/evaluation_tools.md">evaluation guide</a><br>
+explains how to read those artifacts. A recovered job demonstrates continuity<br>
+for its tested state and platform, not broader model quality or portability.</p>
+<p dir="auto">Before supervising a new run, follow the existing platform resource policy,<br>
+declare finite limits and preserve the required host reserve. Reuse adequate<br>
+tools and upstream fixes. This book's editorial verification uses fresh local<br>
+CPU references and does not launch a new model-scale campaign.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-5</h1>
+<h1 dir="auto">Chapter 1 — Evidence Before Optimization</h1>
+<p dir="auto">Companion: <a href="../labs/01-evidence-before-optimization.md">guided laboratory route</a>.</p>
+<p dir="auto">A training process ends without an error. Its loss is lower than it was one minute<br>
+ago. A checkpoint appears on disk. Did the model improve?</p>
+<p dir="auto">Perhaps—but none of those facts answers the question by itself.</p>
+<p dir="auto">Language-model development is unusually good at producing persuasive numbers.<br>
+Losses move every step, rewards can rise rapidly, samples are easy to cherry-pick,<br>
+and modern frameworks can hide thousands of implementation decisions behind a<br>
+short command. The first skill of model development is therefore not optimization.<br>
+It is learning how to make a claim that the evidence can actually support.</p>
+<p dir="auto">This chapter establishes that discipline. We will define the identity of an<br>
+experiment, separate observations from interpretations, design falsifiable tests,<br>
+and use a three-step Qwen3-0.6B fine-tuning run as a worked example. The run is<br>
+small on purpose: it lets us examine the logic of an experiment before scale makes<br>
+the logic difficult to see.</p>
+<h2 dir="auto">1.1 Learning outcomes</h2>
+<p dir="auto">After completing this chapter, you should be able to:</p>
+<ul dir="auto">
+<li>identify the code, environment, data, model, configuration, seed, and hardware<br>
+needed to describe an experiment;</li>
+<li>explain why a random seed does not guarantee identical results;</li>
+<li>write a hypothesis with observable success and failure conditions;</li>
+<li>design a comparison that changes one meaningful variable at a time;</li>
+<li>distinguish an observation, a supported interpretation, and an unsupported<br>
+claim;</li>
+<li>explain what a smoke test establishes and what it leaves unknown;</li>
+<li>interpret system, cgroup, and CUDA memory measurements on a unified-memory<br>
+machine without adding overlapping values.</li>
+</ul>
+<p dir="auto"><strong>Prerequisites:</strong> ordinary Python and a basic distinction between a model,<br>
+a training objective and a measurement. No large-model execution is required<br>
+to work through this chapter's evidence questions.</p>
+<p dir="auto">The practical reproduction instructions live in<br>
+<a href="../appendices/a-laboratory-setup.md">Appendix A</a>. The complete experiment contract<br>
+and evidence remain in the companion repository.</p>
+<p dir="auto">The <a href="../../notebooks/day-01/README.md">four Day 1 notebooks</a> make the evidence<br>
+standard executable: canonical run identity, deliberately failed smoke criteria,<br>
+a read of the actual later TinyStories result, and a checkpoint/tokenizer<br>
+interface audit. They use CPU computations<br>
+and stored reports, with adjacent explanations and useful plots.</p>
+<h2 dir="auto">1.2 An experiment produces measurements, not conclusions</h2>
+<p dir="auto">Consider a hypothetical log:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">step 1: loss = 2.41
+step 2: loss = 2.36
+step 3: loss = 2.33
+exit status: 0
+</code></pre>
+<p dir="auto">We can state several things about it, but those statements do not have equal<br>
+status.</p>
+<p dir="auto"><strong>Observation:</strong> the reported loss decreased from 2.41 to 2.33, and the process<br>
+returned exit status 0. These values were directly recorded.</p>
+<p dir="auto"><strong>Supported interpretation:</strong> this particular execution completed three reported<br>
+steps. If the trainer's behavior and logs have also been inspected, the result is<br>
+evidence that the tested training path is operational.</p>
+<p dir="auto"><strong>Unsupported claim:</strong> the model acquired a generally useful capability. Nothing<br>
+in the log measures behavior on a held-out task, and three loss values cannot<br>
+establish generalization.</p>
+<p dir="auto">This gives us a basic evidence chain:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">configuration → execution → recorded observations → bounded interpretation
+</code></pre>
+<p dir="auto">The last arrow is where many errors occur. An interpretation should not contain<br>
+more certainty or scope than the observations can carry.</p>
+<h3 dir="auto">Decide which claim the log can carry</h3>
+<p dir="auto"><strong>Reader prediction.</strong> Keep those three losses and exit status unchanged, but<br>
+suppose the saved checkpoint cannot be reopened. Did the experiment succeed?<br>
+The answer depends on the contract: a forward/backward execution check may pass,<br>
+while a training-and-save check fails. A favorable number cannot replace a<br>
+missing required observation.</p>
+<p dir="auto">Read the same log through three progressively stronger questions:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Proposed claim</th>
+<th>Evidence needed beyond the printed losses</th>
+<th>Decision from this log alone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>The process returned normally</td>
+<td>Its actual exit status and complete record</td>
+<td>Supported by the stated status</td>
+</tr>
+<tr>
+<td>The intended training path works</td>
+<td>Correct data and loss construction, expected updates, numerical checks, required saved outputs</td>
+<td>Only partly supported</td>
+</tr>
+<tr>
+<td>The model performs better on new requests</td>
+<td>A declared held-out comparison, aligned scoring and representative responses</td>
+<td>Unanswered</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">This is a useful decision procedure: name the claim, list what could falsify it,<br>
+then ask whether those observations exist. A checkpoint is evidence that bytes<br>
+were saved; reopening it with the intended tokenizer tests a different property.<br>
+Likewise, a loss curve measures the chosen objective; a behavioral comparison<br>
+tests whether that objective delivered the desired result. We will follow one<br>
+small text sequence through the model in Chapters 2–6, then return to this gap<br>
+between prediction error and useful behavior in Chapter 7.</p>
+<h3 dir="auto">Loss is not capability</h3>
+<p dir="auto">Training loss answers a narrow question: how well does the current model predict<br>
+the selected training tokens under the selected objective? It does not directly<br>
+answer whether the model follows instructions better, solves new problems, becomes<br>
+more truthful, or retains earlier capabilities.</p>
+<p dir="auto">The common next-token loss is a negative natural logarithm, measured in <strong>nats</strong>.<br>
+It penalizes assigning little probability to an observed continuation. Chapter 3<br>
+will derive both that loss and its gradient. For a mean over many target tokens,<br>
+exponentiating its negative gives their geometric-mean assigned probability,<br>
+not the probability of every token and not a task success rate.</p>
+<p dir="auto">Even a perfectly measured reduction in training loss can coexist with:</p>
+<ul dir="auto">
+<li>memorization rather than generalization;</li>
+<li>regression on unrelated tasks;</li>
+<li>worse generation behavior caused by changed formatting or termination;</li>
+<li>contamination between training and evaluation data;</li>
+<li>optimization of a proxy that does not represent the desired capability.</li>
+</ul>
+<p dir="auto">Later chapters will build evaluation contracts for those questions. For now, the<br>
+important habit is to name what a metric measures instead of calling it “better.”</p>
+<h2 dir="auto">1.3 The identity of an experiment</h2>
+<p dir="auto">“I trained Qwen3 with seed 42” does not identify a reproducible experiment. A<br>
+useful experiment identity is a tuple:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$\mathcal{E} = (C, L, H, M, \mathcal D, \mathcal K, s),$$</math-renderer>
+<p dir="auto">where:</p>
+<ul dir="auto">
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$C$</math-renderer> is the code revision, including local patches;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$L$</math-renderer> is the locked software environment;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$H$</math-renderer> is the relevant hardware and system identity;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$M$</math-renderer> is the model and exact model revision;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$\mathcal D$</math-renderer> is the dataset, revision, split, and selection procedure;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$\mathcal K$</math-renderer> is the full experiment configuration, separate from model parameters;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$s$</math-renderer> is the collection of random seeds.</li>
+</ul>
+<p dir="auto">The result should also retain its outputs and measurements. Without them, we know<br>
+what was intended but not what occurred.</p>
+<h3 dir="auto">Code identity</h3>
+<p dir="auto">A branch name such as <code class="notranslate">main</code> moves over time. Record an immutable commit hash. If<br>
+the working tree contains uncommitted changes, record that fact too: a commit hash<br>
+cannot identify modifications that exist only on one machine.</p>
+<p dir="auto">External trainers deserve the same treatment. Record the upstream revision and<br>
+the identity of any applied patch. “Latest open-instruct” is not an experiment<br>
+identity.</p>
+<h3 dir="auto">Environment identity</h3>
+<p dir="auto">A package list is useful, but a lock file is stronger because it describes the<br>
+dependency solution that should be recreated. Record both the lock file and a<br>
+cryptographic hash of its contents. The interpreter, CUDA runtime, and important<br>
+framework versions should also appear in the manifest so a reviewer can quickly<br>
+see what actually ran.</p>
+<p dir="auto">An import test is not sufficient. A library may import while a real GPU kernel<br>
+fails to compile or execute. Environment validation should exercise representative<br>
+operations: the attention backend, forward and backward computation, compilation,<br>
+and any custom kernels on which the experiment depends.</p>
+<h3 dir="auto">Model and data identity</h3>
+<p dir="auto">Repository names are mutable pointers. Record immutable model and dataset<br>
+revisions, the dataset split, filters, sample count, and ordering or selection<br>
+procedure. Two runs with the same model name and seed can still see different<br>
+tokens if the dataset changed or preprocessing was reordered.</p>
+<h3 dir="auto">Configuration identity</h3>
+<p dir="auto">The configuration includes more than the learning rate. At minimum, training work<br>
+should record:</p>
+<ul dir="auto">
+<li>precision and attention backend;</li>
+<li>optimizer and schedule;</li>
+<li>microbatch size and gradient accumulation;</li>
+<li>sequence lengths and packing behavior;</li>
+<li>gradient checkpointing and clipping;</li>
+<li>total steps or token budget;</li>
+<li>random seeds;</li>
+<li>checkpoint source and output policy.</li>
+</ul>
+<p dir="auto">These fields define the computation. Omitting them makes comparisons ambiguous.</p>
+<p dir="auto">Here <strong>precision</strong> names the numerical storage and computation choices, such as<br>
+32-bit floating point (FP32) or 16-bit brain floating point (BF16). An attention<br>
+backend is the implementation used for the model's information-mixing operation.<br>
+A <strong>microbatch</strong> is the examples processed by one forward/backward pass;<br>
+gradient accumulation combines several such passes before one optimizer update.<br>
+Gradient checkpointing trades extra recomputation for storing fewer intermediate<br>
+activations. It differs from saving a model checkpoint to disk. The optimizer<br>
+uses gradients to change parameters, while its schedule changes the update size<br>
+over time. These names specify costs and behavior; later chapters expose their<br>
+mechanisms.</p>
+<h2 dir="auto">1.4 Reproducibility is larger than a seed</h2>
+<p dir="auto">A pseudorandom seed selects a repeatable stream for a particular random-number<br>
+generator. Training involves several possible generators and several other sources<br>
+of variation:</p>
+<ul dir="auto">
+<li>dataset shuffling and worker processes;</li>
+<li>parameter initialization;</li>
+<li>dropout and sampling;</li>
+<li>asynchronous or nondeterministic GPU kernels;</li>
+<li>floating-point reduction order;</li>
+<li>compiler, driver, and framework changes;</li>
+<li>distributed communication order.</li>
+</ul>
+<p dir="auto">Floating-point addition is not associative:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$(a+b)+c \neq a+(b+c)$$</math-renderer>
+<p dir="auto">in finite precision. Two correct parallel reduction orders can therefore produce<br>
+slightly different values. During many optimization steps, small numerical<br>
+differences can lead to visibly different trajectories.</p>
+<p dir="auto">For a concrete FP32 example, set <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$a=10^8$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$b=-10^8$</math-renderer>, and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$c=1$</math-renderer>.<br>
+Computing <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$(a+b)+c$</math-renderer> gives 1, while <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$a+(b+c)$</math-renderer> gives 0: at that magnitude,<br>
+adding 1 to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$b$</math-renderer> rounds back to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$b$</math-renderer>. The mathematical sum is the same; the<br>
+intermediate rounding differs. Fixing the random seed cannot fix a reduction<br>
+order that the execution backend changes.</p>
+<p dir="auto">In this book, <strong>repeatability</strong> means rerunning the recorded procedure in the same<br>
+controlled environment, while <strong>reproducibility</strong> means independently recreating<br>
+the result from its preserved identity and protocol. Terminology varies across<br>
+fields, so the operational definition matters more than the label.</p>
+<p dir="auto">The objective is not always bit-for-bit equality. The objective is to know which<br>
+variation is acceptable, which quantities should agree, and what evidence would<br>
+indicate a genuine implementation difference.</p>
+<h2 dir="auto">1.5 Write the experiment contract before execution</h2>
+<p dir="auto">A useful experiment begins as a contract, not a command. It answers five<br>
+questions:</p>
+<ol dir="auto">
+<li>What question are we investigating?</li>
+<li>What do we predict, and why?</li>
+<li>What remains fixed, and what changes?</li>
+<li>Which measurements decide the outcome?</li>
+<li>What will the experiment explicitly not establish?</li>
+</ol>
+<p dir="auto">Compare these hypotheses:</p>
+<blockquote>
+<p dir="auto">The training run should work.</p>
+</blockquote>
+<p dir="auto">and:</p>
+<blockquote>
+<p dir="auto">Qwen3-0.6B will complete three BF16 full-SFT optimizer steps with SDPA,<br>
+microbatch size 1, and sequence length 1024. Every reported loss will remain<br>
+finite, expected model outputs will be saved, and whole-system available memory<br>
+will remain above 24 GiB.</p>
+</blockquote>
+<p dir="auto">The second is useful because the result can contradict it. “Work” has been replaced<br>
+by observable conditions.</p>
+<h3 dir="auto">Conjunctive success criteria</h3>
+<p dir="auto">If a hypothesis requires execution <strong>and</strong> numerical validity <strong>and</strong> memory<br>
+safety, all three matter. Suppose training exits successfully but available memory<br>
+falls below the precommitted safety reserve. The execution claim is supported, but<br>
+the experiment fails its overall success criteria.</p>
+<p dir="auto">This prevents a common form of hindsight bias: redefining success around whichever<br>
+number looks favorable after the run.</p>
+<p dir="auto">The same principle applies to recovery: native child processes can finish<br>
+successfully while a required deadline, final-state comparison or supervised<br>
+cleanup condition fails. Preserve the passing observations and the failed<br>
+overall result. <a href="../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision">Appendix D</a><br>
+links the actual recovery cases and their unchanged failure records.</p>
+<h3 dir="auto">Controlled comparisons</h3>
+<p dir="auto">In a controlled comparison, the independent variable is the factor deliberately<br>
+changed, dependent variables are the measured outcomes, and other important<br>
+conditions are held fixed.</p>
+<p dir="auto">If batch size 1 is safe, this is an interpretable next comparison:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">batch size:      1 → 2
+sequence length: 1024
+attention:       SDPA
+everything else: fixed
+</code></pre>
+<p dir="auto">Changing batch size, sequence length, and attention backend simultaneously might<br>
+be useful for testing a complete recipe, but it cannot isolate which change caused<br>
+the observed difference.</p>
+<h2 dir="auto">1.6 Smoke tests occupy the first rung of evidence</h2>
+<p dir="auto">A smoke test asks whether a narrow path through the system executes. Depending on<br>
+the protocol, it may validate:</p>
+<ul dir="auto">
+<li>model, tokenizer, and dataset loading;</li>
+<li>preprocessing and collation;</li>
+<li>forward computation and loss construction;</li>
+<li>backward computation and optimizer execution;</li>
+<li>metric logging and checkpoint saving;</li>
+<li>basic resource safety for the tested configuration.</li>
+</ul>
+<p dir="auto">It does not normally validate:</p>
+<ul dir="auto">
+<li>useful capability improvement;</li>
+<li>convergence over a realistic token budget;</li>
+<li>stability over hours or days;</li>
+<li>the largest safe batch or sequence length;</li>
+<li>optimality relative to alternative recipes;</li>
+<li>identical behavior on another system.</li>
+</ul>
+<p dir="auto">A smoke test is valuable precisely because its claim is small. It catches basic<br>
+failures cheaply before a long experiment turns them into expensive failures.</p>
+<p dir="auto">We will use three experiment modes throughout the book:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Mode</th>
+<th align="right">Typical duration</th>
+<th>Primary question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Smoke</td>
+<td align="right">1–15 minutes</td>
+<td>Does the intended path execute and record evidence?</td>
+</tr>
+<tr>
+<td>Learning</td>
+<td align="right">30 minutes–4 hours</td>
+<td>Does a visible, interpretable learning signal appear?</td>
+</tr>
+<tr>
+<td>Reference</td>
+<td align="right">8–24+ hours</td>
+<td>Does the conclusion survive a publication-quality comparison?</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Duration is a guide, not a definition. The claim and evidence standard define the<br>
+mode.</p>
+<h2 dir="auto">1.7 Memory on a unified-memory system</h2>
+<p dir="auto">On a conventional accelerator server, people often speak as though CPU RAM and<br>
+GPU VRAM were independent budgets. NVIDIA DGX Spark uses unified memory: CPU<br>
+allocations, CUDA allocations, model state, activations, optimizer state, Linux<br>
+file cache, and other processes draw from the same physical pool.</p>
+<p dir="auto">A rough decomposition of training pressure is:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$M_{\text{train}} \approx
+M_{\text{weights}} + M_{\text{gradients}} + M_{\text{optimizer}}
++ M_{\text{activations}} + M_{\text{temporary}} + M_{\text{runtime}}.$$</math-renderer>
+<p dir="auto">Some terms are nearly fixed for a given model; activations and temporary buffers<br>
+depend on batch geometry, sequence length, attention implementation, and<br>
+checkpointing. This is why multiplying a batch-1 peak by eight is not a reliable<br>
+prediction for batch size 8.</p>
+<h3 dir="auto">Size the state before interpreting a peak</h3>
+<p dir="auto"><strong>Reader prediction.</strong> A model has one million trainable parameters. Its FP32<br>
+weights occupy four million bytes. Does an AdamW training step therefore need<br>
+only four million bytes for model state?</p>
+<p dir="auto">No. Under the explicitly chosen policy of FP32 weights, FP32 gradients and two<br>
+FP32 optimizer moment buffers, the persistent ledger is:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>State</th>
+<th align="right">Bytes per parameter</th>
+<th align="right">Bytes for one million parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Weights</td>
+<td align="right">4</td>
+<td align="right">4,000,000</td>
+</tr>
+<tr>
+<td>Gradients</td>
+<td align="right">4</td>
+<td align="right">4,000,000</td>
+</tr>
+<tr>
+<td>First moment: smoothed gradient history</td>
+<td align="right">4</td>
+<td align="right">4,000,000</td>
+</tr>
+<tr>
+<td>Second moment: smoothed squared-gradient history</td>
+<td align="right">4</td>
+<td align="right">4,000,000</td>
+</tr>
+<tr>
+<td>Total of these four terms</td>
+<td align="right">16</td>
+<td align="right">16,000,000</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">These are decimal bytes, before activations, temporary buffers and runtime<br>
+overhead. Moment buffers may be allocated lazily at the first update, so a<br>
+forward-only observation can miss a cost that appears during training.</p>
+<p dir="auto">Now change only the declared storage policy: BF16 weights and gradients use two<br>
+bytes each, with the same FP32 moments. Those four terms become 12,000,000<br>
+bytes. If that implementation also keeps an FP32 master copy of the weights,<br>
+add another 4,000,000 bytes. A “BF16 run” therefore does not identify the whole<br>
+memory budget. Inspect the actual optimizer and master-copy policy. The example<br>
+is arithmetic about stated storage choices; it does not assert how the later<br>
+Qwen smoke trainer stores every tensor.</p>
+<p dir="auto">This ledger explains the next experiment. Increasing the microbatch leaves<br>
+the parameter and moment counts fixed while increasing much of the activation<br>
+work. Increasing sequence length changes both stored states and attention<br>
+work. The measured peak combines those effects; the ledger tells us which<br>
+terms to investigate rather than scaling the entire peak blindly.</p>
+<p dir="auto">We preserve three views:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>View</th>
+<th>What it tells us</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Whole-system <code class="notranslate">MemAvailable</code></td>
+<td>Remaining headroom for the entire machine</td>
+</tr>
+<tr>
+<td>Cgroup <code class="notranslate">memory.peak</code></td>
+<td>Peak memory charged to the isolated job scope</td>
+</tr>
+<tr>
+<td>CUDA-visible process allocation</td>
+<td>Allocation attributed through NVIDIA's process accounting</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">These accounting domains overlap. They must not be added together. If a cgroup<br>
+peak is 7 GiB and CUDA-visible allocation is 6.4 GiB, reporting 13.4 GiB would<br>
+double-count some memory rather than reveal a more accurate total.</p>
+<p dir="auto">Capacity is established incrementally. Start with the smallest useful batch and<br>
+sequence, change one dimension at a time, monitor the whole-system reserve, and<br>
+stop before interactive work or the operating system is placed at risk.</p>
+<h2 dir="auto">1.8 Case study: a three-step Qwen3-0.6B smoke test</h2>
+<p dir="auto">We can now examine a real experiment without asking it to prove more than it was<br>
+designed to prove.</p>
+<h3 dir="auto">Question and prediction</h3>
+<p dir="auto">The question was whether the pinned DGX Spark open-instruct stack could complete<br>
+an existing Qwen3-0.6B full-SFT smoke path while preserving memory headroom.</p>
+<p dir="auto">Before execution, the experiment predicted three BF16 optimizer steps using SDPA,<br>
+microbatch size 1, sequence length 1024, gradient checkpointing, and seed 42. The<br>
+success criteria required:</p>
+<ul dir="auto">
+<li>exit status 0;</li>
+<li>all three optimizer steps;</li>
+<li>finite reported losses;</li>
+<li>saved model outputs;</li>
+<li>at least 24 GiB of whole-system available memory throughout the run.</li>
+</ul>
+<p dir="auto">The contract explicitly excluded claims about general capability improvement,<br>
+long-run convergence, larger configurations, cross-host numerical identity, and<br>
+recipe optimality.</p>
+<h3 dir="auto">Identity and protocol</h3>
+<p dir="auto">The run recorded immutable revisions for the Qwen3-0.6B model, the selected<br>
+instruction dataset, the trainer, its local compatibility patch, and the<br>
+environment lock. It used 32 requested examples and ran inside a 100 GiB cgroup<br>
+with swap disabled for that job.</p>
+<p dir="auto">The complete pre-run contract is preserved in the<br>
+<a href="../../experiments/specs/2026-08-29-qwen3-0.6b-sft-smoke.yaml">experiment specification</a>.</p>
+<h3 dir="auto">Observations</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Measurement</th>
+<th align="right">Observed value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exit status</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Completed optimizer steps</td>
+<td align="right">3 of 3</td>
+</tr>
+<tr>
+<td>Reported losses</td>
+<td align="right">0.360384, 0.264207, 0.357005</td>
+</tr>
+<tr>
+<td>Starting <code class="notranslate">MemAvailable</code></td>
+<td align="right">118.84 GiB</td>
+</tr>
+<tr>
+<td>Minimum <code class="notranslate">MemAvailable</code></td>
+<td align="right">109.74 GiB</td>
+</tr>
+<tr>
+<td>Cgroup peak</td>
+<td align="right">4.03 GiB</td>
+</tr>
+<tr>
+<td>CUDA-visible peak</td>
+<td align="right">6.42 GiB</td>
+</tr>
+<tr>
+<td>Memory and OOM events</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td align="right">21 seconds</td>
+</tr>
+<tr>
+<td>Saved weight file</td>
+<td align="right">1,192,135,096 bytes</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The third loss is higher than the second. That is not a failed criterion: the<br>
+prediction required finite losses, not monotonic loss. Three different<br>
+microbatches can have different difficulty, and three points are far too few for<br>
+a convergence claim.</p>
+<p dir="auto">The trainer did not report gradient norms. We therefore do not manufacture a<br>
+gradient-norm observation. The completed training path is evidence that backward<br>
+and optimizer operations executed, but it is not a recorded measurement of the<br>
+gradient distribution.</p>
+<h3 dir="auto">Interpretation</h3>
+<p dir="auto">All precommitted criteria passed. On the recorded host and stack, this exact<br>
+profile loaded the identified model and data, preprocessed the requested examples,<br>
+executed three BF16 full-SFT steps through the SDPA path, saved the resulting model,<br>
+and preserved the memory reserve.</p>
+<p dir="auto">That is the conclusion. It is intentionally narrower than “the model improved.”<br>
+Establishing improvement would require a capability definition, a frozen<br>
+evaluation set, an appropriate baseline, and uncertainty-aware comparison. We<br>
+will build that machinery later.</p>
+<p dir="auto">The complete measurements, warnings, and output locations are preserved in the<br>
+<a href="../../experiments/reports/2026-08-29-qwen3-0.6b-sft-smoke.md">experiment report</a>.</p>
+<h2 dir="auto">1.9 A reusable reasoning pattern</h2>
+<p dir="auto">For technical decisions throughout this book, use the following sequence:</p>
+<blockquote>
+<p dir="auto">Choice → rationale → evidence → trade-off → failure risk → next experiment</p>
+</blockquote>
+<p dir="auto">Applied to this case:</p>
+<ul dir="auto">
+<li><strong>Choice:</strong> begin with three steps at batch 1 and sequence length 1024.</li>
+<li><strong>Rationale:</strong> exercise the complete path with low cost and conservative memory.</li>
+<li><strong>Evidence:</strong> execution, losses, telemetry, and saved outputs were preserved.</li>
+<li><strong>Trade-off:</strong> the run provides system evidence but almost no capability evidence.</li>
+<li><strong>Failure risk:</strong> a longer or larger run may expose behavior absent from the smoke<br>
+configuration.</li>
+<li><strong>Next experiment:</strong> only after defining the relevant question, vary one dimension<br>
+or move to a learning-mode capability experiment.</li>
+</ul>
+<p dir="auto">This pattern keeps model development attached to decisions rather than dashboards.</p>
+<h2 dir="auto">1.10 A checkpoint is more than its tensor shapes</h2>
+<p dir="auto">Suppose two tokenizers each contain eight IDs. In one, IDs 2 and 3 mean <code class="notranslate">cat</code><br>
+and <code class="notranslate">dog</code>; in the other, those meanings are exchanged. Both fit an eight-row<br>
+embedding and an eight-logit output. Shape checks pass while the new interface<br>
+asks the checkpoint to read and predict different symbols.</p>
+<p dir="auto">This is an interface failure. A checkpoint's learned association with row 2<br>
+does not change when a new tokenizer calls that row <code class="notranslate">dog</code>. Preserve token<br>
+meanings when a supervised checkpoint becomes a parent for another objective.</p>
+<p dir="auto">The vocabulary mapping is necessary but insufficient. Identical mappings can<br>
+encode <code class="notranslate">CAT</code> differently if normalization changes. Merge ranks, pre-tokenization,<br>
+post-processing, decoding, added-token behavior, special IDs, chat templates<br>
+and generation stops also belong to the supported semantic interface. Runtime<br>
+padding buffers are operational state; the training padding/truncation policy<br>
+is a scientific configuration choice.</p>
+<p dir="auto">Keep three questions separate: which upstream revision was requested, which<br>
+actual bytes and encoding rules were used, and which computation occurred.<br>
+A declared revision cannot authenticate arbitrary local files. A byte or<br>
+interface fingerprint cannot establish quality or recover missing provenance.<br>
+For an older checkpoint without an interface record, explicit audited adoption<br>
+can record its actual saved semantics while leaving its original source unproven.</p>
+<p dir="auto">The <a href="../../notebooks/day-01/04_checkpoint_interface.ipynb">interface notebook</a><br>
+builds a local eight-ID fixture without pretrained weights or downloads. Compare unchanged<br>
+save/reload with swapped meanings and changed normalization before considering<br>
+a downstream handoff. <a href="../appendices/d-reproduction-and-environments.md#supervised-fine-tuning-state-and-adapter-exports">Appendix D</a><br>
+provides manifests, validation controls and adapter-export details; Chapter 9<br>
+develops the training and numerical handoff mechanisms.</p>
+<h3 dir="auto">A comparison begins before the first update</h3>
+<p dir="auto">Two training runs can share a seed and still answer different questions. A tokenizer change alters the number of targets; a corpus filter changes the population; a reward filter changes which prompts survive collection. Before using the six <a href="../../docs/COURSE_ASSIGNMENTS.md">course assignments</a>, write the estimand in one sentence: the quantity the comparison is meant to identify. Then list the quantities held fixed and those permitted to vary.</p>
+<p dir="auto">For example, “Does curation reduce validation NLL at equal target exposure?” holds the tokenizer, validation sources, optimizer and targets per update fixed. It permits the training text to change. “Does a larger batch improve forward throughput?” holds model, precision and sequence length fixed, while permitting batch size to change. The first comparison measures a learning outcome; the second measures an execution phase. Neither can substitute for a generated-story judgment.</p>
+<p dir="auto">Assignment F joins these distinctions into a defense. Its evidence table must contain the prediction, frozen protocol, retained failure and strongest supported conclusion for each selected comparison. A refused scaling fit or an unchanged task score can be a successful investigation when the evidence identifies why the original claim was unsupported. The assignment is complete when another reader can reconstruct that argument from the artifacts.</p>
+<h2 dir="auto">1.11 Exercises</h2>
+<p dir="auto">Questions 1–7 develop the core evidence argument. Questions 8–9 are optional<br>
+evidence-reading extensions: use section 1.10 and<br>
+<a href="../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision">Appendix D</a><br>
+for their interface/recovery context. Their original numbers remain stable.</p>
+<ol dir="auto">
+<li>
+<p dir="auto">A run reports losses <code class="notranslate">1.9</code>, <code class="notranslate">1.7</code>, and <code class="notranslate">1.8</code>, then saves a checkpoint. Classify<br>
+each statement as an observation, supported interpretation, or unsupported<br>
+claim:</p>
+<p dir="auto">a. The third reported loss exceeded the second.<br>
+b. The training path completed its requested steps.<br>
+c. The checkpoint is a better general assistant.<br>
+d. Training is converging.</p>
+</li>
+<li>
+<p dir="auto">Two researchers use the same model name, learning rate, and seed but obtain<br>
+different losses. List four identity fields you would investigate before<br>
+blaming GPU nondeterminism.</p>
+</li>
+<li>
+<p dir="auto">Rewrite “I expect training to work” as a falsifiable smoke-test hypothesis. It<br>
+must include execution, numerical validity, output preservation, and a memory<br>
+boundary.</p>
+</li>
+<li>
+<p dir="auto">A profile reports a 5.8 GiB cgroup peak and a 7.1 GiB CUDA-visible peak. What<br>
+total memory did the job consume? Explain why the two numbers are insufficient<br>
+to answer exactly.</p>
+</li>
+<li>
+<p dir="auto">A run exits successfully but crosses its precommitted memory reserve. Which<br>
+parts of the hypothesis are supported, and what is the overall result?</p>
+</li>
+<li>
+<p dir="auto">Design the next controlled memory experiment after a safe run at batch size 1<br>
+and sequence length 1024. State the independent variable, two dependent<br>
+variables, and at least four controlled variables.</p>
+</li>
+<li>
+<p dir="auto">A model and a new tokenizer have the same vocabulary size, but IDs 2 and 3 have<br>
+exchanged meanings. Why can loading succeed while the handoff is invalid?<br>
+What check catches an unchanged vocabulary with a changed normalizer?</p>
+</li>
+<li>
+<p dir="auto">What can explicit adoption establish for an older checkpoint lacking an<br>
+interface fingerprint, and what remains unproven? Should an invocation<br>
+timestamp be part of recovery configuration equality?</p>
+</li>
+<li>
+<p dir="auto">Two children finish a replay experiment with exit 0, but its fresh resume<br>
+hits the external deadline above the memory reserve. Why is the overall<br>
+replay still failed? Is the outer adapter's exit 1 the native child's exit?</p>
+</li>
+</ol>
+<p dir="auto">Attempt the exercises before reading the<br>
+<a href="../solutions/01-evidence-before-optimization.md">solutions</a>.</p>
+<h2 dir="auto">1.12 Chapter summary</h2>
+<ul dir="auto">
+<li>A run produces observations; interpretations must remain bounded by them.</li>
+<li>Experiment identity includes code, environment, hardware, model, data,<br>
+configuration, and seeds.</li>
+<li>A seed controls some randomness but cannot guarantee identical training.</li>
+<li>Hypotheses and success criteria are written before execution.</li>
+<li>Controlled comparisons isolate one meaningful change.</li>
+<li>Smoke tests validate narrow execution paths, not general capability.</li>
+<li>Unified-memory measurements describe overlapping accounting domains and are not<br>
+additive.</li>
+<li>Detailed records belong in experiment reports; the book uses them to support a<br>
+precise argument.</li>
+<li>Checkpoint handoffs preserve token meanings and generation interfaces, not just<br>
+shapes; actual file identity is distinct from declared upstream ancestry.</li>
+</ul>
+<p dir="auto">The next chapter begins at the model's input boundary. Before a language model can<br>
+predict a token, text must be divided into tokens and mapped to vectors. We will<br>
+compare that boundary across English, Chinese, and Swedish—and predict the outcome<br>
+before inspecting it. A multilingual ranking prediction and a later exact Unicode<br>
+round-trip criterion will fail. We will keep both failures, because a valid<br>
+experiment can improve the model of the system by contradicting the model in our<br>
+head.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-6</h1>
+<h1 dir="auto">Chapter 2 — Text, Tokens, and Embeddings</h1>
+<p dir="auto">Companion: <a href="../labs/02-text-tokens-and-embeddings.md">guided laboratory route</a>.</p>
+<p dir="auto">A language model does not receive words. It receives integers.</p>
+<p dir="auto">That simple fact creates an interface problem. Human text is written with<br>
+characters, punctuation, spaces, and writing systems; a neural network operates<br>
+on fixed-width tensors. Something must decide which pieces of text deserve an<br>
+integer, what each integer means, and how that discrete symbol enters continuous<br>
+computation.</p>
+<p dir="auto">The answer is not one dictionary lookup. It is a chain:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">text → bytes and characters → tokenizer pieces → token IDs
+     → embedding vectors → contextual hidden states → next-token scores
+</code></pre>
+<p dir="auto">Every arrow contains a design choice. A tokenizer can compress one language well<br>
+and split another into many pieces. The same numeric ID can mean unrelated text<br>
+under another tokenizer. Repeated IDs retrieve identical initial vectors, yet<br>
+their later hidden states can represent different meanings. A loss can exclude a<br>
+prompt position while still sending gradients into its embedding.</p>
+<p dir="auto">This chapter develops those mechanisms as one argument. We will first understand<br>
+byte-level BPE, then test multilingual tokenization with a pinned Qwen3 tokenizer,<br>
+follow token IDs into an embedding table, and trace next-token supervision back<br>
+into that table. By the end, “text becomes vectors” will no longer be a hidden<br>
+preprocessing step; it will be an inspectable part of the model.</p>
+<p dir="auto">Keep one illustrative sentence in view: <strong>“the pet saw the dog.”</strong> For a tiny<br>
+word-level teaching tokenizer, declare the mapping below and ignore punctuation.<br>
+This is an authored interface, separate from the measured Qwen tokenizer and<br>
+the byte-BPE implementation we will inspect.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>ID</th>
+<th>0</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Piece</td>
+<td><code class="notranslate">cat</code></td>
+<td><code class="notranslate">dog</code></td>
+<td><code class="notranslate">the</code></td>
+<td><code class="notranslate">saw</code></td>
+<td><code class="notranslate">slept</code></td>
+<td><code class="notranslate">pet</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The prefix “the pet saw the” becomes <code class="notranslate">[2,5,3,2]</code>; its next observed target is<br>
+ID 1, <code class="notranslate">dog</code>. How can the two occurrences of ID 2 start from the same vector yet<br>
+help make different predictions? And how can training change that vector when<br>
+the tokenizer's integer mapping is fixed? The lookup and gradient calculations<br>
+below answer the second question. Contextual computation answers the first.</p>
+<h2 dir="auto">2.1 Learning outcomes</h2>
+<p dir="auto">After completing this chapter, you should be able to:</p>
+<ul dir="auto">
+<li>distinguish written words, grapheme clusters, Unicode code points, UTF-8 bytes,<br>
+tokenizer pieces, and token IDs;</li>
+<li>explain offline BPE training separately from frozen runtime encoding;</li>
+<li>explain how byte-level BPE can encode unseen Chinese text without claiming that<br>
+the model understands it;</li>
+<li>treat a tokenizer as part of a model's interface identity rather than a<br>
+replaceable text utility;</li>
+<li>explain why BPE pieces and token IDs have no built-in semantic hierarchy and<br>
+why a coordinated ID permutation preserves model behavior;</li>
+<li>measure token efficiency with an explicit denominator and defend the limits of<br>
+a small multilingual comparison;</li>
+<li>derive the shape change from token IDs to embedding vectors;</li>
+<li>distinguish input embeddings from contextual hidden states;</li>
+<li>trace lookup, tied-classifier, and masked-response gradient paths;</li>
+<li>distinguish attention masks, loss masks, padding, and semantic end tokens;</li>
+<li>interpret the verified Qwen3 tokenizer and embedding dimensions without<br>
+inventing a rationale for unassigned model rows.</li>
+</ul>
+<p dir="auto"><strong>Prerequisites:</strong> Chapter 1's evidence distinctions, Python lists/tensors,<br>
+and the idea that trainable parameters receive gradients from a scalar loss.<br>
+The mechanisms below introduce tokenization and embeddings from first principles.</p>
+<p dir="auto">The <a href="../../notebooks/day-02/README.md">three Day 2 notebooks</a> trace English-trained<br>
+byte BPE on unseen Chinese, vocabulary/sequence cost, and embedding-gradient<br>
+paths. Their original toy encoder is labeled separately from the measured<br>
+production-tokenizer comparisons below; no model download is required.</p>
+<p dir="auto">Chapter 1's evidence discipline remains active: predictions precede measurements,<br>
+observations remain separate from interpretations, and a worked example does not<br>
+silently become a language-wide claim.</p>
+<h2 dir="auto">2.2 Six units that are easy to confuse</h2>
+<p dir="auto">Consider the Chinese character <code class="notranslate">数</code>. It is one visible character and one Unicode<br>
+code point, but UTF-8 stores it as three bytes:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">visible character: 数
+Unicode code point: U+6570
+UTF-8 bytes:        E6 95 B0
+</code></pre>
+<p dir="auto">Now consider the Swedish word <code class="notranslate">språkmodellen</code>. It is one orthographic word, but a<br>
+particular tokenizer may represent it with several pieces. Conversely, a Chinese<br>
+phrase containing multiple characters may be one token.</p>
+<p dir="auto">We therefore need separate names for separate units:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Unit</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Written word</td>
+<td>A language-dependent orthographic unit</td>
+</tr>
+<tr>
+<td>Grapheme cluster</td>
+<td>A user-perceived character, possibly built from several code points</td>
+</tr>
+<tr>
+<td>Unicode code point</td>
+<td>An integer assigned by Unicode to an abstract character</td>
+</tr>
+<tr>
+<td>UTF-8 byte</td>
+<td>One byte in a variable-length encoding of Unicode text</td>
+</tr>
+<tr>
+<td>Tokenizer piece</td>
+<td>A string or byte pattern selected by the tokenizer rules</td>
+</tr>
+<tr>
+<td>Token ID</td>
+<td>The integer address assigned to one tokenizer entry</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">None of these units has a universal one-to-one relationship with another. English<br>
+words can split into stems or fragments. Chinese characters can split into byte<br>
+pieces or merge into phrases. Spaces may be represented as part of the following<br>
+piece. Special tokens can represent control events that do not correspond to<br>
+ordinary source text.</p>
+<p dir="auto">Even “character” is ambiguous. The family emoji <code class="notranslate">👨‍👩‍👧‍👦</code> is one extended<br>
+grapheme cluster, but it contains seven Unicode code points—four people joined by<br>
+three zero-width joiners—and occupies 25 UTF-8 bytes. Python's <code class="notranslate">len()</code> reports<br>
+seven because it counts code points, not reader-perceived graphemes.</p>
+<p dir="auto">This is why “How many tokens does this sentence contain?” is incomplete without a<br>
+tokenizer identity and configuration.</p>
+<h3 dir="auto">The tokenizer is part of the model contract</h3>
+<p dir="auto">Suppose tokenizer A maps ID 42 to <code class="notranslate">cat</code>, while tokenizer B maps ID 42 to a Chinese<br>
+piece. Passing IDs from A into a model trained with B does not produce a type or<br>
+shape error. It silently selects the wrong embedding rows.</p>
+<p dir="auto">The model-tokenizer interface is therefore semantic, not merely structural:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">tokenizer rules + vocabulary + special-token policy ↔ embedding row meanings
+</code></pre>
+<p dir="auto">A reproducible model identity should include the tokenizer name and immutable<br>
+revision, normalization and pre-tokenization behavior, special-token policy, and<br>
+whether encoding adds those special tokens. “The IDs have the right shape” is not<br>
+evidence that the interface is correct.</p>
+<h3 dir="auto">Normalization and pre-tokenization change the input</h3>
+<p dir="auto">Tokenization begins before BPE merges. Normalization may rewrite one valid Unicode<br>
+sequence into another, while pre-tokenization determines which regions are<br>
+eligible to interact. These steps belong to the tokenizer's identity.</p>
+<p dir="auto">The local tokenizer-mechanics experiment compared two canonically equivalent<br>
+spellings of <code class="notranslate">café</code>:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Source</th>
+<th align="right">Code points</th>
+<th align="right">UTF-8 bytes</th>
+<th align="right">Graphemes</th>
+<th>Qwen3 token IDs</th>
+<th>Exact source round trip</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NFC <code class="notranslate">café</code></td>
+<td align="right">4</td>
+<td align="right">5</td>
+<td align="right">4</td>
+<td><code class="notranslate">[924, 58858]</code></td>
+<td>yes</td>
+</tr>
+<tr>
+<td>NFD <code class="notranslate">café</code></td>
+<td align="right">5</td>
+<td align="right">6</td>
+<td align="right">4</td>
+<td><code class="notranslate">[924, 58858]</code></td>
+<td>no</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The pinned tokenizer normalized both forms to the same IDs and decoded both as<br>
+NFC <code class="notranslate">café</code>. The strings are canonically equivalent, but the NFD source and decoded<br>
+text are not identical code-point sequences. Its returned offsets also stopped<br>
+before the original combining mark. A round trip can therefore preserve normalized<br>
+text without preserving the exact source representation, and offset-derived spans<br>
+need scrutiny whenever normalization changes the input.</p>
+<p dir="auto">Pre-tokenization and byte representation can also make whitespace part of token<br>
+identity. Under the same pinned tokenizer:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">token  → ID 5839, internal piece token
+ token → ID 3950, internal piece Ġtoken
+</code></pre>
+<p dir="auto">Both examples used one token, but they did not use the same token. Token count<br>
+alone hides this interface difference. The exact protocol and negative<br>
+round-trip result are preserved in the<br>
+<a href="../../experiments/reports/2026-08-31-tokenizer-mechanics.md">tokenizer-mechanics report</a>.</p>
+<h3 dir="auto">Special tokens and chat templates package the text</h3>
+<p dir="auto">A model-facing prompt may contain more than the visible user content. The pinned<br>
+Qwen3 tokenizer encoded raw <code class="notranslate">Hello</code> as one ID, <code class="notranslate">9707</code>. Rendering the same content<br>
+as one user message with a generation prompt produced:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">&lt;|im_start|&gt;user
+Hello&lt;|im_end|&gt;
+&lt;|im_start|&gt;assistant
+</code></pre>
+<p dir="auto">That sequence occupied nine token positions. The added positions came from the<br>
+frozen chat template and control tokens, not from BPE learning vocabulary at<br>
+runtime. In this snapshot, <code class="notranslate">&lt;|im_end|&gt;</code> is the EOS token and <code class="notranslate">&lt;|endoftext|&gt;</code> is<br>
+used as PAD. Section 2.9 returns to their different learning roles; later<br>
+instruction-data chapters will examine chat-template and loss-mask policy in<br>
+depth.</p>
+<h2 dir="auto">2.3 BPE learns compression offline</h2>
+<p dir="auto">Byte-pair encoding, or BPE, is easier to understand when we separate two phases<br>
+that are often described as though they were one operation.</p>
+<p dir="auto">This chapter focuses on <strong>byte-level BPE</strong>, not every tokenizer family:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Family</th>
+<th>Bounded mechanism summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BPE</td>
+<td>Grow larger pieces through learned merges, then replay merge priorities during encoding</td>
+</tr>
+<tr>
+<td>WordPiece</td>
+<td>Learn a subword inventory with a different scoring procedure; common encoders select valid pieces greedily</td>
+</tr>
+<tr>
+<td>Unigram</td>
+<td>Begin with many candidate pieces, prune the inventory, and score alternative segmentations probabilistically</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Byte fallback is a separate implementation choice; the name of a subword family<br>
+alone does not guarantee complete byte coverage.</p>
+<h3 dir="auto">Phase 1: train the tokenizer</h3>
+<p dir="auto">In a simplified BPE training loop:</p>
+<ol dir="auto">
+<li>represent the training corpus using base symbols;</li>
+<li>count adjacent symbol pairs that are eligible to merge;</li>
+<li>select a pair according to the training rule;</li>
+<li>add its merged form to the vocabulary;</li>
+<li>rewrite occurrences using that merge;</li>
+<li>repeat until the merge or vocabulary budget is exhausted.</li>
+</ol>
+<p dir="auto">For a byte-level tokenizer, the base inventory includes all 256 byte values. To<br>
+make the training mechanism readable, our tiny executable example instead starts<br>
+from characters in a pre-tokenized weighted corpus:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">hug     × 5
+hugs    × 3
+hugging × 2
+</code></pre>
+<p dir="auto">Three measured rounds produced:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="right">Round</th>
+<th>Selected pair</th>
+<th align="right">Weighted count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">1</td>
+<td><code class="notranslate">h + u → hu</code></td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td><code class="notranslate">hu + g → hug</code></td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td><code class="notranslate">hug + s → hugs</code></td>
+<td align="right">3</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">At round 1, <code class="notranslate">h+u</code> and <code class="notranslate">u+g</code> were tied at 10. A declared lexicographic tie break<br>
+selected <code class="notranslate">h+u</code>; “choose the most frequent pair” was not sufficient to determine<br>
+a unique result. After training, frozen replay encoded <code class="notranslate">hugging</code> as<br>
+<code class="notranslate">[hug] [g] [i] [n] [g]</code> and <code class="notranslate">hugs</code> as <code class="notranslate">[hugs]</code>. The old constituent entries did<br>
+not disappear merely because larger pieces were added.</p>
+<p dir="auto">The implementation and complete pair-count trace live in<br>
+<a href="../../src/dongxi_llms/tiny_bpe.py"><code class="notranslate">tiny_bpe.py</code></a> and the<br>
+<a href="../../experiments/reports/2026-08-31-tokenizer-mechanics.md">tokenizer-mechanics report</a>.<br>
+The example establishes the algorithmic mechanism; it does not reconstruct<br>
+Qwen3's historical merge sequence.</p>
+<p dir="auto">Frequency matters, but “frequent text becomes one token” is too strong. A pair<br>
+must compete against every other eligible pair for a finite budget. Normalization,<br>
+pre-tokenization boundaries, existing merges, corpus weighting, and merge order<br>
+all affect the result.</p>
+<h3 dir="auto">Phase 2: encode with frozen rules</h3>
+<p dir="auto">At runtime, the trained tokenizer does not inspect one new sentence and invent<br>
+new vocabulary entries. It:</p>
+<ol dir="auto">
+<li>applies its fixed normalization and pre-tokenization rules;</li>
+<li>converts text to its base representation;</li>
+<li>replays learned merge priorities where eligible;</li>
+<li>maps the resulting pieces to fixed IDs.</li>
+</ol>
+<p dir="auto">Encoding is therefore more than “find the longest vocabulary string.” A string<br>
+can exist in the vocabulary but fail to appear in a segmentation because its<br>
+merge path, rank, or pre-tokenization boundary does not permit it there.</p>
+<h3 dir="auto">Byte coverage is not language understanding</h3>
+<p dir="auto">A byte-level tokenizer has a useful fallback. Even if its training data contained<br>
+only ASCII English, it can still preserve the UTF-8 bytes of <code class="notranslate">数</code>:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">数 → [E6] [95] [B0]
+</code></pre>
+<p dir="auto">With repeated Chinese exposure, BPE may learn compression inside and across<br>
+characters:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">[E6] + [95]       → [E6 95]
+[E6 95] + [B0]    → [数]
+[数] + [据]        → [数据]
+[数据] + [库]      → [数据库]
+</code></pre>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../visuals/animations/rendered/bpe-byte-merges.gif"><img src="../../visuals/animations/rendered/bpe-byte-merges.gif" alt="Byte-level BPE coverage and merge progression" data-animated-image="" style="max-width: 100%;"></a></p>
+<p dir="auto">This progression is a transparent mechanism, not a reconstruction of any<br>
+particular production tokenizer's historical merge sequence.</p>
+<p dir="auto">The distinction is fundamental:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">base bytes guarantee reversible coverage
+learned merges improve compression
+model training creates language capability
+</code></pre>
+<p dir="auto">An English-trained byte tokenizer can encode Chinese without <code class="notranslate">&lt;unk&gt;</code> while doing<br>
+so inefficiently. A language model trained only on English can receive those<br>
+valid byte IDs yet have little ability to interpret them. Encodability,<br>
+compression, and understanding are three different claims.</p>
+<p dir="auto">Not every tokenizer has complete byte coverage or byte fallback. Other designs<br>
+can still emit an unknown token for unsupported input.</p>
+<h3 dir="auto">BPE pieces are procedural atoms, not a semantic family tree</h3>
+<p dir="auto">A trained BPE vocabulary can simultaneously contain pieces corresponding to<br>
+<code class="notranslate">数</code>, <code class="notranslate">据</code>, <code class="notranslate">数据</code>, and <code class="notranslate">数据库</code>. That does not tell the model that one entry is the<br>
+semantic parent, child, or sum of another. The merge history determined which<br>
+adjacent patterns became reusable pieces during tokenizer training. At runtime,<br>
+the tokenizer emits the final selected IDs; the transformer does not normally<br>
+receive the merge tree that produced them.</p>
+<p dir="auto">The old constituents remain vocabulary entries because they are still needed in<br>
+other contexts. A long piece such as <code class="notranslate">数据库</code> is therefore an additional atomic<br>
+symbol at the model interface, not a compositional instruction saying “combine<br>
+the learned meanings of <code class="notranslate">数据</code> and <code class="notranslate">库</code>.”</p>
+<p dir="auto">The language model can later learn relationships among these entries through<br>
+shared contexts, embedding geometry, attention, and next-token gradients. Those<br>
+relationships are induced by model training. They are not guaranteed by string<br>
+overlap, merge ancestry, or neighboring token IDs.</p>
+<h2 dir="auto">2.4 Multilingual efficiency must be measured</h2>
+<p dir="auto">Before inspecting Qwen3, we predicted token counts for approximately equivalent<br>
+English, Chinese, and Swedish sentences. The initial reasoning was plausible:</p>
+<ul dir="auto">
+<li>Chinese might use approximately one token per character;</li>
+<li>Swedish compounds can express in one written word what English expresses with<br>
+multiple words;</li>
+<li>therefore Swedish might use the fewest tokens, Chinese the middle, and English<br>
+the most.</li>
+</ul>
+<p dir="auto">That prediction failed—and the failure taught more than a correct guess would<br>
+have.</p>
+<h3 dir="auto">Fixed protocol</h3>
+<p dir="auto">The experiment pinned <code class="notranslate">Qwen/Qwen3-0.6B</code> at revision<br>
+<code class="notranslate">c1899de289a04d12100db370d81485cdf75e47ca</code>, disabled added special tokens, and<br>
+used tokenizer-default normalization. It recorded:</p>
+<ul dir="auto">
+<li>Unicode code-point count;</li>
+<li>UTF-8 byte count;</li>
+<li>token count;</li>
+<li>code points and bytes per token;</li>
+<li>exact IDs, vocabulary pieces, and source offsets;</li>
+<li>exact encode/decode round trips.</li>
+</ul>
+<p dir="auto">The complete protocol and output are preserved in the<br>
+<a href="../../experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md">tokenizer report</a>.</p>
+<h3 dir="auto">Observations</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Language</th>
+<th align="right">Code points</th>
+<th align="right">UTF-8 bytes</th>
+<th align="right">Tokens</th>
+<th align="right">Code points/token</th>
+<th align="right">Bytes/token</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chinese</td>
+<td align="right">16</td>
+<td align="right">48</td>
+<td align="right">9</td>
+<td align="right">1.777778</td>
+<td align="right">5.333333</td>
+</tr>
+<tr>
+<td>English</td>
+<td align="right">58</td>
+<td align="right">58</td>
+<td align="right">11</td>
+<td align="right">5.272727</td>
+<td align="right">5.272727</td>
+</tr>
+<tr>
+<td>Swedish</td>
+<td align="right">58</td>
+<td align="right">63</td>
+<td align="right">20</td>
+<td align="right">2.900000</td>
+<td align="right">3.150000</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">All three sequences decoded exactly to their original text. The observed ranking<br>
+was the reverse of the initial prediction:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">Chinese (9) &lt; English (11) &lt; Swedish (20)
+</code></pre>
+<p dir="auto">The reader-facing spans make the mechanism easier to see than the tokenizer's<br>
+internal byte-display alphabet:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">Chinese:
+[小型] [语言] [模型] [学习] [预测] [下一个] [词] [元] [。]
+
+English:
+[The] [ small] [ language] [ model] [ learns] [ to] [ predict]
+[ the] [ next] [ token] [.]
+
+Swedish:
+[Den] [ l] [illa] [ spr] [å] [k] [mod] [ellen] [ l] [är]
+[ sig] [ att] [ för] [uts] [ä] [ga] [ nä] [sta] [ token] [.]
+</code></pre>
+<p dir="auto"><code class="notranslate">språkmodellen</code> is one written Swedish word but five tokens in this tokenizer:<br>
+<code class="notranslate"> spr</code>, <code class="notranslate">å</code>, <code class="notranslate">k</code>, <code class="notranslate">mod</code>, and <code class="notranslate">ellen</code>. Chinese, meanwhile, receives several<br>
+multi-character pieces, including the three-character span <code class="notranslate">下一个</code>.</p>
+<h3 dir="auto">Interpretation and limits</h3>
+<p dir="auto">The result does not mean that Chinese is universally more token-efficient than<br>
+Swedish or English. It means that this pinned tokenizer compressed these three<br>
+fixed strings in this order.</p>
+<p dir="auto">It does support a broader mechanism:</p>
+<blockquote>
+<p dir="auto">Orthographic word structure does not determine token efficiency; the learned<br>
+tokenizer interface does.</p>
+</blockquote>
+<p dir="auto">The vocabulary is an imperfect compression record of patterns that won finite<br>
+capacity during tokenizer training. Corpus mixture and weighting are plausible<br>
+causes of multilingual differences, but this experiment did not observe the<br>
+original tokenizer-training corpus and cannot assign a causal explanation to a<br>
+specific merge.</p>
+<p dir="auto">Efficiency also needs a denominator. Tokens per sentence is useful for billing or<br>
+context-window occupancy only when sentences are comparable. Code points per<br>
+token and UTF-8 bytes per token reveal different compression properties. None is<br>
+a direct measure of comprehension or downstream quality.</p>
+<p dir="auto">Language-wide claims would require a representative, frozen multilingual corpus,<br>
+matched content, clear sampling rules, distributional summaries, and uncertainty<br>
+or variation across domains—not one sentence per language.</p>
+<h3 dir="auto">Vocabulary size trades rows against sequence positions</h3>
+<p dir="auto">A tokenizer with fewer learned pieces tends to leave more text decomposed into<br>
+bytes or short fragments. That increases token sequence length <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$n$</math-renderer>. More<br>
+positions mean more transformer work, more autoregressive generation steps, more<br>
+KV-cache entries, and—under full attention—more position pairs.</p>
+<p dir="auto">A larger vocabulary can compress frequent patterns into fewer positions, but it<br>
+increases the embedding and output dimensions <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$V_m$</math-renderer>. Dense next-token projection<br>
+must compare each contextual state with every output row. The broad trade-off is:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">smaller vocabulary → often longer sequences and more transformer positions
+larger vocabulary  → wider embedding/output tables and more candidate scores
+</code></pre>
+<p dir="auto">“Often” matters. A large vocabulary allocated mainly to other languages or<br>
+domains can compress the target text worse than a smaller specialized one.<br>
+Chapter 3 makes the <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$n$</math-renderer>-versus-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$V_m$</math-renderer> computation explicit when it constructs the<br>
+vocabulary-wide logit tensor.</p>
+<h2 dir="auto">2.5 Embeddings turn addresses into vectors</h2>
+<p dir="auto">A token ID is an address, not a learned semantic vector. Let:</p>
+<ul dir="auto">
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$V_m$</math-renderer> be the model's embedding-row count;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$D$</math-renderer> be the embedding width;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$E \in \mathbb{R}^{V_m \times D}$</math-renderer> be the trainable embedding table.</li>
+</ul>
+<p dir="auto">For token IDs <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$I \in \{0,\ldots,V_m-1\}^{B \times n}$</math-renderer>, lookup produces:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$X = E[I], \qquad X \in \mathbb{R}^{B \times n \times D}.$$</math-renderer>
+<p dir="auto">For example:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">input_ids.shape = [2, 5]
+E.shape         = [V_m, 8]
+X.shape         = [2, 5, 8]
+</code></pre>
+<p dir="auto">Every ID becomes one length-8 vector, so lookup adds an embedding dimension<br>
+rather than replacing the batch or sequence dimensions.</p>
+<h3 dir="auto">Follow the illustrative prefix into a table</h3>
+<p dir="auto">Reduce the width to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$D=2$</math-renderer> so that every coordinate is visible. Assign the toy<br>
+rows <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$E[2]=[1,0]$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$E[5]=[0,1]$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$E[3]=[1,1]$</math-renderer>. Lookup for one sequence<br>
+has shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,4,2]$</math-renderer> and reads:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="right">Position</th>
+<th>Piece / ID</th>
+<th>Retrieved row</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">0</td>
+<td>
+<code class="notranslate">the</code> / 2</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,0]$</math-renderer></td>
+</tr>
+<tr>
+<td align="right">1</td>
+<td>
+<code class="notranslate">pet</code> / 5</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[0,1]$</math-renderer></td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td>
+<code class="notranslate">saw</code> / 3</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,1]$</math-renderer></td>
+</tr>
+<tr>
+<td align="right">3</td>
+<td>
+<code class="notranslate">the</code> / 2</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,0]$</math-renderer></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto"><strong>Reader prediction.</strong> If we exchange the two <code class="notranslate">the</code> positions, does lookup<br>
+alone detect a change? No: the retrieved rows are identical. The lookup has no<br>
+position argument. Later position information and access to earlier tokens<br>
+allow the two occurrences to become different contextual states. These<br>
+assigned coordinates expose indexing; neither axis has been learned to mean<br>
+an English concept.</p>
+<p dir="auto">Mathematically, selecting row <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$i$</math-renderer> is equivalent to multiplying a one-hot row<br>
+vector by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$E$</math-renderer>:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$e_i^\top E = E[i].$$</math-renderer>
+<p dir="auto">Implementations use indexed lookup because materializing a mostly zero vector of<br>
+length <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$V_m$</math-renderer> is wasteful.</p>
+<h3 dir="auto">Token IDs are categorical addresses</h3>
+<p dir="auto">It is tempting to say that the model learns relationships among numbers such as<br>
+1, 2, and 3. The important correction is that those integers are only row<br>
+addresses. ID 3 is not numerically closer in meaning to ID 4 than to ID 40,000.</p>
+<p dir="auto">Imagine applying one consistent permutation to the tokenizer mappings, every<br>
+dataset ID and label, the input embedding rows, the output rows and biases, and<br>
+any special-token references. The resulting system can compute exactly the same<br>
+function and decode exactly the same text. Only the printed addresses changed.</p>
+<p dir="auto">The model therefore learns token-sequence structure directly and linguistic<br>
+structure indirectly through the tokenizer's reversible association between IDs<br>
+and text. It does not learn arithmetic on token ID magnitudes. Similarities live<br>
+in learned parameters and contextual behavior, not in the integers themselves.</p>
+<h3 dir="auto">Repetition means parameter reuse</h3>
+<p dir="auto">For IDs <code class="notranslate">[2, 5, 2]</code>, lookup returns three vectors:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">E[2], E[5], E[2]
+</code></pre>
+<p dir="auto">The first and third values are copies used at different sequence positions, but<br>
+they come from the same trainable row. If their position-level gradients are<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$g_0$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$g_2$</math-renderer>, the shared parameter receives their sum:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$\frac{\partial L}{\partial E[2]} = g_0 + g_2.$$</math-renderer>
+<p dir="auto">Under the controlled sum loss in our transparent PyTorch lab, each occurrence<br>
+contributed a vector of ones:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">gradient at row 2: [2, 2, 2, 2]
+gradient at row 5: [1, 1, 1, 1]
+</code></pre>
+<p dir="auto">Only rows 2 and 5 received a <strong>direct lookup-path gradient</strong> in that example. The<br>
+qualification matters because the same table may also participate elsewhere in<br>
+the model.</p>
+<p dir="auto">We can carry the same mechanism through an update. For the four-position<br>
+illustrative prefix, use the deliberately simple objective<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$L_{\mathrm{sum}}=\sum_{t,d}E[I_t,d]$</math-renderer>. It is a microscope for parameter sharing,<br>
+not a language-model loss. Each retrieved coordinate contributes derivative 1.<br>
+The row gradients are therefore <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[2,2]$</math-renderer> at row 2 and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,1]$</math-renderer> at rows 3 and 5;<br>
+other rows receive zero. Plain stochastic gradient descent (SGD) subtracts a<br>
+learning-rate-scaled gradient from each parameter. One step here,<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$E\leftarrow E-0.1\nabla_E L_{\mathrm{sum}}$</math-renderer>,<br>
+changes the selected rows to:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Shared row</th>
+<th>Before</th>
+<th>Gradient</th>
+<th>After</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2: <code class="notranslate">the</code>
+</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,0]$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[2,2]$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[0.8,-0.2]$</math-renderer></td>
+</tr>
+<tr>
+<td>5: <code class="notranslate">pet</code>
+</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[0,1]$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,1]$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[-0.1,0.9]$</math-renderer></td>
+</tr>
+<tr>
+<td>3: <code class="notranslate">saw</code>
+</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,1]$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,1]$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[0.9,0.9]$</math-renderer></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Both <code class="notranslate">the</code> positions retrieve the updated row next time. The IDs did not change;<br>
+the reusable representation did. Change only the final ID from 2 to 5 and<br>
+predict the new gradients: row 2 receives <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,1]$</math-renderer>, row 5 receives <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[2,2]$</math-renderer>,<br>
+and row 3 remains at <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[1,1]$</math-renderer>. Repetition determines accumulation, not the size<br>
+of the printed ID. The same indexed sum and backward operation is runnable in<br>
+<a href="../../src/dongxi_llms/embedding_gradient_lab.py">the repeated-lookup lab</a>;<br>
+Chapter 3 replaces this artificial objective with next-token prediction.</p>
+<h2 dir="auto">2.6 An embedding is a starting point, not a finished meaning</h2>
+<p dir="auto">Consider two occurrences of <code class="notranslate">bank</code>:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">The bank approved the loan.
+We rested beside the river bank.
+</code></pre>
+<p dir="auto">If both occurrences have the same token ID, both initially retrieve the same<br>
+embedding row. The table cannot select a complete context-specific sense before<br>
+the transformer has processed context.</p>
+<p dir="auto">We need three levels:</p>
+<ol dir="auto">
+<li><strong>Token ID:</strong> the discrete address created by the tokenizer.</li>
+<li><strong>Input embedding:</strong> a learned, context-independent starting vector for that<br>
+ID.</li>
+<li><strong>Contextual hidden state:</strong> a position-specific vector constructed by the<br>
+transformer from the causally available sequence.</li>
+</ol>
+<p dir="auto">For a hidden tensor <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$H \in \mathbb{R}^{B \times n \times D}$</math-renderer>, we use lowercase<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$h = H[b,t,:] \in \mathbb{R}^D$</math-renderer> for one position's contextual state. With input<br>
+<code class="notranslate">[cat, sat]</code>, the final position can be summarized as:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$h_{\text{sat}} = \mathrm{Transformer}(E[\text{cat}], E[\text{sat}]).$$</math-renderer>
+<p dir="auto">The two occurrences of one token begin with the same row but can develop<br>
+different hidden states because position and surrounding context differ.</p>
+<h3 dir="auto">Meaning obeys the information boundary</h3>
+<p dir="auto">In a causal decoder, the state at a position can use only that token and earlier<br>
+tokens. At <code class="notranslate">bank</code> in <code class="notranslate">The bank approved the loan</code>, the words <code class="notranslate">approved</code> and<br>
+<code class="notranslate">loan</code> are still in the future. The state at <code class="notranslate">bank</code> may therefore remain<br>
+ambiguous. Later positions can combine the earlier <code class="notranslate">bank</code> representation with<br>
+new evidence and form a financial interpretation; they do not travel backward<br>
+and rewrite the earlier state.</p>
+<p dir="auto">This suggests a more useful mental model than “the model looks up meaning”:</p>
+<blockquote>
+<p dir="auto">A causal transformer maintains an evolving hypothesis about the sequence and<br>
+can preserve ambiguity until later computation has enough evidence.</p>
+</blockquote>
+<h3 dir="auto">Context needs order</h3>
+<p dir="auto"><code class="notranslate">dog bites man</code> and <code class="notranslate">man bites dog</code> retrieve the same set of token-type rows but<br>
+describe different events. Token identity alone is insufficient.</p>
+<p dir="auto">Qwen3 uses rotary positional embeddings, or RoPE, inside attention. At a high<br>
+level, RoPE rotates queries and keys according to position:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$q_t' = R_t q_t, \qquad k_s' = R_s k_s.$$</math-renderer>
+<p dir="auto">Their dot product can then depend on the relative position <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$t-s$</math-renderer>. RoPE does not<br>
+simply replace the token embedding with a “position 7” vector; it makes attention<br>
+comparisons position-aware. Chapter 4 derives attention and its masks, and<br>
+Chapter 5 places RoPE inside the complete decoder.</p>
+<p dir="auto">Meaning in the model therefore emerges from identity, order, accessibility, and<br>
+interaction—not from one coordinate or one lookup row. Individual embedding<br>
+dimensions generally have no fixed human label. A coordinated change of basis in<br>
+the representation space and downstream weights can preserve the network's<br>
+function, so “dimension 347 means animalness” is not a sound default claim.</p>
+<h2 dir="auto">2.7 Next-token loss trains the embedding table</h2>
+<p dir="auto">Embedding training normally has no separate target vector for <code class="notranslate">cat</code>, <code class="notranslate">sat</code>, or<br>
+<code class="notranslate">dog</code>. Supervision comes from the language-model objective:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">token IDs
+   ↓ lookup
+input embeddings
+   ↓ transformer
+contextual state h
+   ↓ output projection
+logits over candidate token IDs
+   ↓ next-token loss
+scalar L
+   ↓ backpropagation
+embedding and transformer gradients
+</code></pre>
+<p dir="auto">The embedding becomes useful because, across many contexts, its values help the<br>
+network predict later tokens. “Meaning” is therefore distributed across the<br>
+embedding table and the transformations that consume it.</p>
+<h3 dir="auto">Weight tying couples reading and predicting</h3>
+<p dir="auto">Hidden states are row vectors throughout the book. The stored output weight<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$W_{\mathrm{out}}$</math-renderer> has shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[V_m,D]$</math-renderer>, so an untied head computes<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$z=hW_{\mathrm{out}}^\top$</math-renderer>. With tying, that stored parameter is the embedding<br>
+table <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$E$</math-renderer>. Legacy notebook variables retain their names; an API's sequence-length<br>
+<code class="notranslate">T</code> means <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$n$</math-renderer> in the mathematical notation here.</p>
+<p dir="auto">An untied language model has a separate output matrix <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$W_{\mathrm{out}}$</math-renderer>. A tied model<br>
+reuses <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$E$</math-renderer>:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$z = hE^\top, \qquad z_i = h \cdot E[i].$$</math-renderer>
+<p dir="auto">Here <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$z_i$</math-renderer> is the logit for candidate token <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$i$</math-renderer>: a raw compatibility score,<br>
+not yet a probability. Softmax converts all logits into a shared probability<br>
+distribution. Chapter 3 derives that conversion and the next-token loss in full.</p>
+<p dir="auto">For target token <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$y$</math-renderer>, the output-side gradient of cross-entropy with respect to<br>
+one tied row is:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$\left.\frac{\partial L}{\partial E[i]}\right|_{output}
+= \left(p_i - \mathbf{1}[i=y]\right)h.$$</math-renderer>
+<p dir="auto">This creates two distinct paths:</p>
+<ul dir="auto">
+<li><strong>lookup path:</strong> only rows selected by input IDs receive direct lookup<br>
+contributions;</li>
+<li><strong>tied output path:</strong> every row in an ordinary dense softmax generally receives<br>
+an output-classifier contribution.</li>
+</ul>
+<p dir="auto">Selected input rows receive the sum of both paths. Unselected rows can still move<br>
+through the tied output path.</p>
+<h3 dir="auto">Equal forward values can create different learning trajectories</h3>
+<p dir="auto">Our lab initialized an untied output matrix with exactly the same numeric values<br>
+as the input table. The tied and untied models therefore produced the same<br>
+forward loss, <code class="notranslate">0.699771</code>. Their embedding gradients differed:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">untied nonzero embedding rows: [1, 3]
+tied nonzero embedding rows:   [0, 1, 2, 3, 4, 5]
+</code></pre>
+<p dir="auto">The values were equal, but their parameter identities were not. In the untied<br>
+model, two independent parameters happened to contain equal numbers. In the tied<br>
+model, one parameter occupied two roles in the computation graph.</p>
+<p dir="auto">This leads to an architectural principle:</p>
+<blockquote>
+<p dir="auto">Architecture determines not only the forward function but also how learning<br>
+credit is routed when that function is wrong.</p>
+</blockquote>
+<p dir="auto">Weight tying saves parameters and encourages one geometry to support both reading<br>
+and predicting. It also removes freedom: the two roles cannot adapt independently.<br>
+The lab verifies gradient routing, not that tying is universally superior.</p>
+<p dir="auto">Production LLMs commonly use AdamW rather than the simple update<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$E \leftarrow E-\eta\nabla E$</math-renderer>, but the optimizer still acts on the accumulated<br>
+gradient produced by these paths.</p>
+<h2 dir="auto">2.8 Qwen3's concrete interface</h2>
+<p dir="auto">We inspected the exact Qwen3-0.6B revision used in the tokenizer experiment. The<br>
+runtime measurements were:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">tokenizer base vocabulary:        151,643
+tokenizer total entries:          151,669
+maximum tokenizer-assigned ID:    151,668
+model vocabulary rows:            151,936
+embedding width:                    1,024
+input embedding shape:    [151936, 1024]
+output embedding shape:   [151936, 1024]
+one-position logits:       [1, 1, 151936]
+</code></pre>
+<p dir="auto">The input and output accessors returned the same Python parameter object backed<br>
+by the same storage. Qwen3 therefore implements true runtime weight tying in this<br>
+pinned stack.</p>
+<p dir="auto">The model has 267 rows beyond the tokenizer's exposed entries:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">ID 151668 → &lt;/think&gt;
+ID 151669 → no tokenizer piece
+ID 151935 → no tokenizer piece
+</code></pre>
+<p dir="auto">Ordinary encoding with this tokenizer cannot select those extra rows as input,<br>
+yet the model emits logits for all 151,936 rows. With dense tied classification,<br>
+such rows can receive output-side gradients despite receiving no ordinary lookup<br>
+gradient.</p>
+<p dir="auto">The model vocabulary size is divisible by 128. That is an observation. Calling<br>
+the 267 rows hardware padding is plausible, but the inspected configuration and<br>
+weights do not establish why the designers selected this exact size. The full<br>
+method and evidence are preserved in the<br>
+<a href="../../experiments/reports/2026-08-31-qwen3-embedding-inspection.md">Qwen3 interface report</a>.</p>
+<p dir="auto">This example also sharpens our notation: tokenizer entry count <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$V_t$</math-renderer> and model<br>
+row count <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$V_m$</math-renderer> can differ. Treating both casually as “the vocabulary size” can<br>
+hide a real interface boundary.</p>
+<p dir="auto">The <a href="../../learning_artifacts/day-02-text-tokens-and-embeddings/output-vocabulary-and-decoder-coverage.md">measured decoder-coverage failure</a><br>
+turns this into an output-interface case: full-support sampling from the pinned<br>
+Base checkpoint chooses unmapped ID 151768 as its 24th action. It is a valid<br>
+model row, yet the tokenizer cannot decode it. This is neither an unfamiliar<br>
+input word nor an embedding-index overflow. Input byte coverage does not<br>
+guarantee coverage of every model output row. Masking unassigned rows would<br>
+change the sampling distribution and cannot repair the historical record.<br>
+Chapter 13 develops the incomplete-panel evidence and the same-seed cap<br>
+comparison; <a href="../appendices/d-reproduction-and-environments.md#policy-reference-and-pending-rollout-identity">Appendix D</a><br>
+links the retained failure protocol.</p>
+<h2 dir="auto">2.9 Masks define different learning boundaries</h2>
+<p dir="auto">Sequences in one batch usually have different lengths. Padding creates a<br>
+rectangular tensor:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">tokens:
+[
+  [The, cat, slept, &lt;eos&gt;],
+  [Birds, fly, &lt;eos&gt;, &lt;pad&gt;],
+]
+</code></pre>
+<p dir="auto"><code class="notranslate">&lt;pad&gt;</code> is artificial batch formatting. <code class="notranslate">&lt;eos&gt;</code> is a semantic event the model<br>
+should learn to predict. Treating them identically would erase the supervision<br>
+that teaches generation to stop.</p>
+<p dir="auto">Two masks answer two different questions:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Attention or visibility mask</td>
+<td>May this position influence another representation?</td>
+</tr>
+<tr>
+<td>Loss or supervision mask</td>
+<td>Should prediction error at this position contribute to the objective?</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">A common representation is:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">input_ids =
+[
+  [12, 24, 31],
+  [47, 18,  0],
+]
+
+attention_mask =
+[
+  [1, 1, 1],
+  [1, 1, 0],
+]
+
+labels =
+[
+  [12, 24, 31],
+  [47, 18, -100],
+]
+</code></pre>
+<p dir="auto">This schematic isolates padding and ignore positions. Causal language-model APIs<br>
+often accept labels aligned with <code class="notranslate">input_ids</code> and perform the one-position shift<br>
+inside the loss computation; Chapter 3 makes that alignment explicit.</p>
+<p dir="auto">In common PyTorch cross-entropy usage, label <code class="notranslate">-100</code> means “ignore this target.” If<br>
+the padded label remained ID 0, the objective would include:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$$L_{pad} = -\log P(\text{PAD}\mid\text{preceding context}),$$</math-renderer>
+<p dir="auto">training the model on batch formatting rather than intended language.</p>
+<p dir="auto">Exact conventions vary by trainer. Never assume that providing an attention mask<br>
+also masks labels; inspect the shifted labels and reduction mask used by the<br>
+actual implementation.</p>
+<h3 dir="auto">No local loss does not mean no gradient</h3>
+<p dir="auto">Instruction tuning later uses the distinction deliberately:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">User prompt       → visible context, possibly excluded from direct loss
+Assistant response → visible context and supervised targets
+</code></pre>
+<p dir="auto">If a supervised response state attends to prompt states, the response loss<br>
+depends on the prompt computation. Backpropagation follows that dependency:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">response loss
+   → response hidden state
+   → attention connection
+   → prompt representation
+   → prompt-token embedding row
+</code></pre>
+<p dir="auto">A loss mask determines where scalar loss terms originate. It does not detach<br>
+earlier visible positions from the graph, and it does not freeze their parameters.</p>
+<p dir="auto">The transparent lab used loss mask <code class="notranslate">[0, 0, 1]</code>: only the final response position<br>
+contributed direct loss. That response assigned positive attention to both prompt<br>
+positions, whose embedding rows received gradient norms <code class="notranslate">0.303322</code> and<br>
+<code class="notranslate">0.668485</code>.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-02/day-02-03_embedding_gradient_paths-01.png"><img src="../../notebooks/figures/chapter-02/day-02-03_embedding_gradient_paths-01.png" alt="Response-only loss gives nonzero embedding-row gradient norms at the two visible prompt rows, 1 and 2, as well as response row 3." style="max-width: 100%;"></a></p>
+<p dir="auto">Read the horizontal axis as vocabulary rows, not sequence positions. The<br>
+nonzero bars at rows 1 and 2 expose the dependency that a loss mask does not<br>
+remove; their heights come from this fixed toy attention computation, not from<br>
+Qwen training. The source is<br>
+<a href="../../notebooks/day-02/03_embedding_gradient_paths.ipynb">Day 2's gradient-path notebook</a><br>
+and <code class="notranslate">response_only_loss_demo</code> in the linked lab. Regenerate it with the<br>
+<a href="../../docs/NOTEBOOK_VISUALS.md#reference-previews-versus-live-plots">saved-preview workflow</a><br>
+selecting <code class="notranslate">--days 2</code>.</p>
+<p dir="auto">Forward causality and backward credit assignment therefore point in opposite<br>
+directions along the same allowed dependency: prompt information moves forward<br>
+into the response, and response error moves backward into the computations that<br>
+made it possible.</p>
+<h2 dir="auto">2.10 Transparent companion experiments</h2>
+<p dir="auto">The chapter's empirical claims come from four small, inspectable artifacts:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Experiment</th>
+<th>What it establishes</th>
+<th>What it does not establish</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md">Pinned multilingual tokenizer</a></td>
+<td>Exact pieces, IDs, ratios, and round trips for three strings</td>
+<td>General language efficiency or comprehension</td>
+</tr>
+<tr>
+<td><a href="../../experiments/reports/2026-08-31-tokenizer-mechanics.md">Transparent tokenizer mechanics</a></td>
+<td>BPE pair-count trace, Unicode units, normalization, leading-space identity, and chat packaging</td>
+<td>Qwen training history or other tokenizer families</td>
+</tr>
+<tr>
+<td><a href="../../experiments/reports/2026-08-31-embedding-gradient-paths.md">Embedding gradient paths</a></td>
+<td>Repeated accumulation, tied/untied routing, response-only masking</td>
+<td>Semantic quality, convergence, or Qwen-specific gradient magnitudes</td>
+</tr>
+<tr>
+<td><a href="../../experiments/reports/2026-08-31-qwen3-embedding-inspection.md">Qwen3 embedding interface</a></td>
+<td>Actual shapes, tokenizer boundary, logits width, and runtime tying</td>
+<td>Design rationale or hardware benefit</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Use the <a href="../labs/02-text-tokens-and-embeddings.md">guided lab</a> for the CPU<br>
+notebook route and <a href="../appendices/a-laboratory-setup.md">Appendix A</a> for environment<br>
+setup. Platform-specific inspection commands and recorded environments belong<br>
+to <a href="../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision">Appendix D</a>.</p>
+<p dir="auto">The embedding lab deliberately uses tiny controlled computations instead of a<br>
+full transformer where thousands of parameters would obscure the graph. Its<br>
+one-head masking demonstration and matched tied/untied classifier isolate the<br>
+mechanisms being claimed. The Qwen3 inspection then verifies that those concepts<br>
+connect to a real model interface.</p>
+<h2 dir="auto">2.11 Common reasoning failures</h2>
+<h3 dir="auto">“One character equals one token”</h3>
+<p dir="auto">Sometimes true in one example, never a safe general rule. A character can split<br>
+into byte pieces, and multiple characters can merge into one token.</p>
+<h3 dir="auto">“A compound word must be token-efficient”</h3>
+<p dir="auto">Orthographic compounding says nothing about whether the tokenizer learned its<br>
+internal patterns. <code class="notranslate">språkmodellen</code> was one word and five Qwen3 tokens here.</p>
+<h3 dir="auto">“No unknown token means the model understands the language”</h3>
+<p dir="auto">Byte coverage guarantees representation, not useful learned behavior.</p>
+<h3 dir="auto">“A decode round trip always preserves the original Unicode sequence”</h3>
+<p dir="auto">Normalization can map canonically equivalent source strings to the same IDs. The<br>
+pinned tokenizer decoded NFD <code class="notranslate">café</code> as NFC <code class="notranslate">café</code>: the text remained canonically<br>
+equivalent, but exact code-point equality failed.</p>
+<h3 dir="auto">“The visible user message is the complete model input”</h3>
+<p dir="auto">A chat template can add roles, separators, and generation prompts. Raw <code class="notranslate">Hello</code><br>
+was one token in the pinned example; its one-message chat representation occupied<br>
+nine positions.</p>
+<h3 dir="auto">“An embedding row contains the word's complete meaning”</h3>
+<p dir="auto">It is a shared starting vector. Contextual meaning is constructed through the<br>
+transformer under positional and causal constraints.</p>
+<h3 dir="auto">“Unused input rows receive no gradient”</h3>
+<p dir="auto">They receive no direct lookup gradient, but tied output classification can update<br>
+every row.</p>
+<h3 dir="auto">“A zero loss mask stops all learning through that position”</h3>
+<p dir="auto">It removes a local loss term. Visible computations can still lie on a path from a<br>
+supervised later loss to shared parameters.</p>
+<h3 dir="auto">“A configuration flag proves runtime sharing”</h3>
+<p dir="auto"><code class="notranslate">tie_word_embeddings: true</code> is evidence of intent. Runtime object and storage<br>
+identity verified the actual loaded behavior in the inspected stack.</p>
+<h3 dir="auto">Where a learned merge is allowed to act</h3>
+<p dir="auto">A merge table does not define the entire text interface. Consider a learned merge spanning <code class="notranslate">red blue</code>. A whole-record encoder may apply it; a word-segmented encoder presents <code class="notranslate">red</code>, the space and <code class="notranslate">blue</code> separately, so the same table cannot cross those boundaries. The vocabulary is only one part of the contract. Segmentation, normalization and reserved-marker admission determine which byte sequences reach it.</p>
+<p dir="auto">A literal reserved marker creates a second boundary. If ordinary text contains <code class="notranslate">&lt;END&gt;</code>, the encoder must either admit it as a control token, reject it, or encode its bytes as ordinary text. Those policies can produce different IDs while decoding to identical visible strings. Round-trip text equality therefore does not prove control-token equivalence. The <a href="../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb">tokenizer contracts microscope</a> wraps the existing byte BPE and makes these choices observable, including save/load identity and adversarial Unicode probes.</p>
+<p dir="auto">Streaming needs its own statement of equivalence. Encoding independent records means resetting the merge boundary between records. Encoding chunks of one record must agree with encoding their concatenation, even when a chunk ends inside a likely merge. The reference achieves that by buffering the complete framed record and checking its declared size limit. This is a transparent correctness reference; its storage grows with record length. Use Assignment A to predict these differences before revealing the token IDs.</p>
+<h2 dir="auto">2.12 Exercises</h2>
+<ol dir="auto">
+<li>
+<p dir="auto"><strong>Interface corruption.</strong> Two tokenizers both produce tensors of shape<br>
+<code class="notranslate">[2, 128]</code>, but their ID-to-piece mappings differ. Explain why a model can run<br>
+successfully while receiving semantically corrupted input. Specify the<br>
+identities that should be recorded to prevent this failure.</p>
+</li>
+<li>
+<p dir="auto"><strong>Coverage versus understanding.</strong> An English-only byte-level BPE tokenizer<br>
+receives <code class="notranslate">数</code>. Trace the most conservative valid encoding path and explain why<br>
+successful round-trip decoding establishes neither efficient tokenization nor<br>
+Chinese understanding.</p>
+</li>
+<li>
+<p dir="auto"><strong>A failed prediction.</strong> The fixed Qwen3 example produced 9 Chinese, 11<br>
+English, and 20 Swedish tokens. Explain why the original Swedish-first<br>
+prediction was reasonable, why the result contradicted it, and what additional<br>
+evidence would be needed for a language-wide comparison.</p>
+</li>
+<li>
+<p dir="auto"><strong>Shape and repetition.</strong> Let <code class="notranslate">input_ids.shape = [3, 7]</code> and<br>
+<code class="notranslate">E.shape = [151936, 1024]</code>. State the lookup output shape. Then explain how<br>
+gradients accumulate if one ID appears at four positions, without assuming<br>
+that its four contextual hidden states are equal.</p>
+</li>
+<li>
+<p dir="auto"><strong>Where meaning emerges.</strong> Compare the state at <code class="notranslate">bank</code> in <code class="notranslate">The bank approved the loan</code> with a later state at <code class="notranslate">loan</code>. Explain why a causal decoder may not<br>
+resolve the financial interpretation locally at <code class="notranslate">bank</code>, and where the<br>
+disambiguated information can appear.</p>
+</li>
+<li>
+<p dir="auto"><strong>Same loss, different future.</strong> A tied and an untied classifier have equal<br>
+numeric matrices and produce equal logits and loss before an update. Explain<br>
+why their input embedding tables can receive different gradients and why the<br>
+two models can diverge after one optimizer step.</p>
+</li>
+<li>
+<p dir="auto"><strong>Tokenizer-model boundary.</strong> In the pinned Qwen3 snapshot, the tokenizer has<br>
+151,669 entries and the model has 151,936 rows. Explain which gradient paths<br>
+can reach the final 267 rows and distinguish observations from hypotheses<br>
+about why those rows exist.</p>
+</li>
+<li>
+<p dir="auto"><strong>Visibility versus supervision.</strong> A user prompt is visible to an assistant<br>
+response, but only response positions contribute direct loss. Explain how<br>
+prompt-token embeddings can still receive gradients. Contrast loss masking<br>
+with detaching and freezing.</p>
+</li>
+<li>
+<p dir="auto"><strong>PAD versus EOS.</strong> Explain the learning failure caused by treating padding as<br>
+an ordinary target, and the different failure caused by masking every EOS<br>
+target. State what you would inspect in a trainer before trusting its masking.</p>
+</li>
+<li>
+<p dir="auto"><strong>Design an honest tokenizer study.</strong> Propose a multilingual efficiency study<br>
+that could support more than a one-sentence worked example. Define the corpus,<br>
+denominators, controls, uncertainty or variation summaries, and claims that<br>
+would still remain outside scope.</p>
+</li>
+<li>
+<p dir="auto"><strong>Unicode and prompt packaging.</strong> NFC <code class="notranslate">café</code> contains four code points, while<br>
+its NFD spelling contains five; both contain four grapheme clusters. Explain<br>
+why a tokenizer may map them to the same IDs without preserving exact source<br>
+equality. Then explain why raw <code class="notranslate">Hello</code> can occupy one token while a chat<br>
+template containing the same visible content occupies nine.</p>
+</li>
+<li>
+<p dir="auto"><strong>Atomic IDs and learned relationships.</strong> A BPE vocabulary contains <code class="notranslate">数</code>,<br>
+<code class="notranslate">据</code>, <code class="notranslate">数据</code>, and <code class="notranslate">数据库</code> as separate entries. Explain what the tokenizer does<br>
+and does not communicate about their relationship to the transformer. Then<br>
+use a consistent ID-permutation thought experiment to show where their<br>
+linguistic relationships can—and cannot—reside.</p>
+</li>
+</ol>
+<p dir="auto">Worked solutions are provided in<br>
+<a href="../solutions/02-text-tokens-and-embeddings.md">the Chapter 2 solutions</a>.</p>
+<h2 dir="auto">2.13 Summary and what follows</h2>
+<p dir="auto">Text reaches a transformer through a learned discrete interface. Byte-level BPE<br>
+separates universal byte coverage from corpus-dependent compression. Runtime<br>
+encoding replays frozen rules; it does not learn vocabulary from the current<br>
+sentence. Normalization, pre-tokenization, whitespace, and chat templates can all<br>
+change the resulting IDs before model computation begins. Token IDs are meaningful<br>
+only under the tokenizer that defined the model's embedding rows. Their numeric<br>
+magnitudes and distances have no linguistic meaning; a consistent permutation<br>
+of IDs and matching parameter rows preserves the model's function.</p>
+<p dir="auto">Embedding lookup maps <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[B,n]$</math-renderer> IDs to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$[B,n,D]$</math-renderer> starting vectors. The transformer<br>
+then constructs position- and context-dependent hidden states under a causal<br>
+information boundary. Next-token loss trains the table end to end. Repeated<br>
+lookups accumulate gradients into shared rows, and tied output weights add a<br>
+dense classifier path that can reach rows absent from the input.</p>
+<p dir="auto">Masks define separate boundaries for visibility and supervision. A position with<br>
+no local loss can still influence a supervised later state and receive gradient<br>
+through that dependency. PAD is artificial formatting; EOS is a meaningful event<br>
+the model must learn.</p>
+<p dir="auto">We have followed text to a vector <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$h$</math-renderer> and seen that the model converts <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="ad01e5632c17a0337dfdbaa194add29b">$h$</math-renderer> to<br>
+logits. The next question is how those arbitrary real scores become a probability<br>
+distribution and a scalar learning signal. Chapter 3 derives softmax,<br>
+negative log-likelihood, cross-entropy, perplexity, causal shifting, and the tiny<br>
+next-token training loop that closes that gap.</p>

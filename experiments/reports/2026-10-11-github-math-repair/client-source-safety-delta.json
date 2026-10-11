@@ -1,0 +1,267 @@
+{
+  "files": [
+    {
+      "path": "book/appendices/b-mathematical-and-tensor-notation.md",
+      "before_sha256": "42615abb1741d8b240e2ab122a847f7e9debbceb45eef5a554cb86036b204641",
+      "after_sha256": "868364011ec569e51de494e8fe0b0a9483e395f3bc6888f3b1a722e31299dd95",
+      "changes": [
+        {
+          "line": 167,
+          "less_than_signs": 0,
+          "row_comments": 1,
+          "before_tex": "R_{m\\omega}u=\n\\begin{bmatrix}\\cos(m\\omega)&-\\sin(m\\omega)\\\\\n\\sin(m\\omega)&\\cos(m\\omega)\\end{bmatrix}u.",
+          "after_tex": "R_{m\\omega}u=\n\\begin{bmatrix}\\cos(m\\omega)&-\\sin(m\\omega)\\\\%\n\\sin(m\\omega)&\\cos(m\\omega)\\end{bmatrix}u."
+        }
+      ]
+    },
+    {
+      "path": "book/chapters/03-learning-the-next-token.md",
+      "before_sha256": "12a2eb6bd997fb8c78e5ea0706b3b926dd695d7114f836e1fac89a1b346b3073",
+      "after_sha256": "ee7d81badd4246a8ffbe94de669bc8b558765cb3ea1591ebaef9ac8284e56b84",
+      "changes": [
+        {
+          "line": 368,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "P(x_0,\\ldots,x_{n-1})\n=\n\\prod_{t=0}^{n-1}P(x_t\\mid x_{<t}).",
+          "after_tex": "P(x_0,\\ldots,x_{n-1})\n=\n\\prod_{t=0}^{n-1}P(x_t\\mid x_{\\lt t})."
+        },
+        {
+          "line": 379,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "\\log P(x_{0:n-1})\n=\n\\sum_{t=0}^{n-1}\\log P(x_t\\mid x_{<t}).",
+          "after_tex": "\\log P(x_{0:n-1})\n=\n\\sum_{t=0}^{n-1}\\log P(x_t\\mid x_{\\lt t})."
+        },
+        {
+          "line": 387,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "\\mathrm{NLL}(x_{0:n-1})\n=\n-\\sum_t\\log P(x_t\\mid x_{<t}).",
+          "after_tex": "\\mathrm{NLL}(x_{0:n-1})\n=\n-\\sum_t\\log P(x_t\\mid x_{\\lt t})."
+        },
+        {
+          "line": 477,
+          "less_than_signs": 0,
+          "row_comments": 2,
+          "before_tex": "\\begin{aligned}\nL\n&=-\\sum_kq_k\\log p_k\\\\\n&=-\\sum_kq_k(z_k-\\log S)\\\\\n&=-\\sum_kq_kz_k+\\log S,\n\\end{aligned}",
+          "after_tex": "\\begin{aligned}\nL\n&=-\\sum_kq_k\\log p_k\\\\%\n&=-\\sum_kq_k(z_k-\\log S)\\\\%\n&=-\\sum_kq_kz_k+\\log S,\n\\end{aligned}"
+        },
+        {
+          "line": 488,
+          "less_than_signs": 0,
+          "row_comments": 2,
+          "before_tex": "\\begin{aligned}\n\\frac{\\partial L}{\\partial z_i}\n&=-q_i+\\frac{1}{S}\\frac{\\partial S}{\\partial z_i}\\\\\n&=-q_i+\\frac{e^{z_i}}{S}\\\\\n&=p_i-q_i.\n\\end{aligned}",
+          "after_tex": "\\begin{aligned}\n\\frac{\\partial L}{\\partial z_i}\n&=-q_i+\\frac{1}{S}\\frac{\\partial S}{\\partial z_i}\\\\%\n&=-q_i+\\frac{e^{z_i}}{S}\\\\%\n&=p_i-q_i.\n\\end{aligned}"
+        },
+        {
+          "line": 499,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "\\frac{\\partial L}{\\partial z_y}=p_y-1<0,\n\\qquad\n\\frac{\\partial L}{\\partial z_i}=p_i>0\\quad(i\\ne y).",
+          "after_tex": "\\frac{\\partial L}{\\partial z_y}=p_y-1\\lt 0,\n\\qquad\n\\frac{\\partial L}{\\partial z_i}=p_i>0\\quad(i\\ne y)."
+        },
+        {
+          "line": 686,
+          "less_than_signs": 0,
+          "row_comments": 2,
+          "before_tex": "\\begin{aligned}\nH(q,p)\n&=-\\sum_iq_i\\log p_i\\\\\n&=-\\sum_iq_i\\log q_i\n  +\\sum_iq_i\\log\\frac{q_i}{p_i}\\\\\n&=H(q)+D_{KL}(q\\|p).\n\\end{aligned}",
+          "after_tex": "\\begin{aligned}\nH(q,p)\n&=-\\sum_iq_i\\log p_i\\\\%\n&=-\\sum_iq_i\\log q_i\n  +\\sum_iq_i\\log\\frac{q_i}{p_i}\\\\%\n&=H(q)+D_{KL}(q\\|p).\n\\end{aligned}"
+        },
+        {
+          "line": 890,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "y_t=x_{t+1},\n\\qquad 0\\le t<n-1.",
+          "after_tex": "y_t=x_{t+1},\n\\qquad 0\\le t\\lt n-1."
+        }
+      ]
+    },
+    {
+      "path": "book/chapters/04-attention-and-the-causal-information-boundary.md",
+      "before_sha256": "9f7db3f822548340a3e3c16ab831732eedc511847bf3fda3f7b8b0935fbb9d96",
+      "after_sha256": "6dbc3507c7c30c034379d85a70c671ea61faa35550122233cd87400ede53894d",
+      "changes": [
+        {
+          "line": 236,
+          "less_than_signs": 0,
+          "row_comments": 1,
+          "before_tex": "M_{ij}=\n\\begin{cases}\n0,&j\\le i,\\\\\n-\\infty,&j>i.\n\\end{cases}",
+          "after_tex": "M_{ij}=\n\\begin{cases}\n0,&j\\le i,\\\\%\n-\\infty,&j>i.\n\\end{cases}"
+        },
+        {
+          "line": 253,
+          "less_than_signs": 0,
+          "row_comments": 3,
+          "before_tex": "\\begin{bmatrix}\n1&0&0&0\\\\\n1&1&0&0\\\\\n1&1&1&0\\\\\n1&1&1&1\n\\end{bmatrix}.",
+          "after_tex": "\\begin{bmatrix}\n1&0&0&0\\\\%\n1&1&0&0\\\\%\n1&1&1&0\\\\%\n1&1&1&1\n\\end{bmatrix}."
+        },
+        {
+          "line": 631,
+          "less_than_signs": 2,
+          "row_comments": 0,
+          "before_tex": "K_{\\le t}=[K_{<t};k_t],\\qquad V_{\\mathrm{val},\\le t}=[V_{\\mathrm{val},<t};v_t],",
+          "after_tex": "K_{\\le t}=[K_{\\lt t};k_t],\\qquad V_{\\mathrm{val},\\le t}=[V_{\\mathrm{val},\\lt t};v_t],"
+        }
+      ]
+    },
+    {
+      "path": "book/chapters/05-building-a-modern-decoder.md",
+      "before_sha256": "8816b92ac70bd453866483fc5179ecc6e4ae2b17f27255950b16dc348b35a029",
+      "after_sha256": "e20c199cbea76808ed35de7ccb82d75819695c3c23b38bc67cbefe13b8708a31",
+      "changes": [
+        {
+          "line": 868,
+          "less_than_signs": 0,
+          "row_comments": 1,
+          "before_tex": "R(\\theta)=\n\\begin{bmatrix}\\cos\\theta&-\\sin\\theta\\\\\n\\sin\\theta&\\cos\\theta\\end{bmatrix},\\qquad\nR(\\theta)\\begin{bmatrix}a\\\\b\\end{bmatrix}\n=\\begin{bmatrix}a\\cos\\theta-b\\sin\\theta\\\\a\\sin\\theta+b\\cos\\theta\\end{bmatrix}.",
+          "after_tex": "R(\\theta)=\n\\begin{bmatrix}\\cos\\theta&-\\sin\\theta\\\\%\n\\sin\\theta&\\cos\\theta\\end{bmatrix},\\qquad\nR(\\theta)\\begin{bmatrix}a\\\\b\\end{bmatrix}\n=\\begin{bmatrix}a\\cos\\theta-b\\sin\\theta\\\\a\\sin\\theta+b\\cos\\theta\\end{bmatrix}."
+        }
+      ]
+    },
+    {
+      "path": "book/chapters/06-pretraining-as-a-controlled-system.md",
+      "before_sha256": "172a1170721e8e55f9bfddb74a921b5d6e09d28e3d443ca0aef7fb9c2294ecca",
+      "after_sha256": "68a74e5f84d97fdea2f7f3e204bc42da025640c89c5f6129a0f6f0f110d7325b",
+      "changes": [
+        {
+          "line": 376,
+          "less_than_signs": 1,
+          "row_comments": 1,
+          "before_tex": "\\eta_u=\\begin{cases}\n\\eta_{\\max}u/W,&1\\leq u\\leq W,\\\\\n\\eta_{\\min}+\\frac{\\eta_{\\max}-\\eta_{\\min}}{2}\n\\left[1+\\cos\\left(\\pi\\frac{u-W}{S-W}\\right)\\right],&W<u\\leq S.\n\\end{cases}",
+          "after_tex": "\\eta_u=\\begin{cases}\n\\eta_{\\max}u/W,&1\\leq u\\leq W,\\\\%\n\\eta_{\\min}+\\frac{\\eta_{\\max}-\\eta_{\\min}}{2}\n\\left[1+\\cos\\left(\\pi\\frac{u-W}{S-W}\\right)\\right],&W\\lt u\\leq S.\n\\end{cases}"
+        }
+      ]
+    },
+    {
+      "path": "book/chapters/07-evaluation-is-a-contract.md",
+      "before_sha256": "cf9ed242d072ce049c36c7495fdad7aee3ef40c8eed346057e183a1724435f01",
+      "after_sha256": "a690220a1ee311b9bf906c90da1e5c372af4ac62cfc5b81c7275a27a1beda0d2",
+      "changes": [
+        {
+          "line": 427,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "s_{\\mathrm{lik}}(c)=\\frac{1}{n_c}\\sum_{t=1}^{n_c}\\log p_\\theta(c_t\\mid x,c_{<t}).",
+          "after_tex": "s_{\\mathrm{lik}}(c)=\\frac{1}{n_c}\\sum_{t=1}^{n_c}\\log p_\\theta(c_t\\mid x,c_{\\lt t})."
+        }
+      ]
+    },
+    {
+      "path": "book/chapters/08-instruction-data-as-an-interface.md",
+      "before_sha256": "cf87eda4722ee096b6f9517cea0cc5b04041cef0710195e64c55a1a345d54e71",
+      "after_sha256": "3af2becd8e247f165d3e9cefa4b28e8445378caf6025d55ef1147a3c395891c4",
+      "changes": [
+        {
+          "line": 103,
+          "less_than_signs": 0,
+          "row_comments": 1,
+          "before_tex": "\\ell_{b,t}=\n\\begin{cases}\nx_{b,t}, & m_{b,t}=1\\ \\text{and}\\ a_{b,t}=1,\\\\\n-100, & \\text{otherwise}.\n\\end{cases}",
+          "after_tex": "\\ell_{b,t}=\n\\begin{cases}\nx_{b,t}, & m_{b,t}=1\\ \\text{and}\\ a_{b,t}=1,\\\\%\n-100, & \\text{otherwise}.\n\\end{cases}"
+        }
+      ]
+    },
+    {
+      "path": "book/chapters/09-supervised-fine-tuning.md",
+      "before_sha256": "87480fca3b39538d16af5d9cdb060d2fdc11e43401b6fff0de208a470cbfcefe",
+      "after_sha256": "98fb871e8336a7e646b5fd0675bf2cbc761cfdec05d094b3e4b4693ed671b107",
+      "changes": [
+        {
+          "line": 117,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "p_\\theta(y_j\\mid x_j)=\\prod_{t=1}^{n_j}\np_\\theta(y_{j,t}\\mid x_j,y_{j,<t}).",
+          "after_tex": "p_\\theta(y_j\\mid x_j)=\\prod_{t=1}^{n_j}\np_\\theta(y_{j,t}\\mid x_j,y_{j,\\lt t})."
+        },
+        {
+          "line": 124,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "L_j(\\theta)=-\\sum_{t=1}^{n_j}\n\\log p_\\theta(y_{j,t}\\mid x_j,y_{j,<t}).",
+          "after_tex": "L_j(\\theta)=-\\sum_{t=1}^{n_j}\n\\log p_\\theta(y_{j,t}\\mid x_j,y_{j,\\lt t})."
+        }
+      ]
+    },
+    {
+      "path": "book/chapters/11-direct-preference-optimization.md",
+      "before_sha256": "7af00576acb0942d9ced55d717985fbc36958cab09e75f166360bbd0220c6f98",
+      "after_sha256": "359a26625076fdf9f72515b36c4354319dcdabbd1b7c07b6a2bf75d392cf693f",
+      "changes": [
+        {
+          "line": 267,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "\\log\\pi_\\theta(y\\mid x)\n=\\sum_{t=1}^{|y|}\\log\\pi_\\theta(y_t\\mid x,y_{<t}).",
+          "after_tex": "\\log\\pi_\\theta(y\\mid x)\n=\\sum_{t=1}^{|y|}\\log\\pi_\\theta(y_t\\mid x,y_{\\lt t})."
+        }
+      ]
+    },
+    {
+      "path": "book/chapters/12-language-generation-as-a-policy.md",
+      "before_sha256": "8f5a1f445a5db823dba9849bf278296c6f1713256ec954d4886d217cc2affaac",
+      "after_sha256": "b3ad909a886543c432bcfa3205e6377be22997caf5a3d911018d00b576852af1",
+      "changes": [
+        {
+          "line": 30,
+          "less_than_signs": 2,
+          "row_comments": 0,
+          "before_tex": "\\pi_\\theta(y\\mid x)=\\prod_t\\pi_\\theta(y_t\\mid x,y_{<t}),\\qquad\n\\log\\pi_\\theta(y\\mid x)=\\sum_t\\log\\pi_\\theta(y_t\\mid x,y_{<t}).",
+          "after_tex": "\\pi_\\theta(y\\mid x)=\\prod_t\\pi_\\theta(y_t\\mid x,y_{\\lt t}),\\qquad\n\\log\\pi_\\theta(y\\mid x)=\\sum_t\\log\\pi_\\theta(y_t\\mid x,y_{\\lt t})."
+        },
+        {
+          "line": 65,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "\\nabla_\\theta J=\\mathbb{E}\\left[R(y)\\sum_t\n\\nabla_\\theta\\log\\pi_\\theta(y_t\\mid x,y_{<t})\\right].",
+          "after_tex": "\\nabla_\\theta J=\\mathbb{E}\\left[R(y)\\sum_t\n\\nabla_\\theta\\log\\pi_\\theta(y_t\\mid x,y_{\\lt t})\\right]."
+        }
+      ]
+    },
+    {
+      "path": "book/chapters/15-distill-evaluate-and-defend.md",
+      "before_sha256": "a5b07ff335dc40f6935fd854bc377c9e23c0ed22ee3ab670314d160705ba4707",
+      "after_sha256": "7faa39c5700738550da3f1c3dcbfb3af838b4ed456e985435050c877f296fed2",
+      "changes": [
+        {
+          "line": 313,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "L_{\\mathrm{response}}=-\\frac{1}{N_{\\mathrm{targets}}}\n\\sum_{t\\in\\mathrm{response+EOS}}\\log p_\\theta(y_t\\mid x,y_{<t}).",
+          "after_tex": "L_{\\mathrm{response}}=-\\frac{1}{N_{\\mathrm{targets}}}\n\\sum_{t\\in\\mathrm{response+EOS}}\\log p_\\theta(y_t\\mid x,y_{\\lt t})."
+        }
+      ]
+    },
+    {
+      "path": "book/solutions/03-learning-the-next-token.md",
+      "before_sha256": "e3e944aed099e3d1727efa70f74397d17c3b6cdb5c0f4c2ff8c587f008a1bfda",
+      "after_sha256": "b17a55701e547898da3410e349a765e37b7d235f36c3adcdcc073a52f352d35a",
+      "changes": [
+        {
+          "line": 177,
+          "less_than_signs": 0,
+          "row_comments": 2,
+          "before_tex": "\\begin{aligned}\n\\mathbb{E}[g]\n&=0.7g_{dog}+0.3g_{cat}\\\\\n&=0.7[-0.3,0.3]+0.3[0.7,-0.7]\\\\\n&=[0,0].\n\\end{aligned}",
+          "after_tex": "\\begin{aligned}\n\\mathbb{E}[g]\n&=0.7g_{dog}+0.3g_{cat}\\\\%\n&=0.7[-0.3,0.3]+0.3[0.7,-0.7]\\\\%\n&=[0,0].\n\\end{aligned}"
+        }
+      ]
+    },
+    {
+      "path": "book/solutions/09-supervised-fine-tuning.md",
+      "before_sha256": "4967b5a7814e829f3d57a6c0ff3b48818d5c91d3c3e2aa9677d9c90fd9f10039",
+      "after_sha256": "344adfefeb8412c718d918474e633cddc85910fd70ddae7168eb3bc9b7be4057",
+      "changes": [
+        {
+          "line": 9,
+          "less_than_signs": 1,
+          "row_comments": 0,
+          "before_tex": "p_\\theta(y\\mid x)=\\prod_t p_\\theta(y_t\\mid x,y_{<t}).",
+          "after_tex": "p_\\theta(y\\mid x)=\\prod_t p_\\theta(y_t\\mid x,y_{\\lt t})."
+        }
+      ]
+    }
+  ],
+  "less_than_signs": 17,
+  "row_comments": 16,
+  "changed_display_expressions": 24,
+  "reason": "Observed GitHub client HTML-reparsing and Markdown continuation serialization. Equivalent lt command and TeX EOL comments preserve mathematical output; MathML equality verified separately."
+}

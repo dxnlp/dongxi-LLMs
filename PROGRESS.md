@@ -4,6 +4,16 @@ This file is the operational source of truth for resuming work. Update it at the
 
 ## Current position
 
+- GitHub math repair, 2026-10-11: complete. All fifteen chapters and affected
+  solutions/notation use protected inline/display forms. The
+  [repair record](experiments/reports/2026-10-11-github-math-repair.md) retains
+  original and failed intermediate evidence. All 1,871 formulas pass source/SVG
+  checks and exact original MathML comparison after actual GitHub Markdown API
+  processing and observed client decoding emulation; 15 regression tests and
+  book navigation pass. Formula meaning/order, notebooks and historical model
+  evidence remain intact. Learner Day 9 is unchanged; next learning action is
+  the requested English-story discussion on Spark.
+
 - CS336 improvement goal, 2026-10-11: complete. All seven P0/P1 packages in
   the [CS336 plan](docs/CS336_IMPROVEMENT_PLAN.md) are implemented and independently
   reviewed: six assignments, fifteen chapter/solution routes, sixteen labs and

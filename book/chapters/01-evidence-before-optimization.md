@@ -135,19 +135,19 @@ important habit is to name what a metric measures instead of calling it “bette
 “I trained Qwen3 with seed 42” does not identify a reproducible experiment. A
 useful experiment identity is a tuple:
 
-$$
+```math
 \mathcal{E} = (C, L, H, M, \mathcal D, \mathcal K, s),
-$$
+```
 
 where:
 
-- $C$ is the code revision, including local patches;
-- $L$ is the locked software environment;
-- $H$ is the relevant hardware and system identity;
-- $M$ is the model and exact model revision;
-- $\mathcal D$ is the dataset, revision, split, and selection procedure;
-- $\mathcal K$ is the full experiment configuration, separate from model parameters;
-- $s$ is the collection of random seeds.
+- $`C`$ is the code revision, including local patches;
+- $`L`$ is the locked software environment;
+- $`H`$ is the relevant hardware and system identity;
+- $`M`$ is the model and exact model revision;
+- $`\mathcal D`$ is the dataset, revision, split, and selection procedure;
+- $`\mathcal K`$ is the full experiment configuration, separate from model parameters;
+- $`s`$ is the collection of random seeds.
 
 The result should also retain its outputs and measurements. Without them, we know
 what was intended but not what occurred.
@@ -225,17 +225,17 @@ of variation:
 
 Floating-point addition is not associative:
 
-$$
+```math
 (a+b)+c \neq a+(b+c)
-$$
+```
 
 in finite precision. Two correct parallel reduction orders can therefore produce
 slightly different values. During many optimization steps, small numerical
 differences can lead to visibly different trajectories.
 
-For a concrete FP32 example, set $a=10^8$, $b=-10^8$, and $c=1$.
-Computing $(a+b)+c$ gives 1, while $a+(b+c)$ gives 0: at that magnitude,
-adding 1 to $b$ rounds back to $b$. The mathematical sum is the same; the
+For a concrete FP32 example, set $`a=10^8`$, $`b=-10^8`$, and $`c=1`$.
+Computing $`(a+b)+c`$ gives 1, while $`a+(b+c)`$ gives 0: at that magnitude,
+adding 1 to $`b`$ rounds back to $`b`$. The mathematical sum is the same; the
 intermediate rounding differs. Fixing the random seed cannot fix a reduction
 order that the execution backend changes.
 
@@ -352,11 +352,11 @@ file cache, and other processes draw from the same physical pool.
 
 A rough decomposition of training pressure is:
 
-$$
+```math
 M_{\text{train}} \approx
 M_{\text{weights}} + M_{\text{gradients}} + M_{\text{optimizer}}
 + M_{\text{activations}} + M_{\text{temporary}} + M_{\text{runtime}}.
-$$
+```
 
 Some terms are nearly fixed for a given model; activations and temporary buffers
 depend on batch geometry, sequence length, attention implementation, and

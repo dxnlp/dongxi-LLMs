@@ -1,0 +1,191 @@
+{
+  "reviewed_utc": "2026-10-11T20:56:37.592001+00:00",
+  "reviewer": "editorial_operations",
+  "status": "accepted",
+  "scope": "Final source checker, renderer, fifteen regression cases, authoring guide and semantic harness; read-only source/evidence review with an inexpensive independently parsed observed-client gate audit.",
+  "source_sha256": {
+    "scripts/check_book_math.py": "8c654c511a3ea9db2d51c549954311f69a20ac3811cfd7bd7c31609ac0e28b21",
+    "scripts/check_book_math_render.cjs": "460b556332e2b7283070dddfc629820e8155dae976e1a31564a3a84eab12f768",
+    "tests/test_book_math.py": "0b6d6c218e718f7862fdcfbc0a6c33837da2652bd1dbf90fc5adc19b954b3ca2",
+    "docs/MATH_FORMATTING.md": "43b634e91e7623b18b3cba412e0e8aa9a8e823e59ad9a5ac169f836e6a8339bc",
+    "experiments/reports/2026-10-11-github-math-repair/check_mathml.cjs": "eaf8cc5ddde4923346ccfcd6769022ae6b7fb61e4f57b6e4b1d3d80f5022973f"
+  },
+  "evidence_sha256": {
+    "experiments/reports/2026-10-11-github-math-repair/baseline.json": "6ad5f2913ed994ebb22da16da3cb9ca18e444d8ed168aad67b3ae47cb2feb30f",
+    "experiments/reports/2026-10-11-github-math-repair/client-serialization-review.json": "1c600ddeb2a6480d2cd8d90c498964e2227728035cbe11a64e5b122dfddf6e8c",
+    "experiments/reports/2026-10-11-github-math-repair/client-source-safety-delta.json": "5601a886a1324d8adb2f000a87edc944bfa2fbe4337b370326d73c1a0ae3aeda",
+    "experiments/reports/2026-10-11-github-math-repair/final-client-mathml.json": "6f666209132d47ab82aeab9448a75cec7a821a5d3fb7030a2b9734b6dc4d626e",
+    "experiments/reports/2026-10-11-github-math-repair/final-client-mathml-03.json": "497fd4f8f27e65ef01b0b30bb9fc7ec18df7820857fc43a0d3c4c2c2d946b36e",
+    "experiments/reports/2026-10-11-github-math-repair/github-after-03/receipt.json": "0a6d928ae110b5cca0de620da66a1c51327b4859ba91356f6a61b8cb6dc62654"
+  },
+  "checker_review": [
+    "Protected inline spans are consumed atomically before literal code, including multi-expression prose; blanking preserves offsets and math-fence ranges.",
+    "Bare inline/display styles, display literal less-than, un-commented physical row separators and literal inline table pipes are diagnosed within the stated source conventions.",
+    "Table rule is deliberately limited to pipe-leading rows, preserving outside-table norm escapes. Tests cover the failed table escape, Vert alias and unaffected outside-table expression.",
+    "Known TeX brace/environment/macro checks remain; literal fenced and multiline inline code are excluded. No new correctness issue found in the current book corpus."
+  ],
+  "renderer_and_harness_review": [
+    "Renderer loads base/AMS/boldsymbol, resets each conversion, and fails on checker or SVG errors.",
+    "Semantic harness verifies stored API response digests, ordered counts and display kinds; compares original and repaired-source serialized MathML exactly.",
+    "Client replay parses actual API HTML into a first DOM, reproduces the observed temporary HTMLDocument document.write/textContent transformation, trims delimiters and compares its MathML against the same original.",
+    "Harness does not silently accept failures: after02 retained its sole table mismatch and nonzero exit; after03 now retains all 1871 exact source and client matches."
+  ],
+  "current_verification_observation": {
+    "regression_cases_reviewed": 15,
+    "tests_rerun_by_reviewer": false,
+    "fresh_semantic_receipt": "experiments/reports/2026-10-11-github-math-repair/final-client-mathml-03.json",
+    "original_expressions": 1871,
+    "repaired_source_mathml_matches": 1871,
+    "client_decoded_mathml_matches": 1871,
+    "remaining_findings": []
+  },
+  "observed_client_gates": {
+    "client_url": "https://github.githubassets.com/assets/chunk-lazy-element-math-renderer-d17ebb6b582fcc67.js",
+    "client_sha256": "b3bf5e2ab18da3343ac3cf9bf8a4a02bd267b39c3bbd911ae93e8b5f6fad0b73",
+    "source_map_url": "https://github.githubassets.com/assets/chunk-lazy-element-math-renderer-d17ebb6b582fcc67-63e02431e2f3a8bd.js.map",
+    "source_map_sha256": "9518c65e350fff00fb31c1426e9bf0307cdb0a972e2489692f8b654da159b730",
+    "blocked_macros": [
+      "DeclareMathOperator",
+      "DeclarePairedDelimiters",
+      "renewtagform",
+      "newtagform",
+      "colorbox",
+      "fcolorbox",
+      "hphantom",
+      "vphantom",
+      "phantom",
+      "operatorname",
+      "Newextarrow",
+      "definecolor",
+      "mathchoice",
+      "unicode",
+      "mmlToken"
+    ],
+    "blocked_literal_cloaked_or_broken_up_matches": [],
+    "dimension_arg_macros": [
+      "hskip",
+      "hspace",
+      "raise",
+      "mspace",
+      "mskip",
+      "kern",
+      "lower",
+      "above",
+      "mkern",
+      "moveleft",
+      "moveright",
+      "rule",
+      "Rule",
+      "space",
+      "Space"
+    ],
+    "dimension_unit_absolute_limits": {
+      "em": 2.0,
+      "pt": 20.0,
+      "pc": 0.75,
+      "ex": 2.5
+    },
+    "dimension_regex_matches": [],
+    "brace_proxy_rule": "this.textContent.split(\"{\").length, i.e. open-brace count plus one; uses observed first DOM text, including escaped brace characters.",
+    "per_expression_limit": 1000,
+    "global_page_limit": 2000,
+    "max_expression_brace_proxy": 23,
+    "per_book_file_brace_proxy": {
+      "book/appendices/b-mathematical-and-tensor-notation.md": 113,
+      "book/chapters/01-evidence-before-optimization.md": 32,
+      "book/chapters/02-text-tokens-and-embeddings.md": 100,
+      "book/chapters/03-learning-the-next-token.md": 385,
+      "book/chapters/04-attention-and-the-causal-information-boundary.md": 289,
+      "book/chapters/05-building-a-modern-decoder.md": 430,
+      "book/chapters/06-pretraining-as-a-controlled-system.md": 122,
+      "book/chapters/07-evaluation-is-a-contract.md": 91,
+      "book/chapters/08-instruction-data-as-an-interface.md": 58,
+      "book/chapters/09-supervised-fine-tuning.md": 156,
+      "book/chapters/10-preferences-and-reward-models.md": 116,
+      "book/chapters/11-direct-preference-optimization.md": 167,
+      "book/chapters/12-language-generation-as-a-policy.md": 253,
+      "book/chapters/13-group-relative-policy-optimization.md": 214,
+      "book/chapters/14-when-optimization-goes-wrong.md": 135,
+      "book/chapters/15-distill-evaluate-and-defend.md": 186,
+      "book/front-matter/notation.md": 117,
+      "book/solutions/02-text-tokens-and-embeddings.md": 21,
+      "book/solutions/03-learning-the-next-token.md": 100,
+      "book/solutions/04-attention-and-the-causal-information-boundary.md": 36,
+      "book/solutions/05-decoder-notebook-solutions.md": 75,
+      "book/solutions/06-pretraining-as-a-controlled-system.md": 10,
+      "book/solutions/07-evaluation-is-a-contract.md": 15,
+      "book/solutions/08-instruction-data-as-an-interface.md": 22,
+      "book/solutions/09-supervised-fine-tuning.md": 35,
+      "book/solutions/10-preferences-and-reward-models.md": 16,
+      "book/solutions/11-direct-preference-optimization.md": 42,
+      "book/solutions/12-language-generation-as-a-policy.md": 32,
+      "book/solutions/13-group-relative-policy-optimization.md": 9,
+      "book/solutions/14-when-optimization-goes-wrong.md": 33,
+      "book/solutions/15-distill-evaluate-and-defend.md": 20,
+      "book/solutions/cs336-posttraining-assignment.md": 24
+    },
+    "max_book_file_brace_proxy": 430,
+    "synthetic_api_request_brace_proxy": [
+      {
+        "response_file": "github-response-00.html",
+        "brace_proxy": 245,
+        "expressions": 137
+      },
+      {
+        "response_file": "github-response-01.html",
+        "brace_proxy": 674,
+        "expressions": 341
+      },
+      {
+        "response_file": "github-response-02.html",
+        "brace_proxy": 552,
+        "expressions": 327
+      },
+      {
+        "response_file": "github-response-03.html",
+        "brace_proxy": 305,
+        "expressions": 136
+      },
+      {
+        "response_file": "github-response-04.html",
+        "brace_proxy": 536,
+        "expressions": 318
+      },
+      {
+        "response_file": "github-response-05.html",
+        "brace_proxy": 535,
+        "expressions": 243
+      },
+      {
+        "response_file": "github-response-06.html",
+        "brace_proxy": 274,
+        "expressions": 143
+      },
+      {
+        "response_file": "github-response-07.html",
+        "brace_proxy": 247,
+        "expressions": 167
+      },
+      {
+        "response_file": "github-response-08.html",
+        "brace_proxy": 86,
+        "expressions": 59
+      }
+    ],
+    "coarse_gate_triggered": false,
+    "true_mathjax_expansion_limit": 1000,
+    "true_expansion_limit_boundary": "Not independently instrumented in GitHub deployed MathJax. No authored macro definitions/recursion are part of this corpus; pinned local full conversion is separately retained by root."
+  },
+  "guide_review": [
+    "Protected inline, fenced display, lt, EOL percent comment and table Vert conventions match the actually observed failure modes.",
+    "Document now promises MathML/content/order preservation after the explicit equivalent spellings, rather than falsely preserving all raw bodies after those deltas.",
+    "Historical local and peer receipts remain bound to their historical source revisions."
+  ],
+  "limits": [
+    "Checker is intentionally conservative, not a full Markdown/TeX parser; table detection here assumes the canonical pipe-leading table style.",
+    "Harness reproduces observed client decoding and pinned local MathJax3.2.2; it does not execute the whole GitHub client, sanitizer, deployed MathJax or live browser layout.",
+    "Safety gates were inspected from pinned observed first-party client source and audited against actual after03 first-DOM payloads. Global page budgets assume these canonical single-file book pages or the retained synthetic API batches; arbitrary combined future pages are outside scope.",
+    "Previous peer-review-01-05.json remains valid for the initial delimiter-only revision, not final raw-body equality after semantic spelling deltas.",
+    "No source/book/notebook or historical receipt edited and no tests/model experiments rerun; only this final review receipt was written."
+  ]
+}

@@ -12,13 +12,13 @@ solutions. A convincing answer explains the causal and computational assumptions
 | W_Q, W_K | [8,4] |
 | W_V | [8,3] |
 | Q, K | [5,4] |
-| $V_{\mathrm{val}}$ | $[5,3]$ |
+| $`V_{\mathrm{val}}`$ | $`[5,3]`$ |
 | QKᵀ, mask, A | [5,5] |
-| $O=AV_{\mathrm{val}}$ | $[5,3]$ |
+| $`O=AV_{\mathrm{val}}`$ | $`[5,3]`$ |
 
 None of these axes indexes the output vocabulary. Rows are receiving positions
 and A's columns are source positions. The later output head maps final hidden
-features to vocabulary logits. Q/K widths must match; $V_{\mathrm{val}}$'s width is independent.
+features to vocabulary logits. Q/K widths must match; $`V_{\mathrm{val}}`$'s width is independent.
 
 ## Exercise 2 — Directed retrieval
 
@@ -34,13 +34,13 @@ row-wise normalization can still make the final attention matrix asymmetric.
 
 With independent zero-mean coordinates,
 
-$$
+```math
 \mathrm{Var}(q_m k_m)=\sigma_q^2\sigma_k^2,
 \qquad
 \mathrm{Var}(q\cdot k)=d_h\sigma_q^2\sigma_k^2.
-$$
+```
 
-Dividing by $\sqrt{d_h}$ removes the dimension factor but retains
+Dividing by $`\sqrt{d_h}`$ removes the dimension factor but retains
 σ_q²σ_k². With correlated coordinate products, covariance terms appear in the
 variance of the sum. Trained magnitudes and correlations can therefore create
 wide score gaps after standard scaling.
@@ -83,27 +83,27 @@ changing others. Use a general graph argument and multiple well-chosen tests.
 
 ## Exercise 6 — Backward credit
 
-Since $dO=(dA)V_{\mathrm{val}}+A(dV_{\mathrm{val}})$, Frobenius inner products with $G_O$ give
+Since $`dO=(dA)V_{\mathrm{val}}+A(dV_{\mathrm{val}})`$, Frobenius inner products with $`G_O`$ give
 
-$$
+```math
 G_A=G_OV_{\mathrm{val}}^\top,\qquad G_V=A^\top G_O.
-$$
+```
 
-Here $G_V=\partial L/\partial V_{\mathrm{val}}$, matching the implementation's `v` tensor. The softmax derivative supplies
+Here $`G_V=\partial L/\partial V_{\mathrm{val}}`$, matching the implementation's `v` tensor. The softmax derivative supplies
 
-$$
+```math
 G_R=A\odot\left(G_A-\mathrm{rowsum}(A\odot G_A)\right).
-$$
+```
 
 Then
 
-$$
+```math
 G_Q=G_RK/\sqrt{d_h},\quad G_K=G_R^\top Q/\sqrt{d_h},
-$$
+```
 
-$$
+```math
 G_X=G_QW_Q^\top+G_KW_K^\top+G_VW_V^\top.
-$$
+```
 
 For each projection, G_W=XᵀG_projected. Earlier prompt rows can receive credit
 through K and V even with no direct loss at those rows. A forbidden future row
@@ -160,9 +160,9 @@ position is insufficient.
 There are two tensors, two layers, six positions, four features, and eight bytes
 per float64 scalar:
 
-$$
+```math
 2\times2\times6\times4\times8=768\ \text{bytes}.
-$$
+```
 
 This counts logical tensor contents only, not Python objects, concatenation
 temporaries, or allocator memory.

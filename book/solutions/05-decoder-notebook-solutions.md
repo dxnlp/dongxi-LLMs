@@ -81,10 +81,10 @@ occurrences' gradient contributions into the same stored row.
 ### 3. One objective can send different learning signals
 
 For one position use row-vector notation:
-$u=o_1W_{O,1}+o_2W_{O,2}$. If the gradient at $u$ is $g$, then the gradients
-at the two head outputs are $gW_{O,1}^\top$ and $gW_{O,2}^\top$. They need
-not match. For a minimal algebraic example, let $g=[1,1]$, $W_{O,1}=[1,0]$,
-and $W_{O,2}=[0,2]$, with scalar head outputs. The returned gradients are
+$`u=o_1W_{O,1}+o_2W_{O,2}`$. If the gradient at $`u`$ is $`g`$, then the gradients
+at the two head outputs are $`gW_{O,1}^\top`$ and $`gW_{O,2}^\top`$. They need
+not match. For a minimal algebraic example, let $`g=[1,1]`$, $`W_{O,1}=[1,0]`$,
+and $`W_{O,2}=[0,2]`$, with scalar head outputs. The returned gradients are
 1 and 2. This demonstrates different paths, not a trained specialization result.
 
 Those gradients continue through each head's own attention activations into
@@ -96,7 +96,7 @@ unique linguistic roles or prevent redundancy.
 
 ### 4. Heads trade mixture count against feature width
 
-Under the baseline constraint $D=Hd_h$, width 16 can give four heads of width 4
+Under the baseline constraint $`D=Hd_h`$, width 16 can give four heads of width 4
 or eight heads of width 2. The latter provides more separately parameterized
 source distributions but fewer value features within each head. It does not
 create eight full-width transformers or assign disjoint token ranges. More
@@ -104,10 +104,10 @@ heads may help a task, but architecture counts alone do not establish that.
 
 ### 5. The sum is not an untouched backup
 
-The output contains $Y=X+F(X)$, not the ordered pair $(X,F(X))$. Different
+The output contains $`Y=X+F(X)`$, not the ordered pair $`(X,F(X))`$. Different
 inputs and updates can produce the same sum, so there is no general recovery
-guarantee. A zero branch makes $Y=X$ and preserves the direct gradient. A branch
-$F(X)=-X$ makes $Y=0$ and its input derivative zero. Thus a bypass offers an
+guarantee. A zero branch makes $`Y=X`$ and preserves the direct gradient. A branch
+$`F(X)=-X`$ makes $`Y=0`$ and its input derivative zero. Thus a bypass offers an
 identity route without enforcing lossless information storage or a nonzero
 total gradient.
 
@@ -122,9 +122,9 @@ boundary. Other full-sequence operations must be checked by the same principle.
 
 ### 7. Normalizing the branch differs from normalizing the sum
 
-Pre-norm gives $Y=X+F(\mathrm{LN}(X))$. If the branch is identically zero,
-$Y=X$ and its input Jacobian is the identity. Post-norm gives
-$Y=\mathrm{LN}(X+F(X))$, becoming $\mathrm{LN}(X)$ under the same
+Pre-norm gives $`Y=X+F(\mathrm{LN}(X))`$. If the branch is identically zero,
+$`Y=X`$ and its input Jacobian is the identity. Post-norm gives
+$`Y=\mathrm{LN}(X+F(X))`$, becoming $`\mathrm{LN}(X)`$ under the same
 intervention. Its backward signal passes through the LayerNorm Jacobian.
 This is not merely a naming difference; the skip contribution is itself
 transformed in post-norm. The final normalization after a pre-norm stack remains
@@ -136,8 +136,8 @@ The MLP applies the same parameters independently to every position, but it
 receives states already updated by attention. It can therefore transform
 contextual features without gathering other tokens itself. Removing its
 activation yields the row-vector affine map with weight
-$W_{\rm up}W_{\rm down}$ and bias
-$b_{\rm up}W_{\rm down}+b_{\rm down}$.
+$`W_{\rm up}W_{\rm down}`$ and bias
+$`b_{\rm up}W_{\rm down}+b_{\rm down}`$.
 
 In PyTorch storage convention, this is `down.weight @ up.weight` and
 `down.weight @ up.bias + down.bias`. GELU prevents this collapse in general;
@@ -169,10 +169,10 @@ generation and position-wise training losses describe different operations.
 
 ### 11. A derivative describes a local change
 
-For $\ell(e)=(e-1)^2$ at $e=.2$, the derivative is $-1.6$. A positive SGD
-learning rate moves right. With $\eta=.1$, $e$ becomes $.36$ and loss becomes
-$.4096$, below $.64$. With $\eta=1.5$, $e$ becomes $2.6$ and loss becomes
-$2.56$. The initial direction is a descent direction, but the larger step
+For $`\ell(e)=(e-1)^2`$ at $`e=.2`$, the derivative is $`-1.6`$. A positive SGD
+learning rate moves right. With $`\eta=.1`$, $`e`$ becomes $`.36`$ and loss becomes
+$`.4096`$, below $`.64`$. With $`\eta=1.5`$, $`e`$ becomes $`2.6`$ and loss becomes
+$`2.56`$. The initial direction is a descent direction, but the larger step
 overshoots. AdamW additionally transforms gradients using optimizer state;
 do not describe its exact update as plain raw-gradient SGD.
 
@@ -209,19 +209,19 @@ final values. Neither method mixes token positions when statistics are over D.
 
 ### 14. Epsilon and vector length matter
 
-For positive $a$, normalizing $ax$ with epsilon is equivalent to normalizing
-$x$ with epsilon divided by $a^2$. The outputs are approximately equal only
+For positive $`a`$, normalizing $`ax`$ with epsilon is equivalent to normalizing
+$`x`$ with epsilon divided by $`a^2`$. The outputs are approximately equal only
 where that denominator change is negligible. Without learned scaling, RMSNorm
 gives approximately unit root-mean-square magnitude, not a zero mean. Its L2
-length is approximately $\sqrt D$, not one. This distinction becomes important
+length is approximately $`\sqrt D`$, not one. This distinction becomes important
 when interpreting RMS-normalized Q/K scores as though they were cosines.
 
 ### 15. A gate is a feature multiplier, not a probability
 
-SiLU is $a\sigma(a)$: it can be negative for negative $a$ and exceed one for
-sufficiently positive $a$. Its outputs are not normalized across coordinates.
-For $u=\mathrm{SiLU}(a)\odot c$, an arriving gradient $\delta$ gives
-$d\mathcal L/da=\delta\odot c\odot\mathrm{SiLU}'(a)$. At $a=0$,
+SiLU is $`a\sigma(a)`$: it can be negative for negative $`a`$ and exceed one for
+sufficiently positive $`a`$. Its outputs are not normalized across coordinates.
+For $`u=\mathrm{SiLU}(a)\odot c`$, an arriving gradient $`\delta`$ gives
+$`d\mathcal L/da=\delta\odot c\odot\mathrm{SiLU}'(a)`$. At $`a=0`$,
 the derivative of SiLU is one half. Thus a zero gate can suppress forward
 content without preventing gradient flow into the gate weights. This requires
 appropriate nonzero content, inputs, and downstream gradients; it is not a
@@ -231,7 +231,7 @@ depends on its bias-free projections.
 ### 16. Count all three projections
 
 At feature widths D and F, the bias-free gated MLP has three matrices totaling
-$3DF$, compared with two totaling $2DF$ in a bias-free ordinary MLP. Matching
+$`3DF`$, compared with two totaling $`2DF`$ in a bias-free ordinary MLP. Matching
 matrix budgets suggests gated width near two-thirds of the original width.
 The notebook's biased GELU MLP at D=16,F=32 has 1072 parameters. SwiGLU at
 F=32 has 1536, and F=22 has 1056. A claim about quality must distinguish exact
@@ -241,8 +241,8 @@ fair quality comparisons.
 
 ### 17. Relative position arises inside a dot product
 
-For orthogonal pair rotations, $R_m^\top R_n=R_{n-m}$. Substituting this into
-$(R_mq)^\top(R_nk)$ gives $q^\top R_{n-m}k$. A common position shift cancels
+For orthogonal pair rotations, $`R_m^\top R_n=R_{n-m}`$. Substituting this into
+$`(R_mq)^\top(R_nk)`$ gives $`q^\top R_{n-m}k`$. A common position shift cancels
 for fixed unrotated q and k. A whole language model also changes those vectors
 with tokens, boundaries, and prior layers; the identity alone does not make its
 outputs invariant to arbitrary sentence shifts. Being able to calculate an
@@ -262,7 +262,7 @@ each time they are read.
 
 ### 19. Share source representations, not query distributions
 
-GQA shrinks K/V projections from $DH_qd_h$ each to $DH_{kv}d_h$ each, and compact
+GQA shrinks K/V projections from $`DH_qd_h`$ each to $`DH_{kv}d_h`$ each, and compact
 K/V tensors from `[B,Hq,S,d]` to `[B,Hkv,S,d]`. Query tensors still use Hq,
 as do attention distributions `[B,Hq,T,S]` and head outputs `[B,Hq,T,d]`.
 Different Q vectors can form different weights over shared K and thus different
@@ -273,10 +273,10 @@ implementation.
 
 ### 20. State the implementation, not just the acronym
 
-The lab computes RMS statistics over each projected Q/K head's $d_h$ features,
+The lab computes RMS statistics over each projected Q/K head's $`d_h`$ features,
 applies learned feature scales, then applies RoPE and retains division by
-$\sqrt{d_h}$. There are separate Q and K scale vectors of length $d_h$ per layer,
-broadcast over heads and positions, so the extra parameter count is $2d_h$ per
+$`\sqrt{d_h}`$. There are separate Q and K scale vectors of length $`d_h`$ per layer,
+broadcast over heads and positions, so the extra parameter count is $`2d_h`$ per
 layer. Separate statistics do not imply separate learned parameters for every
 head. This is not the original L2-normalized, learned-score-scale QKNorm formula.
 Learned coordinate scaling can also change direction, and need not commute with

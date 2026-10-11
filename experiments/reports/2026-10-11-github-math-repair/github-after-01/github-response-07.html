@@ -1,0 +1,1655 @@
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-43</h1>
+<h1 dir="auto">Chapter 5 — Worked Solutions and Notebook Guide</h1>
+<p dir="auto">The <a href="../labs/05-building-a-modern-decoder.md">companion lab</a> provides the<br>
+sequential route. Every exercise has its runnable solution and explanation<br>
+immediately below it in the notebook. This guide summarizes what a sound<br>
+interpretation must preserve; it is not a replacement for running the cells.</p>
+<p dir="auto">The <a href="../chapters/05-building-a-modern-decoder.md">Chapter 5 narrative</a> now covers<br>
+Part A foundation, Part B modern mechanisms, and Part C architecture synthesis.<br>
+Its 34 conceptual exercises are answered below. The table covers the original<br>
+eleven notebooks; the core Day 7 defense immediately below it brings the full<br>
+pathway to twelve. Study that defense before optional recurrence.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Session</th>
+<th>Core reasoning in the worked solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-05/01_embeddings_and_positions.ipynb">1. Lookup and positions</a></td>
+<td>Repeated IDs select the same embedding row; different positions add different vectors. Lookup gradients sum over occurrences. Output tying can add gradients to rows absent from the input. Removing position embeddings does not remove the causal graph.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/02_multi_head_attention.ipynb">2. Multiple heads</a></td>
+<td>Split and merge preserve time as its own axis. Loop and vectorized results and gradients agree under identical weights. Zeroing a head changes its value contribution, not the definition of causal visibility.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/03_residual_stream.ipynb">3. Residuals</a></td>
+<td>For Y=X+XW, the incoming gradient is G+GW transpose in row-vector notation. A zero branch yields identity; a branch equal to -X cancels both state and gradient.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/04_layernorm_and_placement.ipynb">4. LayerNorm</a></td>
+<td>Normalize over features with population variance and epsilon, then apply scale/bias. Time-axis statistics can leak future information. Zero branches make a pre-norm block identity, but post-norm still normalizes.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/05_positionwise_mlp.ipynb">5. MLP</a></td>
+<td>Without activation, the combined weight is W_down W_up and combined bias is W_down b_up+b_down. Nonlinearity prevents this general collapse. Positionwise computation still acts on contextual inputs.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/06_assemble_decoder.ipynb">6. Assembly</a></td>
+<td>Blocks preserve residual width, whereas the vocabulary head outputs one logit per candidate token. Tying is Parameter identity, not copying. A copy oracle fails the next-token objective despite near-zero incorrectly unshifted loss.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/07_one_batch_learning.ipynb">7. Learning</a></td>
+<td>The declared batch is consistent and shifted once. Optimization changes parameters and reduces the correct loss. The frozen control stays unchanged. No gold labels are declared for the reversed-context probe, so its outputs cannot be scored as a generalization result.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-06/01_rmsnorm_and_swiglu.ipynb">8. Modern norm/MLP</a></td>
+<td>RMS scaling does not center features. A SiLU gate is not a probability. Three gated projections require a different width for approximately matched parameters; biases must be accounted for.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-06/02_rotary_positions.ipynb">9. RoPE</a></td>
+<td>Rotations preserve coordinate-pair norms; R_m transpose R_n gives R_(n-m). Cached keys keep their original positions. Restarting new query/key offsets breaks equivalence even with a correct causal mask.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-06/03_gqa_qknorm_and_costs.ipynb">10. GQA/costs</a></td>
+<td>Fewer KV heads reduce compact cache payload and KV projection parameters, not the number of query distributions. QK normalization is explicitly specified. Logical bytes and dense arithmetic estimates are not measured latency or total runtime memory.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-07/01_recurrent_depth.ipynb">11. Recurrence</a></td>
+<td>Shared parameters receive the sum of gradients through their uses. Weight sharing preserves stored size while additional applications spend computation. Different application states generally require different K/V; no adaptive router or quality gain is established.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<h2 dir="auto">Architecture defense</h2>
+<p dir="auto">The core <a href="../../notebooks/day-07/02_architecture_defense.ipynb">Day 7 notebook</a><br>
+now makes this defense executable. Its worked solutions establish:</p>
+<ul dir="auto">
+<li>Trace: Q output is <code class="notranslate">[2,6,16]</code>, compact K projection output <code class="notranslate">[2,6,8]</code> before<br>
+splitting, MLP intermediate <code class="notranslate">[2,6,32]</code>, and vocabulary logits <code class="notranslate">[2,6,16]</code>.<br>
+The two occurrences of width 16 have different roles; hooks are removed.</li>
+<li>Accounting: the modern fixture has 4,960 unique parameters and 3,072 compact<br>
+float64 KV bytes; the dense forward matmul estimate is 125,952, not latency.</li>
+<li>Backward: all parameter tensors have connected finite gradients in the<br>
+fixture, but weights remain unchanged without an optimizer step. Nonzero<br>
+gradients are not a capability or component-importance measurement.</li>
+<li>Diagnosis: the reference passes finite/causal/cache checks. Wrong RoPE<br>
+offsets remain causal but fail replay. Full-time centering can remain finite<br>
+while failing causality and replay. These controlled examples do not imply<br>
+a one-to-one mapping from every real failure signature to a unique cause.</li>
+<li>Comparison: one versus two shared applications can match stored parameters<br>
+while spending different computation. Specify actual training/evaluation and<br>
+measurement budgets before executing the proposal.</li>
+</ul>
+<p dir="auto">Use the modern tiny model after session 10. Explain, without relying on its<br>
+class names alone, what each operation does to the token, head, and feature<br>
+axes; why it is causal; which parameters it trains; and which invariants survive<br>
+its controlled intervention. An answer is strong when it identifies the relevant<br>
+test and its evidence boundary, not merely when it repeats a layer name.</p>
+<p dir="auto">Notebook readiness and the recorded reference experiment are complete material<br>
+deliverables. The Days 5–7 narrative, including the architecture-defense method,<br>
+is written; an independent architecture defense and any trained comparison<br>
+still need their own evidence.</p>
+<p dir="auto"><a id="user-content-day-5-foundation--worked-conceptual-solutions"></a></p>
+<h2 dir="auto">Part A — Foundation — worked conceptual solutions</h2>
+<h3 dir="auto">1. Vocabulary scores are not input positions</h3>
+<p dir="auto">An output position scores the possible next IDs, so its last dimension equals<br>
+the vocabulary size: 16. Six input positions produce logits <code class="notranslate">[B,6,16]</code>.<br>
+Adding a seventh position produces <code class="notranslate">[B,7,16]</code>, not <code class="notranslate">[B,6,17]</code>. Increasing the<br>
+vocabulary is a different architectural change requiring corresponding table<br>
+and output-head capacity. The hidden feature width remains a separate quantity.</p>
+<h3 dir="auto">2. Repeated lookup does not imply repeated contextual states</h3>
+<p dir="auto">Two occurrences of ID 3 retrieve exactly the same row <code class="notranslate">E[3]</code> from the same<br>
+parameter snapshot. Different learned position rows can make their initial<br>
+states differ; attention can then gather different prefixes. Neither step<br>
+guarantees that every pair of outputs is different, but equality of token IDs<br>
+does not require equality of those later states. The lookup path adds the two<br>
+occurrences' gradient contributions into the same stored row.</p>
+<h3 dir="auto">3. One objective can send different learning signals</h3>
+<p dir="auto">For one position use row-vector notation:<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$u=o_1W_{O,1}+o_2W_{O,2}$</math-renderer>. If the gradient at <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$u$</math-renderer> is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$g$</math-renderer>, then the gradients<br>
+at the two head outputs are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$gW_{O,1}^\top$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$gW_{O,2}^\top$</math-renderer>. They need<br>
+not match. For a minimal algebraic example, let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$g=[1,1]$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$W_{O,1}=[1,0]$</math-renderer>,<br>
+and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$W_{O,2}=[0,2]$</math-renderer>, with scalar head outputs. The returned gradients are<br>
+1 and 2. This demonstrates different paths, not a trained specialization result.</p>
+<p dir="auto">Those gradients continue through each head's own attention activations into<br>
+its projection parameters. Heads learn jointly, not as independent predictors.<br>
+Exactly identical corresponding Q/K/V parameters and output blocks, with an<br>
+otherwise symmetry-preserving optimizer and computation, can keep two heads<br>
+identical. Random initialization helps break this symmetry; it does not force<br>
+unique linguistic roles or prevent redundancy.</p>
+<h3 dir="auto">4. Heads trade mixture count against feature width</h3>
+<p dir="auto">Under the baseline constraint <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$D=Hd_h$</math-renderer>, width 16 can give four heads of width 4<br>
+or eight heads of width 2. The latter provides more separately parameterized<br>
+source distributions but fewer value features within each head. It does not<br>
+create eight full-width transformers or assign disjoint token ranges. More<br>
+heads may help a task, but architecture counts alone do not establish that.</p>
+<h3 dir="auto">5. The sum is not an untouched backup</h3>
+<p dir="auto">The output contains <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$Y=X+F(X)$</math-renderer>, not the ordered pair <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$(X,F(X))$</math-renderer>. Different<br>
+inputs and updates can produce the same sum, so there is no general recovery<br>
+guarantee. A zero branch makes <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$Y=X$</math-renderer> and preserves the direct gradient. A branch<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$F(X)=-X$</math-renderer> makes <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$Y=0$</math-renderer> and its input derivative zero. Thus a bypass offers an<br>
+identity route without enforcing lossless information storage or a nonzero<br>
+total gradient.</p>
+<h3 dir="auto">6. Causality extends beyond attention</h3>
+<p dir="auto">If normalization computes an earlier position's statistics using all time<br>
+positions, changing a future token can change that earlier normalized state.<br>
+Attention's mask cannot undo the dependency already introduced. LayerNorm over<br>
+features computes each token's statistics from its own state. Provided those<br>
+states were causally computed, this local operation preserves the information<br>
+boundary. Other full-sequence operations must be checked by the same principle.</p>
+<h3 dir="auto">7. Normalizing the branch differs from normalizing the sum</h3>
+<p dir="auto">Pre-norm gives <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$Y=X+F(\mathrm{LN}(X))$</math-renderer>. If the branch is identically zero,<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$Y=X$</math-renderer> and its input Jacobian is the identity. Post-norm gives<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$Y=\mathrm{LN}(X+F(X))$</math-renderer>, becoming <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\mathrm{LN}(X)$</math-renderer> under the same<br>
+intervention. Its backward signal passes through the LayerNorm Jacobian.<br>
+This is not merely a naming difference; the skip contribution is itself<br>
+transformed in post-norm. The final normalization after a pre-norm stack remains<br>
+a separate operation and is not part of the zero-branch identity assertion.</p>
+<h3 dir="auto">8. Local feature processing can use contextual information</h3>
+<p dir="auto">The MLP applies the same parameters independently to every position, but it<br>
+receives states already updated by attention. It can therefore transform<br>
+contextual features without gathering other tokens itself. Removing its<br>
+activation yields the row-vector affine map with weight<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$W_{\rm up}W_{\rm down}$</math-renderer> and bias<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$b_{\rm up}W_{\rm down}+b_{\rm down}$</math-renderer>.</p>
+<p dir="auto">In PyTorch storage convention, this is <code class="notranslate">down.weight @ up.weight</code> and<br>
+<code class="notranslate">down.weight @ up.bias + down.bias</code>. GELU prevents this collapse in general;<br>
+it does not change the token axis or guarantee a readable concept per neuron.</p>
+<h3 dir="auto">9. Two projections, and one optional shared parameter</h3>
+<p dir="auto">Attention's output projection maps concatenated heads <code class="notranslate">[B,T,H*d]</code> back to<br>
+<code class="notranslate">[B,T,D]</code>. The vocabulary head maps final normalized states <code class="notranslate">[B,T,D]</code> to logits<br>
+<code class="notranslate">[B,T,V]</code>. Under input/output tying, the stored vocabulary-head weight is the<br>
+same Parameter object as the embedding table <code class="notranslate">[V,D]</code>; the linear operation<br>
+uses its transpose. Copying values into another Parameter gives two independent<br>
+objects whose updates may diverge. True sharing accumulates classifier and<br>
+lookup contributions into one parameter, including classifier gradients on<br>
+rows absent from the input lookup.</p>
+<h3 dir="auto">10. Per-position supervision, batched learning</h3>
+<p dir="auto">The model produces logits at all 12 positions of the two-sequence batch using<br>
+one fixed parameter snapshot. Each aligned label selects a target log-probability;<br>
+their negative mean is the scalar loss. Backward accumulates the corresponding<br>
+contributions into shared parameters, and one optimizer step changes them.<br>
+Causal masking constrains each prediction despite parallel computation.</p>
+<p dir="auto">In ordinary free generation, the next input token is the previously selected<br>
+prediction, rather than the supplied training continuation. The model selects<br>
+one new ID at a time and usually keeps its parameters fixed. Token-by-token<br>
+generation and position-wise training losses describe different operations.</p>
+<h3 dir="auto">11. A derivative describes a local change</h3>
+<p dir="auto">For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\ell(e)=(e-1)^2$</math-renderer> at <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$e=.2$</math-renderer>, the derivative is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$-1.6$</math-renderer>. A positive SGD<br>
+learning rate moves right. With <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\eta=.1$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$e$</math-renderer> becomes <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$.36$</math-renderer> and loss becomes<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$.4096$</math-renderer>, below <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$.64$</math-renderer>. With <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\eta=1.5$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$e$</math-renderer> becomes <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$2.6$</math-renderer> and loss becomes<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$2.56$</math-renderer>. The initial direction is a descent direction, but the larger step<br>
+overshoots. AdamW additionally transforms gradients using optimizer state;<br>
+do not describe its exact update as plain raw-gradient SGD.</p>
+<h3 dir="auto">12. Memorization validates a narrow claim</h3>
+<p dir="auto">Correctly aligned loss reduction, finite gradients, parameter changes, and a<br>
+stable frozen control support that the tested computation can optimize the<br>
+declared batch. The unique input IDs make simple successor memorization<br>
+possible; this is not a test that requires understanding syntax or context.</p>
+<p dir="auto">Contextual generalization needs held-out examples where token identity alone<br>
+is insufficient, such as the same last token with different preceding contexts<br>
+and appropriately defined targets. Claims about head roles need interventions<br>
+on trained models, defined evaluation metrics, and controls for redundancy or<br>
+compensation by other components. Neither different attention maps nor a<br>
+changed output after ablation establishes a unique semantic function by itself.<br>
+The reversed-context probe cannot supply an accuracy score without declared<br>
+gold labels.</p>
+<p dir="auto"><a id="user-content-day-6-modern-decoder--worked-conceptual-solutions"></a></p>
+<h2 dir="auto">Part B — Modern decoder — worked conceptual solutions</h2>
+<h3 dir="auto">13. Removing an offset is different from scaling a vector</h3>
+<p dir="auto">LayerNorm subtracts the feature mean. Adding a common constant to the input<br>
+does not change its centered vector or variance. RMSNorm does not subtract<br>
+that constant: both its numerator and RMS magnitude change, generally producing<br>
+a different result. For a positive constant vector, LayerNorm produces zero<br>
+before its affine transform, whereas RMSNorm produces values approximately one<br>
+before its learned scale. With default affine parameters these remain zero and<br>
+approximately one. Arbitrary learned LayerNorm beta or RMS scales change those<br>
+final values. Neither method mixes token positions when statistics are over D.</p>
+<h3 dir="auto">14. Epsilon and vector length matter</h3>
+<p dir="auto">For positive <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$a$</math-renderer>, normalizing <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$ax$</math-renderer> with epsilon is equivalent to normalizing<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$x$</math-renderer> with epsilon divided by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$a^2$</math-renderer>. The outputs are approximately equal only<br>
+where that denominator change is negligible. Without learned scaling, RMSNorm<br>
+gives approximately unit root-mean-square magnitude, not a zero mean. Its L2<br>
+length is approximately <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\sqrt D$</math-renderer>, not one. This distinction becomes important<br>
+when interpreting RMS-normalized Q/K scores as though they were cosines.</p>
+<h3 dir="auto">15. A gate is a feature multiplier, not a probability</h3>
+<p dir="auto">SiLU is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$a\sigma(a)$</math-renderer>: it can be negative for negative <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$a$</math-renderer> and exceed one for<br>
+sufficiently positive <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$a$</math-renderer>. Its outputs are not normalized across coordinates.<br>
+For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$u=\mathrm{SiLU}(a)\odot c$</math-renderer>, an arriving gradient <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\delta$</math-renderer> gives<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$d\mathcal L/da=\delta\odot c\odot\mathrm{SiLU}'(a)$</math-renderer>. At <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$a=0$</math-renderer>,<br>
+the derivative of SiLU is one half. Thus a zero gate can suppress forward<br>
+content without preventing gradient flow into the gate weights. This requires<br>
+appropriate nonzero content, inputs, and downstream gradients; it is not a<br>
+guarantee for every state or loss. The notebook's zero-output result also<br>
+depends on its bias-free projections.</p>
+<h3 dir="auto">16. Count all three projections</h3>
+<p dir="auto">At feature widths D and F, the bias-free gated MLP has three matrices totaling<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$3DF$</math-renderer>, compared with two totaling <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$2DF$</math-renderer> in a bias-free ordinary MLP. Matching<br>
+matrix budgets suggests gated width near two-thirds of the original width.<br>
+The notebook's biased GELU MLP at D=16,F=32 has 1072 parameters. SwiGLU at<br>
+F=32 has 1536, and F=22 has 1056. A claim about quality must distinguish exact<br>
+and approximate parameter matching, and additionally declare training/evaluation<br>
+data and compute budgets. Interface-compatible replacements are not automatically<br>
+fair quality comparisons.</p>
+<h3 dir="auto">17. Relative position arises inside a dot product</h3>
+<p dir="auto">For orthogonal pair rotations, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$R_m^\top R_n=R_{n-m}$</math-renderer>. Substituting this into<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$(R_mq)^\top(R_nk)$</math-renderer> gives <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$q^\top R_{n-m}k$</math-renderer>. A common position shift cancels<br>
+for fixed unrotated q and k. A whole language model also changes those vectors<br>
+with tokens, boundaries, and prior layers; the identity alone does not make its<br>
+outputs invariant to arbitrary sentence shifts. Being able to calculate an<br>
+angle at a new index likewise does not establish trained quality beyond the<br>
+training context range. Different checkpoints can use different pair layouts,<br>
+bases, or scaling rules.</p>
+<h3 dir="auto">18. Causal edges can use incorrect geometry</h3>
+<p dir="auto">If the prefix occupies positions 0 and 1, the next Q/K should use position 2.<br>
+Restarting them at position 0 creates the wrong angle relative to already<br>
+rotated cached keys. The mask may still forbid every future edge, but the<br>
+allowed scores differ from the full-pass computation. Correct replay requires<br>
+both valid visibility and consistent positions under the same parameters and<br>
+prefix. Cached keys keep their original rotations; they are not rotated again<br>
+each time they are read.</p>
+<h3 dir="auto">19. Share source representations, not query distributions</h3>
+<p dir="auto">GQA shrinks K/V projections from <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$DH_qd_h$</math-renderer> each to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$DH_{kv}d_h$</math-renderer> each, and compact<br>
+K/V tensors from <code class="notranslate">[B,Hq,S,d]</code> to <code class="notranslate">[B,Hkv,S,d]</code>. Query tensors still use Hq,<br>
+as do attention distributions <code class="notranslate">[B,Hq,T,S]</code> and head outputs <code class="notranslate">[B,Hq,T,d]</code>.<br>
+Different Q vectors can form different weights over shared K and thus different<br>
+mixtures of shared V. Backward sums the contributions from all using query<br>
+heads into their shared K/V activations and parameters. Explicitly repeating<br>
+K/V verifies this arithmetic, but does not establish an efficient memory-access<br>
+implementation.</p>
+<h3 dir="auto">20. State the implementation, not just the acronym</h3>
+<p dir="auto">The lab computes RMS statistics over each projected Q/K head's <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$d_h$</math-renderer> features,<br>
+applies learned feature scales, then applies RoPE and retains division by<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\sqrt{d_h}$</math-renderer>. There are separate Q and K scale vectors of length <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$d_h$</math-renderer> per layer,<br>
+broadcast over heads and positions, so the extra parameter count is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$2d_h$</math-renderer> per<br>
+layer. Separate statistics do not imply separate learned parameters for every<br>
+head. This is not the original L2-normalized, learned-score-scale QKNorm formula.<br>
+Learned coordinate scaling can also change direction, and need not commute with<br>
+rotation. Preserving the stated operation order is part of reproducing the lab.</p>
+<h3 dir="auto">21. One reduction does not reduce every cost equally</h3>
+<p dir="auto">With fixed layer count, batch, source length, head width, and element size,<br>
+halving Hkv halves compact KV payload and K/V projection parameters. Q and<br>
+output projections, MLPs, embeddings, and norms remain. The dense score/value<br>
+matmul term still uses Hq; therefore total parameters and full arithmetic do<br>
+not halve. In the recorded fixture, four to two KV heads changes cache payload<br>
+6144 to 3072 bytes, parameters 5472 to 4960, and estimated matmul FLOPs<br>
+138240 to 125952. Latency, peak allocated memory, and quality need their own<br>
+measurements; none is established by those ratios alone.</p>
+<h3 dir="auto">22. Projections connect different feature spaces</h3>
+<p dir="auto">Residual width D is the interface between blocks. Concatenated head width Hq<em>d<br>
+is internal to attention. A Q projection can map D to Hq</em>d and W_O can map<br>
+back. The pinned Qwen config sets D=1024 and Hq<em>d=16</em>128=2048, giving stored<br>
+projection shapes <code class="notranslate">[2048,1024]</code> and <code class="notranslate">[1024,2048]</code>. The chapter links the exact<br>
+configuration revision. This establishes those fields and the resulting shape<br>
+calculation, not compatibility with the toy model's RoPE layout, parameter<br>
+names, full implementation, or trained checkpoint.</p>
+<h3 dir="auto">23. Parameters are only one memory category</h3>
+<p dir="auto">A 100M parameter count gives weight payload only after choosing a storage<br>
+dtype or quantization scheme. Training additionally needs gradients, optimizer<br>
+states, saved or recomputed activations, and temporary workspaces. Sequence<br>
+length, batch size, checkpointing, precision, attention implementation, and<br>
+sharding all affect the result. Inference KV payload is a separate function of<br>
+layers, retained length, KV heads, head width, batch, and cache dtype. The<br>
+larger candidate table is an analytical design exercise, not a successful<br>
+allocation or training run. Selecting a candidate requires profiling the actual<br>
+recipe and resolving the assumed tokenizer/vocabulary and data budget.</p>
+<h3 dir="auto">24. Shared weights do not imply shared states or free depth</h3>
+<p dir="auto">Applying the same block twice stores one set of weights but evaluates two<br>
+transformations. Its second input, activations, and generally K/V differ from<br>
+the first application's; backward accumulates both uses' parameter gradients.<br>
+Two equal-valued independent blocks can initially produce the same outputs<br>
+while owning twice the block parameters and receiving separate updates.</p>
+<p dir="auto">A parameter-matched experiment permits additional recurrent computation; a<br>
+compute-matched experiment must compensate elsewhere for the additional work.<br>
+Neither guarantees equal latency or peak memory. Adaptive early exit and<br>
+recursion-specific KV sharing need explicit mechanisms beyond ordinary weight<br>
+tying. A fixed two-use notebook does not establish those mechanisms or any<br>
+trained quality benefit. Visible reasoning tokens and latent block applications<br>
+are separate ways of spending computation, not interchangeable evidence.</p>
+<p dir="auto"><a id="user-content-day-7-architecture-defense--worked-conceptual-solutions"></a></p>
+<h2 dir="auto">Part C — Architecture defense — worked conceptual solutions</h2>
+<h3 dir="auto">25. Equal widths can describe different spaces</h3>
+<p dir="auto">Residual states have shape <code class="notranslate">[B,T,D]</code>; their last axis contains learned features.<br>
+Logits have shape <code class="notranslate">[B,T,V]</code>; each entry on the last axis scores a candidate token<br>
+ID. Equality of D and V is incidental. Growing V from sixteen to 10,000 changes<br>
+the embedding table from <code class="notranslate">[16,16]</code> to <code class="notranslate">[10000,16]</code> and logits from <code class="notranslate">[2,6,16]</code> to<br>
+<code class="notranslate">[2,6,10000]</code>. The tied head uses that enlarged table. Residual states remain<br>
+<code class="notranslate">[2,6,16]</code>, and internal attention and MLP dimensions need not change. Adding<br>
+vocabulary entries is still a change to model parameters and the tokenizer<br>
+contract, not merely renaming the final axis of an existing trained model.</p>
+<h3 dir="auto">26. Backward connectivity is not an optimizer update</h3>
+<p dir="auto">A non-None finite gradient on every parameter tensor establishes that the<br>
+tested loss has backward paths to those tensors and that the resulting entries<br>
+are finite. It does not establish nonzero values in every entry, useful roles,<br>
+good conditioning, or generalization. No optimizer step means no learning update<br>
+was applied, even though gradients were calculated. The notebook explicitly<br>
+checks unchanged parameter values rather than equating backward with training.</p>
+<p dir="auto">With twelve equally weighted token losses, the mean objective gives each logit<br>
+the derivative <code class="notranslate">(p - q) / 12</code>. The corresponding parameter contributions add<br>
+through the chain rule. A sum objective would multiply this batch's gradients<br>
+by twelve. That scale change must not be confused with twelve sequential<br>
+updates; nor does it imply every optimizer's eventual step scales identically.<br>
+Masking or weighting would require the objective's actual denominator instead.</p>
+<h3 dir="auto">27. Legal visibility can coexist with incorrect positions</h3>
+<p dir="auto">One plausible cause is restarting RoPE offsets for the suffix after a cached<br>
+prefix. No future edge is opened, but new Q/K rotations no longer match the<br>
+positions used by full recomputation. Compare cached suffix logits with the<br>
+same full-pass positions under fixed weights and evaluation mode, then inspect<br>
+the new position indices and already-rotated cached keys. Restore the correct<br>
+offset and repeat the test. A recovered match supports this diagnosis in the<br>
+controlled fixture. It is not a universal conclusion from the initial signature:<br>
+cache concatenation, mask alignment, stale weights, or prefix mismatch can also<br>
+cause replay failure. Test more lengths and cache split points before broadening<br>
+the correctness claim.</p>
+<h3 dir="auto">28. Causality belongs to the whole computation graph</h3>
+<p dir="auto">Subtracting a mean over all sequence positions makes the normalized state at<br>
+an early position depend on later input states. The information path is<br>
+<code class="notranslate">future token → future state → time-axis mean → earlier normalized state</code>.<br>
+Masked attention cannot erase a dependency already introduced on its input<br>
+path. Per-position feature normalization does not create this particular<br>
+cross-time edge. Perturb future tokens while holding the prefix fixed and<br>
+compare earlier outputs; the deliberate time-centering case fails this test<br>
+even though its logits remain finite. Finiteness, causality, and cache<br>
+equivalence are separate properties.</p>
+<h3 dir="auto">29. State the memory category before claiming a reduction</h3>
+<p dir="auto">At fixed layer count, batch, source length, head width, and cache element size,<br>
+halving KV heads halves compact K/V cache payload and K/V projection parameter<br>
+counts. It does not halve Q/output projections, MLPs, embeddings, gradients,<br>
+optimizer state, or all activations. Query-head count still determines the<br>
+number of attention distributions and the dense score/value arithmetic term.<br>
+In the paired teaching configurations, cache payload goes from 6,144 to 3,072<br>
+bytes while total unique parameters go from 5,472 to 4,960. Measure actual peak<br>
+memory and latency on the intended workload before claiming a runtime benefit;<br>
+evaluate trained quality before claiming that the savings preserve capability.</p>
+<h3 dir="auto">30. Fix a question, not an attractive outcome</h3>
+<p dir="auto">A valid fixed-parameter question is: “With the same stored block weights in<br>
+size, the same training-token budget, and a declared training recipe, does two-use<br>
+recurrence achieve lower validation cross-entropy than one use?” Use a declared<br>
+initialization/seed policy, identical tokenizer and data splits, a checkpoint<br>
+selection rule, and recorded resource measurements. The shared weights are<br>
+shared across uses <em>within</em> each model; separately trained comparison models<br>
+will generally learn different values.</p>
+<p dir="auto">This question allows additional computation. A compute-efficiency study instead<br>
+declares a common training-compute budget and how it is measured or estimated,<br>
+then makes any resulting token/update differences explicit. Inference recurrence<br>
+count and inference costs need a separate evaluation contract. Evidence against<br>
+the quality hypothesis could be no repeatable validation improvement under the<br>
+declared criterion; evidence against a practical deployment choice could be a<br>
+small gain accompanied by an unacceptable measured latency or memory cost.<br>
+Nonfinite loss, safety-limit violations, or a failed causal/cache contract should<br>
+trigger the predeclared failure rules, not be hidden by favorable samples. No<br>
+such trained comparison has been run by creating this material.</p>
+<h2 dir="auto">Ragged decoding and recovery worked solutions</h2>
+<h3 dir="auto">31. Masks give equal IDs different roles</h3>
+<p dir="auto">A real input zero has input-validity one and participates in the prefix.<br>
+Dummy left-pad zero has input-validity zero and supplies no visible source key.<br>
+Emitted EOS is a valid generated action, whose likelihood is retained, and<br>
+sets that row's stop reason to EOS. An unfinished cap has no invented EOS.<br>
+Post-stop slots are storage only, not additional actions or useful tokens.<br>
+No single token-ID comparison can express all four distinctions.</p>
+<h3 dir="auto">32. Rectangular work and useful outputs differ</h3>
+<p dir="auto">Three prompts of lengths 2/4/6 require 18 physical prefill positions but only 12<br>
+valid ones. Keeping the original rectangle during full-prefix generation<br>
+repeats padding; compaction removes stopped rows but does not remove all<br>
+retained pad columns. The frozen fixture forwards 90 positions uncached in a<br>
+batch versus 66 separately; cached paths forward 27 versus 21. They produce the<br>
+same twelve greedy output tokens. Counts omit much attention arithmetic and<br>
+runtime overhead. The measured tiny cached batch is slightly slower here;<br>
+profiling on the intended hardware/workload is needed for any speed claim.</p>
+<h3 dir="auto">33. The computational state determines the continuation</h3>
+<p dir="auto">Saved-cache recovery includes exact K/V, next logits, active request order,<br>
+prefixes, generators and sampler cursors, under the same weights and interface.<br>
+Its next sample and remaining trajectory are bitwise equal in the tested CPU<br>
+environment. Rebuilding computes K/V again from the same prefixes and must<br>
+be checked under a separately declared numerical tolerance. Equality of one<br>
+fixture does not guarantee bitwise identity across devices or kernels.<br>
+Model parameter bytes/version, template/token/support/position conventions,<br>
+precision and actual prefixes prevent silently reusing unrelated state.</p>
+<h3 dir="auto">34. Pending data belongs to its behavior policy</h3>
+<p dir="auto">The retained batch already consumed shuffle and rollout RNG positions. Its<br>
+tokens and old likelihoods were produced by a specific policy byte identity<br>
+and version. Resume must apply that pending update before the next collection;<br>
+sampling again changes the data and advances the cursors. Completed-boundary<br>
+recovery also needs Adam moments, reference weights and the data stream.<br>
+All four fixed tiny DPO/RLVR runs reproduce their six-update histories and final<br>
+state from both boundaries. The later native recovery reports establish separate runner behavior; this<br>
+tiny replay alone establishes neither their outcomes nor better reasoning. DPO uses no rollout RNG in this<br>
+fixture, so its omission is not advertised as a failure.</p>
+<p dir="auto">The <a href="../../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb">Day 25 extension</a><br>
+provides adjacent runnable answers and five figures; the<br>
+<a href="../../experiments/reports/2026-10-04-batched-cache-recovery.md">report</a> retains<br>
+every natural cap, interrupted/pending collection and broken recovery branch.</p>
+<h2 dir="auto">Assignment C — Work divided by modeled movement</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> How much modeled arithmetic intensity does a square FP32 matrix multiplication of width 32 have under one-read/one-write payload accounting?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> It counts 2×32³ = 65,536 FLOPs and 4×3×32² = 12,288 bytes, giving 16/3 ≈ 5.333 FLOPs per byte. This is a logical movement model. Timed throughput may be affected by caches, launch costs and excluded operations. A roofline ceiling must match the measured hardware and precision; a CPU time cannot establish DGX Spark utilization.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/01_resource_accounting.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-44</h1>
+<h1 dir="auto">Chapter 6 — Worked Solutions</h1>
+<p dir="auto">Read the <a href="../chapters/06-pretraining-as-a-controlled-system.md">chapter</a> first.<br>
+The <a href="../../notebooks/day-08/README.md">three Day 8 notebooks</a> contain adjacent,<br>
+runnable reference solutions; this guide explains the conceptual exercises.<br>
+Executing a reference does not establish independent reasoning about the mechanism.</p>
+<h2 dir="auto">1. Document splits and contamination</h2>
+<p dir="auto">Two different document IDs can contain identical text, overlapping passages,<br>
+translations or paraphrases. A document-level split prevents one document's<br>
+windows from being randomly scattered across splits, but does not establish<br>
+independence of the content. The fixture detects normalized exact overlap only.<br>
+A real corpus needs a declared deduplication and contamination policy, with its<br>
+limitations recorded. A low held-out loss is less convincing if the held-out<br>
+content has effectively been seen during training.</p>
+<h2 dir="auto">2. Shorter windows with the same targets</h2>
+<p dir="auto">Our policy predicts each byte and EOS once regardless of window length. But a<br>
+target just after a new window boundary cannot use the previous window's hidden<br>
+states or tokens. It is a prediction from a shorter prefix. Padding overhead<br>
+can also change. Therefore equal supervised target counts do not mean equal<br>
+context, equal compute or equal difficulty. Notebook 1 changes lengths 8, 16 and<br>
+32 while checking that the target count stays fixed.</p>
+<h2 dir="auto">3. EOS, loss masking and attention masking</h2>
+<p dir="auto">EOS is an ordinary learned vocabulary entry with a boundary convention. The<br>
+network can attend across it unless the attention mechanism forbids that access.<br>
+A loss mask says “do not score this prediction,” not “hide this source.” An<br>
+attention boundary removes information-flow edges. For packed independent<br>
+documents, a block-diagonal causal attention mask can enforce isolation; an EOS<br>
+alone cannot. In the fixture, documents occupy separate windows and right-padding<br>
+sources are in the future of every valid prefix position.</p>
+<h2 dir="auto">4. What the budget formula counts</h2>
+<p dir="auto"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$SbnAR$</math-renderer> counts processed tensor positions under fixed full microbatches and<br>
+accumulation windows. It equals valid target presentations only if every<br>
+position contributes to loss. With ignored labels, it is an upper bound on those<br>
+targets. It never measures unique information: rereading the same corpus adds<br>
+presentations. Keep counters for updates, processed positions, valid targets and<br>
+unique source content. The teaching recipe's 768-position ceiling must be<br>
+reconciled with its actually consumed labels.</p>
+<h2 dir="auto">5. The short-microbatch contribution</h2>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\overline\ell_j$</math-renderer> be microbatch <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$j$</math-renderer>'s mean over <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$n_j$</math-renderer> valid targets. The<br>
+correct global mean is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$$L=\sum_j\frac{n_j}{\sum_r n_r}\overline\ell_j.$$</math-renderer>
+<p dir="auto">The gradient has the same weights. For one target and sixteen targets, the<br>
+weights are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$1/17$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$16/17$</math-renderer>. Taking half of each mean overweights the single<br>
+target sixteenfold relative to each target in the larger microbatch. Backward<br>
+each summed microbatch loss divided by the total valid count, with parameters<br>
+held fixed until all contributions are accumulated. Notebook 1 verifies the<br>
+whole parameter gradient, not merely the reported scalar loss.</p>
+<h2 dir="auto">6. AdamW and the newest gradient</h2>
+<p dir="auto">The first moment is a weighted history of signed gradients. A small new negative<br>
+gradient need not outweigh several earlier positive ones. AdamW can therefore<br>
+continue moving in the negative parameter direction even though plain SGD on<br>
+the newest gradient would move positively. Adaptive scaling and decoupled decay<br>
+also distinguish its update from raw SGD. This is a mechanism, not a guarantee<br>
+that momentum makes a better decision on each step. Notebook 2 exposes the<br>
+recurrence and a positive, positive, slightly negative gradient sequence.</p>
+<h2 dir="auto">7. Doubling accumulation</h2>
+<p dir="auto">If microbatch size, length and valid fraction stay fixed, doubling accumulation<br>
+doubles targets per optimizer update. A schedule that peaks after three updates<br>
+now peaks after twice as many targets. It also changes the gradient estimate and<br>
+the frequency of weight updates per token. It does not automatically double<br>
+activation memory because microbatches can be processed sequentially. State<br>
+whether an experiment fixes updates, token exposure or another resource; do not<br>
+claim that only one harmless implementation detail changed.</p>
+<h2 dir="auto">8. Clipping placement and nonfinite values</h2>
+<p dir="auto">Clipping is nonlinear. For scalar contributions 10 and -9 with limit 1, summing<br>
+then clipping gives 1; clipping separately then summing gives 0. Accumulate<br>
+first, unscale if using loss scaling, check finiteness, then clip the global<br>
+gradient once. NaN or infinite gradients are not trustworthy directions that<br>
+can be repaired by choosing a smaller norm. Reject or explicitly handle the<br>
+failed update. Finally, a bound on the incoming gradient is not a direct bound<br>
+on AdamW's transformed update plus weight decay.</p>
+<h2 dir="auto">9. BF16 range versus detail</h2>
+<p dir="auto">Exponent bits determine a large part of representable range; fraction bits<br>
+determine relative resolution within that range. BF16 has a wider exponent<br>
+range than FP16 but fewer fraction bits. That is why 65536 remains finite in<br>
+BF16 while overflowing FP16, yet a small increment near 1 may survive FP16 and<br>
+round away in BF16. Neither property alone establishes the stability or accuracy<br>
+of a training computation. The notebook's cast demonstration does not execute<br>
+mixed-precision CUDA training.</p>
+<h2 dir="auto">10. Memory is more than persistent parameter state</h2>
+<p dir="auto">The <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$16P$</math-renderer> estimate includes FP32 weights, gradients and two Adam moments. It<br>
+omits activation storage, attention intermediates, optimizer temporaries,<br>
+allocator overhead and framework/process memory. Actual implementation choices<br>
+can also change the ledger. On Spark, CPU and GPU activity share a constrained<br>
+memory environment; a tensor-byte estimate is not a measured host reserve.<br>
+Profile the exact candidate, record peak allocations and minimum host available<br>
+memory, and honor the reserve before selecting a longer run.</p>
+<h2 dir="auto">11. Development grouping invariance</h2>
+<p dir="auto">Evaluate the same frozen model and fixed target set with several batch sizes,<br>
+including unequal tails. Accumulate summed NLL and valid-label counts, then<br>
+divide once. Compare the final means within a declared floating-point tolerance.<br>
+Also check that parameters and gradients were not updated and the prior model<br>
+mode is restored. Notebook 3 uses float64 to make a strict small-fixture<br>
+comparison easy; production tolerances should match the tested dtype and backend.</p>
+<h2 dir="auto">12. Separate recovery controls</h2>
+<p dir="auto">First save all state at an update boundary. Continue the original run and keep<br>
+its subsequent batch IDs, losses and final parameters. Load the checkpoint in<br>
+fresh sessions:</p>
+<ul dir="auto">
+<li>Complete restoration should match the reference under the local replay contract.</li>
+<li>Omit optimizer state but restore the cursor: batch IDs should still match,<br>
+while moment-dependent updates and eventually parameters differ.</li>
+<li>Restore optimizer state but omit the cursor: subsequent batch IDs differ,<br>
+changing gradients even though the saved model weights were identical.</li>
+</ul>
+<p dir="auto">Finite loss and successful process exit can occur in all three branches. The<br>
+discriminating evidence is the continuation trajectory and data identity, not<br>
+whether the file loaded. Exact CPU replay in this fixture does not establish<br>
+cross-device or distributed reproducibility.</p>
+<h2 dir="auto">13. Correct masking and inefficient computation</h2>
+<p dir="auto">The loss mask removes ignored positions from the objective, not necessarily<br>
+from embedding, attention, MLP and output-projection computations. This<br>
+implementation processes fixed 1024-position windows even when stories are<br>
+short. Its 48.84M valid targets occupy about 21.29% of 229.38M processed positions.<br>
+That is a measured utilization fraction, not a guaranteed speedup factor.</p>
+<p dir="auto">A comparison must preserve intended supervision, per-document causal access,<br>
+tokenization and reduction, and disclose changes to ordering or available<br>
+context. An EOS separator alone does not forbid cross-document attention.<br>
+Fixing updates while changing targets per update also changes exposure.</p>
+<h2 dir="auto">14. Better likelihood, inconsistent characters</h2>
+<p dir="auto">Teacher-forced evaluation conditions on recorded prefixes. Free generation<br>
+conditions on the model's own preceding choices. A mistaken speaker attribution<br>
+can become part of the subsequent history. Separately, average loss improvement<br>
+can be driven by frequent syntax while character tracking remains unreliable.<br>
+Neither explanation requires a faulty causal mask.</p>
+<p dir="auto">The objective can reward long-range consistency when it helps predict observed<br>
+tokens; it does not prohibit learning it. Our evidence establishes improved<br>
+fixed-development likelihood and remaining behavioral failures, not the unique<br>
+mechanism responsible for each failure.</p>
+<h2 dir="auto">15. Repetition and the overfitting hypothesis</h2>
+<p dir="auto">Retain the exact prompt, checkpoint, decoding mode, temperature, seed and length<br>
+limit. Reproduce the symptom, then distinguish decoding from training effects.<br>
+Evaluate fixed training and held-out samples under matched frozen-checkpoint<br>
+settings, preferably across several checkpoints. Audit relevant content when<br>
+making contamination or memorization claims.</p>
+<p dir="auto">Our development loss continued decreasing. That does not support a claim of<br>
+development-loss deterioration here, or prove absence of memorization. The<br>
+last 500 online losses came from changing weights and are averaged by batch;<br>
+final development NLL uses fixed weights and valid-target weighting. Their<br>
+difference is not a clean generalization gap. The defensible current label is<br>
+repetitive/inconsistent generation with unresolved cause.</p>
+<h2 dir="auto">16. Seeds, greedy decoding and length limits</h2>
+<p dir="auto">Greedy decoding selects a maximum-scoring token; there is no random draw for<br>
+the seed to change. With positive-temperature sampling and identical inputs<br>
+and runtime, a fixed seed repeats the tested trajectory. Raising the length<br>
+limit usually permits more steps without changing its initial segment. These<br>
+are expected behaviors, not evidence that controls are necessarily broken.</p>
+<p dir="auto">Change one relevant variable at a time and verify submitted settings. Backend<br>
+probes alone do not validate browser event handling. Temperature modifies<br>
+selection probabilities, not learned parameters.</p>
+<h2 dir="auto">17. EOS and narrative closure</h2>
+<p dir="auto">EOS establishes that the model selected termination before the cap in that<br>
+generation. It does not establish consistent characters, resolved causality,<br>
+factuality or natural plot closure. Our archived final greedy first-prompt<br>
+sample emits EOS but contains unexplained speaker-role changes. Report<br>
+termination and narrative quality separately.</p>
+<h2 dir="auto">18. An honest next-experiment proposal</h2>
+<p dir="auto">A systems proposal is length-aware batching: hypothesize higher useful-target<br>
+throughput while preserving the intended prediction problem. Declare baseline,<br>
+exposure, model, dtype, safety cap and ordering policy. Measure wall time,<br>
+throughput, memory and evaluation invariants. Failed equivalence checks block<br>
+interpreting a speed change as a pure implementation benefit.</p>
+<p dir="auto">A behavior proposal is more training under a frozen evaluation contract.<br>
+Specify whether this means restarting with a longer learning-rate schedule<br>
+or extending the existing checkpoint; those are different recipes. Keep prompts<br>
+and decoding fixed, assess entity/event continuity, and allow little or no gain.<br>
+Do not pick the nicest sampling seed.</p>
+<p dir="auto">The length-aware systems intervention remains unrun. The separately declared<br>
+fresh control/half-learning-rate comparison has reached its first 400 updates,<br>
+not its 14,000-update horizon. It preserves the original schedule, seed and<br>
+target exposure; <a href="../../experiments/reports/2026-10-05-native-story-first400-comparison.md">the measured report</a><br>
+does not establish final storytelling competence. Short batch-size profiles<br>
+and sampling probes still answer different questions.</p>
+<h2 dir="auto">19. Do not change the objective to spend the remaining budget</h2>
+<p dir="auto">The cap is a ceiling, not a promise to spend every target. After 9 targets under<br>
+cap 16, the next complete 8-target update cannot fit into the remaining 7. Removing<br>
+one label or a microbatch changes the training objective. Refuse the whole update<br>
+before forward/backward, LR mutation or optimizer mutation, and restore collection's<br>
+shuffle permutation, cursor, epoch and RNG. Keep completed weights, moments,<br>
+gradients and counters unchanged. Resume must restore the cumulative allowance,<br>
+not start it at zero. The <a href="../../experiments/reports/2026-10-05-story-valid-target-budget.md">CPU report</a><br>
+tests this boundary, including an epoch crossing and exact same-cap continuation.<br>
+It does not test recovery from a partly executed optimizer update.</p>
+<h2 dir="auto">Evidence-reading extensions</h2>
+<p dir="auto">Exercises 19–21 retain their original numbers because they test conceptual<br>
+budget, replay and coverage boundaries. Operational receipts are documented in<br>
+<a href="../appendices/d-reproduction-and-environments.md#budget-boundaries-and-spent-work">Appendix D</a>.</p>
+<h2 dir="auto">20. Numerical replay does not refund failed work</h2>
+<p dir="auto">Completed target exposure describes successful optimizer boundaries:9 plus 8<br>
+is 17. The persistent allowance describes all admitted attempts:9 for the first<br>
+update,8 for the failed operation and 8 for its retry is 25. Restoring an older<br>
+checkpoint restores weights, moments, stream/RNG and successful counters, not<br>
+the journal's later reservations. The independently retained receipt binds the<br>
+old prefix to the same physical journal; a new output directory cannot reset it.</p>
+<p dir="auto">Check every declared dimension before the next complete model operation. If a<br>
+cap would be crossed, make no forward/backward/optimizer call and restore the<br>
+planning step's stream state. Do not trim labels or change the loss denominator.<br>
+If computation has already started and AdamW may have changed only some weights,<br>
+poison that session: it cannot update, observe or publish. Construct a fresh<br>
+session and restore a previously durable completed boundary. Keep the failed<br>
+ticket even when the later numerical trajectory replays exactly.</p>
+<p dir="auto">Development, uncached generation and activation probes are separate work. A<br>
+successful replay is not proof that their repeated calls are free, that all<br>
+reserved work actually completed, or that a physical resource ceiling was<br>
+enforced. Source and evidence boundaries are frozen in the<br>
+<a href="../../experiments/specs/2026-10-05-story-persistent-work.md">story work specification</a>.<br>
+The <a href="../../experiments/reports/2026-10-05-story-work-lesson.md">actual native companion</a><br>
+also checks cap 24: only 7 places remain, so retrying the whole 8 refuses with 9<br>
+successful targets/17 reserved places, zero loss calls and unchanged state.</p>
+<h2 dir="auto">21. The requested boundary is not the schedule horizon</h2>
+<p dir="auto">Success depends on the declared boundary and other acceptance conditions. A<br>
+predeclared first 400 tranche can complete successfully while its 14,000-update<br>
+schedule remains unfinished. The<br>
+<a href="../../experiments/reports/native-story-control-pilot-20261005-01/acceptance.json">actual control receipt</a><br>
+and <a href="../../experiments/reports/native-story-half-lr-pilot-20261005-01/acceptance.json">half-rate receipt</a><br>
+each support 400 updates, exit zero and their tested source/resource envelope.<br>
+Both present 1,389,548 valid training targets in 6,553,600 training positions.<br>
+Those receipts alone do not supply any story-quality score.</p>
+<p dir="auto">Shortening the schedule horizon changes decay at those same updates. The result<br>
+would no longer test only the declared proportional learning-rate intervention<br>
+under the original horizon. Label it as another recipe rather than hiding the<br>
+change behind the same update count.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-native-story-first400-comparison.md">measured publication comparison</a><br>
+now includes 192 actual continuations from four native children and fixed slice<br>
+NLL. Control development NLL is 3.388772 versus 3.652813 for half-rate on the<br>
+same 64 windows/13,132 valid labels; the separate training-source selection has<br>
+64 windows/13,285 labels. This supports lower observed-target loss on that<br>
+development slice, not a whole-corpus claim or an overfitting diagnosis.</p>
+<p dir="auto">Stopping is a separate observation: control reaches EOS in 45/48 continuations,<br>
+half-rate in 25/48. Yet their two-AI-reader ending means are 0.020833 and 0 on<br>
+the rubric's 0–2 scale. A completed token stream need not complete the plot.<br>
+The initial random checkpoints score 1.5 on freedom from repetition and zero on<br>
+the other four dimensions: lack of loops does not imply coherence either.<br>
+Keep all five axes instead of declaring a winner from one number.</p>
+<p dir="auto">Both readers scored every actual candidate, retaining 56 disagreements under<br>
+the declared mean policy. The 800-draw, seed-1010 paired intervals resample<br>
+twelve openings with their four recipes together, not 48 independent stories.<br>
+These AI judgments and small-panel intervals do not establish human agreement,<br>
+new-opening performance or between-training-seed uncertainty. Publication also<br>
+uses automatic SDPA rather than the deterministic MATH-only training/recovery<br>
+entry, so this is not a cross-backend bitwise equivalence test.</p>
+<p dir="auto">The 288 later cells remain missing, not poor-quality zeros. Neither accepted<br>
+tranche establishes 14,000-update behavior or final convergence. Keep the<br>
+September completed run separate from this fresh intervention.</p>
+<h2 dir="auto">Integration: a convincing Days 8–9 defense</h2>
+<p dir="auto">Explain the path from a source document to a recoverable update using the<br>
+<a href="../../experiments/specs/2026-09-09-day8-bounded-pretraining.md">bounded specification</a>.<br>
+Identify which claims are measured by the CPU fixtures, which are analytical<br>
+estimates, and which are now supported by the<br>
+<a href="../../experiments/reports/2026-09-14-tinystories-learning-result.md">completed Spark run</a>.<br>
+Use the <a href="../labs/06-reading-a-pretraining-run.md">evidence-reading lab</a> to<br>
+reproduce the accounting and inspect complete archived samples.<br>
+If a run has decreasing loss but<br>
+leaked development, an incorrect loss denominator or violated memory reserve,<br>
+do not call the whole experiment successful. Completion is a conjunction of<br>
+its stated criteria, not one attractive curve.</p>
+<h2 dir="auto">Assignment B/D — A disappointing filter and a refused fit</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> Curated NLL is worse on all three reference seeds and the scaling fit refuses a boundary optimum. What should be reported?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> Retain the filter, target exposure, validation population and all seed outcomes. Conclude that this curation recipe did not improve this fixture at the declared budget. Preserve the scaling refusal before examining the held-out budget; the sampled grid did not identify an interior optimum. Do not retune the grid on held-out results or report an empirical exponent from the refused fit.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/06_corpus_curation.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<p dir="auto">For the refused allocation fit, inspect the separate <a href="../../notebooks/extensions/cs336/03_scaling_prediction.ipynb">scaling prediction reference</a>, including its prediction/refusal frozen before the held-out budget.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-45</h1>
+<h1 dir="auto">Worked solutions — Evaluation Is a Contract</h1>
+<p dir="auto">Read <a href="../chapters/07-evaluation-is-a-contract.md">Chapter 7</a> first. The five Day 10 notebooks supply runnable reference calculations next to each prediction. These answers emphasize the claim supported by a measurement.</p>
+<h2 dir="auto">1. Operational story coherence</h2>
+<p dir="auto">A defensible claim is: “On the frozen set of 60 original story openings, greedy continuations of at most 192 tokens have fewer character-identity contradictions than the baseline.” Preserve the prompt identifiers and split hash. Two blinded readers assign the prewritten 0–2 identity rubric; retain disagreement and use adjudication only according to a declared rule. Separately score causal continuity, repetition and endings. An improvement on identity does not imply every dimension improved.</p>
+<p dir="auto">Choose the item or source group as the sampling unit. If six prompts are variants of the same underlying plot, a bootstrap should resample plots rather than treating all variants as independent. The test compares behavior under this decoding budget; it does not establish unlimited-length storytelling.</p>
+<h2 dir="auto">2. Normalization policy</h2>
+<p dir="auto">For an integer-answer task, a numeric parser may reasonably consider “1.0” equal to “1”. Define whether decimals, scientific notation, units and multiple answers are accepted. If the instruction demands exactly one integer token, the strings may instead differ on format while sharing numeric meaning.</p>
+<p dir="auto">Report separate answer and format scores rather than deleting formatting requirements after seeing failures. The reference normalizer intentionally preserves punctuation; its three-string example yields true, false, false. That verifies its chosen policy, not universal language equivalence.</p>
+<h2 dir="auto">3. Derive pass@3</h2>
+<p dir="auto">There are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\binom{10}{3}=120$</math-renderer> equally sized three-candidate subsets. With two correct candidates, eight are incorrect, and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\binom{8}{3}=56$</math-renderer> subsets contain only incorrect answers. Therefore</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$$\widehat{\mathrm{pass@}3}=1-\frac{56}{120}=0.533333\ldots.$$</math-renderer>
+<p dir="auto">The fixture tests the product implementation against combinatorial counts for many small <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$n,c,k$</math-renderer> combinations, including zero successes and all-success cases. The event is at least one verified success; it does not identify which candidate a user should receive.</p>
+<h2 dir="auto">4. Duplicate draws</h2>
+<p dir="auto">Generating once and storing the same string ten times does not provide ten independent opportunities. Conditional on that one draw, every copy has the same outcome. The finite-pool combinatorics still describe subsets of the recorded pool, but interpreting the result as fresh independent sampling is unsupported.</p>
+<p dir="auto">Record sampling settings and candidate identities. Deduplication alone is not enough to establish independence: genuinely independent draws can coincidentally produce the same output. Independence concerns the generation process, not merely distinct strings.</p>
+<h2 dir="auto">5. Two kinds of confidence</h2>
+<p dir="auto">Token confidence is a model distribution over vocabulary candidates. It is conditional on the current context and learned training distribution. It does not guarantee answer truth.</p>
+<p dir="auto">A statistical score interval describes uncertainty in an estimate over a declared input population and sampling model. Ten successes out of ten leave a nontrivial Wilson interval. Neither quantity is equivalent to a model saying “I am certain.” Verbal confidence requires its own calibration evaluation.</p>
+<h2 dir="auto">6. Paired comparison</h2>
+<p dir="auto">Use the same item index for A and B, compute <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$d_j=b_j-a_j$</math-renderer>, and bootstrap indices once for both scores. Shared task difficulty remains paired. Independent resampling breaks that correlation and can obscure a precise comparison.</p>
+<p dir="auto">The notebook also duplicates all items ten times. The naive binomial interval narrows, although the source information is unchanged. That deliberate failure illustrates why the unit of independence belongs in the contract. A percentile interval that crosses zero means the sign is unresolved at the chosen precision, not that the models are equivalent.</p>
+<h2 dir="auto">7. Slice report</h2>
+<p dir="auto">Publish the total score and a table with task family, count, score, interval and paired change. Freeze the slice definitions before evaluating candidates. Include a rare-format slice even when its denominator is small; show the broad interval rather than hiding it.</p>
+<p dir="auto">The purpose-built forty-item fixture gives model B a better aggregate but a worse rare-format score. This verifies the accounting and shows how an aggregate conceals a regression. It supplies no measured model capability.</p>
+<h2 dir="auto">8. Exact contamination audit</h2>
+<p dir="auto">Normalized prompt-plus-reference hashes detect the deliberately inserted cross-split duplicate. Grouping those two records repairs that particular exact leak.</p>
+<p dir="auto">The procedure does not detect every paraphrase, translated question, shared document or leaked solution in a reasoning trace. Preserve provenance, run near-duplicate analysis, and document what was inspected. “No exact collisions found” is a narrower and more accurate statement than “the test is uncontaminated.”</p>
+<h2 dir="auto">9. Repeatedly used tests</h2>
+<p dir="auto">Once examples inform learning-rate selection, prompt engineering, parser edits or checkpoint choice, they contribute to development. Rename the split and freeze a new final suite, or explicitly describe the evaluation as exploratory. Calling a repeatedly consulted set “publication test” does not restore independence.</p>
+<p dir="auto">If no new data is available, report that limitation and avoid a final-test claim. Cross-validation can support some comparisons, but requires nesting the selection process appropriately.</p>
+<h2 dir="auto">10. Stopping rule</h2>
+<p dir="auto">Before inspecting candidate outputs, declare the item count, review rubric, generation budget, seed policy and minimum useful effect. Stop after all fixed items are scored, or on an implementation failure. If uncertainty is too broad, a separately specified expansion can add independent items.</p>
+<p dir="auto">Do not stop when the first excellent example appears. Do not extend only the losing recipe's budget after reviewing its results. Changes remain legitimate experiments when their selection and new evidence are recorded.</p>
+<h2 dir="auto">11. Three mathematical equivalence decisions</h2>
+<p dir="auto">Convert decimal text directly to an exact rational. <code class="notranslate">0.5</code> is <code class="notranslate">1/2</code>, but a finite<br>
+rounded third is not exactly <code class="notranslate">1/3</code>; numerical tolerance would require a named<br>
+metric. Interval equality preserves endpoint inclusion, so <code class="notranslate">[1,2)</code> differs<br>
+from <code class="notranslate">[1,2]</code>. Unit equality uses declared aliases without conversions in this<br>
+instrument: <code class="notranslate">seconds</code> matches <code class="notranslate">s</code>, while <code class="notranslate">100 cm</code> does not match <code class="notranslate">1 m</code>.</p>
+<p dir="auto">These decisions define grader coverage, not universal mathematics. Variables,<br>
+roots and unknown units are unsupported. Do not map every unsupported answer<br>
+to an ordinary mathematical mistake or silently expand the parser after seeing<br>
+one checkpoint's outputs. The adversarial fixtures expose each boundary.</p>
+<h2 dir="auto">12. Answer format and stopping are independent</h2>
+<p dir="auto">For “return only one integer,” <code class="notranslate">Final answer: 4</code> can have correct arithmetic,<br>
+invalid format and a max-token stop. Record answer correctness 1, format 0 and<br>
+natural termination 0, with truncation 1. Under our declared metric,<br>
+<code class="notranslate">task_success</code> is correctness AND format, hence 0. It does not secretly require<br>
+natural termination; a different deployment requirement needs a different metric.</p>
+<p dir="auto">Retain raw text, token IDs/counts if measured, and the actual stop reason. A<br>
+replay fixture's assigned stop is simulated evidence, not proof of an EOS event.<br>
+Unknown generation token counts and latency stay null, not character counts or<br>
+zero-cost claims.</p>
+<h2 dir="auto">13. Resample source groups but preserve the estimand</h2>
+<p dir="auto">Align item/sample IDs first. Sample source groups with replacement and retain<br>
+all differences inside each drawn group. Sum their differences and divide by<br>
+the total number of retained item/sample differences. Unequal group sizes remain<br>
+unequal; this estimates a micro-average difference, not an equal-group mean.</p>
+<p dir="auto">The fraction siblings in the original fixture travel together. A comparison<br>
+with a deleted response or changed group identity fails instead of changing the<br>
+population silently. With few deliberately authored groups, even a positive<br>
+percentile interval cannot justify a broad model capability claim.</p>
+<h2 dir="auto">14. Prevent a hidden answer oracle</h2>
+<p dir="auto">An answer selector receiving held-out references or correctness flags can<br>
+choose the correct candidate because it already knows the answer. That measures<br>
+oracle availability, not the deployable ranker. Preserve references in evaluator<br>
+inputs while projecting candidate records to a view containing only generation<br>
+metadata and the raw response.</p>
+<p dir="auto">The <code class="notranslate">candidate_view</code> test injects gold fields into a graded record, then checks<br>
+they are absent from the selection view. This protects the interface, not the<br>
+ranker's statistical quality. Inspect actual selection code and its provenance<br>
+before trusting a real inference-time comparison.</p>
+<h2 dir="auto">15. Preserve the stop action without grading its spelling</h2>
+<p dir="auto">The model chose two actions: the token for <code class="notranslate">4</code> and EOS. Keep both IDs, their<br>
+likelihoods and generation cost 2. Raw decoding preserves the EOS spelling;<br>
+the frozen grading-text policy decodes only the prefix before that final<br>
+declared stop. The answer can then satisfy a one-integer format without erasing<br>
+termination evidence. No other token or explanation is trimmed. A max-token or<br>
+context-truncated response has no final natural stop to remove.</p>
+<p dir="auto">This is a declared interface rule, not a post-hoc repair selected because one<br>
+checkpoint otherwise scores poorly. Change it only through a named new contract.</p>
+<h2 dir="auto">16. Partial execution is evidence but not recovery equivalence</h2>
+<p dir="auto">One generated action and the successful first forward are known. The failing<br>
+second forward was attempted, so attempted token positions and calls exceed<br>
+completed work; its elapsed forward time still belongs to the attempt. Preserve<br>
+the partial text/IDs, error stage and recorded wall time. Append-only progress<br>
+and final error records survive an ordinary interruption, while the failure<br>
+summary lists planned item/sample coordinates that were never attempted.</p>
+<p dir="auto">A new invocation may regenerate the same coordinate under the same seed, but<br>
+that is not proof of exact mid-attempt resume, identical device kernels or an<br>
+uninterrupted timing comparison. This adapter does not implement resume. The<br>
+tiny randomly initialized CPU model verifies actual HF loading/forward/record<br>
+replay; scripted stop and failure controls are separately labeled.</p>
+<h2 dir="auto">17. Availability and a deployable decision</h2>
+<p dir="auto">A correct candidate already in <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$C_N$</math-renderer> remains in every longer nested prefix, so<br>
+the any-correct event cannot become false. Majority counts can change: three<br>
+correct 0 votes lose to five wrong 1 votes in the actual seed 10052 <code class="notranslate">train-11</code><br>
+pool. A selector returning one candidate satisfies <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$d_N\le o_N$</math-renderer>, but may not<br>
+find the available correct answer. An oracle seeing correctness labels is not<br>
+the same selector. The worked notebook keeps oracle results in evaluator inputs,<br>
+not the strict selection projection.</p>
+<h2 dir="auto">18. Sampling identity and answer support</h2>
+<p dir="auto">Independent coordinates can produce identical strings. Their repeated frequency<br>
+is part of majority voting under the declared sampling process. Copies of one<br>
+stored sample ID are not new draws and are rejected by the candidate-pool<br>
+contract. Counting one vote per distinct answer instead removes frequency<br>
+information: with binary support both 0 and 1 get one vote, so the stable rule<br>
+returns the earliest eligible answer. This is a different estimator, not a<br>
+universal correction for correlated mistakes.</p>
+<p dir="auto">Inspect string diversity separately from wrong-answer and correctness agreement.<br>
+Across-item sample-ordinal error correlations have undefined values for zero<br>
+variance, stored as null. Related source siblings and tiny panel size prevent<br>
+those diagnostics from establishing general IID properties.</p>
+<h2 dir="auto">19. Charge a whole-attempt overshoot</h2>
+<p dir="auto">The candidate is generated and its three actions cost work. It is not eligible<br>
+for selection under the remaining two-action cap. Retain its ID and rejection,<br>
+charge all three actions, and stop without looking for a cheaper later answer.<br>
+The accepted prefix stays unchanged; the charged prefix contains the boundary<br>
+attempt and has a one-action overshoot. This retrospective whole-attempt control<br>
+is not an exactly capped interruptible generator. Prompt/scoring positions and<br>
+time remain separate from the generation-token cap.</p>
+<h2 dir="auto">20. Likelihood and usefulness of compute</h2>
+<p dir="auto">Mean conditional log probability, including EOS, measures what the fitted<br>
+policy favors under its declared support. A frequent wrong answer can have a<br>
+large value. It does not compare the candidate with an independent reference,<br>
+prove a rationale faithful or establish calibrated answer confidence.</p>
+<p dir="auto">Use the same candidate pools for competing selectors, preserve every attempt,<br>
+compare declared token caps and actual work, and report correctness plus oracle<br>
+availability on independent frozen slices. Additional attempts can enlarge<br>
+availability but reinforce wrong votes. A positive fixed-panel result does not<br>
+establish optimized serving latency, equal total compute or broad reasoning<br>
+improvement. The actual tiny lesson deliberately retains negative seeds and<br>
+source/template/family failures.</p>
+<h2 dir="auto">Evidence-reading and operational extensions</h2>
+<p dir="auto">Exercises 21–23 retain their original IDs. Their conceptual evidence boundaries<br>
+are unchanged; exporter and rating-consumer commands belong to the linked lab<br>
+and <a href="../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence">Appendix D</a>.</p>
+<h2 dir="auto">21. A reproducible summary does not invent a model event</h2>
+<p dir="auto">The authored panel supports its actual item/source-group coverage, frozen<br>
+contract, accepted/rejected parses, per-task metrics, retained errors and paired<br>
+group resampling. Its input hashes identify the exact fixture bytes. They do<br>
+not establish a model forward, token count, device measurement, checkpoint<br>
+weight digest, training genealogy, execution or independent behavior review.<br>
+Missing measurements remain unknown, not zero.</p>
+<p dir="auto">Run the export command in <a href="../labs/07-evaluation-is-a-contract.md">Lab 7</a> into a<br>
+new directory. Compare the readable card with its full replay, including the<br>
+set/JSON regression and simulated error. Repeated export from identical inputs<br>
+should agree; existing outputs must be refused rather than overwritten.<br>
+Calling the authored panel Qwen changes a name, not its provenance. Even an<br>
+actual tiny random-model record supports only that recorded model/interface,<br>
+task population and resource boundary. An attractive card is not a substitute<br>
+for a pretrained evaluation or a broader safety assessment.</p>
+<h2 dir="auto">22. Preserve proxy success and whole-response failure</h2>
+<p dir="auto">The automatic SFT score 1/15 is correct under the frozen phrase rubric: its<br>
+<code class="notranslate">benign-a</code> response contains the required strings and no forbidden string.<br>
+The whole text also contains repeated <code class="notranslate">.nasa</code> fragments, an unfinished final<br>
+sentence and a measured 64-token cap stop. Those facts are not erased by the<br>
+pass. A separate review should inspect every retained response, distinguish<br>
+the useful fragment from a completed helpful answer and state its own review<br>
+criteria and independence limits. It is not human agreement or broad safety.</p>
+<p dir="auto">Keep the original automatic 0/15 versus 1/15 comparison, its grouped uncertainty<br>
+and both panels'0/15 natural-stop rates. Do not change the rubric after seeing<br>
+this checkpoint's failure or treat its score as semantic helpfulness. A stricter<br>
+next contract may be useful, but needs its own identity and selection history.<br>
+The <a href="../../experiments/reports/2026-10-05-pretrained-evaluation-replay.md">actual report</a><br>
+links complete raw records, the unchanged contract, actual local identities,<br>
+external resources and the immutable card. Instrument execution is completed;<br>
+assistant quality and the larger publication campaign are not established.</p>
+<h2 dir="auto">23. Blind records without inventing reviews</h2>
+<p dir="auto">Give the reviewers complete anonymous opening/continuation pairs and the<br>
+predeclared rubric, not the checkpoint/arm codebook. Preserve all emitted<br>
+tokens, selected likelihoods, stop reasons, costs and original source groups<br>
+privately so the join remains auditable. Disclose whether raters are human or<br>
+AI, independent and previously exposed; output shuffling alone cannot establish<br>
+those properties.</p>
+<p dir="auto">The <a href="../labs/07-evaluation-is-a-contract.md">rating lab</a> prepares authored<br>
+controls with two empty rating templates. Evaluating without rating files must<br>
+report awaiting ratings and null paired scores/intervals, not 0, an assumed 1 or<br>
+a claimed trained-model tie. If ratings later disagree, preserve each original<br>
+decision and use only the declared adjudication policy. Reject a changed text<br>
+digest, duplicate ID or score outside 0/1/2 instead of quietly repairing it.</p>
+<p dir="auto">Pair checkpoints only at the same declared update/recipe and resample the<br>
+twelve source-opening groups, carrying both arms together. Sampling seeds and<br>
+raters are repeated measurements within an opening, not independent new<br>
+openings. Report any partial matched cohort explicitly. Grammar, consistency,<br>
+causality, repetition and ending retain their separate meanings; an overall<br>
+average cannot hide which one regressed. A capped response can be judged on<br>
+its actual incomplete ending without pretending it naturally terminated.<br>
+The authored fixtures verify the consumer, not real model quality or human<br>
+annotation agreement.</p>
+<p dir="auto">The later <a href="../../experiments/reports/native-story-publication-20261005-01/ratings-evaluation-01/report.json">actual rating replay</a><br>
+contains 192 individually assessed continuations from each of two anonymous<br>
+AI instances, no abstentions and 56 candidates with an axis disagreement.<br>
+Apply the already frozen two-rater mean; do not renegotiate an unfavorable<br>
+score after revealing the arms. At update 400, the control's 45/48 natural EOS<br>
+stops coexist with narrative-ending mean 0.0208/2. EOS proves a stop, not a<br>
+resolved story. Its grammar mean 0.0729/2 also keeps lower NLL separate from<br>
+readable generation. The half-rate arm's higher repetition mean does not<br>
+override its lower consistency/causality/grammar scores. Initial random text's<br>
+repetition 1.5/2 is another warning against an unspecified overall average.</p>
+<p dir="auto">Resample twelve openings, not 96 independent rater/recipe observations. Retain<br>
+all 288 missing later cells and their null scores; no completed 400 comparison<br>
+can stand in for absent 4000/8000/14000 results. This is actual AI review of<br>
+actual model text, not human review or a new training-seed sweep.</p>
+<h2 dir="auto">Notebook pathway</h2>
+<ol dir="auto">
+<li><a href="../../notebooks/day-10/01_metrics_and_contracts.ipynb">Metrics and contracts</a>: exact match and attempt budgets.</li>
+<li><a href="../../notebooks/day-10/02_paired_uncertainty.ipynb">Paired uncertainty</a>: intervals, aligned resampling and false independence.</li>
+<li><a href="../../notebooks/day-10/03_slices_and_contamination.ipynb">Slices and contamination</a>: aggregate regression and leakage repair.</li>
+<li><a href="../../notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb">Mathematical grading and response replay</a>: bounded equivalence, complete ledgers and source-group pairing.</li>
+<li><a href="../../notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb">Actual candidates and answer selection</a>: real causal samples, gold-blind choices, attempted costs and oracle gaps.</li>
+</ol>
+<p dir="auto">Each lesson contains prediction, reference answer, runnable computation and a labeled data-derived plot.</p>
+<h2 dir="auto">Assignment B — A transitive source group</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> A–B and B–C pass the duplicate threshold, while A–C does not. May A and C be placed in different splits?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> Under connected-component grouping, all three share one source group and must remain together. The transitive grouping is a declared split policy, not a claim that every pair is sufficiently similar. Record candidate retrieval and verified edges separately, and compare retrieval with the all-pairs reference on the small fixture.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/06_corpus_curation.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-46</h1>
+<h1 dir="auto">Worked solutions — Instruction Data as an Interface</h1>
+<p dir="auto">These answers accompany <a href="../chapters/08-instruction-data-as-an-interface.md">Chapter 8</a>. The symbolic fixture makes masks visible; the real-model runner uses its separately audited template.</p>
+<h2 dir="auto">1. Serialize the roles</h2>
+<p dir="auto">The teaching conversation is BOS, SYSTEM header, “short answer”, END, USER header, “copy red”, END, ASSISTANT header, “red”, END. Each word and marker has an explicit teaching ID. The same English text rendered by a Qwen tokenizer will generally have different IDs and token boundaries.</p>
+<p dir="auto">At training time include the completed answer. At generation time include context and the assistant-start prefix. Inspect raw IDs and decoded text; a Python message dictionary is not itself the model input.</p>
+<h2 dir="auto">2. First assistant target</h2>
+<p dir="auto">The ASSISTANT header's logit predicts the first assistant body token. In an unshifted ownership array, mark that body token as supervised. Then align logits at positions <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$0,\ldots,n-2$</math-renderer> with labels at <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$1,\ldots,n-1$</math-renderer>.</p>
+<p dir="auto">Do not mark the preceding header merely because its logit supplies the prediction. Ownership concerns the target being taught. The notebook prints the exact producing-position/target pairs; this catches an off-by-one error that a target-count check can miss.</p>
+<h2 dir="auto">3. Zero prompt loss and gradients</h2>
+<p dir="auto">A prompt prediction can have zero direct loss while its hidden state affects later answer predictions through attention. The answer's derivative flows back through those context dependencies. Prompt embeddings can therefore receive a gradient.</p>
+<p dir="auto">Attention masking, loss masking and parameter freezing are distinct. To forbid a context source, change visibility. To omit a direct prediction, change its label. To prevent a parameter update, freeze the parameter. Conflating these controls can quietly change the objective or information available.</p>
+<h2 dir="auto">4. END-as-pad failure</h2>
+<p dir="auto">Imagine IDs <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[7,5,5,5]$</math-renderer> where the second position is a real END and the last two are padding, also represented by 5. Masking all IDs equal to 5 removes the real termination target. A length-derived validity mask <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[1,1,0,0]$</math-renderer> retains it.</p>
+<p dir="auto">Build padding validity before combining it with assistant ownership. Confirm that all padded labels are ignored and that the final real assistant END remains supervised. Termination quality requires its own free-generation check too.</p>
+<h2 dir="auto">5. Overlength policy</h2>
+<p dir="auto">One transparent bounded policy rejects any serialized example longer than the declared context. Record the number of rejected examples, their source/task distributions and the lost supervised-token fraction. This avoids silently removing task instructions or ending targets.</p>
+<p dir="auto">A production policy may instead truncate or segment, but must state which side is removed and what happens to incomplete answers. A length budget is a data-selection rule; it can disproportionately remove long reasoning tasks and change the mixture.</p>
+<h2 dir="auto">6. Isolated packing</h2>
+<p dir="auto">Use</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$$M_{t,u}=\mathbf{1}\{u\le t\}\mathbf{1}\{s_u=s_t\}.$$</math-renderer>
+<p dir="auto">For segment IDs <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[0,0,1,1]$</math-renderer>, query 3 can see positions 2 and 3, while query 2 cannot see 3 or either earlier segment position. Position IDs may reset within segments or continue, according to the chosen positional scheme. Compare with independent forwards to establish equivalence.</p>
+<p dir="auto">Also ignore boundary targets that would ask the last token of one segment to predict the first token of another. The teaching policy ignores BOS and headers; another policy needs its own explicit boundary mask.</p>
+<h2 dir="auto">7. Why END is insufficient</h2>
+<p dir="auto">END supplies a token whose meaning is learned. An ordinary triangular mask still allows every later query to attend to earlier positions. No algebraic boundary appears merely because END occurs.</p>
+<p dir="auto">The visualization shows this difference directly: the ordinary lower-left triangle contains cross-conversation links; the segment mask removes them. A throughput recipe that allows those links has changed the conditioning distribution and should say so.</p>
+<h2 dir="auto">8. Token exposure</h2>
+<p dir="auto">Equal example sampling with answer lengths 10 and 90 gives token shares</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$$\pi_{\mathrm{short}}=\frac{0.5\cdot10}{0.5\cdot10+0.5\cdot90}=0.1,
+\qquad \pi_{\mathrm{long}}=0.9.$$</math-renderer>
+<p dir="auto">Inverse-length weights produce equal expected token shares but sample short examples more often. Example averaging is another objective with different weights. The correct unit depends on the desired behavior and should be defended using the evaluation slices.</p>
+<h2 dir="auto">9. Group related examples</h2>
+<p dir="auto">Group normalized identical instruction-answer pairs before splitting. For synthetic generation, keep records sharing the same value/source group together. If testing phrasing transfer, place related template families in separate groups too.</p>
+<p dir="auto">The original English fixture uses disjoint numeric values across train, development and test but shares task templates. Its test therefore measures transfer to unseen values under familiar task forms, not unseen instruction families. This limitation belongs in the card.</p>
+<h2 dir="auto">10. Data-card limitation</h2>
+<p dir="auto">Write: “Four symbolic copy requests demonstrate role serialization, loss alignment and bounded optimization. They do not represent the distribution of general user requests and cannot support a general assistant-quality claim.”</p>
+<p dir="auto">State authorship, release license status, template, stopping marker, padding, rejection policy and grouping. Preserve the generator and hashes. A data card should make misuse of the evidence difficult, not advertise a dataset more broadly than its design supports.</p>
+<h2 dir="auto">11. Acceptance is not ranking</h2>
+<p dir="auto">A format-valid wrong answer must remain available if the experiment asks whether<br>
+ranking helps relative to random selection. If acceptance already requires<br>
+correctness, both selectors may receive only correct examples and the proposed<br>
+contrast disappears. This is not an argument that wrong answers should normally<br>
+be deployed: it is the stated control in this bounded comparison. The notebook<br>
+reveals twelve correct and 24 wrong candidates after its format filter.</p>
+<h2 dir="auto">12. Commitment and execution</h2>
+<p dir="auto">A committed result has a complete synchronized record with a stable attempt ID.<br>
+Resumption skips it. An interrupted execution may have only a start event and<br>
+an incomplete final suffix. Preserve that suffix and recovery reason before any<br>
+explicit repair. A repeated uncommitted execution gets a visible new execution<br>
+index; its lost prior cost is unknown. Thus no duplicate committed records does<br>
+not establish exactly-once API requests or exact model-state resume.</p>
+<h2 dir="auto">13. Three budget units</h2>
+<p dir="auto">All arms have twelve samples and twelve prompts. Top/length-random each expose<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$80\cdot42=3360$</math-renderer> assistant-plus-END targets; unstratified random exposes<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$80\cdot46=3680$</math-renderer>. The primary comparison therefore does not match token exposure.<br>
+The sensitivity does, because each prompt has an eligible correct and wrong<br>
+response at the same length. It does not establish equal gradient distributions,<br>
+wall time, teacher quality, or broad-method superiority.</p>
+<h2 dir="auto">14. Global coverage</h2>
+<p dir="auto">The top twelve correct candidates include six two-word and six three-word<br>
+responses. Correctness ties plus shorter-answer preference make global top 6<br>
+select the six short prompts, giving coverage <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$6/12=0.5$</math-renderer> and no three-word<br>
+examples. One candidate per prompt retains all twelve prompts by construction.<br>
+Different global <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$K$</math-renderer> values have different example budgets; their coverage plots<br>
+are audits, not extra matched student outcomes.</p>
+<h2 dir="auto">15. Optimization and independent generation</h2>
+<p dir="auto">Low NLL says the model predicts its selected demonstrations well under teacher<br>
+forcing. Those demonstrations can be wrong, and unseen combinations can remain<br>
+wrong even when demonstrations are correct. Natural END also does not guarantee<br>
+the requested answer. Keep free-generation raw IDs and separately score final<br>
+correctness, format and termination on held-out source groups. All nine actual<br>
+students fail the greedy polite-prefix control here; preserve that finding<br>
+instead of choosing a new seed or silently extending the update budget.</p>
+<h2 dir="auto">16. Unsupported text and honest cost</h2>
+<p dir="auto">Retain the raw unsupported symbol and mark symbolic final IDs unavailable. Audit<br>
+its unsupported/format rejection without inventing an UNK encoding. The local<br>
+teacher performs text transformations, so its recorded units are serialized<br>
+words and measured elapsed seconds with zero model forwards/API calls. Student<br>
+generation separately records actual symbolic tokens and full-prefix model<br>
+positions. Neither unit is a pretrained inference bill.</p>
+<h2 dir="auto">Notebook pathway</h2>
+<ul dir="auto">
+<li><a href="../../notebooks/day-11/01_roles_templates_and_masks.ipynb">Roles and masks</a>.</li>
+<li><a href="../../notebooks/day-11/02_padding_packing_boundaries.ipynb">Padding and packing boundaries</a>.</li>
+<li><a href="../../notebooks/day-11/03_mixtures_and_data_cards.ipynb">Mixtures and cards</a>.</li>
+<li><a href="../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb">Teacher attempts and matched rejection SFT</a>.</li>
+</ul>
+<p dir="auto">The corresponding plots display target alignment, actual visibility matrices and supervised-token shares.</p>
+<h2 dir="auto">Assignment E — Equal tokens, unequal coverage</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> Two SFT arms each use 768 valid targets and 24 updates. One covers eight sources, the other two. What is controlled?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> Target exposure and the optimizer clock are controlled at 32 targets per update. Source coverage is the intervention. Rendered templates are not independent underlying sources. Report group identities and repeats, then evaluate paired forms on held-out source groups. Do not claim equal independent information or equal collection cost from token matching alone.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-47</h1>
+<h1 dir="auto">Worked solutions — Supervised Fine-Tuning</h1>
+<p dir="auto">These answers accompany <a href="../chapters/09-supervised-fine-tuning.md">Chapter 9</a> and the four Days 12–14 notebooks. The CPU mechanisms, seen symbolic requests and native 0.6B held-out-value comparison are measured. The proposed 1.7B transfer remains unexecuted.</p>
+<h2 dir="auto">1. Conditional sequence NLL</h2>
+<p dir="auto">The assistant response factorizes causally:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$$p_\theta(y\mid x)=\prod_t p_\theta(y_t\mid x,y_{&lt;t}).$$</math-renderer>
+<p dir="auto">Apply negative natural logs to get a sum of token surprise. Sum across demonstrations and divide by the total supervised count for a token-mean objective. Include the intended ending in the response targets. The logarithm does not choose the most likely token; it scores the demonstrated token's probability.</p>
+<h2 dir="auto">2. Shapes</h2>
+<p dir="auto">Input IDs and full labels are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[B,n]$</math-renderer>; logits are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[B,n,V]$</math-renderer>; hidden states are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[B,n,D]$</math-renderer>; the output weight is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[V,D]$</math-renderer>. Ownership and padding masks are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[B,n]$</math-renderer>. After one shift, logits are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[B,n-1,V]$</math-renderer> and target labels are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[B,n-1]$</math-renderer>.</p>
+<p dir="auto">Flattening for cross-entropy produces <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[B(n-1),V]$</math-renderer> logits and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$[B(n-1)]$</math-renderer> labels. This preserves the vocabulary axis. A tensor with correct dimensions can still have a wrong shift, so print position/target identities in addition to shapes.</p>
+<h2 dir="auto">3. Prompt gradient path</h2>
+<p dir="auto">The answer logit depends on its hidden state. Attention at that answer position reads earlier prompt representations, so the answer derivative reaches those representations and their embeddings. The user prediction's own logit gradient can be zero while its state receives a later path's derivative.</p>
+<p dir="auto">For a tied embedding table, output projection supplies an additional gradient path. An unused-as-input row can still update because it is a vocabulary candidate. The Day 12 notebook verifies that case numerically.</p>
+<h2 dir="auto">4. Unequal answer lengths</h2>
+<p dir="auto">With two responses of lengths 2 and 6, the token mean gives the longer response three times the total weight, assuming equal average loss. The example mean gives each response half the objective weight. Neither is a harmless formatting choice.</p>
+<p dir="auto">Specify the objective before recipe comparisons. If a model becomes verbose, examine how many explanation tokens it receives, not only how many explanation examples.</p>
+<h2 dir="auto">5. Accumulation test</h2>
+<p dir="auto">Start two identical dropout-free models. Compute a joint batch gradient for all four fixture conversations. Compute split gradients using one-example and three-example microbatches, scaling every summed microbatch loss by the same total target count.</p>
+<p dir="auto">The gradients agree within numerical tolerance. A deliberately wrong average of microbatch means produces a measured mismatch. This test checks weighting and step placement; a same-size microbatch test can miss the error because equal counts conceal it.</p>
+<h2 dir="auto">6. Restart boundary</h2>
+<p dir="auto">A weights-only restore reproduces the immediate forward pass if the architecture and backend match. AdamW's next update also depends on moment state and step counters. Copying optimizer state restores those local dependencies.</p>
+<p dir="auto">The notebook copies weights plus optimizer state after one update, applies the same next batch, and obtains matching parameters. A full experiment must also preserve scheduler, RNG, data cursor, tokenizer and template. Equality in this CPU fixture does not establish cross-hardware bitwise reproducibility.</p>
+<h2 dir="auto">7. LoRA count and initial gradient</h2>
+<p dir="auto">A <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$d_{\mathrm{out}}\times d_{\mathrm{in}}$</math-renderer> matrix has <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$d_{\mathrm{out}}d_{\mathrm{in}}$</math-renderer> scalars. Rank-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$r$</math-renderer> LoRA trains <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$r(d_{\mathrm{in}}+d_{\mathrm{out}})$</math-renderer> adapter scalars. For a <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$5\times6$</math-renderer> teaching matrix at rank 2, that is 22 adapter parameters alongside 30 frozen base scalars.</p>
+<p dir="auto">With <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$B=0$</math-renderer> and random <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$A$</math-renderer>, the initial effective update is zero. The derivative of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$A$</math-renderer> includes <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$B$</math-renderer> and is zero on the first step; the derivative of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$B$</math-renderer> can be nonzero because <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$A$</math-renderer> is present. The tested merged matrix gives the same linear output as the separate adapter path.</p>
+<h2 dir="auto">8. Memory accounting</h2>
+<p dir="auto">LoRA reduces trainable gradients and optimizer moments, but the frozen base weights are still stored. Activation tensors are needed to compute adapter gradients. Quantization is an additional independent change, not implied by low rank.</p>
+<p dir="auto">Report actual peak allocation and sampled host memory during a profiled run. A scalar parameter count alone excludes backend workspaces, attention temporaries and allocator overhead.</p>
+<h2 dir="auto">9. Comparison budget</h2>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-base-tokenizer-sizing.md">pinned tokenizer sizing case</a><br>
+illustrates why training exposure and whole-run target allowance differ. The<br>
+selected 80 training examples supply 455 supervised targets, while two complete<br>
+development panels supply 360 each. The whole-run likelihood allowance is 1,175;<br>
+the optimizer's training exposure is still 455. Include message-end and separator<br>
+targets according to the exact mask, not a word count. Reserve generation<br>
+separately. These counts do not measure parameter updates or establish learning.</p>
+<p dir="auto">Choose equal supervised-token exposure as a primary budget and freeze data order, evaluation contract and seed policy. Report optimizer updates, runtime, memory and trainable count. A matched learning rate supplies a fixed-recipe control; it may be suboptimal for either method.</p>
+<p dir="auto">If also tuning each method, declare equal search budgets and a final confirmation split. The executed microscopic comparison is fixed-recipe: 100 updates, seed 1212, AdamW learning rate 0.015, no weight decay, rank-four Q/V adapters.</p>
+<h2 dir="auto">10. Stopping regression</h2>
+<p dir="auto">Check preprocessing first: was the assistant end target retained? Then inspect generation settings: does the stop ID match the training marker? Inspect raw IDs, because decoded text can hide special markers. Compare the same token cap across checkpoints.</p>
+<p dir="auto">Improved answer likelihood does not establish reliable free-generation termination. Count natural endings separately from token-limit stops. If endings regress, a longer generation limit alone can conceal rather than repair the learned behavior.</p>
+<h2 dir="auto">11. Starting checkpoint identity</h2>
+<p dir="auto">Fine-tuning Qwen3-0.6B starts from a post-trained model. That tests continued adaptation. Starting from Qwen3-0.6B-Base tests a first instruction-stage transition under the stated data.</p>
+<p dir="auto">The distinction affects causal interpretation even if both runs improve. Exact checkpoint revisions prevent an upstream update from silently changing the starting point. The lab pins official base revisions retrieved on 2026-10-04.</p>
+<h2 dir="auto">12. Larger-run gate</h2>
+<p dir="auto">Before a 1.7B transfer check, require finite loss and gradients, successful checkpoint recovery, host-memory reserve compliance, correct target alignment, and improvements on frozen held-out task/format slices. Define tolerated regression bounds in advance.</p>
+<p dir="auto">A healthy runtime is necessary but does not establish behavior. If the smaller run improves only seen values, revise the data or claim before scaling. A larger model is not a substitute for an instrument that measures the intended outcome.</p>
+<h2 dir="auto">Actual microscopic evidence</h2>
+<p dir="auto">The source-hashed <a href="../../experiments/reports/2026-10-04-evaluation-and-sft-course.md">CPU report</a> records full-SFT answer NLL decreasing from 3.101167 to 0.000555 and LoRA from 3.101167 to 2.802457. On the four seen requests, answer-plus-END sequence exact match was respectively 1.00 and 0.75. These are measurements from the fixed microscopic recipe.</p>
+<p dir="auto">The adapter model stores 6,504 total parameters, of which 384 train; the full model stores/trains 6,120. Do not turn this outcome into a broad claim that full SFT always outperforms LoRA.</p>
+<h2 dir="auto">Distillation forward-reading extension</h2>
+<p dir="auto">Exercises 13–16 use Chapter 15's response-level distillation argument and<br>
+<a href="../../notebooks/day-26/03_response_level_distillation.ipynb">Day 26 notebook</a>.<br>
+The exercise IDs and retained measured outcomes below remain unchanged.</p>
+<h2 dir="auto">13. Response supervision versus a teacher distribution</h2>
+<p dir="auto">An actual emitted response supplies target IDs. Sequence NLL pushes the student toward each observed target under the demonstrated prefix. It does not reveal the teacher's probabilities for alternative tokens. Forward KL needs the teacher distribution, an aligned vocabulary and a declared temperature; the existing three-logit <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\tau^2$</math-renderer> microscope remains a separate mechanism lesson.</p>
+<p dir="auto">A teacher can emit a wrong but well-formed response. Response NLL still imitates that response unless a separately declared review/filter intervention changes the dataset. It cannot infer semantic truth simply because the example came from a larger model.</p>
+<h2 dir="auto">14. Eligibility and teacher coverage</h2>
+<p dir="auto">The frozen adapter selects the first full trace with compatible provenance/interface, strict form, natural EOS and no error. It does not inspect gold totals or answers. Best-correct selection would instead condition training on a verifier and change the experiment. All unselected attempts and costs stay visible.</p>
+<p dir="auto">If one of the six training sources has no eligible trace, both student arms are blocked for that campaign, without replacement by a gold demonstration. The actual three-seed run had complete coverage and 18 correct selected traces; the missing-coverage and wrong-content cases are separately tested. The notebook's authored wrong-step/right-answer control remains eligible and is not falsely described as a neural sample.</p>
+<h2 dir="auto">15. Three distinct trace observations</h2>
+<p dir="auto">A wrong step with a correct answer satisfies final correctness but fails joint correctness. A valid step with a wrong answer proves that the printed intermediate statement alone was insufficient to obtain a correct final. An answer-only output supplies no printed step, so its step correctness is null rather than true or false.</p>
+<p dir="auto">The actual teacher evaluation records contain 80 and 24 cases in the first two cells; the complete-response student contains 26 and 15. These counts preserve observed errors instead of rescuing them with an answer-only score. Even a valid step and correct final do not establish that the model used that step internally.</p>
+<h2 dir="auto">16. Distillation work accounting</h2>
+<p dir="auto">The two student arms use the same six parent responses, same initial weights and 80 updates. Complete-response supervision contributes 30 targets per update; the answer-only transformation contributes 18. Over a campaign that is 2,400 versus 1,440 supervised targets, with 4,320 versus 3,360 padded forward positions. The comparison is matched in update count, not compute or token exposure.</p>
+<p dir="auto">Across three campaigns, the teacher incurs 360 fitting updates and 144 data-generation attempts totaling 720 actions and 4,320 uncached prefix positions. Student fitting and 1,728 common evaluation attempts are additional work. Parameter counts, generation prefixes and local wall timers must not be conflated with optimized deployment latency. The <a href="../../experiments/reports/2026-10-04-response-distillation.md">actual report</a> provides each boundary and retains the negative held-out slices.</p>
+<h2 dir="auto">Evidence-reading extension</h2>
+<p dir="auto">Exercise 17 keeps the conceptual durable-boundary question. Operational snapshot<br>
+and merge details are linked from <a href="../appendices/d-reproduction-and-environments.md#supervised-fine-tuning-state-and-adapter-exports">Appendix D</a>.</p>
+<h2 dir="auto">17. Committed state versus a journal attempt</h2>
+<p dir="auto">If the update 3 snapshot did not commit, update 2 is the last durable training<br>
+state. Restore its policy, Adam moments, applicable RNG, cursor and cumulative<br>
+counts, then retry update 3. Preserve the failed invocation's log as an attempt;<br>
+do not add that attempted update to the restored trajectory's completed count.</p>
+<p dir="auto">If update 3 did commit before metric append failed, restore update 3 and recover<br>
+its numerical metric from the snapshot-carried history. Do not apply update 3<br>
+again. The resumed invocation has its own output and identity, but the scientific<br>
+recipe and cumulative work remain bound. A visible marker after a failed fsync<br>
+requires verification and a retained durability failure, not an invented success.<br>
+Neither local branch proves CUDA/BF16 or pretrained recovery.</p>
+<h2 dir="auto">18. Lower NLL, but no exact or naturally ended responses</h2>
+<p dir="auto">The native 20-update profile's development NLL fell from 4.061965 to 1.100189,<br>
+while both generation panels remained 0/8 exact answers and 0/8 message-end stops.<br>
+That is successful execution and measured likelihood improvement, not successful<br>
+assistant behavior. Teacher forcing evaluates each gold target under the gold<br>
+prefix; greedy free generation conditions on its own choices. A target can<br>
+gain probability without becoming the largest logit. Once another token wins,<br>
+the continuation can enter contexts not represented by the demonstration.</p>
+<p dir="auto">The end marker was supervised, but did not win in these sampled trajectories.<br>
+All responses exhausted 64 tokens, so termination failure remains explicit.<br>
+Do not repair the generated text, remove awkward tokens or select a nicer decode<br>
+to turn a fixed negative result into a positive one. Use the already declared<br>
+longer comparison with unchanged evaluation, and retain the short profile as<br>
+resource evidence. The <a href="../../experiments/reports/2026-10-05-native-base-profile.md">raw report</a><br>
+separates the 455 training targets from 720 evaluation target presentations.</p>
+<h2 dir="auto">19. A controlled recipe is not a universal method ranking</h2>
+<p dir="auto">The actual fixed full/LoRA400 intervention establishes different local learning<br>
+outcomes under common data, seed, target exposure and evaluation. Full tuning<br>
+learned the eight observed instruction/ending behaviors; the adapter improved<br>
+teacher-forced likelihood but failed whole-response completion. Safe exits and<br>
+five committed snapshots establish execution, not quality.</p>
+<p dir="auto">The separate <a href="../../experiments/reports/native-assistant-comparison-20261005-run-02/README.md">actual publication comparison</a><br>
+now observes 120/120 strict whole decoded answers and 120/120 natural message-end<br>
+stops for full400, versus 0/120 answers/stops and 120 caps for both unchanged Base<br>
+and explicitly merged LoRA400. There are 40 copy,40 reverse and 40 extract items<br>
+over 40 held-out lexical-value groups; each family shows the same contrast.<br>
+Generation uses common prompt token IDs, original template, greedy seed 1010,<br>
+context 512, cap 64 and BF16. Every actual producer exits 0 without response errors.</p>
+<p dir="auto">Generic parser correctness agrees here, but its case-folded text rule is not<br>
+the strict case-sensitive rule. Every response passes <code class="notranslate">format_policy=any</code>,<br>
+including the capped incorrect responses: format validity is therefore not<br>
+evidence that an answer is correct or naturally ended. Neither rule extracts a<br>
+favorable prefix. Raw generated stop tokens are retained; only the terminal<br>
+special token is excluded from decoded scoring content.</p>
+<p dir="auto">The 2,000-draw seed 1010 paired bootstrap samples the 40 original source groups,<br>
+retaining their 120 aligned greedy item/sample IDs. Full−Base is+100 percentage<br>
+points with interval[+100,+100]; LoRA−Base is 0[0,0]; LoRA−full is−100[−100,−100].<br>
+Every group has constant outcomes, so these descriptive intervals are<br>
+degenerate. They do not measure variation over training seeds, learning rates,<br>
+new task templates or genuinely different assistant domains. The physical<br>
+receipts stay distinct; only the common logical+actual encoded analysis<br>
+contract is shared for resampling.</p>
+<p dir="auto">The trainable subspaces differ. LoRA may require another learning rate, rank or<br>
+target-module choice; the one common recipe does not optimize either method.<br>
+One seed provides no between-run variability estimate. Shared synthetic task<br>
+templates limit both the eight development prompts and the separately measured<br>
+held-out-value publication panel; neither establishes broad instruction<br>
+generalization. Development NLL falls from 4.061965 to 0.000276425 for full and<br>
+to 1.320048 for LoRA, but those teacher-forced 60-item observations do not replace<br>
+the generated 120-item results. The adapter's lower NLL and failed whole answers<br>
+are compatible measurements, not a contradiction. The <a href="../../experiments/reports/2026-10-05-native-sft400-comparison.md">actual comparison report</a><br>
+also distinguishes labels, padded positions, measured seconds and overlapping<br>
+snapshot cost counters.</p>
+<p dir="auto">For example, full400 emits 760 tokens and processes 29,720 full-prefix forward<br>
+positions; Base and LoRA each emit 7,680 and process 515,840. The difference partly<br>
+follows from correct short stopping, not an optimized inference-engine speed<br>
+advantage. Summed response-attempt times are 27.540/159.574/157.873 seconds for<br>
+full/Base/LoRA and have a different boundary from external supervision. FP32<br>
+names the verified LoRA merge/storage; all publication generation is BF16.<br>
+A passed merge/reload identity check does not imply favorable task scores or<br>
+equivalence to an unmerged BF16 adapter path.</p>
+<h2 dir="auto">Notebook pathway</h2>
+<ol dir="auto">
+<li><a href="../../notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb">Objective and gradient paths</a>.</li>
+<li><a href="../../notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb">Accumulation and checkpoint identity</a>.</li>
+<li><a href="../../notebooks/day-13/01_tiny_assistant_training.ipynb">Tiny assistant training</a>.</li>
+<li><a href="../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb">Full tuning, LoRA and defense</a>.</li>
+<li><a href="../../notebooks/day-26/03_response_level_distillation.ipynb">Complete-response distillation, masks and printed-step checks</a>, a Chapter 15 extension bridged here through the SFT objective.</li>
+</ol>
+<h2 dir="auto">Assignment E — Ancestry before comparison</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> Which model should be the parent of accepted-response SFT and GRPO in the compatible exercise?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> Both siblings start from the same frozen SFT checkpoint, with its weights, interface identity and evaluation retained. Independently constructed tiny checkpoints cannot be substituted merely because their shapes match. The reference shows usable task gradients but sub-baseline final complete-path probabilities. A termination improvement does not establish learning the parity relation.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-48</h1>
+<h1 dir="auto">Chapter 10 — Worked Solutions</h1>
+<p dir="auto">Companion to <a href="../chapters/10-preferences-and-reward-models.md">Preferences and Reward Models</a>.<br>
+Runnable references immediately follow predictions in the <a href="../labs/10-preferences-and-reward-models.md">notebooks</a>.</p>
+<h2 dir="auto">1. Soft-target gradients</h2>
+<p dir="auto">For the fixed prompt, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$r_a=r_\phi(x,a)$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$r_b=r_\phi(x,b)$</math-renderer>.<br>
+Writing <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$L=\mathrm{softplus}(r_a-r_b)-q(r_a-r_b)$</math-renderer> gives<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\partial L/\partial r_a=\sigma(r_a-r_b)-q$</math-renderer> and the opposite derivative<br>
+for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$r_b$</math-renderer>. When the predicted probability is below the observed preference<br>
+frequency, gradient descent raises the first score and lowers the second.<br>
+These are score derivatives. A shared network's parameter update combines both<br>
+score Jacobians and may affect other answers too.</p>
+<h2 dir="auto">2. Offset versus scale</h2>
+<p dir="auto">Adding <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$c(x)$</math-renderer> cancels in <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$r_a-r_b$</math-renderer>, leaving loss, ranking, and probability<br>
+unchanged. Multiplying scores by two doubles the margin, preserving ranking<br>
+but changing probability toward more extreme confidence. An additive offset is<br>
+unidentified by within-prompt pair data. Scale is identified only relative to<br>
+the assumed preference-noise model; changing it requires calibration evidence.</p>
+<h2 dir="auto">3. Nonzero converged loss</h2>
+<p dir="auto">For repeated identical comparisons with fraction <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$q$</math-renderer> favoring the first answer,<br>
+the optimum predicts <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$p=q$</math-renderer>. Its expected loss is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$-q\log q-(1-q)\log(1-q)$</math-renderer>, positive whenever <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$0&amp;lt;q&amp;lt;1$</math-renderer>. Zero expected gradient<br>
+at that point indicates a fitted distribution. Individual votes still produce<br>
+opposing gradients. Do not interpret irreducible label disagreement as a failed<br>
+optimizer or manufacture unanimous labels to force the loss down.</p>
+<h2 dir="auto">4. Cyclic judgments</h2>
+<p dir="auto">Take strong preferences A over B, B over C, and C over A. A single scalar model<br>
+would require <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$r_A&amp;gt;r_B&amp;gt;r_C&amp;gt;r_A$</math-renderer>, an impossibility. A population mixing different<br>
+criteria can produce such judgments without any one annotator being careless.<br>
+Inspect subgroup and rubric differences; fit a richer contextual judgment model<br>
+if the intended objective needs them. A scalar ranking is a modeling assumption.</p>
+<h2 dir="auto">5. Group-aware splitting</h2>
+<p dir="auto">Assign prompt/source groups to train, calibration, and final test before making<br>
+pairs. Keep all variants of one prompt in its assigned split. Normalize and<br>
+hash exact texts, and audit near duplicates under a declared rule. Swapped<br>
+orders of one pair stay in the same split. A random row split would overcount<br>
+similar comparisons as independent evidence and can leak answer content.</p>
+<h2 dir="auto">6. Accuracy does not measure confidence</h2>
+<p dir="auto">On ten unanimous positive labels, probabilities .51 and .99 both produce ten<br>
+correct rankings. Their mean binary Brier scores are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$.49^2$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$.01^2$</math-renderer>.<br>
+If the labels actually favor the first answer only six times, .99 becomes<br>
+overconfident. Ranking, NLL, and calibration must be interpreted against the<br>
+same declared label population; a model can win one metric and lose another.</p>
+<h2 dir="auto">7. Temperature fitting is training</h2>
+<p dir="auto">Choosing <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\tau$</math-renderer> to minimize calibration-set NLL estimates a parameter from<br>
+those labels. Its measured performance on the same set is optimistic. Freeze<br>
+the temperature before final evaluation and report both the original and<br>
+calibrated mapping. Temperature changes certainty but cannot repair wrong<br>
+rankings or an unobserved population shift.</p>
+<h2 dir="auto">8. Diagnose length preference</h2>
+<p dir="auto">First ask whether length belongs in the rubric. Then construct correctness-<br>
+matched length variants and length-matched correctness contrasts. Preserve<br>
+format and content provenance, and assess more than one prompt family. If<br>
+longer wrong answers win while short correct answers lose under a correctness<br>
+rubric, the reward has learned a shortcut. A length penalty alone might conceal<br>
+the symptom while introducing a new preference for unhelpful brevity.</p>
+<h2 dir="auto">9. Padding and endpoint selection</h2>
+<p dir="auto">For right padding, the final nonpadding index is <code class="notranslate">attention_mask.sum(-1)-1</code>.<br>
+For arbitrary padding, find the maximum valid position explicitly. Decide<br>
+whether the selected representation includes EOS or a turn-ending token, and<br>
+hold that choice fixed. Using the last array index scores padding for short<br>
+answers; subtracting one too many can score the previous word and drop answer<br>
+information. Test two different lengths with identical content boundaries.</p>
+<h2 dir="auto">10. Optimization shifts response selection</h2>
+<p dir="auto">A fixed pair set samples ordinary answers. A reward-maximizing policy can seek<br>
+unusual answers that exploit the predictor's error. Accurate ordinary held-out<br>
+ranking therefore does not guarantee accuracy on optimized responses. Audit<br>
+policy-generated samples over time, retain independent outcome measurements,<br>
+and look for nuisance features improving while the task stays unchanged. This<br>
+is a reason to preserve reward failures, not only good examples.</p>
+<h2 dir="auto">11. Display order is not answer identity</h2>
+<p dir="auto">If the original left answer moves from A to B, a judge choosing that answer must<br>
+emit B instead of A. The collector maps the slot back to the original candidate<br>
+ID; the canonical left/right outcome stays left. If the canonical pair itself<br>
+is swapped, the same candidate is now right and the declared label reverses.<br>
+The <a href="../../notebooks/day-15/03_preference_collection_and_judges.ipynb">collection notebook</a><br>
+tests both operations and retains the displayed text and raw verdict. A mapping<br>
+bug can create incorrect labels even with a correct judge.</p>
+<h2 dir="auto">12. Distinct audits expose distinct vulnerabilities</h2>
+<p dir="auto">Order consistency measures canonical selection under an A/B display swap.<br>
+It says nothing about whether that selection follows correctness or length.<br>
+The simulated longer-answer judge has order consistency 1 but changes on 37.5%<br>
+of matched verbosity observations. The injection-sensitive judge is also<br>
+order-consistent and changes on 37.5% of matched injection observations.<br>
+The repeat-unstable rule instead disagrees on 75% of paired repeats. These are<br>
+original deterministic controls, not empirical statements about AI judges.<br>
+Preserve all category counts and compare against separately reviewed labels;<br>
+passing one check does not certify an evaluator.</p>
+<h2 dir="auto">13. Declare the population that receives weight</h2>
+<p dir="auto">Equal-pair weighting gives the nine-row source three times the influence of<br>
+the three-row source. To weight sources equally, assign per-pair weights 1/9<br>
+and 1/3, then normalize across sources. All siblings, swaps and nuisance variants<br>
+remain in their source's split. Repeated judgments may estimate a within-pair<br>
+preference frequency, but they are not new independent source questions.<br>
+For the notebook's authored demonstration, row agreement is 0.5 while<br>
+source-balanced agreement is 1/3. The difference is a change of population<br>
+weighting, not a changed prediction or contradiction in the raw evidence.</p>
+<h2 dir="auto">14. A tie is not a failed measurement</h2>
+<p dir="auto">Equal observed ordinal ratings become a tie under a declared conversion;<br>
+missing ratings become an abstention. A duplicate/conflicting JSON field,<br>
+unsupported verdict or missing reason makes the observation invalid. A timeout<br>
+is an invalid transport observation, retaining any partial raw response.<br>
+Do not assign any of these an automatic half-win label. A tie model, binary<br>
+soft-target approximation or exclusion rule must be chosen explicitly, with<br>
+coverage reported. An ordinal score difference is not a calibrated reward<br>
+margin, so keep the raw ratings and conversion version rather than inventing<br>
+preference confidence.</p>
+<h2 dir="auto">15. Padding changes array positions not text positions</h2>
+<p dir="auto">For a left-padded mask <code class="notranslate">[0,0,1,1]</code>, the final valid array index is 3; length minus<br>
+one is 1 and selects padding. Use the maximum valid position and assign token<br>
+position IDs from the cumulative valid-token count. Reject all-padding rows<br>
+and suppress padded query outputs without generating an all-masked softmax<br>
+NaN. The <a href="../../notebooks/day-16/03_text_reward_and_process_labels.ipynb">text reward notebook</a><br>
+measures left/right and extra-padding parity. EOS-inclusive and EOS-excluded<br>
+endpoints are separate saved contracts, not interchangeable offsets.</p>
+<h2 dir="auto">16. Terminal correctness does not label the steps</h2>
+<p dir="auto">For 2+3, a false “2+3=6” followed by final 5 has terminal target 1 and local<br>
+target 0. A valid “2+3=5” followed by final 6 has terminal target 0 and local<br>
+target 1. Put terminal supervision at final EOS and local supervision only at<br>
+the explicit step marker. Padding and unrelated tokens are not process-label<br>
+positions. Use a source-aware weighting rule when sources supply unequal<br>
+numbers of labeled boundaries; do not let long traces define the population<br>
+accidentally.</p>
+<h2 dir="auto">17. A critic and a process judge have different targets</h2>
+<p dir="auto">The process label asks whether a displayed step is valid under the annotation<br>
+rubric. A critic estimates expected remaining reward under a policy and its<br>
+continuation distribution. A locally invalid step might precede an eventual<br>
+correct answer, and a locally valid step might precede a wrong one. Both<br>
+quantities can be implemented as scalar heads, but shared tensor shape does<br>
+not make their supervision or interpretation equivalent.</p>
+<h2 dir="auto">18. Unknown IDs can destroy the distinction being learned</h2>
+<p dir="auto">The held-out arithmetic records contain 7 and 8, both mapped to <code class="notranslate">&lt;unk&gt;</code> because<br>
+neither appeared in the fitted training vocabulary. Their opposite validity<br>
+labels can then have identical token sequences. The numerical model cannot<br>
+recover a distinction removed by encoding. All three measured seeds have 0.5<br>
+held-out terminal and process accuracy, with poor probability losses retained.<br>
+The unseen nouns “box” and “book” also collapse to one ID, making all four<br>
+baseline test pairs duplicate calibration encodings despite disjoint source<br>
+IDs. This is not independent calibration evidence, general arithmetic learning<br>
+or a unique diagnosis of optimizer failure. Changing tokenization is a new experiment, not a<br>
+quiet replacement of the failed test cases.</p>
+<h2 dir="auto">19. Freeze the interface and the selection rule</h2>
+<p dir="auto">Save complete numeric parameters, architecture, ordered token meanings,<br>
+normalization/separators, unknown policy, EOS and endpoint semantics, source<br>
+identity and input hashes. Require nonempty lists of unique nonblank source IDs,<br>
+then validate the payload and actual tensor shapes on<br>
+reload, compare an independently expected interface, then disable reward<br>
+gradients. The course's seed 1601 checkpoint was selected before testing and<br>
+reloads to exactly equal CPU scores. A self-hash alone is not authentication<br>
+against an actor who rewrites all metadata. A frozen reward can still be<br>
+exploited, so policy optimization must retain independent factual metrics.</p>
+<h2 dir="auto">20. Audit what the model actually receives</h2>
+<p dir="auto">The word vocabulary maps unseen “box” and “book” to one unknown ID. Different<br>
+raw source names then produce identical calibration/test inputs. Check complete<br>
+prompt/completion sequences, unordered candidate pairs including swaps and<br>
+complete causal prefixes at labeled STEP boundaries. Different source IDs<br>
+cannot make those inputs independent. Repeated equal-label prefixes within<br>
+one source are related observations; arbitrary shared short prefixes are not<br>
+the supervised unit. The character arm passes these exact checks, but does<br>
+not prove semantic independence, independent human labels or a large sample.</p>
+<h2 dir="auto">21. Information preservation is not an abstract rule</h2>
+<p dir="auto">Distinct character IDs ensure that numbers 7 and 8 are no longer indistinguishable<br>
+at encoding. The learner could now represent their difference, but training<br>
+need not identify arithmetic or a general color-matching rule. All three<br>
+character seeds fit training labels and still reach 0.5 ordinary heldout<br>
+ranking; terminal accuracy is 0/0.5/0 and local validity 0/0.5/0.5. That rejects<br>
+a claim of successful transfer in this fixture, not every possible character<br>
+model or a unique optimizer diagnosis. Do not tune more updates or choose a<br>
+new seed after observing those test failures under the frozen protocol.</p>
+<h2 dir="auto">22. Calibration and serialization answer narrower questions</h2>
+<p dir="auto">Positive temperature scaling preserves the order of reward margins. Temperature<br>
+4 chosen on calibration labels can reduce overconfidence and improve heldout<br>
+NLL/Brier without fixing the wrong ranking. Exact serialization equality<br>
+compares the same saved state and interface within one execution environment.<br>
+Fresh training under another Torch version may produce different weights;<br>
+record that difference rather than replacing an old checkpoint. The notebook<br>
+retains its initial historical-retraining equality failure and verifies exact<br>
+same-state reload, while the new character fit/export/reload remains exact in<br>
+its locked CPU environment.</p>
+<h2 dir="auto">Assignment E — Two instruments, one response</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> A richer parser accepts a boxed answer that the original bare-integer verifier rejects. Has the historical reward changed?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> No. Preserve the historical score and record a separately named diagnostic with full text, stop reason and extraction reason codes. If the richer instrument becomes a training reward, freeze a new protocol and adversarial tests first. A learned reward model also needs independent task evaluation; scorer agreement alone cannot establish behavior quality.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-49</h1>
+<h1 dir="auto">Chapter 11 — Worked Solutions</h1>
+<p dir="auto">Companion to <a href="../chapters/11-direct-preference-optimization.md">Direct Preference Optimization</a>.<br>
+The <a href="../labs/11-direct-preference-optimization.md">lab route</a> links the runnable references.</p>
+<h2 dir="auto">1. Exponential tilt and support</h2>
+<p dir="auto">Differentiate the Lagrangian with respect to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\pi_y$</math-renderer>:<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$r_y-\beta(\log(\pi_y/\pi_{\mathrm{ref},y})+1)+\lambda=0$</math-renderer>.<br>
+Exponentiation gives a reference weight times <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\exp(r_y/\beta)$</math-renderer> times a<br>
+shared constant; normalization determines <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$Z$</math-renderer>. Positive reference support,<br>
+finite reward, positive beta, and an unrestricted probability simplex establish<br>
+the finite optimum. A neural policy's capacity and shared prompts impose<br>
+additional constraints. Zero reference mass forbids positive current mass under<br>
+finite forward KL.</p>
+<h2 dir="auto">2. Partition cancellation</h2>
+<p dir="auto">The reconstructed reward is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\beta\log(\pi/\pi_{\mathrm{ref}})+\beta\log Z(x)$</math-renderer>.<br>
+Both answers share <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$x$</math-renderer>, so subtracting rewards removes <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\log Z(x)$</math-renderer>. Responses<br>
+to different prompts generally have different partition terms, so the same<br>
+pairwise cancellation does not justify arbitrary cross-prompt reward comparisons.</p>
+<h2 dir="auto">3. Log-probability derivatives</h2>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$m=\beta(c-l-c_{\mathrm{ref}}+l_{\mathrm{ref}})$</math-renderer> and<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$L=\mathrm{softplus}(m)-qm$</math-renderer>. The derivatives are<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\beta(\sigma(m)-q)$</math-renderer> for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$c$</math-renderer> and its negative for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$l$</math-renderer>. At policy/reference<br>
+equality with a hard winning pair, they are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$-\beta/2$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\beta/2$</math-renderer>.<br>
+Reference derivatives are absent because it is fixed; code must enforce that<br>
+boundary, not assume it from a variable name.</p>
+<h2 dir="auto">4. Two beta comparisons</h2>
+<p dir="auto">For fixed reward, increasing beta reduces the exponential tilt <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$r/\beta$</math-renderer>.<br>
+For fixed current/reference equality and one preference example, the initial<br>
+gradient magnitude is beta over two. For fixed soft preference target, the<br>
+required pair log-odds movement is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\log(q/(1-q))/\beta$</math-renderer>. These compare<br>
+different held-fixed quantities. Learning rate and training duration mediate<br>
+actual neural movement, so beta is not a one-dimensional “aggressiveness” knob.</p>
+<h2 dir="auto">5. Ratios do not control absolute likelihood</h2>
+<p dir="auto">Suppose chosen probability changes from .2 to .1 and rejected probability from<br>
+.1 to .01. The ratio increases from two to ten while chosen probability halves.<br>
+The remaining mass goes elsewhere. DPO's pairwise likelihood can improve under<br>
+that change. Shared transformer updates make such movements possible; independent<br>
+generation evaluation is therefore needed. The tiny decoder experiment preserves<br>
+an instance of this diagnostic tension rather than hiding it.</p>
+<p dir="auto">With the first distribution as reference and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\beta=0.5$</math-renderer>, the margin changes<br>
+from zero to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$0.5\log(10/2)=0.804719$</math-renderer> and hard-pair loss from 0.693147 to<br>
+0.369640. The chapter's three-answer table makes the missing mass explicit.<br>
+This is a constructed counterexample to what pair loss guarantees, rather<br>
+than a measured training path. Keeping the third probability fixed would<br>
+remove this freedom and force higher chosen probability for higher pair odds.</p>
+<h2 dir="auto">6. One causal shift</h2>
+<p dir="auto">For token positions <code class="notranslate">[prompt_0, prompt_1, A, EOS, PAD]</code>, model inputs are the<br>
+first four positions and labels the last four. The aligned scored labels are<br>
+<code class="notranslate">[unscored_prompt_1, A, EOS, unscored_PAD]</code>. Their completion mask is<br>
+<code class="notranslate">[False, True, True, False]</code>. A is predicted from the state at prompt_1. Use<br>
+that target mask for likelihood; use a separate attention mask to prevent pad<br>
+positions supplying context.</p>
+<h2 dir="auto">7. Sum versus average</h2>
+<p dir="auto">A product of conditional probabilities becomes a sum of log-probabilities.<br>
+Dividing by token count gives the logarithm of a geometric mean per token,<br>
+not the probability of the entire sequence. It may be useful in a separately<br>
+specified length-adjusted objective, but the original derivation no longer<br>
+applies unchanged. Inspect preference-length bias and EOS errors before changing<br>
+the mathematical contract.</p>
+<h2 dir="auto">8. Reference-cache identity</h2>
+<p dir="auto">Checkpoint weights, tokenizer revision, chat template, encoded prompt and answer,<br>
+EOS and mask boundaries, dtype, stochastic evaluation settings, and sequence<br>
+normalization all affect cached scores. Cache each encoded branch with an<br>
+identity covering these inputs. After changing a template, the same raw answer<br>
+string is not evidence that the cached log-probability remains valid.</p>
+<h2 dir="auto">9. A controlled comparison</h2>
+<p dir="auto">Keep one SFT checkpoint untouched. Train DPO on frozen pair data; optionally<br>
+train chosen-SFT and shuffled-label arms from copies of the same checkpoint.<br>
+Freeze independent task prompts and decoding. Report examples, valid completion<br>
+tokens, updates, gradient passes, wall time, and optimizer settings. Chosen-SFT<br>
+does not see the rejected answer; shuffled labels test dependence on judgment<br>
+direction. These controls answer different questions and should not be called<br>
+equally informative simply because the update count matches.</p>
+<h2 dir="auto">10. Preference gain, correctness regression</h2>
+<p dir="auto">The measured result supports improved ranking on that held-out preference<br>
+population and worsened correctness on the independent task under the frozen<br>
+decoding contract. It does not establish a universal improvement or a single<br>
+cause. Inspect absolute chosen/rejected likelihoods, EOS, response length,<br>
+format/rubric correlation, reference drift, and sample-level failures. Check<br>
+shift and masks before expanding the training budget. Preserve the negative<br>
+comparison and its confidence intervals.</p>
+<h2 dir="auto">11. Explicit auxiliary gradients</h2>
+<p dir="auto">Global chosen-token NLL is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$-\sum_i c_i/\sum_i n_{w,i}$</math-renderer>, so its derivative<br>
+with respect to any <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$c_i$</math-renderer> is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$-1/\sum_i n_{w,i}$</math-renderer>. Multiply by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\lambda_{\mathrm{SFT}}$</math-renderer> and add<br>
+the mean-pair derivative <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\beta(\sigma(m_i)-1)/B$</math-renderer>. The counts are fixed data,<br>
+not differentiable policy outputs. Rehearsal adds a separate parameter<br>
+gradient and remains present when gamma is nonzero, even if <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\lambda_{\mathrm{SFT}}=0$</math-renderer>.<br>
+Only <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\lambda_{\mathrm{SFT}}=\gamma=0$</math-renderer> recovers ordinary DPO; the independent parameter-gradient<br>
+tests verify exact recovery and the explicit combined expression.</p>
+<h2 dir="auto">12. More supervision can teach the wrong thing</h2>
+<p dir="auto">Chosen NLL points toward the recorded winner, not an independent oracle. A<br>
+swapped label can therefore supply a wrong supervised target. It also cannot<br>
+guarantee another task's retention, because shared parameters couple the tasks.<br>
+Rehearsal supplies that task's demonstrations, but its finite weight and<br>
+examples do not protect every behavior. Compare an untouched warm model,<br>
+all fixed arms/seeds and per-task generation. The new symbolic comparison<br>
+cannot establish a universal remedy or pretrained language capability.</p>
+<h2 dir="auto">13. Length and information controls</h2>
+<p dir="auto">Longer-chosen pairs introduce both length asymmetry and a different recorded<br>
+style. Matched-long pairs remove the branch length asymmetry while retaining<br>
+the style change. Neither changes the independent canonical answer+EOS<br>
+evaluation. DPO uses sequence sums; chosen NLL uses its declared token mean.<br>
+Margins can rise while both absolute likelihoods fall, or while free generation<br>
+breaks stopping/style. Rehearsal adds targets and forwards; chosen NLL reuses<br>
+scores but adds objective supervision. Publish those budgets instead of calling<br>
+equal updates equal compute. The <a href="../../notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb">new notebook</a><br>
+places runnable references beside each prediction.</p>
+<h2 dir="auto">14. The original reference must survive recovery</h2>
+<p dir="auto">DPO compares current chosen/rejected log-likelihoods with the original frozen<br>
+reference's corresponding scores. At update 3, the current policy generally<br>
+differs from that reference. Replacing the reference by the resumed policy<br>
+resets its relative margins at the recovery boundary and supplies different<br>
+gradients for subsequent updates. Equal tensor shapes and token meanings do<br>
+not imply equal distributions or equal objectives.</p>
+<p dir="auto">Retain the actual original reference state and its independently bound identity,<br>
+along with policy, Adam, sampler/RNG and cumulative work. Validate all of them<br>
+before applying a completed snapshot. A new output directory changes invocation<br>
+provenance, not the reference. An intentional reference reset needs a separately<br>
+named intervention; it is not same-recipe recovery.</p>
+<p dir="auto">The <a href="../../experiments/reports/native-dpo-replay-20261005-run-03/acceptance.json">later native DPO replay</a><br>
+checks this on the actual full400 parent: the original reference remains<br>
+unchanged and the fresh-process result matches the clean numerical state and<br>
+metric tail. All native children and the separate CPU comparison exit 0.<br>
+That is stronger evidence than an export existing, but still not evidence<br>
+that preference training improves independent answers. Earlier timed-out<br>
+invocations and their already-spent work remain in the experiment history.</p>
+<h2 dir="auto">15. A seed is not a sampling protocol</h2>
+<p dir="auto">Shuffled cycling visits each pair once per traversal; replacement sampling can<br>
+repeat one pair and omit another. Identical seed values do not make these two<br>
+algorithms consume the same examples or random draws. Compare actual index<br>
+traces, encoded chosen IDs/masks, source/data identity, valid chosen targets<br>
+and private sampler endpoints from the same parent and fixed recipe.</p>
+<p dir="auto">The <a href="../../src/dongxi_llms/chosen_sft_control.py">matched control</a> uses the native<br>
+DPO replacement sampler for the chosen-SFT accumulation window. Its chosen loss<br>
+is a global valid-target mean, whereas DPO is a mean of preference-pair losses<br>
+using response sums. Matched chosen exposure does not remove this objective<br>
+difference or DPO's rejected/reference work. Freeze independent evaluation and<br>
+retain all outcomes; do not infer preference quality, equal compute or production<br>
+recovery from a matching index trace.</p>
+<h2 dir="auto">16. Recover the chosen objective, not its unspent allowance</h2>
+<p dir="auto">The numerical trajectory contains six completed updates, but the failed earlier<br>
+attempt also reserved a full window. Restoring update 2 is not refunding that<br>
+attempt: the same physical journal retains seven reserved updates,56 chosen<br>
+targets and 336 input positions versus six completed updates,48 targets and 288<br>
+positions. The <a href="../../experiments/reports/2026-10-05-chosen-sft-accounted-recovery.md">two fresh-process tests</a><br>
+recover exact weights, Adam, RNG, history and next replacement draws.</p>
+<p dir="auto">Chosen-SFT's training objective has no rejected supervision or frozen-reference<br>
+forward. A separately counted preference-validation panel can still evaluate<br>
+chosen and rejected scores against a fixed reference. A payload validator<br>
+requiring DPO margins/reference state would check a different algorithm. Bind<br>
+its actual global chosen-token denominator, full forwards, masks, sampler and<br>
+optimizer layout with its own contract. Then independently bind payload bytes<br>
+and both journal prefixes before application. The counted opt-in API does not<br>
+make the legacy CLI accounted or supply pretrained/GPU quality evidence.</p>
+<p dir="auto">The later <a href="../../experiments/reports/2026-10-05-native-chosen-replay.md">actual native replay</a><br>
+supplies pretrained recovery evidence at two updates, not a quality pass. Its<br>
+source trajectory contains 40 chosen labels/266 policy positions, while source<br>
+plus fresh resumed tail physically presents 60/400. Both independent generation<br>
+panels remain 0/4 correct with 4/4 natural stops. Do not add validation reservations<br>
+to those training counts or substitute this recovery state for a fresh pilot.</p>
+<h2 dir="auto">17. A pairwise winner is not necessarily the generated answer</h2>
+<p dir="auto">The actual 100-update pilots match parent, replacement draws, chosen IDs/masks<br>
+and 2,047 chosen targets. They do not match rejected supervision, objective<br>
+reduction, full forward geometry or reference work. DPO additionally scores<br>
+1,600 rejected targets and makes 800 reference training forwards. Chosen-only's<br>
+diagnostic reference forwards belong to validation, not its training objective.</p>
+<p dir="auto">A favorable reference-relative margin means that the chosen/rejected odds<br>
+improved against the fixed reference. It does not require the chosen answer<br>
+to beat every unrecorded continuation, or each chosen token to win the greedy<br>
+decision at its prefix. Free generation can leave the recorded answer path.<br>
+Both sequence probabilities can also fall while their relative margin rises.<br>
+Natural EOS is not exact answering; an omitted article is not the same error<br>
+as an omitted object name, even when both fail the unchanged strict contract.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-native-preference-comparison.md">native report</a><br>
+retains the own-run FP32/BF16-autocast 0/4→4/4 chosen-only and 0/4→1/4 DPO<br>
+panels. The separately accepted common comparison observes the same location<br>
+counts with BF16-loaded greedy 64 generation. Both retain 120/120 original<br>
+instruction answers; both keep the same five correct reasoning IDs and add<br>
+only <code class="notranslate">math-10</code>, changing the annotated diagnostic from 5/20 to 6/20. All responses<br>
+stop naturally, with no caps or item-level correctness loss in these panels.</p>
+<p dir="auto">The four validation pairs and four held-out location prompts also differ.<br>
+An aggregate margin cannot isolate the cause of a specific held-out omission.<br>
+The nine diagnostic math rows reflect the original fixture/development and<br>
+RLVR-overlap policy, not training examples seen by these assistant descendants.<br>
+This annotation does not reconstruct upstream pretraining contamination.</p>
+<p dir="auto">Mean chosen logp improves in both arms: −0.003524 for chosen-only and −6.642914<br>
+for DPO versus the parent's −11.486888. DPO's stronger rejected suppression<br>
+produces the larger unscaled relative margin, not more exact answers. The<br>
+eleven controlled held-out reasoning items change 0/11→1/11; the remaining<br>
+nine seen/development diagnostics stay separately labeled. Known overlap,<br>
+bounded parsing, shared instruction templates, one recipe and one seed limit<br>
+the claim. No universal ranking, broad reasoning gain or human preference<br>
+assessment follows. Do not substitute own-run precision settings for the<br>
+common results, pool the different tasks, or add overlapping cost lanes.</p>
+<h2 dir="auto">Assignment E — The margin is an incomplete outcome</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> What evidence is needed beyond a better chosen–rejected likelihood margin?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> Retain absolute chosen likelihood, natural termination, generated responses and independent task results. Use the chapter’s chosen-SFT control to distinguish relative-margin optimization from direct response supervision. Keep labeled targets, collected tokens and updates separate. The compatible GRPO branch is a different objective and does not replace the DPO comparison.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-50</h1>
+<h1 dir="auto">Chapter 12 — Worked Solutions</h1>
+<p dir="auto">Companion to <a href="../chapters/12-language-generation-as-a-policy.md">Language Generation as a Policy</a>.<br>
+The <a href="../labs/12-language-generation-as-a-policy.md">lab guide</a> links the original<br>
+finite-policy sessions and probability-accounting/learned-critic extensions.</p>
+<h2 dir="auto">1. Score-function identity</h2>
+<p dir="auto"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\nabla J=\sum_yR(y)\nabla\pi(y)=\mathbb{E}[R\nabla\log\pi]$</math-renderer> when reward<br>
+is fixed and differentiation and summation are valid. Implement the estimator<br>
+with negative detached reward times sampled sequence log-probability. Detachment<br>
+prevents spurious reward-gradient paths; the gradient of the sampled token<br>
+log-probability remains. If reward explicitly depends on policy parameters,<br>
+derive the extra term before deciding how to detach it.</p>
+<h2 dir="auto">2. Relative reward</h2>
+<p dir="auto">The softmax derivative gives<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\partial J/\partial z_i=\sum_a p_a R_a(\mathbf1[a=i]-p_i)=p_i(R_i-J)$</math-renderer>.<br>
+A reward one answer has a negative gradient when expected reward exceeds one.<br>
+Gradient ascent then moves mass toward better alternatives. The score need not<br>
+be negative in an absolute sense to be relatively undesirable.</p>
+<h2 dir="auto">3. A valid and invalid baseline</h2>
+<p dir="auto">For action-independent <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$b$</math-renderer>, the baseline contribution is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$b\sum_a\nabla p_a=b\nabla1=0$</math-renderer>. For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$b(a)=R_a$</math-renderer>, every sample's advantage<br>
+is zero, so the estimator vanishes even if the true gradient is nonzero.<br>
+Detaching that baseline does not fix the statistical bias: dependence on the<br>
+sampled action is the issue.</p>
+<h2 dir="auto">4. Minimum-variance scalar</h2>
+<p dir="auto">The mean gradient is unchanged by a constant baseline, so minimize<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\mathbb{E}[(R-b)^2\|s\|^2]$</math-renderer>, where <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$s=\nabla\log\pi$</math-renderer>. Setting its<br>
+derivative to zero yields<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$b^*=\mathbb{E}[R\|s\|^2]/\mathbb{E}[\|s\|^2]$</math-renderer>. Expected reward equals<br>
+this only under suitable score-norm weighting. The exact lab can enumerate both<br>
+values and their covariance traces; the result does not automatically prescribe<br>
+an optimal neural state-value baseline.</p>
+<h2 dir="auto">5. Group self-inclusion</h2>
+<p dir="auto"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$R_i-\bar R=(G-1)\hat A_i/G$</math-renderer>, where <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\hat A_i=R_i-b_{-i}$</math-renderer>. Under iid conditional samples, the RLOO<br>
+mean has the true gradient expectation, while inclusive mean centering scales<br>
+it by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$(G-1)/G$</math-renderer>. Rescaling restores the same estimator. Coupled samples or<br>
+division by a reward-dependent standard deviation require another analysis.<br>
+RLOO needs at least two genuinely separate completions per prompt.</p>
+<h2 dir="auto">6. Two frozen policies with different clocks</h2>
+<p dir="auto">The old policy generated the current rollout batch and defines importance<br>
+ratios. It updates when new rollouts are sampled. The reference defines the<br>
+long-term KL anchor and may remain fixed for the whole experiment. Using the<br>
+reference in place of the old policy's denominator does not correct sampling<br>
+from the actual rollout distribution.</p>
+<h2 dir="auto">7. Sequence and token ratios</h2>
+<p dir="auto">The exact trajectory ratio is a product of token ratios, so its logarithm is<br>
+the sum of token log-ratio differences. PPO uses local ratios at states from<br>
+the old rollout distribution. It does not exactly correct all changes in state<br>
+visitation after several updates. Full ratios can have severe variance; local<br>
+surrogates trade exact correction for a more manageable update.</p>
+<h2 dir="auto">8. Clipping by advantage sign</h2>
+<p dir="auto">For positive <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$A$</math-renderer>, the surrogate is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$A\rho$</math-renderer> until the upper threshold and then<br>
+flat; decreases below the lower threshold remain penalized. For negative <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$A$</math-renderer>,<br>
+the beneficial decrease becomes flat below the lower threshold, while harmful<br>
+increases remain penalized. The notebook verifies slopes for ratios .6 and<br>
+1.4 and both signs. Clipping a sampled objective does not impose a global KL<br>
+bound on a shared-parameter policy.</p>
+<h2 dir="auto">9. KL control variate and missing support</h2>
+<p dir="auto">For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$a\sim p$</math-renderer> with common positive support,<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\mathbb{E}_p[q(a)/p(a)-1]=\sum_aq(a)-1=0$</math-renderer>. Therefore adding this term to<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\log(p/q)$</math-renderer> preserves forward KL expectation and produces nonnegative samples.<br>
+If reference mass lies where <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$p=0$</math-renderer>, the sum over sampled support is less than<br>
+one, breaking that identity. If <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$q=0$</math-renderer> where <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$p&amp;gt;0$</math-renderer>, the forward KL is infinite.<br>
+The square-log estimator has no such exact expectation identity in general.</p>
+<h2 dir="auto">10. Fairness depends on the question</h2>
+<p dir="auto">Match sampled completion count to compare sample efficiency, match gradient<br>
+passes or wall time to compare compute efficiency, and report both when they<br>
+differ. PPO with three epochs sees the same rollout budget but takes three times<br>
+as many gradient passes in this microscope. Use multiple seeds and one fixed<br>
+success definition. A finite task with separate prompt logits tests estimator<br>
+mechanics, not unseen language generalization.</p>
+<h2 dir="auto">11. Relationship among objectives</h2>
+<p dir="auto">SFT maximizes externally demonstrated sequence likelihood. DPO fits recorded<br>
+pair judgments using reference-relative likelihood differences. REINFORCE<br>
+estimates expected reward gradients from current-policy samples. RLOO changes<br>
+its baseline using other samples for the same prompt. PPO uses old-policy data,<br>
+advantages, and a clipped surrogate for repeated updates. Common<br>
+log-probability computations do not make their training distributions,<br>
+objectives, or guarantees identical.</p>
+<h2 dir="auto">12. Reward rises while success falls</h2>
+<p dir="auto">Check the reward definition against the independent success rule; inspect<br>
+verifier parsing, formatting shortcuts, response length, reward scaling, KL,<br>
+entropy, masks, and sample/old-policy identities. A learning-rate change can<br>
+hide instability but cannot repair a verifier rewarding the wrong behavior.<br>
+Retain paired examples and an untouched checkpoint control. Only after these<br>
+checks should a new controlled optimization comparison be proposed.</p>
+<h2 dir="auto">13. Lambda endpoints with a cap</h2>
+<p dir="auto">For one response, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\hat A_t$</math-renderer> abbreviates <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\hat A_{i,t}$</math-renderer>. At lambda zero,<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\hat A_t=\delta_t$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a76fdababeef1dd9177a5e68c8a7b545">$\hat G_t=R_t+\gamma c_tV_\psi(s_{t+1})$</math-renderer>.<br>
+At lambda one, intermediate values cancel, leaving observed discounted rewards<br>
+plus the final value after a nonterminal cap. Two zero-reward actions, gamma 0.9<br>
+and bootstrap 1.2 give returns 0.972/1.08. Fully observed Monte Carlo targets<br>
+require true termination; a cap does not supply future experience.</p>
+<h2 dir="auto">14. EOS is an event and padding is not</h2>
+<p dir="auto">Generated EOS zeros continuation even if a nonzero following value was supplied.<br>
+A cap leaves continuation alive in the declared task. Post-EOS padding gets no<br>
+residual, advantage or loss. Do not count a cap-four forced syntax endpoint as<br>
+EOS within cap-three delivery. Breaking the mask changes the return without<br>
+changing the observed token prefix.</p>
+<h2 dir="auto">15. Separate learning objectives</h2>
+<p dir="auto">Actor gradients reach current likelihoods, not detached advantages or critic<br>
+parameters. Critic gradients reach its representation/scalar head, not detached<br>
+targets. Reward weights are frozen after verified reload; sampling IDs is not<br>
+differentiated. Shared features would receive both losses and let critic<br>
+updates move policy representations indirectly. Separate backbones isolate it.</p>
+<h2 dir="auto">16. Pair fitting does not constrain every generated completion</h2>
+<p dir="auto">Training pairs used plain/fancy styles. Bare colors and repeated markers visit<br>
+text outside those comparisons. Tiny pair loss establishes fit on records,<br>
+not reliable extrapolation. Balanced oracle rows chose constant blue and<br>
+achieved only 0.5 quality. Oracle values do not repair a reward or shortcut.</p>
+<h2 dir="auto">17. Compare quantities with their clocks</h2>
+<p dir="auto">All arms match sampled paths and actor steps. Learned arms also train a critic;<br>
+oracle/noisy arms enumerate futures. Neither makes compute equal. Distinguish<br>
+terminal rewards, bootstraps and diagnostic prefix scores. Inspect every seed,<br>
+scheduled checkpoint and truncated/withheld row. Independent quality is not<br>
+reward or tuning criterion; finite controls do not rank pretrained PPO stacks.</p>
+<p dir="auto">The <a href="../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb">new notebook</a><br>
+supplies adjacent runnable answers, saved reward identities and measured plots.</p>
+<h2 dir="auto">Assignment E — A moving policy with no task signal</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> Can a nonzero policy gradient prove that reward distinguishes task outcomes?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> No. KL or entropy pressure can supply the total gradient when every task advantage is zero. Differentiate the task term independently and report its norm, sampled successes/failures and mixed-group fraction. The integrated fixture clears those mechanism checks while still failing to exceed its constant-answer baseline.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>

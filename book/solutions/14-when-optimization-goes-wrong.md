@@ -99,7 +99,7 @@ For rewards 0,1,4, the conditional target's exact expectation is 0.352941.
 Enumeration with the actual behavior denominator agrees, including the
 gradient `[−0.228374,+0.228374,0]`. Substituting raw model denominators gives
 0.269764 and gradient `[−0.174553,+0.174553,0]`: a different objective.
-The analytical gradient is $t_i(R_i-J)/\tau_t$ on fixed support. The
+The analytical gradient is $`t_i(R_i-J)/\tau_t`$ on fixed support. The
 [adjacent runnable reference](../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb)
 tests this identity before plotting the measured vectors.
 
@@ -113,19 +113,19 @@ a general autoregressive off-policy objective.
 
 ## 12. Why a KL metric can disagree with a KL loss gradient
 
-Under positive shared full support, $\mathbb{E}_p[k_1]$ and
-$\mathbb{E}_p[k_3]$ equal $D_{\mathrm{KL}}(p\Vert q)$ because the extra
-$q/p-1$ term has expectation zero. Freezing collected actions at $b=p_0$ while
-differentiating only $k$ omits the derivative of their action distribution.
-At the fresh point, frozen $k_1$ has expected gradient 0 and frozen $k_3$ has
-gradient $p-q$. Exact forward KL has gradient
-$p_i[\log(p_i/q_i)-D_{\mathrm{KL}}]$ instead.
+Under positive shared full support, $`\mathbb{E}_p[k_1]`$ and
+$`\mathbb{E}_p[k_3]`$ equal $`D_{\mathrm{KL}}(p\Vert q)`$ because the extra
+$`q/p-1`$ term has expectation zero. Freezing collected actions at $`b=p_0`$ while
+differentiating only $`k`$ omits the derivative of their action distribution.
+At the fresh point, frozen $`k_1`$ has expected gradient 0 and frozen $`k_3`$ has
+gradient $`p-q`$. Exact forward KL has gradient
+$`p_i[\log(p_i/q_i)-D_{\mathrm{KL}}]`$ instead.
 
 In the finite fixture all five forward values are 0.299160737nats. Exact KL
-gradient is approximately `[+0.391842,−0.242996,−0.148846]`; frozen $k_1$
-is all zero and frozen $k_3$ gives `[+0.350000,−0.200000,−0.150000]`.
+gradient is approximately `[+0.391842,−0.242996,−0.148846]`; frozen $`k_1`$
+is all zero and frozen $`k_3`$ gives `[+0.350000,−0.200000,−0.150000]`.
 Differentiating the complete importance-weighted expectation
-$\mathbb{E}_b[(p_\theta/b)k_\theta]$ reproduces exact KL for both statistics
+$`\mathbb{E}_b[(p_\theta/b)k_\theta]`$ reproduces exact KL for both statistics
 in this one-state full-support example. Detaching the weight changes the
 gradient again. An intended surrogate can differ from the full KL, but must be
 labeled as such. This is not a universal trajectory-KL correction recipe.
@@ -334,8 +334,8 @@ larger four-branch job plus evaluation. Fixture receipts remain fixture-only.
 
 ## 27. A conservative upper bound is not the measured path
 
-For a prompt of length $P$ and a cap $C$, uncached decoding can forward at most
-$CP+C(C-1)/2$ logical input positions. Cached decoding usually forwards the
+For a prompt of length $`P`$ and a cap $`C`$, uncached decoding can forward at most
+$`CP+C(C-1)/2`$ logical input positions. Cached decoding usually forwards the
 prefix once, then one new input position per subsequent step. Early stops change
 both totals. Reserving the uncached upper bound can protect an unchanged cached
 observer, but report its actual executed calls/positions separately. Neither
@@ -356,8 +356,8 @@ does not erase the old root's storage history.
 ## 29. Temporary replay and live sampling have different roles
 
 Replay the declared seeded stream using a separate generator and compare its
-indices and resulting RNG state with the saved history. For $u$ completed DPO
-updates with accumulation $a$, that check draws $ua$ times. Those draws are
+indices and resulting RNG state with the saved history. For $`u`$ completed DPO
+updates with accumulation $`a`$, that check draws $`ua`$ times. Those draws are
 verification work, not new supervision. Do not advance the live sampler while
 checking. Apply the saved live RNG only after the complete state is accepted;
 the next optimizer update must consume the original next indices. Count repeated
@@ -403,11 +403,11 @@ changing the I/O path must not change the objective, sampler or reference.
 
 ## 33. One update cursor can name two different next actions
 
-At $C_k$, no next pool has been collected; at $P_k$, the same $k$ updates have
+At $`C_k`$, no next pool has been collected; at $`P_k`$, the same $`k`$ updates have
 been applied but the next group, source cursor and collection RNG are retained.
 Apply that pool once without recollection. The full native lifecycle saves its
-initial boundary and every pending/completed pair: $1+2U$ saves fresh,
-$1+2(U-k)$ on completed resume, and $2+2(U-k-1)$ on pending resume. The pending
+initial boundary and every pending/completed pair: $`1+2U`$ saves fresh,
+$`1+2(U-k)`$ on completed resume, and $`2+2(U-k-1)`$ on pending resume. The pending
 formula includes republishing the restored pending state and the subsequent
 completed state. Add one admitted inspect and one load on each resume. These
 are source-derived schedules, not measured FLOPs or a capacity approval.

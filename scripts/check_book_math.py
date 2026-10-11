@@ -13,32 +13,48 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def prose_only(source):
-    """Blank literal code while preserving offsets and math code fences."""
+def _prose_with_math_fences(source):
+    """Blank literal code and retain the source ranges of protected math."""
     lines = source.splitlines(keepends=True)
     fence = None
     math_fence = False
+    math_ranges = []
+    math_start = None
+    offset = 0
     for i, line in enumerate(lines):
         match = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line.rstrip('\n'))
         if match and fence is None:
             fence = match[1]
             math_fence = match[2].strip() == 'math'
+            if math_fence:
+                math_start = offset
             lines[i] = ('$$' if math_fence else '') + ' ' * (len(line.rstrip('\n')) - (2 if math_fence else 0)) + ('\n' if line.endswith('\n') else '')
         elif fence is not None:
             if match and match[1][0] == fence[0] and len(match[1]) >= len(fence) and not match[2].strip():
                 lines[i] = ('$$' if math_fence else '') + ' ' * (len(line.rstrip('\n')) - (2 if math_fence else 0)) + ('\n' if line.endswith('\n') else '')
+                if math_fence:
+                    math_ranges.append((math_start, offset + len(line)))
                 fence = None
             elif not math_fence:
                 lines[i] = re.sub(r'[^\n]', ' ', line)
+        offset += len(line)
     text = ''.join(lines)
-    # GitHub's $`...`$ inline math is not a literal inline code span.
-    return re.sub(r'(?<!\$)(`+)([^`]*?)\1(?!\$)',
-                  lambda m: re.sub(r'[^\n]', ' ', m[0]), text)
+    # Consume a protected math span as a whole before looking for code spans.
+    # Otherwise the closing backtick of one formula can be paired with the
+    # opening backtick of the next, erasing the prose and delimiters between.
+    text = re.sub(r'(?<!\\)\$`[^`\n]*`\$|(?<!`)(`+)(?!`)([\s\S]*?)(?<!`)\1(?!`)',
+                  lambda m: m[0] if m[1] is None else re.sub(r'[^\n]', ' ', m[0]), text)
+    return text, math_ranges
+
+
+def prose_only(source):
+    """Blank literal code while preserving offsets and math code fences."""
+    return _prose_with_math_fences(source)[0]
 
 
 def inspect_markdown(source):
     """Return (issues, expressions), with one-based source line numbers."""
-    text = prose_only(source)
+    text, math_ranges = _prose_with_math_fences(source)
     issues, expressions = [], []
 
     def report(offset, message):
@@ -56,8 +72,24 @@ def inspect_markdown(source):
             report(match.start(), 'Mixed inline/display math delimiters')
             continue
         body = text[opened.end():match.start()]
-        if body.startswith('`') and body.endswith('`'):
+        protected_inline = body.startswith('`') and body.endswith('`')
+        if opened[0] == '$$':
+            if not any(start <= opened.start() < match.end() <= end
+                       for start, end in math_ranges):
+                report(opened.start(), 'Use a fenced math block to protect display TeX from Markdown')
+        elif not protected_inline:
+            report(opened.start(), 'Use dollar/backtick delimiters to protect inline TeX from Markdown')
+        if protected_inline:
             body = body[1:-1]
+        source_line = text[text.rfind('\n', 0, opened.start()) + 1:
+                           text.find('\n', opened.start()) if '\n' in text[opened.start():] else len(text)]
+        if opened[0] == '$' and source_line.lstrip().startswith('|') and '|' in body:
+            report(opened.start(), 'Use vert or Vert instead of a literal pipe in table math: GFM consumes pipe escapes')
+        if opened[0] == '$$':
+            if '<' in body:
+                report(opened.start(), 'Use lt instead of a literal less-than sign in display math: GitHub reparses HTML')
+            if re.search(r'\\\\[ \t]*\n', body):
+                report(opened.start(), 'End multiline TeX row separators with a percent comment to prevent GitHub continuation escapes')
         line = text.count('\n', 0, opened.start()) + 1
         expressions.append({'line': line, 'display': opened[0] == '$$', 'tex': body.strip()})
         if not body.strip():

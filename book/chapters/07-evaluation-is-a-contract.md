@@ -38,14 +38,14 @@ Keep a small development suite for rapid feedback and a larger final suite with 
 
 ## 7.3 Exact match measures a particular agreement
 
-For item $j$, let the model prediction be $\hat a_j$, the set of accepted references be $R_j$, and a fixed normalization function be $f$. Exact match is
+For item $`j`$, let the model prediction be $`\hat a_j`$, the set of accepted references be $`R_j`$, and a fixed normalization function be $`f`$. Exact match is
 
-$$
+```math
 e_j=\mathbf{1}\{f(\hat a_j)\in f(R_j)\},\qquad
 \hat s=\frac{1}{N}\sum_{j=1}^{N}e_j.
-$$
+```
 
-Here $N$ counts evaluation items, not generated tokens. The fixture normalizer applies Unicode NFC, case folding and whitespace collapse. Thus “ RED ” matches “red”, while “1.0” does not match “1”. This is deliberate: numeric equivalence belongs in a separately specified numeric verifier.
+Here $`N`$ counts evaluation items, not generated tokens. The fixture normalizer applies Unicode NFC, case folding and whitespace collapse. Thus “ RED ” matches “red”, while “1.0” does not match “1”. This is deliberate: numeric equivalence belongs in a separately specified numeric verifier.
 
 Removing punctuation can make a parser accept a response that violates a JSON requirement. Removing all words except the final number can reward an incorrect derivation that happens to end correctly. Conversely, raw string comparison rejects harmless capitalization. The correct policy depends on the capability. Report answer correctness and format validity separately when both matter.
 
@@ -53,21 +53,21 @@ An output such as “The answer is red” can be correct in ordinary conversatio
 
 ## 7.4 pass@k includes an attempt budget
 
-Suppose a code task permits $k$ independently sampled attempts and an executable verifier accepts a candidate. The event of interest is “at least one passes.” If the success probability for one independent sample is $p$, its probability is
+Suppose a code task permits $`k`$ independently sampled attempts and an executable verifier accepts a candidate. The event of interest is “at least one passes.” If the success probability for one independent sample is $`p`$, its probability is
 
-$$
+```math
 \mathrm{pass@}k=1-(1-p)^k.
-$$
+```
 
-The evaluation usually samples $n$ candidates, counts $c$ correct candidates, and estimates the chance that a uniformly chosen subset of $k$ candidates contains a success:
+The evaluation usually samples $`n`$ candidates, counts $`c`$ correct candidates, and estimates the chance that a uniformly chosen subset of $`k`$ candidates contains a success:
 
-$$
+```math
 \widehat{\mathrm{pass@}k}
 =1-\frac{\binom{n-c}{k}}{\binom{n}{k}},
 \qquad n\ge k.
-$$
+```
 
-The fraction counts all-incorrect subsets divided by all subsets. If fewer than $k$ incorrect candidates exist, every subset contains a success and the estimate is one. For $n=10,c=2,k=3$, the estimate is $1-56/120=0.5333\ldots$. The notebook verifies the product implementation against exact combinatorial counts. The estimator is established in the [original code-evaluation paper](https://arxiv.org/abs/2107.03374).
+The fraction counts all-incorrect subsets divided by all subsets. If fewer than $`k`$ incorrect candidates exist, every subset contains a success and the estimate is one. For $`n=10,c=2,k=3`$, the estimate is $`1-56/120=0.5333\ldots`$. The notebook verifies the product implementation against exact combinatorial counts. The estimator is established in the [original code-evaluation paper](https://arxiv.org/abs/2107.03374).
 
 The procedure assumes candidates come from the stated sampling process. Copying one completion ten times supplies no new independent attempts. Picking the best answer with an oracle after generation measures an oracle budget, not single-response deployment quality. If a user must receive one answer without access to the verifier, pass@10 does not describe that experience. Record temperature, top-p, seeds, maximum output length, execution limits and verifier version.
 
@@ -79,17 +79,17 @@ The probability of a token is not confidence that the entire answer is true. A m
 
 Calibration instead asks whether cases assigned a stated confidence succeed at the corresponding frequency. For example, among cases rated 0.8, roughly 80% should be correct under the same population and grading rule. A reliability diagram groups predicted confidence and compares it with observed correctness. Its bins, sample counts and uncertainty must remain visible. Verbal confidence elicited by a prompt is another model output, not a guarantee.
 
-Statistical confidence intervals describe uncertainty in a score estimate under a sampling model. They do not describe an individual model's internal certainty. For $x$ successes in $N$ independent Bernoulli items, $\hat p=x/N$. The Wilson interval uses
+Statistical confidence intervals describe uncertainty in a score estimate under a sampling model. They do not describe an individual model's internal certainty. For $`x`$ successes in $`N`$ independent Bernoulli items, $`\hat p=x/N`$. The Wilson interval uses
 
-$$
+```math
 \mathrm{center}=\frac{\hat p+z^2/(2N)}{1+z^2/N},\qquad
 \mathrm{halfwidth}=
 \frac{z\sqrt{\hat p(1-\hat p)/N+z^2/(4N^2)}}{1+z^2/N}.
-$$
+```
 
-For a nominal 95% interval, $z$ is approximately 1.96. Unlike the simplest normal approximation, this interval does not pretend zero observed failures establishes a zero failure rate. Ten successes out of ten still leave uncertainty about the underlying population. The confidence level refers to repeated interval construction; it is not a posterior probability that a fixed parameter lies in a particular computed interval.
+For a nominal 95% interval, $`z`$ is approximately 1.96. Unlike the simplest normal approximation, this interval does not pretend zero observed failures establishes a zero failure rate. Ten successes out of ten still leave uncertainty about the underlying population. The confidence level refers to repeated interval construction; it is not a posterior probability that a fixed parameter lies in a particular computed interval.
 
-For ten successes out of ten, the interval is approximately $[0.7225,1]$.
+For ten successes out of ten, the interval is approximately $`[0.7225,1]`$.
 The lower endpoint is wide because only ten independent opportunities were
 observed. Copying those ten records repeatedly does not create more evidence.
 The [uncertainty companion](../../notebooks/day-10/02_paired_uncertainty.ipynb)
@@ -105,27 +105,27 @@ scores, not generated checkpoint results. Should we replace A? Separate score
 intervals discard useful information: which A failures did B fix, and which
 A successes did it lose? Preserve item identifiers and compare the same inputs.
 
-For per-item scores $a_j$ and $b_j$, define
+For per-item scores $`a_j`$ and $`b_j`$, define
 
-$$
+```math
 d_j=b_j-a_j,\qquad \hat\Delta=\frac{1}{N}\sum_j d_j.
-$$
+```
 
-The paired bootstrap samples item indices with replacement and recalculates $\hat\Delta$ for each resampled set. Percentile endpoints summarize the resampling distribution. Pairing retains shared item difficulty. Our implementation fixes the seed and number of draws; the notebook shows the full resampling distribution and its interval.
+The paired bootstrap samples item indices with replacement and recalculates $`\hat\Delta`$ for each resampled set. Percentile endpoints summarize the resampling distribution. Pairing retains shared item difficulty. Our implementation fixes the seed and number of draws; the notebook shows the full resampling distribution and its interval.
 
 ### Account for the improvement before naming a winner
 
 **Reader prediction.** B has three more successes. Does that mean it only
 changed three answers for the better? The aligned records say otherwise:
 
-| A outcome | B outcome | Items | Per-item difference $d_j$ |
+| A outcome | B outcome | Items | Per-item difference $`d_j`$ |
 |---|---|---:|---:|
 | Correct | Correct | 18 | 0 |
 | Wrong | Wrong | 5 | 0 |
 | Wrong | Correct | 10 | +1 |
 | Correct | Wrong | 7 | −1 |
 
-The net change is $(10-7)/40=0.075$, or 7.5 percentage points. Seventeen
+The net change is $`(10-7)/40=0.075`$, or 7.5 percentage points. Seventeen
 items changed outcome, and seven are regressions. A difference calculation
 contains the information the two totals concealed.
 
@@ -139,7 +139,7 @@ To reproduce the resampling rather than treating “bootstrap” as a magic word
 5. Sort those means and read the declared percentile endpoints.
 
 The canonical `paired_bootstrap` uses Python's seeded sampler, 2,000 draws
-and seed 1010. It gives $\hat\Delta=0.075$ and interval $[-0.125,0.275]$
+and seed 1010. It gives $`\hat\Delta=0.075`$ and interval $`[-0.125,0.275]`$
 for this fixture. The notebook additionally draws its histogram with a
 separately seeded NumPy sampler; finite-draw endpoints need not be identical.
 Neither construction resolves a population-wide gain here. The observed
@@ -283,14 +283,14 @@ simulated execution error. No model generation or token-cost measurement occurs.
 
 ### Preserve the estimand when resampling groups
 
-Related items must remain paired and grouped. If source group $g$ contains
-$n_g$ aligned item/sample differences $d_{gj}$, a cluster-bootstrap draw
+Related items must remain paired and grouped. If source group $`g`$ contains
+$`n_g`$ aligned item/sample differences $`d_{gj}`$, a cluster-bootstrap draw
 resamples groups with replacement and computes
 
-$$
+```math
 \Delta^*=\frac{\sum_{g\ \mathrm{drawn}}\sum_{j=1}^{n_g}d_{gj}}
 {\sum_{g\ \mathrm{drawn}}n_g}.
-$$
+```
 
 Every sibling item travels with its group, including repeated groups in a draw.
 This preserves the micro-average estimand while avoiding independent resampling
@@ -381,19 +381,19 @@ A majority selector can still return the wrong one. These are different events:
 one measures the supply of useful candidates, the other measures a decision
 made without access to the answer key.
 
-Let $C_N=(c_1,\ldots,c_N)$ be an ordered candidate prefix, let $v(c)$ be a fixed
-independent complete-task verifier, and let $s(C_N)$ select one candidate or
+Let $`C_N=(c_1,\ldots,c_N)`$ be an ordered candidate prefix, let $`v(c)`$ be a fixed
+independent complete-task verifier, and let $`s(C_N)`$ select one candidate or
 abstain. Define
 
-$$
+```math
 o_N=\mathbf{1}\{\exists c\in C_N:v(c)=1\},\qquad
 d_N=\mathbf{1}\{s(C_N)\ne\varnothing\ \mathrm{and}\ v(s(C_N))=1\}.
-$$
+```
 
-The diagnostic $o_N$ is any-correct oracle availability. A deployable selector
-does not receive $v(c)$ or the reference answer. Always $d_N\le o_N$. Nested
-prefixes make $o_N$ nondecreasing: adding candidates cannot remove an available
-correct answer. There is no corresponding monotonic guarantee for $d_N$.
+The diagnostic $`o_N`$ is any-correct oracle availability. A deployable selector
+does not receive $`v(c)`$ or the reference answer. Always $`d_N\le o_N`$. Nested
+prefixes make $`o_N`$ nondecreasing: adding candidates cannot remove an available
+correct answer. There is no corresponding monotonic guarantee for $`d_N`$.
 New wrong votes can overturn the decision, and a confident wrong candidate can
 outrank a correct one.
 
@@ -424,11 +424,11 @@ It supplies no measured evidence of verbosity-ranking damage.
 The likelihood ranker uses the mean conditional action log probability,
 including EOS:
 
-$$
-s_{\mathrm{lik}}(c)=\frac{1}{n_c}\sum_{t=1}^{n_c}\log p_\theta(c_t\mid x,c_{<t}).
-$$
+```math
+s_{\mathrm{lik}}(c)=\frac{1}{n_c}\sum_{t=1}^{n_c}\log p_\theta(c_t\mid x,c_{\lt t}).
+```
 
-Here $n_c$ counts generated actions including the chosen EOS. The fitted policy
+Here $`n_c`$ counts generated actions including the chosen EOS. The fitted policy
 supplies learned probabilities, not a separately trained correctness judge.
 Length normalization addresses one scoring convention; it does not turn
 likelihood into truth. The strict candidate view removes gold fields even when

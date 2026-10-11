@@ -8,11 +8,12 @@ const {SVG} = require('mathjax-full/js/output/svg.js');
 const {liteAdaptor} = require('mathjax-full/js/adaptors/liteAdaptor.js');
 const {RegisterHTMLHandler} = require('mathjax-full/js/handlers/html.js');
 require('mathjax-full/js/input/tex/ams/AmsConfiguration.js');
+require('mathjax-full/js/input/tex/boldsymbol/BoldsymbolConfiguration.js');
 
 const adaptor = liteAdaptor();
 RegisterHTMLHandler(adaptor);
 const tex = new TeX({
-  packages: ['base', 'ams'],
+  packages: ['base', 'ams', 'boldsymbol'],
   formatError(_jax, error) { throw error; },
 });
 const mathDocument = mathjax.document('', {
@@ -35,7 +36,7 @@ for (const file of files) {
       passed++;
     } catch (error) {
       failed++;
-      console.error(`${file.path}:${expression.line}: ${error}`);
+      console.error(`${file.path}:${expression.line}: ${error.message || error}`);
     }
   }
 }

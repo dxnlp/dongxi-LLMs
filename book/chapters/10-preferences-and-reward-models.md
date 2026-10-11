@@ -28,7 +28,7 @@ about Lily happily playing outside without answering the question. Which is
 better? A rubric emphasizing factual continuity favors the first; a rubric
 emphasizing engaging prose might distract an annotator toward the second.
 
-A preference record therefore includes a prompt $x$, two completions $y_a,y_b$,
+A preference record therefore includes a prompt $`x`$, two completions $`y_a,y_b`$,
 the judgment, and the conditions under which it was made. Store the rubric,
 source identifiers, presentation order, annotator or judge identity, abstentions,
 and the reason for a tie. Preserve the original answers. “Chosen” and “rejected”
@@ -45,66 +45,66 @@ constructing the record, not only the intended lesson.
 
 ## 10.2 From two scores to one preference probability
 
-Let $r_\phi(x,y)$ be a real-valued score from a parameterized model. Fix one
-prompt and write $r_y=r_\phi(x,y)$ briefly. Give each completion a positive strength
-$s_y=\exp(r_y)$. If a comparison allocates probability in proportion to strength,
+Let $`r_\phi(x,y)`$ be a real-valued score from a parameterized model. Fix one
+prompt and write $`r_y=r_\phi(x,y)`$ briefly. Give each completion a positive strength
+$`s_y=\exp(r_y)`$. If a comparison allocates probability in proportion to strength,
 then
 
-$$
+```math
 P(a\succ b)=\frac{\exp(r_a)}{\exp(r_a)+\exp(r_b)}
 =\frac{1}{1+\exp(-(r_a-r_b))}=\sigma(\Delta),\qquad \Delta=r_a-r_b.
-$$
+```
 
 This is the Bradley–Terry model. The score difference is a binary classification
 logit. A margin of zero means probability one half. A positive margin favors
-$a$; a large magnitude expresses confidence under the model. The use of
+$`a`$; a large magnitude expresses confidence under the model. The use of
 pairwise likelihoods for language-model reward fitting follows the formulation
 in [the DPO paper's preliminaries](https://arxiv.org/html/2305.18290v3#S3).
 
 Why use a difference? The same response can win against a poor answer and lose
 against a better one. A reusable scalar score lets us compare it with either;
 the pair determines how the scores interact. Exponentiating turns real scores
-into positive strengths, and their ratio is $\exp(r_a-r_b)$. This is a model
+into positive strengths, and their ratio is $`\exp(r_a-r_b)`$. This is a model
 of judgments with a particular odds structure, rather than a claim that every
 human comparison must obey it.
 
-Now record $q=P_{\text{labels}}(a\succ b)$. A hard selection has $q=1$ or $0$;
+Now record $`q=P_{\text{labels}}(a\succ b)`$. A hard selection has $`q=1`$ or $`0`$;
 aggregated repeated votes can give a fraction. The negative log-likelihood is
 
-$$
+```math
 L(\Delta,q)=-q\log\sigma(\Delta)-(1-q)\log(1-\sigma(\Delta))
 =\mathrm{softplus}(\Delta)-q\Delta.
-$$
+```
 
 The identity is easier to reproduce after defining
-$\mathrm{softplus}(\Delta)=\log(1+e^\Delta)$:
-$\log\sigma(\Delta)=\Delta-\mathrm{softplus}(\Delta)$ and
-$\log(1-\sigma(\Delta))=-\mathrm{softplus}(\Delta)$.
+$`\mathrm{softplus}(\Delta)=\log(1+e^\Delta)`$:
+$`\log\sigma(\Delta)=\Delta-\mathrm{softplus}(\Delta)`$ and
+$`\log(1-\sigma(\Delta))=-\mathrm{softplus}(\Delta)`$.
 Substitute these two expressions into the binary loss. The two softplus weights
-add to one; the remaining term is $-q\Delta$. This form also connects the
+add to one; the remaining term is $`-q\Delta`$. This form also connects the
 pairwise loss to the cross-entropy machinery we already know.
 
 Use a stable binary-cross-entropy-with-logits implementation. Computing the
 sigmoid, then taking logarithms, can turn extreme but finite scores into
-infinite losses. For an ordered winning pair, $q=1$ and
-$L=\mathrm{softplus}(-\Delta)$. A pair has one likelihood, not two independent
+infinite losses. For an ordered winning pair, $`q=1`$ and
+$`L=\mathrm{softplus}(-\Delta)`$. A pair has one likelihood, not two independent
 absolute quality labels.
 
 ## 10.3 The gradient explains the update
 
 Differentiate the stable expression:
 
-$$
+```math
 \frac{\partial L}{\partial\Delta}=\sigma(\Delta)-q,
 \qquad
 \frac{\partial L}{\partial r_a}=\sigma(\Delta)-q,
 \qquad
 \frac{\partial L}{\partial r_b}=q-\sigma(\Delta).
-$$
+```
 
-Suppose annotators favor $a$, but the model currently favors $b$. The first
-derivative is negative, so gradient descent raises $r_a$; the second is positive,
-so it lowers $r_b$. If the model already predicts the preference confidently,
+Suppose annotators favor $`a`$, but the model currently favors $`b`$. The first
+derivative is negative, so gradient descent raises $`r_a`$; the second is positive,
+so it lowers $`r_b`$. If the model already predicts the preference confidently,
 the correction becomes small. This is the same probability-minus-target
 mechanism from Chapter 3, applied to a pair rather than a vocabulary.
 
@@ -113,25 +113,25 @@ parameters, so increasing one scalar and decreasing the other are local
 directions, not guarantees about every score after an optimizer step. An
 embedding or transformer parameter can affect both sides. The transparent lab
 first treats scores as independent leaves, then replaces them with
-$r_\phi=w^\top f(x,y)$. It makes this distinction visible rather than hiding it
+$`r_\phi=w^\top f(x,y)`$. It makes this distinction visible rather than hiding it
 inside a large training library.
 
 ### Work one judgment through the correction
 
 Use the existing [margin notebook](../../notebooks/day-15/01_bradley_terry_margin.ipynb)
-scores $r_a=0.4$ and $r_b=-0.6$. Their margin is one, so the model predicts
-$P(a\succ b)=0.731059$. With a hard label favoring $a$, the loss is
-$-\log(0.731059)=0.313262$ nats. The score derivatives are $-0.268941$
-and $+0.268941$: gradient descent raises the first leaf score and lowers the
+scores $`r_a=0.4`$ and $`r_b=-0.6`$. Their margin is one, so the model predicts
+$`P(a\succ b)=0.731059`$. With a hard label favoring $`a`$, the loss is
+$`-\log(0.731059)=0.313262`$ nats. The score derivatives are $`-0.268941`$
+and $`+0.268941`$: gradient descent raises the first leaf score and lowers the
 second. Only their difference determines this pair's probability.
 
 **Reader prediction:** keep the scores but replace the hard winner with seven
-votes for $a$ and three for $b$. Should training make the margin still larger?
+votes for $`a`$ and three for $`b`$. Should training make the margin still larger?
 
-**Reference reasoning:** the target is now $q=0.7$. The first score derivative
-becomes $0.731059-0.7=+0.031059$, with the opposite derivative for the second.
+**Reference reasoning:** the target is now $`q=0.7`$. The first score derivative
+becomes $`0.731059-0.7=+0.031059`$, with the opposite derivative for the second.
 Descent slightly reduces the margin: the model is already more confident than
-the observed vote fraction. Its optimum is $\log(0.7/0.3)=0.847298$, a
+the observed vote fraction. Its optimum is $`\log(0.7/0.3)=0.847298`$, a
 positive finite margin. Label disagreement changes the desired confidence,
 rather than merely slowing a demand for certainty.
 
@@ -159,14 +159,14 @@ copy using [Appendix D](../appendices/d-reproduction-and-environments.md).
 
 ## 10.4 Disagreement carries information
 
-Suppose ten independent judgments favor $a$ seven times and $b$ three times.
+Suppose ten independent judgments favor $`a`$ seven times and $`b`$ three times.
 Under a repeated identical comparison and the binary model, the empirical
-target is $q=0.7$. Minimizing expected likelihood gives
+target is $`q=0.7`$. Minimizing expected likelihood gives
 
-$$
+```math
 \sigma(\Delta^*)=q,\qquad
 \Delta^*=\log\frac{q}{1-q}.
-$$
+```
 
 The optimal margin is finite. The remaining loss is the entropy of the vote
 distribution, not evidence that optimization failed. Repeating a deterministic
@@ -183,16 +183,16 @@ alternatives. Strong cyclic judgments cannot generally be represented exactly
 by one score per answer. This is a model limitation, not a reason to delete
 awkward labels until the dataset looks consistent.
 
-For a concrete cycle at one prompt, suppose judgments require $a\succ b$,
-$b\succ c$ and $c\succ a$, each with probability above one half. A scalar
-model then requires $r_a-r_b>0$, $r_b-r_c>0$ and $r_c-r_a>0$. Adding the
+For a concrete cycle at one prompt, suppose judgments require $`a\succ b`$,
+$`b\succ c`$ and $`c\succ a`$, each with probability above one half. A scalar
+model then requires $`r_a-r_b>0`$, $`r_b-r_c>0`$ and $`r_c-r_a>0`$. Adding the
 three left sides gives zero, while the three required positive differences
 would have a positive sum. No choice of these three scores can satisfy all
 three demands. A pair-conditioned classifier can express richer relations,
 but would give up this reusable single-score representation. The choice is
 about which judgment structure we intend to model.
 
-Ties require a declared convention. A soft $q=0.5$ says the model should predict
+Ties require a declared convention. A soft $`q=0.5`$ says the model should predict
 an even binary choice; it does not model a separate “equally good” event. If
 ties are frequent and meaningful, use a model with an explicit tie outcome or
 retain them for analysis. Abstention because the judge cannot assess a response
@@ -200,8 +200,8 @@ is a different event and should not automatically become a half-win label.
 
 ## 10.5 Reward has a gauge
 
-For any function $c(x)$, replacing every score for one prompt by
-$r'_\phi(x,y)=r_\phi(x,y)+c(x)$ leaves all within-prompt differences unchanged. Preferences
+For any function $`c(x)`$, replacing every score for one prompt by
+$`r'_\phi(x,y)=r_\phi(x,y)+c(x)`$ leaves all within-prompt differences unchanged. Preferences
 cannot identify the absolute origin of the reward. An intercept shared by the
 two answers has zero gradient under pure pairwise loss. Adding fifty to every
 score therefore says nothing about improvement.
@@ -229,7 +229,7 @@ score allows us to read every coefficient and ask which shortcut training found.
 
 A neural reward model instead takes the prompt and completion through a
 transformer and maps a selected hidden state to a scalar, for example
-$r_\phi=w^\top h_{\text{end}}+b$. Selecting the final nonpadding position
+$`r_\phi=w^\top h_{\text{end}}+b`$. Selecting the final nonpadding position
 requires an attention-mask-aware index. Padding at a fixed maximum index is not
 the answer's end. Whether EOS is included, whether the chat template adds a
 turn-ending token, and whether the reward head sees the prompt must be frozen
@@ -260,18 +260,18 @@ to detect an order-dependent judge or preprocessing bug.
 
 ## 10.7 Ranking accuracy and calibration ask different questions
 
-Pair accuracy checks whether the sign of $\Delta$ agrees with a winner. It
+Pair accuracy checks whether the sign of $`\Delta`$ agrees with a winner. It
 does not punish unjustified certainty. Probability metrics do. On independent
-binary labels $l_i$, the Brier score is
+binary labels $`l_i`$, the Brier score is
 
-$$
+```math
 \frac1N\sum_i(p_i-l_i)^2.
-$$
+```
 
-In our simulator the true soft probability $q_i$ is known, so the *expected*
+In our simulator the true soft probability $`q_i`$ is known, so the *expected*
 binary Brier score is
-$N^{-1}\sum_i[q_i(1-p_i)^2+(1-q_i)p_i^2]$. It includes irreducible label
-variance. The simple squared discrepancy $(p_i-q_i)^2$ measures another
+$`N^{-1}\sum_i[q_i(1-p_i)^2+(1-q_i)p_i^2]`$. It includes irreducible label
+variance. The simple squared discrepancy $`(p_i-q_i)^2`$ measures another
 quantity and should not be mislabeled as the observed binary Brier score.
 
 A reliability diagram bins predicted probabilities and compares mean prediction
@@ -282,8 +282,8 @@ accuracy, and slices together. Fit any temperature on a calibration split and
 evaluate it on a separate final split; fitting and judging on the same labels
 overstates evidence.
 
-Temperature scaling replaces $\sigma(\Delta)$ with $\sigma(\Delta/\tau)$.
-For positive $\tau$ it preserves pair rankings while changing confidence. It
+Temperature scaling replaces $`\sigma(\Delta)`$ with $`\sigma(\Delta/\tau)`$.
+For positive $`\tau`$ it preserves pair rankings while changing confidence. It
 cannot repair a systematically reversed ranking or a model that uses length
 instead of correctness. Calibration is a conditional statement about a specified
 population and label process, not a permanent property of the model.
@@ -294,7 +294,7 @@ The predeclared CPU experiment changes the training distribution while keeping
 the linear score, seed, optimizer, number of examples, and held-out distribution
 fixed. In the confounded arm, length and polished format nearly equal quality.
 In the balanced arm, they vary independently. Soft preference labels follow
-$\sigma(2\,\Delta\text{quality})$ in both. The held-out distribution and an
+$`\sigma(2\,\Delta\text{quality})`$ in both. The held-out distribution and an
 adversarial pair are independent of the training fixture.
 
 Predict before running: both arms can fit training comparisons; the confounded
@@ -321,7 +321,7 @@ and the existing `reward_comparison()` helper make that ambiguity visible:
 | Confounded |0.655898|0.649301|0.651102|0.962504|
 | Balanced |1.855388|-0.000018|0.004854|0.136947|
 
-The adversarial difference vector is $(-1,3,3)$: the first answer is worse on
+The adversarial difference vector is $`(-1,3,3)`$: the first answer is worse on
 quality, but longer and more polished. Multiplying it by the confounded weights
 gives a positive comparison margin; the balanced weights give a negative one.
 The same loss and fitting budget therefore produce very different extrapolation
@@ -370,8 +370,8 @@ preference data's biases and coverage limits.
 
 Before fitting the reward model, build the observation instrument. A response
 has a stable candidate ID, exact text, source checkpoint and generation settings.
-Its display slot is temporary. If answer $a$ moves from A to B, a verdict of B
-still chooses $a$. Store the displayed order and map it back to canonical answer
+Its display slot is temporary. If answer $`a`$ moves from A to B, a verdict of B
+still chooses $`a`$. Store the displayed order and map it back to canonical answer
 identity before writing a chosen/rejected pair. Swapping canonical answers is a
 different operation: it reverses the binary preference label, while a display
 swap should preserve the selected response. This distinction catches a quiet
@@ -457,13 +457,13 @@ candidate content IDs and duplicate comparison records. Near-duplicate source
 discovery still needs its own declared rule; these exact identity checks are
 not a semantic contamination detector.
 
-If source $s$ supplies $n_s$ training pairs and the intended population weights
+If source $`s`$ supplies $`n_s`$ training pairs and the intended population weights
 each source equally, one suitable objective is
 
-$$
+```math
 L=\frac{1}{S}\sum_{s=1}^{S}\frac{1}{n_s}
 \sum_{j=1}^{n_s}L_{s,j}.
-$$
+```
 
 Each source contributes total weight one before the final normalization. Our
 box-story source supplies nine pair rows after nuisance expansion, versus three
@@ -484,14 +484,14 @@ Chapter 7's contract: evaluation and training metrics must name what is counted.
 The known-feature shortcut experiment made the confound readable. A text reward
 instead learns contextual states and reads one scalar from a chosen endpoint:
 
-$$
+```math
 H=f_\phi(x,y),\qquad
 e=\max\{t:m_t=1\},\qquad
 r_\phi(x,y)=w^\top H_e+b.
-$$
+```
 
-Here $m_t$ marks valid tokens, $H$ has shape $[n,24]$, and a batch has ID shape
-$[B,n]$, hidden-state shape $[B,n,24]$ and score shape $[B]$. Both answers share
+Here $`m_t`$ marks valid tokens, $`H`$ has shape $`[n,24]`$, and a batch has ID shape
+$`[B,n]`$, hidden-state shape $`[B,n,24]`$ and score shape $`[B]`$. Both answers share
 the decoder and scalar head, so preference gradients reach the whole backbone.
 The [canonical text reward](../../src/dongxi_llms/text_reward_lab.py) reads:
 
@@ -538,14 +538,14 @@ original records in the text fixture rather than merely hypothetical caveats.
 
 The outcome microscope predicts a binary target from the final EOS state.
 The process microscope predicts a separate binary target at each explicit
-step marker. Let $\mathcal B$ be the declared supervised boundary positions,
-$a_b\in\{0,1\}$ their authored validity labels and $s_b$ the scalar logits:
+step marker. Let $`\mathcal B`$ be the declared supervised boundary positions,
+$`a_b\in\{0,1\}`$ their authored validity labels and $`s_b`$ the scalar logits:
 
-$$
+```math
 L_{\mathrm{step}}=-\frac{1}{|\mathcal B|}
 \sum_{b\in\mathcal B}
 \left[a_b\log\sigma(s_b)+(1-a_b)\log(1-\sigma(s_b))\right].
-$$
+```
 
 Implement this with stable binary cross-entropy on logits. Unlabeled tokens,
 padding and the final-answer position do not receive a step target. When

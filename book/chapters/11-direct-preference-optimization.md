@@ -23,30 +23,30 @@ and why free-generation evaluation remains necessary.
 
 ## 11.1 The reference is a distribution over possible continuations
 
-Fix prompt $x$ and let $\pi_{\mathrm{ref}}(y\mid x)$ be a reference policy over
+Fix prompt $`x`$ and let $`\pi_{\mathrm{ref}}(y\mid x)`$ be a reference policy over
 complete responses. It is commonly a supervised checkpoint at the start of
-preference training. A policy $\pi$ may move probability toward higher-reward
+preference training. A policy $`\pi`$ may move probability toward higher-reward
 answers, but a movement penalty expresses a preference for staying near that
 reference:
 
-$$
+```math
 J(\pi)=\sum_y\pi(y\mid x)r(x,y)
 -\beta\sum_y\pi(y\mid x)\log\frac{\pi(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)},
 \qquad \beta>0.
-$$
+```
 
-The second term is $\beta\,\mathrm{KL}(\pi\Vert\pi_{\mathrm{ref}})$. Its
+The second term is $`\beta\,\mathrm{KL}(\pi\Vert\pi_{\mathrm{ref}})`$. Its
 direction matters: samples would come from the current policy, and their log
 ratio is measured against the reference. The finite derivation assumes the
 reference is positive on every candidate under discussion and rewards are
 finite. A policy placing mass outside the reference support incurs infinite
 forward KL. Real softmax models have positive theoretical token probabilities,
-but truncation, top-$k$ sampling, and numerical underflow can create a different
+but truncation, top-$`k`$ sampling, and numerical underflow can create a different
 effective support. Do not quietly transfer a theorem about one distribution
 to another sampler.
 
-Here $r(x,y)$ is the fixed reward in the finite derivation. A trained reward
-model is written $r_\phi(x,y)$ elsewhere; DPO below eliminates the explicit
+Here $`r(x,y)`$ is the fixed reward in the finite derivation. A trained reward
+model is written $`r_\phi(x,y)`$ elsewhere; DPO below eliminates the explicit
 reward through policy log ratios rather than fitting that model.
 
 This is an objective over response probabilities. It does not mean that two
@@ -65,43 +65,43 @@ remains fixed throughout the declared preference-training objective.
 
 ## 11.2 Solve the finite optimization problem
 
-Use a Lagrange multiplier $\lambda$ for $\sum_y\pi_y=1$:
+Use a Lagrange multiplier $`\lambda`$ for $`\sum_y\pi_y=1`$:
 
-$$
+```math
 \mathcal{F}=\sum_y\pi_y r_y
 -\beta\sum_y\pi_y\log(\pi_y/\pi_{\mathrm{ref},y})
 +\lambda\left(\sum_y\pi_y-1\right).
-$$
+```
 
 Differentiating with respect to a positive probability gives
 
-$$
+```math
 r_y-\beta\left(\log\frac{\pi_y}{\pi_{\mathrm{ref},y}}+1\right)+\lambda=0.
-$$
+```
 
 First isolate the log ratio:
 
-$$
+```math
 \log\frac{\pi_y}{\pi_{\mathrm{ref},y}}
 =\frac{r_y}{\beta}+\frac{\lambda}{\beta}-1.
-$$
+```
 
 Exponentiating gives
-$\pi_y=C\,\pi_{\mathrm{ref},y}\exp(r_y/\beta)$, where
-$C=\exp(\lambda/\beta-1)$ is shared by all responses to this prompt.
+$`\pi_y=C\,\pi_{\mathrm{ref},y}\exp(r_y/\beta)`$, where
+$`C=\exp(\lambda/\beta-1)`$ is shared by all responses to this prompt.
 The sum-to-one constraint now determines that constant:
-$1=C\sum_y\pi_{\mathrm{ref},y}\exp(r_y/\beta)$.
-Call that sum the **partition function** $Z(x)$; then $C=1/Z(x)$.
+$`1=C\sum_y\pi_{\mathrm{ref},y}\exp(r_y/\beta)`$.
+Call that sum the **partition function** $`Z(x)`$; then $`C=1/Z(x)`$.
 The multiplier enforces the competition for one unit of probability mass:
 
-$$
+```math
 \pi^*(y\mid x)=\frac{\pi_{\mathrm{ref}}(y\mid x)\exp(r(x,y)/\beta)}{Z(x)},
 \qquad Z(x)=\sum_y\pi_{\mathrm{ref}}(y\mid x)\exp(r(x,y)/\beta).
-$$
+```
 
 The optimum exponentially tilts the reference toward reward. Compute it as
-$\mathrm{softmax}(\log\pi_{\mathrm{ref}}+r/\beta)$ for stability. With fixed
-reward, large $\beta$ resists movement; small $\beta$ concentrates mass more
+$`\mathrm{softmax}(\log\pi_{\mathrm{ref}}+r/\beta)`$ for stability. With fixed
+reward, large $`\beta`$ resists movement; small $`\beta`$ concentrates mass more
 strongly. Adding a prompt-dependent constant to rewards multiplies numerator
 and partition function by the same factor, so the policy is unchanged. This
 is Chapter 10's reward gauge appearing inside an optimization problem.
@@ -109,7 +109,7 @@ is Chapter 10's reward gauge appearing inside an optimization problem.
 ### Three answers make the anchor visible
 
 Use [Day 17's existing categorical fixture](../../notebooks/day-17/01_kl_regularized_optimum.ipynb):
-reference $(0.6,0.3,0.1)$, rewards $(0,0.5,1)$ and $\beta=0.5$.
+reference $`(0.6,0.3,0.1)`$, rewards $`(0,0.5,1)`$ and $`\beta=0.5`$.
 The computation is a reward-weighted reallocation of a fixed total:
 
 | Complete answer | Reference probability | Reward | Reference × exponential tilt | Normalized optimum |
@@ -118,16 +118,16 @@ The computation is a reward-weighted reallocation of a fixed total:
 | 1 |0.3|0.5|0.815485|0.378522|
 | 2 |0.1|1|0.738906|0.342977|
 
-The unnormalized weights sum to $Z=2.154390$. Dividing by that same number
+The unnormalized weights sum to $`Z=2.154390`$. Dividing by that same number
 preserves their ratios and makes their probabilities sum to one. Answer 2 has
 the largest reward but still less mass than answer 1: its smaller reference
 probability matters. This is precisely what anchoring adds to reward seeking.
 
-**Controlled change:** double $\beta$ to one, holding the reward and reference
+**Controlled change:** double $`\beta`$ to one, holding the reward and reference
 fixed. Predict whether the high-reward answer gains more mass.
 
 **Reference reasoning:** the tilt becomes weaker; the optimum is now
-$(0.439096,0.361973,0.198931)$, closer to the reference. The existing
+$`(0.439096,0.361973,0.198931)`$, closer to the reference. The existing
 [`optimal_policy` helper](../../src/dongxi_llms/dpo_lab.py) computes both
 cases as `softmax(reference.log() + reward / beta)`. Adding fifty to all
 rewards instead leaves the normalized result unchanged because the shared
@@ -153,30 +153,30 @@ not a certificate that a short neural training run reaches the ideal policy.
 
 Take logarithms of the optimum:
 
-$$
+```math
 r(x,y)=\beta\log\frac{\pi^*(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)}
 +\beta\log Z(x).
-$$
+```
 
-For two responses to the same prompt, the $\log Z(x)$ terms cancel. Define
+For two responses to the same prompt, the $`\log Z(x)`$ terms cancel. Define
 the policy's reference-relative pair margin
 
-$$
+```math
 m_\theta=\beta\left[
 \log\pi_\theta(y_w\mid x)-\log\pi_{\mathrm{ref}}(y_w\mid x)
 -\log\pi_\theta(y_l\mid x)+\log\pi_{\mathrm{ref}}(y_l\mid x)
 \right].
-$$
+```
 
 Substitute this into the Bradley–Terry preference likelihood. For an ordered
 winning pair,
 
-$$
+```math
 L_{\text{DPO}}=\mathrm{softplus}(-m_\theta).
-$$
+```
 
-For an explicit soft preference target $q$, use
-$\mathrm{softplus}(m_\theta)-q m_\theta$. The model is now a language policy,
+For an explicit soft preference target $`q`$, use
+$`\mathrm{softplus}(m_\theta)-q m_\theta`$. The model is now a language policy,
 but the classification target is still a preference. Offline DPO needs the
 recorded pair's likelihoods; it does not require generating a fresh response
 for every update. That operational advantage does not remove biases inherited
@@ -199,22 +199,22 @@ responses, but adds the problem of reward extrapolation developed in Chapter 10.
 
 ## 11.4 The gradient and the meaning of beta
 
-Write $c=\log\pi_\theta(y_w\mid x)$ and
-$l=\log\pi_\theta(y_l\mid x)$. With a frozen reference,
+Write $`c=\log\pi_\theta(y_w\mid x)`$ and
+$`l=\log\pi_\theta(y_l\mid x)`$. With a frozen reference,
 
-$$
+```math
 \frac{\partial L}{\partial c}=\beta(\sigma(m_\theta)-q),\qquad
 \frac{\partial L}{\partial l}=-\beta(\sigma(m_\theta)-q).
-$$
+```
 
-At initialization $\pi_\theta=\pi_{\mathrm{ref}}$, every relative margin is
-zero. For a hard winning pair the derivatives are $-\beta/2$ and $\beta/2$.
-At this point larger $\beta$ gives a larger local gradient for fixed learning
-rate. Yet in the fixed-reward optimum larger $\beta$ means stronger restraint.
+At initialization $`\pi_\theta=\pi_{\mathrm{ref}}`$, every relative margin is
+zero. For a hard winning pair the derivatives are $`-\beta/2`$ and $`\beta/2`$.
+At this point larger $`\beta`$ gives a larger local gradient for fixed learning
+rate. Yet in the fixed-reward optimum larger $`\beta`$ means stronger restraint.
 These statements concern different comparisons and are compatible.
 
-For a fixed noisy target $q$, the optimal classifier margin is
-$m^*=\log(q/(1-q))$. The corresponding change in pair log odds is $m^*/\beta$.
+For a fixed noisy target $`q`$, the optimal classifier margin is
+$`m^*=\log(q/(1-q))`$. The corresponding change in pair log odds is $`m^*/\beta`$.
 Thus changing beta alters both gradient scale and the policy displacement
 needed to fit the same preference probability. Report beta with learning rate,
 update count, and data noise. It is not inference temperature: sampling
@@ -230,14 +230,14 @@ mass can move toward a third continuation absent from the comparison.
 ### A better pair can be a worse source of the chosen answer
 
 Return to the opening puzzle using the normalized distributions from worked
-exercise 5. Freeze the first distribution as the reference and set $\beta=0.5$:
+exercise 5. Freeze the first distribution as the reference and set $`\beta=0.5`$:
 
 | Constructed policy | Chosen probability | Rejected probability | Third-answer probability | Chosen/rejected odds | DPO margin | Hard-pair loss |
 |---|---:|---:|---:|---:|---:|---:|
 | Initial/reference |0.20|0.10|0.70|2|0|0.693147|
 | Changed |0.10|0.01|0.89|10|0.804719|0.369640|
 
-The relative odds improve fivefold, giving margin $0.5\log(10/2)=0.804719$.
+The relative odds improve fivefold, giving margin $`0.5\log(10/2)=0.804719`$.
 The chosen answer is now only half as likely, yet the pair loss is lower.
 The rejected answer lost proportionally more mass. These are deliberately
 constructed probability vectors, not a claimed optimizer path or a new model
@@ -264,10 +264,10 @@ pair data is not a per-step guarantee of that optimum's restraint.
 
 An autoregressive completion has
 
-$$
+```math
 \log\pi_\theta(y\mid x)
-=\sum_{t=1}^{|y|}\log\pi_\theta(y_t\mid x,y_{<t}).
-$$
+=\sum_{t=1}^{|y|}\log\pi_\theta(y_t\mid x,y_{\lt t}).
+```
 
 Include a termination token under the declared template when it belongs to the
 response. Otherwise a model can assign high prefix likelihood without learning
@@ -275,9 +275,9 @@ when to stop. Do not sum prompt likelihood into the DPO response score. The
 prompt supplies context and can receive gradients through attention, but its
 tokens are not the completion being compared.
 
-For a batch, predictive logits have shape $[B,n,V]$, aligned labels and the
-completion mask have shape $[B,n]$, and the gathered token log-probabilities
-have shape $[B,n]$. Summing the masked values produces $[B]$ sequence scores.
+For a batch, predictive logits have shape $`[B,n,V]`$, aligned labels and the
+completion mask have shape $`[B,n]`$, and the gathered token log-probabilities
+have shape $`[B,n]`$. Summing the masked values produces $`[B]`$ sequence scores.
 Chosen and rejected branches each produce one vector. The DPO loss reduces the
 pair vector only after these sums.
 
@@ -349,7 +349,7 @@ not an extra training label secretly supplied to DPO.
 
 The sequence experiment trains the actual tiny decoder from Chapter 5. Six
 short prompts prefer an answer token called A over B; both branches include
-EOS. A held-out prompt measures $P(A\mid x_{\text{heldout}})$ independently of
+EOS. A held-out prompt measures $`P(A\mid x_{\text{heldout}})`$ independently of
 the pair loss. It is intentionally a severe simplification: answers are symbolic,
 the prompt set is tiny, and no English capability is being tested.
 
@@ -374,36 +374,36 @@ A preference comparison says which of two recorded responses should win. It
 does not supervise every other response or every other task. To give an absolute
 chosen-likelihood objective a voice, augment the pair loss explicitly:
 
-$$
+```math
 L_{\lambda_{\mathrm{SFT}},\gamma}=L_{\text{DPO}}
 +\lambda_{\mathrm{SFT}} N_{\text{chosen}}+\gamma N_{\text{rehearsal}},\qquad
 N_{\text{chosen}}=-\frac{\sum_{i=1}^B c_i}{\sum_{i=1}^B n_{w,i}}.
-$$
+```
 
-Here $c_i$ is the summed chosen-response log-likelihood, $n_{w,i}$ counts
-its valid response tokens including EOS, and $B$ is the number of pairs.
-$N_{\text{rehearsal}}$ is a separate supervised next-token loss on retained
-demonstrations, also normalized by its own valid-token count. $\lambda_{\mathrm{SFT}}$ and $\gamma$
+Here $`c_i`$ is the summed chosen-response log-likelihood, $`n_{w,i}`$ counts
+its valid response tokens including EOS, and $`B`$ is the number of pairs.
+$`N_{\text{rehearsal}}`$ is a separate supervised next-token loss on retained
+demonstrations, also normalized by its own valid-token count. $`\lambda_{\mathrm{SFT}}`$ and $`\gamma`$
 are nonnegative coefficients. This global token mean is not a mean of
 per-response averages; variable response lengths make the distinction matter.
 Neither auxiliary changes the DPO response sums into token averages. The
 companion API names the chosen-NLL coefficient `alpha`; here it is written
-$\lambda_{\mathrm{SFT}}$ to distinguish it from other objective weights.
+$`\lambda_{\mathrm{SFT}}`$ to distinguish it from other objective weights.
 
 With hard recorded preferences and frozen references, the direct chosen-score
 derivative is
 
-$$
+```math
 \frac{\partial L_{\lambda_{\mathrm{SFT}},\gamma}}{\partial c_i}
 =\frac{\beta}{B}(\sigma(m_i)-1)
 -\frac{\lambda_{\mathrm{SFT}}}{\sum_j n_{w,j}}.
-$$
+```
 
 The extra negative term pushes recorded chosen likelihood upward. Rehearsal
 adds its own parameter gradient; it is not a new direct derivative of this
 pair's score. Through shared embeddings, attention and MLP weights, those
-directions can reinforce or compete. Setting $\lambda_{\mathrm{SFT}}=0$ recovers ordinary DPO
-**only when $\gamma$ is also zero**. A positive rehearsal coefficient still
+directions can reinforce or compete. Setting $`\lambda_{\mathrm{SFT}}=0`$ recovers ordinary DPO
+**only when $`\gamma`$ is also zero**. A positive rehearsal coefficient still
 defines a different objective.
 
 This added pressure is not a correctness guarantee. If the recorded winner is
@@ -549,7 +549,7 @@ the historical pre-run hypothesis.
 | Parent | Same original full400 SFT export; recovery weights are not pilot parents |
 | Exposure | 100 updates; identical 400 replacement draws and 2,047 chosen targets |
 | Chosen-only objective | Global valid-chosen-token NLL |
-| DPO objective | Mean pair loss using complete-response sums, original reference and $\beta=0.1$ |
+| DPO objective | Mean pair loss using complete-response sums, original reference and $`\beta=0.1`$ |
 | Common generation | Saved template, greedy decoding, 64-token cap; BF16-loaded policies |
 | Pair scoring | FP32 weights with BF16 autocast; four separate validation pairs |
 
@@ -685,7 +685,7 @@ following questions; each notebook also contains adjacent runnable solutions.
 8. What invalidates a reference-log-probability cache?
 9. Design a DPO/SFT/control comparison and explain unequal information versus unequal compute.
 10. If held-out preference accuracy rises but generation correctness falls, what conclusions and next checks are justified?
-11. Derive the chosen-NLL contribution to the chosen-score gradient. Why does $\lambda_{\mathrm{SFT}}=0$ not remove a nonzero rehearsal term?
+11. Derive the chosen-NLL contribution to the chosen-score gradient. Why does $`\lambda_{\mathrm{SFT}}=0`$ not remove a nonzero rehearsal term?
 12. Can chosen NLL correct a noisy recorded winner or guarantee parity retention? Explain the supervision and shared-parameter boundaries.
 13. Why compare longer-chosen and matched-long pairs, absolute likelihoods, free generation and extra token costs together?
 14. Why is copying the resumed policy into a new DPO reference an objective change, even when tensor shapes and tokenizer identities agree?

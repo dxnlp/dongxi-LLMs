@@ -1,0 +1,1682 @@
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-7</h1>
+<h1 dir="auto">Chapter 3 — Learning the Next Token</h1>
+<p dir="auto">Companion: <a href="../labs/03-learning-the-next-token.md">guided laboratory route</a>.</p>
+<p dir="auto">A tokenizer can turn text into IDs, and an embedding table can turn those IDs<br>
+into vectors. Neither operation yet answers the question a language model is<br>
+trained to solve:</p>
+<blockquote>
+<p dir="auto">Given the available prefix, what should come next?</p>
+</blockquote>
+<p dir="auto">The answer begins as one contextual hidden state, becomes a score for every<br>
+candidate token, turns into a probability distribution, and is compared with one<br>
+observed target. That comparison produces a scalar loss. Backpropagation then<br>
+turns the loss back into corrections for the output head, transformer, and<br>
+embeddings.</p>
+<p dir="auto">There is a surprise at the end of this path. If the same available context<br>
+continues with <code class="notranslate">dog</code> seven times out of ten and <code class="notranslate">cat</code> three times, the best<br>
+probability prediction still has positive average loss. Each individual example<br>
+still asks for a correction, yet the average correction is zero. How can the<br>
+model have finished learning this distribution while remaining uncertain? We<br>
+will first trace one target through a parameter update, then explain that<br>
+balance.</p>
+<p dir="auto">The complete path is:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">token IDs [B,n]
+   → embeddings [B,n,D]
+   → contextual hidden states [B,n,D]
+   → output projection
+   → logits [B,n,V]
+   → probabilities [B,n,V]
+   → shifted targets [B,n-1]
+   → masked mean loss
+   → gradients
+   → parameter updates
+</code></pre>
+<p dir="auto">This chapter follows that path in both directions. Along the way, it resolves<br>
+several apparent contradictions:</p>
+<ul dir="auto">
+<li>one input position produces thousands of output scores but only one selected<br>
+token;</li>
+<li>every training label can be one-hot while the model learns uncertainty;</li>
+<li>a successful optimum can have positive loss but zero expected gradient;</li>
+<li>a model can achieve a very low loss while learning the wrong task;</li>
+<li>a prompt can have no direct loss and still receive gradient influence;</li>
+<li>two models can have equal perplexity while behaving differently.</li>
+</ul>
+<p dir="auto">Chapter 2 established the discrete interface and the distinction between an<br>
+input embedding and a contextual hidden state. We now turn that hidden state<br>
+into a trainable prediction.</p>
+<h2 dir="auto">3.1 Learning outcomes</h2>
+<p dir="auto">After completing this chapter, you should be able to:</p>
+<ul dir="auto">
+<li>trace tensor shapes from token IDs through logits, labels, and reduced loss;</li>
+<li>explain why one position emits one logit for every model-vocabulary row;</li>
+<li>interpret logits as relative evidence rather than probabilities;</li>
+<li>implement stable softmax and stable target negative log-likelihood;</li>
+<li>explain how greedy decoding, sampling, temperature, top-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$k$</math-renderer>, and top-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p$</math-renderer><br>
+convert a distribution into one token ID;</li>
+<li>derive one-hot cross-entropy and the exact logit gradient <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p-q$</math-renderer>;</li>
+<li>route that gradient through the output head into <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$W_{\mathrm{out}}$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$b$</math-renderer>, and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$h$</math-renderer>;</li>
+<li>explain how repeated one-hot targets learn a non-one-hot distribution;</li>
+<li>separate irreducible entropy from reducible KL mismatch;</li>
+<li>derive sequence NLL, mean token loss, and perplexity, including their<br>
+evaluation limits;</li>
+<li>align causal logits with next-token labels and identify the unshifted-copying<br>
+failure;</li>
+<li>distinguish attention visibility, target masking, and gradient flow;</li>
+<li>interpret the controlled two-logit experiment without generalizing beyond its<br>
+evidence.</li>
+</ul>
+<p dir="auto">As in Chapters 1 and 2, equations establish mechanisms, experiments establish<br>
+bounded observations, and neither alone establishes broad language capability.</p>
+<h2 dir="auto">3.2 One contextual state becomes a vocabulary-wide score vector</h2>
+<p dir="auto">Let:</p>
+<ul dir="auto">
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$B$</math-renderer> be batch size;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n$</math-renderer> be sequence length in tokens;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$D$</math-renderer> be hidden width;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V$</math-renderer> be the model's output-vocabulary dimension.</li>
+</ul>
+<p dir="auto">The transformer produces:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$H\in\mathbb{R}^{B\times n\times D}.$$</math-renderer>
+<p dir="auto">For one batch item and position, write:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$h=H[b,t,:]\in\mathbb{R}^{D}.$$</math-renderer>
+<p dir="auto">Treat the state <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$h$</math-renderer> and output <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$z$</math-renderer> as row vectors. The output head contains<br>
+one stored row for every candidate token ID:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$W_{\mathrm{out}}\in\mathbb{R}^{V\times D},
+\qquad
+b\in\mathbb{R}^{V}.$$</math-renderer>
+<p dir="auto">It computes:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$z=hW_{\mathrm{out}}^\top+b,
+\qquad
+z\in\mathbb{R}^{V}.$$</math-renderer>
+<p dir="auto">For candidate ID <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$i$</math-renderer>:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$z_i=W_{\mathrm{out},i}\cdot h+b_i.$$</math-renderer>
+<p dir="auto"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$z_i$</math-renderer> is a <strong>logit</strong>: a raw compatibility score between this context and token<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$i$</math-renderer>. It is not constrained to be positive, does not sum to one, and has no<br>
+standalone percentage interpretation.</p>
+<p dir="auto">This explains the asymmetry that often surprises new readers:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">input at one position:  one token ID
+contextual result:      one D-dimensional state
+output at that position: V logits, one for every candidate ID
+</code></pre>
+<p dir="auto">If <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V=10{,}000$</math-renderer>, one position emits 10,000 logits. A sequence emits one such row<br>
+at every position, giving <code class="notranslate">[B,T,V]</code> in the existing code, where <code class="notranslate">T</code> means <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n$</math-renderer>.<br>
+<strong>Teacher forcing</strong><br>
+supplies the recorded preceding tokens at each training prediction; causal<br>
+attention prevents future-token visibility. This lets many supervised rows be<br>
+computed in parallel. During cached generation, the decoder normally uses<br>
+only the newest position's <code class="notranslate">[V]</code> row to choose the next token.</p>
+<h3 dir="auto">The coordinates are token IDs</h3>
+<p dir="auto">The coordinate of the probability vector already is the candidate token ID.<br>
+Coordinate 42 is not later translated into some unrelated address: under the<br>
+paired tokenizer-model contract, index 42 names token ID 42.</p>
+<p dir="auto">The integers themselves have no ordinal meaning. ID 900 is not “more” than ID 9,<br>
+and neighboring IDs need not represent related strings. If we consistently<br>
+permute:</p>
+<ul dir="auto">
+<li>tokenizer IDs;</li>
+<li>input embedding rows;</li>
+<li>output rows;</li>
+<li>dataset labels;</li>
+</ul>
+<p dir="auto">the model's function is unchanged. The network learns relationships among token<br>
+events through shared parameters and contexts, not arithmetic relationships<br>
+among the printed ID numbers.</p>
+<h3 dir="auto">The output head is large for a reason</h3>
+<p dir="auto">The stored output matrix uses<br>
+the <code class="notranslate">torch.nn.Linear(D, V).weight</code> layout <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[V,D]$</math-renderer>; <code class="notranslate">lm_head(hidden)</code> applies<br>
+<code class="notranslate">hidden @ lm_head.weight.T</code>. Existing notebook code uses <code class="notranslate">T</code> for sequence<br>
+length, which corresponds to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n$</math-renderer> here. These API names remain unchanged.</p>
+<p dir="auto">Dense projection across all positions can be written:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$Z_{[B,n,V]}=H_{[B,n,D]}W_{\mathrm{out},[V,D]}^\top.$$</math-renderer>
+<p dir="auto">Its arithmetic scales approximately as <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$BnDV$</math-renderer>, and the matrix contains <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$VD$</math-renderer><br>
+weights when untied. Chapter 2's pinned Qwen3-0.6B interface had <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$D=1024$</math-renderer> and<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V=151{,}936$</math-renderer>. Its tied embedding/output matrix contains 155,582,464 values, and<br>
+one dense vocabulary projection performs roughly 155.6 million<br>
+multiply-accumulates per position. Tying avoids a second matrix of that size; it<br>
+does not remove the projection computation.</p>
+<p dir="auto">Vocabulary design therefore creates a systems trade-off. A smaller vocabulary<br>
+can leave text split into more tokens, increasing <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n$</math-renderer>, transformer positions,<br>
+autoregressive steps, and KV-cache use. A larger vocabulary increases<br>
+embedding/output cost through <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V$</math-renderer> and may allocate many rows to rare pieces. A<br>
+rough full-sequence decomposition is:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\text{cost}
+\approx
+c_1LnD^2+c_2Ln^2D+c_3nDV,$$</math-renderer>
+<p dir="auto">where <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$L$</math-renderer> is layer count and the constants hide implementation details. The<br>
+equation is a scaling guide, not a latency prediction. Vocabulary size alone<br>
+does not determine compression; which languages and domains received capacity<br>
+matters.</p>
+<h2 dir="auto">3.3 Softmax turns relative evidence into competition</h2>
+<p dir="auto">Softmax converts logits into a categorical distribution:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$p_i=\frac{e^{z_i}}{\sum_{j=0}^{V-1}e^{z_j}}.$$</math-renderer>
+<p dir="auto">Now:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$p_i&gt;0,
+\qquad
+\sum_i p_i=1.$$</math-renderer>
+<p dir="auto">Each probability is conditional on the current context and relative to every<br>
+other candidate. Increasing one candidate's logit can lower another candidate's<br>
+probability even if the second logit does not change, because all candidates<br>
+share the denominator.</p>
+<p dir="auto">“Categorical” means that one outcome is selected from a discrete candidate set.<br>
+The nonnegative probabilities sum to one across mutually exclusive candidates;<br>
+they are not independent yes/no confidence scores. Softmax uses positive<br>
+exponentials so negative logits remain valid scores, then divides by their sum.<br>
+Its ratios have a particularly useful form:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\frac{p_i}{p_j}=e^{z_i-z_j},\qquad
+\log\frac{p_i}{p_j}=z_i-z_j.$$</math-renderer>
+<p dir="auto">A logit gap is therefore a log probability ratio. The normalization creates<br>
+competition; exponentiation alone does not conserve probability mass.</p>
+<p dir="auto">For logits <code class="notranslate">[2,1,-1]</code>, exponentiation produces relative positive weights:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">exp(logits) ≈ [7.389, 2.718, 0.368]
+</code></pre>
+<p dir="auto">Normalizing gives approximately:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">probabilities ≈ [0.7054, 0.2595, 0.0351]
+</code></pre>
+<p dir="auto">The largest logit becomes the largest probability, but its value <code class="notranslate">2</code> never meant<br>
+“200%” or any other absolute probability.</p>
+<h3 dir="auto">Only differences matter</h3>
+<p dir="auto">Adding the same constant <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$c$</math-renderer> to every logit changes nothing:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\frac{e^{z_i+c}}{\sum_j e^{z_j+c}}
+=
+\frac{e^c e^{z_i}}{e^c\sum_j e^{z_j}}
+=p_i.$$</math-renderer>
+<p dir="auto">Softmax therefore identifies relative gaps, not an absolute logit height. This<br>
+shared-shift symmetry will reappear when the logit gradients sum to zero.</p>
+<h3 dir="auto">Stable softmax</h3>
+<p dir="auto">Directly computing <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$e^{1002}$</math-renderer> can overflow even though logits<br>
+<code class="notranslate">[1002,1001,999]</code> describe the same distribution as <code class="notranslate">[2,1,-1]</code>. Let<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$m=\max_j z_j$</math-renderer> and compute:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$p_i=\frac{e^{z_i-m}}{\sum_j e^{z_j-m}}.$$</math-renderer>
+<p dir="auto">The largest shifted logit is zero, so every exponential is at most one. The<br>
+subtraction preserves the exact mathematical distribution while avoiding an<br>
+unnecessary numerical range.</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">math</span>
+
+<span class="pl-k">def</span> <span class="pl-en">stable_softmax</span>(<span class="pl-s1">logits</span>):
+    <span class="pl-s1">maximum</span> <span class="pl-c1">=</span> <span class="pl-en">max</span>(<span class="pl-s1">logits</span>)
+    <span class="pl-s1">weights</span> <span class="pl-c1">=</span> [<span class="pl-s1">math</span>.<span class="pl-c1">exp</span>(<span class="pl-s1">value</span> <span class="pl-c1">-</span> <span class="pl-s1">maximum</span>) <span class="pl-k">for</span> <span class="pl-s1">value</span> <span class="pl-c1">in</span> <span class="pl-s1">logits</span>]
+    <span class="pl-s1">denominator</span> <span class="pl-c1">=</span> <span class="pl-en">sum</span>(<span class="pl-s1">weights</span>)
+    <span class="pl-k">return</span> [<span class="pl-s1">weight</span> <span class="pl-c1">/</span> <span class="pl-s1">denominator</span> <span class="pl-k">for</span> <span class="pl-s1">weight</span> <span class="pl-c1">in</span> <span class="pl-s1">weights</span>]</pre></div>
+<p dir="auto">Very unlikely probabilities can still underflow in finite precision. When we<br>
+need target log-likelihood, stable <code class="notranslate">log_softmax</code> or <code class="notranslate">logsumexp</code> avoids computing a<br>
+rounded zero and then taking <code class="notranslate">log(0)</code>.</p>
+<h2 dir="auto">3.4 From a distribution back to one token ID</h2>
+<p dir="auto">Softmax produces a vector, not an emitted word. A decoding rule chooses one<br>
+coordinate:</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-s1">last_logits</span> <span class="pl-c1">=</span> <span class="pl-s1">logits</span>[:, <span class="pl-c1">-</span><span class="pl-c1">1</span>, :]           <span class="pl-c"># [B,V]</span>
+<span class="pl-s1">probabilities</span> <span class="pl-c1">=</span> <span class="pl-en">softmax</span>(<span class="pl-s1">last_logits</span>)     <span class="pl-c"># [B,V]</span>
+<span class="pl-s1">next_id</span> <span class="pl-c1">=</span> <span class="pl-en">choose</span>(<span class="pl-s1">probabilities</span>)          <span class="pl-c"># [B,1]</span></pre></div>
+<p dir="auto">The selected index is appended to the input, and the process repeats.</p>
+<h3 dir="auto">Greedy decoding and ties</h3>
+<p dir="auto">Greedy decoding selects:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\underset{i}{\mathrm{argmax}} z_i
+=
+\underset{i}{\mathrm{argmax}} p_i.$$</math-renderer>
+<p dir="auto">If several candidates share the exact maximum, the mathematical argmax is a<br>
+set. A concrete implementation needs a policy. Many tensor libraries return the<br>
+first maximal index; another decoder could randomize among tied maxima. Near-ties<br>
+are different from exact ties and can be sensitive to numerical precision.</p>
+<h3 dir="auto">Sampling, temperature, top-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$k$</math-renderer>, and top-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p$</math-renderer>
+</h3>
+<p dir="auto">Sampling draws one categorical index instead of always choosing the maximum.<br>
+Temperature rescales logit gaps:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$p_i(\tau)=
+\frac{e^{z_i/\tau}}{\sum_j e^{z_j/\tau}},
+\qquad \tau&gt;0.$$</math-renderer>
+<p dir="auto">The ratio form reveals the mechanism:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\frac{p_i(\tau)}{p_j(\tau)}
+=
+\exp\left(\frac{z_i-z_j}{\tau}\right).$$</math-renderer>
+<ul dir="auto">
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$0&amp;lt;\tau&amp;lt;1$</math-renderer> sharpens the distribution;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\tau=1$</math-renderer> preserves the trained distribution;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\tau&amp;gt;1$</math-renderer> flattens it;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\tau\to0^+$</math-renderer> concentrates mass on maximal logits;</li>
+<li>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\tau\to\infty$</math-renderer> approaches uniformity over a finite vocabulary.</li>
+</ul>
+<p dir="auto">Positive temperature never changes logit ordering, so it cannot change greedy<br>
+argmax. Interfaces that accept temperature zero usually implement greedy<br>
+decoding as a special case; literal division by zero is undefined.</p>
+<p dir="auto">Top-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$k$</math-renderer> keeps a fixed number of highest-ranked candidates. Top-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p$</math-renderer> keeps the<br>
+smallest high-probability prefix whose cumulative mass reaches a threshold.<br>
+Survivors are renormalized before sampling. Temperature changes probability<br>
+ratios and can therefore change the size of a top-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p$</math-renderer> set; positive temperature<br>
+does not change the ranking used by top-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$k$</math-renderer>.</p>
+<p dir="auto">Lower temperature can reduce low-probability excursions, but it does not solve<br>
+generation drift. The highest-probability token can still be a bad choice, and<br>
+sharpening can amplify a systematic error or repetition loop. If the model is<br>
+already calibrated, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\tau&amp;lt;1$</math-renderer> moves its sampling frequencies away from the data<br>
+distribution by overrepresenting the mode.</p>
+<p dir="auto">These are decoding transformations. Ordinary maximum-likelihood training uses<br>
+the unfiltered model distribution in its cross-entropy objective.</p>
+<h2 dir="auto">3.5 Likelihood becomes additive surprise</h2>
+<p dir="auto">For a causal model, the probability of a token sequence follows the chain rule:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$P(x_0,\ldots,x_{n-1})
+=
+\prod_{t=0}^{n-1}P(x_t\mid x_{&lt;t}).$$</math-renderer>
+<p dir="auto">The initial term may be conditioned on a beginning token or another declared<br>
+prompt convention. Multiplying many probabilities produces very small numbers<br>
+and makes it difficult to see which token caused trouble. Logs turn the product<br>
+into a sum:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\log P(x_{0:n-1})
+=
+\sum_{t=0}^{n-1}\log P(x_t\mid x_{&lt;t}).$$</math-renderer>
+<p dir="auto">Negative log-likelihood, or NLL, is:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\mathrm{NLL}(x_{0:n-1})
+=
+-\sum_t\log P(x_t\mid x_{&lt;t}).$$</math-renderer>
+<p dir="auto">At one target position <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$y$</math-renderer>:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$L=-\log p_y.$$</math-renderer>
+<p dir="auto">This quantity is predictive surprise. A likely observed token contributes little<br>
+loss. An unlikely observed token contributes much more. As <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p_y\to0$</math-renderer>, the loss<br>
+diverges, strongly rejecting a model that declares an observed outcome<br>
+impossible.</p>
+<p dir="auto">Natural logarithms express surprise in <strong>nats</strong>. For an illustrative three-token<br>
+continuation, suppose its successive observed-target probabilities are 0.5,<br>
+0.25 and 0.8 under their respective prefixes. They need not be independent:<br>
+each is conditional on the preceding tokens. The sequence probability is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$0.5\times0.25\times0.8=0.1$</math-renderer>, the total NLL is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$-\log0.1=2.302585$</math-renderer> nats,<br>
+and the mean is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$0.767528$</math-renderer> nats per target. Their geometric-mean assigned<br>
+probability is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$e^{-0.767528}\approx0.464159$</math-renderer>, different from every one of the<br>
+three token probabilities. The mask and the sum-versus-mean convention determine<br>
+which quantity a reported “loss” represents.</p>
+<p dir="auto">Stable target NLL can be computed directly from logits:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$L=-z_y+m+\log\sum_j e^{z_j-m},
+\qquad m=\max_jz_j.$$</math-renderer>
+<p dir="auto">This is algebraically identical to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$-\log p_y$</math-renderer> but avoids materializing an<br>
+underflowed target probability.</p>
+<h2 dir="auto">3.6 Labels, cross-entropy, and the exact logit gradient</h2>
+<p dir="auto">At one position, the model output is a length-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V$</math-renderer> logit vector. The ordinary<br>
+label is one integer ID:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">logits: [V]     one score per candidate
+label:  scalar  one observed target ID
+</code></pre>
+<p dir="auto">Framework cross-entropy usually accepts integer labels without constructing a<br>
+dense one-hot vector. Conceptually, let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q$</math-renderer> be the target distribution:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$H(q,p)=-\sum_iq_i\log p_i.$$</math-renderer>
+<p dir="auto">For a one-hot target <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$y$</math-renderer>:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$q_y=1,
+\qquad
+q_{i\ne y}=0,$$</math-renderer>
+<p dir="auto">so every term except one disappears:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$H(q,p)=-\log p_y.$$</math-renderer>
+<p dir="auto">Token-level one-hot cross-entropy and observed-token NLL are numerically the same<br>
+quantity. The names emphasize different views: NLL focuses on the observed<br>
+sample; cross-entropy compares target and model distributions.</p>
+<h3 dir="auto">Deriving <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\partial L/\partial z_i=p_i-q_i$</math-renderer>
+</h3>
+<p dir="auto">Let:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$S=\sum_j e^{z_j},
+\qquad
+p_k=\frac{e^{z_k}}{S}.$$</math-renderer>
+<p dir="auto">Then:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\log p_k=z_k-\log S.$$</math-renderer>
+<p dir="auto">Substitute into cross-entropy:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\begin{aligned}
+L
+&amp;=-\sum_kq_k\log p_k\\\
+&amp;=-\sum_kq_k(z_k-\log S)\\\
+&amp;=-\sum_kq_kz_k+\log S,
+\end{aligned}$$</math-renderer>
+<p dir="auto">because <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\sum_kq_k=1$</math-renderer>. Differentiate with respect to one logit <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$z_i$</math-renderer>:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\begin{aligned}
+\frac{\partial L}{\partial z_i}
+&amp;=-q_i+\frac{1}{S}\frac{\partial S}{\partial z_i}\\\
+&amp;=-q_i+\frac{e^{z_i}}{S}\\\
+&amp;=p_i-q_i.
+\end{aligned}$$</math-renderer>
+<p dir="auto">For a one-hot target:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\frac{\partial L}{\partial z_y}=p_y-1&lt;0,
+\qquad
+\frac{\partial L}{\partial z_i}=p_i&gt;0\quad(i\ne y).$$</math-renderer>
+<p dir="auto">Gradient descent moves opposite these signs. In a direct-logit sketch:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$z_y\leftarrow z_y+\eta(1-p_y),
+\qquad
+z_i\leftarrow z_i-\eta p_i.$$</math-renderer>
+<p dir="auto">The target rises. Every non-target falls in proportion to the probability it<br>
+wrongly captured. A confidently wrong candidate receives more correction than<br>
+an already unlikely candidate because probability is a limited budget: removing<br>
+mass from the main wrong competitor helps the target most.</p>
+<p dir="auto">The gradient components sum to zero:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\sum_i(p_i-q_i)=1-1=0.$$</math-renderer>
+<p dir="auto">This is the differential form of the shared-logit-shift symmetry. The loss has no<br>
+reason to move all logits together because that direction changes no<br>
+probability.</p>
+<h3 dir="auto">From logit correction to model learning</h3>
+<p dir="auto">Logits are intermediate activations, not normally optimizer parameters. For<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$z=hW_{\mathrm{out}}^\top+b$</math-renderer>, write <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$g=p-q$</math-renderer>. The chain rule gives:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\frac{\partial L}{\partial b}=g,
+\qquad
+\frac{\partial L}{\partial W_{\mathrm{out}}}=g^\top h,
+\qquad
+\frac{\partial L}{\partial h}=gW_{\mathrm{out}}.$$</math-renderer>
+<p dir="auto">The output rows learn how to recognize contexts that support their candidate<br>
+tokens. The target row moves toward the current state under a simple SGD update;<br>
+high-probability wrong rows move away. Meanwhile, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$gW_{\mathrm{out}}$</math-renderer> sends a<br>
+blended error signal into the transformer, asking it to construct a more useful<br>
+context representation next time. Backpropagation distributes that signal<br>
+through every operation that created <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$h$</math-renderer>.</p>
+<p dir="auto">One example therefore does not store a correction in a disposable logit. It<br>
+changes reusable parameters and can affect many other contexts.</p>
+<h3 dir="auto">Carry one prediction through an actual parameter update</h3>
+<p dir="auto">Return to Chapter 2's illustrative prefix “the pet saw the,” with observed next<br>
+piece <code class="notranslate">dog</code>. To inspect the output operation, temporarily use a three-candidate<br>
+classifier with rows ordered <code class="notranslate">[cat, dog, slept]</code>, exactly as in the softmax<br>
+notebook. This is a complete three-class teaching distribution, separate from<br>
+the six-entry toy tokenizer; it is not the normalized shortlist of a larger<br>
+model. Hold the contextual state fixed at <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$h=[1,0]$</math-renderer> and assign:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$W_{\mathrm{out}}=\begin{bmatrix}2&amp;0\\1&amp;0\\-1&amp;0\end{bmatrix},\qquad
+b=[0,0,0].$$</math-renderer>
+<p dir="auto">The row-vector projection gives the familiar logits <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[2,1,-1]$</math-renderer>.<br>
+<strong>Reader prediction.</strong> <code class="notranslate">cat</code> wins the score competition, but <code class="notranslate">dog</code> is the<br>
+observed target. Which row should move most, and in which direction?</p>
+<p dir="auto">The one-hot target is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q=[0,1,0]$</math-renderer>. Its probability is 0.259496, so the loss<br>
+is 1.349012 nats. The complete correction is:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Candidate</th>
+<th align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p_i$</math-renderer></th>
+<th align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q_i$</math-renderer></th>
+<th align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$g_i=p_i-q_i$</math-renderer></th>
+<th align="right">First coordinate of output row after SGD</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">cat</code></td>
+<td align="right">0.705385</td>
+<td align="right">0</td>
+<td align="right">0.705385</td>
+<td align="right">1.929462</td>
+</tr>
+<tr>
+<td><code class="notranslate">dog</code></td>
+<td align="right">0.259496</td>
+<td align="right">1</td>
+<td align="right">-0.740504</td>
+<td align="right">1.074050</td>
+</tr>
+<tr>
+<td><code class="notranslate">slept</code></td>
+<td align="right">0.035119</td>
+<td align="right">0</td>
+<td align="right">0.035119</td>
+<td align="right">-1.003512</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The last column uses <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$W_{\mathrm{out}}\leftarrow W_{\mathrm{out}}-0.1g^\top h$</math-renderer>;<br>
+the second coordinate stays zero. We update only these rows, holding <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$h$</math-renderer> and<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$b$</math-renderer> fixed to isolate the output-weight path. Recomputing the prediction gives<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p_{\mathrm{dog}}=0.287557$</math-renderer> and loss 1.246336 nats. The wrong leading row<br>
+moves down, the observed row moves up, and even the low-probability wrong row<br>
+participates. The hidden-state gradient before this update is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$gW_{\mathrm{out}}=[0.635146,0]$</math-renderer>; in a whole model it would also flow into<br>
+the operations that constructed <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$h$</math-renderer>.</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">torch</span>
+<span class="pl-k">from</span> <span class="pl-s1">torch</span>.<span class="pl-s1">nn</span> <span class="pl-k">import</span> <span class="pl-s1">functional</span> <span class="pl-k">as</span> <span class="pl-c1">F</span>
+
+<span class="pl-s1">h</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>([<span class="pl-c1">1.</span>, <span class="pl-c1">0.</span>], <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">torch</span>.<span class="pl-c1">float64</span>)
+<span class="pl-s1">w</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>([[<span class="pl-c1">2.</span>, <span class="pl-c1">0.</span>], [<span class="pl-c1">1.</span>, <span class="pl-c1">0.</span>], [<span class="pl-c1">-</span><span class="pl-c1">1.</span>, <span class="pl-c1">0.</span>]],
+                 <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">torch</span>.<span class="pl-c1">float64</span>, <span class="pl-s1">requires_grad</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-c1">F</span>.<span class="pl-c1">cross_entropy</span>((<span class="pl-s1">h</span> @ <span class="pl-s1">w</span>.<span class="pl-c1">T</span>)[<span class="pl-c1">None</span>], <span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>([<span class="pl-c1">1</span>]))
+<span class="pl-s1">gradient</span>, <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">autograd</span>.<span class="pl-c1">grad</span>(<span class="pl-s1">loss</span>, <span class="pl-s1">w</span>)
+<span class="pl-s1">updated</span> <span class="pl-c1">=</span> <span class="pl-s1">w</span>.<span class="pl-c1">detach</span>() <span class="pl-c1">-</span> <span class="pl-c1">0.1</span> <span class="pl-c1">*</span> <span class="pl-s1">gradient</span>
+<span class="pl-en">print</span>((<span class="pl-s1">h</span> @ <span class="pl-s1">updated</span>.<span class="pl-c1">T</span>).<span class="pl-c1">softmax</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>))</pre></div>
+<p dir="auto">Change only the observed target to <code class="notranslate">cat</code>, leaving scores and parameters fixed.<br>
+The gradient becomes <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[-0.294615,0.259496,0.035119]$</math-renderer>: the same prediction now<br>
+asks to strengthen its leading row. A gradient is an error relative to an<br>
+observed target, not a judgment about the score vector in isolation. Repeat<br>
+these target-dependent corrections with different observed continuations and<br>
+we reach the distribution-learning question that opened the chapter.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-03/day-03-01_logits_softmax_nll-01.png"><img src="../../notebooks/figures/chapter-03/day-03-01_logits_softmax_nll-01.png" alt="The three-candidate prediction favors cat, the observed target is dog, and the signed logit gradient lowers cat while raising dog; the right panel varies only the dog score." style="max-width: 100%;"></a></p>
+<p dir="auto">Read the middle panel as derivatives, so gradient descent moves opposite each<br>
+bar. The right panel holds the other scores fixed: a higher <code class="notranslate">dog</code> score lowers<br>
+its NLL smoothly. Its horizontal axis is a logit, not a probability. Source:<br>
+<a href="../../notebooks/day-03/01_logits_softmax_nll.ipynb">Day 3's logits notebook</a>.<br>
+The <a href="../../docs/NOTEBOOK_VISUALS.md#reference-previews-versus-live-plots">saved-preview workflow</a><br>
+with <code class="notranslate">--days 3</code> regenerates the figure. The new parameter arithmetic above is<br>
+retained in the <a href="../../experiments/reports/2026-10-10-book-foundations-pass/run-01/depth-calculations.json">calculation receipt</a>.</p>
+<h2 dir="auto">3.7 How one-hot observations teach a distribution</h2>
+<p dir="auto">Suppose indistinguishable instances of one context continue with <code class="notranslate">dog</code> 70% of<br>
+the time and <code class="notranslate">cat</code> 30% of the time. Every training row still provides one<br>
+observed target. Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$r=[0.7,0.3]$</math-renderer> be the empirical distribution and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q$</math-renderer> be one<br>
+sample's one-hot target.</p>
+<p dir="auto">Because:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\mathbb{E}[q]=r,$$</math-renderer>
+<p dir="auto">the expected logit gradient is:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\mathbb{E}[p-q]=p-r.$$</math-renderer>
+<p dir="auto">The competing updates balance when:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$p=r.$$</math-renderer>
+<p dir="auto">At that point a <code class="notranslate">dog</code> sample still has gradient:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$[0.7,0.3]-[1,0]=[-0.3,0.3],$$</math-renderer>
+<p dir="auto">and a <code class="notranslate">cat</code> sample has:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$[0.7,0.3]-[0,1]=[0.7,-0.7].$$</math-renderer>
+<p dir="auto">Their frequency-weighted average is zero:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$0.7[-0.3,0.3]+0.3[0.7,-0.7]=[0,0].$$</math-renderer>
+<p dir="auto">Individual minibatches can therefore keep producing noisy gradients near the<br>
+optimum even though the population gradient vanishes.</p>
+<h3 dir="auto">Separate unavoidable uncertainty from mismatch</h3>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q$</math-renderer> now denote the population target distribution and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p$</math-renderer> the model; it no<br>
+longer denotes one example's one-hot label. <strong>Entropy</strong> is the average surprise<br>
+of outcomes drawn from <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q$</math-renderer> when predicted by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q$</math-renderer> itself:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$H(q)=-\sum_iq_i\log q_i.$$</math-renderer>
+<p dir="auto">It is zero for a certain outcome and positive when multiple outcomes can occur.<br>
+<strong>Cross-entropy</strong>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$H(q,p)=-\sum_iq_i\log p_i$</math-renderer>, is their average surprise under<br>
+the model's prediction. <strong>Kullback–Leibler divergence</strong>, or KL, is the excess<br>
+surprise caused by that mismatch:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$D_{KL}(q\|p)=\sum_iq_i\log\frac{q_i}{p_i}.$$</math-renderer>
+<p dir="auto">The direction matters: the expectation weights outcomes by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q$</math-renderer>, and reversing<br>
+the arguments generally changes the answer. Add and subtract the target's own<br>
+log term to connect all three quantities:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\begin{aligned}
+H(q,p)
+&amp;=-\sum_iq_i\log p_i\\\
+&amp;=-\sum_iq_i\log q_i
+  +\sum_iq_i\log\frac{q_i}{p_i}\\\
+&amp;=H(q)+D_{KL}(q\|p).
+\end{aligned}$$</math-renderer>
+<p dir="auto"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$H(q)$</math-renderer> is uncertainty under the declared conditioning information. Improving<br>
+the prediction for that fixed context cannot reduce it. With <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q=[0.7,0.3]$</math-renderer>,<br>
+the decomposition exposes why extra confidence can hurt:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Model <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p$</math-renderer>
+</th>
+<th align="right">Entropy <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$H(q)$</math-renderer>
+</th>
+<th align="right">KL mismatch <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$D_{KL}(q|p)$</math-renderer>
+</th>
+<th align="right">Cross-entropy <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$H(q,p)$</math-renderer>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[0.5,0.5]$</math-renderer></td>
+<td align="right">0.610864</td>
+<td align="right">0.082283</td>
+<td align="right">0.693147</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[0.7,0.3]$</math-renderer></td>
+<td align="right">0.610864</td>
+<td align="right">0</td>
+<td align="right">0.610864</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[0.9,0.1]$</math-renderer></td>
+<td align="right">0.610864</td>
+<td align="right">0.153664</td>
+<td align="right">0.764528</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">All entries use natural logs, in nats per target. The last prediction makes<br>
+the common <code class="notranslate">dog</code> outcome less surprising but assigns too little mass to the<br>
+<code class="notranslate">cat</code> outcomes that still occur 30% of the time. Their larger penalties more<br>
+than erase the gain. Confidence and calibration are different properties.</p>
+<p dir="auto">Why is KL nonnegative? For positive probabilities, use<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$-\log u\geq1-u$</math-renderer> with <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$u=p_i/q_i$</math-renderer> and sum with weights <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q_i$</math-renderer>:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\sum_iq_i\log\frac{q_i}{p_i}
+\geq\sum_i(q_i-p_i)=0.$$</math-renderer>
+<p dir="auto">Equality holds at matching distributions. More generally use<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$0\log(0/p_i)=0$</math-renderer>; if <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q_i&amp;gt;0$</math-renderer> but <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p_i=0$</math-renderer>, the divergence is infinite. Summing<br>
+the same inequality only over <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q$</math-renderer>'s support—the outcomes with positive<br>
+probability—gives a lower bound<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$1-\sum_{i:q_i&amp;gt;0}p_i\geq0$</math-renderer>, so the conclusion still holds when some target<br>
+probabilities are zero. This is why a perfectly calibrated model can have<br>
+positive cross-entropy: only the mismatch vanishes. Zero expected gradient<br>
+plus positive loss can represent successful learning rather than an optimizer<br>
+failure.</p>
+<h3 dir="auto">The model sees samples, not <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q$</math-renderer>
+</h3>
+<p dir="auto">The optimizer never receives the true population distribution directly. For a<br>
+context observed <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n$</math-renderer> times, it sees counts <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n_i$</math-renderer> and an empirical estimate:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\hat q_i=\frac{n_i}{n}.$$</math-renderer>
+<p dir="auto">Exact long contexts rarely repeat. A language model must share parameters and<br>
+representations across related contexts so that evidence from many examples<br>
+interacts. A sufficiently flexible model can instead memorize unique training<br>
+prefixes and drive empirical loss down without reducing population mismatch.<br>
+Falling training loss with rising held-out loss is therefore evidence of<br>
+overfitting under a fixed evaluation contract.</p>
+<h2 dir="auto">3.8 Controlled experiment: two logits learn 70/30</h2>
+<p dir="auto"><strong>Reader prediction:</strong> every target is one-hot, but the same context has two<br>
+different observed continuations. Should the learned model become deterministic?<br>
+Should its best mean loss be zero? Explain what should balance at the optimum<br>
+before revealing the measured trajectory. This exercise does not replace the<br>
+historical specification's pre-run hypotheses.</p>
+<p dir="auto">We tested the distribution-learning claim with the smallest transparent system:</p>
+<ul dir="auto">
+<li>one abstract context;</li>
+<li>two float32 trainable logits initialized to zero;</li>
+<li>70 class-0 and 30 class-1 one-hot targets;</li>
+<li>full-batch SGD with learning rate 0.5 for 500 steps;</li>
+<li>mean PyTorch cross-entropy;</li>
+<li>precommitted probability, loss, finiteness, and gradient-agreement criteria.</li>
+</ul>
+<p dir="auto">The complete specification was committed before execution. The measured<br>
+trajectory was:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="right">Step</th>
+<th align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p_0$</math-renderer></th>
+<th align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p_1$</math-renderer></th>
+<th align="right">Mean CE</th>
+<th align="right">Gradient norm</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">0</td>
+<td align="right">0.5000000</td>
+<td align="right">0.5000000</td>
+<td align="right">0.6931473</td>
+<td align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$2.83\times10^{-1}$</math-renderer></td>
+</tr>
+<tr>
+<td align="right">10</td>
+<td align="right">0.6854001</td>
+<td align="right">0.3145998</td>
+<td align="right">0.6113629</td>
+<td align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$2.06\times10^{-2}$</math-renderer></td>
+</tr>
+<tr>
+<td align="right">50</td>
+<td align="right">0.6999989</td>
+<td align="right">0.3000011</td>
+<td align="right">0.6108643</td>
+<td align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$1.58\times10^{-6}$</math-renderer></td>
+</tr>
+<tr>
+<td align="right">500</td>
+<td align="right">0.7000000</td>
+<td align="right">0.3000000</td>
+<td align="right">0.6108643</td>
+<td align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$7.45\times10^{-9}$</math-renderer></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">All seven precommitted criteria passed. PyTorch autograd agreed with <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p-r$</math-renderer> at<br>
+every recorded checkpoint; the maximum absolute disagreement was<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$5.96\times10^{-8}$</math-renderer>. Final loss matched empirical entropy within the declared<br>
+tolerance.</p>
+<p dir="auto">The final logits were approximately:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$[0.42364874,-0.42364898].$$</math-renderer>
+<p dir="auto">Their difference has an exact interpretation:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\frac{p_0}{p_1}=e^{z_0-z_1}
+\quad\Longrightarrow\quad
+z_0-z_1=\log\frac{0.7}{0.3}\approx0.8472979.$$</math-renderer>
+<p dir="auto">The observed gap was <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$0.8472977$</math-renderer>. The individual logit heights remain arbitrary;<br>
+adding a shared constant preserves the distribution.</p>
+<p dir="auto">This experiment demonstrates the optimization mechanism in a controlled<br>
+empirical system. It does not establish that a transformer recovers the true<br>
+human-language distribution, generalizes to new contexts, understands either<br>
+label, or remains calibrated under deployment shift. See the full<br>
+<a href="../../experiments/specs/2026-09-03-next-token-distribution.yaml">specification</a><br>
+and <a href="../../experiments/reports/2026-09-03-next-token-distribution.md">report</a>.</p>
+<h2 dir="auto">3.9 From token surprise to perplexity</h2>
+<p dir="auto">For valid aligned targets, a common reduced loss is:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$L_{mean}
+=
+\frac{\sum_{b,t}m_{b,t}\left[-\log p_{b,t}(y_{b,t})\right]}
+{\sum_{b,t}m_{b,t}},$$</math-renderer>
+<p dir="auto">where <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$m_{b,t}=1$</math-renderer> for included targets and zero otherwise. The denominator is<br>
+the number of valid targets, not padded tensor capacity.</p>
+<p dir="auto">Perplexity is:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\mathrm{PPL}=e^{L_{mean}}.$$</math-renderer>
+<p dir="auto">Equivalently:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$e^{-L_{mean}}
+=
+\left(\prod_{t=1}^{N}p_t(y_t)\right)^{1/N},$$</math-renderer>
+<p dir="auto">so perplexity is the reciprocal geometric-mean probability assigned to observed<br>
+targets. Calling it an “effective branching factor” is exact for an equal-choice<br>
+teaching case and only an intuition for unequal real distributions.</p>
+<h3 dir="auto">One scalar hides where surprise occurred</h3>
+<p dir="auto">Model A can assign <code class="notranslate">[0.5,0.5,0.5,0.5]</code> to four observed targets, producing<br>
+sequence probability <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$0.0625$</math-renderer>. Model B can assign approximately<br>
+<code class="notranslate">[0.99,0.99,0.99,0.0644]</code>, producing the same product and total NLL.</p>
+<p dir="auto">The metric correctly says that both assign equal probability to this exact<br>
+sequence. It does not say they have equal calibration, robustness, token-level<br>
+loss tails, gradient concentration, or free-generation trajectories. Model B<br>
+concentrates almost all surprise at one catastrophic point. Token-level traces,<br>
+quantiles, calibration tests, and generated behavior answer questions that mean<br>
+loss discards.</p>
+<h3 dir="auto">Per-token perplexity depends on the tokenizer</h3>
+<p dir="auto">Suppose tokenizer A represents a text fragment as one token with probability<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$0.25$</math-renderer>. Its total NLL and mean token NLL are both <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$1.386$</math-renderer>, so its perplexity is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$4$</math-renderer>.</p>
+<p dir="auto">Tokenizer B represents the same fragment as two successive tokens, each assigned<br>
+probability <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$0.5$</math-renderer>. The text probability and total NLL remain:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$0.5\times0.5=0.25,
+\qquad
+-\log0.25=1.386.$$</math-renderer>
+<p dir="auto">But mean NLL is now <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$1.386/2=0.693$</math-renderer>, so perplexity is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$2$</math-renderer>. Nothing became twice<br>
+as predictable; the counting unit changed.</p>
+<p dir="auto">Per-token perplexity comparisons therefore require the same tokenizer, target<br>
+alignment, loss mask, preprocessing, context policy, and evaluation corpus. For<br>
+cross-tokenizer or multilingual comparisons, bits or nats per byte can provide a<br>
+more common unit when raw-text normalization is also fixed. A lower perplexity<br>
+on one corpus establishes higher geometric-mean probability under that contract,<br>
+not general superiority, truthfulness, or downstream usefulness.</p>
+<h2 dir="auto">3.10 Causal shifting: predict what is not yet visible</h2>
+<p dir="auto">For tokens:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">&lt;BOS&gt;  I  love  dogs  &lt;EOS&gt;
+</code></pre>
+<p dir="auto">the causal training relationships are:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Logit position sees through</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code class="notranslate">&lt;BOS&gt;</code></td>
+<td><code class="notranslate">I</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;BOS&gt; I</code></td>
+<td><code class="notranslate">love</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;BOS&gt; I love</code></td>
+<td><code class="notranslate">dogs</code></td>
+</tr>
+<tr>
+<td><code class="notranslate">&lt;BOS&gt; I love dogs</code></td>
+<td><code class="notranslate">&lt;EOS&gt;</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The state at position <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$t$</math-renderer> may use <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$x_{\le t}$</math-renderer> and predicts <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$x_{t+1}$</math-renderer>:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$y_t=x_{t+1},
+\qquad 0\le t&lt;n-1.$$</math-renderer>
+<p dir="auto">Explicit alignment is:</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-s1">shift_logits</span> <span class="pl-c1">=</span> <span class="pl-s1">logits</span>[:, :<span class="pl-c1">-</span><span class="pl-c1">1</span>, :]  <span class="pl-c"># [B,T-1,V]</span>
+<span class="pl-s1">shift_labels</span> <span class="pl-c1">=</span> <span class="pl-s1">input_ids</span>[:, <span class="pl-c1">1</span>:]    <span class="pl-c"># [B,T-1]</span></pre></div>
+<p dir="auto">Some causal-LM APIs accept <code class="notranslate">labels=input_ids</code> and perform this shift internally.<br>
+That convenience is an implementation contract to verify, not a universal rule<br>
+to assume.</p>
+<h3 dir="auto">The unshifted-copying trap</h3>
+<p dir="auto">Comparing <code class="notranslate">logits[:,t,:]</code> directly with <code class="notranslate">input_ids[:,t]</code> asks the model to recover<br>
+a token that is already present at that position. A copy-like model can obtain<br>
+near-zero loss while learning no next-token relationship. This is different from<br>
+a broken causal attention mask:</p>
+<ul dir="auto">
+<li><strong>unshifted labels:</strong> the target is the currently visible token;</li>
+<li><strong>broken causal mask:</strong> the representation can inspect future tokens.</li>
+</ul>
+<p dir="auto">Either can create deceptively low loss. Compatible tensor shapes prove neither<br>
+semantic alignment nor causal validity.</p>
+<h3 dir="auto">Teacher forcing and generation drift</h3>
+<p dir="auto">Training can process all positions in parallel because the full sequence is<br>
+available while the causal mask blocks future visibility. Each position receives<br>
+the real preceding tokens: the teacher-forcing convention introduced in section 3.2.</p>
+<p dir="auto">Generation is different. The model appends its own selected token and consumes<br>
+that altered prefix on the next step. One poor or merely unusual choice can move<br>
+the trajectory into a context that appeared rarely in training, making later<br>
+predictions less reliable. This train-generation context mismatch is often<br>
+called exposure bias:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\text{training prefixes}\sim p_{data},
+\qquad
+\text{generated prefixes}\sim p_{model}.$$</math-renderer>
+<p dir="auto">It can occur even with perfect shifting and causal masking. Lowering temperature<br>
+may reduce random low-probability deviations, but it cannot repair a wrong mode<br>
+and can make systematic errors more deterministic.</p>
+<h2 dir="auto">3.11 Loss masks grade targets; attention masks control visibility</h2>
+<p dir="auto">Three controls answer different questions:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Causal attention mask</td>
+<td>May this state read a future token?</td>
+</tr>
+<tr>
+<td>Padding or document mask</td>
+<td>May it read padding or an unrelated document?</td>
+</tr>
+<tr>
+<td>Loss mask or ignored label</td>
+<td>Should this aligned prediction contribute loss?</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">EOS is normally a meaningful target: it teaches the model when to stop. PAD is<br>
+storage structure and normally should not contribute loss. In PyTorch-style<br>
+cross-entropy, ignored labels are often represented by <code class="notranslate">-100</code>.</p>
+<h3 dir="auto">Mask target tokens, then respect the shift</h3>
+<p dir="auto">Consider:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">index:   0      1       2       3          4             5      6
+token:  BOS   User   capital  France   ASSISTANT       Paris   EOS
+label: -100   -100    -100     -100       -100            5      6
+</code></pre>
+<p dir="auto">With the standard internal shift, label index <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$k$</math-renderer> is predicted by logit index<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$k-1$</math-renderer>:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">logits at position 4 → Paris at label position 5
+logits at position 5 → EOS at label position 6
+</code></pre>
+<p dir="auto">The hidden state at <code class="notranslate">ASSISTANT</code> predicts <code class="notranslate">Paris</code>; the hidden state at <code class="notranslate">Paris</code><br>
+already contains <code class="notranslate">Paris</code> and predicts <code class="notranslate">EOS</code>. Applying a visible-position mask<br>
+directly to logits without respecting this target shift can move the supervision<br>
+boundary by one token.</p>
+<h3 dir="auto">No direct prompt loss does not mean no gradient</h3>
+<p dir="auto">Answer-only supervision can let answer positions read the prompt while excluding<br>
+prompt targets from the loss. The answer loss still has a path through attention:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">answer loss
+   → answer hidden state
+   → prompt keys and values
+   → earlier-layer prompt states
+   → prompt embeddings and shared parameters
+</code></pre>
+<p dir="auto">A loss mask removes selected scalar loss terms. It does not detach prompt<br>
+computation. The activation-level statement is layer-sensitive: an answer state<br>
+at layer <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\ell$</math-renderer> reads prompt states from layer <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\ell-1$</math-renderer>, so earlier prompt states<br>
+can receive gradient while the unused final-layer prompt output need not. An<br>
+attention block, explicit detach, or frozen parameter creates different<br>
+boundaries.</p>
+<p dir="auto">The masked mean must divide by valid targets:</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-en">cross_entropy</span>(
+    <span class="pl-s1">shift_logits</span>.<span class="pl-c1">reshape</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>, <span class="pl-c1">V</span>),
+    <span class="pl-s1">shift_labels</span>.<span class="pl-c1">reshape</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>),
+    <span class="pl-s1">ignore_index</span><span class="pl-c1">=</span><span class="pl-c1">-</span><span class="pl-c1">100</span>,
+    <span class="pl-s1">reduction</span><span class="pl-c1">=</span><span class="pl-s">"mean"</span>,
+)</pre></div>
+<p dir="auto">If two padded sequences contain four and two valid targets, the denominator is<br>
+six, not their padded capacity of eight. Otherwise padding changes the gradient<br>
+scale despite contributing no evidence.</p>
+<h2 dir="auto">3.12 First-class companion notebooks and evidence</h2>
+<p dir="auto">The chapter has three interactive companion lessons. They are course material,<br>
+not disposable scratchpads:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Central question</th>
+<th>Mechanisms</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-03/01_logits_softmax_nll.ipynb">Session 01</a></td>
+<td>Why do relative scores determine belief and surprise?</td>
+<td>stable softmax, NLL, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p-q$</math-renderer>, perplexity</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-03/02_causal_shift_and_masks.ipynb">Session 02</a></td>
+<td>How can low loss certify the wrong task?</td>
+<td>shifting, copying failure, ignored labels, prompt gradients</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-03/03_distribution_learning.ipynb">Session 03</a></td>
+<td>How do one-hot examples become a distribution?</td>
+<td>gradient balance, optimizer trajectory, logit-gap equilibrium</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Each notebook uses prediction, implementation, perturbation, interpretation, and<br>
+an evidence boundary. Every exercise is followed by a runnable reference solution<br>
+and mechanism explanation. Reusable computations remain in importable source:</p>
+<ul dir="auto">
+<li><a href="../../src/dongxi_llms/next_token_distribution_lab.py"><code class="notranslate">next_token_distribution_lab.py</code></a></li>
+<li><a href="../../tests/test_next_token_distribution_lab.py"><code class="notranslate">test_next_token_distribution_lab.py</code></a></li>
+</ul>
+<p dir="auto">The notebooks teach mechanisms; the specification and report establish the<br>
+experiment's empirical identity. Successful execution alone does not broaden the<br>
+claims beyond the stated controls.</p>
+<h2 dir="auto">3.13 Common reasoning failures</h2>
+<h3 dir="auto">“The hidden state is already a probability vector”</h3>
+<p dir="auto"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$h$</math-renderer> has hidden width <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$D$</math-renderer> and learned internal coordinates. The output head must<br>
+map it to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V$</math-renderer> vocabulary logits before softmax.</p>
+<h3 dir="auto">“One input token produces one output score”</h3>
+<p dir="auto">One position produces one score for every output candidate. Decoding later<br>
+chooses one coordinate.</p>
+<h3 dir="auto">“Token IDs are numbers the model learns arithmetic relationships among”</h3>
+<p dir="auto">They are categorical addresses. A consistent permutation of IDs and matching<br>
+rows preserves behavior.</p>
+<h3 dir="auto">“Softmax interprets each logit independently”</h3>
+<p dir="auto">All candidates share the denominator. Probabilities express normalized<br>
+competition and depend on relative gaps.</p>
+<h3 dir="auto">“Temperature changes the greedy answer”</h3>
+<p dir="auto">Positive temperature preserves ranking. It changes sampling probabilities, not<br>
+argmax.</p>
+<h3 dir="auto">“Every wrong token receives equal punishment”</h3>
+<p dir="auto">For a non-target token, the logit gradient is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p_i$</math-renderer>. A confidently wrong<br>
+candidate receives a larger downward correction.</p>
+<h3 dir="auto">“One-hot labels force the model to become deterministic”</h3>
+<p dir="auto">Across samples, expected gradients recover the empirical conditional<br>
+distribution. One-hot is a per-example representation, not necessarily the<br>
+population distribution.</p>
+<h3 dir="auto">“Positive loss at zero gradient means optimization failed”</h3>
+<p dir="auto">At <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p=q$</math-renderer>, KL mismatch is zero while irreducible entropy can remain positive.</p>
+<h3 dir="auto">“Lower perplexity proves a better model”</h3>
+<p dir="auto">It establishes higher geometric-mean target probability only under a fixed<br>
+tokenizer and evaluation contract. It does not establish general capability.</p>
+<h3 dir="auto">“Low training loss proves next-token learning”</h3>
+<p dir="auto">Unshifted labels can reward copying, and memorization can reduce empirical loss<br>
+without improving held-out behavior.</p>
+<h3 dir="auto">“A zero prompt loss mask prevents prompt parameters from changing”</h3>
+<p dir="auto">Visible prompt computations can remain ancestors of supervised answer losses.</p>
+<h3 dir="auto">Comparing likelihood across text interfaces</h3>
+<p dir="auto">Token perplexity inherits the tokenizer's unit. To compare two tokenizations of the same held-out text, retain the total negative log-likelihood and the byte denominator, rather than averaging already averaged token losses. Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$S$</math-renderer> be the summed NLL in nats and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$N_{\mathrm{bytes}}$</math-renderer> the number of UTF-8 bytes in the fixed evaluation text. The conversion is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\mathrm{bits\ per\ byte}=\frac{S}{N_{\mathrm{bytes}}\ln 2}.$$</math-renderer>
+<p dir="auto">For an illustrative four-byte text with total NLL of four nats, the value is approximately 1.443 bits per byte. Splitting it into two or four tokens does not change that arithmetic when the total NLL is held fixed. In an actual model comparison, the total NLL may change because the models learn different distributions. Byte normalization fixes a reporting unit; it does not make the models equivalent.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb">tokenizer companion</a> exposes summed NLL, valid target count and raw-byte count together. Declare whether EOS contributes to the numerator: a scored EOS has probability cost but adds no raw-text bytes. Likewise, a loss mask may exclude a prefix while the byte denominator still describes the whole document. Such a conditional score is not an unconditional document compression claim. Assignment A requires that boundary to be explicit before interpreting an apparent perplexity improvement.</p>
+<h2 dir="auto">3.14 Exercises</h2>
+<ol dir="auto">
+<li>
+<p dir="auto"><strong>The complete tensor bridge.</strong> For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$B=2$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n=5$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$D=8$</math-renderer>, and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V=10{,}000$</math-renderer>,<br>
+state the shapes of input IDs, embeddings, final hidden states, logits,<br>
+shifted logits, and shifted integer labels. Explain why the label does not<br>
+need shape <code class="notranslate">[V]</code>.</p>
+</li>
+<li>
+<p dir="auto"><strong>Permutation invariance.</strong> A tokenizer swaps IDs 3 and 900. State every<br>
+model and dataset object that must be permuted to preserve behavior. Explain<br>
+why this proves that numeric ID distance is not linguistic similarity.</p>
+</li>
+<li>
+<p dir="auto"><strong>Stable competition.</strong> Explain why logits <code class="notranslate">[1002,1001,999]</code> and <code class="notranslate">[2,1,-1]</code><br>
+produce the same softmax distribution. Then state why subtracting the maximum<br>
+improves finite-precision behavior without changing the model.</p>
+</li>
+<li>
+<p dir="auto"><strong>Confidently wrong.</strong> For target class 1 and probabilities<br>
+<code class="notranslate">[0.7054,0.2595,0.0351]</code>, interpret every component of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p-q$</math-renderer>. Distinguish<br>
+gradient sign from optimizer motion and explain why class 0 receives more<br>
+correction than class 2.</p>
+</li>
+<li>
+<p dir="auto"><strong>From logits into parameters.</strong> Starting from <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$z=hW_{\mathrm{out}}^\top+b$</math-renderer><br>
+and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$g=p-q$</math-renderer>, give the gradients for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$W_{\mathrm{out}}$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$b$</math-renderer>, and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$h$</math-renderer>. Explain what the output head and the<br>
+transformer learn from their respective gradients.</p>
+</li>
+<li>
+<p dir="auto"><strong>Nonzero loss, zero expected gradient.</strong> For a 70/30 target distribution,<br>
+show how the two one-hot gradients cancel at <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p=[0.7,0.3]$</math-renderer>. Explain why the<br>
+remaining cross-entropy is successful learning rather than failure.</p>
+</li>
+<li>
+<p dir="auto"><strong>Same NLL, different behavior.</strong> Compare <code class="notranslate">[0.5,0.5,0.5,0.5]</code> with<br>
+<code class="notranslate">[0.99,0.99,0.99,0.0644]</code>. State what equal products establish and which<br>
+behavioral claims require additional metrics.</p>
+</li>
+<li>
+<p dir="auto"><strong>Tokenizer-dependent perplexity.</strong> One tokenizer assigns probability 0.25<br>
+to one token; another assigns 0.5 to each of two tokens representing the same<br>
+text. Compare total NLL and per-token perplexity. Design a more defensible<br>
+multilingual comparison.</p>
+</li>
+<li>
+<p dir="auto"><strong>Audit causal alignment.</strong> For <code class="notranslate">&lt;BOS&gt; I love dogs &lt;EOS&gt;</code>, list every<br>
+supervised <code class="notranslate">(prefix,target)</code> pair. Explain how an unshifted copy model can<br>
+achieve low loss while being useless for next-token generation.</p>
+</li>
+<li>
+<p dir="auto"><strong>Three boundaries.</strong> A user prompt is readable by an assistant response but<br>
+has labels <code class="notranslate">-100</code>. Explain attention visibility, direct loss contribution,<br>
+and possible gradient flow separately. Include the layer-level activation<br>
+nuance.</p>
+</li>
+<li>
+<p dir="auto"><strong>Teacher forcing and temperature.</strong> Explain why correct teacher-forced loss<br>
+can coexist with free-generation drift. Evaluate the claim that lowering<br>
+temperature “solves” the mismatch.</p>
+</li>
+<li>
+<p dir="auto"><strong>Evidence discipline.</strong> The controlled two-logit experiment passed all<br>
+criteria and learned 70/30. Write one supported claim, one plausible but<br>
+unsupported interpretation, and the smallest next experiment needed to test<br>
+generalization across related contexts.</p>
+</li>
+</ol>
+<p dir="auto">Worked answers are available in<br>
+<a href="../solutions/03-learning-the-next-token.md">the Chapter 3 solutions</a>. The three<br>
+companion notebooks provide executable versions of the central mechanisms.</p>
+<h2 dir="auto">3.15 Summary and what follows</h2>
+<p dir="auto">A contextual hidden state <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$h$</math-renderer> is mapped through an output head into one logit per<br>
+model-vocabulary row. Softmax turns relative logit gaps into a normalized<br>
+distribution, and decoding selects or samples one coordinate as the next token<br>
+ID. Stable implementations subtract the maximum or use log-sum-exp without<br>
+changing the mathematics.</p>
+<p dir="auto">One-hot cross-entropy equals observed-token NLL, and its logit gradient is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p-q$</math-renderer>. That compact expression explains target reward, probability-weighted<br>
+correction of wrong candidates, shared-shift invariance, and gradient flow into<br>
+the output head and transformer. Across repeated outcomes, the expected gradient<br>
+is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$p-r$</math-renderer>, so one-hot examples can learn a non-one-hot distribution. Cross-entropy<br>
+then separates into irreducible entropy plus reducible KL mismatch.</p>
+<p dir="auto">Sequence likelihood becomes additive surprise under the logarithm. Mean loss and<br>
+perplexity are useful only under an explicit tokenizer, alignment, mask, and<br>
+evaluation contract. Causal shifting ensures each state predicts a token it has<br>
+not yet seen; attention and loss masks define different boundaries; backward<br>
+credit can flow through visible prompt computation even when prompt targets are<br>
+ignored.</p>
+<p dir="auto">We have treated the transformer as the function that creates <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$h$</math-renderer>. Chapter 4<br>
+opens that box. It derives queries, keys, values, scaled dot products, causal<br>
+masks, attention distributions, and the gradients that decide which earlier<br>
+positions influence the next-token state.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-8</h1>
+<h1 dir="auto">Chapter 4 — Attention and the Causal Information Boundary</h1>
+<p dir="auto">Companion: <a href="../labs/04-attention-and-the-causal-information-boundary.md">guided laboratory route</a>.</p>
+<p dir="auto">Chapter 3 began with a contextual hidden state and asked how it becomes a<br>
+next-token prediction. We now examine how a position obtains information from<br>
+other positions in the first place.</p>
+<p dir="auto">Return to the illustrative prefix <strong>“the pet saw the”</strong>, whose observed next<br>
+piece in Chapters 2–3 was <code class="notranslate">dog</code>. The final <code class="notranslate">the</code> retrieves the same initial<br>
+embedding as the first <code class="notranslate">the</code>. If every position were processed independently<br>
+with only that embedding, their next-token predictions would be identical.<br>
+The later occurrence needs a way to use its history: <code class="notranslate">pet</code> and <code class="notranslate">saw</code> are already<br>
+available; the answer <code class="notranslate">dog</code> is not. How can it retrieve useful past information<br>
+without looking at the target it is supposed to predict?</p>
+<p dir="auto">This exposes both needs at once. Earlier information must be able to influence<br>
+the current state, and later information must be excluded. A model that reads<br>
+the following <code class="notranslate">dog</code> during training could obtain a pleasing loss by answering<br>
+a different, easier question. During generation that answer does not yet exist.</p>
+<p dir="auto">Attention provides a trainable way for each position to retrieve information<br>
+from allowed sources. Its design connects four questions: what should a<br>
+position look for, what should each source offer, how should they be combined,<br>
+and which sources are legal? Answering them precisely also explains why<br>
+inference systems can reuse keys and values while generating a continuation.</p>
+<h2 dir="auto">4.1 Learning outcomes and chapter route</h2>
+<p dir="auto">After studying this chapter, you should be able to:</p>
+<ul dir="auto">
+<li>explain queries, keys, and values as distinct learned projections;</li>
+<li>trace every shape in single-head attention, including the source/query axes;</li>
+<li>distinguish learned compatibility from semantic similarity;</li>
+<li>derive the square-root scaling factor under explicit statistical assumptions;</li>
+<li>implement causal attention and diagnose incorrect masking;</li>
+<li>distinguish attention weights, mixed values, contextual states, and logits;</li>
+<li>derive backward credit through routing and content paths;</li>
+<li>explain the limits of interpreting attention maps;</li>
+<li>derive causal prefix invariance and connect it to per-layer KV caching;</li>
+<li>distinguish cache correctness, memory accounting, and measured speed;</li>
+<li>reproduce the small experiments and state their evidence boundaries.</li>
+</ul>
+<p dir="auto">The route is retrieval (§4.2), compatibility (§4.3), scaling (§4.4), masking<br>
+(§4.5), value mixtures (§4.6), implementation (§4.7), gradients (§4.8),<br>
+interpretation (§4.9), caching (§§4.10–4.11), and controlled evidence (§4.12).<br>
+The chapter closes with exercises and the transition to a complete decoder.</p>
+<p dir="auto">Prerequisites are matrix multiplication, the chain rule, softmax, and the<br>
+next-token objective from Chapters 2–3. We use row vectors and zero-based<br>
+positions. The derivations concern one sequence and one attention head, with<br>
+no dropout unless explicitly stated. Full multi-head blocks, residual streams,<br>
+normalization, positional encodings, and feed-forward layers receive their<br>
+complete treatment in Chapter 5.</p>
+<h2 dir="auto">4.2 One position has three roles</h2>
+<p dir="auto">Let X contain the incoming representations at n positions, each with D features:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$X\in\mathbb{R}^{n\times D}.$$</math-renderer>
+<p dir="auto">These are continuous representations, not token IDs. At the first attention<br>
+layer they may originate from embeddings and position-dependent processing.<br>
+At deeper layers they already incorporate earlier layer computations.</p>
+<p dir="auto">Each position has three learned projections:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$Q=XW_Q,\qquad K=XW_K,\qquad V_{\mathrm{val}}=XW_V.$$</math-renderer>
+<p dir="auto">The query <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q_i$</math-renderer> represents the receiving position's matching criteria. A source's<br>
+key <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$k_j$</math-renderer> represents what that receiver can match against. Its value <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$v_j$</math-renderer> is the<br>
+message returned when that source receives weight.</p>
+<p dir="auto">The retrieval analogy helps explain the roles, but a query need not encode a<br>
+literal question and a key is not a dictionary address. They are learned<br>
+coordinates. The downstream language-model loss adjusts their projections to<br>
+make useful retrieval more likely.</p>
+<p dir="auto">Why separate these roles? What makes a source worth retrieving need not be the<br>
+same information that should be retrieved. A receiver may match a source using<br>
+one feature while obtaining other features from its value. Distinct query and<br>
+key projections also allow directed relationships: position i's interest in j<br>
+need not equal j's interest in i.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Object</th>
+<th>Shape</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$X$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[n,D]$</math-renderer></td>
+<td>Incoming feature rows</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$W_Q,W_K$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[D,d_h]$</math-renderer></td>
+<td>Matching projections</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$W_V$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[D,d_v]$</math-renderer></td>
+<td>Message projection</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$Q,K$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[n,d_h]$</math-renderer></td>
+<td>One query/key per position</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V_{\mathrm{val}}$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[n,d_v]$</math-renderer></td>
+<td>One value per position</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$QK^\top$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[n,n]$</math-renderer></td>
+<td>Receiver-by-source scores</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$A$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[n,n]$</math-renderer></td>
+<td>Receiver-by-source weights</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$O=AV_{\mathrm{val}}$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[n,d_v]$</math-renderer></td>
+<td>Retrieved output features</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Q and K require compatible feature widths for the dot product. The value width<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$d_v$</math-renderer> may differ. Adding a batch axis gives <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[B,n,d_h]$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[B,n,d_v]$</math-renderer>; multiple<br>
+heads add another axis in Chapter 5.</p>
+<p dir="auto">The value matrix is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V_{\mathrm{val}}$</math-renderer>; vocabulary size remains <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V$</math-renderer> as<br>
+in Chapter 3. The implementation uses <code class="notranslate">v</code> for these value activations and<br>
+<code class="notranslate">d_k</code> for the query/key width denoted <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$d_h$</math-renderer> here.</p>
+<h2 dir="auto">4.3 Dot products are learned compatibility scores</h2>
+<p dir="auto">The raw score between receiver i and source j is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$s_{ij}=q_i k_j^\top
+      =x_iW_QW_K^\top x_j^\top.$$</math-renderer>
+<p dir="auto">This is a learned bilinear relation over incoming representations. The<br>
+multiplication contains no linguistic knowledge by itself; the trained<br>
+projections determine what counts as compatibility.</p>
+<p dir="auto">A large score can support a dependency between very different words. For<br>
+example, a verb might retrieve information about its subject. Conversely,<br>
+semantically similar words need not be useful sources for the current query.</p>
+<p dir="auto">The geometric form is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$q_i k_j^\top=\|q_i\|\,\|k_j\|\cos\theta.$$</math-renderer>
+<p dir="auto">Both direction and magnitude contribute. Dot-product attention is therefore not<br>
+automatically cosine similarity. Nor is its score symmetric: <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$W_QW_K^\top$</math-renderer> need<br>
+not be symmetric.</p>
+<p dir="auto">Collecting all queries and keys gives <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$S=QK^\top$</math-renderer>. Row i contains a single receiver's<br>
+scores over source positions; column j shows how different receivers score one<br>
+source. Confusing these axes can produce a matrix of the expected shape that<br>
+implements the wrong information flow.</p>
+<h3 dir="auto">A matching address still gives a soft mixture</h3>
+<p dir="auto">The retrieval analogy can make attention sound like exact dictionary lookup.<br>
+Test that impression before using it. Give three allowed sources one-hot keys<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$k_0=[1,0,0]$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$k_1=[0,1,0]$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$k_2=[0,0,1]$</math-renderer> and a receiving query<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$q=\alpha[1,0,0]$</math-renderer>. Their scaled scores are<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[\alpha/\sqrt{3},0,0]$</math-renderer>.</p>
+<p dir="auto"><strong>Reader prediction.</strong> At <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\alpha=1$</math-renderer>, does the matching key receive weight 1?<br>
+No. Softmax gives positive mass to the two zero-score keys because <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$e^0=1$</math-renderer>.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="right">Query scale <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\alpha$</math-renderer>
+</th>
+<th align="right">Weight on matching source</th>
+<th align="right">Weight on each other source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">1</td>
+<td align="right">0.471083</td>
+<td align="right">0.264458</td>
+</tr>
+<tr>
+<td align="right">4</td>
+<td align="right">0.834278</td>
+<td align="right">0.082861</td>
+</tr>
+<tr>
+<td align="right">16</td>
+<td align="right">0.999805</td>
+<td align="right">0.000097</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The output remains a weighted combination of their value vectors at every<br>
+finite scale. Increasing only the query scale approaches a hard lookup because<br>
+this fixture has a unique largest score. If two allowed keys tie for the<br>
+maximum, the large-scale limit shares mass between them. Exact hard retrieval<br>
+is a limiting statement with a uniqueness condition, not a property of finite<br>
+one-hot vectors. In learned attention, keeping a mixture can be useful: the<br>
+current position may need information from several sources.</p>
+<h2 dir="auto">4.4 Why divide by the square root of the head width?</h2>
+<p dir="auto">Suppose the query and key coordinates are independent, have mean zero and<br>
+variance one, and their coordinate products are independent across dimensions.<br>
+For one product,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\mathbb{E}[q_mk_m]=0,\qquad
+\mathrm{Var}(q_mk_m)
+=\mathbb{E}[q_m^2]\mathbb{E}[k_m^2]=1.$$</math-renderer>
+<p dir="auto">The score sums <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$d_h$</math-renderer> such products:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$s=\sum_{m=1}^{d_h}q_mk_m,\qquad
+\mathrm{Var}(s)=d_h,\qquad
+\mathrm{Std}(s)=\sqrt{d_h}.$$</math-renderer>
+<p dir="auto">Positive and negative contributions partly cancel; the standard deviation grows<br>
+as the square root, not linearly with width. Thus</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\mathrm{Var}\left(\frac{s}{\sqrt{d_h}}\right)=1.$$</math-renderer>
+<p dir="auto">Without this correction, wider random heads tend to create wider score gaps.<br>
+Softmax exponentiates those gaps, producing concentrated distributions even<br>
+without stronger learned evidence. Scaling by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\sqrt{d_h}$</math-renderer> controls this initial<br>
+spread. This is the scaled dot-product mechanism introduced in<br>
+<a href="https://arxiv.org/abs/1706.03762" rel="nofollow"><em>Attention Is All You Need</em></a>.</p>
+<p dir="auto">For a softmax row a, the Jacobian is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$J=\mathrm{diag}(a)-aa^\top,\qquad
+J_{ij}=a_i(\mathbf{1}[i=j]-a_j).$$</math-renderer>
+<p dir="auto">As a approaches a one-hot vector, these entries approach zero. Its trace,<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$1-\sum_i a_i^2$</math-renderer>, offers a simple measure of local softmax sensitivity. It is not<br>
+itself a downstream loss gradient.</p>
+<p dir="auto">This does not contradict Chapter 3's strong p−q gradient for a confidently wrong<br>
+vocabulary prediction. That result combines softmax with a particular<br>
+cross-entropy objective, whose derivative cancels part of the softmax derivative.<br>
+Attention normally receives its learning signal through a weighted value sum;<br>
+the same cancellation cannot be assumed.</p>
+<p dir="auto">The IID assumptions explain the scaling rule, not every trained attention<br>
+distribution. Learned magnitudes, correlations, normalization, and positional<br>
+transformations affect actual score statistics. Dividing by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\sqrt{d_h}$</math-renderer> does not<br>
+guarantee unit variance or prevent every saturated row.</p>
+<p dir="auto">An authored two-source score row makes the size of the effect tangible. At<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$d_h=64$</math-renderer>, dividing scores <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[8,-8]$</math-renderer> by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\sqrt{64}=8$</math-renderer> changes the weights from<br>
+approximately <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[0.999999887,0.000000113]$</math-renderer> to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[0.880797,0.119203]$</math-renderer>. The<br>
+unscaled row has almost committed before it mixes the values. These assigned<br>
+scores illustrate the softmax transformation; the variance calculation above<br>
+does not say that every random 64-dimensional dot product equals 8 or -8.<br>
+The companion's paired random-coordinate experiment measures the spread rather<br>
+than confusing a standard deviation with an individual score.</p>
+<h2 dir="auto">4.5 Causality belongs inside normalization</h2>
+<p dir="auto">At position i, allowed source positions satisfy j≤i. The diagonal is included:<br>
+the current input token is known, and its output predicts the following token.</p>
+<p dir="auto">Define the additive mask</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$M_{ij}=
+\begin{cases}
+0,&amp;j\le i,\\\
+-\infty,&amp;j&gt;i.
+\end{cases}$$</math-renderer>
+<p dir="auto">Scaled, masked scores and weights are</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$R=\frac{QK^\top}{\sqrt{d_h}}+M,\qquad
+A=\mathrm{softmax}_{\mathrm{row}}(R).$$</math-renderer>
+<p dir="auto">For four positions the allowed pattern is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\begin{bmatrix}
+1&amp;0&amp;0&amp;0\\\
+1&amp;1&amp;0&amp;0\\\
+1&amp;1&amp;1&amp;0\\\
+1&amp;1&amp;1&amp;1
+\end{bmatrix}.$$</math-renderer>
+<p dir="auto">The mask defines permissible information flow; A determines how the model<br>
+distributes attention within that boundary.</p>
+<h3 dir="auto">Two masking errors</h3>
+<p dir="auto">Take one row with scores [0,0,10], where the third source is forbidden.</p>
+<p dir="auto">Correct pre-softmax masking produces</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\mathrm{softmax}([0,0,-\infty])=[0.5,0.5,0].$$</math-renderer>
+<p dir="auto">If softmax is applied first, the forbidden score participates in the denominator.<br>
+Zeroing its probability afterward produces approximately</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$[0.0000454,\;0.0000454,\;0].$$</math-renderer>
+<p dir="auto">Although its direct value contribution is removed, the future has changed the<br>
+allowed weights. The row no longer sums to one.</p>
+<p dir="auto">Replacing the forbidden score with zero before softmax is also incorrect:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\mathrm{softmax}([0,0,0])=[1/3,1/3,1/3].$$</math-renderer>
+<p dir="auto">Zero is an ordinary score with exponential one. In an additive mask, adding zero<br>
+to an allowed score means leave it unchanged; it does not mean remove a source.</p>
+<p dir="auto">There is a useful qualification. Post-softmax zeroing followed by renormalizing<br>
+the remaining weights is equivalent in exact arithmetic:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\frac{\exp(s_j)/Z}{\sum_{m\in\mathcal A}\exp(s_m)/Z}
+=\frac{\exp(s_j)}{\sum_{m\in\mathcal A}\exp(s_m)},
+\quad j\in\mathcal A.$$</math-renderer>
+<p dir="auto">But a large forbidden score can cause all allowed probabilities to underflow<br>
+before renormalization, leaving a zero denominator. Masking before a stable<br>
+softmax avoids that failure.</p>
+<h3 dir="auto">The stronger check: perturb the future</h3>
+<p dir="auto">Assume inputs through t are identical, parameters and position handling are<br>
+fixed, and stochastic operations are disabled. Correct causal attention obeys</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$X^{(A)}_{0:t}=X^{(B)}_{0:t}
+\Longrightarrow
+O^{(A)}_{0:t}=O^{(B)}_{0:t}.$$</math-renderer>
+<p dir="auto">Changing the later <code class="notranslate">dog</code> to <code class="notranslate">cat</code> cannot change the earlier output at the final<br>
+<code class="notranslate">the</code>. The changed position's own output may change. The earlier state helps<br>
+predict that following input; it cannot depend on the answer it is supposed to<br>
+predict.</p>
+<p dir="auto">This property assumes earlier layers have also respected causality. A mask<br>
+cannot remove future information already hidden in X by a faulty upstream<br>
+operation.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-04/day-04-01_causal_attention_forward-01.png"><img src="../../notebooks/figures/chapter-04/day-04-01_causal_attention_forward-01.png" alt="Correct causal masking gives a triangular weight map and zero earlier-output change after a future perturbation; post-softmax masking and zero-filled scores fail that invariance." style="max-width: 100%;"></a></p>
+<p dir="auto">The top panels show weights with receivers on rows and sources on columns.<br>
+The lower panels change only the final input in the notebook's separate<br>
+four-position numeric fixture. Correct masking leaves outputs 0–2 unchanged.<br>
+Post-softmax masking can look triangular yet still leak through its denominator;<br>
+zero-filled forbidden scores even retain future weights. Read both panels<br>
+together: a plausible-looking map is weaker evidence than an intervention.<br>
+Source: <a href="../../notebooks/day-04/01_causal_attention_forward.ipynb">Day 4's forward notebook</a><br>
+and <code class="notranslate">attention_trace</code> in the transparent lab. The<br>
+<a href="../../docs/NOTEBOOK_VISUALS.md#reference-previews-versus-live-plots">saved-preview workflow</a><br>
+with <code class="notranslate">--days 4</code> regenerates this figure.</p>
+<h3 dir="auto">Causal masks, padding masks, and loss masks</h3>
+<p dir="auto">A causal mask restricts which time positions a query may read. A padding mask<br>
+removes invalid source positions. Their allowed sets are intersected. A loss<br>
+mask selects which predictions contribute to the objective; it does not by<br>
+itself remove any source from attention.</p>
+<p dir="auto">Every evaluated softmax row must have an allowed source. A row of all negative<br>
+infinities is undefined in a naive implementation. Padding-only query rows need<br>
+an explicit policy: skip them, or supply a valid numerical computation and<br>
+discard their outputs. Do not treat NaNs as masked information.</p>
+<h2 dir="auto">4.6 Attention constructs a value mixture</h2>
+<p dir="auto">The output for receiver i is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$o_i=\sum_{j\le i}a_{ij}v_j,\qquad O=AV_{\mathrm{val}}.$$</math-renderer>
+<p dir="auto">With nonnegative weights summing to one, a single head's output lies in the<br>
+convex hull of its allowed value vectors. For weights [0.2,0.7,0.1], it is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$o_i=0.2v_1+0.7v_2+0.1v_3.$$</math-renderer>
+<p dir="auto">It is a new continuous feature vector, not a token ID. The same source weights<br>
+are used across all value coordinates within the head. A sharp distribution<br>
+can approximate copying one value, but the operation remains a weighted sum.</p>
+<p dir="auto">The convex-mixture statement applies before attention dropout or subsequent<br>
+transformations. Output projection, residual addition, and later nonlinear<br>
+layers are not constrained to remain within that same convex hull.</p>
+<p dir="auto">To reconnect with Chapter 3:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$O \longrightarrow \text{later decoder computation}
+\longrightarrow h_i
+\longrightarrow z_i=h_iW_{\mathrm{out}}^\top+b
+\longrightarrow p_i=\mathrm{softmax}(z_i).$$</math-renderer>
+<p dir="auto"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$A$</math-renderer>'s columns index source positions. The stored vocabulary head has<br>
+shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[V,D]$</math-renderer>, so the row state multiplies its transpose. The final vocabulary logits' columns index<br>
+candidate output tokens. These are different competitions with different axes.</p>
+<h2 dir="auto">4.7 A transparent implementation</h2>
+<p dir="auto">The implementation below handles one unpadded sequence and one head. Finite<br>
+inputs and at least one allowed source per row are assumed.</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">math</span>
+<span class="pl-k">import</span> <span class="pl-s1">torch</span>
+
+<span class="pl-s1">q</span>, <span class="pl-s1">k</span>, <span class="pl-s1">v</span> <span class="pl-c1">=</span> <span class="pl-s1">x</span> @ <span class="pl-s1">wq</span>, <span class="pl-s1">x</span> @ <span class="pl-s1">wk</span>, <span class="pl-s1">x</span> @ <span class="pl-s1">wv</span>
+<span class="pl-s1">scores</span> <span class="pl-c1">=</span> (<span class="pl-s1">q</span> @ <span class="pl-s1">k</span>.<span class="pl-c1">T</span>) <span class="pl-c1">/</span> <span class="pl-s1">math</span>.<span class="pl-c1">sqrt</span>(<span class="pl-s1">q</span>.<span class="pl-c1">shape</span>[<span class="pl-c1">-</span><span class="pl-c1">1</span>])
+<span class="pl-s1">allowed</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">ones_like</span>(<span class="pl-s1">scores</span>, <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">torch</span>.<span class="pl-c1">bool</span>).<span class="pl-c1">tril</span>()
+<span class="pl-s1">masked</span> <span class="pl-c1">=</span> <span class="pl-s1">scores</span>.<span class="pl-c1">masked_fill</span>(<span class="pl-c1">~</span><span class="pl-s1">allowed</span>, <span class="pl-c1">-</span><span class="pl-s1">torch</span>.<span class="pl-c1">inf</span>)
+<span class="pl-s1">weights</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">softmax</span>(<span class="pl-s1">masked</span>, <span class="pl-s1">dim</span><span class="pl-c1">=</span><span class="pl-c1">-</span><span class="pl-c1">1</span>)
+<span class="pl-s1">output</span> <span class="pl-c1">=</span> <span class="pl-s1">weights</span> @ <span class="pl-s1">v</span></pre></div>
+<h3 dir="auto">Work through three positions</h3>
+<p dir="auto"><strong>Reader prediction.</strong> The third position will match both earlier keys equally.<br>
+Will its output be the average of their two values, or can its own value dominate?<br>
+Which rows would change if only the final value were perturbed?</p>
+<p dir="auto">This is a newly calculated teaching fixture, not a model measurement. Set<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$d_h=d_v=2$</math-renderer> and use the already projected rows</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$Q=K=\begin{bmatrix}1&amp;0\\0&amp;1\\1&amp;1\end{bmatrix},\qquad
+V_{\mathrm{val}}=\begin{bmatrix}1&amp;2\\3&amp;0\\0&amp;4\end{bmatrix}.$$</math-renderer>
+<p dir="auto">Divide the query-key products by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\sqrt{2}$</math-renderer>, mask forbidden sources, and<br>
+normalize each row. With <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$a=1/\sqrt{2}$</math-renderer>, the masked score matrix is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$R=\begin{bmatrix}a&amp;-\infty&amp;-\infty\\0&amp;a&amp;-\infty\\a&amp;a&amp;2a\end{bmatrix}.$$</math-renderer>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Receiving position</th>
+<th>Weights over sources 0, 1, 2</th>
+<th>Retrieved value coordinates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[1,0,0]$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[1,2]$</math-renderer></td>
+</tr>
+<tr>
+<td>1</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[0.330238,0.669762,0]$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[2.339523,0.660477]$</math-renderer></td>
+</tr>
+<tr>
+<td>2</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[0.248255,0.248255,0.503490]$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[0.993020,2.510470]$</math-renderer></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The third row puts more than half its weight on itself: matching two earlier<br>
+keys equally does not remove self-attention. Its output is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$0.248255[1,2]+0.248255[3,0]+0.503490[0,4]$</math-renderer>, rounded here to six decimals.<br>
+The first row has only one legal source, so its normalized weight is one<br>
+regardless of the size of its finite score. These rows are already projected;<br>
+start the preceding implementation at its <code class="notranslate">scores</code> line after assigning them<br>
+to <code class="notranslate">q</code>, <code class="notranslate">k</code> and <code class="notranslate">v</code>. Equivalently, run the canonical trace directly:</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">dongxi_llms</span>.<span class="pl-s1">causal_attention_lab</span> <span class="pl-k">import</span> <span class="pl-s1">attention_trace</span>
+<span class="pl-s1">q</span> <span class="pl-c1">=</span> <span class="pl-s1">k</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>([[<span class="pl-c1">1.</span>, <span class="pl-c1">0.</span>], [<span class="pl-c1">0.</span>, <span class="pl-c1">1.</span>], [<span class="pl-c1">1.</span>, <span class="pl-c1">1.</span>]], <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">torch</span>.<span class="pl-c1">float64</span>)
+<span class="pl-s1">v</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>([[<span class="pl-c1">1.</span>, <span class="pl-c1">2.</span>], [<span class="pl-c1">3.</span>, <span class="pl-c1">0.</span>], [<span class="pl-c1">0.</span>, <span class="pl-c1">4.</span>]], <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">torch</span>.<span class="pl-c1">float64</span>)
+<span class="pl-s1">trace</span> <span class="pl-c1">=</span> <span class="pl-en">attention_trace</span>(<span class="pl-s1">q</span>, <span class="pl-s1">k</span>, <span class="pl-s1">v</span>)
+<span class="pl-en">print</span>(<span class="pl-s1">trace</span>[<span class="pl-s">"weights"</span>], <span class="pl-s1">trace</span>[<span class="pl-s">"output"</span>])</pre></div>
+<p dir="auto">Then change the final value to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[100,-100]$</math-renderer>. The first two<br>
+outputs remain unchanged; the third changes. This isolates value mixing and<br>
+causality, without claims about learned linguistic retrieval. The<br>
+<a href="../../experiments/reports/2026-10-10-book-editorial-pass/run-01/attention-forward-calculation.json">calculation receipt</a><br>
+retains full precision and the regeneration command.</p>
+<p dir="auto">Use replacement or an additive mask constructed directly. Multiplying a binary<br>
+mask by negative infinity creates 0×(−∞), which is NaN.</p>
+<p dir="auto">The companion<br>
+<a href="../../src/dongxi_llms/causal_attention_lab.py">forward implementation</a><br>
+returns intermediate tensors so the notebook can expose each transformation.<br>
+A correct implementation should satisfy:</p>
+<ol dir="auto">
+<li>nonnegative weights and row sums one before dropout;</li>
+<li>zero weights at forbidden positions;</li>
+<li>agreement between <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$AV_{\mathrm{val}}$</math-renderer> and an explicit allowed-source sum;</li>
+<li>unchanged prefix outputs when only future inputs change;</li>
+<li>agreement with an independently implemented reference at a declared tolerance.</li>
+</ol>
+<p dir="auto">The first notebook compares with PyTorch SDPA using dropout_p=0. For that API,<br>
+boolean true in an attention mask means allowed; other APIs can use different<br>
+conventions. Its causal handling also depends on query/key alignment, which<br>
+matters for cached decoding. Consult the<br>
+<a href="https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html" rel="nofollow">SDPA reference</a><br>
+rather than transferring a boolean mask convention by name alone.</p>
+<p dir="auto">For dense full-sequence attention, the products <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$QK^\top$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$AV_{\mathrm{val}}$</math-renderer><br>
+cost on the order of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n^2d_h$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n^2d_v$</math-renderer>. Explicitly storing <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$A$</math-renderer> costs <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n^2$</math-renderer><br>
+elements per head. Projections add costs proportional to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$nD$</math-renderer> times their widths.<br>
+Fused implementations may avoid materializing the whole score matrix; the small<br>
+implementation intentionally retains it for inspection.</p>
+<h2 dir="auto">4.8 How one loss teaches routing and content</h2>
+<p dir="auto">Let a downstream next-token loss <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$L$</math-renderer> send derivative <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$G_O=\partial L/\partial O$</math-renderer> into attention.<br>
+Because <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$O=AV_{\mathrm{val}}$</math-renderer>,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$dO=(dA)V_{\mathrm{val}}+A(dV_{\mathrm{val}}).$$</math-renderer>
+<p dir="auto">The chain rule separates the two paths:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$G_A=G_OV_{\mathrm{val}}^\top,\qquad G_V=A^\top G_O.$$</math-renderer>
+<p dir="auto">Write <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$G_V=\partial L/\partial V_{\mathrm{val}}$</math-renderer>. This derivative changes the messages that sources transmit. <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$G_A$</math-renderer> says how the downstream<br>
+loss would respond to changing the routing weights, given those messages.</p>
+<p dir="auto">For one softmax row a with incoming derivative g,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\frac{\partial L}{\partial r_j}
+=\sum_m g_m a_m(\mathbf{1}[m=j]-a_j)
+=a_j\left(g_j-\sum_m a_mg_m\right).$$</math-renderer>
+<p dir="auto">Stacking rows gives</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$G_R=A\odot\left(G_A-
+\mathrm{rowsum}(A\odot G_A)\right),$$</math-renderer>
+<p dir="auto">where the <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[n,1]$</math-renderer> row sum broadcasts across sources. Forbidden entries have zero<br>
+weight and zero score gradient. M is fixed, so it has no learned update.</p>
+<p dir="auto">For one receiver, this has a useful interpretation. Let g be its output<br>
+gradient and s_j an allowed scaled score. Substituting the value-path expression<br>
+for the incoming weight derivative yields</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\frac{\partial L}{\partial s_j}=a_j\,g\cdot(v_j-o).$$</math-renderer>
+<p dir="auto">Increasing a score redistributes weight toward its value and away from the<br>
+current mixture. The loss evaluates that change through g. If all allowed<br>
+values are identical, every v_j-o is zero: routing cannot change the output,<br>
+so this local routing gradient vanishes. The value projections can still learn.</p>
+<p dir="auto">Put numbers on that statement using receiving row 1 of the three-position<br>
+fixture in §4.7. Its two legal values are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[1,2]$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[3,0]$</math-renderer>, its weights<br>
+are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[0.330238,0.669762]$</math-renderer>, and its output is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[2.339523,0.660477]$</math-renderer>.<br>
+For the diagnostic objective <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$L=o_0$</math-renderer>—the first output coordinate—the incoming<br>
+gradient is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$g=[1,0]$</math-renderer>. The two score derivatives are approximately<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$[-0.442362,+0.442362]$</math-renderer>. Increasing the first score would pull that output<br>
+toward 1; increasing the second would pull it toward 3. Gradient descent on<br>
+this diagnostic coordinate therefore favors the first source. A next-token<br>
+loss supplies a different <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$g$</math-renderer> through the vocabulary head, but the same<br>
+redistribution rule applies.</p>
+<p dir="auto">Now make the two values identical while keeping the scores fixed. The<br>
+weights stay different, yet the output no longer depends on their allocation<br>
+and both score derivatives become zero. This controlled change separates<br>
+learning <strong>where to read</strong> from learning <strong>what to send</strong>. The<br>
+<a href="../../experiments/reports/2026-10-10-book-foundations-pass/run-01/depth-calculations.json">calculation receipt</a><br>
+checks the numeric derivative against autograd; the gradient notebook continues<br>
+through the actual query, key and value projections.</p>
+<p dir="auto">Through scaled dot products,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$G_Q=\frac{G_RK}{\sqrt{d_h}},\qquad
+G_K=\frac{G_R^\top Q}{\sqrt{d_h}}.$$</math-renderer>
+<p dir="auto">Through the learned projections,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$G_{W_Q}=X^\top G_Q,\quad
+G_{W_K}=X^\top G_K,\quad
+G_{W_V}=X^\top G_V,$$</math-renderer>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$G_X=G_QW_Q^\top+G_KW_K^\top+G_VW_V^\top.$$</math-renderer>
+<p dir="auto">All derivatives match the shape of their corresponding tensor. No separate<br>
+attention-map target is needed. The next-token objective can change where the<br>
+receiver reads, what each source advertises, and what it transmits.</p>
+<p dir="auto">For a simple SGD illustration, each matrix updates by<br>
+W←W−ηG_W. A derivative's sign and the optimizer's update direction are opposite.<br>
+In a shared network, an update affects many examples and scores; these local<br>
+derivatives do not imply that every useful edge increases after every step.</p>
+<h3 dir="auto">Why prompt states can receive gradients</h3>
+<p dir="auto">If only an answer position has direct loss, earlier prompt rows can still<br>
+affect that loss through their keys and values. They therefore receive<br>
+gradients. A forbidden future row cannot affect that isolated earlier loss,<br>
+so its input gradient is zero. Shared parameter updates are not a channel for<br>
+future information in the current forward pass.</p>
+<h3 dir="auto">Detach as a controlled intervention</h3>
+<p dir="auto">Replacing A with A.detach() preserves forward values but disconnects the<br>
+routing gradient. In the isolated head, W_Q and W_K lose their paths while<br>
+W_V still receives credit. Detaching <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V_{\mathrm{val}}$</math-renderer> instead removes W_V's path while Q/K<br>
+can learn which fixed messages to retrieve.</p>
+<p dir="auto">These statements assume independently parameterized projections and no extra<br>
+loss paths. The second notebook verifies them with one fixed output head,<br>
+one cross-entropy target, and finite differences of the projection weights.</p>
+<h2 dir="auto">4.9 What an attention map does and does not explain</h2>
+<p dir="auto">A shows routing coefficients inside a computation. To determine even the head's<br>
+output, one also needs <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V_{\mathrm{val}}$</math-renderer>. Different weight patterns may produce the same result.</p>
+<p dir="auto">Let v_1=[2,0], v_2=[0,2], and v_3=[1,1]. Then both</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$[0.4,0.4,0.2]V_{\mathrm{val}}=[1,1],\qquad
+[0.1,0.1,0.8]V_{\mathrm{val}}=[1,1].$$</math-renderer>
+<p dir="auto">More generally, if <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\delta V_{\mathrm{val}}=0$</math-renderer> and both <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$a$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$a+\delta$</math-renderer> are valid distributions,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$(a+\delta)V_{\mathrm{val}}=aV_{\mathrm{val}}.$$</math-renderer>
+<p dir="auto">A complete model adds other heads, residual paths, projections, and later<br>
+layers. A high attention weight alone therefore does not establish a source's<br>
+causal importance to the final prediction or a human-readable reasoning step.</p>
+<p dir="auto">Attention maps remain useful for diagnosing masking errors and proposing<br>
+hypotheses about retrieval. Stronger claims require interventions and<br>
+downstream measurements, with their own assumptions. Gradient magnitude alone<br>
+also does not settle causal importance.</p>
+<h2 dir="auto">4.10 Causal invariance explains the KV cache</h2>
+<p dir="auto">Generation extends a prefix one position at a time. At new position t,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$q_t=x_tW_Q,\quad k_t=x_tW_K,\quad v_t=x_tW_V,$$</math-renderer>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$K_{\le t}=[K_{&lt;t};k_t],\qquad V_{\mathrm{val},\le t}=[V_{\mathrm{val},&lt;t};v_t],$$</math-renderer>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$o_t=\mathrm{softmax}\left(
+\frac{q_tK_{\le t}^{\top}}{\sqrt{d_h}}\right)V_{\mathrm{val},\le t}.$$</math-renderer>
+<p dir="auto">The new query reads stored source keys and values. The old queries have already<br>
+completed their retrievals and are not needed by this expression.</p>
+<p dir="auto">Why are the stored projections still valid? Earlier states in a causal layer<br>
+cannot change when a future token is appended. Starting from unchanged input<br>
+representations, this property carries through successive causal layers and<br>
+positionwise transformations. Each layer can therefore retain its own earlier<br>
+keys and values. This is the mathematical basis of the runtime optimization<br>
+described in the <a href="https://huggingface.co/docs/transformers/cache_explanation" rel="nofollow">Hugging Face cache explanation</a>.</p>
+<h3 dir="auto">Same token, different context</h3>
+<p dir="auto">A cache is tied to position, prefix, layer, model parameters, and compatible<br>
+execution settings. It is not a vocabulary lookup table.</p>
+<p dir="auto">There is an important first-layer qualification. If two occurrences have<br>
+identical incoming embeddings and identical position treatment, their initial<br>
+linear Q/K/V projections can be identical despite different preceding text.<br>
+After contextual attention, deeper-layer incoming states can differ, so deeper<br>
+keys and values can differ. Context dependence must be traced through the<br>
+actual graph rather than assumed at every projection.</p>
+<h3 dir="auto">Prefill and decoding</h3>
+<p dir="auto">Prefill computes an entire prompt with causal attention and retains each<br>
+layer's K/V. Decoding then projects only new positions, appends their K/V, and<br>
+computes their outputs using the prefix cache.</p>
+<p dir="auto">For one new final-position query, all supplied cache keys are past or self.<br>
+No additional triangular mask is needed if no padding or other restrictions<br>
+exist. An unshifted [1,N] lower triangle would keep only source zero and be wrong.<br>
+For multi-token chunks, the mask must include the cached-prefix offset.</p>
+<p dir="auto">KV retention is an optional inference optimization. A full-sequence training<br>
+pass normally computes positions in parallel and retains activations for<br>
+backward, which is a different purpose. The cache does not add learned knowledge.</p>
+<h2 dir="auto">4.11 Cache cost, lifecycle, and inference systems</h2>
+<p dir="auto">For equal-width keys and values, a simple logical-storage model is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\text{KV bytes}=2BLnH_{\mathrm{KV}}d_hb,$$</math-renderer>
+<p dir="auto">where <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$B$</math-renderer> is batch size, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$L$</math-renderer> is layer count, and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n$</math-renderer> is retained positions;<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$H_{\mathrm{KV}}$</math-renderer> is KV heads per layer, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$d_h$</math-renderer> is head width, and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$b$</math-renderer> is bytes per scalar.<br>
+Unequal key/value widths require summing their sizes separately.</p>
+<p dir="auto">This formula counts payload, not allocation overhead, padding, fragmentation,<br>
+temporary buffers, or other model memory. GQA reduces the number of KV heads<br>
+relative to query heads; detailed design comparisons belong in Chapter 5.</p>
+<p dir="auto">Caching avoids projecting and processing the unchanged prefix repeatedly. It<br>
+does not make a new query's retrieval constant-time: its dot products and value<br>
+mixture still grow with the number of retained keys. Small replay experiments<br>
+can establish equality and count saved operations, but real latency depends on<br>
+hardware, batching, kernels, and memory traffic.</p>
+<p dir="auto">A completed or cancelled request no longer needs its request-local cache.<br>
+A runtime can release it while an allocator retains freed memory for reuse.<br>
+Some serving systems retain compatible exact-prefix state across requests;<br>
+vLLM documents such<br>
+<a href="https://docs.vllm.ai/en/latest/design/prefix_caching/" rel="nofollow">automatic prefix caching</a>.<br>
+This is reuse based on a compatible prefix, not merely a matching token string.</p>
+<p dir="auto">Hugging Face model code, vLLM, TensorRT-LLM, and llama.cpp are useful examples<br>
+of the systems layer to inspect later. Their cache policies, storage formats,<br>
+offloading choices, and defaults are implementation contracts. Verify the<br>
+version being used before treating a particular setting as universal.</p>
+<h2 dir="auto">4.12 Three companion notebooks and their evidence</h2>
+<p dir="auto">These are executable sections of the chapter. Each includes prediction prompts,<br>
+optional practice cells, adjacent runnable reference solutions, and explanations.<br>
+They can also be read as worked lessons before returning to hands-on study.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Session</th>
+<th>Main question</th>
+<th>Evidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-04/01_causal_attention_forward.ipynb">1. Forward attention</a></td>
+<td>Can a forbidden future affect normalization?</td>
+<td>Shape checks, SDPA agreement, prefix intervention, broken masks</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-04/02_attention_gradients_and_failures.ipynb">2. Gradients and failures</a></td>
+<td>How does loss train routing and content?</td>
+<td>Autograd, finite differences, detach interventions, scaling simulation</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-04/03_kv_cache_equivalence.ipynb">3. KV-cache equivalence</a></td>
+<td>What can be reused without changing outputs?</td>
+<td>Full-prefix versus cached replay, stale-prefix failure, logical memory accounting</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The <a href="../../experiments/reports/2026-09-05-causal-attention-forward.md">forward report</a><br>
+records exact agreement with SDPA on the fixed teaching fixture, unchanged<br>
+earlier outputs under the correct mask, and changed earlier outputs under both<br>
+broken masking variants.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-09-05-attention-gradients-cache.md">gradient and cache report</a><br>
+records the following CPU float64 observations:</p>
+<ul dir="auto">
+<li>maximum manual/autograd derivative error: 2.22×10⁻¹⁶;</li>
+<li>maximum central-difference projection-gradient error: 1.83×10⁻¹⁰;</li>
+<li>zero forbidden-score and future-input gradients for the isolated target;</li>
+<li>nonzero gradients into earlier input rows with no direct target;</li>
+<li>agreement of cached and full-prefix logits within 10⁻¹²;</li>
+<li>a stale-prefix cache causing a maximum logit difference of about 1.80691.</li>
+</ul>
+<p dir="auto">In the IID scaling simulation, head widths 8, 64, and 512 produced:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="right">d_h</th>
+<th align="right">Raw score std.</th>
+<th align="right">Scaled score std.</th>
+<th align="right">Raw entropy (nats)</th>
+<th align="right">Scaled entropy (nats)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">8</td>
+<td align="right">2.84406</td>
+<td align="right">1.00553</td>
+<td align="right">1.24229</td>
+<td align="right">2.35528</td>
+</tr>
+<tr>
+<td align="right">64</td>
+<td align="right">7.98888</td>
+<td align="right">0.99861</td>
+<td align="right">0.42197</td>
+<td align="right">2.36165</td>
+</tr>
+<tr>
+<td align="right">512</td>
+<td align="right">22.28492</td>
+<td align="right">0.98486</td>
+<td align="right">0.11479</td>
+<td align="right">2.35443</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">These are paired finite-sample results under the declared random-coordinate<br>
+model, not measurements of a pretrained model.</p>
+<p dir="auto">The cache fixture uses two single-head residual attention layers with width<br>
+four and an arbitrary five-class head. It omits a full decoder's normalization,<br>
+MLP, and positional encoding. Replaying six fixed input rows with a two-row<br>
+prefill requires 12 cached versus 40 uncached layer-position projections for<br>
+each of K and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$V_{\mathrm{val}}$</math-renderer>. Final logical cache storage is 768 bytes. This is neither a<br>
+measured speedup nor a model-quality result.</p>
+<h3 dir="auto">A row can be normalized without keeping every score</h3>
+<p dir="auto">Softmax needs a row's global normalization, but the row need not remain materialized. After visiting one key block, retain a maximum <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$m$</math-renderer>, a scaled denominator <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\ell$</math-renderer> and a scaled value numerator <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$u$</math-renderer>. If the next block has scores <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$s_j$</math-renderer> and a larger maximum, set <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$m'=\max(m,\max_j s_j)$</math-renderer> and update</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$$\ell'=e^{m-m'}\ell+\sum_j e^{s_j-m'},\qquad
+u'=e^{m-m'}u+\sum_j e^{s_j-m'}v_j.$$</math-renderer>
+<p dir="auto">Initialize <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$m=-\infty$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$\ell=0$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$u=0$</math-renderer>. Skip a block with no allowed keys. For the first nonempty block, its maximum is finite and the old accumulators contribute zero; an implementation must handle the empty state explicitly to avoid subtracting two negative infinities.</p>
+<p dir="auto">Here <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$s_j$</math-renderer> is a scaled query–key dot product, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$v_j$</math-renderer> is a value vector, and the final row output is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$u'/\ell'$</math-renderer>. The factor multiplying the old state preserves its contribution in the new coordinate system. Removing that factor can yield plausible-looking values while violating dense attention. The <a href="../../notebooks/extensions/cs336/02_online_attention.ipynb">online attention microscope</a> shows this failure beside the correct blockwise result.</p>
+<p dir="auto">Apply the causal and padding masks before each block's reduction. An entirely masked row has zero output under the companion's declared convention, with log-sum-exp equal to negative infinity. The tests also compare gradients and exercise uneven tiles. These checks establish a transparent implementation's mathematical behavior. Python tiling with ordinary autograd can still retain intermediate graphs; its smaller forward workspace is not evidence of FlashAttention's fused backward memory or GPU speed. Assignment C asks the reader to defend both the recurrence and that boundary.</p>
+<h2 dir="auto">4.13 Exercises</h2>
+<ol dir="auto">
+<li>
+<strong>Shapes and meaning.</strong> For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$n=5,D=8,d_h=4,d_v=3$</math-renderer>, give every shape<br>
+from X through O. Which axis indexes vocabulary candidates?</li>
+<li>
+<strong>Directed retrieval.</strong> Explain why q_i k_jᵀ need not equal q_j k_iᵀ,<br>
+even though both projections come from X.</li>
+<li>
+<strong>Scale assumptions.</strong> Derive Var(q·k). What changes if coordinate variances<br>
+are σ_q² and σ_k²? Why does scaling not guarantee nonsaturated trained scores?</li>
+<li>
+<strong>Mask-order failure.</strong> Explain the three outcomes for [0,0,10] when the last<br>
+source is forbidden. When can post-softmax renormalization repair masking?</li>
+<li>
+<strong>Future intervention.</strong> Change only “river” to “road.” Explain the outputs<br>
+at “crossed” and at the changed position. State the assumptions.</li>
+<li>
+<strong>Backward credit.</strong> Derive <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$G_V$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$G_A$</math-renderer> from <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$O=AV_{\mathrm{val}}$</math-renderer>, then trace the path to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="64fdfc447b30f7dde5b3ab9311df2eca">$X$</math-renderer>.<br>
+Can an earlier prompt position receive gradients with zero direct loss?</li>
+<li>
+<strong>Detach and saturation.</strong> Explain the two detach interventions. Reconcile<br>
+attention saturation with the p−q gradient for vocabulary cross-entropy.</li>
+<li>
+<strong>Interpretation.</strong> Construct two different attention distributions with the<br>
+same value mixture. What can an attention map establish by itself?</li>
+<li>
+<strong>Cache correctness.</strong> Explain why old K/V remain valid when a prefix grows,<br>
+why old Q is unnecessary for ordinary decoding, and why the same token can<br>
+have different deeper-layer keys.</li>
+<li>
+<strong>Cache memory and masking.</strong> Derive the 768-byte fixture size. Explain why<br>
+an unshifted [1,N] causal triangle is incorrect for its final-position query.</li>
+<li>
+<strong>Experimental claims.</strong> What do the derivative checks, cache replay, and<br>
+operation counts establish? What would require a separate experiment?</li>
+<li>
+<strong>Implementation defense.</strong> Starting from the first notebook's five-step<br>
+attention implementation, name a check that catches each of: wrong softmax<br>
+axis, future leakage, zero-score replacement, and an all-masked row.</li>
+</ol>
+<p dir="auto"><a href="../solutions/04-attention-and-the-causal-information-boundary.md">Worked solutions</a><br>
+provide explanations and links to executable checks.</p>
+<h2 dir="auto">4.14 From one head to a decoder</h2>
+<p dir="auto">We can now follow attention in both directions: incoming states produce<br>
+matching requests, source keys, and messages; a causal distribution mixes those<br>
+messages; downstream loss sends credit back through content and routing.<br>
+Causal prefix invariance then permits a runtime to retain the sources that<br>
+future queries will need.</p>
+<p dir="auto">A single head is only one component of a language model. Chapter 5 assembles<br>
+multiple heads, output projection, residual streams, normalization, position<br>
+information, and feed-forward transformations into a decoder. It then studies<br>
+modern variants and accounts for parameters, compute, and memory. Recurrent<br>
+depth and looped Transformers remain a later architecture extension after this<br>
+baseline is established.</p>

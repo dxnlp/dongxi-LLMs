@@ -84,7 +84,7 @@ For training a complete assistant demonstration, use the full conversation witho
 
 The role header is not the same as its body. A useful supervision policy learns assistant body tokens and the assistant's termination marker, while treating system/user content and role headers as context. Other policies can also learn headers; the choice must be written and tested.
 
-Our encoder produces three aligned lists: token IDs, a boolean supervised flag, and a human-readable owner. The supervised flag is attached to the token being predicted. This detail matters when the model's logit at position $t$ predicts token $t+1$.
+Our encoder produces three aligned lists: token IDs, a boolean supervised flag, and a human-readable owner. The supervised flag is attached to the token being predicted. This detail matters when the model's logit at position $`t`$ predicts token $`t+1`$.
 
 **Reader prediction:** `red` occurs once in the user's request and once in the
 assistant's answer. Can the token ID alone tell us which occurrence to train?
@@ -98,17 +98,17 @@ on reconstructing user and system text. Its effect depends on their lengths and
 the task, so masking is an objective choice rather than a rule that every
 unmasked prompt must cause a bad assistant.
 
-Let $x_{b,t}$ be the full conversation IDs, $m_{b,t}$ the ownership mask, and $a_{b,t}$ the padding-validity mask. Define labels
+Let $`x_{b,t}`$ be the full conversation IDs, $`m_{b,t}`$ the ownership mask, and $`a_{b,t}`$ the padding-validity mask. Define labels
 
-$$
+```math
 \ell_{b,t}=
 \begin{cases}
-x_{b,t}, & m_{b,t}=1\ \text{and}\ a_{b,t}=1,\\
+x_{b,t}, & m_{b,t}=1\ \text{and}\ a_{b,t}=1,\\%
 -100, & \text{otherwise}.
 \end{cases}
-$$
+```
 
-The sentinel $-100$ is an implementation convention for ignored labels, not a token ID. For logits $Z\in\mathbb{R}^{B\times n\times V}$, train using $Z[:,:-1,:]$ against $\ell[:,1:]$. Shift exactly once. Some high-level model APIs shift labels internally; the transparent teaching module performs the shift itself. Combining both shifts predicts two positions ahead.
+The sentinel $`-100`$ is an implementation convention for ignored labels, not a token ID. For logits $`Z\in\mathbb{R}^{B\times n\times V}`$, train using $`Z[:,:-1,:]`$ against $`\ell[:,1:]`$. Shift exactly once. Some high-level model APIs shift labels internally; the transparent teaching module performs the shift itself. Combining both shifts predicts two positions ahead.
 
 In the symbolic example, the final assistant body “red” and its END marker are supervised. The ASSISTANT header is ignored. The logit at the header predicts “red”; the logit at “red” predicts END. The target belongs to the assistant even though the producing position may be the header.
 
@@ -165,7 +165,7 @@ The fixture keeps all sequences within a small bound. The Spark runner rejects e
 
 ## 8.6 Padding is not an instruction
 
-Batches contain different lengths. Padding creates a rectangular tensor $X\in\mathbb{N}^{B\times n}$. Padded labels must be ignored and padded context must be masked appropriately. The attention-validity mask is separate from the supervision mask because valid user context is visible even when its labels are ignored.
+Batches contain different lengths. Padding creates a rectangular tensor $`X\in\mathbb{N}^{B\times n}`$. Padded labels must be ignored and padded context must be masked appropriately. The attention-validity mask is separate from the supervision mask because valid user context is visible even when its labels are ignored.
 
 Our right-padded microscope has no future influence on earlier real positions under a causal decoder. Its padding loss is still explicitly ignored. A production model should receive the actual attention mask; left padding changes position handling and generation conventions and requires an independent equivalence check.
 
@@ -186,11 +186,11 @@ the same available context as in its separate forward pass. The segment mask
 below makes that intended independence a computation we can check, instead of
 asking the model to learn it from an END marker.
 
-For independent conversations, assign a segment identifier $s_t$ to each position. An allowed-attention mask is
+For independent conversations, assign a segment identifier $`s_t`$ to each position. An allowed-attention mask is
 
-$$
+```math
 M_{t,u}=\mathbf{1}\{u\le t\}\mathbf{1}\{s_u=s_t\}.
-$$
+```
 
 This block-diagonal causal structure allows a conversation to see its own past and excludes preceding independent examples. Whether position IDs reset within segments is another explicit choice. Test equivalence with independent forwards at the chosen positional convention.
 
@@ -202,7 +202,7 @@ The notebook visualizes ordinary causal visibility beside segment-isolated visib
 
 ![Ordinary causal visibility versus segment-isolated visibility for nine positions](../../notebooks/figures/chapter-08/day-11-02_padding_packing_boundaries-02.png)
 
-Both matrices are $9\times9$: rows are receiving/query positions and columns
+Both matrices are $`9\times9`$: rows are receiving/query positions and columns
 are source/key positions. Five positions belong to segment zero and four to
 segment one. The lower-left block is visible under the ordinary triangle and
 blocked by the isolated mask. Change one segment ID in the notebook and track
@@ -213,13 +213,13 @@ evidence of a production packing backend.
 
 Suppose half the sampled examples belong to short-answer tasks and half to explanation tasks. Short answers average ten supervised tokens; explanations average ninety. Under a global token mean, explanation tokens contribute approximately 90% of the objective, although example sampling is balanced.
 
-If task family $r$ has example probability $w_r$ and mean supervised length $\bar n_r$, its expected token share is
+If task family $`r`$ has example probability $`w_r`$ and mean supervised length $`\bar n_r`$, its expected token share is
 
-$$
+```math
 \pi_r=\frac{w_r\bar n_r}{\sum_q w_q\bar n_q}.
-$$
+```
 
-To target equal supervised-token shares, one possible sampling strategy chooses $w_r$ proportional to $1/\bar n_r$. This changes the example distribution and increases the frequency of short tasks. Another approach averages each example's loss before averaging examples; that changes gradient weighting. Neither should be introduced silently.
+To target equal supervised-token shares, one possible sampling strategy chooses $`w_r`$ proportional to $`1/\bar n_r`$. This changes the example distribution and increases the frequency of short tasks. Another approach averages each example's loss before averaging examples; that changes gradient weighting. Neither should be introduced silently.
 
 Report examples, input tokens, assistant tokens and source proportions separately. A high fraction of explanation tokens is not necessarily bad; it becomes a problem when it contradicts the intended interface. Use an evaluation slice for concise-output instructions to see whether the behavior transfers.
 
@@ -313,19 +313,19 @@ unseen polite prefix does not make a reused underlying task a new source group.
 
 ## 8.13 Selection changes both answers and exposure
 
-Let $C_i$ be the frozen accepted candidate pool for training prompt $x_i$, and
-let $s(x_i,y)$ be the declared training-task score. A per-prompt selection is
+Let $`C_i`$ be the frozen accepted candidate pool for training prompt $`x_i`$, and
+let $`s(x_i,y)`$ be the declared training-task score. A per-prompt selection is
 
-$$
+```math
 y_i^\star=\underset{y\in C_i}{\mathrm{argmax}}\,s(x_i,y).
-$$
+```
 
 The implementation resolves ties by shorter supervised length and stable
-attempt identity. Its random control samples uniformly from the same $C_i$,
+attempt identity. Its random control samples uniformly from the same $`C_i`$,
 using an independently item-keyed seeded stream. Both choose one demonstration
 per prompt, preserving prompt coverage. Neither can query the held-out panel.
 
-A global top-$K$ ranking over all pools solves a different problem. It can spend
+A global top-$`K`$ ranking over all pools solves a different problem. It can spend
 several selections on one source or omit an entire difficulty slice. Define
 prompt coverage as the fraction of training prompts represented at least once.
 In this fixture global top 6 covers only six of twelve prompts, all two-word
@@ -333,13 +333,13 @@ tasks, because correctness ties favor shorter answers. Global top 12 covers all
 twelve. These are separate coverage audits at different sample budgets, not
 additional matched student results.
 
-Matching examples and prompts does not match supervised tokens. Let $n_{a,j}$
-count the final-answer and END targets in example $j$ of arm $a$. Under $U$
+Matching examples and prompts does not match supervised tokens. Let $`n_{a,j}`$
+count the final-answer and END targets in example $`j`$ of arm $`a`$. Under $`U`$
 full-batch updates, target exposure is
 
-$$
+```math
 E_a=U\sum_j n_{a,j}.
-$$
+```
 
 All three selected datasets contain twelve examples and all twelve prompts.
 Top and length-stratified random each contain 42 targets per batch; unstratified

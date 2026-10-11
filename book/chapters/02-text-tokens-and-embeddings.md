@@ -418,12 +418,12 @@ or variation across domains—not one sentence per language.
 ### Vocabulary size trades rows against sequence positions
 
 A tokenizer with fewer learned pieces tends to leave more text decomposed into
-bytes or short fragments. That increases token sequence length $n$. More
+bytes or short fragments. That increases token sequence length $`n`$. More
 positions mean more transformer work, more autoregressive generation steps, more
 KV-cache entries, and—under full attention—more position pairs.
 
 A larger vocabulary can compress frequent patterns into fewer positions, but it
-increases the embedding and output dimensions $V_m$. Dense next-token projection
+increases the embedding and output dimensions $`V_m`$. Dense next-token projection
 must compare each contextual state with every output row. The broad trade-off is:
 
 ```text
@@ -433,22 +433,22 @@ larger vocabulary  → wider embedding/output tables and more candidate scores
 
 “Often” matters. A large vocabulary allocated mainly to other languages or
 domains can compress the target text worse than a smaller specialized one.
-Chapter 3 makes the $n$-versus-$V_m$ computation explicit when it constructs the
+Chapter 3 makes the $`n`$-versus-$`V_m`$ computation explicit when it constructs the
 vocabulary-wide logit tensor.
 
 ## 2.5 Embeddings turn addresses into vectors
 
 A token ID is an address, not a learned semantic vector. Let:
 
-- $V_m$ be the model's embedding-row count;
-- $D$ be the embedding width;
-- $E \in \mathbb{R}^{V_m \times D}$ be the trainable embedding table.
+- $`V_m`$ be the model's embedding-row count;
+- $`D`$ be the embedding width;
+- $`E \in \mathbb{R}^{V_m \times D}`$ be the trainable embedding table.
 
-For token IDs $I \in \{0,\ldots,V_m-1\}^{B \times n}$, lookup produces:
+For token IDs $`I \in \{0,\ldots,V_m-1\}^{B \times n}`$, lookup produces:
 
-$$
+```math
 X = E[I], \qquad X \in \mathbb{R}^{B \times n \times D}.
-$$
+```
 
 For example:
 
@@ -463,16 +463,16 @@ rather than replacing the batch or sequence dimensions.
 
 ### Follow the illustrative prefix into a table
 
-Reduce the width to $D=2$ so that every coordinate is visible. Assign the toy
-rows $E[2]=[1,0]$, $E[5]=[0,1]$ and $E[3]=[1,1]$. Lookup for one sequence
-has shape $[1,4,2]$ and reads:
+Reduce the width to $`D=2`$ so that every coordinate is visible. Assign the toy
+rows $`E[2]=[1,0]`$, $`E[5]=[0,1]`$ and $`E[3]=[1,1]`$. Lookup for one sequence
+has shape $`[1,4,2]`$ and reads:
 
 | Position | Piece / ID | Retrieved row |
 |---:|---|---|
-| 0 | `the` / 2 | $[1,0]$ |
-| 1 | `pet` / 5 | $[0,1]$ |
-| 2 | `saw` / 3 | $[1,1]$ |
-| 3 | `the` / 2 | $[1,0]$ |
+| 0 | `the` / 2 | $`[1,0]`$ |
+| 1 | `pet` / 5 | $`[0,1]`$ |
+| 2 | `saw` / 3 | $`[1,1]`$ |
+| 3 | `the` / 2 | $`[1,0]`$ |
 
 **Reader prediction.** If we exchange the two `the` positions, does lookup
 alone detect a change? No: the retrieved rows are identical. The lookup has no
@@ -481,15 +481,15 @@ allow the two occurrences to become different contextual states. These
 assigned coordinates expose indexing; neither axis has been learned to mean
 an English concept.
 
-Mathematically, selecting row $i$ is equivalent to multiplying a one-hot row
-vector by $E$:
+Mathematically, selecting row $`i`$ is equivalent to multiplying a one-hot row
+vector by $`E`$:
 
-$$
+```math
 e_i^\top E = E[i].
-$$
+```
 
 Implementations use indexed lookup because materializing a mostly zero vector of
-length $V_m$ is wasteful.
+length $`V_m`$ is wasteful.
 
 ### Token IDs are categorical addresses
 
@@ -517,11 +517,11 @@ E[2], E[5], E[2]
 
 The first and third values are copies used at different sequence positions, but
 they come from the same trainable row. If their position-level gradients are
-$g_0$ and $g_2$, the shared parameter receives their sum:
+$`g_0`$ and $`g_2`$, the shared parameter receives their sum:
 
-$$
+```math
 \frac{\partial L}{\partial E[2]} = g_0 + g_2.
-$$
+```
 
 Under the controlled sum loss in our transparent PyTorch lab, each occurrence
 contributed a vector of ones:
@@ -537,24 +537,24 @@ the model.
 
 We can carry the same mechanism through an update. For the four-position
 illustrative prefix, use the deliberately simple objective
-$L_{\mathrm{sum}}=\sum_{t,d}E[I_t,d]$. It is a microscope for parameter sharing,
+$`L_{\mathrm{sum}}=\sum_{t,d}E[I_t,d]`$. It is a microscope for parameter sharing,
 not a language-model loss. Each retrieved coordinate contributes derivative 1.
-The row gradients are therefore $[2,2]$ at row 2 and $[1,1]$ at rows 3 and 5;
+The row gradients are therefore $`[2,2]`$ at row 2 and $`[1,1]`$ at rows 3 and 5;
 other rows receive zero. Plain stochastic gradient descent (SGD) subtracts a
 learning-rate-scaled gradient from each parameter. One step here,
-$E\leftarrow E-0.1\nabla_E L_{\mathrm{sum}}$,
+$`E\leftarrow E-0.1\nabla_E L_{\mathrm{sum}}`$,
 changes the selected rows to:
 
 | Shared row | Before | Gradient | After |
 |---|---|---|---|
-| 2: `the` | $[1,0]$ | $[2,2]$ | $[0.8,-0.2]$ |
-| 5: `pet` | $[0,1]$ | $[1,1]$ | $[-0.1,0.9]$ |
-| 3: `saw` | $[1,1]$ | $[1,1]$ | $[0.9,0.9]$ |
+| 2: `the` | $`[1,0]`$ | $`[2,2]`$ | $`[0.8,-0.2]`$ |
+| 5: `pet` | $`[0,1]`$ | $`[1,1]`$ | $`[-0.1,0.9]`$ |
+| 3: `saw` | $`[1,1]`$ | $`[1,1]`$ | $`[0.9,0.9]`$ |
 
 Both `the` positions retrieve the updated row next time. The IDs did not change;
 the reusable representation did. Change only the final ID from 2 to 5 and
-predict the new gradients: row 2 receives $[1,1]$, row 5 receives $[2,2]$,
-and row 3 remains at $[1,1]$. Repetition determines accumulation, not the size
+predict the new gradients: row 2 receives $`[1,1]`$, row 5 receives $`[2,2]`$,
+and row 3 remains at $`[1,1]`$. Repetition determines accumulation, not the size
 of the printed ID. The same indexed sum and backward operation is runnable in
 [the repeated-lookup lab](../../src/dongxi_llms/embedding_gradient_lab.py);
 Chapter 3 replaces this artificial objective with next-token prediction.
@@ -580,13 +580,13 @@ We need three levels:
 3. **Contextual hidden state:** a position-specific vector constructed by the
    transformer from the causally available sequence.
 
-For a hidden tensor $H \in \mathbb{R}^{B \times n \times D}$, we use lowercase
-$h = H[b,t,:] \in \mathbb{R}^D$ for one position's contextual state. With input
+For a hidden tensor $`H \in \mathbb{R}^{B \times n \times D}`$, we use lowercase
+$`h = H[b,t,:] \in \mathbb{R}^D`$ for one position's contextual state. With input
 `[cat, sat]`, the final position can be summarized as:
 
-$$
+```math
 h_{\text{sat}} = \mathrm{Transformer}(E[\text{cat}], E[\text{sat}]).
-$$
+```
 
 The two occurrences of one token begin with the same row but can develop
 different hidden states because position and surrounding context differ.
@@ -613,11 +613,11 @@ describe different events. Token identity alone is insufficient.
 Qwen3 uses rotary positional embeddings, or RoPE, inside attention. At a high
 level, RoPE rotates queries and keys according to position:
 
-$$
+```math
 q_t' = R_t q_t, \qquad k_s' = R_s k_s.
-$$
+```
 
-Their dot product can then depend on the relative position $t-s$. RoPE does not
+Their dot product can then depend on the relative position $`t-s`$. RoPE does not
 simply replace the token embedding with a “position 7” vector; it makes attention
 comparisons position-aware. Chapter 4 derives attention and its masks, and
 Chapter 5 places RoPE inside the complete decoder.
@@ -654,29 +654,29 @@ embedding table and the transformations that consume it.
 ### Weight tying couples reading and predicting
 
 Hidden states are row vectors throughout the book. The stored output weight
-$W_{\mathrm{out}}$ has shape $[V_m,D]$, so an untied head computes
-$z=hW_{\mathrm{out}}^\top$. With tying, that stored parameter is the embedding
-table $E$. Legacy notebook variables retain their names; an API's sequence-length
-`T` means $n$ in the mathematical notation here.
+$`W_{\mathrm{out}}`$ has shape $`[V_m,D]`$, so an untied head computes
+$`z=hW_{\mathrm{out}}^\top`$. With tying, that stored parameter is the embedding
+table $`E`$. Legacy notebook variables retain their names; an API's sequence-length
+`T` means $`n`$ in the mathematical notation here.
 
-An untied language model has a separate output matrix $W_{\mathrm{out}}$. A tied model
-reuses $E$:
+An untied language model has a separate output matrix $`W_{\mathrm{out}}`$. A tied model
+reuses $`E`$:
 
-$$
+```math
 z = hE^\top, \qquad z_i = h \cdot E[i].
-$$
+```
 
-Here $z_i$ is the logit for candidate token $i$: a raw compatibility score,
+Here $`z_i`$ is the logit for candidate token $`i`$: a raw compatibility score,
 not yet a probability. Softmax converts all logits into a shared probability
 distribution. Chapter 3 derives that conversion and the next-token loss in full.
 
-For target token $y$, the output-side gradient of cross-entropy with respect to
+For target token $`y`$, the output-side gradient of cross-entropy with respect to
 one tied row is:
 
-$$
+```math
 \left.\frac{\partial L}{\partial E[i]}\right|_{output}
 = \left(p_i - \mathbf{1}[i=y]\right)h.
-$$
+```
 
 This creates two distinct paths:
 
@@ -713,7 +713,7 @@ and predicting. It also removes freedom: the two roles cannot adapt independentl
 The lab verifies gradient routing, not that tying is universally superior.
 
 Production LLMs commonly use AdamW rather than the simple update
-$E \leftarrow E-\eta\nabla E$, but the optimizer still acts on the accumulated
+$`E \leftarrow E-\eta\nabla E`$, but the optimizer still acts on the accumulated
 gradient produced by these paths.
 
 ## 2.8 Qwen3's concrete interface
@@ -755,8 +755,8 @@ weights do not establish why the designers selected this exact size. The full
 method and evidence are preserved in the
 [Qwen3 interface report](../../experiments/reports/2026-08-31-qwen3-embedding-inspection.md).
 
-This example also sharpens our notation: tokenizer entry count $V_t$ and model
-row count $V_m$ can differ. Treating both casually as “the vocabulary size” can
+This example also sharpens our notation: tokenizer entry count $`V_t`$ and model
+row count $`V_m`$ can differ. Treating both casually as “the vocabulary size” can
 hide a real interface boundary.
 
 The [measured decoder-coverage failure](../../learning_artifacts/day-02-text-tokens-and-embeddings/output-vocabulary-and-decoder-coverage.md)
@@ -823,9 +823,9 @@ inside the loss computation; Chapter 3 makes that alignment explicit.
 In common PyTorch cross-entropy usage, label `-100` means “ignore this target.” If
 the padded label remained ID 0, the objective would include:
 
-$$
+```math
 L_{pad} = -\log P(\text{PAD}\mid\text{preceding context}),
-$$
+```
 
 training the model on batch formatting rather than intended language.
 
@@ -1032,7 +1032,7 @@ only under the tokenizer that defined the model's embedding rows. Their numeric
 magnitudes and distances have no linguistic meaning; a consistent permutation
 of IDs and matching parameter rows preserves the model's function.
 
-Embedding lookup maps $[B,n]$ IDs to $[B,n,D]$ starting vectors. The transformer
+Embedding lookup maps $`[B,n]`$ IDs to $`[B,n,D]`$ starting vectors. The transformer
 then constructs position- and context-dependent hidden states under a causal
 information boundary. Next-token loss trains the table end to end. Repeated
 lookups accumulate gradients into shared rows, and tied output weights add a
@@ -1043,7 +1043,7 @@ no local loss can still influence a supervised later state and receive gradient
 through that dependency. PAD is artificial formatting; EOS is a meaningful event
 the model must learn.
 
-We have followed text to a vector $h$ and seen that the model converts $h$ to
+We have followed text to a vector $`h`$ and seen that the model converts $`h`$ to
 logits. The next question is how those arbitrary real scores become a probability
 distribution and a scalar learning signal. Chapter 3 derives softmax,
 negative log-likelihood, cross-entropy, perplexity, causal shifting, and the tiny

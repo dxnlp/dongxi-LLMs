@@ -1,0 +1,2463 @@
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-20</h1>
+<h1 dir="auto">How to Use the Book and Companion Repository</h1>
+<p dir="auto">Start with the preface and Chapter 1. Chapters 2–5 develop a common decoder;<br>
+Chapters 6–9 use it to explain training, evaluation and SFT. Chapters 10–13 introduce<br>
+preferences and policy optimization. Chapters 14–15 diagnose failures and assemble<br>
+the final comparison. The <a href="../../docs/COURSE_SEQUENCE.md">28-day route</a> links<br>
+every day's material and practical work.</p>
+<p dir="auto">Read a chapter for its central question before treating it as a collection of<br>
+definitions. Follow the worked example until you can identify the input, the<br>
+operation and the consequence. At a prediction, pause long enough to say what<br>
+you expect and why; the reference reasoning follows nearby. Then choose the<br>
+companion session that changes that assumption. You can read the argument and<br>
+inspect its saved evidence without executing a model training run.</p>
+<p dir="auto">Some examples recur with different roles. A token distribution first explains<br>
+prediction loss, later becomes a policy, and eventually becomes a teacher's<br>
+target. An instruction response first defines an interface, then becomes a<br>
+training target and an evaluation item. Each chapter names the new role and<br>
+the distribution or gradient boundary it changes. Follow that change rather<br>
+than assuming that a familiar-looking equation has the same meaning everywhere.</p>
+<p dir="auto">For a lesson, first read its motivating question. Write a prediction in ordinary<br>
+language before executing the reference. A useful prediction says which quantity<br>
+will change, why, and what would contradict your explanation. It need not contain<br>
+a calculated number. Next run the small implementation, examine the plot, and<br>
+change one meaningful assumption. Finish by explaining the discrepancy between<br>
+your prediction and the observation.</p>
+<p dir="auto">Each notebook supplies a runnable reference and an explanation adjacent to its<br>
+exercise. You can inspect the answer immediately when syntax is holding you up;<br>
+independent understanding is tested later by reconstructing the argument or<br>
+designing another intervention. Prefer thoughtful questions about information<br>
+flow, gradients, controls and competing explanations to calculation speed.</p>
+<p dir="auto">Use a fresh kernel and run from top to bottom when checking readiness. Running<br>
+only a later cell can accidentally use stale variables from an earlier trial.<br>
+Source notebooks are preserved by the course verifier, which writes executed<br>
+copies elsewhere. Saved previews are fixed reference observations; run the plot<br>
+cell to regenerate it from your current state. The image's source and evidence<br>
+type matter as much as its appearance.</p>
+<p dir="auto">The reusable modules under <code class="notranslate">src/dongxi_llms/</code> hold the computations. The notebooks<br>
+hold the question, prediction, intervention, visuals and interpretation. Tests<br>
+check mathematical or protocol invariants. Experiment specifications freeze the<br>
+intended comparison; reports record the actual result, including failures.<br>
+Writing a report before measuring the outcome would break this chain.</p>
+<p dir="auto">Three execution modes are available:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Mode</th>
+<th>Purpose</th>
+<th>Typical environment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mechanism reference</td>
+<td>Inspect exact arithmetic, masks, gradients and failures</td>
+<td>CPU on Mac or Spark</td>
+</tr>
+<tr>
+<td>Bounded model experiment</td>
+<td>Measure learning and resources under a fixed cap</td>
+<td>Spark</td>
+</tr>
+<tr>
+<td>Saved-evidence analysis</td>
+<td>Reproduce a reported comparison without its weights</td>
+<td>Either machine</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Use <a href="../appendices/d-reproduction-and-environments.md">Appendix D</a> for environment and verification commands. The CPU route avoids<br>
+Hub downloads. Spark extensions record model revisions, data identity, objective,<br>
+batch geometry, stop conditions and memory reserve. Their specifications are<br>
+study material even before their executions are approved or measured.</p>
+<p dir="auto">The day trackers distinguish ready material from learner practice. Reading all<br>
+solutions is different from independently explaining them. Executing all notebooks<br>
+is different from training every Qwen checkpoint proposed by the roadmap. Preserve<br>
+these distinctions when assessing yourself or presenting the course to others.</p>
+<p dir="auto">When switching machines, use the established phrases: <strong>Switch to Mac</strong>, then<br>
+<strong>Continue on Mac</strong>, or <strong>Switch to Spark</strong>, then <strong>Continue on Spark</strong>. The<br>
+departure saves scoped work and the arrival verifies host and repository state.<br>
+Git transfers the source and durable records, not an active Python kernel or<br>
+an SSH-forwarded browser port. See the <a href="../../docs/LEARNING_WORKFLOW.md">workflow</a>.</p>
+<p dir="auto">At the end of a chapter, use its worked solutions and the mastery rubric to<br>
+identify the next question. The final capstone asks for a defended checkpoint<br>
+comparison, an explicit genealogy, a model card and a release decision based on<br>
+the accumulated evidence. A failed capability claim can still produce a useful,<br>
+well-documented experiment and a better next hypothesis.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-21</h1>
+<h1 dir="auto">Notation and Experimental Conventions</h1>
+<p dir="auto">All logarithms are natural unless a base is explicitly stated. Negative<br>
+log-likelihood and KL are therefore measured in nats. Token IDs are categorical<br>
+indices; their numerical distances do not express linguistic similarity.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Typical shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$B,n,V,D$</math-renderer></td>
+<td>Batch, sequence length, vocabulary, residual width</td>
+<td>Scalar dimensions</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$X$</math-renderer></td>
+<td>Residual states at all input positions</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[B,n,D]$</math-renderer></td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$E$</math-renderer></td>
+<td>Input embedding table</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[V,D]$</math-renderer></td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$W_{\mathrm{out}}$</math-renderer></td>
+<td>Stored vocabulary head; <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$z_t=h_tW_{\mathrm{out}}^\top$</math-renderer>
+</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[V,D]$</math-renderer></td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$h_t,z_t,p_t$</math-renderer></td>
+<td>Contextual state, logits, probabilities</td>
+<td>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[D]$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[V]$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[V]$</math-renderer>
+</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$q_t$</math-renderer></td>
+<td>Target distribution, often one-hot</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[V]$</math-renderer></td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$H,d_h$</math-renderer></td>
+<td>Attention heads and query/key head width</td>
+<td>Scalar dimensions</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$Q,K,V_{\mathrm{val}}$</math-renderer></td>
+<td>Queries, keys and attention values</td>
+<td>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[B,H,n,d_h]$</math-renderer> when value width matches</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$m_t$</math-renderer></td>
+<td>Valid-target or completion-loss mask</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[B,n]$</math-renderer></td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\pi_\theta,\pi_{\mathrm{ref}},\pi_{\mathrm{old}}$</math-renderer></td>
+<td>Current, reference and rollout policies</td>
+<td>Conditional distributions</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$x,y$</math-renderer></td>
+<td>Context and response</td>
+<td>Token sequences</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$r_\phi(x,y),R(x,y)$</math-renderer></td>
+<td>Learned reward and environment/verifier reward</td>
+<td>Scalars</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\hat A_i,\hat A_{i,t}$</math-renderer></td>
+<td>Response-level and token-level advantage</td>
+<td>Response/token arrays</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\tau,\Delta t_{\mathrm{update}}$</math-renderer></td>
+<td>Temperature and update duration</td>
+<td>Scalar; duration has time units</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\beta$</math-renderer></td>
+<td>KL coefficient; its direction is named with the objective</td>
+<td>Scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\alpha_{\mathrm{LoRA}}$</math-renderer></td>
+<td>LoRA scaling numerator</td>
+<td>Scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\lambda_{\mathrm{SFT}},\lambda_H,\lambda_{\mathrm{KD}}$</math-renderer></td>
+<td>Chosen-NLL, entropy and distillation weights</td>
+<td>Scalars</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\delta_t,\epsilon_{\mathrm{adv}}$</math-renderer></td>
+<td>TD residual and advantage-normalization stabilizer</td>
+<td>Scalar/token arrays; scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$G$</math-renderer></td>
+<td>Number of completions per prompt in grouped optimization</td>
+<td>Scalar</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Architecture and optimization add the following local quantities:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Shape or units</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$L,F$</math-renderer></td>
+<td>Number of decoder blocks; intermediate MLP width</td>
+<td>Scalar dimensions</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$P_{\mathrm{pos}}$</math-renderer></td>
+<td>Baseline learned position table; RoPE has a different mechanism</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[n_{\mathrm{max}},D]$</math-renderer></td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$A$</math-renderer></td>
+<td>Row-normalized attention weights</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[B,H,n,n]$</math-renderer></td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$M$</math-renderer></td>
+<td>Additive attention mask: zero for allowed positions, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$-\infty$</math-renderer> for forbidden ones</td>
+<td>Broadcastable to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[B,H,n,n]$</math-renderer>
+</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\theta,\eta_t$</math-renderer></td>
+<td>Trainable parameters; learning rate at optimizer update <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$t$</math-renderer>
+</td>
+<td>Tensor collection; scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$g_t$</math-renderer></td>
+<td>Current parameter gradient</td>
+<td>Same shape as its parameter</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\beta_1,\beta_2$</math-renderer></td>
+<td>Adam first/second-moment decay coefficients</td>
+<td>Scalars in <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[0,1)$</math-renderer>
+</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$m_t^{\mathrm{Adam}},v_t^{\mathrm{Adam}}$</math-renderer></td>
+<td>Adam gradient and squared-gradient moments</td>
+<td>Same shape as their parameter</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\lambda_{\mathrm{wd}}$</math-renderer></td>
+<td>Decoupled weight-decay coefficient</td>
+<td>Scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\epsilon_{\mathrm{norm}},\epsilon_{\mathrm{Adam}},\epsilon_{\mathrm{clip}}$</math-renderer></td>
+<td>Normalization stabilizer, optimizer stabilizer and PPO clipping width</td>
+<td>Scalars with different roles</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$N$</math-renderer></td>
+<td>Count of items or valid targets; the local definition names which</td>
+<td>Scalar count</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Preference and policy arguments use:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+<th>Shape or units</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\sigma(u)$</math-renderer></td>
+<td>Logistic sigmoid, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$1/(1+e^{-u})$</math-renderer>
+</td>
+<td>Scalar probability</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\Delta$</math-renderer></td>
+<td>Difference between two reward scores</td>
+<td>Scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\ell_\theta(x,y)$</math-renderer></td>
+<td>Sum of response-token log probabilities</td>
+<td>Scalar in nats</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$m_\theta$</math-renderer></td>
+<td>Scaled reference-relative DPO pair margin</td>
+<td>Scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$Z(x)$</math-renderer></td>
+<td>Normalizer in the reward-tilted policy; distinct from the logits tensor <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$Z$</math-renderer>
+</td>
+<td>Positive scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$s_t,a_t$</math-renderer></td>
+<td>Pre-action prefix/state and sampled next-token action</td>
+<td>Token sequence; categorical ID</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$J(\theta)$</math-renderer></td>
+<td>Expected reward, or the explicitly stated regularized objective</td>
+<td>Scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\rho$</math-renderer></td>
+<td>Current/behavior likelihood ratio on the declared action or trajectory</td>
+<td>Positive scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$V_\psi(s_t)$</math-renderer></td>
+<td>Critic estimate of expected future return from a pre-action state</td>
+<td>Scalar</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$G_t$</math-renderer></td>
+<td>Return after state <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$s_t$</math-renderer>; distinct from group size <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$G$</math-renderer>
+</td>
+<td>Scalar reward sum</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\gamma,\lambda_{\mathrm{GAE}}$</math-renderer></td>
+<td>Discount factor and GAE residual-weighting factor</td>
+<td>Scalars in <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[0,1]$</math-renderer>
+</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$H(p),D_{\mathrm{KL}}(p\Vert q)$</math-renderer></td>
+<td>Distribution entropy and directional KL divergence</td>
+<td>Scalars in nats</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$k_1,k_2,k_3$</math-renderer></td>
+<td>Sampled KL quantities with estimator-specific contracts</td>
+<td>Scalars</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">These explicit names help compare chapters. A derivation may write Adam moments<br>
+as <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$m_t,v_t$</math-renderer>, the GAE factor as <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\lambda$</math-renderer>, or weight decay as <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\lambda$</math-renderer> after<br>
+defining that local meaning. Read the subscript and surrounding definition:<br>
+an Adam moment is not a supervision mask, a baseline is not a behavior policy,<br>
+and the LayerNorm offset called <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\beta$</math-renderer> is not a KL coefficient. Target,<br>
+reference and teacher distributions may each be written <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$q$</math-renderer> locally; their<br>
+source, normalization and gradient status are stated at the point of use.</p>
+<p dir="auto"><a href="../chapters/03-learning-the-next-token.md">Chapter 3</a> develops probability,<br>
+entropy and KL from prediction. <a href="../chapters/11-direct-preference-optimization.md">Chapter 11</a><br>
+uses them for reference-relative preference learning, while<br>
+<a href="../chapters/12-language-generation-as-a-policy.md">Chapter 12</a> develops states,<br>
+returns, advantages and behavior-policy ratios. The tables are lookup aids;<br>
+the chapters teach why these quantities enter the computation.</p>
+<p dir="auto">The attention value tensor uses a subscript here to avoid confusing it with<br>
+vocabulary size. A chapter can use another local symbol after defining it.<br>
+Archived figures and Python APIs may call sequence length <code class="notranslate">T</code>, head width<br>
+<code class="notranslate">d_k</code> or <code class="notranslate">d</code>, and distillation temperature <code class="notranslate">T</code>. Their local mappings are<br>
+stated in the chapters; the symbols above do not change code or measurements.<br>
+Chapter 2 distinguishes tokenizer entries <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$V_t$</math-renderer> from model output rows <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$V_m$</math-renderer>.<br>
+An output table may be tied to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$E$</math-renderer>; unique parameter storage is then counted<br>
+once even though the parameter has two computational paths.</p>
+<p dir="auto">Python tensors commonly use zero-based positions. At logit position <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$t$</math-renderer>, a<br>
+causal next-token model predicts token <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$t+1$</math-renderer>. A training API may accept labels<br>
+at their original input positions and shift internally; a manual implementation<br>
+typically slices logits and labels explicitly. Every implementation in the book<br>
+states which alignment it uses.</p>
+<p dir="auto">The mask <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$m_t$</math-renderer> selects losses. It does not determine which source positions a<br>
+hidden state can attend to. Attention masks control that visibility, while<br>
+autograd detachment controls gradient propagation. These three boundaries<br>
+must be named separately when describing an intervention.</p>
+<p dir="auto">The same word “step” may refer to a generated token, microbatch, optimizer update<br>
+or environment action. Reports use the explicit term. Token budgets name whether<br>
+they count valid targets, processed positions, unique source targets or generated<br>
+tokens. Throughput names both its numerator and timing boundary.</p>
+<p dir="auto">Measured results are linked to reports. Calculated costs are labeled calculations.<br>
+Synthetic fixtures are labeled teaching examples. Proposed Spark protocols remain<br>
+proposed until their actual measurements exist. Repeatedly inspected prompts<br>
+are development probes; final capability claims need an independent contract.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-22</h1>
+<h1 dir="auto">Preface — From API User to Model Developer</h1>
+<p dir="auto">A language model can produce a fluent paragraph while failing to track who owns<br>
+the object mentioned two sentences earlier. A training run can lower its loss<br>
+while teaching an evaluation leak. A reward can rise while the behavior we care<br>
+about deteriorates. These tensions are the reason to study model development<br>
+as a sequence of arguments supported by computation.</p>
+<p dir="auto">This book begins with the question “what would count as evidence?” It then follows<br>
+text through tokenization, embeddings, causal attention and a complete decoder.<br>
+We train that decoder, evaluate its behavior, teach it with demonstrations and<br>
+preferences, and finally treat generation as a policy that can receive rewards.<br>
+The last chapters ask whether the improvements survive independent evaluation,<br>
+whether their computational cost is acceptable, and whether another person can<br>
+reconstruct the experiment.</p>
+<p dir="auto">The reader is assumed to know Python, arrays, basic derivatives and the broad<br>
+idea of neural networks. You need not have trained a language model. The first<br>
+examples are small enough to inspect their actual tensors. Later lessons retain<br>
+that transparency while introducing the practical constraints of real runs.<br>
+The notebooks provide reference solutions next to each question so routine<br>
+syntax does not become the main obstacle.</p>
+<p dir="auto">Three examples carry the explanation. First, a short sequence becomes token<br>
+IDs, learned vectors, contextual states and a distribution over the next token.<br>
+We follow the loss backward to see what learning can change. Next, an assistant<br>
+is asked to return one word. Choosing that word, producing the requested format<br>
+and ending the turn become three concrete design problems. Finally, several<br>
+possible answers receive different rewards. We ask how their probabilities<br>
+should change, then investigate the noise and failure modes of learning from<br>
+sampled answers. The small examples are explicitly illustrative; the measured<br>
+model runs retain their own data and checkpoint histories.</p>
+<p dir="auto">The questions become more interesting when a plausible explanation breaks.<br>
+An unchanged average loss can conceal a concentrated error. A correct answer<br>
+prefix can become a failed response when generation continues. A group of<br>
+uniformly unsuccessful answers can supply no relative reward signal. Each<br>
+chapter develops such a difficulty, gives you a prediction to make, and follows<br>
+a computation far enough to explain the outcome. Equations describe that<br>
+computation; plots expose a relationship or a controlled change. The companion<br>
+notebooks let you replace an input or assumption and see which explanation<br>
+survives.</p>
+<p dir="auto">There are two scales of evidence. A tiny categorical policy can establish that<br>
+a gradient formula agrees with enumeration. It cannot establish that the same<br>
+algorithm improves a pretrained assistant. Conversely, a successful large run<br>
+can demonstrate practical behavior without revealing why a particular update<br>
+worked. The course connects these scales and labels what each observation supports.</p>
+<p dir="auto">Our first from-scratch model, DongxiGPT, trained on TinyStories. Its fixed<br>
+development loss fell substantially, and its samples gained recognizable story<br>
+structure. Yet some stories repeated familiar phrases or exchanged speaker roles<br>
+without explanation. We retain those outputs because they create a better<br>
+learning problem than a gallery of the nicest samples. The completed-run evidence<br>
+is used in Chapter 6. Later chapters pair CPU demonstrations with separately<br>
+identified native SFT, preference and RLVR results; genuinely unrun extensions<br>
+remain proposals. Each scale retains its own controls and limitations.</p>
+<p dir="auto">The learning schedule is 28 days; the narrative is 15 chapters. Those numbers serve<br>
+different purposes. A day organizes practice and a tangible deliverable. A chapter<br>
+builds one argument, often synthesizing several days. The material can be studied<br>
+more slowly. The schedule is an organizational route, not a promise of mastery<br>
+after a fixed number of hours.</p>
+<p dir="auto">Mac Studio is the default place for reading, small experiments, notebook plots<br>
+and approved media production. DGX Spark supplies model-scale GPU measurements.<br>
+The same durable files travel through Git, while environments, running processes,<br>
+credentials and model weights remain machine-specific. This lets a reader examine<br>
+a mechanism without maintaining a permanently running GPU service.</p>
+<p dir="auto">The course has succeeded for a reader when they can explain a design, derive<br>
+its relevant mathematics, implement it, perturb an assumption, and defend the<br>
+result using appropriate evidence. The final defense is a conversation about<br>
+decisions and their consequences. Producing attractive metrics alone does not<br>
+finish that conversation.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-23</h1>
+<h1 dir="auto">Lab 1 — Evidence Before Optimization</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Read the chapter opening; basic Python dictionaries and conjunctions.<br>
+Deliverable: An evidence card separating intended controls, actual observations and warranted claims.</p>
+<p dir="auto">Read the <a href="../chapters/01-evidence-before-optimization.md">chapter</a> and use the<br>
+<a href="../solutions/01-evidence-before-optimization.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-01/01_experiment_identity.ipynb">Run identity</a></td>
+<td>Predict: Will reordered JSON change identity, and will a changed context?</td>
+<td>Reordering preserves the fingerprint; changing context changes it.</td>
+<td>Change one tokenizer/context field.</td>
+<td>Identity sensitivity does not measure capability.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-01/02_smoke_criteria_and_claims.ipynb">Smoke acceptance</a></td>
+<td>Predict: Can a zero exit compensate for failed reserve or nonfinite state?</td>
+<td>Acceptance is the conjunction; each planted failure refuses.</td>
+<td>Remove a required observation.</td>
+<td>Sampled reserve does not observe every instant.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-01/03_read_a_real_run.ipynb">Read an actual run</a></td>
+<td>Predict: Does declining NLL establish a coherent plot?</td>
+<td>Read the final whole story and EOS separately from NLL.</td>
+<td>Compare both retained decoding modes at the same checkpoint.</td>
+<td>Selected archive examples do not estimate a story population.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-01/04_checkpoint_interface.ipynb">Checkpoint meanings · extension</a></td>
+<td>Predict: Will an eight-ID permutation load yet change the prediction problem?</td>
+<td>Equal vocabulary size is eight; swapped mapping is incompatible; unchanged local reload passes.</td>
+<td>Keep IDs fixed and change normalization.</td>
+<td>These local interfaces do not establish pretrained quality.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The eight-ID checkpoint extension constructs and serializes local random interfaces. It downloads nothing; loading success and semantic compatibility are separate checks.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 1 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment F: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../docs/COURSE_ASSIGNMENTS.md">companion route</a>, predict your answer to this question: Two arms have the same update count but one discards half its collected responses. What must the defense disclose?</p>
+<p dir="auto">Use the <a href="../solutions/01-evidence-before-optimization.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-24</h1>
+<h1 dir="auto">Lab 2 — Text, Tokens and Embeddings</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapter 1 evidence identity; bytes, indexing and basic gradients.<br>
+Deliverable: A text→bytes→IDs→states→logits map plus one controlled tokenizer intervention.</p>
+<p dir="auto">Read the <a href="../chapters/02-text-tokens-and-embeddings.md">chapter</a> and use the<br>
+<a href="../solutions/02-text-tokens-and-embeddings.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-02/01_byte_bpe_training_and_encoding.ipynb">Byte coverage and merges</a></td>
+<td>Predict: Will English-only training make 数 unknown?</td>
+<td>Its toy byte IDs are [230,149,176]; decoding restores 数.</td>
+<td>Separate 数据 and 库 into different documents.</td>
+<td>Coverage is distinct from compression and understanding.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-02/02_vocabulary_and_sequence_cost.ipynb">Vocabulary and sequence cost</a></td>
+<td>Predict: Must fewer tokens reduce every computation term?</td>
+<td>Round trips persist; table size grows with vocabulary while attention depends on sequence length.</td>
+<td>Train on English only and reuse the mixed text.</td>
+<td>Structural counts are not measured GPU cost.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-02/03_embedding_gradient_paths.ipynb">Embedding gradients</a></td>
+<td>Predict: Must a prompt row have zero gradient when its direct label is ignored?</td>
+<td>Repeated IDs accumulate into one row; both inspected prompt-row norms are positive.</td>
+<td>Detach the prompt representation in a copied mechanism.</td>
+<td>Local sensitivity is not semantic importance.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The pinned Qwen token counts 9 &lt; 11 &lt; 20 in the <a href="../../experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md">tokenization report</a> are a separate report-reading checkpoint. They are not outputs of the educational byte-BPE notebooks.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 2 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment A: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb">companion route</a>, predict your answer to this question: A special marker decodes to the same visible string whether it is reserved or ordinary. Are the encodings equivalent?</p>
+<p dir="auto">Use the <a href="../solutions/02-text-tokens-and-embeddings.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-25</h1>
+<h1 dir="auto">Lab 3 — Learning the Next Token</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapter 2 token IDs/embedding paths; elementary probability and derivatives.<br>
+Deliverable: A defended alignment diagram and explanation of nonzero optimum NLL.</p>
+<p dir="auto">Read the <a href="../chapters/03-learning-the-next-token.md">chapter</a> and use the<br>
+<a href="../solutions/03-learning-the-next-token.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-03/01_logits_softmax_nll.ipynb">Logits, surprise and gradient</a></td>
+<td>Predict: Will a shared logit shift change probabilities?</td>
+<td>Probability sum is one; the declared target NLL is about 1.3490122; logit gradients sum to zero.</td>
+<td>Raise one competing logit instead.</td>
+<td>A normalized distribution does not establish calibration.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-03/02_causal_shift_and_masks.ipynb">Shift and loss mask</a></td>
+<td>Predict: Will copying current tokens solve next-token prediction?</td>
+<td>Shifted logits are [1,4,5]; labels are [1,2,3,4]; copy loss is small only under the wrong alignment.</td>
+<td>Remove one valid target and compare mean denominators.</td>
+<td>Loss masks do not erase causal prompt influence.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-03/03_distribution_learning.ipynb">Learning a distribution</a></td>
+<td>Predict: Should the 70/30 optimum have zero loss?</td>
+<td>NLL approaches 0.6108643, probabilities 0.7/0.3 and logit gap 0.8473.</td>
+<td>Change target frequencies before fitting the copied fixture.</td>
+<td>Two logits demonstrate estimation, not language modeling.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Keep predictions and learner attempts before revealing the adjacent references. The <a href="../../experiments/reports/2026-09-03-next-token-distribution.md">70/30 report</a> supplies the fixed numerical checkpoint; interventions change its expected optimum.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 3 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment A: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb">companion route</a>, predict your answer to this question: A four-byte evaluation text has summed NLL of four nats. What happens to bits per byte when it is represented by two instead of four tokens?</p>
+<p dir="auto">Use the <a href="../solutions/03-learning-the-next-token.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-26</h1>
+<h1 dir="auto">Lab 4 — Attention and the Causal Information Boundary</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapters 2–3; matrix multiplication, softmax and chain rule.<br>
+Deliverable: A causal dependency diagram and a cache failure explained by its changed context.</p>
+<p dir="auto">Read the <a href="../chapters/04-attention-and-the-causal-information-boundary.md">chapter</a> and use the<br>
+<a href="../solutions/04-attention-and-the-causal-information-boundary.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-04/01_causal_attention_forward.ipynb">Causal retrieval</a></td>
+<td>Predict: Will a changed final token alter earlier outputs?</td>
+<td>Rows sum to one; forbidden weights are zero; earlier causal outputs agree within the declared tolerance.</td>
+<td>Use the unmasked or late-mask variant.</td>
+<td>Attention weights alone do not explain the whole output.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-04/02_attention_gradients_and_failures.ipynb">Routing and content gradients</a></td>
+<td>Predict: Can routing and value paths receive different credit?</td>
+<td>Manual/autograd errors are below 1e-12; forbidden-score gradient is zero.</td>
+<td>Detach Q/K routing or value content separately.</td>
+<td>The IID scaling control is not a statement about learned representations.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-04/03_kv_cache_equivalence.ipynb">KV-cache identity</a></td>
+<td>Predict: Will a stale prefix preserve next-token logits?</td>
+<td>Correct replay agrees within 1e-12; stale-prefix error is about 1.80691; final logical payload is 768 bytes.</td>
+<td>Change an earlier prefix while reusing its cache.</td>
+<td>Logical work and payload are not latency or peak memory.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Use the <a href="../../experiments/reports/2026-09-05-attention-gradients-cache.md">attention/cache report</a> for the fixed stale-prefix case. In every figure distinguish forbidden edges, allowed near-zero weights and measured numerical error.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 4 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment C: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/02_online_attention.ipynb">companion route</a>, predict your answer to this question: The retained row maximum rises from two to four. How should the old denominator and value numerator change?</p>
+<p dir="auto">Use the <a href="../solutions/04-attention-and-the-causal-information-boundary.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-27</h1>
+<h1 dir="auto">Lab 5 — Building a Modern Decoder</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapter 4 attention and cache identity; tensor shapes and autograd.<br>
+Deliverable: A whole-model shape map, parameter/KV ledger and one diagnosed architectural failure.</p>
+<p dir="auto">Read the <a href="../chapters/05-building-a-modern-decoder.md">chapter</a> and use the<br>
+<a href="../solutions/05-decoder-notebook-solutions.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-05/01_embeddings_and_positions.ipynb">Token and position lookup</a></td>
+<td>Predict: Will repeated IDs remain identical after position addition?</td>
+<td>The same embedding row is reused; position-aware states differ.</td>
+<td>Remove learned positions in a copied forward pass.</td>
+<td>Random rows are not learned semantic geometry.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/02_multi_head_attention.ipynb">Multi-head views</a></td>
+<td>Predict: Will head concatenation equal averaging?</td>
+<td>Loop and vectorized outputs agree; a head ablation changes output; future weights remain zero.</td>
+<td>Ablate one retrieved head.</td>
+<td>One ablation does not identify an interpretable head role.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/03_residual_stream.ipynb">Residual stream</a></td>
+<td>Predict: Can a branch cancel a skip-path contribution?</td>
+<td>Zero branch leaves the stream unchanged; direct and branch gradients add.</td>
+<td>Use the cancellation counterexample.</td>
+<td>A skip path does not guarantee information preservation.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/04_layernorm_and_placement.ipynb">Normalization placement</a></td>
+<td>Predict: Can correct attention coexist with future leakage?</td>
+<td>Feature normalization matches the reference; wrong time normalization changes an earlier state.</td>
+<td>Normalize over time rather than features.</td>
+<td>Tiny checks do not rank pre-norm and post-norm training.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/05_positionwise_mlp.ipynb">Positionwise MLP</a></td>
+<td>Predict: Can two affine maps replace a nonlinear branch?</td>
+<td>A changed position does not directly change another MLP position; nonlinear output differs from the collapsed affine map.</td>
+<td>Remove the activation.</td>
+<td>Context can already reside in the MLP input.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/06_assemble_decoder.ipynb">Whole decoder</a></td>
+<td>Predict: Are equal-valued weights necessarily one shared parameter?</td>
+<td>Logits are [2,6,16]; tied input/output weights are the same object.</td>
+<td>Use an untied equal-valued copy.</td>
+<td>Architecture compatibility with pretrained weights is not tested.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-05/07_one_batch_learning.ipynb">One-batch learning</a></td>
+<td>Predict: Does fitting one sequence imply transfer?</td>
+<td>Declared fixture reaches loss below 0.05 and accuracy one; frozen control loss is unchanged.</td>
+<td>Change the target alignment.</td>
+<td>This is memorization of a fixed sequence.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-06/01_rmsnorm_and_swiglu.ipynb">RMSNorm and SwiGLU</a></td>
+<td>Predict: Does RMS scaling remove an additive offset?</td>
+<td>It does not; equal hidden width gives unequal two/three-projection parameter budgets.</td>
+<td>Shift input and match parameter budgets separately.</td>
+<td>Finite local outputs do not establish a method ranking.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-06/02_rotary_positions.ipynb">RoPE geometry</a></td>
+<td>Predict: Will the right causal mask repair a wrong decode offset?</td>
+<td>Rotations preserve pair norms; correct replay matches; the wrong offset produces an error.</td>
+<td>Reset the cached query position to zero.</td>
+<td>RoPE is inside Q/K attention, unlike learned input positions.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-06/03_gqa_qknorm_and_costs.ipynb">KV sharing and cost</a></td>
+<td>Predict: Does reducing KV heads remove query-head views?</td>
+<td>Four/two/one KV-head payloads have ratios 4:2:1; actual tensor bytes match the ledger.</td>
+<td>Toggle the defined QK normalization independently.</td>
+<td>Transparent KV expansion is not an optimized serving kernel.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-07/02_architecture_defense.ipynb">Architecture defense · core</a></td>
+<td>Predict: Will a causal model necessarily have a correct cache?</td>
+<td>Fixture ledger: 4,960 parameters, 3,072 logical KV bytes; wrong offset remains causal but breaks replay.</td>
+<td>Diagnose wrong offset and time mixing independently.</td>
+<td>FLOP estimates do not establish serving speed.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-07/01_recurrent_depth.ipynb">Recurrent depth · optional</a></td>
+<td>Predict: Will shared weights produce equal activations at both depths?</td>
+<td>Independent copies store twice the block parameters; the shared gradient equals their summed paths.</td>
+<td>Compare per-application K/V before reusing a cache.</td>
+<td>Fixed sharing does not implement adaptive depth or measure quality.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Study the core architecture defense before the optional recurrent-depth notebook. Each session pairs a whole-model map with the component close-up. Learned input position embeddings and RoPE rotations inside attention are distinct mechanisms. The <a href="14-when-optimization-goes-wrong.md">ragged-cache extension</a> belongs to Chapter 14; its operations remain in the runbook.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 5 6 7 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment C: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/01_resource_accounting.ipynb">companion route</a>, predict your answer to this question: How much modeled arithmetic intensity does a square FP32 matrix multiplication of width 32 have under one-read/one-write payload accounting?</p>
+<p dir="auto">Use the <a href="../solutions/05-decoder-notebook-solutions.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-28</h1>
+<h1 dir="auto">Lab 6 companion — Specify, Perturb and Recover a Training Run</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook (planning estimate).<br>
+Prerequisites: Chapters 3–5 objective, decoder and gradients.<br>
+Deliverable: a training-state diagram and a run card identifying the changed causal path.</p>
+<p dir="auto">This is the Day 8 mechanism route for <a href="../chapters/06-pretraining-as-a-controlled-system.md">Chapter 6</a>.<br>
+Predict before executing each reference; retain learner attempts. Use the<br>
+<a href="../solutions/06-pretraining-as-a-controlled-system.md">worked solutions</a> after<br>
+the checkpoint, then continue with <a href="06-reading-a-pretraining-run.md">Lab 6’s completed-run reading</a>.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-08/01_data_batches_and_token_budget.ipynb">Documents, batches and targets</a></td>
+<td>Predict: Will shorter windows change counted targets or their context?</td>
+<td>Targets retain their document ownership; correct weighted accumulation error is below 1e-10.</td>
+<td>Shorten the window or average unequal batch means.</td>
+<td>An authored corpus does not eliminate every leakage route.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-08/02_adamw_schedule_and_stability.ipynb">Optimizer and schedule</a></td>
+<td>Predict: Must identical current gradients produce identical updates?</td>
+<td>Manual/PyTorch AdamW error is below 1e-12; update-three rate is 0.01 and final rate 0.001.</td>
+<td>Change the second gradient or clip microbatches separately.</td>
+<td>Precision range, clipping and finite state are distinct checks.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb">Development and recovery</a></td>
+<td>Predict: Will weights alone reproduce continuation?</td>
+<td>Complete restore has zero parameter error and identical history; missing moments/cursor fail different controls.</td>
+<td>Omit only optimizer state or only data position.</td>
+<td>This CPU continuation does not certify cross-device recovery.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Record which predictions count, which clock advances, and which state a<br>
+checkpoint restores. A loss curve cannot diagnose all three. Separate the<br>
+schematic data flow, calculated memory ledger and measured numerical trajectory.<br>
+Use the <a href="../../experiments/reports/2026-09-09-day8-material-verification.md">Day 8 verification report</a><br>
+as existing material evidence, with its actual platform boundary.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 8 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment B/D: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/06_corpus_curation.ipynb">companion route</a>, predict your answer to this question: Curated NLL is worse on all three reference seeds and the scaling fit refuses a boundary optimum. What should be reported?</p>
+<p dir="auto">Use the <a href="../solutions/06-pretraining-as-a-controlled-system.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<p dir="auto">For the refused allocation fit, inspect the separate <a href="../../notebooks/extensions/cs336/03_scaling_prediction.ipynb">scaling prediction reference</a>, including its prediction/refusal frozen before the held-out budget.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-29</h1>
+<h1 dir="auto">Lab 6 — Read a Pretraining Run</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapters 3–5; the companion Day 8 foundation route below.<br>
+Deliverable: A run card joining target exposure, time boundary, development NLL and complete-story evidence.</p>
+<p dir="auto">Read the <a href="../chapters/06-pretraining-as-a-controlled-system.md">chapter</a> and use the<br>
+<a href="../solutions/06-pretraining-as-a-controlled-system.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<p dir="auto">Begin with <a href="06-pretraining-as-a-controlled-system.md">the training-system foundation route</a>, then read the completed-run evidence below.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-08/01_data_batches_and_token_budget.ipynb">Documents, batches and targets</a></td>
+<td>Predict: Will shorter windows change counted targets or their context?</td>
+<td>Targets retain their document ownership; correct weighted accumulation error is below 1e-10.</td>
+<td>Shorten the window or average unequal batch means.</td>
+<td>An authored corpus does not eliminate every leakage route.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-08/02_adamw_schedule_and_stability.ipynb">Optimizer and schedule</a></td>
+<td>Predict: Must identical current gradients produce identical updates?</td>
+<td>Manual/PyTorch AdamW error is below 1e-12; update-three rate is 0.01 and final rate 0.001.</td>
+<td>Change the second gradient or clip microbatches separately.</td>
+<td>Precision range, clipping and finite state are distinct checks.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb">Development and recovery</a></td>
+<td>Predict: Will weights alone reproduce continuation?</td>
+<td>Complete restore has zero parameter error and identical history; missing moments/cursor fail different controls.</td>
+<td>Omit only optimizer state or only data position.</td>
+<td>This CPU continuation does not certify cross-device recovery.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-09/01_read_training_clocks.ipynb">Read training clocks</a></td>
+<td>Predict: Will restored numerical exposure erase failed spending?</td>
+<td>Historical run ends at 14,000 updates; retry control has 17 successful targets and 25 reservations.</td>
+<td>Compare the lower-cap refusal with zero new forward calls.</td>
+<td>Reservations and completed work are distinct from physical quotas.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-09/02_masking_and_padding_control.ipynb">Document visibility</a></td>
+<td>Predict: Will ordinary causal packing isolate separate documents?</td>
+<td>The isolated mask blocks position 3 from source 0; changing the first document leaves the second isolated output unchanged.</td>
+<td>Use ordinary cross-document causal visibility.</td>
+<td>A valid loss mask alone does not enforce attention isolation.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-09/03_story_quality_and_decoding.ipynb">Complete stories</a></td>
+<td>Predict: Will natural EOS imply a satisfactory ending?</td>
+<td>Read both final archived completions: EOS and plot continuity are separate observations.</td>
+<td>Compare greedy and sampled stories under retained settings.</td>
+<td>These selected stories do not estimate general story quality.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The historical September run and fresh October control/half-LR arms have different initializations and budgets. Read the <a href="../../experiments/reports/2026-09-14-tinystories-learning-result.json">historical result</a> and <a href="../../experiments/reports/2026-10-05-native-story-first400-comparison.md">fresh matched comparison</a> separately. For the fresh arms, reconcile 13,132 development targets with exposure/schedule differences; EOS, satisfactory endings and reviewer disagreement are separate evidence. The <a href="07-evaluation-is-a-contract.md">five-axis rating route</a> owns the detailed rubric.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 8 9 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment B/D: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/06_corpus_curation.ipynb">companion route</a>, predict your answer to this question: Curated NLL is worse on all three reference seeds and the scaling fit refuses a boundary optimum. What should be reported?</p>
+<p dir="auto">Use the <a href="../solutions/06-pretraining-as-a-controlled-system.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<p dir="auto">For the refused allocation fit, inspect the separate <a href="../../notebooks/extensions/cs336/03_scaling_prediction.ipynb">scaling prediction reference</a>, including its prediction/refusal frozen before the held-out budget.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-30</h1>
+<h1 dir="auto">Lab 7 — Evaluation Is a Contract</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapter 6 evidence boundaries; fractions, grouping and uncertainty.<br>
+Deliverable: An evaluation card with frozen instrument, denominators, source pairing, slices and limits.</p>
+<p dir="auto">Read the <a href="../chapters/07-evaluation-is-a-contract.md">chapter</a> and use the<br>
+<a href="../solutions/07-evaluation-is-a-contract.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-10/01_metrics_and_contracts.ipynb">Metrics and identity</a></td>
+<td>Predict: Will three allowed attempts equal three independent successes?</td>
+<td>For n=10,c=2,k=3, pass@3 is 0.5333; changing the cap changes contract identity.</td>
+<td>Change normalization under a new named contract.</td>
+<td>Oracle availability is not a deployed selector.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-10/02_paired_uncertainty.ipynb">Pairing and uncertainty</a></td>
+<td>Predict: Will duplicated rows create new information?</td>
+<td>Duplicating rows narrows the naive interval without adding independent sources.</td>
+<td>Pair responses by source rather than treating them independently.</td>
+<td>An interval inherits its sampling/population assumptions.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-10/03_slices_and_contamination.ipynb">Slices and overlap</a></td>
+<td>Predict: Can mean improvement hide a rare failure?</td>
+<td>One planted source overlap is found; removing it clears that fixture overlap.</td>
+<td>Change a rare slice while keeping the aggregate visible.</td>
+<td>Exact source checks are not semantic deduplication.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb">Grading and replay · extension</a></td>
+<td>Predict: Can an extracted correct value fail the task contract?</td>
+<td>Two conflicting boxes are AMBIGUOUS; comparisons use 14 source groups; correctness and format remain separate.</td>
+<td>Change a copied response while freezing parser and coverage.</td>
+<td>Authored responses test the instrument, not a model.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb">Actual candidates · extension</a></td>
+<td>Predict: Can a correct available response lose selection?</td>
+<td>Oracle availability is nondecreasing over pool prefixes; gold-blind selector decisions ignore injected grades.</td>
+<td>Change the selector on the same retained candidate pool.</td>
+<td>Tiny decoder candidates are not pretrained reasoning evidence.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">For actual evidence, compare the <a href="../../experiments/reports/2026-10-05-pretrained-evaluation-replay.md">short development replay</a>, <a href="../../experiments/reports/2026-10-05-native-sft400-comparison.md">120-item instruction panel</a> and <a href="../../experiments/reports/2026-10-05-native-story-rating-independent.md">blind story comparison</a> under their own populations. Retain correctness, format, stopping and reviewer disagreement separately; forty lexical groups within three templates are not 120 independent tasks.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 10 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment B: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/06_corpus_curation.ipynb">companion route</a>, predict your answer to this question: A–B and B–C pass the duplicate threshold, while A–C does not. May A and C be placed in different splits?</p>
+<p dir="auto">Use the <a href="../solutions/07-evaluation-is-a-contract.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-31</h1>
+<h1 dir="auto">Lab 8 — Instruction Data as an Interface</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapters 2–4 token semantics, single shift and causal visibility.<br>
+Deliverable: A data card and annotated ownership/attention/loss grids for one conversation.</p>
+<p dir="auto">Read the <a href="../chapters/08-instruction-data-as-an-interface.md">chapter</a> and use the<br>
+<a href="../solutions/08-instruction-data-as-an-interface.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-11/01_roles_templates_and_masks.ipynb">Role ownership</a></td>
+<td>Predict: Will masking prompt loss erase prompt influence?</td>
+<td>The shown serialized fixture has two scored targets; assistant content/ending remain labelled.</td>
+<td>Change role ownership in a copied serialization.</td>
+<td>Ownership and visibility are different boundaries.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-11/02_padding_packing_boundaries.ipynb">Padding and packing</a></td>
+<td>Predict: Will ordinary causality isolate packed conversations?</td>
+<td>Ordinary mask permits position 8→0 while isolated mask blocks it; padding labels are ignored.</td>
+<td>Replace document isolation with ordinary causality.</td>
+<td>Packing alters available context unless contracts are matched.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-11/03_mixtures_and_data_cards.ipynb">Mixture exposure</a></td>
+<td>Predict: Will equal example weight imply equal token weight?</td>
+<td>Fixture token shares are 0.1/0.9; adjusted exposure is 0.5/0.5; source-group sizes are one and two.</td>
+<td>Change length or mixture unit independently.</td>
+<td>Balanced exposure does not establish balanced capability.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb">Teacher attempts · extension</a></td>
+<td>Predict: Will a better selected dataset guarantee student transfer?</td>
+<td>All nine arms survive; EOS labels cover twelve examples; padding is ignored.</td>
+<td>Compare top/random/within-stratum selection and 42/46 target exposure.</td>
+<td>The programmatic teacher is not a pretrained rationale model.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Keep scientific controls visible: one shift, assistant-owned content and ending targets, document isolation, frozen source groups and a declared example/token mixture unit. The <a href="../../experiments/reports/2026-10-04-teacher-data.md">teacher-attempt report</a> retains rejected attempts and negative student outcomes; format eligibility does not mean correctness.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 11 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment E: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">companion route</a>, predict your answer to this question: Two SFT arms each use 768 valid targets and 24 updates. One covers eight sources, the other two. What is controlled?</p>
+<p dir="auto">Use the <a href="../solutions/08-instruction-data-as-an-interface.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-32</h1>
+<h1 dir="auto">Lab 9 — From Answer Gradients to a Defended Recipe</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapter 8 serialization, target ownership, padding and source groups.<br>
+Deliverable: A matched full/LoRA recipe card with target exposure, generation outcomes and retained limitations.</p>
+<p dir="auto">Read the <a href="../chapters/09-supervised-fine-tuning.md">chapter</a> and use the<br>
+<a href="../solutions/09-supervised-fine-tuning.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb">SFT gradient paths</a></td>
+<td>Predict: Can ignored prompt logits coexist with nonzero prompt-embedding gradients?</td>
+<td>Ignored direct logit gradients are zero; inspected user and unused tied-output rows receive gradient.</td>
+<td>Detach a prompt path rather than changing its labels.</td>
+<td>Direct supervision and downstream gradient paths differ.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb">Token-weighted accumulation</a></td>
+<td>Predict: Will a mean of unequal microbatch means reproduce the intended objective?</td>
+<td>Correct gradient difference is below 2e-6; the broken reduction exceeds 1e-5; complete CPU restore has zero error.</td>
+<td>Replace total-target weighting with batch averaging.</td>
+<td>Fixture recovery does not certify every saved state/interface.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-13/01_tiny_assistant_training.ipynb">Tiny assistant</a></td>
+<td>Predict: Will lower answer NLL establish successful free generation?</td>
+<td>Final fixture NLL is below initial NLL; evaluate complete responses and endings separately.</td>
+<td>Change one response target or compare the frozen policy.</td>
+<td>Four seen symbolic requests are not assistant generalization.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb">Full versus LoRA</a></td>
+<td>Predict: Will both low-rank factors receive gradient at zero-update initialization?</td>
+<td>Initial LoRA equals its base; A gradient is zero, B nonzero, base gradient absent; merged output agrees.</td>
+<td>Change rank while retaining target exposure.</td>
+<td>A rank/recipe comparison does not establish universal LoRA quality.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Read the <a href="../../experiments/reports/2026-10-05-native-sft400-comparison.md">actual full/LoRA comparison</a>: same Base and 9,321 training labels, different trainable spaces, whole-answer outcomes and natural endings. Keep the failed BF16 merge distinct from the separately verified FP32 export. <a href="15-distill-evaluate-and-defend.md">Response-level distillation</a> has its learning home in Chapter 15; its supervised-objective bridge uses this chapter’s single-shift/mask reasoning.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 12 13 14 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/sft_spark_runner.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment E: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">companion route</a>, predict your answer to this question: Which model should be the parent of accepted-response SFT and GRPO in the compatible exercise?</p>
+<p dir="auto">Use the <a href="../solutions/09-supervised-fine-tuning.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-33</h1>
+<h1 dir="auto">Lab 10 — Preferences and Reward Models</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapter 7 instrument identity; sigmoid, likelihood and source groups.<br>
+Deliverable: A preference/reward audit separating judgment direction, calibration, shortcuts and transfer.</p>
+<p dir="auto">Read the <a href="../chapters/10-preferences-and-reward-models.md">chapter</a> and use the<br>
+<a href="../solutions/10-preferences-and-reward-models.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-15/01_bradley_terry_margin.ipynb">Preference margin</a></td>
+<td>Predict: Will adding a common reward offset change pair preference?</td>
+<td>Probability is sigmoid(chosen−rejected); loss gradient is sigmoid(margin)−1; common offsets cancel.</td>
+<td>Change vote fraction or relative margin.</td>
+<td>Relative scores do not identify an absolute reward level.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-15/02_disagreement_and_calibration.ipynb">Disagreement and calibration</a></td>
+<td>Predict: Can correct ordering coexist with miscalibrated probabilities?</td>
+<td>Positive score stretching preserves the 0.5 decision boundary; inverse scaling restores this fixture calibration.</td>
+<td>Stretch margins while keeping rankings fixed.</td>
+<td>Synthetic vote probabilities are not human consensus.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-15/03_preference_collection_and_judges.ipynb">Collection audit · extension</a></td>
+<td>Predict: Will swapping a blind display change the chosen candidate identity?</td>
+<td>Retain 24 pairs, 484 judgments and four failures; swaps map sides while candidate identity survives.</td>
+<td>Perturb verbosity/injection and preserve ties/abstentions.</td>
+<td>Simulated judges are not independent human annotations.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-16/01_reward_model_bias_audit.ipynb">Reward shortcuts</a></td>
+<td>Predict: Can a low training objective hide nuisance dependence?</td>
+<td>Worse-answer win probability is about 0.962504 confounded versus 0.136947 balanced on the declared adversary.</td>
+<td>Vary length with quality fixed.</td>
+<td>Features are authored; this is not a text-understanding benchmark.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-16/03_text_reward_and_process_labels.ipynb">Text reward and process labels · extension</a></td>
+<td>Predict: Will distinct text always receive distinct encoded input?</td>
+<td>Original word encoding has four held-out collisions; character encoding separates them; frozen reload is exact.</td>
+<td>Move padding/EOS or compare the separately specified character arm.</td>
+<td>Closing collisions does not establish robust reward transfer.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Inspect all seeds and the <a href="../../experiments/reports/2026-10-04-preference-audit.md">collection ledger</a>. The <a href="../../experiments/reports/2026-10-04-text-reward.md">word-reward</a> and <a href="../../experiments/reports/2026-10-04-text-reward-character.md">character intervention</a> remain separate measured arms. Character distinctions remove an encoding collision; their retained failures prevent a reward-transfer claim.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 15 16 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment E: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb">companion route</a>, predict your answer to this question: A richer parser accepts a boxed answer that the original bare-integer verifier rejects. Has the historical reward changed?</p>
+<p dir="auto">Use the <a href="../solutions/10-preferences-and-reward-models.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-34</h1>
+<h1 dir="auto">Lab 11 — Direct Preference Optimization</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapters 9–10 sequence likelihood and learned reward; Chapter 7 evaluation.<br>
+Deliverable: A DPO comparison defense separating pair ratio, absolute likelihood, retention and work.</p>
+<p dir="auto">Read the <a href="../chapters/11-direct-preference-optimization.md">chapter</a> and use the<br>
+<a href="../solutions/11-direct-preference-optimization.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-17/01_kl_regularized_optimum.ipynb">Finite KL optimum</a></td>
+<td>Predict: Will a common reward offset move the optimal policy?</td>
+<td>Stationarity matches across coordinates; adding 50 to rewards leaves the policy unchanged.</td>
+<td>Vary beta before examining the exact tilt.</td>
+<td>Finite fixed rewards do not model a learned reward landscape.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-17/02_sequence_likelihood_and_masks.ipynb">Sequence likelihood</a></td>
+<td>Predict: Will equal token likelihoods yield equal response sums?</td>
+<td>Unscored direct logit gradients are zero; longer responses have a larger-magnitude sum while token means agree.</td>
+<td>Replace summed response likelihood with a mean.</td>
+<td>That replacement changes the preference objective.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-18/01_dpo_controlled_comparison.ipynb">DPO and controls</a></td>
+<td>Predict: Must a rising chosen/rejected ratio raise chosen probability?</td>
+<td>Constructed chosen mass falls 0.2→0.1 while its ratio rises 2→10; frozen reference gets no gradient.</td>
+<td>Flip preferences and compare the separate SFT control.</td>
+<td>Different losses are not comparable quality scales.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb">Retention controls · extension</a></td>
+<td>Predict: Will extra chosen NLL recover plain DPO at coefficient zero?</td>
+<td>Zero coefficient matches plain loss/gradient; all 48 rows retain unchanged references and identical caches.</td>
+<td>Compare chosen NLL/rehearsal with noisy and length controls.</td>
+<td>Extra supervision and unequal cost must remain visible.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Read all 48 <a href="../../experiments/reports/2026-10-04-dpo-retention.md">retention-control rows</a>. Then inspect the <a href="../../experiments/reports/2026-10-05-native-preference-comparison.md">actual matched chosen/DPO comparison</a>: common chosen exposure does not match rejected/reference work. Unchanged/chosen/DPO location answers are 0/4, 4/4 and 1/4 under the common contract; original instruction retention is a separate panel. Exercises 14–15 retain the original-reference and sampler/reduction arguments; detailed source/recovery reading stays in the runbook.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 17 18 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/dpo_spark_runner.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment E: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">companion route</a>, predict your answer to this question: What evidence is needed beyond a better chosen–rejected likelihood margin?</p>
+<p dir="auto">Use the <a href="../solutions/11-direct-preference-optimization.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-35</h1>
+<h1 dir="auto">Lab 12 — Language Generation as a Policy</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapters 3 and 11 log probabilities/gradients/KL; finite probability sums.<br>
+Deliverable: A signed estimator derivation and comparison card with rollout and gradient-work clocks.</p>
+<p dir="auto">Read the <a href="../chapters/12-language-generation-as-a-policy.md">chapter</a> and use the<br>
+<a href="../solutions/12-language-generation-as-a-policy.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-19/01_exact_reinforce_gradient.ipynb">Exact REINFORCE</a></td>
+<td>Predict: Must an action with positive reward gain probability?</td>
+<td>Exact/autograd and weighted sampled gradients agree; a below-average rewarded action can lose mass.</td>
+<td>Add the same constant to every reward.</td>
+<td>One sampled gradient need not point in the expectation direction.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-20/01_baselines_and_rloo.ipynb">Baselines and RLOO</a></td>
+<td>Predict: Will including an action in its own baseline preserve expectation?</td>
+<td>Leave-one-out mean matches the exact gradient; the inclusive size-three mean is scaled by 2/3.</td>
+<td>Use equal rewards or change baseline conditioning.</td>
+<td>Variance reduction depends on estimator assumptions.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-20/02_ppo_clipping_and_kl.ipynb">PPO and KL</a></td>
+<td>Predict: Will clipping stop every ratio outside 0.8–1.2?</td>
+<td>The active flat branch depends on advantage sign; sampled KL estimators agree in expectation under named support.</td>
+<td>Use rare-action probabilities or multiply token ratios.</td>
+<td>Clipping is not a hard policy-distance bound.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb">Behavior support · extension</a></td>
+<td>Predict: Will identical raw logits give ratio one after filtering?</td>
+<td>Matched behavior ratios are one on retained support; wrong denominators differ; old/reference/advantage have no gradient.</td>
+<td>Remove support or substitute raw-policy probabilities.</td>
+<td>Conditional support changes the estimand.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb">Critics and rewards · extension</a></td>
+<td>Predict: Will treating a cap as termination change bootstrapped targets?</td>
+<td>Correct cap-row targets are [0.972,1.08]; all twelve runs survive; frozen reward parameters remain unchanged.</td>
+<td>Break the cap mask or substitute oracle/noisy values.</td>
+<td>A fitted critic can amplify a mistaken reward prediction.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-21/01_policy_algorithm_comparison.ipynb">Two work clocks</a></td>
+<td>Predict: Will equal rollouts imply equal gradient work?</td>
+<td>Each run samples 3,840 completions; PPO takes 480 passes, the other arms 160.</td>
+<td>Compare sample and gradient-work axes separately.</td>
+<td>Separate context logits test optimization, not unseen arithmetic.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-04-preference-policy-cpu.md">finite-policy report</a> retains three seeds and both work clocks. PPO uses an exact detached value in that control. The separate <a href="../../experiments/reports/2026-10-04-critic-policy.md">critic report</a> fits a neural value head and uses actual frozen text rewards; terminal reward and cap bootstrapping have different boundaries.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 19 20 21 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment E: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">companion route</a>, predict your answer to this question: Can a nonzero policy gradient prove that reward distinguishes task outcomes?</p>
+<p dir="auto">Use the <a href="../solutions/12-language-generation-as-a-policy.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-36</h1>
+<h1 dir="auto">Lab 13 — Group-Relative Policy Optimization</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapter 12 behavior/old/reference roles; detached advantages and token masks.<br>
+Deliverable: An annotated rollout group plus verifier counterexample and a bounded interpretation of held-out results.</p>
+<p dir="auto">Read the <a href="../chapters/13-group-relative-policy-optimization.md">chapter</a> and use the<br>
+<a href="../solutions/13-group-relative-policy-optimization.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-22/01_group_advantages.ipynb">Group centering</a></td>
+<td>Predict: Will all-success and all-failure groups both supply reward gradient?</td>
+<td>Both constant groups have zero relative advantage; the mixed group has both signs; estimator is detached.</td>
+<td>Compare population/sample deviation or near-constant rewards.</td>
+<td>Zero relative signal says nothing about absolute success.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-22/02_token_ratios_kl.ipynb">Ratios and KL</a></td>
+<td>Predict: Will a sampled KL value identity establish its full gradient?</td>
+<td>Exact forward-KL autograd matches its analytical gradient; positive/negative advantages flatten at the favorable upper/lower boundary.</td>
+<td>Switch advantage sign or clipping epsilon.</td>
+<td>Token surrogates are not trajectory importance ratios.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-22/03_objective_weighting_and_filtering.ipynb">Weighting and filtering · extension</a></td>
+<td>Predict: Can filtering change a gradient while the policy remains fixed?</td>
+<td>All retained policy hashes stay unchanged; analytical errors are below 1e-12; attempts exceed selections.</td>
+<td>Change reduction/filtering on the same rollout pool.</td>
+<td>Discarded attempts still count toward collection cost.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-23/01_decoder_rlvr.ipynb">Tiny decoder RLVR</a></td>
+<td>Predict: Will doubling group size imply an equal-cost update comparison?</td>
+<td>Both arms use twelve updates and seed 2223; retained response-token counts and every held-out row are shown.</td>
+<td>Compare groups of four/eight with the same frozen task.</td>
+<td>Warm-started symbolic performance is not pretrained transfer.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-23/02_verifier_contract.ipynb">Strict verifier</a></td>
+<td>Predict: Will a plausible numeral with missing EOS satisfy the token task?</td>
+<td>-35 is accepted for -35; ambiguous/full-width numerals and missing EOS refuse.</td>
+<td>Try extra candidates or omit the ending marker.</td>
+<td>Verified format is not proof of reasoning faithfulness.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb">Positive controls · extension</a></td>
+<td>Predict: Will higher average path probability improve every solvable item?</td>
+<td>All declared seeds/updates survive; every positive control improves while failures and frozen initial weights remain.</td>
+<td>Compare stopping/support faults and unknown lookup keys.</td>
+<td>Tiny sequence learning and English-panel instruments have distinct evidence.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">For the actual native case, retain constant-group reward signal, KL pressure, generation caps and failed/absent responses. <a href="../../experiments/reports/2026-10-05-final-native-campaign-defense.md">The final campaign defense</a> distinguishes held-out correctness from pooled diagnostics. Old policy produces the recorded rollouts; the reference supplies the anchor; collected targets and applied targets have separate denominators. <a href="../solutions/13-group-relative-policy-optimization.md#evidence-reading-extensions">Operational exercises 22–25</a> retain their IDs and mappings.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 22 23 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/rlvr_runner.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment E: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb">companion route</a>, predict your answer to this question: For p=0.5 and G=4, what fraction of independent groups is mixed? How does selection affect easier prompts?</p>
+<p dir="auto">Use the <a href="../solutions/13-group-relative-policy-optimization.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-37</h1>
+<h1 dir="auto">Lab 14 — When Optimization Goes Wrong</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapter 13 objective, strict verifier and rollout identities.<br>
+Deliverable: An incident record: observation, first broken invariant, competing causes, intervention and remaining uncertainty.</p>
+<p dir="auto">Read the <a href="../chapters/14-when-optimization-goes-wrong.md">chapter</a> and use the<br>
+<a href="../solutions/14-when-optimization-goes-wrong.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-24/01_reward_hacking.ipynb">Reward misspecification</a></td>
+<td>Predict: Can proxy reward rise while strict correctness falls?</td>
+<td>Exact gradient matches probability×(reward−mean); the favored wrong action illustrates objective misspecification.</td>
+<td>Repair proxy rewards from equal initial logits.</td>
+<td>Repair after a hacked checkpoint is a different intervention.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-24/02_length_entropy_diagnostics.ipynb">Length and entropy</a></td>
+<td>Predict: Will equal response weight imply equal token weight?</td>
+<td>Lengths two/eight get response weights 0.5/0.5 versus token weights 0.2/0.8; relabelling preserves entropy.</td>
+<td>Favor the wrong action at the same probability mass.</td>
+<td>Low entropy alone does not identify success or failure.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-25/01_rollout_versions_and_budget.ipynb">Versions and work</a></td>
+<td>Predict: Will a metadata pass certify the actual sampling engine?</td>
+<td>Version two accepts at two; default version-three reuse refuses; explicitly allowed lag retains behavior identity.</td>
+<td>Change tokenizer identity or the projected generation rate.</td>
+<td>The budget plot is an analytical scenario, not Spark throughput.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb">Ragged cache and recovery · extension</a></td>
+<td>Predict: Will restoring weights permit recollecting a pending update?</td>
+<td>Four generation paths agree within 1e-10; saved next draw/tail replay exactly; pending tokens apply without recollection.</td>
+<td>Use wrong row positions or remove pending/RNG state.</td>
+<td>Forced stopping, logical work and physical runtime remain separate.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Optional bridges remain in their original routes: <a href="10-preferences-and-reward-models.md">text reward</a>, <a href="11-direct-preference-optimization.md">DPO retention</a>, <a href="12-language-generation-as-a-policy.md">behavior support/critics</a> and <a href="13-group-relative-policy-optimization.md">fixed-pool objective controls</a>. Use one negative outcome to distinguish two causes; do not change reward, sampling and reduction together. <a href="../solutions/14-when-optimization-goes-wrong.md#evidence-reading-extensions">Detailed operational exercises</a> retain their original mappings.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 24 25 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/rlvr_runner.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment E/C: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb">companion route</a>, predict your answer to this question: A model emits a correct boxed answer, the strict checker gives zero, and task advantages vanish. Which next experiment is supported?</p>
+<p dir="auto">Use the <a href="../solutions/14-when-optimization-goes-wrong.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-38</h1>
+<h1 dir="auto">Lab 15 — Distill, Evaluate and Defend</h1>
+<p dir="auto">Machine: isolated CPU course kernel on Mac or Spark, offline.<br>
+Expected time: 25–45 minutes per notebook; longer routes span several sessions (planning estimate).<br>
+Prerequisites: Chapters 7, 9–13 evaluation, supervised labels, reward errors and policy roles.<br>
+Deliverable: A complete comparison defense with checkpoint ancestry, output/cost evidence, failures and next question.</p>
+<p dir="auto">Read the <a href="../chapters/15-distill-evaluate-and-defend.md">chapter</a> and use the<br>
+<a href="../solutions/15-distill-evaluate-and-defend.md">worked solutions</a> after attempting each exercise.<br>
+Write each prediction before executing the reference. Numerical checkpoints use<br>
+the notebook’s declared fixture, seed, dtype and tolerance; changing inputs may<br>
+change the result. References and interpretations remain adjacent to the attempt.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Notebook</th>
+<th>Question / prediction before reveal</th>
+<th>Checkpoint on the declared fixture</th>
+<th>One intervention</th>
+<th>Evidence boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../../notebooks/day-26/01_temperature_distillation.ipynb">Temperature distillation</a></td>
+<td>Predict: Will omitting squared-temperature scaling preserve gradients?</td>
+<td>Analytical/autograd gradients agree at temperatures one/two/four; teacher gradient is absent.</td>
+<td>Reverse the teacher distribution or student initialization.</td>
+<td>Three logits do not establish model compression or reasoning transfer.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-26/02_selection_and_sampling.ipynb">Selection and sampling</a></td>
+<td>Predict: Must more oracle availability improve a biased ranker?</td>
+<td>The ranker can prefer a wrong class; majority ties choose the earliest tied candidate.</td>
+<td>Change score ordering in a copied simulator.</td>
+<td>Independent categorical draws are not correlated LLM candidates.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-26/03_response_level_distillation.ipynb">Complete-response distillation · extension</a></td>
+<td>Predict: Will a correct final answer certify its printed step?</td>
+<td>Prompt logits are ignored; eight response/EOS targets are scored; fresh fixed-seed fit and raw IDs match retained records.</td>
+<td>Admit a wrong-step/right-final well-formed response.</td>
+<td>Eligibility, final accuracy and trace validity are separate.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-26/04_critique_revision_and_acceptance.ipynb">Critique and acceptance · extension</a></td>
+<td>Predict: Can a format-valid revision harm a correct draft?</td>
+<td>One FLIP changes the binary answer; two can restore it; replay retains 864 historical candidates and zero new model calls.</td>
+<td>Cap the critique before revision or change max rounds.</td>
+<td>Programmatic revision is not neural self-critique.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-26/05_student_prefix_and_teacher_context.ipynb">Student-visited states · extension</a></td>
+<td>Predict: Will changing both prefix sampling and KL identify either cause?</td>
+<td>Same-state KL gradients detach teacher targets; bucket KL plus lost detail equals full KL; evaluation uses no teacher hints.</td>
+<td>Match tail mass while changing its internal distribution.</td>
+<td>Conditional KL ignores state occupancy and need not improve transfer.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-27/01_genealogy_and_frozen_panel.ipynb">Genealogy and evaluation</a></td>
+<td>Predict: Will shared ancestry make different evaluation scores comparable?</td>
+<td>Valid fixture graph passes; cycle, unknown parent and changed evaluation identity refuse.</td>
+<td>Add a DPO sibling to the same SFT parent.</td>
+<td>Fixture hashes name labels, not trained weight bytes.</td>
+</tr>
+<tr>
+<td><a href="../../notebooks/day-28/01_defense_and_release_gate.ipynb">Claim defense</a></td>
+<td>Predict: Will passing CPU mechanics justify an unrun model-scale quality claim?</td>
+<td>Illustrative missing-license/held-out checks keep readiness false; all-true fixture passes structurally.</td>
+<td>Remove a real acceptance condition and bound the claim again.</td>
+<td>Boolean readiness is not evidence or publication.</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The <a href="07-evaluation-is-a-contract.md">actual-candidate</a> and <a href="08-instruction-data-as-an-interface.md">teacher-selection</a> bridges stay in their original routes. Distillation adds teacher collection and student exposure; final-answer correctness, printed-step validity and faithful reasoning are distinct claims. Defend one real comparison using the <a href="../../experiments/reports/2026-10-05-final-native-campaign-defense.md">final campaign evidence</a>: keep random-init stories, Base→SFT→chosen/DPO, and acquired Instruct→RLVR as separate roots. The synthetic genealogy/release fixtures do not replace those records.</p>
+<p dir="auto">Retain a short explanation of the intervention, observed change and claim it<br>
+does not establish. The deliverable should connect these explanations into one<br>
+defensible argument, with source/report links rather than an execution-only checklist.</p>
+<details>
+<summary>Fresh CPU verification and operational reference</summary>
+<p dir="auto">From the repository root, use the isolated environment/kernel described in<br>
+<a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>:</p>
+<div class="highlight highlight-source-shell" dir="auto"><pre class="notranslate">.venv-course/bin/python scripts/verify_course_notebooks.py --days 26 27 28 --kernel dongxi-course --expected-prefix .venv-course</pre></div>
+<p dir="auto">The verifier retains executed copies and identities in a new directory. Source<br>
+notebooks and learner attempts remain intact. Exact runner/replay/export commands<br>
+and their evidence boundaries are in the <a href="../../docs/runbooks/evaluation_tools.md">runbook</a>.</p>
+</details>
+<h3 dir="auto">Assignment F: connect the mechanism to a comparison</h3>
+<p dir="auto">Before opening the <a href="../../docs/COURSE_ASSIGNMENTS.md">companion route</a>, predict your answer to this question: What makes a retained negative result useful in a final report?</p>
+<p dir="auto">Use the <a href="../solutions/15-distill-evaluate-and-defend.md">worked reasoning</a> after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The <a href="../../docs/COURSE_ASSIGNMENTS.md">assignment brief</a> specifies the combined deliverable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-39</h1>
+<h1 dir="auto">Solutions — Chapter 1: Evidence Before Optimization</h1>
+<p dir="auto">These are model answers, not scripts to memorize. A strong answer states the<br>
+evidence boundary explicitly.</p>
+<h2 dir="auto">Exercise 1</h2>
+<p dir="auto"><strong>a. Observation.</strong> The recorded third loss, 1.8, is numerically greater than the<br>
+recorded second loss, 1.7.</p>
+<p dir="auto"><strong>b. Supported interpretation.</strong> The logs and saved checkpoint support the<br>
+conclusion that the requested training path completed, assuming the trainer's step<br>
+semantics and output path were inspected. “Optimizer steps executed” is an<br>
+interpretation of the system evidence rather than a raw scalar.</p>
+<p dir="auto"><strong>c. Unsupported claim.</strong> No general-assistant evaluation or baseline comparison<br>
+was provided.</p>
+<p dir="auto"><strong>d. Unsupported claim.</strong> Three non-monotonic points are insufficient to establish<br>
+a convergence trend. Even a monotonic three-point sequence would be weak evidence<br>
+for long-run convergence.</p>
+<h2 dir="auto">Exercise 2</h2>
+<p dir="auto">Investigate high-impact differences before attributing the result to low-level GPU<br>
+nondeterminism. Suitable answers include:</p>
+<ol dir="auto">
+<li>dataset revision, split, filtering, and order;</li>
+<li>batch size, sequence length, accumulation, and preprocessing configuration;</li>
+<li>code and trainer commits, including local patches;</li>
+<li>environment lock and installed framework versions;</li>
+<li>exact model and tokenizer revisions;</li>
+<li>precision and attention backend.</li>
+</ol>
+<p dir="auto">Hardware, driver, and kernel behavior still matter, but input or configuration<br>
+differences often explain larger discrepancies.</p>
+<h2 dir="auto">Exercise 3</h2>
+<p dir="auto">One acceptable hypothesis is:</p>
+<blockquote>
+<p dir="auto">The selected model will complete three BF16 optimizer steps at microbatch size 1<br>
+and sequence length 1024. Every reported loss will remain finite, the expected<br>
+checkpoint files will be saved, and whole-system available memory will remain<br>
+above 24 GiB. Any failed load, non-finite loss, missing output, nonzero exit, or<br>
+reserve violation will fail the smoke test.</p>
+</blockquote>
+<p dir="auto">The exact configuration is less important than making every term observable and<br>
+falsifiable.</p>
+<h2 dir="auto">Exercise 4</h2>
+<p dir="auto">The total cannot be calculated as <code class="notranslate">5.8 + 7.1 GiB</code>. Cgroup accounting and<br>
+CUDA-visible allocation are different, overlapping views. Some CUDA allocations<br>
+may be charged to the cgroup, and the accounting mechanisms can include or omit<br>
+different categories. Whole-system <code class="notranslate">MemAvailable</code> samples provide another view of<br>
+pressure, but background activity and reclaimable cache mean that it is not a<br>
+perfect per-model allocation meter either.</p>
+<p dir="auto">Report all views separately and describe what each measures.</p>
+<h2 dir="auto">Exercise 5</h2>
+<p dir="auto">Successful execution and any numerical criteria may be supported, but the<br>
+memory-safety clause is falsified. If the hypothesis joins these criteria with<br>
+“and,” the overall experiment fails its precommitted success criteria. The report<br>
+should preserve both the partial success and the safety failure.</p>
+<h2 dir="auto">Exercise 6</h2>
+<p dir="auto">One controlled comparison is:</p>
+<ul dir="auto">
+<li><strong>Independent variable:</strong> microbatch size, changed from 1 to 2.</li>
+<li><strong>Dependent variables:</strong> minimum whole-system <code class="notranslate">MemAvailable</code> and cgroup memory<br>
+peak. Runtime or throughput can be an additional dependent variable.</li>
+<li><strong>Controlled variables:</strong> model and revision, dataset examples and order,<br>
+sequence length 1024, gradient accumulation, precision, attention backend,<br>
+optimizer, gradient checkpointing, trainer/environment revisions, and concurrent<br>
+services.</li>
+</ul>
+<p dir="auto">The result describes batch size 2 only. Continue incrementally rather than<br>
+extrapolating directly to batch size 8.</p>
+<h2 dir="auto">Exercise 7</h2>
+<p dir="auto">Loading checks row counts and shapes, not linguistic meanings. The new tokenizer<br>
+sends <code class="notranslate">cat</code> to a row trained as <code class="notranslate">dog</code>, and decodes the original <code class="notranslate">cat</code> score as<br>
+<code class="notranslate">dog</code>. A size check accepts a semantic interface failure. Compare the full<br>
+token-to-ID mapping, not only its length.</p>
+<p dir="auto">Identical mappings still do not establish identical encoding. Check the supported<br>
+serialized rules, including normalization and merge/pre-tokenization, plus wrapper<br>
+settings, special IDs, template and stops. Lowercasing changes how <code class="notranslate">CAT</code> is encoded<br>
+without changing the fixture's eight entries. Actual save/reload is the positive control.</p>
+<h2 dir="auto">Optional evidence-reading extensions</h2>
+<p dir="auto">Exercises 8–9 retain their original IDs. They extend the chapter's conjunction<br>
+and semantic-interface principles through the operational cases linked from<br>
+<a href="../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision">Appendix D</a>.</p>
+<h2 dir="auto">Exercise 8</h2>
+<p dir="auto">Explicit adoption fingerprints current saved meanings/rules and records a new<br>
+declaration for downstream comparison. It cannot authenticate the upstream commit<br>
+or reconstruct an unrecorded past tokenizer. Automatic migration would hide that gap.</p>
+<p dir="auto">Timestamp and invocation ID belong in the journal, not stable recovery equality:<br>
+both change on restart. Source/data/interface/objective identity belongs in the<br>
+stable contract. Passing a fingerprint proves neither language improvement,<br>
+a CUDA kernel nor exact model-scale restart parity.</p>
+<h2 dir="auto">Exercise 9</h2>
+<p dir="auto">The contract requires successful fresh-process replay within the declared<br>
+deadline, not only two completed original runs. Safe sampled memory cannot<br>
+replace a failed time criterion or missing final comparison. The outer<br>
+adapter's exit 1 reports its own failure; the native exit remains unknown in<br>
+this receipt, with the cleanup error retained. Preserve incurred work and the<br>
+uncommitted artifact rather than assigning a convenient native exit or calling<br>
+the case successful. A new CPU 8 attempt keeps the original deadline and must<br>
+produce its own complete receipts before pilot admission.</p>
+<h2 dir="auto">Assignment F — Evidence that identifies a comparison</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> Two arms have the same update count but one discards half its collected responses. What must the defense disclose?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> Report attempted prompts, generated tokens, retained responses, supervised targets and applied updates separately. Retained-token matching omits the cost and population of rejected observations. A supported defense names its matching choice, reports the excluded population and limits its conclusion to the frozen evaluation contract. The six assignment briefs provide the complete submission structure.</p>
+<p dir="auto">The <a href="../../docs/COURSE_ASSIGNMENTS.md">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-40</h1>
+<h1 dir="auto">Solutions — Chapter 2: Text, Tokens, and Embeddings</h1>
+<p dir="auto">These are model answers rather than scripts to memorize. A strong answer names<br>
+the mechanism, the relevant evidence, and the boundary of the claim.</p>
+<h2 dir="auto">Exercise 1 — Interface corruption</h2>
+<p dir="auto">The tensor can be structurally valid because both tokenizers emit integers in the<br>
+expected shape and numeric range. The model does not inspect the original text;<br>
+it uses each integer as an address into its embedding table. If tokenizer A's ID<br>
+42 means <code class="notranslate">cat</code> while the model's tokenizer assigned ID 42 to another piece, the<br>
+model retrieves the latter row without raising an error.</p>
+<p dir="auto">This is semantic interface corruption:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">intended text → IDs under tokenizer A → rows defined under tokenizer B
+</code></pre>
+<p dir="auto">Record at least:</p>
+<ul dir="auto">
+<li>tokenizer repository and immutable revision;</li>
+<li>tokenizer files or their hashes;</li>
+<li>normalization and pre-tokenization configuration;</li>
+<li>added-special-token behavior and chat template where relevant;</li>
+<li>model repository and immutable revision;</li>
+<li>confirmation that the paired tokenizer and embedding interface were loaded<br>
+together.</li>
+</ul>
+<p dir="auto">Matching shapes and vocabulary bounds are necessary but not sufficient checks.</p>
+<h2 dir="auto">Exercise 2 — Coverage versus understanding</h2>
+<p dir="auto">UTF-8 encodes <code class="notranslate">数</code> as bytes <code class="notranslate">E6 95 B0</code>. A byte-level tokenizer has a base symbol<br>
+for every byte value, so the conservative fallback is:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">数 → [E6] [95] [B0] → three byte-token IDs
+</code></pre>
+<p dir="auto">The decoder can reverse the ID-to-byte mapping and reconstruct the original<br>
+character. That exact round trip establishes coverage and reversibility for the<br>
+input. It does not show efficiency: a tokenizer with learned Chinese merges may<br>
+represent the same character or a larger phrase with fewer tokens.</p>
+<p dir="auto">It also does not establish understanding. Language capability depends on how the<br>
+model parameters were trained on those IDs in meaningful contexts. A model can<br>
+receive a perfectly valid byte sequence that was rare or absent during model<br>
+training.</p>
+<p dir="auto">The answer must be qualified as byte-level BPE or another tokenizer with complete<br>
+byte fallback; not every tokenizer guarantees this behavior.</p>
+<h2 dir="auto">Exercise 3 — A failed prediction</h2>
+<p dir="auto">The original prediction used genuine linguistic facts: Swedish forms compounds,<br>
+and Chinese has no spaces between written words. It became unreliable when those<br>
+facts were treated as tokenizer rules. BPE compression depends on the patterns<br>
+that won merge capacity under a particular corpus, weighting, normalization,<br>
+pre-tokenization scheme, and vocabulary budget.</p>
+<p dir="auto">The pinned Qwen3 example contradicted the prediction because it encoded several<br>
+Chinese multi-character spans, including <code class="notranslate">下一个</code>, while splitting the single<br>
+Swedish word <code class="notranslate">språkmodellen</code> into five tokens. The observation is:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">Chinese 9 &lt; English 11 &lt; Swedish 20
+</code></pre>
+<p dir="auto">The bounded interpretation is that this tokenizer compressed these fixed strings<br>
+in that order.</p>
+<p dir="auto">A language-wide comparison would need:</p>
+<ul dir="auto">
+<li>a frozen, representative sample across domains and sentence lengths;</li>
+<li>comparable or carefully matched content across languages;</li>
+<li>documented normalization and special-token policy;</li>
+<li>code-point, UTF-8-byte, word or grapheme, and token denominators as appropriate;</li>
+<li>distributional results rather than only means, such as quantiles and per-domain<br>
+variation;</li>
+<li>ideally multiple tokenizers and uncertainty from sampling.</li>
+</ul>
+<p dir="auto">Token count still would not establish comprehension or generation quality.</p>
+<h2 dir="auto">Exercise 4 — Shape and repetition</h2>
+<p dir="auto">Lookup preserves the batch and sequence axes and adds the embedding width:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">input_ids.shape = [3, 7]
+E.shape         = [151936, 1024]
+output.shape    = [3, 7, 1024]
+</code></pre>
+<p dir="auto">If ID <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$i$</math-renderer> appears at four positions with position-level lookup gradients<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$g_1,g_2,g_3,g_4 \in \mathbb{R}^{1024}$</math-renderer>, its shared row receives:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$\left.\frac{\partial L}{\partial E[i]}\right|_{lookup}
+= g_1+g_2+g_3+g_4.$$</math-renderer>
+<p dir="auto">The contributions need not be equal. Lookup returned the same initial row, but<br>
+position, causal context, attention, and later nonlinear computation can send a<br>
+different gradient back from each occurrence. The equation expresses parameter<br>
+reuse, not equal contextual meaning.</p>
+<p dir="auto">If the model ties input and output weights, this lookup sum is only one part of<br>
+the total row gradient; output-classifier contributions must also be added.</p>
+<h2 dir="auto">Exercise 5 — Where meaning emerges</h2>
+<p dir="auto">At the <code class="notranslate">bank</code> position in a causal decoder, the available prefix is approximately<br>
+<code class="notranslate">The bank</code>. The future tokens <code class="notranslate">approved the loan</code> cannot influence that position's<br>
+hidden state because the causal mask blocks future-to-past information. The model<br>
+may preserve an ambiguous representation rather than choosing a fully financial<br>
+sense there.</p>
+<p dir="auto">At <code class="notranslate">loan</code>, the available prefix contains <code class="notranslate">The bank approved the loan</code>. Its hidden<br>
+state can attend to and combine all relevant earlier positions, so financial-bank<br>
+information can be represented at this later position and in later predictions.</p>
+<p dir="auto">The decoder does not need to rewrite the earlier <code class="notranslate">bank</code> state. Sequence meaning<br>
+can live in evolving later hidden states. A bidirectional encoder would have a<br>
+different information boundary and could use words on both sides of <code class="notranslate">bank</code>.</p>
+<h2 dir="auto">Exercise 6 — Same loss, different future</h2>
+<p dir="auto">The code names <code class="notranslate">E_in</code> and <code class="notranslate">W_out</code> correspond to stored matrices with shape<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[V_m,D]$</math-renderer>. Hidden states are rows, so classification computes<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$hW_{\mathrm{out}}^\top$</math-renderer>.</p>
+<p dir="auto">Equal tensor values do not imply equal parameter identity.</p>
+<p dir="auto">In the untied model:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">input table E_in ── lookup path
+output table W_out ── classifier path
+</code></pre>
+<p dir="auto">Even if <code class="notranslate">E_in</code> and <code class="notranslate">W_out</code> initially contain equal numbers, they are independent<br>
+parameters. The input table receives direct lookup gradients only from selected<br>
+input rows; the output matrix receives dense classifier gradients.</p>
+<p dir="auto">In the tied model:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">shared E ── lookup path
+        └── classifier path
+</code></pre>
+<p dir="auto">The shared table receives the sum of both paths. It can therefore have nonzero<br>
+gradients on rows that were absent from the input. The lab observed equal forward<br>
+loss <code class="notranslate">0.699771</code>, but nonzero input-embedding rows <code class="notranslate">[1,3]</code> when untied and all six<br>
+rows when tied.</p>
+<p dir="auto">After the optimizer applies those different gradients, the matrices no longer<br>
+contain the same values. Subsequent logits, losses, and training trajectories can<br>
+therefore diverge even though the pre-update forward pass was identical.</p>
+<h2 dir="auto">Exercise 7 — Tokenizer-model boundary</h2>
+<p dir="auto">The verified observations are:</p>
+<ul dir="auto">
+<li>tokenizer IDs end at 151,668;</li>
+<li>the model has rows and logits through 151,935;</li>
+<li>input and output matrices are the same runtime parameter;</li>
+<li>the last 267 IDs have no tokenizer piece in this snapshot.</li>
+</ul>
+<p dir="auto">Ordinary tokenizer output cannot select those final rows, so they receive no<br>
+ordinary direct lookup-path gradient. The model still emits a logit for every<br>
+row. Under dense cross-entropy, each candidate generally receives an output-side<br>
+contribution:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$\left.\frac{\partial L}{\partial E[i]}\right|_{output}
+= \left(p_i-\mathbf{1}[i=y]\right)h.$$</math-renderer>
+<p dir="auto">Because an unassigned ID is not a valid target under the paired tokenizer, its<br>
+indicator term is zero in ordinary data, but its probability term can still<br>
+produce a gradient.</p>
+<p dir="auto">The model vocabulary's divisibility by 128 is observed. “The rows exist for<br>
+hardware alignment” is a plausible hypothesis, not a conclusion supported by<br>
+the configuration or checkpoint alone. Establishing that rationale would require<br>
+design documentation or a controlled implementation/performance comparison.</p>
+<h2 dir="auto">Exercise 8 — Visibility versus supervision</h2>
+<p dir="auto">A response hidden state can attend to prompt keys and values. Its logits and loss<br>
+therefore depend on prompt representations. Backpropagation follows that<br>
+dependency in reverse, reaching attention parameters, prompt hidden states, and<br>
+prompt-token embedding rows.</p>
+<p dir="auto">The prompt has no <strong>local</strong> loss term, but it is still an ancestor of the response<br>
+loss in the computation graph.</p>
+<p dir="auto">The mechanisms differ:</p>
+<ul dir="auto">
+<li><strong>Loss masking:</strong> removes selected prediction errors from the scalar objective.</li>
+<li><strong>Detaching:</strong> cuts a tensor's earlier computation from gradient propagation.</li>
+<li><strong>Freezing:</strong> prevents optimizer updates to selected parameters, even if their<br>
+values participate in forward computation and gradients may be computed<br>
+elsewhere.</li>
+</ul>
+<p dir="auto">The Day 2 lab used loss mask <code class="notranslate">[0,0,1]</code>; both prompt rows still received nonzero<br>
+gradients because the supervised response attended to them.</p>
+<h2 dir="auto">Exercise 9 — PAD versus EOS</h2>
+<p dir="auto">If PAD remains an ordinary label, the model is rewarded for predicting artificial<br>
+batch formatting:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$L_{pad}=-\log P(\text{PAD}\mid\text{prefix}).$$</math-renderer>
+<p dir="auto">Frequent padded positions can waste optimization capacity and distort the learned<br>
+termination distribution.</p>
+<p dir="auto">If every EOS label is masked, the model loses direct supervision for when a<br>
+sequence ends. It may learn content tokens while becoming worse at emitting the<br>
+semantic stopping event used by generation.</p>
+<p dir="auto">Before trusting a trainer, inspect:</p>
+<ul dir="auto">
+<li>whether padding is left or right and which ID represents it;</li>
+<li>the attention mask actually passed to the model;</li>
+<li>the shifted input/label alignment used for causal prediction;</li>
+<li>the exact ignore index and which labels are replaced by it;</li>
+<li>whether prompt, response, EOS, and packed-document boundaries are treated as<br>
+intended;</li>
+<li>the denominator used to reduce token-level losses.</li>
+</ul>
+<p dir="auto">An attention mask should not be assumed to modify the loss automatically.</p>
+<h2 dir="auto">Exercise 10 — Design an honest tokenizer study</h2>
+<p dir="auto">One defensible design would freeze a corpus of several thousand aligned or<br>
+carefully matched passages per language across conversation, news, technical<br>
+writing, code-adjacent text, and informal text. Deduplicate it, record immutable<br>
+revisions, and preserve the exact normalization pipeline.</p>
+<p dir="auto">For each pinned tokenizer:</p>
+<ol dir="auto">
+<li>encode every passage without chat-template or special-token overhead, unless<br>
+overhead is itself a declared study question;</li>
+<li>require exact decode round trips where the tokenizer promises reversibility;</li>
+<li>record tokens per UTF-8 byte, Unicode code point, grapheme cluster, written<br>
+word where meaningful, and matched passage;</li>
+<li>report medians, means, quantiles, long-tail examples, and per-domain results;</li>
+<li>use paired passage-level comparisons where translations are aligned;</li>
+<li>quantify sampling uncertainty, for example with bootstrap intervals over<br>
+documents;</li>
+<li>inspect representative segmentations instead of relying only on aggregate<br>
+counts.</li>
+</ol>
+<p dir="auto">Controls include tokenizer revision, special-token behavior, normalization,<br>
+pre-tokenization, and the exact same frozen inputs for each tokenizer.</p>
+<p dir="auto">The study could support bounded claims about compression and context-window<br>
+occupancy on the sampled distribution. It still would not establish model<br>
+understanding, language quality, fairness, capability, or the causal effect of<br>
+the unknown tokenizer-training mixture.</p>
+<h2 dir="auto">Exercise 11 — Unicode and prompt packaging</h2>
+<p dir="auto">NFC <code class="notranslate">café</code> represents <code class="notranslate">é</code> with one code point, <code class="notranslate">U+00E9</code>. Its NFD form represents<br>
+the same reader-perceived grapheme with <code class="notranslate">e</code> followed by combining acute accent<br>
+<code class="notranslate">U+0301</code>. The full words therefore contain four and five code points respectively,<br>
+while both contain four extended grapheme clusters.</p>
+<p dir="auto">The pinned Qwen3 tokenizer normalized both forms to token IDs <code class="notranslate">[924, 58858]</code> and<br>
+decoded both as NFC <code class="notranslate">café</code>. The NFD source and decoded output are canonically<br>
+equivalent under Unicode normalization, but they are not identical code-point<br>
+sequences. Exact round-trip equality, normalized equivalence, and visual<br>
+similarity are three different checks.</p>
+<p dir="auto">Raw <code class="notranslate">Hello</code> encoded as ID <code class="notranslate">[9707]</code>. The chat template added role text, separators,<br>
+and a generation prompt:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">&lt;|im_start|&gt;user
+Hello&lt;|im_end|&gt;
+&lt;|im_start|&gt;assistant
+</code></pre>
+<p dir="auto">That representation occupied nine tokens. The tokenizer did not learn new BPE<br>
+merges at runtime; it encoded a longer, policy-defined model input. Reproducible<br>
+token counts must therefore state whether chat templating and special-token<br>
+packaging were applied.</p>
+<h2 dir="auto">Exercise 12 — Atomic IDs and learned relationships</h2>
+<p dir="auto">The BPE vocabulary records that each listed byte or string pattern can be emitted<br>
+as one tokenizer piece under the frozen runtime rules. It may also preserve merge<br>
+ranks that explain when a longer piece wins over shorter constituents. The older<br>
+pieces remain available because other inputs still need them.</p>
+<p dir="auto">This does not give the transformer a semantic composition graph:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">数据 + 库 = meaning(数据库)
+</code></pre>
+<p dir="auto">The model normally receives only the final token IDs, not the merge history. It<br>
+initially treats <code class="notranslate">数</code>, <code class="notranslate">据</code>, <code class="notranslate">数据</code>, and <code class="notranslate">数据库</code> as separate categorical addresses<br>
+that select separate rows. String overlap and merge ancestry do not force those<br>
+rows to be similar.</p>
+<p dir="auto">Relationships can emerge later because the pieces occur in related contexts and<br>
+share the same transformer and next-token objective. Embedding geometry,<br>
+contextual hidden states, attention behavior, and output probabilities can then<br>
+reflect useful linguistic relationships. Those are learned model properties,<br>
+not tokenizer guarantees.</p>
+<p dir="auto">For the permutation argument, consistently relabel all IDs while permuting:</p>
+<ul dir="auto">
+<li>tokenizer piece-to-ID and ID-to-piece mappings;</li>
+<li>input embedding rows;</li>
+<li>output rows and biases;</li>
+<li>dataset inputs and labels;</li>
+<li>special-token references and any row-specific optimizer state.</li>
+</ul>
+<p dir="auto">The transformed system can produce the same vectors, logits, probabilities, and<br>
+decoded text for every input. Therefore numeric relationships such as “ID 100 is<br>
+close to ID 101” cannot carry the language knowledge. The knowledge resides in<br>
+the parameters and computation associated with those categorical addresses and<br>
+in the text interface that maps the addresses back to symbols.</p>
+<h2 dir="auto">Assignment A — Text equality versus interface equality</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> A special marker decodes to the same visible string whether it is reserved or ordinary. Are the encodings equivalent?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> No. Reserved admission can emit one control ID; ordinary admission emits byte/BPE IDs. The decoded text alone hides this distinction. Compare IDs, control-token counts and policy identity. For streamed chunks of one record, check IDs against concatenated-record encoding; for independent records, preserve the declared reset boundary.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-41</h1>
+<h1 dir="auto">Solutions — Chapter 3: Learning the Next Token</h1>
+<p dir="auto">These are reference explanations, not scripts to memorize. A complete answer<br>
+connects the mathematics to the computation graph and keeps every empirical<br>
+claim within its evaluation contract.</p>
+<h2 dir="auto">Exercise 1 — The complete tensor bridge</h2>
+<p dir="auto">The shapes are:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Object</th>
+<th>Shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Input token IDs</td>
+<td><code class="notranslate">[2,5]</code></td>
+</tr>
+<tr>
+<td>Input embeddings</td>
+<td><code class="notranslate">[2,5,8]</code></td>
+</tr>
+<tr>
+<td>Final hidden states</td>
+<td><code class="notranslate">[2,5,8]</code></td>
+</tr>
+<tr>
+<td>Logits</td>
+<td><code class="notranslate">[2,5,10000]</code></td>
+</tr>
+<tr>
+<td>Shifted logits</td>
+<td><code class="notranslate">[2,4,10000]</code></td>
+</tr>
+<tr>
+<td>Shifted integer labels</td>
+<td><code class="notranslate">[2,4]</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Lookup preserves batch and sequence axes and adds the embedding width. The<br>
+transformer preserves those outer axes while contextualizing each length-8<br>
+state. The output head maps each state from hidden coordinates to 10,000<br>
+candidate-token scores.</p>
+<p dir="auto">The label at each supervised position is one integer ID naming the observed<br>
+candidate. A cross-entropy implementation can use that ID to select the target<br>
+log-probability without materializing a length-10,000 one-hot vector. The model<br>
+must score all candidates; the dataset observed only one target at that position.</p>
+<p dir="auto">The final input position has no later token within this sequence, so the usual<br>
+shift drops its logit row and drops the first token from the label side:</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-s1">shift_logits</span> <span class="pl-c1">=</span> <span class="pl-s1">logits</span>[:, :<span class="pl-c1">-</span><span class="pl-c1">1</span>, :]
+<span class="pl-s1">shift_labels</span> <span class="pl-c1">=</span> <span class="pl-s1">input_ids</span>[:, <span class="pl-c1">1</span>:]</pre></div>
+<h2 dir="auto">Exercise 2 — Permutation invariance</h2>
+<p dir="auto">To swap IDs 3 and 900 without changing behavior, apply the same permutation to:</p>
+<ul dir="auto">
+<li>the tokenizer's piece-to-ID and ID-to-piece mappings;</li>
+<li>rows 3 and 900 of the input embedding table;</li>
+<li>rows 3 and 900 of the output matrix, or the corresponding shared rows if<br>
+weights are tied;</li>
+<li>output biases for those candidate IDs;</li>
+<li>every dataset input ID and target label;</li>
+<li>any special-token IDs, masks, or decoding constraints that refer to the<br>
+affected IDs;</li>
+<li>optimizer state associated with the permuted parameter rows when continuing an<br>
+existing training run.</li>
+</ul>
+<p dir="auto">After the coordinated change, each text symbol selects the same numeric vector<br>
+and each output coordinate is decoded back to the same symbol as before. All<br>
+logits, probabilities, losses, and decoded text can therefore remain unchanged.</p>
+<p dir="auto">If numeric ID distance encoded linguistic similarity, such a permutation would<br>
+destroy the model's function. Because the coordinated permutation preserves it,<br>
+the printed numbers are categorical addresses. Linguistic relationships arise<br>
+from the learned vectors and transformations associated with those addresses.</p>
+<h2 dir="auto">Exercise 3 — Stable competition</h2>
+<p dir="auto">The first vector is the second plus a shared constant 1000:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$[1002,1001,999]=[2,1,-1]+1000.$$</math-renderer>
+<p dir="auto">Softmax cancels that constant:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$\frac{e^{z_i+1000}}{\sum_je^{z_j+1000}}
+=
+\frac{e^{1000}e^{z_i}}{e^{1000}\sum_je^{z_j}}
+=
+\frac{e^{z_i}}{\sum_je^{z_j}}.$$</math-renderer>
+<p dir="auto">The two vectors therefore produce the same mathematical distribution.</p>
+<p dir="auto">Computing <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$e^{1002}$</math-renderer> directly can overflow in finite precision. Stable softmax<br>
+subtracts <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$m=\max_i z_i$</math-renderer> first:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$[1002,1001,999]-1002=[0,-1,-3].$$</math-renderer>
+<p dir="auto">Every exponential is now at most one. This is not a changed model or an<br>
+approximate probability rule; it is an algebraically identical computation with<br>
+a safer numeric range. Stable target NLL should likewise use <code class="notranslate">log_softmax</code> or<br>
+log-sum-exp rather than <code class="notranslate">log(softmax(...))</code> after a probability has rounded to<br>
+zero.</p>
+<h2 dir="auto">Exercise 4 — Confidently wrong</h2>
+<p dir="auto">The target is class 1, so:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$q=[0,1,0].$$</math-renderer>
+<p dir="auto">Therefore:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$p-q=[0.7054,-0.7405,0.0351].$$</math-renderer>
+<p dir="auto">Interpretation by coordinate:</p>
+<ul dir="auto">
+<li>Class 0 has positive gradient <code class="notranslate">0.7054</code>. Gradient descent subtracts it, strongly<br>
+lowering that wrong candidate's logit.</li>
+<li>Class 1 has negative gradient <code class="notranslate">-0.7405</code>. Gradient descent subtracts a negative<br>
+number, strongly raising the target logit.</li>
+<li>Class 2 has positive gradient <code class="notranslate">0.0351</code>. Its logit is lowered only slightly<br>
+because the model had assigned it little probability.</li>
+</ul>
+<p dir="auto">The gradient sign is not the update direction; the optimizer moves opposite the<br>
+gradient under the SGD sketch <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$z\leftarrow z-\eta\nabla z$</math-renderer>.</p>
+<p dir="auto">Class 0 receives more correction because it captured most of the limited<br>
+probability budget. Lowering an already unlikely class 2 would release little<br>
+mass. Cross-entropy concentrates correction on the beliefs most responsible for<br>
+the observed mistake.</p>
+<h2 dir="auto">Exercise 5 — From logits into parameters</h2>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$h$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$g$</math-renderer> be row vectors of lengths <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$D$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$V$</math-renderer>, and let the stored<br>
+output weight have shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[V,D]$</math-renderer>:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$z=hW_{\mathrm{out}}^\top+b,
+\qquad
+g=\frac{\partial L}{\partial z}=p-q.$$</math-renderer>
+<p dir="auto">The chain rule gives:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$\frac{\partial L}{\partial b}=g,
+\qquad
+\frac{\partial L}{\partial W_{\mathrm{out}}}=g^\top h,
+\qquad
+\frac{\partial L}{\partial h}=gW_{\mathrm{out}}.$$</math-renderer>
+<p dir="auto"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$g^\top h$</math-renderer> is an outer product with shape <code class="notranslate">[V,D]</code>. Under a simple gradient step,<br>
+the target row is strengthened in the direction of the current hidden state,<br>
+while non-target rows are weakened in proportion to their probabilities. The<br>
+output head is learning how to read contextual geometry as token evidence.</p>
+<p dir="auto"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$gW_{\mathrm{out}}$</math-renderer> has shape <code class="notranslate">[D]</code> and tells the transformer how the state should change<br>
+to make the target more competitive. Backpropagation sends this signal through<br>
+the layers that created <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$h$</math-renderer>. The transformer is learning to construct better<br>
+contextual geometry.</p>
+<p dir="auto">The local logit update is explanatory, but logits are normally disposable<br>
+activations. Reusable learning lives in <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$W_{\mathrm{out}}$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$b$</math-renderer>, transformer parameters, and<br>
+possibly a tied embedding table.</p>
+<h2 dir="auto">Exercise 6 — Nonzero loss, zero expected gradient</h2>
+<p dir="auto">At <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$p=[0.7,0.3]$</math-renderer>, the <code class="notranslate">dog</code> one-hot target produces:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$g_{dog}=[0.7,0.3]-[1,0]=[-0.3,0.3].$$</math-renderer>
+<p dir="auto">The <code class="notranslate">cat</code> target produces:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$g_{cat}=[0.7,0.3]-[0,1]=[0.7,-0.7].$$</math-renderer>
+<p dir="auto">Weighting by target frequencies:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$\begin{aligned}
+\mathbb{E}[g]
+&amp;=0.7g_{dog}+0.3g_{cat}\\%
+&amp;=0.7[-0.3,0.3]+0.3[0.7,-0.7]\\%
+&amp;=[0,0].
+\end{aligned}$$</math-renderer>
+<p dir="auto">Each sample still prefers its observed outcome, but across the distribution the<br>
+corrections balance. With small stochastic minibatches, realized gradients can<br>
+fluctuate around this zero expectation.</p>
+<p dir="auto">The cross-entropy decomposition is:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$H(q,p)=H(q)+D_{KL}(q\|p).$$</math-renderer>
+<p dir="auto">At <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$p=q$</math-renderer>, KL mismatch is zero while <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$H(q)$</math-renderer> remains positive because both outcomes<br>
+can occur. The optimizer has reached the best calibrated prediction available<br>
+for that empirical distribution. Positive loss measures irreducible uncertainty,<br>
+not necessarily residual model error.</p>
+<h2 dir="auto">Exercise 7 — Same NLL, different behavior</h2>
+<p dir="auto">Model A's product is:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$0.5^4=0.0625.$$</math-renderer>
+<p dir="auto">Model B's product is approximately:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$0.99^3\times0.0644\approx0.0625.$$</math-renderer>
+<p dir="auto">The products and therefore total sequence NLLs are equal. This establishes one<br>
+narrow claim: both models assign approximately the same probability to this<br>
+exact observed sequence.</p>
+<p dir="auto">The token-level structures differ. A spreads moderate uncertainty across every<br>
+position. B is nearly certain three times and catastrophically surprised once.<br>
+That difference can affect:</p>
+<ul dir="auto">
+<li>calibration;</li>
+<li>maximum and tail token loss;</li>
+<li>where gradients concentrate;</li>
+<li>sensitivity to a decision at the catastrophic position;</li>
+<li>free-generation trajectories after that decision.</li>
+</ul>
+<p dir="auto">These claims require token-level loss distributions, calibration evaluation,<br>
+generated trajectories, or task-specific robustness tests. Total NLL correctly<br>
+forgets this information when it reduces many factors to one product.</p>
+<h2 dir="auto">Exercise 8 — Tokenizer-dependent perplexity</h2>
+<p dir="auto">For tokenizer A:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$\mathrm{NLL}_{total}=-\log0.25\approx1.386.$$</math-renderer>
+<p dir="auto">There is one token, so mean NLL is 1.386 and:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$\mathrm{PPL}_A=e^{1.386}=4.$$</math-renderer>
+<p dir="auto">For tokenizer B, the complete text probability remains:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$0.5\times0.5=0.25,$$</math-renderer>
+<p dir="auto">so total NLL is still 1.386. There are two tokens, however, so mean NLL is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$1.386/2=0.693$</math-renderer> and:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$\mathrm{PPL}_B=e^{0.693}=2.$$</math-renderer>
+<p dir="auto">The lower number does not indicate a more probable text. The denominator counts<br>
+different units.</p>
+<p dir="auto">A multilingual comparison should freeze the corpora, domains, preprocessing,<br>
+special tokens, target masks, and context policy; report tokenizer compression<br>
+such as tokens per UTF-8 byte; and normalize total NLL to a common unit such as:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$\text{bits per byte}
+=
+\frac{\mathrm{NLL}_{total}}
+{N_{bytes}\ln2}.$$</math-renderer>
+<p dir="auto">It should also compare how much raw text fits inside the fixed token context.<br>
+Even then, lower predictive loss does not by itself establish comprehension,<br>
+truthfulness, or downstream quality.</p>
+<h2 dir="auto">Exercise 9 — Audit causal alignment</h2>
+<p dir="auto">The supervised pairs are:</p>
+<pre lang="text" class="notranslate"><code class="notranslate">&lt;BOS&gt;                 → I
+&lt;BOS&gt; I               → love
+&lt;BOS&gt; I love          → dogs
+&lt;BOS&gt; I love dogs     → &lt;EOS&gt;
+</code></pre>
+<p dir="auto">The state at position <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$t$</math-renderer> sees tokens through <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$x_t$</math-renderer> and predicts <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$x_{t+1}$</math-renderer>. The<br>
+final EOS position has no later target in this sequence.</p>
+<p dir="auto">An unshifted objective compares the position-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$t$</math-renderer> logits with <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$x_t$</math-renderer>. Because the<br>
+current token is already part of the position-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$t$</math-renderer> input, a model can learn an<br>
+identity-like map from the current embedding to the same token's output row. It<br>
+can achieve very low loss on that objective without learning the continuation<br>
+relationships listed above.</p>
+<p dir="auto">During generation, the last visible token must predict something unseen. A<br>
+current-token copier therefore solves the measured task but not the intended<br>
+one. This is label misalignment, distinct from future leakage caused by a broken<br>
+causal attention mask.</p>
+<h2 dir="auto">Exercise 10 — Three boundaries</h2>
+<ol dir="auto">
+<li><strong>Attention visibility:</strong> the response may read the prompt wherever causal and<br>
+padding/document masks permit it. A zero loss label does not make the prompt<br>
+invisible.</li>
+<li><strong>Direct loss contribution:</strong> a prompt label of <code class="notranslate">-100</code> contributes no local<br>
+cross-entropy term and is excluded from the valid-target denominator.</li>
+<li><strong>Gradient flow:</strong> a supervised response state can depend on prompt keys and<br>
+values. Its loss therefore backpropagates into earlier prompt representations,<br>
+input embeddings, and shared transformer parameters.</li>
+</ol>
+<p dir="auto">The activation-level qualifier matters. At layer <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\ell$</math-renderer>, a response position<br>
+reads prompt states from layer <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\ell-1$</math-renderer>. Those earlier-layer states can lie on the<br>
+loss path. The final-layer output at a masked prompt position need not receive a<br>
+gradient merely because a later final-layer response output exists; that exact<br>
+activation may have no consumer. Explicit detaching, blocked attention, or frozen<br>
+parameters creates still different behavior.</p>
+<p dir="auto">Loss masking means “do not grade this target,” not “remove this token from<br>
+context” or “prevent every related parameter update.”</p>
+<h2 dir="auto">Exercise 11 — Teacher forcing and temperature</h2>
+<p dir="auto">Teacher forcing evaluates each prediction under a real prefix from the dataset.<br>
+During generation, the model consumes its own previous selections. One imperfect<br>
+or unusual selection changes the next context, and later predictions may operate<br>
+on prefixes that were rare in training. These trajectory errors can compound<br>
+even if shifting and causal masking are correct.</p>
+<p dir="auto">Lower temperature sharpens the current distribution and may reduce the chance of<br>
+sampling low-probability candidates. It cannot guarantee a good trajectory:</p>
+<ul dir="auto">
+<li>the highest-probability candidate can still be wrong;</li>
+<li>positive temperature does not change greedy ranking;</li>
+<li>sharpening can amplify systematic model bias;</li>
+<li>deterministic choices can enter repetition loops;</li>
+<li>if <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$p$</math-renderer> is calibrated, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\tau&amp;lt;1$</math-renderer> distorts its frequencies away from the data by<br>
+overrepresenting the mode.</li>
+</ul>
+<p dir="auto">Temperature changes the decoder's risk profile. It does not eliminate the<br>
+difference between gold training prefixes and model-generated prefixes.</p>
+<h2 dir="auto">Exercise 12 — Evidence discipline</h2>
+<p dir="auto">A supported claim is:</p>
+<blockquote>
+<p dir="auto">In the precommitted two-logit, full-batch PyTorch experiment, repeated 70/30<br>
+one-hot targets produced probabilities approximately <code class="notranslate">[0.7,0.3]</code>; autograd<br>
+matched <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$p-r$</math-renderer>, and final mean cross-entropy matched empirical entropy within<br>
+the declared tolerances.</p>
+</blockquote>
+<p dir="auto">A plausible but unsupported interpretation is:</p>
+<blockquote>
+<p dir="auto">Therefore a transformer trained on natural text will recover the true human<br>
+continuation distribution for unseen contexts.</p>
+</blockquote>
+<p dir="auto">The controlled experiment has no context representation, no unseen examples,<br>
+and no distribution shift. It establishes an optimization mechanism, not<br>
+generalization or language understanding.</p>
+<p dir="auto">The smallest next experiment could define several related but nonidentical input<br>
+contexts with a deliberately shared feature structure, hold out some combinations,<br>
+and precommit whether a tiny contextual classifier should recover known target<br>
+frequencies on those held-out combinations. The report would need separate<br>
+training and held-out losses, calibration error or frequency comparisons, fixed<br>
+seeds and splits, and failure criteria. A successful result would support<br>
+generalization only within that synthetic family, not natural language broadly.</p>
+<h2 dir="auto">Assignment A — A fixed likelihood unit</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> A four-byte evaluation text has summed NLL of four nats. What happens to bits per byte when it is represented by two instead of four tokens?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> At fixed summed NLL and byte count, both give 4/(4 ln 2), approximately 1.443 bits per byte. Their token-average NLLs are two and one nats, so token perplexity differs. State EOS and masking policies before interpreting the byte-normalized score. This arithmetic illustrates reporting units; it does not predict equal learned NLL across real tokenizers.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-42</h1>
+<h1 dir="auto">Solutions — Chapter 4: Attention and the Causal Information Boundary</h1>
+<p dir="auto">These answers accompany the complete <a href="../chapters/04-attention-and-the-causal-information-boundary.md">chapter</a>.<br>
+The notebooks contain the same mechanisms as inspectable code with adjacent<br>
+solutions. A convincing answer explains the causal and computational assumptions.</p>
+<h2 dir="auto">Exercise 1 — Shapes and meaning</h2>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Object</th>
+<th>Shape</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X</td>
+<td>[5,8]</td>
+</tr>
+<tr>
+<td>W_Q, W_K</td>
+<td>[8,4]</td>
+</tr>
+<tr>
+<td>W_V</td>
+<td>[8,3]</td>
+</tr>
+<tr>
+<td>Q, K</td>
+<td>[5,4]</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$V_{\mathrm{val}}$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[5,3]$</math-renderer></td>
+</tr>
+<tr>
+<td>QKᵀ, mask, A</td>
+<td>[5,5]</td>
+</tr>
+<tr>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$O=AV_{\mathrm{val}}$</math-renderer></td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$[5,3]$</math-renderer></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">None of these axes indexes the output vocabulary. Rows are receiving positions<br>
+and A's columns are source positions. The later output head maps final hidden<br>
+features to vocabulary logits. Q/K widths must match; <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$V_{\mathrm{val}}$</math-renderer>'s width is independent.</p>
+<h2 dir="auto">Exercise 2 — Directed retrieval</h2>
+<p dir="auto">The score is x_i W_Q W_Kᵀ x_jᵀ. Swapping i and j transposes the effective<br>
+bilinear relationship. Since W_QW_Kᵀ need not be symmetric, the scores need not<br>
+agree. Separate projections let a receiver match a source under a different<br>
+role from the one that source uses when receiving information itself.</p>
+<p dir="auto">If W_Q=W_K, the unmasked dot-product matrix is symmetric. Causal masking and<br>
+row-wise normalization can still make the final attention matrix asymmetric.</p>
+<h2 dir="auto">Exercise 3 — Scaling</h2>
+<p dir="auto">With independent zero-mean coordinates,</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$\mathrm{Var}(q_m k_m)=\sigma_q^2\sigma_k^2,
+\qquad
+\mathrm{Var}(q\cdot k)=d_h\sigma_q^2\sigma_k^2.$$</math-renderer>
+<p dir="auto">Dividing by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$\sqrt{d_h}$</math-renderer> removes the dimension factor but retains<br>
+σ_q²σ_k². With correlated coordinate products, covariance terms appear in the<br>
+variance of the sum. Trained magnitudes and correlations can therefore create<br>
+wide score gaps after standard scaling.</p>
+<p dir="auto">The paired simulation in <a href="../../notebooks/day-04/02_attention_gradients_and_failures.ipynb">notebook 2</a><br>
+tests the unit-variance IID case. It does not establish a universal trained-model<br>
+distribution.</p>
+<h2 dir="auto">Exercise 4 — Mask order</h2>
+<p dir="auto">Pre-softmax masking gives [0.5,0.5,0]. Naive post-softmax zeroing leaves<br>
+approximately [0.0000454,0.0000454,0], because exp(10) was present in the<br>
+normalization denominator. Replacing the forbidden score with zero gives<br>
+[1/3,1/3,1/3], because exp(0)=1.</p>
+<p dir="auto">Dividing the post-masked weights by their remaining sum cancels the original<br>
+denominator in exact arithmetic. In finite precision, a sufficiently large<br>
+forbidden maximum may have already made every allowed probability zero. The<br>
+repair then yields 0/0. Masking before stable normalization avoids that problem.</p>
+<p dir="auto">If a query has no allowed keys, the desired distribution is itself undefined.<br>
+A separate padding/query policy is necessary; simply choosing a huge negative<br>
+number does not solve the semantic problem.</p>
+<h2 dir="auto">Exercise 5 — Future intervention</h2>
+<p dir="auto">“Crossed” must have the same output: all its allowed incoming representations,<br>
+weights, and positions remain identical. The fourth output may change because<br>
+the fourth input itself changes. The state at “crossed” predicts a continuation<br>
+without observing that continuation.</p>
+<p dir="auto">Assumptions include causal upstream states, fixed parameters, compatible<br>
+position handling, and disabled stochastic effects such as dropout. In floating<br>
+point, different kernels or shapes may introduce small rounding differences;<br>
+equality checks should declare tolerance.</p>
+<p dir="auto">A single unchanged output under one perturbation does not prove causality.<br>
+The chapter's naive post-mask fixture leaves one earlier output unchanged while<br>
+changing others. Use a general graph argument and multiple well-chosen tests.</p>
+<h2 dir="auto">Exercise 6 — Backward credit</h2>
+<p dir="auto">Since <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$dO=(dA)V_{\mathrm{val}}+A(dV_{\mathrm{val}})$</math-renderer>, Frobenius inner products with <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$G_O$</math-renderer> give</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$G_A=G_OV_{\mathrm{val}}^\top,\qquad G_V=A^\top G_O.$$</math-renderer>
+<p dir="auto">Here <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="a265d9ce347b0e8be984c57313000777">$G_V=\partial L/\partial V_{\mathrm{val}}$</math-renderer>, matching the implementation's <code class="notranslate">v</code> tensor. The softmax derivative supplies</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$G_R=A\odot\left(G_A-\mathrm{rowsum}(A\odot G_A)\right).$$</math-renderer>
+<p dir="auto">Then</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$G_Q=G_RK/\sqrt{d_h},\quad G_K=G_R^\top Q/\sqrt{d_h},$$</math-renderer>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$G_X=G_QW_Q^\top+G_KW_K^\top+G_VW_V^\top.$$</math-renderer>
+<p dir="auto">For each projection, G_W=XᵀG_projected. Earlier prompt rows can receive credit<br>
+through K and V even with no direct loss at those rows. A forbidden future row<br>
+has no path to the isolated earlier target. Shared projection parameters still<br>
+receive gradients from other valid paths.</p>
+<p dir="auto">The <a href="../../src/dongxi_llms/attention_evidence.py">gradient implementation</a><br>
+checks all these identities against autograd and independently checks projection<br>
+weights with central differences.</p>
+<h2 dir="auto">Exercise 7 — Detach and saturation</h2>
+<p dir="auto">Detaching A removes the W_Q/W_K paths while preserving the value path. Detaching<br>
+V removes W_V's path while routing can still learn from fixed messages. The<br>
+forward loss stays the same because detach changes graph connectivity, not the<br>
+tensor's numerical value. These are statements about this isolated graph with<br>
+independent projection parameters.</p>
+<p dir="auto">Softmax's Jacobian approaches zero near a one-hot row. For vocabulary<br>
+cross-entropy, the target's negative-log derivative compensates, giving p−q.<br>
+For attention, the incoming derivative comes through values and subsequent<br>
+computation; no such compensation is guaranteed. A small softmax Jacobian can<br>
+therefore weaken its routing signal, without implying every full-network<br>
+gradient vanishes.</p>
+<h2 dir="auto">Exercise 8 — Interpretation</h2>
+<p dir="auto">For values [2,0], [0,2], [1,1], both [.4,.4,.2] and [.1,.1,.8] yield [1,1].<br>
+All weights are positive and normalized; the ambiguity does not rely on exact<br>
+hard selection.</p>
+<p dir="auto">An attention map establishes routing coefficients for that head and execution.<br>
+It does not, by itself, identify a final prediction's unique cause. Changing<br>
+values, heads, or inputs and measuring downstream effects can provide stronger<br>
+evidence, but intervention design and distribution shift also require care.</p>
+<h2 dir="auto">Exercise 9 — Cache correctness</h2>
+<p dir="auto">A past position cannot read an appended future position. Its representation at<br>
+each causal layer remains the same, so that layer's projected K/V remain valid.<br>
+The new query uses those K/V to retrieve; it does not use earlier queries.</p>
+<p dir="auto">Identical first-layer incoming states may give identical first-layer keys.<br>
+Their deeper states can differ after attention to different earlier prefixes.<br>
+The cache replay demonstrates both behaviors.</p>
+<p dir="auto">Cache validity requires an unchanged prefix, compatible parameters and<br>
+position treatment, and compatible execution state. If part of the prefix<br>
+changes, recompute the affected state; retaining the same token string at one<br>
+position is insufficient.</p>
+<h2 dir="auto">Exercise 10 — Cache memory and masking</h2>
+<p dir="auto">There are two tensors, two layers, six positions, four features, and eight bytes<br>
+per float64 scalar:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="a265d9ce347b0e8be984c57313000777">$$2\times2\times6\times4\times8=768\ \text{bytes}.$$</math-renderer>
+<p dir="auto">This counts logical tensor contents only, not Python objects, concatenation<br>
+temporaries, or allocator memory.</p>
+<p dir="auto">For a single final-position query, the source positions already consist solely<br>
+of past positions and self. It may attend to all of them. A [1,N] lower triangle<br>
+without an offset allows only key zero, because it treats the query as global<br>
+position zero. For a multi-token chunk after P cached positions, new query i<br>
+can read keys j≤P+i.</p>
+<h2 dir="auto">Exercise 11 — Experimental claims</h2>
+<p dir="auto">The checks establish numerical derivative agreement and full-prefix/cached<br>
+agreement for declared small fixtures. The operation count demonstrates how<br>
+many layer-position rows receive K or V projections in the chosen replay<br>
+schedule.</p>
+<p dir="auto">They do not establish trained-model quality, end-to-end generation correctness<br>
+for every architecture, or a speedup equal to the operation-count ratio.<br>
+Latency claims need controlled timing, warmup, synchronization, batching, and<br>
+hardware/backend identity. Cache quantization or changed positional handling<br>
+requires new correctness checks. Quality claims need frozen evaluation.</p>
+<h2 dir="auto">Exercise 12 — Implementation defense</h2>
+<ul dir="auto">
+<li>Wrong softmax axis: inspect row sums with a nonsymmetric score fixture, verify<br>
+receiver/source orientation, and compare with a reference. Symmetric special<br>
+cases can conceal this bug.</li>
+<li>Future leakage: intervene on later inputs and compare earlier outputs. Also<br>
+inspect forbidden weights, since a finite perturbation may accidentally have<br>
+no effect.</li>
+<li>Zero-score replacement: inspect forbidden probabilities; exp(0) is nonzero.</li>
+<li>All-masked row: detect rows with no allowed sources before normalization,<br>
+define their policy, and assert finite outputs for evaluated rows.</li>
+</ul>
+<p dir="auto">The <a href="../../notebooks/day-04/01_causal_attention_forward.ipynb">forward notebook</a><br>
+contains mask and invariance checks. The<br>
+<a href="../../notebooks/day-04/03_kv_cache_equivalence.ipynb">cache notebook</a><br>
+adds a stale-prefix counterexample. Together with the analytical argument, these<br>
+give evidence at the mechanism level without substituting for broader model<br>
+evaluation.</p>
+<h2 dir="auto">Assignment C — Repairing an online softmax state</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> The retained row maximum rises from two to four. How should the old denominator and value numerator change?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> Multiply both old accumulators by exp(2−4), approximately 0.1353, before adding the new block in coordinates relative to four. This rescales old probability mass consistently. Omitting the factor overweights earlier blocks. Check dense outputs and Q/K/V gradients, including a fully masked row and an uneven last tile. Forward workspace accounting alone does not establish fused backward savings.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/02_online_attention.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>

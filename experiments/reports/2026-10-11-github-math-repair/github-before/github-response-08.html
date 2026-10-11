@@ -1,0 +1,1233 @@
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-51</h1>
+<h1 dir="auto">Chapter 13 — Worked solutions</h1>
+<p dir="auto">Read the <a href="../chapters/13-group-relative-policy-optimization.md">chapter</a> and<br>
+make a prediction before opening an answer. Runnable versions are adjacent to<br>
+the exercises in the <a href="../labs/13-group-relative-policy-optimization.md">notebook pathway</a>.</p>
+<h2 dir="auto">1. A successful group can teach nothing relatively</h2>
+<p dir="auto">If all rewards are one, each centered reward is zero. The standard deviation is<br>
+zero, so our explicit constant-group rule returns zero advantages. The group<br>
+contains evidence of success, but no information about which sampled response<br>
+should become more likely relative to the others. Across later prompts, the<br>
+shared parameters may still change. KL regularization or optimizer momentum can<br>
+also move them; “zero relative signal” is narrower than “no weight movement.”</p>
+<h2 dir="auto">2. Population versus sample standard deviation</h2>
+<p dir="auto">For rewards 0, 1, the mean is 0.5. Population standard deviation is 0.5 and sample<br>
+standard deviation is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$\sqrt{0.5}$</math-renderer>. Normalized advantages are approximately<br>
+−1, +1 with the population convention and−0.707, +0.707 with the sample convention.<br>
+The sample convention reduces this group's scale by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$\sqrt{(G-1)/G}$</math-renderer>.<br>
+It must be declared because the change affects optimization, especially for small groups.</p>
+<h2 dir="auto">3. The denominator changes prompt weighting</h2>
+<p dir="auto">Centering subtracts a local comparison; dividing by a reward-dependent standard<br>
+deviation scales that comparison differently across groups. Binary groups with<br>
+success fractions near 0 or 1 have a smaller spread than balanced groups.<br>
+Moreover, the statistics include each response's own reward. The exact<br>
+independent-sample baseline identity from REINFORCE does not make all these<br>
+normalized estimators identical or unbiased. The notebook changes reward spread<br>
+while retaining signs and exposes the changed advantage magnitudes.</p>
+<h2 dir="auto">4. Zero value, nonzero slope</h2>
+<p dir="auto">At initial ratio 1, centered advantages can sum to zero, producing a zero average<br>
+surrogate value. The derivative contains each answer's log-probability derivative:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$$
+\nabla J=\frac1G\sum_i\hat A_i\nabla\log\pi_\theta(y_i\mid x)
+$$</math-renderer></p>
+<p dir="auto">for the simple one-token, unclipped case. Those gradients point in different<br>
+directions. The scalar sum of advantages being zero does not make this vector<br>
+sum zero. The actual decoder experiment records a first-update gradient norm.</p>
+<h2 dir="auto">5. Negative-advantage clipping</h2>
+<p dir="auto">With <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$A=-1$</math-renderer>, ratio 0.5 and clip interval[0.8, 1.2], the unclipped product is−0.5<br>
+and clipped product−0.8. The minimum is−0.8, stopping further reward for reducing<br>
+the ratio below 0.8. At ratio 1.5, the minimum is−1.5 rather than−1.2, so the<br>
+unfavorable increase remains penalized. Clipping treats direction relative to<br>
+advantage, not merely numerical distance from one.</p>
+<h2 dir="auto">6. A value identity does not specify a full derivative</h2>
+<p dir="auto">The expectation of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$k_3$</math-renderer> under the current distribution equals forward KL.<br>
+When differentiating that expectation, both the integrand and its distribution<br>
+weights depend on parameters. Autograd through a fixed sample includes only the<br>
+integrand's path unless a score-function or equivalent correction supplies the<br>
+other path. Sampling under an old distribution adds another mismatch. The<br>
+notebook computes exact categorical KL and verifies its full logit gradient,<br>
+making the implemented regularizer unambiguous at visited states.</p>
+<h2 dir="auto">7. Length reductions</h2>
+<p dir="auto">For lengths 2 and 8, response means assign each response half the total nominal<br>
+weight, so per-token weights are 0.25 and 0.0625. Global token means assign every<br>
+token weight 0.1, yielding total response weights 0.2 and 0.8. Actual gradients<br>
+also depend on token log probabilities and advantage signs. The coefficients<br>
+alone do not prove how generation length will change after training.</p>
+<h2 dir="auto">8. Prompt gradients survive a response-only loss</h2>
+<p dir="auto">Response states attend to earlier prompt states. Differentiating response logits<br>
+therefore reaches prompt representations and their embedding/projection<br>
+parameters through attention and the residual stack. Masking a prompt's direct<br>
+loss removes a local objective term; it does not detach that state's computation.<br>
+A deliberate <code class="notranslate">.detach()</code> would change the graph and must be justified separately.</p>
+<h2 dir="auto">9. Strict checking can reject valid work</h2>
+<p dir="auto">Our one-integer rule rejects a correct mathematical explanation containing extra<br>
+words. That is an intentional task-interface constraint, not proof the answer's<br>
+reasoning is wrong. Check allowed equivalences and adversarial cases separately.<br>
+Tests reject multiple answers, embedded correct substrings and truncation while<br>
+accepting the declared whitespace/sign variants. Record the raw response and<br>
+checker version to diagnose parser failures without rewriting history.</p>
+<h2 dir="auto">10. Implementation readiness and model evidence</h2>
+<p dir="auto">CPU tests show that the selected objective, masks, gradient boundaries and tiny<br>
+decoder path execute. They do not measure Qwen3's GPU memory, throughput,<br>
+held-out math accuracy or safety. The optional HF runner requires a supplied<br>
+local model and pinned revision. Its model-scale experiment remains unexecuted<br>
+until a separate report records that run. A four-prompt CPU held-out score is<br>
+descriptive, and every failed row remains part of the report.</p>
+<h2 dir="auto">11. A constructive control is not a guarantee of every-item learning</h2>
+<p dir="auto">Known solvability establishes that a correct path exists, not that stochastic<br>
+optimization must discover it for every initialization. The new shared decoder<br>
+receives actual sampled response rewards, unlike the separate exact lookup arm.<br>
+Its first answer and conditional EOS probabilities both change. All three<br>
+predeclared seeds improve mean complete-path probability; two still fail 0+0.<br>
+That minority example can disappear into a majority-answer shortcut while<br>
+stopping improves. Keep the item-level probabilities, failed seed rows, frozen<br>
+policy and oracle. Do not choose another checkpoint after reading the test data.</p>
+<p dir="auto">The adjacent references in the<br>
+<a href="../../notebooks/day-23/03_reasoning_tasks_and_positive_controls.ipynb">constructive-control notebook</a><br>
+show the actual sampled tokens, old likelihoods, EOS gradient and layer-gradient<br>
+reach. The diagnostic exact expectation is not differentiated as decoder training<br>
+loss. EOS is sampled within the declared grammar and included in the loss.</p>
+<h2 dir="auto">12. A constant baseline can explain a perfect slice without reasoning</h2>
+<p dir="auto">Every new-source sum-positive item has at least one positive operand. Always<br>
+returning 1 plus EOS therefore scores 100% on that slice,75% on the training set,<br>
+and 50% on the odd-sum family. Those percentages match a shortcut's availability,<br>
+not proof the decoder learned the intended arithmetic rule. Four prompts per<br>
+slice provide little coverage. Examine zero-sum cases, balanced task variants<br>
+and generated answers before proposing a new development experiment. Do not<br>
+silently retune the current final test or replace its frozen panel.</p>
+<p dir="auto">The lookup arm makes a related limitation explicit: trained keys improve, but<br>
+all unseen keys retain probability 0.5. It supplies EOS by construction and has<br>
+a different objective/budget, so it cannot be ranked against sampled decoder<br>
+training as though those conditions matched.</p>
+<h2 dir="auto">13. Weight changes, inference changes and rationale claims</h2>
+<p dir="auto">Base and instruct refer to different weight checkpoints and training histories.<br>
+Raw versus chat is a prompt-interface choice on specified weights. A supported<br>
+thinking toggle changes a template/output path, not the underlying checkpoint.<br>
+Changing the response cap changes a computational constraint; it is not training.<br>
+Record all four axes independently, including actual tokenizer/template/weight<br>
+identities, stopping and costs.</p>
+<p dir="auto">Cap 1 can contain a correct numeral without EOS. The answer grader may mark it<br>
+correct while the complete-path reward is zero. A longer cap is an intervention,<br>
+not proof of reasoning, and final-answer correctness does not validate rationale<br>
+faithfulness. The original English arithmetic/algebra/two-step panel currently<br>
+has independently authored oracle/parser controls, not a tiny-decoder language<br>
+score. A <a href="../../experiments/reports/2026-10-05-native-reasoning-rlvr-evidence.md">separate actual report</a><br>
+now incorporates all eight initial conditions: six accepted complete invocations<br>
+and two failed Base/custom-chat partial invocations. It establishes bounded<br>
+native off/on and cap observations, not complete 800-response coverage, a broad<br>
+model ranking or native RLVR gain. Negative declared grades expose a model-output/grader-interface<br>
+limitation. Keep those measured rows separate from the historical symbolic controls.</p>
+<h2 dir="auto">14. Changing scale versus changing direction</h2>
+<p dir="auto">Global token mean and fixed-cap mean share the same numerator on a fixed pool.<br>
+Their parameter gradients differ by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$\sum_in_i/(NC)$</math-renderer>. Response means insert a<br>
+separate <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$1/n_i$</math-renderer> inside that numerator. They change relative contributions from<br>
+short and long responses, so the summed gradient can rotate when individual<br>
+token gradients are not collinear. Cosine one still does not imply equal<br>
+magnitudes or equal behavior after repeated training.</p>
+<p dir="auto">The <a href="../../notebooks/day-22/03_objective_weighting_and_filtering.ipynb">notebook</a><br>
+shows exact coefficients, three-seed measured gradient norms and a gradient-cosine<br>
+matrix. It applies no update, isolating an objective fact from a performance claim.</p>
+<h2 dir="auto">15. Normalization and preference weights remain separate</h2>
+<p dir="auto">Component normalization removes each component's observed within-group mean and<br>
+spread. Its subsequent weight still changes its contribution. Multiplying all<br>
+weights by ten multiplies component-aggregated advantages by ten. Normalizing the<br>
+total can largely cancel common positive scaling, subject to epsilon; these<br>
+operations are not interchangeable. Constant components provide no relative signal.</p>
+<p dir="auto">A normalized verbosity reward remains a verbosity reward. Separate strict task<br>
+quality detects capped answers that earn proxy credit without completing with EOS.</p>
+<h2 dir="auto">16. Clip directions follow advantage signs</h2>
+<p dir="auto">For positive advantage, enlarging the upper boundary permits more encouragement<br>
+to increase the ratio. For negative advantage, the favorable movement is reducing<br>
+the ratio, controlled by the lower boundary. Changing only the upper boundary<br>
+does not move that lower threshold. Unfavorable movements remain penalized.<br>
+The constructed ratio-1.3 fixture has zero positive-advantage derivative at upper<br>
+boundary 1.2 but a negative derivative at boundary 1.4. Gradient descent increases<br>
+the selected log probability only in the latter case. At ratio one both agree.</p>
+<h2 dir="auto">17. A selected batch hides rejected collection</h2>
+<p dir="auto">Retain all attempted groups and valid actions, including unsuccessful groups,<br>
+sampled EOS, caps and unqualified prompts. The measured seeds select forty<br>
+responses each but attempt seventy-two, seventy-two and fifty-six. Selected<br>
+token counts differ too. Uncached full-prefix position counts are not FLOPs;<br>
+collection and analysis rescoring add work. Independent quality and a matched<br>
+budget are required before an algorithm-performance comparison.</p>
+<h2 dir="auto">18. Preserve observations, not just weights</h2>
+<p dir="auto">The retained group is already a realized draw from the behavior policy. Replacing<br>
+it can change its actions, stopping lengths, rewards, normalized advantages and<br>
+resulting update. A pending restart keeps policy/Adam at the completed update<br>
+boundary but restores the post-collection source cursor and RNG together with<br>
+that exact pool. Its detached old likelihoods and policy version remain part of<br>
+the objective. Recompute current/reference scores on the retained prefixes and<br>
+apply once before new collection; preserve the original reference, not a copy of<br>
+the updated policy.</p>
+<p dir="auto">Collected and applied work differ at this boundary. Retain both counters and<br>
+the complete committed numerical history. A no-collection spy can verify that<br>
+pending restoration consumes its group rather than silently sampling again;<br>
+weights-only equality cannot prove that property. Partial generation and partial<br>
+optimizer work are separate failed attempts, not accepted pending/completed states.<br>
+Tiny actual-loop CPU replay does not establish pretrained/CUDA/BF16 recovery.</p>
+<p dir="auto">The external receipt must bind both the exact sampled state and its saved<br>
+model-work/I/O prefixes before payload inspection. Those prefixes need not equal<br>
+the journals' final cursor: save validation and publication create later work.<br>
+Reopen the same physical journals and retain those suffixes. The native save's<br>
+historical model-work capture occurs before semantic validation; preserving it<br>
+while retaining the later charge is correct. Refreshing the prefix merely to<br>
+make counters look aligned would change the saved boundary. Exercise 8 in the<br>
+Day 25 recovery notebook pairs this distinction with a native completed/pending<br>
+comparison; the model-work 23 and shared-reader 9 dimensions stay separate.</p>
+<h2 dir="auto">19. Follow one response through independent predicates</h2>
+<p dir="auto">Begin with the actual receipt and raw record, not a rewritten answer.<br>
+<code class="notranslate">Sample1009</code>/<code class="notranslate">math10</code> records raw <code class="notranslate">5 + 6 = 11&lt;|im_end|&gt;</code> and scoring text<br>
+<code class="notranslate">5 + 6 = 11</code>. The declared turn marker explains natural termination and<br>
+<code class="notranslate">truncated=false</code>. <code class="notranslate">format_policy="any"</code> explains <code class="notranslate">format_valid=true</code>; this is<br>
+not a promise that the rational parser can understand an equation. The frozen<br>
+<code class="notranslate">boxed_or_final</code> extraction falls back to <code class="notranslate">mechanism="whole"</code>, whose answer<br>
+contains the whole equation. Canonicalization is <code class="notranslate">UNSUPPORTED</code>, with reason<br>
+<code class="notranslate">outside exact rational grammar</code>. Consequently accepted <code class="notranslate">correct</code> and<br>
+<code class="notranslate">task_success</code> remain false.</p>
+<p dir="auto">Execution acceptance proves all planned records exist and the whole child exited 0.<br>
+It does not promote an unsupported grade to a supported wrong answer, and it does<br>
+not prove every visible mathematical statement is false. Conversely, noticing<br>
+the valid equation does not license a replacement headline. Preserve the frozen<br>
+grade and describe this case qualitatively as a grading-interface limitation.<br>
+A new bare-numeral instruction or extraction policy needs separate declaration,<br>
+controls and actual evaluation. Final-answer correctness would still not prove<br>
+the rationale's faithfulness.</p>
+<p dir="auto">Use the controlled held-out denominator: eleven distinct problems,44 sampled<br>
+attempts and 11 separate greedy attempts. Exclude the nine diagnostic problems,<br>
+including <code class="notranslate">math9</code>'s RLVR training overlap. No best-of-four selector was deployed;<br>
+candidate availability and delivered-answer accuracy would be different systems.<br>
+More precisely, the nine diagnostic roles comprise the eight original fixture-train<br>
+items <code class="notranslate">math1</code>–<code class="notranslate">math8</code> and <code class="notranslate">math9</code>'s known RLVR-fixture overlap; only <code class="notranslate">math2</code> and <code class="notranslate">math9</code><br>
+carry true RLVR-overlap flags. Those roles do not establish that full400/chosen/DPO<br>
+policies consumed this math data or that upstream checkpoint contamination occurred.</p>
+<p dir="auto">The newly accepted Base/raw 32 and Base/raw 128 children also retain all 100 original<br>
+records each and exit 0. Base/raw 32's controlled sampled slice has 1 natural stop<br>
+and 43 caps; all 11 controlled greedy attempts cap, with no declared correct row.<br>
+Base/raw 128's sampled slice has 2/44 declared correct,9 natural stops and 35 caps;<br>
+its greedy slice has 1/11 correct,2 stops and 9 caps. Those three held-out correct<br>
+answers use supported boxes and naturally terminate. Two other correct cap 128<br>
+rows are seen/overlap diagnostics, not held-out success. Any-candidate availability<br>
+among its four samples is 2/11 problems; greedy delivers a correct answer on a<br>
+different 1/11. No selector delivers the sampled successes.</p>
+<p dir="auto">Base/raw versus Instruct/native-chat changes both weights and serialization, not<br>
+only instruction fine-tuning. The two Base/raw caps hold those identities fixed<br>
+while changing the allowance; a few supported boxes at 128 do not promise monotonic<br>
+per-problem gain or validate visible reasoning. Keep the failed same-weights chat<br>
+rows distinct from the accepted negative thinking-on rows; neither is a license<br>
+to invent scores or complete missing comparisons.</p>
+<p dir="auto">Instruct/thinking-off 128 is accepted with all 100 records and exit 0, using the<br>
+same weights, source, original panel, native interface and decoding settings as 32.<br>
+The output cap is the intervention. Its controlled sampled answer grade is 13/44,<br>
+with 35 natural stops and 9 caps; greedy is 7/11 with 11 natural stops and no caps.<br>
+All 100 satisfy permissive <code class="notranslate">any</code> format. Two correct sampled boxes still cap 128:<br>
+<code class="notranslate">math19</code>/seed 1009 and <code class="notranslate">math18</code>/seed 1019. <code class="notranslate">correct</code> and <code class="notranslate">task_success</code> in this parser<br>
+panel are true for those boxes even though natural termination is false. Do not<br>
+turn them into strict EOS-complete paths, rewrite the flags or validate the<br>
+rationale by implication. Availability among four samples is 8/11 controlled<br>
+problems, distinct from 7/11 greedy-delivered answers and any unimplemented selector.<br>
+This controlled budget observation neither trains new weights nor guarantees<br>
+monotonic per-prompt improvement or faithful reasoning.</p>
+<p dir="auto">Base/custom-chat 32 and 128 are actual failures, not pending outcomes.<br>
+<code class="notranslate">Sample1019</code>/<code class="notranslate">math6</code> ends its 24-action trajectory in unmapped ID151768 and records a<br>
+decode error. For cap 32 the child exits 1;40 records and 60 missing responses remain. Its<br>
+56.54799546097638 child seconds and 56.59703186398838 supervisor seconds are<br>
+different, overlapping scopes. Minimum sampled available bytes are 122019704832,<br>
+stop reason is null and cleanup errors are empty; no deadline stopped this child.<br>
+The 39 unsupported records, one error and all their cost/IDs remain evidence.<br>
+Do not count missing cells as wrong answers, or convert the failed row to success<br>
+by silently filtering, replacing or resampling an unrepresentable action. The<br>
+cap 128 condition independently fails at the same 24th unmapped action with<br>
+40 retained/60 missing,39 unsupported/one error,8 natural stops and 31 caps.<br>
+Its native exit is 1 after 132.66686874401057 seconds; supervisor interval is<br>
+132.72932148602558, minimum sampled bytes 120977350656, stop reason null and<br>
+cleanup errors empty. It retains 4491 actions and 377459 positions without a<br>
+filter, retry or source/gate change. This is a second fixed-budget condition,<br>
+not a repaired cap 32 run. Thinking-on now has actual negative results at both<br>
+caps. G4 recovery run 01 has a cleanup-gate failure and fresh 02 has accepted exact<br>
+recovery; G8/01 also has accepted exact recovery. G8 pilot 16 now passes, while<br>
+G4's completed 16 export is separately consistency-closed without rewriting its<br>
+failed supervision. Common-panel outcomes are now measured separately in the<br>
+<a href="../chapters/13-group-relative-policy-optimization.md#1384-read-the-matched-outcome-not-the-pooled-count">matched results</a>.</p>
+<p dir="auto">The 680 retained records across eight invoked conditions include two errors;<br>
+800 planned slots leave 120 missing. Six complete accepted invocations account<br>
+for 600 records, not 600 correct answers. Do not call the 680 successful completions,<br>
+pool them into an accuracy score, invent missing observations or claim all 800<br>
+original panel slots are covered. Retaining failed Base/chat evidence also does<br>
+not create a new mandatory gate requiring a successful rerun. Continue to apply<br>
+the original criteria and dependency contracts, not a retrospectively altered task.</p>
+<h2 dir="auto">20. An iteration is not a quality claim</h2>
+<p dir="auto">The completed loop cursor identifies a committed numerical boundary. An optimizer<br>
+application is an actual operation in that iteration; nonzero relative policy<br>
+signal additionally requires nonconstant group rewards. All-correct and<br>
+all-wrong groups both have zero relative advantages. The fixed native application<br>
+path still recomputes likelihoods and exact KL, backpropagates, clips and invokes<br>
+AdamW when valid. Zero advantages do not by themselves prove no optimizer call,<br>
+no momentum effect or no parameter movement. Inspect actual histories and state<br>
+identities rather than infer these events from baseline parser grades; the RLVR<br>
+strict integer reward and the publication parser are distinct instruments.</p>
+<p dir="auto">Exact recovery adds another obligation: source 2, completed 1→2 and pending 1→2<br>
+must agree in numerical state and history while retaining the same physical<br>
+journals' later work. Applying the retained pending group without collecting<br>
+again preserves a realized observation, not merely a seed. A completed pilot 16<br>
+then needs a completed horizon and bound final export through its explicitly<br>
+declared consumer. Neither recovery nor<br>
+training acceptance proves quality improvement. That requires unchanged<br>
+Instruct/G4/G8 evaluations on the common twenty-item contract, separately per<br>
+cap and decoding cell, with overlap excluded and failures/costs retained.</p>
+<h2 dir="auto">21. A supported thinking flag is not a completed answer</h2>
+<p dir="auto">Both native thinking-on caps are accepted execution outcomes with 100 records,<br>
+zero adapter errors and all 100 capped/unsupported grades each. For either cap,<br>
+the controlled sampled system is 0/44 and the separate greedy system 0/11; no<br>
+natural stop occurs. <code class="notranslate">format_policy="any"</code> makes each record format-valid, not<br>
+parser-supported. Raw output keeps the thinking text; no response at either<br>
+budget closes <code class="notranslate">&lt;/think&gt;</code> or supplies a box. <code class="notranslate">Sample1009</code>/<code class="notranslate">math10</code> at 128 opens a<br>
+discussion of 5+6 but does not complete its answer. Do not rescue a numeral,<br>
+declare all mathematics false or infer the result of a longer unrun horizon.</p>
+<p dir="auto">Off/on shares the actual weights, tokenizer, native template and semantic<br>
+interface. The supported flag nevertheless changes every rendered prompt: off<br>
+precloses an empty thinking region while on permits generated <code class="notranslate">&lt;think&gt;</code> text.<br>
+That is a serialization/output-path intervention, not a new checkpoint or an<br>
+unchanged prompt. Within thinking-on 32→128, all 100 attempt seeds and prompt IDs<br>
+agree and the shorter action sequence is exactly the longer run's prefix. This<br>
+within-run-pair evidence does not establish cross-platform bitwise determinism.</p>
+<p dir="auto">On 32's 3200 actions and 124960 uncached prefix positions become 12800 actions and<br>
+1114240 positions at 128, with zero supported grades at both. Whole-child times<br>
+are 144.33200714498525 and 364.1156065230025 seconds; supervisor intervals are<br>
+144.3781207689899 and 364.1712747570127, respectively. Those scopes overlap;<br>
+positions are not FLOPs and recorded eager/BF16 configuration is not a kernel<br>
+trace or serving benchmark. The contrast with off 128's bounded delivered scores<br>
+does not establish universal mode superiority, rationale faithfulness or method<br>
+ranking. A new budget or extraction rule requires a new declared experiment.</p>
+<h2 dir="auto">Evidence-reading extensions</h2>
+<p dir="auto">The chapter keeps the mechanisms and conclusions; this section retains the<br>
+original operational questions and their evidence paths. Read these after<br>
+<a href="../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence">Appendix D's supervision distinction</a>.</p>
+<ol start="22" dir="auto">
+<li>Three G4 recovery children exit 0, all work/I/O tickets close and all helper<br>
+cleanup receipts complete, yet the adapter fails. Which independent gate is<br>
+missing, and what can the retained zero-advantage, nonzero-gradient history<br>
+establish without claiming accepted replay or reward learning?</li>
+<li>Which new run 02 receipts establish accepted exact recovery without erasing<br>
+failed 01? Why are its twelve passed checks, unchanged source/input closure<br>
+and four physical applications still insufficient to claim improved reasoning?</li>
+<li>Why does accepted G8 recovery retain 384 sampled slots but 314 newly valid<br>
+actions and 434 applied targets? Which masks, rollout/restoration histories<br>
+and stopping fields explain those different counts without calling them FLOPs<br>
+or an equal-compute quality comparison?</li>
+<li>A pilot completes sixteen native iterations/export and exits 0, then fails<br>
+final logging acknowledgment. Which facts remain measured, which acceptance<br>
+and publication claims are still unavailable, and why is natural stopping<br>
+across 64 zero-reward training responses not a learning-success proxy?</li>
+</ol>
+<h2 dir="auto">22. Native exit 0 does not waive the cleanup and replay gates</h2>
+<p dir="auto">The actual G4 run 01 source 2, completed 1→2 and pending 1→2 native children all<br>
+exit 0. Their child durations are 179.35619652300375,131.65557820600225 and<br>
+107.62926277797669 seconds. The last supervisor nevertheless records<br>
+<code class="notranslate">Observed descendant cleanup timed out</code> and status <code class="notranslate">failed</code>. Its three helper<br>
+cleanup receipts show terminated helpers and both feeder threads stop, but<br>
+those fields address different processes from the observed-descendant gate.<br>
+The adapter fails before reaching its CPU comparison and writes no acceptance.<br>
+Later process absence, readable reports or completed snapshots cannot substitute<br>
+for an accepted whole invocation plus exact numerical/state comparison. Each<br>
+child's 600-second/25GiB bounds and all failed spending remain unchanged.</p>
+<p dir="auto">Read the shared journal rather than add restored report histories. Four measured<br>
+<code class="notranslate">train_updates</code> split 2/1/1 among the children; three collections split 2/1/0.<br>
+Pending applies 64 saved targets without collection. The journal retains 160<br>
+newly collected valid tokens and 224 application targets, with twenty-five closed<br>
+work reservations. Fourteen closed I/O reservations retain ten saves, two<br>
+inspections and two loads. None of this repairs the cleanup failure.</p>
+<p dir="auto">Both source groups have zero rewards and advantages. Actual gradient norms are<br>
+5.811452865600586e-7 and 0.1796875, with update 2 pre-update exact KL<br>
+0.0010778990108519793 and different recorded post-update policy identities.<br>
+The code applies a clipped objective plus exact-KL regularizer and calls AdamW<br>
+with zero weight decay when valid; it does not skip constant groups. A displayed<br>
+zero objective value need not imply a numerically zero derivative. Do not call<br>
+these operations zero work, infer skipped updates, or attribute their movement<br>
+to a nonzero task-relative reward signal. Nor do these failed-attempt measurements<br>
+prove exact recovery, verifier success or common-panel reasoning improvement.</p>
+<p dir="auto">The separately reviewed controller correction defers numerical imports before<br>
+spawn cleanup and permits an explicit, sealed recovery 02 selector. It preserves<br>
+the original native code,0.5-second acknowledgment,600-second children,23-work/<br>
+9-I/O ceilings and run 01 failure. Fresh G4 run 02 is now accepted; pilot 01 may<br>
+select 02 only explicitly after that own gate.<br>
+Neither CPU controls nor current queue activity retroactively passes run 01 or<br>
+pre-signs pilots or common-panel quality. G8's own accepted recovery is separate.</p>
+<h2 dir="auto">23. An accepted replay still needs a separate quality experiment</h2>
+<p dir="auto">G4 run 02's actual acceptance records twelve literal true checks, three completed<br>
+supervisors/native exits 0, null stop reasons and empty cleanup errors. The<br>
+adapter now reaches the streamed three-way comparison: all ten final scientific<br>
+components and update 2 metrics agree. That covers policy, original reference,<br>
+optimizer, RNG, loop contract/history/cursor and numerical work/pending state,<br>
+while excluding only producer invocation and physical spending prefix. It is<br>
+stronger than successful saves, readable exports or matching scalar metrics.<br>
+Its retained closing receipt binds the same source/input/model/prerequisite<br>
+bytes before and after execution; only controller/test source hashes differ<br>
+from failed 01, not the Qwen implementation, supervisor, baseline or recipe.</p>
+<p dir="auto">The fresh 02 journal again measures four applications, three collections,160<br>
+fresh valid tokens and 224 applied targets; pending applies 64 retained targets<br>
+without resampling. I/O retains ten saves, two inspections and two loads. Those<br>
+shared run 02 histories do not reset or refund failed 01's distinct journals.<br>
+All source rewards/advantages remain zero despite recorded gradient/KL movement.<br>
+Exact replay does not establish nonzero task signal, verifier quality or improved<br>
+answers. Pending 02 observes no owned descendant; accepted execution is not a<br>
+captured explanation of the historical cleanup failure.</p>
+<p dir="auto">Native child seconds are 176.87867476296378,143.31851184100378 and<br>
+109.66025628399802. The separate after-the-job owner transcription records<br>
+outer 0/482.61591269401833 seconds, including overlapping preparation,<br>
+supervision, inline CPU comparison and closure. Do not add those intervals or<br>
+call the outer observation a native prelaunch archive. G4 pilot 01 must explicitly<br>
+bind accepted recovery 02, then its actual sixteen-iteration export and unchanged<br>
+common 20 per-cap evaluations must exist before any quality comparison. G8/01 now<br>
+has its own accepted recovery and later accepted pilot 16. Common-panel results<br>
+are a separate observation, now completed under both original caps.<br>
+The later G4 pilot 01 attempt completes native 16/export but fails terminal logging<br>
+acknowledgment; it does not establish an accepted pilot or change failed 01.</p>
+<h2 dir="auto">24. A batch slot, valid action and replayed target are different costs</h2>
+<p dir="auto">G8/01 has all twelve actual recovery checks true, three completed supervisors/<br>
+native exits 0, empty cleanup errors and exact ten-component/update 2 equality.<br>
+Its original 600-second/25GiB bounds remain unchanged. All three roles observe no<br>
+owned descendant; this does not explain the historical G4 cleanup timeout.</p>
+<p dir="auto">Its shared physical journal retains four optimizer applications versus three<br>
+collections. Dense batch sampling spends 384 slots/draws, including stopped-row<br>
+slots, while the response mask retains 314 newly valid actions. The numerical<br>
+source has 74 valid tokens with seven EOS/one cap, then 120 with two EOS/six caps;<br>
+completed resume freshly collects another 120. Pending applies its saved 120<br>
+without collection. Applications score 194 source targets plus 120 plus 120,<br>
+giving 434, not 384 or three restored cursors summed as six fresh updates.<br>
+The 14 I/O operations are ten saves, two inspections and two loads; their later<br>
+spending and failed G4/01 costs remain retained under distinct journal identities.</p>
+<p dir="auto">Both source groups have eight zero rewards/advantages despite some natural stops.<br>
+Their gradient norms are 4.3585896492004395e-7 and 0.146484375, with update 2 KL<br>
+0.0009698036592453718. Constant strict-reward groups supply no task-relative<br>
+signal, not an automatic no-op for the numerical exact-KL/AdamW application path.<br>
+Recovered state equality proves this fixed run replays; it does not prove<br>
+reward-driven quality improvement, equal token budgets across G4/G8 or faithfulness.<br>
+Keep the pilot 16 cap 64 and common evaluation caps 32/128 separate from recovery 16.</p>
+<h2 dir="auto">25. Trained but unaccepted is neither no training nor a quality pass</h2>
+<p dir="auto">G4 pilot 01 explicitly selects accepted recovery 02, uses the original cap 64/<br>
+sixteen-iteration recipe and actually completes native cursor 16/export with<br>
+child exit 0 after 1275.7366294650128 seconds. The supervisor interval is<br>
+1275.7819221359678 seconds with minimum sampled available bytes 108300517376,<br>
+null stop reason, empty cleanup and no observed descendants. Its terminal writer<br>
+acknowledgment is nevertheless false and journal error is <code class="notranslate">Final logging timed out</code>. That distinct failed gate is not a native crash, cleanup timeout or external<br>
+1800-second deadline. The adapter writes failure, not acceptance/closing/export<br>
+inventory. Surviving weights are not an accepted evaluation parent.</p>
+<p dir="auto">The native journal retains 67 closed reservations, sixteen applications and<br>
+sixteen collections. It spends 1508 dense slots/draws versus 1004 valid targets;<br>
+all 64 responses naturally stop but every reward/advantage group is zero.<br>
+Thirty-three saves and 173146264423 serialized bytes remain spent. All sixteen<br>
+recorded post-update policy identities differ, and the final gradient/KL are<br>
+0.07666015625/0.0006887196796014905. Those observations do not establish positive<br>
+task-relative signal or mathematical quality, and closed native tickets do not<br>
+satisfy terminal record retention. Initial/final four-item diagnostics are not<br>
+the common twenty-item panel. The owner's outer 1/1293.7624233269598-second<br>
+observation overlaps this work and is not added as another model invocation.</p>
+<p dir="auto">The later explicitly declared export-consistency consumer checks the actual<br>
+completed 16 state/export without changing the failed supervisor into acceptance.<br>
+G8 separately passes pilot 16. Its 128 responses naturally stop, but all sixteen<br>
+groups also have zero rewards/advantages; sixteen actual applications and<br>
+4888 slots/2335 valid targets do not establish positive reward learning or an<br>
+equal-budget group-size comparison. Keep these policy observations separate from<br>
+the actual common 20 evaluations. Do not erase the original failure or refund<br>
+spending. At cap 128 the all 100 correct counts 34→35→36 include diagnostics;<br>
+held-out sampled counts instead read 13→11→13/44, with greedy 7/11 unchanged.<br>
+At cap 32 all three policies have zero graded-correct held-out responses. The<br>
+fixed pilots do not improve this held-out correct-count headline, not a universal<br>
+ranking or proof that GRPO fails. Correct-but-capped sample counts 2/2/1 also show<br>
+why stopping is a separate outcome. Read the matched per-seed receipts, retain<br>
+the frozen parser and distinguish four new 100-record evaluations from reused<br>
+baseline records.</p>
+<h2 dir="auto">Assignment E — The population induced by mixed-group selection</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> For p=0.5 and G=4, what fraction of independent groups is mixed? How does selection affect easier prompts?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> The fraction is 1−0.5⁴−0.5⁴ = 0.875. For p=0.1 or 0.9 it is 1−0.1⁴−0.9⁴ = 0.3438. Requiring a mixed group favors intermediate success probabilities and increases collection cost for extreme ones. Enumerate action/reward/normalizer jointly for standardized finite groups; a marginal standard deviation treated as independent changes the calculation.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-52</h1>
+<h1 dir="auto">Chapter 14 — Worked solutions</h1>
+<p dir="auto">Companion to the <a href="../chapters/14-when-optimization-goes-wrong.md">chapter</a> and<br>
+<a href="../labs/14-when-optimization-goes-wrong.md">Day 24–25 notebook route</a>.</p>
+<h2 dir="auto">1. Correct optimization of a flawed proxy</h2>
+<p dir="auto">The malformed action <code class="notranslate">35 0</code> has proxy reward 2 while the correct <code class="notranslate">35</code> has reward 1.<br>
+The exact expected-reward gradient increases probability of actions above the<br>
+current average. It therefore favors the malformed answer. Rising proxy and<br>
+falling strict accuracy are predicted consequences of the programmed objective.<br>
+The paired plot measures both; reporting only reward would hide the task failure.</p>
+<h2 dir="auto">2. Repairing a checker differs from repairing weights</h2>
+<p dir="auto">A corrected verifier changes future updates. It does not restore diversity,<br>
+general skills or representations already lost during previous optimization.<br>
+Our repair experiment restarts from the same initial logits to isolate objective<br>
+quality. Repairing the actual hacked checkpoint would require another controlled<br>
+run, a recovery budget and external evaluation. Do not substitute one experiment's<br>
+result for the other's claim.</p>
+<h2 dir="auto">3. Low entropy has a context</h2>
+<p dir="auto">A deterministic arithmetic task may warrant concentration on the correct<br>
+answer. On an unsolved prompt, concentration on one wrong answer destroys<br>
+exploration. Inspect correctness, valid fraction, output diversity and conditional<br>
+state identity alongside entropy. An entropy bonus can broaden outputs, but<br>
+cannot make the broadened candidates correct by itself.</p>
+<h2 dir="auto">4. The actual collection distribution is the behavior policy</h2>
+<p dir="auto">Temperature scales logits; top-p removes outcomes and renormalizes the rest.<br>
+These operations change the sampling probabilities. Importance ratios must use<br>
+the probabilities of the distribution that generated the stored actions, not<br>
+the unmodified model distribution unless it was actually used. The basic course<br>
+runner avoids this ambiguity with temperature 1 and full-support sampling.</p>
+<h2 dir="auto">5. Average KL hides identity and tails</h2>
+<p dir="auto">A KL value requires a named reference, state distribution, estimator and<br>
+reduction. A mean can hide extreme prompts and changes in response length.<br>
+Measure quantiles, fixed-prompt values and validity. First check identical-policy<br>
+KL, logit/label alignment and masks; then test the learning-rate or regularizer<br>
+hypothesis. A threshold breach is a reason to investigate, not a completed cause.</p>
+<h2 dir="auto">6. Denominator pressure</h2>
+<p dir="auto">Response means spread equal response weight over variable token counts;<br>
+token means give long responses more total weight. With positive and negative<br>
+advantages this can change relative pressures on answer content and stopping.<br>
+Record the exact formula, EOS handling and token cap. A plot of nominal weights<br>
+isolates this mechanism, while a trained length-distribution comparison is<br>
+needed to establish the realized behavioral effect.</p>
+<h2 dir="auto">7. Synchronization does not rewrite history</h2>
+<p dir="auto">A response collected under version 4 retains version 4 behavior probabilities<br>
+after the learner reaches version 6. Assigning version 6 to its denominator makes<br>
+the ratio an incorrect description of collection. Synchronization affects future<br>
+generation. Metadata checks reject unintended lag; intentional asynchronous<br>
+training needs an explicit lag/correction contract and engine integration tests.</p>
+<h2 dir="auto">8. Optimize the dominating cost</h2>
+<p dir="auto">If generation takes 32 seconds, learning 6, verification 0.1 and synchronization 0.5,<br>
+halving learning time saves 3 seconds out of 38.6. Doubling useful generation<br>
+throughput saves 16 seconds under this simple model. Actual batching and memory<br>
+can change these numbers; the notebook labels them projected rather than Spark<br>
+measurements. Compare useful tokens, complete update time and safety together.</p>
+<h2 dir="auto">9. Resume the trajectory, not only its weights</h2>
+<p dir="auto">Restore optimizer moments and step, scheduler, RNG, data/sampler position,<br>
+policy/reference identities and rollout progress. Reusing weights with a fresh<br>
+optimizer can be a valid new experiment, but should receive a new identity.<br>
+For replay checks, use a small fixed input and restored RNG to compare the next<br>
+sample and update under the same environment. Save recovery failures honestly.</p>
+<h2 dir="auto">10. Alerts versus explanations</h2>
+<p dir="auto">An actionable alert names a failed configured condition and points to evidence:<br>
+nonfinite loss, reserve below 25 GiB, changed verifier, unexpected lag or reward<br>
+improvement alongside evaluation decline. A causal conclusion additionally<br>
+needs a mechanism and discriminating intervention. “Entropy fell” is a<br>
+measurement; “the model learned the correct deterministic action” needs<br>
+correctness evidence and alternate explanations checked.</p>
+<h2 dir="auto">11. Three probability distributions and a support boundary</h2>
+<p dir="auto">Raw probabilities are 0.55,0.30,0.15. Behavior uses temperature 0.5, top-k 2 and<br>
+top-p 0.9, so it normalizes the squared first two probabilities: approximately<br>
+0.770701,0.229299,0. The declared temperature-one conditional target instead<br>
+normalizes 0.55,0.30:0.647059,0.352941,0. Its target/behavior ratios are about<br>
+0.839572 and 1.539216, not 1. The same source logits and retained mask do not<br>
+encode the same temperature. A matched temperature 0.5 target gives ratio 1.</p>
+<p dir="auto">For rewards 0,1,4, the conditional target's exact expectation is 0.352941.<br>
+Enumeration with the actual behavior denominator agrees, including the<br>
+gradient <code class="notranslate">[−0.228374,+0.228374,0]</code>. Substituting raw model denominators gives<br>
+0.269764 and gradient <code class="notranslate">[−0.174553,+0.174553,0]</code>: a different objective.<br>
+The analytical gradient is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$t_i(R_i-J)/\tau_t$</math-renderer> on fixed support. The<br>
+<a href="../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb">adjacent runnable reference</a><br>
+tests this identity before plotting the measured vectors.</p>
+<p dir="auto">The original full-support target requires action 2, which behavior never emits.<br>
+Its probability mass 0.15 contributes 0.60 to expected reward. No finite ratio<br>
+can recover that contribution from this collector. Preserve the raw objective<br>
+by changing collection to cover it, or explicitly change to a conditional<br>
+objective. Silently applying the old mask is not the former repair. This<br>
+single-state identity does not correct the state-distribution differences of<br>
+a general autoregressive off-policy objective.</p>
+<h2 dir="auto">12. Why a KL metric can disagree with a KL loss gradient</h2>
+<p dir="auto">Under positive shared full support, $\mathbb{E}<em>p[k_1]$ and<br>
+$\mathbb{E}<em>p[k_3]$ equal $D</em>{\mathrm{KL}}(p\Vert q)$ because the extra<br>
+$q/p-1$ term has expectation zero. Freezing collected actions at $b=p_0$ while<br>
+differentiating only $k$ omits the derivative of their action distribution.<br>
+At the fresh point, frozen $k_1$ has expected gradient 0 and frozen $k_3$ has<br>
+gradient $p-q$. Exact forward KL has gradient<br>
+$p_i[\log(p_i/q_i)-D</em>{\mathrm{KL}}]$ instead.</p>
+<p dir="auto">In the finite fixture all five forward values are 0.299160737nats. Exact KL<br>
+gradient is approximately <code class="notranslate">[+0.391842,−0.242996,−0.148846]</code>; frozen <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$k_1$</math-renderer><br>
+is all zero and frozen <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$k_3$</math-renderer> gives <code class="notranslate">[+0.350000,−0.200000,−0.150000]</code>.<br>
+Differentiating the complete importance-weighted expectation<br>
+$\mathbb{E}<em>b[(p</em>\theta/b)k_\theta]$ reproduces exact KL for both statistics<br>
+in this one-state full-support example. Detaching the weight changes the<br>
+gradient again. An intended surrogate can differ from the full KL, but must be<br>
+labeled as such. This is not a universal trajectory-KL correction recipe.</p>
+<h2 dir="auto">13. Which stop permits a bootstrap?</h2>
+<p dir="auto">Generated EOS is a scored response action; prompt EOS and EOS-valued padding<br>
+are not. Use valid lengths and prompt boundaries, then stop at the first<br>
+generated stop ID. A response ending only at the declared token cap has a<br>
+truncation boundary, not a sampled terminal decision. A continuing-task critic<br>
+can bootstrap there if its remaining state/value is available. A finite-horizon<br>
+task may instead define the cap terminal. The task convention decides; the<br>
+token value cannot.</p>
+<p dir="auto">The notebook shows both rows and rejects an unexplained early end. Its masks<br>
+index collated token positions and still need one shift/slice when used with<br>
+next-token logits. Recorded behavior likelihoods, advantages and reference<br>
+weights detach. Current target logits do not. Select valid positions before<br>
+arithmetic: zero times NaN remains NaN, and cannot safely exclude invalid<br>
+padding likelihoods. The tests assert finite current gradients, zero padded<br>
+gradient and absent gradients for old/reference/advantage tensors.</p>
+<p dir="auto">These are verified CPU mechanisms, not learned-value performance, model-scale<br>
+stability, a full PPO implementation or Mac execution evidence.</p>
+<h2 dir="auto">14. Distinguishability is not generalization</h2>
+<p dir="auto">Removing an encoded collision means the model can now represent the two inputs<br>
+differently. It does not require their learned scores to rank them correctly.<br>
+The word experiment establishes a representation-level impossibility; the<br>
+character intervention removes it while preserving the raw fixtures and<br>
+predeclared test population. Its three held-out ranking accuracies remain 0.5.<br>
+The legitimate conclusion is that collisions were not the only limitation.<br>
+Training fit and calibration improvements do not supply the missing ranking<br>
+evidence. Sample size, shortcut learning and unseen patterns remain possible<br>
+explanations, not proven causes.</p>
+<p dir="auto">This matters before policy optimization: a frozen reward that fails independent<br>
+evaluation can still supply finite, consistent gradients. A learned critic can<br>
+then add a second measurement error at nonterminal caps. Inspect the reward,<br>
+the return target and independent task quality separately. Do not call an<br>
+unfinished prefix's displayed reward-model score a delivered terminal reward.</p>
+<h2 dir="auto">15. What exactly did rehearsal retain?</h2>
+<p dir="auto">First measure the warm checkpoint on the unrelated task. If it solves only part<br>
+of that task, later rehearsal can both protect existing behavior and learn the<br>
+remaining examples. A final improvement alone cannot identify those effects.<br>
+Compare warm-to-final transitions on the same sources, preserve held-out cases<br>
+and label the initial capability honestly. The CPU experiment starts from<br>
+imperfect parity performance; it is not a pure forgetting test of a completed<br>
+skill.</p>
+<p dir="auto">Chosen-response likelihood anchors winners, not necessarily general knowledge.<br>
+Rehearsal anchors its particular demonstrations and adds forward/token cost.<br>
+The four-arm comparison separates these objectives, while clean/noisy and<br>
+length-matched pairs test different data hypotheses. A fixed strict evaluator<br>
+can legitimately disagree with a preference target containing extra style<br>
+tokens. Preserve that disagreement rather than changing the evaluator after<br>
+seeing the outputs. These controls do not establish a general pretrained-model<br>
+retention guarantee.</p>
+<h2 dir="auto">16. Saved work and elapsed time are different measurements</h2>
+<p dir="auto">Caching avoids repeated prefix projections and attention work; batching adds<br>
+rectangular padding and changes kernel geometry. On the tiny CPU reference,<br>
+cached batching forwards 27 rather than 90 positions but its additional Python<br>
+bookkeeping and small kernels can outweigh that reduction in wall time. The<br>
+counts are not FLOPs and the timing is not a GPU serving benchmark. Measure<br>
+IDs, likelihoods, useful output, padding, tensor payload and actual time under<br>
+the same workload before describing a speedup.</p>
+<h2 dir="auto">17. Finish the preserved pending update first</h2>
+<p dir="auto">Its old likelihoods, sampled actions, policy version and source cursor belong<br>
+to the policy that collected it. Restore those records together with weights,<br>
+Adam, reference and RNG, then consume the pending update before collecting new<br>
+data. Resampling changes both trajectory and cost; silently advancing the<br>
+cursor can skip data. The isolated CPU reference checks completed and pending<br>
+boundaries for tiny DPO/RLVR and preserves omitted-state divergences. It does<br>
+not establish resume in a pretrained Spark runner.</p>
+<h2 dir="auto">Evidence-reading extensions</h2>
+<p dir="auto">The chapter retains general systems questions 18–35. This guide preserves<br>
+their original detailed questions and numbering, so implementation-specific<br>
+checks remain reachable after narrative extraction.<br>
+<a href="../appendices/d-reproduction-and-environments.md#d6-checkpoints-recovery-and-job-supervision">Appendix D</a><br>
+provides the common checkpoint/supervision framework.</p>
+<ol start="18" dir="auto">
+<li>Why is a strong hash insufficient if two different states share its serialization?</li>
+<li>Why can a leader exit 0 while the overall shutdown condition fails?</li>
+<li>Why does a hard per-file limit fail to provide a total experiment disk quota?</li>
+<li>Why can 204,800 positions of DPO update geometry exclude most logical forward work?</li>
+<li>Why must an attempted update after a snapshot remain charged when that snapshot is restored?</li>
+<li>Why can the final checkpoint fit an artifact cap while its safe publication cannot?</li>
+<li>Why is validating a mock backend receipt different from proving real platform enforcement?</li>
+<li>Why can checking a recovered pending pool spend work even without a new optimizer update?</li>
+<li>Why do actual encoded lengths make a budget more useful without making it authorized?</li>
+<li>How can cached generation use an uncached reservation without misreporting its work?</li>
+<li>Why does budgeted snapshot publication not establish a whole-output disk quota?</li>
+<li>How can replaying sampler draws validate a checkpoint without changing the training trajectory?</li>
+<li>Why cannot a work prefix stored only inside a checkpoint authorize the work required to read it?</li>
+<li>Why cannot a checkpoint payload contain its own completed save charge, and what should recovery do with later save failures?</li>
+<li>Why does a guarded loader fail to bound pre-read work if identity collection already hashed the checkpoint? What should be bound instead?</li>
+<li>Why do completed and pending RLVR snapshots with the same applied-update cursor require different first actions and save schedules? Can a pre-validation saved work prefix still retain later validation charges?</li>
+<li>Why can an external runtime check still fail if its resource observer or incident logger blocks? What must remain uncertain after a logging failure?</li>
+<li>How can bounded parallel file hashing preserve a recovery contract, and why are a completed snapshot, a whole-child exit and a three-way replay comparison still different claims?</li>
+</ol>
+<h2 dir="auto">18. Hash the state, not an ambiguous flattened description</h2>
+<p dir="auto">Without dictionary boundaries, a key can appear to belong to an inner or outer<br>
+mapping while contributing the same byte stream. A cryptographic hash receives<br>
+identical bytes and must return identical digests; this is not a SHA256 collision.<br>
+Version 2 encodes types, container counts, byte lengths and tensor shape/dtype/<br>
+payload. Historical identities remain historical, and actual tensor-byte and<br>
+numerical comparisons bridge the migration. The digest still is not external<br>
+authentication, and trusted local checkpoint loading is not a hostile-input<br>
+sandbox.</p>
+<h2 dir="auto">19. A leader exit does not describe its workers</h2>
+<p dir="auto">A leader may return successfully before an owned worker exits. Save the actual<br>
+leader code 0, but fail the shutdown criterion while a worker remains live or<br>
+uninspectable. A group signal reaches same-group processes; an independently-<br>
+sessioned worker requires its retained identity-safe handle. Never adopt an<br>
+unrelated PID merely because a conflict scanner reports it. The<br>
+<a href="../../experiments/reports/2026-10-05-owned-workers-and-disk-guards.md">CPU guard controls</a><br>
+test discovery and cleanup for fixed cooperative workers, not every daemonization<br>
+race or a production cgroup. Denied inspection must be preserved as uncertainty,<br>
+and cleanup/journal faults cannot justify declaring success.</p>
+<h2 dir="auto">20. Separate a file limit from a storage budget</h2>
+<p dir="auto">Ten files can each satisfy a one-file limit while exceeding their intended total.<br>
+A per-file POSIX limit is a hard boundary on each child-written file, not a<br>
+directory quota or space reservation. An aggregate sample can trigger cleanup<br>
+after crossing, but the writer can grow between samples, and final evidence<br>
+writes add bytes afterward. Measure logical payload and available filesystem<br>
+space separately. A hard total guarantee needs a tested filesystem/platform<br>
+quota; sampled CPU fixture success does not supply one for Spark checkpoints.</p>
+<h2 dir="auto">21. One pair has four score branches</h2>
+<p dir="auto">Each selected pair provides chosen and rejected sequences. Both the policy and<br>
+frozen reference score them, so one pair has four logical score forwards. Under<br>
+the current one-shift path, a length-512 branch supplies at most 511 input<br>
+positions. 100 updates times four pairs times two branches times two networks<br>
+times 511 gives 817,600 logical positions. 204,800 is only the declared single-branch<br>
+geometry before that shift. Baseline/final evaluation, generation and retries<br>
+are additional; backward activation recomputation is not included in this count.<br>
+This is a source-derived upper bound, not measured Spark FLOPs or latency.</p>
+<h2 dir="auto">22. Recovery must not erase a real attempt</h2>
+<p dir="auto">The optimizer checkpoint describes a durable numerical boundary. The work journal<br>
+describes resource reservations and attempts, including later failures. They<br>
+need not have the same final cursor. Validate the snapshot's independently<br>
+retained ledger prefix, then replay all valid later charged entries. Restore the<br>
+optimizer but keep that spending. An interrupted library call can have unknown<br>
+partial work; its reserved allowance must not be silently refunded. A new output<br>
+directory or invocation ID cannot reset the immutable campaign allowance.</p>
+<h2 dir="auto">23. Publication has a peak</h2>
+<p dir="auto">Old and new payloads coexist until publication finishes. Temporary and published<br>
+markers can also occupy separate entries, and failed writes leave partial bytes.<br>
+Reserve this complete bundle before opening the next artifact. Once completion<br>
+is observed, release only capacity whose absence or actual size is established<br>
+under the owned writer's contract. Never delete an old checkpoint merely to make<br>
+a proposed save fit. Cooperative accounting covers only routed writes; an<br>
+uncooperative export can still exceed it without a real physical quota.</p>
+<h2 dir="auto">24. A structural contract is not a platform observation</h2>
+<p dir="auto">An authored fixture can claim an enforced timeout or empty GPU-owner list, and<br>
+the validator can correctly check its schema, freshness and binding. That proves<br>
+the source refusal rules, not the truth of the claim or a bounded real probe.<br>
+The current interface implements no production provider and refuses that mode.<br>
+A real readiness gate needs a separately authorized private backend, actual<br>
+ownership and membership observations, hard aggregate storage enforcement,<br>
+independent deadlines, bounded observer/cleanup behavior and GPU clearance.<br>
+Even that does not guarantee global host memory against unrelated jobs. Preserve<br>
+the 25GiB reserve and label samples rather than calling them continuous minima.</p>
+<h2 dir="auto">25. Verification has a computational path</h2>
+<p dir="auto">A retained pending group must agree with the weights and collection RNG that<br>
+produced it. Rechecking selected likelihoods runs the collecting policy; replaying<br>
+the RNG-consumption trace can draw from a separate temporary generator. Neither<br>
+changes the restored optimizer cursor, but both execute real operations. Charge<br>
+them in separate validation dimensions, before they begin. Keep later failed<br>
+validation attempts when replaying an older trusted journal prefix. Otherwise<br>
+repeated reloads would create an unaccounted path around the job's allowance.</p>
+<h2 dir="auto">26. Geometry, integrity and authority are different</h2>
+<p dir="auto">Encoded IDs and suffix masks reveal how many targets and scored positions the<br>
+actual branches require. Whole baseline/final panels and a declared attempt<br>
+schedule expose work that update geometry omits. But a supplied observation is<br>
+not authenticated tokenization; a live runner must reproduce it with the pinned<br>
+tokenizer/template/source. Even a reproduced requirement is not permission to<br>
+spend it. Require a separately retained full-vector budget decision and approved<br>
+stage. Do not silently interpret the old 204,800 geometry as permission for a<br>
+larger four-branch job plus evaluation. Fixture receipts remain fixture-only.</p>
+<h2 dir="auto">27. A conservative upper bound is not the measured path</h2>
+<p dir="auto">For a prompt of length <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$P$</math-renderer> and a cap <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$C$</math-renderer>, uncached decoding can forward at most<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$CP+C(C-1)/2$</math-renderer> logical input positions. Cached decoding usually forwards the<br>
+prefix once, then one new input position per subsequent step. Early stops change<br>
+both totals. Reserving the uncached upper bound can protect an unchanged cached<br>
+observer, but report its actual executed calls/positions separately. Neither<br>
+number is FLOPs, cache memory, backward recomputation or GPU elapsed time. The<br>
+full/LoRA parity checks must retain the original cached dispatch, not replace it<br>
+with an easier-to-instrument algorithm.</p>
+<h2 dir="auto">28. Routed storage is not all storage</h2>
+<p dir="auto">The shared writer can reserve snapshot payload, temporary/published markers,<br>
+entries and the retained earlier files. It cannot control an HF export, metrics<br>
+journal or child that writes outside that interface. Keep the snapshot claim<br>
+narrow and name those remaining paths. A physical aggregate guarantee requires<br>
+a separately verified quota/backend, not merely a counter class or free-space<br>
+sample. Preserve the failed file and its full reservation; a new output directory<br>
+does not erase the old root's storage history.</p>
+<h2 dir="auto">29. Temporary replay and live sampling have different roles</h2>
+<p dir="auto">Replay the declared seeded stream using a separate generator and compare its<br>
+indices and resulting RNG state with the saved history. For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$u$</math-renderer> completed DPO<br>
+updates with accumulation <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$a$</math-renderer>, that check draws <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$ua$</math-renderer> times. Those draws are<br>
+verification work, not new supervision. Do not advance the live sampler while<br>
+checking. Apply the saved live RNG only after the complete state is accepted;<br>
+the next optimizer update must consume the original next indices. Count repeated<br>
+validation calls separately if the actual load and restore path both execute<br>
+them. Exact weights and a correct saved sampler do not imply zero replay cost.</p>
+<h2 dir="auto">30. Pre-read authority cannot depend only on post-read state</h2>
+<p dir="auto">An existing journal opens unbound and cannot grant new reservations until its<br>
+trusted prefix is checked. A prefix stored only in the checkpoint is unavailable<br>
+before deserialization. Reserving in the semantic callback therefore covers later<br>
+checks, not the earlier byte verification, restricted load and generic finite/tree<br>
+scans. A separately retained bounded receipt can supply the pre-read expectation,<br>
+but its identity, same-journal binding and retained later charges need actual<br>
+ordering/failure tests. The separate shared I/O source and Day 25 microscope<br>
+exercise that boundary; physical and pretrained claims still require their own<br>
+evidence. Never create a new journal to bypass<br>
+the dependency, trust an unverified adjacent marker, or infer cross-host recovery<br>
+from copied receipts. File/resource envelopes and physical isolation remain<br>
+separate safeguards.</p>
+<h2 dir="auto">31. The save completion is later history</h2>
+<p dir="auto">The payload must be fixed before its serializer, hashing and durable publication<br>
+can finish. It cannot contain a successful completion that has not happened yet.<br>
+Record the pre-save I/O prefix inside the payload, bind that exact prefix in the<br>
+separately retained receipt, and replay the physical journal's later entries on<br>
+resume. Those entries include the save reservation/completion and later failed<br>
+attempts. Keep the numerical checkpoint while retaining spending and partial<br>
+files. A readable marker after an uncertain fsync is not automatic proof that<br>
+the whole publication succeeded.</p>
+<h2 dir="auto">32. Admission must cover the first payload path</h2>
+<p dir="auto">Generic identity hashing is itself a full payload read. If it runs before<br>
+admission, adding a reservation inside the loader cannot retroactively protect<br>
+it. Exclude the resume payload from that generic path. Read only bounded,<br>
+independently retained metadata, bind its expected payload SHA/size and journal<br>
+prefix, then let the admitted reader establish actual byte identity. Label the<br>
+pre-read digest an expectation until verification succeeds. Keep source/data<br>
+identity checks and every subsequent actual inspect/load separately visible;<br>
+changing the I/O path must not change the objective, sampler or reference.</p>
+<h2 dir="auto">33. One update cursor can name two different next actions</h2>
+<p dir="auto">At <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$C_k$</math-renderer>, no next pool has been collected; at <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$P_k$</math-renderer>, the same <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$k$</math-renderer> updates have<br>
+been applied but the next group, source cursor and collection RNG are retained.<br>
+Apply that pool once without recollection. The full native lifecycle saves its<br>
+initial boundary and every pending/completed pair: <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$1+2U$</math-renderer> saves fresh,<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$1+2(U-k)$</math-renderer> on completed resume, and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$2+2(U-k-1)$</math-renderer> on pending resume. The pending<br>
+formula includes republishing the restored pending state and the subsequent<br>
+completed state. Add one admitted inspect and one load on each resume. These<br>
+are source-derived schedules, not measured FLOPs or a capacity approval.</p>
+<p dir="auto">The saved runner-work prefix precedes its semantic save check. The shared I/O<br>
+prefix precedes its whole save reservation. The external receipt pins those<br>
+exact saved prefixes; the physical journals retain the later validation,<br>
+publication and failed-read suffixes. A smaller prefix inside a valid payload<br>
+does not refund spending. Nor does recovery require rewriting the historical<br>
+payload to include a completion that happened after serialization.</p>
+<p dir="auto">The Exercise 8 microscope manually saves one boundary per arm, then actually<br>
+inspects and performs two loads, of which one deliberately rejects its callback.<br>
+It is not the full lifecycle. Compare its actual arrays/IDs and first resumed<br>
+collection count: completed adds one, pending adds zero; both recover the same<br>
+original four-update policy/reference/Adam/history/RNG. Logical source counts do<br>
+not establish language ability, hostile-payload safety, physical quotas or<br>
+bitwise cross-machine execution.</p>
+<h2 dir="auto">34. The watchdog must not inherit the failure it observes</h2>
+<p dir="auto">An external check is useful only while its controller can keep checking time.<br>
+Calling a blocking probe or <code class="notranslate">fsync</code> from that loop merely moves the hang from<br>
+the model to the controller. Likewise, a readable pipe is not proof that an<br>
+entire response has arrived. Isolate those operations and bound response<br>
+assembly, logging and cleanup separately. Stop only the owned invocation;<br>
+discovered conflicting processes are evidence for refusal, not signal targets.</p>
+<p dir="auto">Retain the actual leader exit, worker-cleanup result and logger outcome as<br>
+separate facts. A stopped job with a failed final write is not a durable success<br>
+receipt. Keep available partial logs and label the unretained evidence unknown.<br>
+Inert failure controls test that mechanism; they do not demonstrate a successful<br>
+pretrained profile or continuous physical-resource enforcement.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md">first native DPO deadline case</a><br>
+is separate actual evidence. Its clean and source children exit 0, while fresh<br>
+resume reaches 600.683331 supervisor seconds with an unknown native exit and a<br>
+recorded reap timeout. Keep all three observations. The adapter returns 1;<br>
+substituting that for the missing native exit would falsify the receipt.<br>
+Above-reserve sampled memory does not establish continuous safety or diagnose<br>
+the deadline as memory exhaustion. A new configured retry must pass its own<br>
+recovery and shutdown checks without erasing the old failure or its spent work.</p>
+<p dir="auto">Run 02 also fails that gate despite actual CPU 8 witnesses and a durable update 2,<br>
+validation/generation and export. Its final result is missing. Later absent<br>
+processes or readable snapshots do not recover the original null native exit.<br>
+Run 03 supplies new completed exit-0 receipts for all three native children and<br>
+the CPU comparison under the unchanged 600-second guard per invocation; it does<br>
+not retroactively change either failure. Its resumed child time is 392.908058170<br>
+seconds, whereas its supervisor interval is 392.957157330 seconds. The outer<br>
+launcher interval is a separate owner-transcribed observation, not native time.</p>
+<h2 dir="auto">35. Preserve integrity while changing its scheduling</h2>
+<p dir="auto">The serial default still performs each complete-file digest directly. The<br>
+explicit four-worker inventory schedules independent files concurrently, with<br>
+at most four outstanding tasks/file descriptors and 1-MiB buffers. It still<br>
+invokes every inventory, reads every body byte, applies the same no-follow,<br>
+regular-file, ownership, cap, missing-file, hardlink and race checks, reports<br>
+the original first failure and drains submitted workers. Metadata caching or<br>
+skipping a repeated inventory would weaken the contract; this change does<br>
+neither. The worker setting changes execution scheduling, not receipt identity,<br>
+the DPO objective, data, save cadence or work/I/O allowance.</p>
+<p dir="auto">Snapshot completion proves a durable numerical boundary. A whole-child exit<br>
+also requires later diagnostics, identity/integrity checks, final result and<br>
+supervisor cleanup to finish. The separate CPU comparison then admits the final<br>
+clean/source/resumed reads and compares all ten typed numerical components.<br>
+For actual run 03, those identities and the update 2 metric tail match, while<br>
+the frozen reference remains unchanged. This is stronger than matching three<br>
+export directories or finding update 2 in a journal.</p>
+<p dir="auto">Numerical equality does not require equal cost prefixes. The source's two<br>
+updates plus the resumed repetition of update 2 remain three updates in the<br>
+shared physical work journal, not two. CPU comparison inspect/load operations<br>
+also remain charged. Independent component hashing and artifact inventory<br>
+hashing are named exclusions from <code class="notranslate">DPO19</code>/I/O 9, protected by the bounded external<br>
+invocations rather than mislabelled as fully ledgered CPU work. Inventory hashes<br>
+remain within their invocation's time boundary; independent component hashing<br>
+remains within the separate CPU comparison boundary. No counters here measure<br>
+FLOPs or physical disk traffic.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-native-dpo-recovery-deadline.md#run-03-whole-child-recovery-and-comparison-pass">actual report</a><br>
+therefore supports local completed 1→2 recovery within these invocation bounds.<br>
+It does not isolate a causal speedup, supply a 100-update pilot result or prove<br>
+independent assistant/preference quality. Retain both earlier failures, their<br>
+null native exits, all spent work and partial/intermediate artifacts.</p>
+<h2 dir="auto">Assignment E/C — Selecting a repair from evidence</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> A model emits a correct boxed answer, the strict checker gives zero, and task advantages vanish. Which next experiment is supported?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> First audit answer extraction and stopping on retained text using an independently tested, newly named instrument. Then measure training/development task signal under the new contract. A longer policy run under the unchanged zero-signal instrument does not resolve the interface question. Keep execution-phase improvements separate from task-signal repairs.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-53</h1>
+<h1 dir="auto">Chapter 15 — Worked solutions</h1>
+<p dir="auto">Companion to the <a href="../chapters/15-distill-evaluate-and-defend.md">chapter</a> and<br>
+<a href="../labs/15-distill-evaluate-and-defend.md">Day 26–28 notebook route</a>.</p>
+<h2 dir="auto">1. Availability and selection differ</h2>
+<p dir="auto">More candidates make a correct answer available more often under the independent<br>
+model, but an imperfect ranker may systematically favor wrong answers. In our<br>
+simulator, the frequent wrong class receives the highest score. A larger pool<br>
+therefore gives it more opportunities to displace correct candidates. Plot oracle<br>
+availability and actual selected accuracy separately, and include generation cost.</p>
+<h2 dir="auto">2. Independence is a substantive assumption</h2>
+<p dir="auto">The formula <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$1-(1-p)^N$</math-renderer> assumes independent candidate correctness indicators with<br>
+the same <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$p$</math-renderer>. Shared prompts and a fixed policy do not guarantee independence of<br>
+errors in a deployed system, especially with duplicated outputs or reused search<br>
+paths. The finite simulator deliberately samples independently. Its formula is<br>
+not an empirical law for a language model's correlated answers.</p>
+<h2 dir="auto">3. Winner's curse</h2>
+<p dir="auto">Selecting by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$Q+e$</math-renderer> conditions on a high score. Among candidates with similar<br>
+quality, those with positive scorer error are more likely to win. Unbiased error<br>
+over the whole candidate pool can therefore become positive among winners.<br>
+Use an evaluator independent of the selecting score and retain candidates so<br>
+selection failures can be inspected. The scorer's own winner scores cannot<br>
+validate its correctness.</p>
+<h2 dir="auto">4. Rejection changes the prompt mixture</h2>
+<p dir="auto">Prompts with low acceptance probability yield few accepted examples or exhaust<br>
+their retry budgets. Easy prompts dominate unless collection deliberately<br>
+controls per-prompt counts. Track attempted, accepted, rejected and timed-out<br>
+counts by source and difficulty. Training on accepted answers may be useful,<br>
+but it should not be described as learning the original prompt distribution<br>
+without measuring the induced shift.</p>
+<h2 dir="auto">5. Soft targets express alternatives</h2>
+<p dir="auto">A generated token gives one observed outcome. A soft teacher distribution can<br>
+place probability on several alternatives and communicate relative plausibility.<br>
+The student gradient then compares its probabilities with the teacher's full<br>
+vector rather than a one-hot label. This preserves uncertainty and also transfers<br>
+teacher errors. Correctness requires a separate evaluation contract.</p>
+<h2 dir="auto">6. Temperature derivation</h2>
+<p dir="auto">For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$L=\tau^2[-\sum_i q_i^{(\tau)}\log p_i^{(\tau)}]$</math-renderer> plus a teacher-only constant,<br>
+differentiating log-softmax contributes <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$1/\tau$</math-renderer> and the soft-target residual:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$$
+\frac{\partial L}{\partial z_i}=\tau(p_i^{(\tau)}-q_i^{(\tau)}).
+$$</math-renderer></p>
+<p dir="auto">Without scaling the derivative is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$(p_i^{(\tau)}-q_i^{(\tau)})/\tau$</math-renderer>. At high temperature,<br>
+the probability difference itself tends to shrink as <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$1/\tau$</math-renderer>, so unscaled<br>
+gradients shrink roughly as <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$1/\tau^2$</math-renderer> for fixed centered logits. The factor is a<br>
+gradient-scale convention, not a guarantee of identical training across<br>
+temperatures. The notebook checks analytical/autograd agreement at 1, 2, 4.</p>
+<h2 dir="auto">7. Vocabulary identities must agree</h2>
+<p dir="auto">ID 42 can mean different token strings in two tokenizers. Even vocabulary sizes<br>
+that match do not establish a coordinate correspondence. A direct categorical<br>
+KL requires aligned outcomes. Different tokenizers can instead support teacher<br>
+text/sequence supervision or an explicit alignment method. Record tokenizer<br>
+revision and special-token/chat-template behavior for both systems.</p>
+<h2 dir="auto">8. Prefix distribution affects the lesson</h2>
+<p dir="auto">Offline teacher trajectories train on teacher-selected histories. A student<br>
+generating freely visits its own histories, including its mistakes. On-policy<br>
+distillation queries teacher targets at those student states and can address<br>
+that coverage difference, at additional teacher cost. It does not automatically<br>
+remove model-capacity limits or guarantee stable optimization. Compare prefix<br>
+coverage and held-out free generation rather than only teacher-forced loss.</p>
+<h2 dir="auto">9. Structural validity is a limited claim</h2>
+<p dir="auto">The genealogy checker confirms unique IDs, known parents, no cycles and one<br>
+evaluation identity. It does not inspect weight file bytes, verify dataset<br>
+contents or judge panel quality. Synthetic fixture hashes are labeled as such.<br>
+Real cards must use computed artifact hashes and measured reports, and scores<br>
+must be evaluated under the declared decoding and candidate budgets.</p>
+<h2 dir="auto">10. An honest defense includes missing evidence</h2>
+<p dir="auto">Say which implementation and CPU mechanisms were verified, which model-scale<br>
+runs were actually executed, and which remain prepared. An absent Qwen run<br>
+cannot be replaced by a tiny arithmetic gain or a paper's score. Defend the<br>
+ready method and its acceptance gates, then name the next bounded experiment.<br>
+Release preparation can be complete while a public capability claim remains<br>
+unsupported; the model card must preserve that distinction.</p>
+<p dir="auto">In the <a href="../../experiments/reports/2026-10-05-current-model-defense.md">historical short-run native case</a>,<br>
+identify the exact Base,20-update disposable profile, separate fresh full/LoRA<br>
+references and precision-qualified FP32 validation export. Do not manufacture<br>
+a selected 400-update SFT parent or DPO/RLVR descendants from those short-run<br>
+receipts. Both native replay<br>
+paths can pass while generated answering remains 0/8. Preserve the failed BF16<br>
+handoff beside the distinct FP32 pass and the proxy phrase-score gain beside<br>
+all capped responses. A replay pair's 455 numerical training targets do not<br>
+erase 684 physical training plus 1,440 development presentations or the failed<br>
+attempt's elapsed time. That is a defensible partial account, not a completed<br>
+campaign or a claim that the learner has mastered its mechanisms.</p>
+<p dir="auto">The later <a href="../../experiments/reports/2026-10-05-native-sft400-comparison.md">actual full and LoRA400 comparison</a><br>
+does establish the predeclared full400 parent. Its 120/120 whole answers and<br>
+natural endings, versus 0/120 for Base and merged LoRA, concern 40 held-out lexical<br>
+groups within three shared templates. Attach later preference descendants only<br>
+from their own accepted export receipts. Do not use the degenerate grouped<br>
+intervals to claim certainty about new tasks, another training seed or a retuned<br>
+adapter recipe.</p>
+<p dir="auto">For the separate fresh story lineage, distinguish 400 completed updates from<br>
+the unfinished 14k schedule. The actual rubric joins 192 continuations and both<br>
+AI reviewers, with 56 candidates showing at least one disagreement across 64<br>
+dimension-level disagreements. Control 400's 45 natural endings do not<br>
+contradict its 0.0208 mean ending-quality rating: stopping and narrative resolution<br>
+measure different things. Its lower fixed dev NLL than half-LR 400 is not broad<br>
+proof of better storytelling. Keep the 288 absent later cells null, and do not<br>
+describe separate AI instances as independent human or model populations. The<br>
+<a href="../../experiments/reports/2026-10-05-native-story-first400-comparison.md">worked evidence report</a><br>
+and portable model-free archive make this conclusion auditable without loading<br>
+the trained model.</p>
+<h2 dir="auto">11. A correct candidate does not choose itself</h2>
+<p dir="auto">Majority counts eligible answers, not truths. In the actual eight-candidate<br>
+parity pool, correct 0 receives three votes and incorrect 1 receives five.<br>
+Gold-blind majority must return 1 under its declared rule, while the evaluator's<br>
+any-correct diagnostic is true. The latter cannot be used as a deployable<br>
+selector without a checker that legitimately distinguishes answers. A model's<br>
+likelihood can rank alternatives, but high likelihood is not that checker.<br>
+Retain the entire pool, tie rule and invalid candidates; do not select a new<br>
+favorable pool after seeing the failure.</p>
+<h2 dir="auto">12. Count work before calling a comparison fair</h2>
+<p dir="auto">Equal attempts can generate different valid lengths and stopping patterns.<br>
+Equal generation-token caps can also admit different numbers of complete<br>
+attempts; our retrospective rule charges a whole overshooting attempt even<br>
+though it is not selectable. Neither control includes all prompt-forward,<br>
+rescoring, selection and memory work by itself. The actual experiment records<br>
+these boundaries separately. All arms include measurement rescoring, so their<br>
+times do not establish optimized serving latency. Fix the claim first, then<br>
+choose a budget whose measurements address it; disclose the other differences.</p>
+<h2 dir="auto">13. A format gate is not a hidden correctness oracle</h2>
+<p dir="auto">The gate checks whether a response satisfies the declared interface: supported<br>
+tokens, bounded length, real END and source/deduplication rules. Correctness is<br>
+a separate score. Keeping well-formed wrong responses lets top and random<br>
+selection compete on the same pool and exposes the effect of the selection rule.<br>
+Removing every wrong answer before that comparison would predetermine its<br>
+available supervision. In the recorded teacher-data pool,24 of 36 accepted<br>
+candidates are wrong. Those are executed programmatic responses, not claims<br>
+about a pretrained teacher's behavior.</p>
+<h2 dir="auto">14. Match the budget that addresses the claim</h2>
+<p dir="auto">Record body-plus-END targets, update count, repeated exposure, padded positions,<br>
+teacher attempts/retries and generation work. The recorded top and random arms<br>
+both cover 12 prompts/examples but expose 42 versus 46 valid targets per update,<br>
+or 3360 versus 3680 over 80 updates. Length-random matches 42 without filtering<br>
+correctness. Even matching these counts does not equalize target information,<br>
+gradients or wall time. Keep both the matched quantities and remaining<br>
+differences explicit; held-out free generation, not selection score, measures<br>
+the trained student's transfer.</p>
+<h2 dir="auto">15. One realized response is not a distribution</h2>
+<p dir="auto">Response SFT provides one-hot targets along selected teacher trajectories.<br>
+Even perfect reproduction of those examples does not identify probabilities<br>
+for unobserved alternatives or student-generated prefixes. Soft KL instead<br>
+provides a full aligned conditional target at a chosen state. The actual tiny<br>
+students learn their six selected parent traces but retain different held-out<br>
+failures. Keep this empirical sequence objective beside the exact three-logit<br>
+KL lesson rather than treating them as the same experiment.</p>
+<h2 dir="auto">16. Printed validity does not prove causal use</h2>
+<p dir="auto">An arithmetic checker can establish that a printed total agrees with the<br>
+operands. It cannot establish that the model internally reasoned through or<br>
+causally relied on that text. The recorded teacher produces 80 wrong-step/<br>
+right-answer and 24 valid-step/wrong-answer responses among 432 evaluation<br>
+attempts. A final-answer scorer and a printed-step scorer measure distinct<br>
+properties, and neither alone proves internal faithfulness. Missing steps in<br>
+answer-only outputs are explicitly null, not a negative rationale label.</p>
+<h2 dir="auto">17. Follow the delivered state, not only the endpoint</h2>
+<p dir="auto">A valid-format tie may accept a wrong replacement for a correct draft. A later<br>
+round can undo it, leaving final accuracy unchanged while hiding a harmful<br>
+intermediate decision. The contrarian control accepts 54 harmful and 54 helpful<br>
+changes and returns to its original answer. Preserve proposal grade, acceptance,<br>
+delivered grade and stop reason per round. A format score is not a truth score,<br>
+and a programmatic flip is not neural reasoning.</p>
+<h2 dir="auto">18. State the unit that is matched</h2>
+<p dir="auto">Counting every emitted draft/critique/revision symbol can match the outputs of<br>
+independent programmatic binary draws. It does not match prompt forwards,<br>
+attention work, rescoring, memory, latency or real model-token billing. Historical<br>
+model attempts in the replay also underfill or overshoot whole-attempt ceilings.<br>
+Their incurred costs remain recorded even when they cannot vote. Do not call a<br>
+shared serialized ceiling a compute-matched inference benchmark.</p>
+<h2 dir="auto">19. An EOS-looking suffix is not a stop event</h2>
+<p dir="auto">A capped result has not satisfied the declared natural-stop contract. Keep its<br>
+IDs, serialized count and failure reason, but skip the revision callback. This<br>
+both accounts for incurred work and avoids treating incomplete advice as usable.<br>
+The original normal-path acceptance missed this case; explicit capped-critique<br>
+regression tests and a new preserved-source campaign establish the hardened<br>
+boundary without rewriting the earlier evidence.</p>
+<h2 dir="auto">20. Separate coverage from target geometry</h2>
+<p dir="auto">Prefix source selects the histories at which teacher advice is requested.<br>
+KL direction determines the conditional probability mismatch being optimized<br>
+there. Change one while holding the other fixed before attributing a result.<br>
+Privileged teacher context is a third independent intervention. The actual<br>
+factorial lab uses detached aligned targets and excludes hints from student<br>
+inputs/evaluation; its poor held-out results do not invalidate the exact<br>
+conditional-gradient checks or establish a universal ranking.</p>
+<h2 dir="auto">21. Collection does not automatically create an occupancy gradient</h2>
+<p dir="auto">For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$J(\theta)=\sum_s d_\theta(s)L_\theta(s)$</math-renderer>, the formal derivative contains</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$$
+\nabla_\theta J=\sum_s d_\theta(s)\nabla_\theta L_\theta(s)
++\sum_s L_\theta(s)\nabla_\theta d_\theta(s).
+$$</math-renderer></p>
+<p dir="auto">The lab samples histories and treats them as fixed observations during backward.<br>
+It estimates the first conditional term at collected states, not the second<br>
+occupancy term. Detached teacher targets are necessary but do not add that<br>
+missing derivative. State how an objective is implemented; do not silently<br>
+equate current-policy data collection with a full policy-gradient calculation.</p>
+<h2 dir="auto">22. Aggregation preserves mass, not all information</h2>
+<p dir="auto">The exact tail decomposition leaves a nonnegative conditional KL inside the<br>
+unselected outcomes, weighted by teacher tail mass for forward KL or student<br>
+tail mass for reverse KL. Equal retained entries and equal total tail mass make<br>
+the bucket loss zero without making those conditional distributions equal.<br>
+The full loss and its logit gradient may remain nonzero. The notebook checks<br>
+mass/decomposition and this counterexample separately; at <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$k=V$</math-renderer> it recovers the<br>
+full objective. Discarding or arbitrarily renormalizing the tail is a different<br>
+operation and does not inherit the same identity.</p>
+<h2 dir="auto">23. The population is part of the result</h2>
+<p dir="auto">The original panel varies 40 lexical values inside three shared copy/reverse/<br>
+extract templates. The full400 checkpoint succeeds on every source group,<br>
+making the observed paired difference and its fixed source-group bootstrap<br>
+interval equal to one. Resampling those groups cannot create new tasks, natural<br>
+conversation or a new application distribution. Report the narrow transfer,<br>
+natural endings, costs and failed Base/LoRA controls; do not generalize beyond<br>
+what was sampled. A permissive format score is a separate quantity and gives<br>
+all three models full marks despite their different answer quality.</p>
+<h2 dir="auto">Assignment F — The limit belongs in the defense</h2>
+<p dir="auto"><strong>Prediction/checkpoint.</strong> What makes a retained negative result useful in a final report?</p>
+<p dir="auto"><strong>Reference reasoning.</strong> It identifies a boundary and a discriminating next observation. State the frozen comparison, observed failure, plausible interpretation and competing explanation. A worse curated NLL identifies a recipe/budget outcome; a refused scaling fit identifies lack of allocation identifiability; a constant baseline identifies a shortcut. None supports an unmeasured universal conclusion.</p>
+<p dir="auto">The <a href="../../docs/COURSE_ASSIGNMENTS.md">executable reference and assignment route</a> exposes the intermediate values and deliberate failure where applicable.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-54</h1>
+<h1 dir="auto">Worked solution: a compatible post-training assignment</h1>
+<p dir="auto">The question is whether a delivered answer improves because the policy learns<br>
+the task, learns to stop, or receives broader source coverage. The executable<br>
+route is <a href="../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb">the reward audit</a><br>
+followed by <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">the compatible chain</a>.<br>
+Each checkpoint has its runnable reference and explanation immediately adjacent.<br>
+The consumer is <a href="../../src/dongxi_llms/posttraining_assignment.py">posttraining_assignment.py</a>;<br>
+it reuses the existing decoder, SFT loss, sampler, group advantages, clipping,<br>
+categorical KL, and mathematical grader.</p>
+<h2 dir="auto">The interface makes the comparison possible</h2>
+<p dir="auto">The original fixture encodes parity with ten tokens. Inputs are<br>
+<code class="notranslate">[BOS, operation, NUMBER_START+a, NUMBER_START+b]</code>; responses are an answer token<br>
+and EOS. English fixture prompts describe the problem but are not parsed by the<br>
+decoder. A source is the underlying ordered operand pair and task family.<br>
+Training, development, and held-out parity sources are disjoint. Both direct and<br>
+alias forms are present on each source, including the identical held-out panel.<br>
+The independently withheld equality operation uses a new operation token;<br>
+overlapping operands do not make it a trained task.</p>
+<p dir="auto">All four splits have at least two distinct sources per answer class. Constant 0,<br>
+constant 1, and the training-majority baseline each have accuracy 0.5. The<br>
+baselines emit EOS, so their complete-response accuracy is also 0.5. Omitting this<br>
+partial baseline would make a formatting gain look like a reasoning gain.</p>
+<p dir="auto">The SFT labels mask the first four positions. After the loss's single causal<br>
+shift, position 3 predicts the answer and position 4 predicts EOS. Coverage uses<br>
+eight sources in two templates; repetition uses two sources in two templates,<br>
+each repeated four times. Both arms see 32 supervised labels per update and 768<br>
+across 24 updates, starting from the same actual random parent. Adding prompt<br>
+labels changes both the objective and exposure; it is the deliberately broken<br>
+mask in checkpoint 1, not an alternative result selected after evaluation.</p>
+<p dir="auto">SFT uses full-vocabulary cross-entropy. Reward collection uses the declared<br>
+position-specific conditional support: answer 0/1 first, then EOS/0/1. EOS is<br>
+sampled, never appended by an oracle. Old-policy scores, entropy, and KL use<br>
+that same conditional support. Full-vocabulary and cap 1 generation are separately<br>
+labeled fixed-checkpoint interventions.</p>
+<h2 dir="auto">Actual ancestry and sibling budgets</h2>
+<p dir="auto">The frozen protocol uses seeds 33671, 33672, 33673, 24 SFT updates and 16 sibling<br>
+updates, with a 180-second total CPU cap. The actual reference completed in<br>
+2.173 seconds on the task-local CPU environment. All seeds and raw paths are<br>
+retained. Random parent → coverage-SFT is the common sibling lineage; the<br>
+repetition-SFT arm is a same-random-parent comparison. The historical<br>
+TinyStories, Qwen Base/SFT/preference, and acquired Instruct/RLVR checkpoints<br>
+remain separate roots.</p>
+<p dir="auto">Accepted-response SFT trains only on the actual sampled correct complete paths.<br>
+It uses accepted-token-mean full-vocabulary CE. Failed paths are not replaced by<br>
+oracle answers, and an empty accepted pool skips the optimizer step. Reward<br>
+siblings include every eligible response and use the existing response-mean<br>
+clipped objective, with either population-std or center-only group advantages.<br>
+The frozen SFT parent supplies the categorical KL reference.</p>
+<p dir="auto">The first sibling pool is exactly shared because weights and RNG agree. Later<br>
+fresh collections follow the diverging policies. All main sibling arms attempt<br>
+2048 responses and 4096 generated response positions per seed, but accepted SFT<br>
+uses 1692, 1572, 1746 supervised labels across the three seeds. Those are distinct<br>
+clocks. The reports additionally count physical generation prefixes, scoring<br>
+inputs, and accepted-SFT forward inputs; equal attempts are not equal compute.</p>
+<h2 dir="auto">What the measurements support</h2>
+<p dir="auto">The exact held-out conditional complete-path probabilities are:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Seed</th>
+<th align="right">Coverage SFT</th>
+<th align="right">Repetition SFT</th>
+<th align="right">Accepted-response SFT</th>
+<th align="right">GRPO std</th>
+<th align="right">GRPO center</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>33671</td>
+<td align="right">0.3792</td>
+<td align="right">0.2104</td>
+<td align="right">0.4602</td>
+<td align="right">0.4719</td>
+<td align="right">0.4713</td>
+</tr>
+<tr>
+<td>33672</td>
+<td align="right">0.3562</td>
+<td align="right">0.3505</td>
+<td align="right">0.4481</td>
+<td align="right">0.4627</td>
+<td align="right">0.4624</td>
+</tr>
+<tr>
+<td>33673</td>
+<td align="right">0.3863</td>
+<td align="right">0.1539</td>
+<td align="right">0.4608</td>
+<td align="right">0.4719</td>
+<td align="right">0.4712</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">These are exact probabilities of the two-token correct path under the frozen<br>
+conditional policy, not sampled fractions. The notebook also shows actual<br>
+fixed-seeded sampled answers, stops, and complete responses. Coverage improves<br>
+this delivery probability relative to repetition on the retained panel, with a<br>
+small difference in seed 33672. Siblings improve termination while answer-only<br>
+transfer remains weak. Every final exact score remains below the always-stopping<br>
+constant baseline 0.5. These measurements support a useful signal and delivery<br>
+diagnostic, not established parity generalization or English capability.</p>
+<p dir="auto">Every seed supplies training/development successes and failures, mixed groups,<br>
+and a separately measured task-reward gradient. The independently withheld<br>
+equality negatives, source-paired regressions, and descriptive source standard<br>
+errors remain in the reports. Two templates do not double the number of<br>
+independent problems. Nothing on the held-out panel chooses the recipe, caps,<br>
+difficulty, or checkpoint.</p>
+<h2 dir="auto">Finite groups and the cost of difficulty selection</h2>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$r_i$</math-renderer> be an independent Bernoulli reward with success probability <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$p$</math-renderer> and<br>
+let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$p$</math-renderer> be parameterized by a logit <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$\theta$</math-renderer>. Its score is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$r_i-p$</math-renderer>, and the true<br>
+reward gradient is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$p(1-p)$</math-renderer>. For the inclusive group baseline<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$\bar r=G^{-1}\sum_i r_i$</math-renderer>, the center-only estimate is</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$$
+\hat g=\frac{1}{G}\sum_{i=1}^{G}(r_i-\bar r)(r_i-p),\qquad
+\mathbb{E}[\hat g]=\frac{G-1}{G}p(1-p).
+$$</math-renderer></p>
+<p dir="auto">The response participates in its own baseline. Dividing by the group's sampled<br>
+population standard deviation introduces another dependence. The reference<br>
+enumerates every joint group and its probability; it never substitutes the<br>
+expected denominator or sums independent normalized response variances. At<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$G=2$</math-renderer>, std-normalized mixed pairs give expectation<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$p(1-p)/(1+2\varepsilon)$</math-renderer>, with the kernel's <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$\varepsilon=10^{-8}$</math-renderer>. All-constant<br>
+groups give zero. The large-group std-normalized limit is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$\sqrt{p(1-p)}$</math-renderer>, while center-only approaches <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$p(1-p)$</math-renderer>; those are different<br>
+scales, not a promise of universal variance reduction.</p>
+<p dir="auto">Keeping mixed groups has probability <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="2687fcb1db54424b894985c7a6f235d6">$1-p^G-(1-p)^G$</math-renderer>. Originally uniform<br>
+prompt slices are reweighted by that probability after selection. Discarded<br>
+groups still consume collection work, and the conditional expected gradient is<br>
+a different estimand. The assignment chooses prompt eligibility once from<br>
+frozen-parent <strong>training</strong> probabilities in the predeclared range 0.05–0.95;<br>
+development is a signal audit only. The actual reference kept all training<br>
+prompts. Its mixed-only selection analysis is explicitly counterfactual;<br>
+constant groups are never silently removed from the real update.</p>
+<p dir="auto">The all-zero-reward gradient probe changes the policy away from its frozen<br>
+reference. Its task gradient is exactly zero while KL produces a nonzero<br>
+gradient. The real updates therefore report task and weighted-KL gradients<br>
+separately, their dot product, and the actual combined objective gradient.<br>
+Accepted-SFT's GRPO components are labeled counterfactual diagnostics; its<br>
+actual update remains CE.</p>
+<h2 dir="auto">The historical verifier stays historical</h2>
+<p dir="auto">The audit replays all 192 retained G4/G8 responses and reproduces every original<br>
+zero reward from the original stop and <code class="notranslate">verify_integer</code>. The separately named<br>
+<code class="notranslate">cs336-bounded-answer-audit-v1</code> accepts one terminated boxed 9 rationale for 4+5;<br>
+the other 191 responses have unsupported richer parses. Full text, token IDs,<br>
+original stops, archive hashes, and reason codes are retained. This diagnostic<br>
+does not rewrite the rewards that produced the old updates.</p>
+<p dir="auto">Authored probes separately test answer correctness, parser support, format,<br>
+natural termination, and truncation against independent references. A capped<br>
+correct answer earns no complete reward. A richer correct prose answer can fail<br>
+a stricter <code class="notranslate">single_integer</code> format policy. Unsupported and unsafe expressions<br>
+receive no answer credit; nothing is evaluated as Python.</p>
+<p dir="auto">The frozen specification, commands, all seed checkpoint states, complete raw<br>
+collections, source identities, executed notebooks and labeled figures are in<br>
+<a href="../../experiments/reports/2026-10-11-cs336-upgrade/run-01/posttraining/">the new report directory</a>.<br>
+The optional native capability audit has a separate named protocol and execution<br>
+record. Same-parent native SFT/RL training remains a future gated experiment;<br>
+the CPU mechanism result does not authorize or demonstrate it.</p>

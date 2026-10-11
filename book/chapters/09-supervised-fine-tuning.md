@@ -112,33 +112,33 @@ remain in [Chapter 15's genealogy](15-distill-evaluate-and-defend.md#1510-the-ch
 
 ## 9.2 Derive the supervised objective
 
-For demonstration $j$, let $x_j$ be its conversation context and $y_j=(y_{j,1},\ldots,y_{j,n_j})$ its assistant sequence, including the intended ending. The causal model gives
+For demonstration $`j`$, let $`x_j`$ be its conversation context and $`y_j=(y_{j,1},\ldots,y_{j,n_j})`$ its assistant sequence, including the intended ending. The causal model gives
 
-$$
+```math
 p_\theta(y_j\mid x_j)=\prod_{t=1}^{n_j}
-p_\theta(y_{j,t}\mid x_j,y_{j,<t}).
-$$
+p_\theta(y_{j,t}\mid x_j,y_{j,\lt t}).
+```
 
 Taking negative natural logs turns products into sums:
 
-$$
+```math
 L_j(\theta)=-\sum_{t=1}^{n_j}
-\log p_\theta(y_{j,t}\mid x_j,y_{j,<t}).
-$$
+\log p_\theta(y_{j,t}\mid x_j,y_{j,\lt t}).
+```
 
-The common token-mean objective divides the total sum by the number of supervised targets, $N=\sum_jn_j$:
+The common token-mean objective divides the total sum by the number of supervised targets, $`N=\sum_jn_j`$:
 
-$$
+```math
 L(\theta)=\frac{1}{N}\sum_jL_j(\theta).
-$$
+```
 
-For a padded full transcript, use ownership mask $m_{b,t}$ and validity mask $v_{b,t}$. Logits $Z$ have shape $[B,n,V]$ and labels have shape $[B,n]$. After one causal shift, the logit gradient is
+For a padded full transcript, use ownership mask $`m_{b,t}`$ and validity mask $`v_{b,t}`$. Logits $`Z`$ have shape $`[B,n,V]`$ and labels have shape $`[B,n]`$. After one causal shift, the logit gradient is
 
-$$
+```math
 \frac{\partial L}{\partial z_{b,t,i}}=
 \frac{m_{b,t+1}v_{b,t+1}}{N}
 \left(p_{b,t,i}-\mathbf{1}\{i=x_{b,t+1}\}\right).
-$$
+```
 
 At a directly ignored prediction position, this gradient is zero. At an answer prediction, the observed target gets upward pressure through gradient descent and competing logits get downward pressure. The hidden state, output head and earlier context receive gradients according to the chain rule. The equation gives a derivative with respect to logits; actual parameter updates depend on the entire computation and optimizer.
 
@@ -154,18 +154,18 @@ the retained Qwen outputs. Suppose the two relevant prediction rows are:
 | After the assistant header |(0.6, 0.3, 0.1)|red|0.510826|
 | After demonstrated `red` |(0.2, 0.3, 0.5)|END|0.693147|
 
-The complete demonstrated answer has probability $0.6\times0.5=0.3$.
-Its summed NLL is $-\log(0.3)=1.203973$; the two-target mean is $0.601986$.
+The complete demonstrated answer has probability $`0.6\times0.5=0.3`$.
+Its summed NLL is $`-\log(0.3)=1.203973`$; the two-target mean is $`0.601986`$.
 These are different units: a sequence loss and nats per supervised target.
 The prompt supplies the first state but contributes no direct target here.
 
 **Reader prediction:** remove only END from supervision. Will a lower reported
 mean NLL now mean that stopping improved?
 
-**Reference reasoning:** the remaining loss is $-\log(0.6)=0.510826$, which is
+**Reference reasoning:** the remaining loss is $`-\log(0.6)=0.510826`$, which is
 lower because we removed the harder target. No update or generation occurred.
 The direct logit gradients under the original two-target mean are
-$(-0.2,0.15,0.05)$ at the first row and $(0.1,0.15,-0.25)$ at the second.
+$`(-0.2,0.15,0.05)`$ at the first row and $`(0.1,0.15,-0.25)`$ at the second.
 Gradient descent favors `red` at the header and END after `red`. Removing END
 makes the second row's direct gradient zero; the first row's gradient doubles
 because its denominator changes from two targets to one. Loss masking changes
@@ -192,7 +192,7 @@ deliberate broken variant explains why learning a correct prefix is weaker
 than learning the complete response. It does not attribute the measured LoRA
 failure to missing END labels: that real recipe included its ending targets.
 
-An example-mean objective instead averages $L_j/n_j$ across examples. This weights each conversation equally even when answer lengths differ. Choose intentionally and retain the denominator in logs; the two objectives need not prefer the same parameters.
+An example-mean objective instead averages $`L_j/n_j`$ across examples. This weights each conversation equally even when answer lengths differ. Choose intentionally and retain the denominator in logs; the two objectives need not prefer the same parameters.
 
 For answers with two and eight scored targets, a global token mean gives the
 long answer eight of ten target positions; an example mean gives each answer
@@ -202,15 +202,15 @@ shows the same weighting mechanism at the data-mixture level.
 
 ## 9.3 Gradients reach the shared decoder
 
-Let the final hidden state be $h_t\in\mathbb{R}^D$ and output matrix $W_{\mathrm{out}}\in\mathbb{R}^{V\times D}$. With row-vector batch notation, $z_t=h_tW_{\mathrm{out}}^\top$. The loss derivative sends pressure to both sides:
+Let the final hidden state be $`h_t\in\mathbb{R}^D`$ and output matrix $`W_{\mathrm{out}}\in\mathbb{R}^{V\times D}`$. With row-vector batch notation, $`z_t=h_tW_{\mathrm{out}}^\top`$. The loss derivative sends pressure to both sides:
 
-$$
+```math
 \frac{\partial L}{\partial h_t}
 =\frac{\partial L}{\partial z_t}W_{\mathrm{out}},
 \qquad
 \frac{\partial L}{\partial W_{\mathrm{out}}}
 =\left(\frac{\partial L}{\partial z_t}\right)^\top h_t.
-$$
+```
 
 Backward propagation traverses final normalization, residual additions, MLP transformations and attention. Attention reaches earlier prompt states through the value path and changes routing through the Q/K paths. It eventually reaches token embeddings unless those parameters are frozen.
 
@@ -254,13 +254,13 @@ precision and checkpointing controls.
 
 ## 9.5 Accumulation must preserve weighting
 
-A logical batch can be split into microbatches when memory is limited. Suppose microbatch $r$ has summed loss $S_r$ and supervised count $N_r$. The desired accumulated objective is
+A logical batch can be split into microbatches when memory is limited. Suppose microbatch $`r`$ has summed loss $`S_r`$ and supervised count $`N_r`$. The desired accumulated objective is
 
-$$
+```math
 L=\frac{\sum_rS_r}{\sum_rN_r}.
-$$
+```
 
-Backward each $S_r/\sum_qN_q$, then perform one optimizer step. Averaging microbatch means instead gives $\frac{1}{R}\sum_rS_r/N_r$, which overweights short-answer microbatches when counts differ.
+Backward each $`S_r/\sum_qN_q`$, then perform one optimizer step. Averaging microbatch means instead gives $`\frac{1}{R}\sum_rS_r/N_r`$, which overweights short-answer microbatches when counts differ.
 
 The accumulation notebook compares gradients from a joint batch with token-weighted split batches. It also deliberately averages means to expose the failure. Use a shared initialization, no stochastic dropout and identical context masks so the only difference is weighting. Floating-point reduction order may introduce tiny numerical differences; define a justified tolerance rather than demanding impossible bitwise equality.
 
@@ -375,7 +375,7 @@ Checkpoint selection uses development criteria declared in advance. “Choose wh
 
 ## 9.7 Full tuning changes all allowed parameters
 
-Full SFT allows the optimizer to update every trainable parameter. It offers flexible adaptation, but its optimizer state and gradients can dominate memory. A rough AdamW accounting for $P$ parameters distinguishes weights, gradients and two moment tensors. Additional master weights, activations, temporary buffers and allocator overhead depend on the implementation. Do not promise memory sufficiency from a parameter-only estimate.
+Full SFT allows the optimizer to update every trainable parameter. It offers flexible adaptation, but its optimizer state and gradients can dominate memory. A rough AdamW accounting for $`P`$ parameters distinguishes weights, gradients and two moment tensors. Additional master weights, activations, temporary buffers and allocator overhead depend on the implementation. Do not promise memory sufficiency from a parameter-only estimate.
 
 Full tuning can alter useful broad behavior while improving the target interface. Evaluate general continuation, arithmetic, format compliance and concise-answer behavior with the same contract before and after. A narrowly successful recipe may be appropriate for a specialized system; its limitations should remain visible.
 
@@ -383,49 +383,49 @@ The microscopic full run uses fixed seed, a bounded update budget and four known
 
 ## 9.8 LoRA constrains an update
 
-For a linear weight $W_0\in\mathbb{R}^{d_{\mathrm{out}}\times d_{\mathrm{in}}}$, LoRA freezes $W_0$ and learns
+For a linear weight $`W_0\in\mathbb{R}^{d_{\mathrm{out}}\times d_{\mathrm{in}}}`$, LoRA freezes $`W_0`$ and learns
 
-$$
+```math
 W=W_0+\frac{\alpha_{\mathrm{LoRA}}}{r}BA,
 \qquad
 A\in\mathbb{R}^{r\times d_{\mathrm{in}}},
 \quad B\in\mathbb{R}^{d_{\mathrm{out}}\times r}.
-$$
+```
 
-The trainable adapter count is $r(d_{\mathrm{in}}+d_{\mathrm{out}})$ rather than $d_{\mathrm{in}}d_{\mathrm{out}}$. The rank of the update is at most $r$. The base matrix remains present, so small trainable state does not mean the whole base model occupies little memory. Activations also remain necessary for adapter training.
+The trainable adapter count is $`r(d_{\mathrm{in}}+d_{\mathrm{out}})`$ rather than $`d_{\mathrm{in}}d_{\mathrm{out}}`$. The rank of the update is at most $`r`$. The base matrix remains present, so small trainable state does not mean the whole base model occupies little memory. Activations also remain necessary for adapter training.
 
-The [LoRA paper](https://arxiv.org/abs/2106.09685) introduces this parameterization. Our implementation uses a random $A$ and zero $B$. Initially the adapter output is exactly zero. The first gradient of $A$ is zero because it is multiplied by $B$; $B$ can receive a nonzero gradient through the initialized $A$. This asymmetry explains why “all trainable parameters must have nonzero gradients on the first step” is a poor health check.
+The [LoRA paper](https://arxiv.org/abs/2106.09685) introduces this parameterization. Our implementation uses a random $`A`$ and zero $`B`$. Initially the adapter output is exactly zero. The first gradient of $`A`$ is zero because it is multiplied by $`B`$; $`B`$ can receive a nonzero gradient through the initialized $`A`$. This asymmetry explains why “all trainable parameters must have nonzero gradients on the first step” is a poor health check.
 
-For row-batch input $X$, compute $XW_0^\top+\frac{\alpha_{\mathrm{LoRA}}}{r}(XA^\top)B^\top$. The notebook compares this with a merged matrix and verifies equality. The microscopic adapter targets Q and V projections only. This is a declared design, not a universal optimal target set.
+For row-batch input $`X`$, compute $`XW_0^\top+\frac{\alpha_{\mathrm{LoRA}}}{r}(XA^\top)B^\top`$. The notebook compares this with a merged matrix and verifies equality. The microscopic adapter targets Q and V projections only. This is a declared design, not a universal optimal target set.
 
 ### What the rank restriction buys, and what it excludes
 
-Each column of $B$ is one output direction. The corresponding row of $A$
+Each column of $`B`$ is one output direction. The corresponding row of $`A`$
 computes how strongly an input uses that direction. Their product can combine
-at most $r$ independent output directions for this matrix update. With
-$d_{\mathrm{in}}=d_{\mathrm{out}}=1024$ and $r=8$, the adapter has 16,384
+at most $`r`$ independent output directions for this matrix update. With
+$`d_{\mathrm{in}}=d_{\mathrm{out}}=1024`$ and $`r=8`$, the adapter has 16,384
 trainable scalars versus 1,048,576 in the full matrix. This reduces the
 trainable state while requiring the desired correction to pass through those
 factorized directions. A whole network can contain many adapted matrices;
 the matrix rank bound is not a rank bound on the network's behavior.
 
-**Reader prediction:** initialize both factors to zero instead of only $B$.
+**Reader prediction:** initialize both factors to zero instead of only $`B`$.
 Does that make a safer unchanged starting policy?
 
 **Reference reasoning:** it makes the first-order adapter unable to start.
-For gradient $G_W=\partial L/\partial W$, the two paths are
+For gradient $`G_W=\partial L/\partial W`$, the two paths are
 
-$$
+```math
 \frac{\partial L}{\partial A}=\frac{\alpha_{\mathrm{LoRA}}}{r}B^\top G_W,
 \qquad
 \frac{\partial L}{\partial B}=\frac{\alpha_{\mathrm{LoRA}}}{r}G_WA^\top.
-$$
+```
 
-Both vanish if both factors are zero. Random $A$ with zero $B$ keeps the
-initial function unchanged while supplying directions through which $B$ can
-begin learning. After $B$ moves, $A$ can receive signal too. The Day 14
+Both vanish if both factors are zero. Random $`A`$ with zero $`B`$ keeps the
+initial function unchanged while supplying directions through which $`B`$ can
+begin learning. After $`B`$ moves, $`A`$ can receive signal too. The Day 14
 [initialization and merge reference](../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb)
-checks this asymmetry directly. The factor $\alpha_{\mathrm{LoRA}}/r$ scales
+checks this asymmetry directly. The factor $`\alpha_{\mathrm{LoRA}}/r`$ scales
 the correction and its gradients; changing rank or scale is a recipe change,
 not a guarantee of proportionally stronger useful adaptation.
 
@@ -583,7 +583,7 @@ solutions remain stable.
 4. Compare token and example averaging on unequal response lengths.
 5. Design an accumulation test that exposes incorrect microbatch weighting.
 6. Identify what a weights-only restart can and cannot reproduce.
-7. Calculate LoRA parameter count and explain the zero-$B$ first-step gradients.
+7. Calculate LoRA parameter count and explain the zero-$`B`$ first-step gradients.
 8. Explain why the base matrix still consumes memory during LoRA training.
 9. Defend a full/LoRA comparison budget and identify its remaining confounders.
 10. Diagnose improved likelihood with worse stopping behavior.

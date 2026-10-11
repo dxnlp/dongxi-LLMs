@@ -1,0 +1,133 @@
+{
+  "utc": "2026-10-11T20:54:45.709786+00:00",
+  "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+  "python": "3.12.3",
+  "node": "v24.5.0",
+  "mathjax": "3.2.2",
+  "jsdom": "27.0.0",
+  "scope": "Focused regression, source/prose/navigation, local SVG syntax and exact MathML equality through actual GitHub API HTML and observed client decoding emulation. Not live browser layout or a model experiment.",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_book_math.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.10792174097150564,
+      "output": "final-verification-00.txt",
+      "output_sha256": "d550418eb7269ef4e4c8f51ccd759b80db6e923be203e76dae792c9f40b85fde"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_book_math.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.11187537503428757,
+      "output": "final-verification-01.txt",
+      "output_sha256": "31239ed4fa832a2e3cf2c438a0b324524850da0c5a8d1e107263c89a9ac9dfb5"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_book_prose.py",
+        "--strict-narrative"
+      ],
+      "exit_code": 0,
+      "seconds": 0.19207568792626262,
+      "output": "final-verification-02.txt",
+      "output_sha256": "9ef6bf19f6fe2247924ef2ac0c8ea2a60239d7e3e570a9140877b5ad39564c37"
+    },
+    {
+      "command": [
+        "python3",
+        "scripts/check_course_integrity.py"
+      ],
+      "exit_code": 0,
+      "seconds": 0.07592415006365627,
+      "output": "final-verification-03.txt",
+      "output_sha256": "48c029361a55e572ba8466f756f706f31e3e1b23aca441642ccac206fb85d61a"
+    },
+    {
+      "command": [
+        "/home/dongxi/.local/share/cursor-agent/versions/2026.10.01-e373342/node",
+        "scripts/check_book_math_render.cjs"
+      ],
+      "exit_code": 0,
+      "seconds": 0.8047119729453698,
+      "output": "final-verification-04.txt",
+      "output_sha256": "244ea7050a961158a91b37521834175b6c0f8fccc7058cda73d5dc76b626b486"
+    }
+  ],
+  "renderer_and_dom_lock_sha256": "658df38d38fe8773693ac609a308de09851f0854f2aea06d368af4229d66e306",
+  "github_api_receipt_sha256": "0a6d928ae110b5cca0de620da66a1c51327b4859ba91356f6a61b8cb6dc62654",
+  "client_mathml_receipt_sha256": "497fd4f8f27e65ef01b0b30bb9fc7ec18df7820857fc43a0d3c4c2c2d946b36e",
+  "source_sha256": {
+    "scripts/check_book_math.py": "8c654c511a3ea9db2d51c549954311f69a20ac3811cfd7bd7c31609ac0e28b21",
+    "scripts/check_book_math_render.cjs": "460b556332e2b7283070dddfc629820e8155dae976e1a31564a3a84eab12f768",
+    "tests/test_book_math.py": "0b6d6c218e718f7862fdcfbc0a6c33837da2652bd1dbf90fc5adc19b954b3ca2",
+    "docs/MATH_FORMATTING.md": "43b634e91e7623b18b3cba412e0e8aa9a8e823e59ad9a5ac169f836e6a8339bc",
+    "book/README.md": "5ecaba37bdb69717a7e4e33a08f16dde945846743c5252075c7ac7e638fdc765",
+    "book/appendices/a-laboratory-setup.md": "63587e04b9e596cac89194f6db4b8690724e6c779ad188562549acae24e410bc",
+    "book/appendices/b-mathematical-and-tensor-notation.md": "868364011ec569e51de494e8fe0b0a9483e395f3bc6888f3b1a722e31299dd95",
+    "book/appendices/c-evaluation-and-experiment-templates.md": "0a3e2fe746a41e467cd0e87aa91853f85e7becf20a78bfbffb711f1c2a5564c5",
+    "book/appendices/d-reproduction-and-environments.md": "0337d4bb91824bbe5526f3f9fad069264796aa844b611cfba5998b67bef69e68",
+    "book/chapters/01-evidence-before-optimization.md": "cb64a89c353ee1ea9d71636f851736dcf8ca6de2e3622a949133bd5a8d0754f4",
+    "book/chapters/02-text-tokens-and-embeddings.md": "f40c9946840583d7f6dc0da666b304ee87acd891643d030e9eebe25d8e42e3a2",
+    "book/chapters/03-learning-the-next-token.md": "c7ba89598b0d25368dc4d8c4297a6ca3116f9e77ccc4cb8911ee8e54daf58626",
+    "book/chapters/04-attention-and-the-causal-information-boundary.md": "6dbc3507c7c30c034379d85a70c671ea61faa35550122233cd87400ede53894d",
+    "book/chapters/05-building-a-modern-decoder.md": "e20c199cbea76808ed35de7ccb82d75819695c3c23b38bc67cbefe13b8708a31",
+    "book/chapters/06-pretraining-as-a-controlled-system.md": "68a74e5f84d97fdea2f7f3e204bc42da025640c89c5f6129a0f6f0f110d7325b",
+    "book/chapters/07-evaluation-is-a-contract.md": "a690220a1ee311b9bf906c90da1e5c372af4ac62cfc5b81c7275a27a1beda0d2",
+    "book/chapters/08-instruction-data-as-an-interface.md": "3af2becd8e247f165d3e9cefa4b28e8445378caf6025d55ef1147a3c395891c4",
+    "book/chapters/09-supervised-fine-tuning.md": "98fb871e8336a7e646b5fd0675bf2cbc761cfdec05d094b3e4b4693ed671b107",
+    "book/chapters/10-preferences-and-reward-models.md": "e090f4227bee75c5cab33336cd5a72221571bce771a1b278dde285a498c96084",
+    "book/chapters/11-direct-preference-optimization.md": "359a26625076fdf9f72515b36c4354319dcdabbd1b7c07b6a2bf75d392cf693f",
+    "book/chapters/12-language-generation-as-a-policy.md": "b3ad909a886543c432bcfa3205e6377be22997caf5a3d911018d00b576852af1",
+    "book/chapters/13-group-relative-policy-optimization.md": "4a56253be7e435861d02728ed8edfc79aedf53fda643343faf94d3c163d8a871",
+    "book/chapters/14-when-optimization-goes-wrong.md": "eefdf4446f4e071fa99f0a99b236cc89753ea06b1c50f84361c8cc503b09a886",
+    "book/chapters/15-distill-evaluate-and-defend.md": "7faa39c5700738550da3f1c3dcbfb3af838b4ed456e985435050c877f296fed2",
+    "book/front-matter/how-to-use.md": "92dc1e5a56ee14c7a1eddd8dc1b40c0e8b3ae4df42c034feaad7836fd641fbf2",
+    "book/front-matter/notation.md": "b30baffdcc9f53f305ac3f65690d99bacbc77ae04ac09528b980423b3fc29ab9",
+    "book/front-matter/preface.md": "44d42fa6dadd16a3e9ec9f0d23fad4cd952c33a3a0b7ed5f58bafafe3ce9fbec",
+    "book/labs/01-evidence-before-optimization.md": "4c0e6ab48dcb8cd0f30e4d8ff76d15db3a71671f9138a67b80fcd393fefac901",
+    "book/labs/02-text-tokens-and-embeddings.md": "ab195338049f5d82211e31895c2464bab463c1381fe0ab7faca8d7ec12812b64",
+    "book/labs/03-learning-the-next-token.md": "58730da20a7dce085c71f5736930238fc7f3b1f4e791f78d440ba4da1f628984",
+    "book/labs/04-attention-and-the-causal-information-boundary.md": "79b4f0722f7246e00403735ba574bba9da88ab556ad856b26cef768901baeb01",
+    "book/labs/05-building-a-modern-decoder.md": "033140e519e80948cdd8bbb46cf321119b5b962353cae28b350d1d7df21e32ac",
+    "book/labs/06-pretraining-as-a-controlled-system.md": "383e3c3937a26985836e124d3d9eb1706b294c36668a62aee126cd4f2b8e760f",
+    "book/labs/06-reading-a-pretraining-run.md": "410c974404d620587c5a297f9202cc8816fada63088bbd107828868a387ffacb",
+    "book/labs/07-evaluation-is-a-contract.md": "8b5d689bb34677c1be572ff41749ab9c84f61df65a69f33831d4c23aca98d5c3",
+    "book/labs/08-instruction-data-as-an-interface.md": "5a630b802b67c69e321f40b6eed8983b184fef47514702dc704e084910134e1e",
+    "book/labs/09-supervised-fine-tuning.md": "7867d1aa415e88f4df0fc7f0aa24820446682c136824234dca5001bc4deac6a0",
+    "book/labs/10-preferences-and-reward-models.md": "23b01259ede42776e2e669b2ed190ba07df02279684e412aefd4242641aa878e",
+    "book/labs/11-direct-preference-optimization.md": "000df660efbf5f3c6117ba03d6f5596ce698735ee8cbb11a31fe91a9a1ef5b02",
+    "book/labs/12-language-generation-as-a-policy.md": "9570ac8d73831b4a11d43025843040099aa75b154b99da535c4f48042ba7338e",
+    "book/labs/13-group-relative-policy-optimization.md": "30f640a816b6b137f1de8a0e3c0fed43c6ef342be7ef516168a80e288b15931c",
+    "book/labs/14-when-optimization-goes-wrong.md": "cc080d15d213d75c076b9c875848c4af1991ce3d713f433956c3d8c84c1d59e3",
+    "book/labs/15-distill-evaluate-and-defend.md": "be8e4573c9e4db695a3f9555d46e58e710b60da1de79e1bc08a2719cf3dc7f3c",
+    "book/solutions/01-evidence-before-optimization.md": "ddf0e4b62b3df215b2e4769c1671087806412134e2bc8baaf312ef4b8b769313",
+    "book/solutions/02-text-tokens-and-embeddings.md": "e3dc22f249771060ccfcd6168013c3b37b1d26c69796b4b3c63bdd3e706f9c5c",
+    "book/solutions/03-learning-the-next-token.md": "b17a55701e547898da3410e349a765e37b7d235f36c3adcdcc073a52f352d35a",
+    "book/solutions/04-attention-and-the-causal-information-boundary.md": "70d435485322b5df6b0d61b169abc54bdecd865822cbab59354d133e7a3e9664",
+    "book/solutions/05-decoder-notebook-solutions.md": "4a555e0f406c7aaf56ec560bf4eab360569d3cb7ea838241c5584528ff517639",
+    "book/solutions/06-pretraining-as-a-controlled-system.md": "96597b2b55d357c3e3d58bf340ec2c803f66bc4fe4a9ec888c51ee8aea2edfaa",
+    "book/solutions/07-evaluation-is-a-contract.md": "b8dc213d4419f74a13dcd59c0ab017a67b16a7fb7d88cfc73db57cfe26397055",
+    "book/solutions/08-instruction-data-as-an-interface.md": "e7dca954e2ee90a17561b30729fbc238f672151ec063ae46b424bc6abff1a8dd",
+    "book/solutions/09-supervised-fine-tuning.md": "344adfefeb8412c718d918474e633cddc85910fd70ddae7168eb3bc9b7be4057",
+    "book/solutions/10-preferences-and-reward-models.md": "1d21c776ae8eddfc29822275ecb2bfd292ae476fd98a2e308eba8a68ab72dee9",
+    "book/solutions/11-direct-preference-optimization.md": "594da1d787cab43beb8926aa3a1c55809b5994e9598964127b513dde0c97211f",
+    "book/solutions/12-language-generation-as-a-policy.md": "7924df3d3961071be1b1f774e57bd7f3ffe3cc60bece01ef9512b16bfa7c148b",
+    "book/solutions/13-group-relative-policy-optimization.md": "1dec1ddf86d17e3f9f4c0f9aa33361c975a49f43acde7758c0f15639753bed22",
+    "book/solutions/14-when-optimization-goes-wrong.md": "db4023b73068d337724599f5c6c16f1e991aaf860f509cdb3f1a57d533984fa6",
+    "book/solutions/15-distill-evaluate-and-defend.md": "34f1c261cce09c74053a7f8cd0e730046d57b4d842a4a3b398b4de783f073f78",
+    "book/solutions/cs336-posttraining-assignment.md": "e38301f23772fb3dd8892f6d6685f7d4a679ff5e8f33bde5a0d8783c545faf82"
+  }
+}

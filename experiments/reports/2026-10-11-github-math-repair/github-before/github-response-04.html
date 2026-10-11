@@ -1,0 +1,2160 @@
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-14</h1>
+<h1 dir="auto">10. Preferences and Reward Models</h1>
+<p dir="auto">Our story model learned to make locally plausible predictions while still<br>
+repeating itself and losing track of characters. Supervised fine-tuning can<br>
+demonstrate a better continuation, but demonstrations alone leave another useful<br>
+source of information unused: a reader can often recognize a better story<br>
+without being able to write an ideal one. This chapter asks how that comparison<br>
+becomes a trainable signal, and what the resulting scalar actually measures.</p>
+<p dir="auto">Chapter 9 followed a demonstration through its answer and ending. Now imagine<br>
+that we have two generated responses, neither quite the demonstration we would<br>
+write. A comparison can still say which better serves the request. That changes<br>
+the form of the supervision: we observe a relation between responses, rather<br>
+than a token-by-token ideal answer. We will first make that relation numerical,<br>
+then ask what happens when correctness and polish travel together in the data.</p>
+<p dir="auto">The prerequisites are next-token likelihood, gradient descent, and the evaluation<br>
+contract from Chapter 7. By the end, the reader should be able to derive a<br>
+pairwise preference likelihood, fit a transparent reward model, audit its<br>
+probabilities, and explain why a high reward is a fallible measurement. Days 15<br>
+and 16 share this argument: first define judgments; then model and challenge them.</p>
+<h2 dir="auto">10.1 A judgment needs a question</h2>
+<p dir="auto">Imagine two answers to “Where is Lily's ball?” after a story explicitly puts it<br>
+in a red box. One answer says “In the red box.” Another gives a polished paragraph<br>
+about Lily happily playing outside without answering the question. Which is<br>
+better? A rubric emphasizing factual continuity favors the first; a rubric<br>
+emphasizing engaging prose might distract an annotator toward the second.</p>
+<p dir="auto">A preference record therefore includes a prompt <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$x$</math-renderer>, two completions <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$y_a,y_b$</math-renderer>,<br>
+the judgment, and the conditions under which it was made. Store the rubric,<br>
+source identifiers, presentation order, annotator or judge identity, abstentions,<br>
+and the reason for a tie. Preserve the original answers. “Chosen” and “rejected”<br>
+are convenient names for a selected pair, but they do not mean objectively true<br>
+and false. A rejected response can contain useful content, and both can be wrong.</p>
+<p dir="auto">Separate substantive criteria such as correctness, instruction compliance, and<br>
+coherence from nuisance criteria such as verbosity, headings, confidence, and<br>
+position on the screen. Some users genuinely prefer a particular style; that is<br>
+valid if the objective explicitly includes it. The danger is accidental style<br>
+selection being interpreted as improved reasoning. This continues Chapter 8's<br>
+interface argument: the training target includes every choice made while<br>
+constructing the record, not only the intended lesson.</p>
+<h2 dir="auto">10.2 From two scores to one preference probability</h2>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_\phi(x,y)$</math-renderer> be a real-valued score from a parameterized model. Fix one<br>
+prompt and write <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_y=r_\phi(x,y)$</math-renderer> briefly. Give each completion a positive strength<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$s_y=\exp(r_y)$</math-renderer>. If a comparison allocates probability in proportion to strength,<br>
+then</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+P(a\succ b)=\frac{\exp(r_a)}{\exp(r_a)+\exp(r_b)}
+=\frac{1}{1+\exp(-(r_a-r_b))}=\sigma(\Delta),\qquad \Delta=r_a-r_b.
+$$</math-renderer></p>
+<p dir="auto">This is the Bradley–Terry model. The score difference is a binary classification<br>
+logit. A margin of zero means probability one half. A positive margin favors<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a$</math-renderer>; a large magnitude expresses confidence under the model. The use of<br>
+pairwise likelihoods for language-model reward fitting follows the formulation<br>
+in <a href="https://arxiv.org/html/2305.18290v3#S3" rel="nofollow">the DPO paper's preliminaries</a>.</p>
+<p dir="auto">Why use a difference? The same response can win against a poor answer and lose<br>
+against a better one. A reusable scalar score lets us compare it with either;<br>
+the pair determines how the scores interact. Exponentiating turns real scores<br>
+into positive strengths, and their ratio is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\exp(r_a-r_b)$</math-renderer>. This is a model<br>
+of judgments with a particular odds structure, rather than a claim that every<br>
+human comparison must obey it.</p>
+<p dir="auto">Now record <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q=P_{\text{labels}}(a\succ b)$</math-renderer>. A hard selection has <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q=1$</math-renderer> or <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$0$</math-renderer>;<br>
+aggregated repeated votes can give a fraction. The negative log-likelihood is</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+L(\Delta,q)=-q\log\sigma(\Delta)-(1-q)\log(1-\sigma(\Delta))
+=\mathrm{softplus}(\Delta)-q\Delta.
+$$</math-renderer></p>
+<p dir="auto">The identity is easier to reproduce after defining<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathrm{softplus}(\Delta)=\log(1+e^\Delta)$</math-renderer>:<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\log\sigma(\Delta)=\Delta-\mathrm{softplus}(\Delta)$</math-renderer> and<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\log(1-\sigma(\Delta))=-\mathrm{softplus}(\Delta)$</math-renderer>.<br>
+Substitute these two expressions into the binary loss. The two softplus weights<br>
+add to one; the remaining term is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$-q\Delta$</math-renderer>. This form also connects the<br>
+pairwise loss to the cross-entropy machinery we already know.</p>
+<p dir="auto">Use a stable binary-cross-entropy-with-logits implementation. Computing the<br>
+sigmoid, then taking logarithms, can turn extreme but finite scores into<br>
+infinite losses. For an ordered winning pair, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q=1$</math-renderer> and<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$L=\mathrm{softplus}(-\Delta)$</math-renderer>. A pair has one likelihood, not two independent<br>
+absolute quality labels.</p>
+<h2 dir="auto">10.3 The gradient explains the update</h2>
+<p dir="auto">Differentiate the stable expression:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\frac{\partial L}{\partial\Delta}=\sigma(\Delta)-q,
+\qquad
+\frac{\partial L}{\partial r_a}=\sigma(\Delta)-q,
+\qquad
+\frac{\partial L}{\partial r_b}=q-\sigma(\Delta).
+$$</math-renderer></p>
+<p dir="auto">Suppose annotators favor <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a$</math-renderer>, but the model currently favors <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$b$</math-renderer>. The first<br>
+derivative is negative, so gradient descent raises <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_a$</math-renderer>; the second is positive,<br>
+so it lowers <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_b$</math-renderer>. If the model already predicts the preference confidently,<br>
+the correction becomes small. This is the same probability-minus-target<br>
+mechanism from Chapter 3, applied to a pair rather than a vocabulary.</p>
+<p dir="auto">Actual network updates also pass through score Jacobians. Two answers share<br>
+parameters, so increasing one scalar and decreasing the other are local<br>
+directions, not guarantees about every score after an optimizer step. An<br>
+embedding or transformer parameter can affect both sides. The transparent lab<br>
+first treats scores as independent leaves, then replaces them with<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_\phi=w^\top f(x,y)$</math-renderer>. It makes this distinction visible rather than hiding it<br>
+inside a large training library.</p>
+<h3 dir="auto">Work one judgment through the correction</h3>
+<p dir="auto">Use the existing <a href="../../notebooks/day-15/01_bradley_terry_margin.ipynb">margin notebook</a><br>
+scores <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_a=0.4$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_b=-0.6$</math-renderer>. Their margin is one, so the model predicts<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$P(a\succ b)=0.731059$</math-renderer>. With a hard label favoring <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a$</math-renderer>, the loss is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$-\log(0.731059)=0.313262$</math-renderer> nats. The score derivatives are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$-0.268941$</math-renderer><br>
+and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$+0.268941$</math-renderer>: gradient descent raises the first leaf score and lowers the<br>
+second. Only their difference determines this pair's probability.</p>
+<p dir="auto"><strong>Reader prediction:</strong> keep the scores but replace the hard winner with seven<br>
+votes for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a$</math-renderer> and three for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$b$</math-renderer>. Should training make the margin still larger?</p>
+<p dir="auto"><strong>Reference reasoning:</strong> the target is now <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q=0.7$</math-renderer>. The first score derivative<br>
+becomes <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$0.731059-0.7=+0.031059$</math-renderer>, with the opposite derivative for the second.<br>
+Descent slightly reduces the margin: the model is already more confident than<br>
+the observed vote fraction. Its optimum is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\log(0.7/0.3)=0.847298$</math-renderer>, a<br>
+positive finite margin. Label disagreement changes the desired confidence,<br>
+rather than merely slowing a demand for certainty.</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">torch</span>
+<span class="pl-k">from</span> <span class="pl-s1">dongxi_llms</span>.<span class="pl-s1">reward_model_lab</span> <span class="pl-k">import</span> <span class="pl-s1">bt_loss</span>
+<span class="pl-s1">a</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>([<span class="pl-c1">0.4</span>], <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">torch</span>.<span class="pl-c1">float64</span>, <span class="pl-s1">requires_grad</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">b</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>([<span class="pl-c1">-</span><span class="pl-c1">0.6</span>], <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">torch</span>.<span class="pl-c1">float64</span>, <span class="pl-s1">requires_grad</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-en">bt_loss</span>(<span class="pl-s1">a</span>, <span class="pl-s1">b</span>, <span class="pl-s1">preference</span><span class="pl-c1">=</span><span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>([<span class="pl-c1">0.7</span>], <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">torch</span>.<span class="pl-c1">float64</span>))
+<span class="pl-en">print</span>(<span class="pl-en">float</span>(<span class="pl-s1">loss</span>.<span class="pl-c1">detach</span>()), <span class="pl-s1">torch</span>.<span class="pl-c1">autograd</span>.<span class="pl-c1">grad</span>(<span class="pl-s1">loss</span>, (<span class="pl-s1">a</span>, <span class="pl-s1">b</span>)))</pre></div>
+<p dir="auto">Change the preference to one while keeping both score leaves fixed. This<br>
+isolates the label's effect on the gradient. Adding the same offset to both<br>
+scores instead changes neither margin nor loss; §10.5 explains that freedom.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-10/day-15-01_bradley_terry_margin-02.png"><img src="../../notebooks/figures/chapter-10/day-15-01_bradley_terry_margin-02.png" alt="Bradley–Terry preference probability, winner NLL and margin gradient across score differences" style="max-width: 100%;"></a></p>
+<p dir="auto">The horizontal coordinate is the same score difference in all three panels.<br>
+At zero the model is undecided and receives a substantial correction. Far to<br>
+the right it is confident and the hard-winner gradient approaches zero.<br>
+These are exact scalar computations, not measured judge accuracy. The source<br>
+is the notebook's margin-sweep reference; execute that companion in a fresh<br>
+copy using <a href="../appendices/d-reproduction-and-environments.md">Appendix D</a>.</p>
+<h2 dir="auto">10.4 Disagreement carries information</h2>
+<p dir="auto">Suppose ten independent judgments favor <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a$</math-renderer> seven times and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$b$</math-renderer> three times.<br>
+Under a repeated identical comparison and the binary model, the empirical<br>
+target is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q=0.7$</math-renderer>. Minimizing expected likelihood gives</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+
+\sigma(\Delta^_)=q,\qquad
+
+\Delta^_=\log\frac{q}{1-q}.
+
+$$</math-renderer></p>
+<p dir="auto">The optimal margin is finite. The remaining loss is the entropy of the vote<br>
+distribution, not evidence that optimization failed. Repeating a deterministic<br>
+winner label for a genuinely ambiguous pair instead asks for unlimited margin<br>
+in an unconstrained separable model. A regularizer, finite training, or limited<br>
+model capacity may stop the scores growing, but these are different mechanisms.</p>
+<p dir="auto">The fraction does not explain <em>why</em> people disagree. They may interpret the<br>
+rubric differently, have different expertise, make errors, or represent<br>
+legitimate conflicting preferences. Annotator-stratified analysis can reveal<br>
+that one global probability conceals stable subgroups. A Bradley–Terry scalar<br>
+also imposes structure: its implied pair odds satisfy additive log-odds across<br>
+alternatives. Strong cyclic judgments cannot generally be represented exactly<br>
+by one score per answer. This is a model limitation, not a reason to delete<br>
+awkward labels until the dataset looks consistent.</p>
+<p dir="auto">For a concrete cycle at one prompt, suppose judgments require <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a\succ b$</math-renderer>,<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$b\succ c$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$c\succ a$</math-renderer>, each with probability above one half. A scalar<br>
+model then requires <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_a-r_b&amp;gt;0$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_b-r_c&amp;gt;0$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_c-r_a&amp;gt;0$</math-renderer>. Adding the<br>
+three left sides gives zero, while the three required positive differences<br>
+would have a positive sum. No choice of these three scores can satisfy all<br>
+three demands. A pair-conditioned classifier can express richer relations,<br>
+but would give up this reusable single-score representation. The choice is<br>
+about which judgment structure we intend to model.</p>
+<p dir="auto">Ties require a declared convention. A soft <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q=0.5$</math-renderer> says the model should predict<br>
+an even binary choice; it does not model a separate “equally good” event. If<br>
+ties are frequent and meaningful, use a model with an explicit tie outcome or<br>
+retain them for analysis. Abstention because the judge cannot assess a response<br>
+is a different event and should not automatically become a half-win label.</p>
+<h2 dir="auto">10.5 Reward has a gauge</h2>
+<p dir="auto">For any function <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$c(x)$</math-renderer>, replacing every score for one prompt by<br>
+$r'<em>\phi(x,y)=r</em>\phi(x,y)+c(x)$ leaves all within-prompt differences unchanged. Preferences<br>
+cannot identify the absolute origin of the reward. An intercept shared by the<br>
+two answers has zero gradient under pure pairwise loss. Adding fifty to every<br>
+score therefore says nothing about improvement.</p>
+<p dir="auto">Nor are raw scores from different reward checkpoints directly comparable.<br>
+One checkpoint can stretch margins while retaining identical rankings. Fixed<br>
+label-noise assumptions determine the meaning of that stretch: unlike an<br>
+additive offset, multiplying all scores changes preference probabilities.<br>
+Centering rewards fixes a convenient origin; temperature calibration fixes a<br>
+probability mapping. Neither establishes that the scores represent human welfare<br>
+or task accuracy on new prompts.</p>
+<p dir="auto">This freedom will matter twice. DPO cancels prompt-specific reward offsets.<br>
+Policy-gradient baselines can subtract an action-independent value without<br>
+changing the expected gradient. The algebra resembles the reward gauge, but<br>
+the purpose differs: identifiability for a preference model versus variance<br>
+reduction for an estimator.</p>
+<h2 dir="auto">10.6 Fitting a reward model</h2>
+<p dir="auto">The small lab uses three features: substantive quality, response length, and<br>
+polished format. These are explicit synthetic coordinates, not measurements<br>
+inferred from real stories. Labels depend only on the first feature. A linear<br>
+score allows us to read every coefficient and ask which shortcut training found.</p>
+<p dir="auto">A neural reward model instead takes the prompt and completion through a<br>
+transformer and maps a selected hidden state to a scalar, for example<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_\phi=w^\top h_{\text{end}}+b$</math-renderer>. Selecting the final nonpadding position<br>
+requires an attention-mask-aware index. Padding at a fixed maximum index is not<br>
+the answer's end. Whether EOS is included, whether the chat template adds a<br>
+turn-ending token, and whether the reward head sees the prompt must be frozen<br>
+in the data contract.</p>
+<p dir="auto">The endpoint head makes the learned score useful beyond the original pairs.<br>
+We can generate a fresh completion, pass its prompt and complete answer through<br>
+the same backbone, and read one scalar at the declared endpoint. The pairwise<br>
+loss trains this scoring function by contrasting two such forwards. It does<br>
+not turn its scalar into a probability of correctness; only a specified<br>
+comparison and sigmoid produce a preference probability.</p>
+<p dir="auto">Both answer branches contribute gradients to shared parameters. A language-model<br>
+initialization can supply representations, but the scalar head must still learn<br>
+from comparisons. Outcome rewards evaluate a completed answer; process rewards<br>
+evaluate intermediate steps under a step-level annotation contract. They are<br>
+not interchangeable simply because both return numbers. A process verifier<br>
+can reward valid intermediate reasoning yet miss an invalid final claim, or<br>
+vice versa. The earlier feature experiment fits an outcome preference model;<br>
+the later text lesson below makes terminal and step-supervision boundaries<br>
+explicit, without claiming pretrained reward quality or general arithmetic.</p>
+<p dir="auto">Split by prompt or source group before forming answer pairs. Splitting individual<br>
+pairs can put the same prompt, near-duplicate answer, or generation family in<br>
+both training and development sets. Randomly swapping presentation order is valuable,<br>
+but a swap is not a new independent example. Score both orders during audits<br>
+to detect an order-dependent judge or preprocessing bug.</p>
+<h2 dir="auto">10.7 Ranking accuracy and calibration ask different questions</h2>
+<p dir="auto">Pair accuracy checks whether the sign of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\Delta$</math-renderer> agrees with a winner. It<br>
+does not punish unjustified certainty. Probability metrics do. On independent<br>
+binary labels <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$l_i$</math-renderer>, the Brier score is</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\frac1N\sum_i(p_i-l_i)^2.
+$$</math-renderer></p>
+<p dir="auto">In our simulator the true soft probability <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q_i$</math-renderer> is known, so the <em>expected</em><br>
+binary Brier score is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$N^{-1}\sum_i[q_i(1-p_i)^2+(1-q_i)p_i^2]$</math-renderer>. It includes irreducible label<br>
+variance. The simple squared discrepancy <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$(p_i-q_i)^2$</math-renderer> measures another<br>
+quantity and should not be mislabeled as the observed binary Brier score.</p>
+<p dir="auto">A reliability diagram bins predicted probabilities and compares mean prediction<br>
+against mean label frequency. Show counts in each bin. Empty or tiny bins do<br>
+not provide precise estimates. Expected calibration error depends on binning<br>
+and can conceal bad subgroup behavior. Keep held-out NLL, Brier score, ranking<br>
+accuracy, and slices together. Fit any temperature on a calibration split and<br>
+evaluate it on a separate final split; fitting and judging on the same labels<br>
+overstates evidence.</p>
+<p dir="auto">Temperature scaling replaces <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\sigma(\Delta)$</math-renderer> with <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\sigma(\Delta/\tau)$</math-renderer>.<br>
+For positive <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\tau$</math-renderer> it preserves pair rankings while changing confidence. It<br>
+cannot repair a systematically reversed ranking or a model that uses length<br>
+instead of correctness. Calibration is a conditional statement about a specified<br>
+population and label process, not a permanent property of the model.</p>
+<h2 dir="auto">10.8 A controlled shortcut experiment</h2>
+<p dir="auto">The predeclared CPU experiment changes the training distribution while keeping<br>
+the linear score, seed, optimizer, number of examples, and held-out distribution<br>
+fixed. In the confounded arm, length and polished format nearly equal quality.<br>
+In the balanced arm, they vary independently. Soft preference labels follow<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\sigma(2,\Delta\text{quality})$</math-renderer> in both. The held-out distribution and an<br>
+adversarial pair are independent of the training fixture.</p>
+<p dir="auto">Predict before running: both arms can fit training comparisons; the confounded<br>
+arm has insufficient evidence to isolate quality from correlated nuisance<br>
+features. On a pair whose first answer is substantively worse but much longer<br>
+and more polished, it may assign the wrong preference. The balanced arm can<br>
+identify the intended coordinate more clearly. The report preserves all<br>
+coefficients, learning curves, held-out NLL, probability calibration, and the<br>
+adversarial prediction. These are measured properties of the synthetic model,<br>
+not empirical claims about Qwen or human judges.</p>
+<h3 dir="auto">A good fit can leave the important question unidentified</h3>
+<p dir="auto">In the confounded data, a quality improvement nearly always accompanies more<br>
+length and polish. The optimizer can explain the judgments using any of those<br>
+correlated coordinates. Its low loss cannot tell us which explanation will<br>
+survive when a long, polished answer is wrong.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-04-preference-policy-cpu.json">retained finite reference</a><br>
+and the existing <code class="notranslate">reward_comparison()</code> helper make that ambiguity visible:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Fitted arm</th>
+<th align="right">Quality coefficient</th>
+<th align="right">Length coefficient</th>
+<th align="right">Format coefficient</th>
+<th align="right">Probability worse polished answer wins</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Confounded</td>
+<td align="right">0.655898</td>
+<td align="right">0.649301</td>
+<td align="right">0.651102</td>
+<td align="right">0.962504</td>
+</tr>
+<tr>
+<td>Balanced</td>
+<td align="right">1.855388</td>
+<td align="right">-0.000018</td>
+<td align="right">0.004854</td>
+<td align="right">0.136947</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The adversarial difference vector is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$(-1,3,3)$</math-renderer>: the first answer is worse on<br>
+quality, but longer and more polished. Multiplying it by the confounded weights<br>
+gives a positive comparison margin; the balanced weights give a negative one.<br>
+The same loss and fitting budget therefore produce very different extrapolation<br>
+because the training examples supplied different identifying contrasts.</p>
+<p dir="auto"><strong>Controlled change:</strong> hold quality at minus one and format at three, then<br>
+vary only the length difference. Predict which fitted scorer changes its<br>
+decision before reading the notebook's sweep:</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-10/day-16-01_reward_model_bias_audit-02.png"><img src="../../notebooks/figures/chapter-10/day-16-01_reward_model_bias_audit-02.png" alt="Probability that a worse answer wins as its length advantage grows for confounded and balanced linear reward models" style="max-width: 100%;"></a></p>
+<p dir="auto">The dashed line is an even preference. The confounded curve crosses it as<br>
+length increases; the balanced curve remains below it because its length<br>
+coefficient is nearly zero. This source-backed plot is regenerated by<br>
+<a href="../../notebooks/day-16/01_reward_model_bias_audit.ipynb">Day 16's adversarial sweep</a>.<br>
+The coordinates are authored synthetic features, so the result isolates a<br>
+mechanism of confounding rather than demonstrating that a particular real<br>
+judge prefers verbosity.</p>
+<p dir="auto">The mechanism generalizes as a diagnostic question: when reward improves,<br>
+which feature changed? Audit matched-length pairs, matched-format pairs,<br>
+correct-but-plain answers, incorrect-but-polished answers, and refusal versus<br>
+valid response cases. Matching can itself alter the population, so report the<br>
+construction rule. Do not infer from one adversarial failure that all training<br>
+comparisons are useless, or from a high held-out score that a policy may safely<br>
+optimize the reward without encountering new failures.</p>
+<h2 dir="auto">10.9 When optimization changes the population</h2>
+<p dir="auto">A held-out comparison dataset usually contains responses from a fixed generation<br>
+process. A policy maximizing the reward changes that process. It can discover<br>
+regions where the reward extrapolates badly: repetitive praise, excessive length,<br>
+format tricks, confident nonsense, or phrases correlated with high training<br>
+scores. This is the link from measurement to optimization. The reward model<br>
+may remain accurate on ordinary held-out comparisons while failing on responses<br>
+actively selected to exploit it.</p>
+<p dir="auto">Maintain independent outcome measurements and periodically audit samples from<br>
+the evolving policy. Freeze evaluation prompts and decoding settings before<br>
+comparing checkpoints. Store negative cases. A larger score is an observation;<br>
+improved usefulness requires another argument. Chapter 11 learns directly from<br>
+comparisons without a separately trained scalar head, but it still inherits the<br>
+preference data's biases and coverage limits.</p>
+<h2 dir="auto">10.10 Collecting judgments without confusing identity and position</h2>
+<p dir="auto">Before fitting the reward model, build the observation instrument. A response<br>
+has a stable candidate ID, exact text, source checkpoint and generation settings.<br>
+Its display slot is temporary. If answer <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a$</math-renderer> moves from A to B, a verdict of B<br>
+still chooses <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a$</math-renderer>. Store the displayed order and map it back to canonical answer<br>
+identity before writing a chosen/rejected pair. Swapping canonical answers is a<br>
+different operation: it reverses the binary preference label, while a display<br>
+swap should preserve the selected response. This distinction catches a quiet<br>
+failure in which a neutral judge supplies correct judgments but preprocessing<br>
+turns half of them into incorrect training labels.</p>
+<p dir="auto">The judge-facing display contains the rubric, question and A/B answer texts,<br>
+without checkpoint names or reviewed labels. Blinding removes one source of<br>
+influence; it does not establish neutrality. Answer style can reveal its origin,<br>
+and untrusted text inside an answer can ask the judge to ignore the rubric.<br>
+Preserve the exact displayed object and its hash, judge/revision, rubric/hash,<br>
+settings, raw verdict, parser version and every failure. A strict schema rejects<br>
+contradictory or malformed outputs rather than guessing the intended winner.<br>
+These collection concerns complement the discussion in the pinned<br>
+<a href="https://github.com/natolambert/rlhf-book/blob/eecc49e1e1daf1be670d7242eb090240b5bb0f04/book/chapters/11-preference-data.md">RLHF Book preference-data chapter</a>.<br>
+The implementation and fixture here are independently written course material.</p>
+<p dir="auto">Use separate outcomes for left preference, right preference, tie, abstention<br>
+and invalid observation. A tie says the answers are equally acceptable under<br>
+the rubric. Abstention says the judge cannot assess them. An invalid observation<br>
+says collection or parsing failed. None is automatically the same as a binary<br>
+target of one half. Report every category, then state the subset eligible for<br>
+reward training. Otherwise, a judge that declines hard cases may appear accurate<br>
+merely because its decisive denominator shrinks.</p>
+<p dir="auto">Ratings and rankings also need an explicit conversion. Equal observed ordinal<br>
+ratings may become a tie; missing ratings become an abstention. A score gap of<br>
+four on a five-point scale does not justify a Bradley–Terry logit of four: the<br>
+scale has not established equal utility spacing or calibrated odds. A ranking<br>
+of three answers yields three related comparisons, not three new independent<br>
+questions. Retain raw ratings or ordered tie groups beside the derived pairs<br>
+and record the conversion version.</p>
+<h2 dir="auto">10.11 Audit the judge before trusting the labels</h2>
+<p dir="auto">An order audit presents the same pair in both directions and compares the<br>
+canonical outcomes. A repeat audit holds the pair and order fixed while<br>
+collecting another judgment. A verbosity intervention changes redundant wording<br>
+without changing the intended substantive answer. An injection intervention<br>
+adds untrusted instructions inside a candidate. Keep matched baseline/variant<br>
+identities so a change in judgment can be distinguished from a changed question.<br>
+Independently review whether the intervention actually preserves the rubric<br>
+label; an intended nuisance can become substantive under another objective.</p>
+<p dir="auto">No single check is enough. A judge can select the same answer in both orders,<br>
+yet prefer whichever answer is longer. It can be stable across repeats, yet<br>
+obey an injected instruction every time. First-position choice, canonical order<br>
+consistency, repeat disagreement and matched nuisance sensitivity answer<br>
+different questions. Show their numerators and denominators, along with<br>
+agreement against independent reviewed labels. Agreement does not prove the<br>
+reviewer is correct, and agreement between two judges sharing a shortcut does<br>
+not remove the shortcut.</p>
+<p dir="auto">The <a href="../../notebooks/day-15/03_preference_collection_and_judges.ipynb">offline collection notebook</a><br>
+makes those distinctions visible. Eight original authored base comparisons<br>
+cover six source groups. Three turns share one story source. Verbosity and<br>
+injection variants produce twenty-four pairs; five deterministic simulated<br>
+judges each supply two repeats in both orders. Four separately identified<br>
+malformed/transport controls bring the retained total to 484 observations.<br>
+Reference labels are authored separately from the toy judge rules; they are<br>
+not independent human feedback. Human, AI, authored and simulated provenance<br>
+remain distinct in the data contract and report.</p>
+<p dir="auto">In the <a href="../../experiments/reports/2026-10-04-preference-audit.md">measured CPU report</a>,<br>
+the first-slot rule has first-position choice rate 1 but canonical order<br>
+consistency 0.25. Ties and abstentions explain why consistency is not zero.<br>
+The longer-answer rule has order consistency 1, yet changes its outcome on<br>
+37.5% of matched verbosity observations. The injection-sensitive rule also<br>
+passes order consistency, while changing on 37.5% of matched injection<br>
+observations. The repeat-unstable rule disagrees on 75% of paired repeats.<br>
+These are deliberately constructed simulations, not measured failure rates<br>
+of a live language-model judge. A transparent keyword rule supplies a perfect<br>
+positive control on this narrow fixture, not a credible general evaluator.</p>
+<h2 dir="auto">10.12 Source weighting is part of the objective</h2>
+<p dir="auto">Group conversational siblings, repeated comparisons, swapped displays and<br>
+perturbations by their original source prompt. Assign the group to a split<br>
+before generating its pairs. Changing a turn's row ID or inventing a new source<br>
+ID does not make it independent of its conversation. The audit rejects source<br>
+or task-family split collisions, cross-source conversation siblings, inconsistent<br>
+candidate content IDs and duplicate comparison records. Near-duplicate source<br>
+discovery still needs its own declared rule; these exact identity checks are<br>
+not a semantic contamination detector.</p>
+<p dir="auto">If source <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$s$</math-renderer> supplies <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$n_s$</math-renderer> training pairs and the intended population weights<br>
+each source equally, one suitable objective is</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+L=\frac{1}{S}\sum_{s=1}^{S}\frac{1}{n_s}
+\sum_{j=1}^{n_s}L_{s,j}.
+$$</math-renderer></p>
+<p dir="auto">Each source contributes total weight one before the final normalization. Our<br>
+box-story source supplies nine pair rows after nuisance expansion, versus three<br>
+for each one-turn source. Per-pair weights 1/9 and 1/3 preserve equal source<br>
+influence. Equal-pair weighting instead makes the box source three times as<br>
+influential. Repeated judge observations require another explicit aggregation<br>
+choice; they cannot silently add more independent questions.</p>
+<p dir="auto">The notebook's authored demonstration yields row-weighted outcome agreement 0.5<br>
+but source-balanced agreement 1/3 on the same records. Neither number is the<br>
+uniquely correct objective: a product may deliberately prefer a traffic-weighted<br>
+population. The obligation is to declare the population and weighting, not to<br>
+let the number of candidates choose it accidentally. This returns us to<br>
+Chapter 7's contract: evaluation and training metrics must name what is counted.</p>
+<h2 dir="auto">10.13 Learning a reward from token sequences</h2>
+<p dir="auto">The known-feature shortcut experiment made the confound readable. A text reward<br>
+instead learns contextual states and reads one scalar from a chosen endpoint:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+H=f_\phi(x,y),\qquad
+e=\max{t:m_t=1},\qquad
+r_\phi(x,y)=w^\top H_e+b.
+$$</math-renderer></p>
+<p dir="auto">Here <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$m_t$</math-renderer> marks valid tokens, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$H$</math-renderer> has shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[n,24]$</math-renderer>, and a batch has ID shape<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[B,n]$</math-renderer>, hidden-state shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[B,n,24]$</math-renderer> and score shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[B]$</math-renderer>. Both answers share<br>
+the decoder and scalar head, so preference gradients reach the whole backbone.<br>
+The <a href="../../src/dongxi_llms/text_reward_lab.py">canonical text reward</a> reads:</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-k">def</span> <span class="pl-en">token_scores</span>(<span class="pl-s1">self</span>, <span class="pl-s1">ids</span>, <span class="pl-s1">mask</span>):
+    <span class="pl-k">return</span> <span class="pl-s1">self</span>.<span class="pl-c1">head</span>(<span class="pl-s1">self</span>.<span class="pl-c1">hidden</span>(<span class="pl-s1">ids</span>, <span class="pl-s1">mask</span>)).<span class="pl-c1">squeeze</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>)
+
+<span class="pl-k">def</span> <span class="pl-en">forward</span>(<span class="pl-s1">self</span>, <span class="pl-s1">ids</span>, <span class="pl-s1">mask</span>):
+    <span class="pl-s1">scores</span> <span class="pl-c1">=</span> <span class="pl-s1">self</span>.<span class="pl-c1">token_scores</span>(<span class="pl-s1">ids</span>, <span class="pl-s1">mask</span>)
+    <span class="pl-k">return</span> <span class="pl-s1">scores</span>.<span class="pl-c1">gather</span>(<span class="pl-c1">1</span>, <span class="pl-en">last_valid_indices</span>(<span class="pl-s1">mask</span>)[:, <span class="pl-c1">None</span>]).<span class="pl-c1">squeeze</span>(<span class="pl-c1">1</span>)</pre></div>
+<p dir="auto"><code class="notranslate">last_valid_indices</code> selects the maximum valid array position and rejects an<br>
+all-padding row. <code class="notranslate">mask.sum(-1)-1</code> works for right padding but fails for left<br>
+padding. Valid-token position IDs and zero padded-query contributions preserve<br>
+left/right parity and finite gradients. EOS is the declared endpoint here;<br>
+a no-EOS variant scores the last answer token. Earlier words still receive<br>
+gradients through the endpoint's causal context.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-04-text-reward.md">three-seed experiment</a><br>
+fits twelve original color-comparison groups. All seeds rank the four ordinary<br>
+held-out matched pairs correctly, yet “box” and “book” both become <code class="notranslate">&lt;unk&gt;</code>:<br>
+all four test encodings duplicate calibration inputs. Training/test encodings<br>
+remain distinct, but this apparent success cannot establish independent<br>
+calibration generalization. Adding headings yields ranking accuracies<br>
+0.5, 1.0, 0.5; making wrong answers longer also exposes a failure. Formatting<br>
+changes can shift scores even when substance is unchanged.</p>
+<p dir="auto">Calibration is a different measurement. A frozen temperature grid uses only<br>
+four calibration sources; held-out NLL, Brier and counted reliability bins<br>
+expose confidence. Temperature can change probabilities without repairing a<br>
+ranking inversion. Authored tie targets use probability one half, whose expected<br>
+Bernoulli Brier minimum is one quarter. These are synthetic targets, not measured<br>
+human preference frequencies or an explicit tie model.</p>
+<h2 dir="auto">10.14 Outcome labels and process labels supervise different questions</h2>
+<p dir="auto">Consider “Compute 2+3.” A trace can write the false equality “2+3=6,” then<br>
+give the correct final answer 5. Another can write the valid equality “2+3=5,”<br>
+then give the wrong final answer 6. A terminal correctness label cannot identify<br>
+which intermediate equation was valid. A local step-validity label cannot<br>
+establish that the eventual conclusion is correct. Both crossed cases are<br>
+original records in the text fixture rather than merely hypothetical caveats.</p>
+<p dir="auto">The outcome microscope predicts a binary target from the final EOS state.<br>
+The process microscope predicts a separate binary target at each explicit<br>
+step marker. Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathcal B$</math-renderer> be the declared supervised boundary positions,<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a_b\in{0,1}$</math-renderer> their authored validity labels and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$s_b$</math-renderer> the scalar logits:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+L_{\mathrm{step}}=-\frac{1}{|\mathcal B|}
+\sum_{b\in\mathcal B}
+\left[a_b\log\sigma(s_b)+(1-a_b)\log(1-\sigma(s_b))\right].
+$$</math-renderer></p>
+<p dir="auto">Implement this with stable binary cross-entropy on logits. Unlabeled tokens,<br>
+padding and the final-answer position do not receive a step target. When<br>
+sources contribute different numbers of traces or boundaries, declare how<br>
+those losses are weighted; the reference averages within a source, then across<br>
+sources. The terminal and process models are trained separately so their<br>
+different contracts do not disappear behind one combined scalar.</p>
+<p dir="auto">Each step state is causal. Changing only the later final answer leaves an<br>
+earlier step score unchanged in the same forward pass. Training on its local<br>
+step label can still update the shared encoder. That label is not a value<br>
+target: a critic in Chapter 12 estimates expected future reward under a policy,<br>
+whereas this process label judges a displayed equality under an annotation<br>
+rubric. A useful-looking scalar does not make those meanings interchangeable.</p>
+<p dir="auto">One-step/two-step traces include all four terminal/local correctness combinations. Yet the held-out outcome and step<br>
+classifiers each reach only 0.5 accuracy for all three seeds. The report exposes<br>
+a concrete reason: numbers 7 and 8 are absent from the training vocabulary and<br>
+both become the same unknown ID. Opposite labels can therefore have identical<br>
+encoded inputs. No classifier can distinguish those records from that<br>
+representation alone. High confidence in those failed predictions is retained,<br>
+not explained away as successful reasoning. The character intervention below tests this diagnosis while retaining the failed run.</p>
+<h2 dir="auto">10.15 Freeze the reward before optimizing a policy</h2>
+<p dir="auto">Freeze the predeclared seed 1601 word-token reward regardless of which seed<br>
+looks best on a nuisance slice. The <a href="../../fixtures/text-reward/frozen-preference-seed1601.json">saved numeric export</a><br>
+preserves weights, ordered token meanings, preprocessing, special IDs and the<br>
+EOS/endpoint policy. Equal tensor dimensions alone cannot detect a vocabulary<br>
+permutation. The loader disables reward gradients; exact saved-state score<br>
+equality is measured in the tested environment.</p>
+<p dir="auto">Freezing holds a proxy fixed without making it true. Retain independent factual<br>
+checks and responses rewarded for headings, repetition or other nuisances.<br>
+<a href="../appendices/d-reproduction-and-environments.md#policy-reference-and-pending-rollout-identity">Appendix D</a><br>
+records export/identity boundaries. Neither the known-feature nor the text<br>
+microscope establishes pretrained reward quality.</p>
+<h2 dir="auto">10.16 Preserve information before asking for generalization</h2>
+<p dir="auto">An unknown token can erase a distinction before the neural network has any<br>
+opportunity to learn it. That explains why two differently labeled arithmetic<br>
+traces could have identical word-token inputs; it does not imply that restoring<br>
+the distinction will make the learned rule correct. <strong>Reader prediction:</strong> if distinct digits now receive distinct IDs, must the<br>
+model learn the arithmetic rule?</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-04-text-reward-character.md">character intervention</a><br>
+keeps the original raw fixture, but uses a separately fixed printable ASCII<br>
+alphabet. Spaces and punctuation remain characters. Unsupported input is<br>
+rejected before casefolding, not silently mapped to UNK. SEP, STEP and EOS keep<br>
+their explicit boundary meanings.</p>
+<p dir="auto">Before any fit, the intervention checks exact complete pairs in both candidate<br>
+orders, full prompts, prompt/completion inputs and causal prefixes through<br>
+supervised STEP markers. Different raw source IDs cannot license equal encoded<br>
+inputs across splits. Repeated equal-label prefixes inside one source remain<br>
+related observations. Arbitrary shared short prefixes such as the first letter<br>
+of “Compute” are not contamination; the full supervised context is the unit<br>
+being checked. The character arm has no cross-source/split collisions among 55<br>
+baseline, nuisance and trace records. Exact-input separation still does not<br>
+establish semantic independence or a large evaluation population.</p>
+<p dir="auto">The same real decoder/head design now processes character sequences. Its<br>
+100-entry alphabet and frozen 160-position bound give 11,185 parameters;<br>
+training remains float64 CPU, with 120 preference updates and 80 each for<br>
+terminal/process models. Seeds 1611, 1612 and 1613 are fixed in advance, and<br>
+seed 1611 is exported before its test evaluation. The word arm remains intact; differing sequence lengths and position tables<br>
+prevent an equal-compute tokenizer-superiority claim.</p>
+<p dir="auto">All three training objectives fit. Nevertheless, ordinary held-out ranking is<br>
+only 0.5 for every seed. Terminal accuracy is 0, 0.5, 0; local-step accuracy is<br>
+0, 0.5, 0.5. The network now receives distinct number IDs, so the earlier<br>
+unknown-token collision cannot explain these new failures. Preserved<br>
+information was necessary, not sufficient, for generalization. High training<br>
+accuracy and nonzero backbone/head gradients establish learning on those<br>
+examples, not the desired abstract rule.</p>
+<p dir="auto">Calibration can now be measured on distinct encoded calibration/test inputs.<br>
+Every seed chooses temperature 4 from the predeclared grid using calibration<br>
+NLL alone. For seed 1611, held-out NLL falls from 6.295234 to 1.614901 and<br>
+Brier from 0.499997 to 0.460377, but ranking stays 0.5. Temperature softens<br>
+overconfidence; it cannot reverse a learned ordering. With only four source<br>
+questions, counted bins matter more than the apparent smoothness of a plot.<br>
+These authored labels are not calibrated human preference frequencies.</p>
+<p dir="auto">The <a href="../../fixtures/text-reward/frozen-char-preference-seed1611.json">frozen character export</a><br>
+has its own complete numeric state, protocol, source, encoding and endpoint<br>
+identity. Exact reload compares the same saved state in the same environment.<br>
+Fresh retraining under a newer Torch version is a different reproducibility<br>
+question; the notebook retains the first failed portability assertion and<br>
+prints that difference rather than rewriting historical weights. A linked<br>
+policy experiment must state which frozen proxy it optimizes. Separate<br>
+balanced/confounded fits need their own fixture, selection rule and exports,<br>
+plus independent factual measurements. Freezing an imperfect reward does not<br>
+make its score true.</p>
+<h3 dir="auto">A reward interface belongs in the comparison</h3>
+<p dir="auto">Assignment E separates a learned preference score from the task's independent checker. The existing reward-model microscopes show that a model can rank familiar answers while depending on length, style or another shortcut. Carry that result into the common comparison: report the reward's input representation, labels, frozen version and out-of-distribution probes before treating policy reward as task quality.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb">reward-signal audit</a> supplies a complementary example. Two instruments can grade the same retained text differently because their answer-extraction contracts differ. That disagreement can be understood without fitting another reward model. Preserve the emitted answer and both reason codes, then state which instrument defines the new task.</p>
+<p dir="auto">Use the current reward-model lab as Assignment E's preference branch and compare its independent task metric with the policy's reward. A rising score can support optimization progress for that frozen scorer while leaving the intended quality claim unresolved. This distinction lets the reader connect preference judgments, verifiable answers and optimization without treating their numerical scores as interchangeable.</p>
+<h2 dir="auto">10.17 Companion route and exercises</h2>
+<p dir="auto">Run <a href="../../notebooks/day-15/01_bradley_terry_margin.ipynb">Day 15's margin microscope</a>,<br>
+<a href="../../notebooks/day-15/02_disagreement_and_calibration.ipynb">Day 15's disagreement/calibration lab</a>,<br>
+<a href="../../notebooks/day-15/03_preference_collection_and_judges.ipynb">Day 15's collection/judge audit</a>,<br>
+<a href="../../notebooks/day-16/01_reward_model_bias_audit.ipynb">Day 16's shortcut audit</a>,<br>
+and <a href="../../notebooks/day-16/03_text_reward_and_process_labels.ipynb">Day 16's text/outcome/process lesson</a>.<br>
+The <a href="../labs/10-preferences-and-reward-models.md">lab guide</a> records the machine<br>
+route and reproduction command; <a href="../solutions/10-preferences-and-reward-models.md">worked solutions</a><br>
+follow each exercise. Use the <a href="../../experiments/specs/2026-10-04-preference-policy-cpu.md">specification</a><br>
+and <a href="../../experiments/reports/2026-10-04-preference-policy-cpu.md">measured report</a><br>
+to distinguish predictions from results.</p>
+<ol dir="auto">
+<li>Derive the score gradients for a soft preference target and explain their signs.</li>
+<li>What does adding a prompt-specific constant to all rewards change? What does multiplying rewards by two change?</li>
+<li>Why can a well-trained preference model have nonzero minimum loss on repeated judgments?</li>
+<li>Construct cyclic preferences and explain the restriction imposed by one score per answer.</li>
+<li>Design a split that prevents a prompt with many candidate pairs from leaking into the development set.</li>
+<li>Explain how two models can have identical pair accuracy and different Brier scores.</li>
+<li>Why should calibration temperature be fitted on a different split from final evaluation?</li>
+<li>Diagnose a reward model that likes longer incorrect answers. What would distinguish intended style from a shortcut?</li>
+<li>Which hidden state should a padded transformer reward head score? Explain an off-by-one failure.</li>
+<li>Why can optimization reveal reward failures absent from a fixed held-out pair set?</li>
+<li>When an answer moves from A to B, what must change in a raw verdict and what must stay fixed in the selected candidate identity?</li>
+<li>Why can a judge pass an order audit yet fail a verbosity or instruction-injection audit?</li>
+<li>A source yields nine pair rows while another yields three. Compare equal-pair and equal-source objectives, and explain how repeats affect the evidence unit.</li>
+<li>How should equal ratings, missing ratings, contradictory verdicts and transport failures differ in a preference collection contract?</li>
+<li>Why does <code class="notranslate">mask.sum(-1)-1</code> fail with left padding, and what positional convention preserves the score of unchanged text?</li>
+<li>Construct a correct final answer with an invalid step and a wrong final answer with a valid step. Where should each supervision target be placed?</li>
+<li>Why is a process-validity target different from a critic's expected future-return target?</li>
+<li>If different numbers become the same unknown token, what can and cannot be learned about their held-out labels?</li>
+<li>Which identities must accompany a frozen scalar reward head, and why must its checkpoint be chosen before looking at nuisance-test performance?</li>
+<li>Why can raw source groups be disjoint while actual model inputs collide? What does a whole-pair/swap/causal-prefix audit add, and what does it still not prove?</li>
+<li>If distinct characters remove unknown-token collisions but heldout predictions still fail, what can you conclude about representation versus generalization?</li>
+<li>Why can calibration lower NLL without improving ranking? Distinguish same-state reload equality from identical retraining across package versions.</li>
+</ol>
+<p dir="auto">The next chapter retains the pairwise probability model, but replaces the scalar<br>
+reward with a policy's change in log-probability relative to a frozen reference.<br>
+Understanding the score difference, its gauge, and its evidence limits makes<br>
+that transformation much easier to interpret.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-15</h1>
+<h1 dir="auto">11. Direct Preference Optimization</h1>
+<p dir="auto">A preference tells us that one answer is better than another. The previous<br>
+chapter turned this judgment into a scalar reward model, then warned that<br>
+optimizing the scalar can discover its mistakes. Can we use the comparison to<br>
+train the language policy directly? Direct Preference Optimization, or DPO,<br>
+answers that question through a change of variables. Its simplicity becomes<br>
+useful only when we understand what is being compared, which reference is held<br>
+fixed, and what the loss does not guarantee.</p>
+<p dir="auto">This chapter builds on sequence likelihood, Bradley–Terry modeling, and<br>
+supervised fine-tuning. Days 17 and 18 form one route: derive the objective,<br>
+audit its implementation, then compare policies using a frozen evaluation<br>
+contract. The complete derivation below is an independently worked finite-space<br>
+example of the construction introduced in<br>
+<a href="https://arxiv.org/abs/2305.18290" rel="nofollow">Rafailov and colleagues' DPO paper</a>.</p>
+<p dir="auto">The interesting puzzle is stronger than “does the chosen answer beat the<br>
+rejected one?” Suppose both become less likely and a third answer gains their<br>
+probability mass. Could the pairwise loss still improve? Keep this question in<br>
+view while deriving the objective: the answer will tell us what DPO measures<br>
+and why free-generation evaluation remains necessary.</p>
+<h2 dir="auto">11.1 The reference is a distribution over possible continuations</h2>
+<p dir="auto">Fix prompt <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$x$</math-renderer> and let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\pi_{\mathrm{ref}}(y\mid x)$</math-renderer> be a reference policy over<br>
+complete responses. It is commonly a supervised checkpoint at the start of<br>
+preference training. A policy <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\pi$</math-renderer> may move probability toward higher-reward<br>
+answers, but a movement penalty expresses a preference for staying near that<br>
+reference:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+J(\pi)=\sum_y\pi(y\mid x)r(x,y)
+-\beta\sum_y\pi(y\mid x)\log\frac{\pi(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)},
+\qquad \beta&gt;0.
+$$</math-renderer></p>
+<p dir="auto">The second term is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta,\mathrm{KL}(\pi\Vert\pi_{\mathrm{ref}})$</math-renderer>. Its<br>
+direction matters: samples would come from the current policy, and their log<br>
+ratio is measured against the reference. The finite derivation assumes the<br>
+reference is positive on every candidate under discussion and rewards are<br>
+finite. A policy placing mass outside the reference support incurs infinite<br>
+forward KL. Real softmax models have positive theoretical token probabilities,<br>
+but truncation, top-$k$ sampling, and numerical underflow can create a different<br>
+effective support. Do not quietly transfer a theorem about one distribution<br>
+to another sampler.</p>
+<p dir="auto">Here <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r(x,y)$</math-renderer> is the fixed reward in the finite derivation. A trained reward<br>
+model is written <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_\phi(x,y)$</math-renderer> elsewhere; DPO below eliminates the explicit<br>
+reward through policy log ratios rather than fitting that model.</p>
+<p dir="auto">This is an objective over response probabilities. It does not mean that two<br>
+neural checkpoints have nearby weights, nor that a small KL implies every<br>
+rare behavior is preserved. A reference is a behavioral anchor under a specified<br>
+prompt population; that population belongs in the experiment contract.</p>
+<p dir="auto">Chapter 3 introduced KL as the mismatch between two distributions. Here its<br>
+coordinates are complete responses: the expectation weights a log ratio by<br>
+the current policy's probability. Moving mass to an answer that was unlikely<br>
+under the reference is costly in this direction. The anchor therefore expresses<br>
+which behavioral distribution the reward must justify moving away from.<br>
+It is different from the <strong>old policy</strong> used later to account for collected<br>
+samples: an old policy can refresh after collection, while this reference<br>
+remains fixed throughout the declared preference-training objective.</p>
+<h2 dir="auto">11.2 Solve the finite optimization problem</h2>
+<p dir="auto">Use a Lagrange multiplier <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda$</math-renderer> for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\sum_y\pi_y=1$</math-renderer>:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\mathcal{F}=\sum_y\pi_y r_y
+-\beta\sum_y\pi_y\log(\pi_y/\pi_{\mathrm{ref},y})
++\lambda\left(\sum_y\pi_y-1\right).
+$$</math-renderer></p>
+<p dir="auto">Differentiating with respect to a positive probability gives</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+r_y-\beta\left(\log\frac{\pi_y}{\pi_{\mathrm{ref},y}}+1\right)+\lambda=0.
+$$</math-renderer></p>
+<p dir="auto">First isolate the log ratio:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\log\frac{\pi_y}{\pi_{\mathrm{ref},y}}
+=\frac{r_y}{\beta}+\frac{\lambda}{\beta}-1.
+$$</math-renderer></p>
+<p dir="auto">Exponentiating gives<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\pi_y=C,\pi_{\mathrm{ref},y}\exp(r_y/\beta)$</math-renderer>, where<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$C=\exp(\lambda/\beta-1)$</math-renderer> is shared by all responses to this prompt.<br>
+The sum-to-one constraint now determines that constant:<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$1=C\sum_y\pi_{\mathrm{ref},y}\exp(r_y/\beta)$</math-renderer>.<br>
+Call that sum the <strong>partition function</strong> <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$Z(x)$</math-renderer>; then <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$C=1/Z(x)$</math-renderer>.<br>
+The multiplier enforces the competition for one unit of probability mass:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\pi^*(y\mid x)=\frac{\pi_{\mathrm{ref}}(y\mid x)\exp(r(x,y)/\beta)}{Z(x)},
+\qquad Z(x)=\sum_y\pi_{\mathrm{ref}}(y\mid x)\exp(r(x,y)/\beta).
+$$</math-renderer></p>
+<p dir="auto">The optimum exponentially tilts the reference toward reward. Compute it as<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathrm{softmax}(\log\pi_{\mathrm{ref}}+r/\beta)$</math-renderer> for stability. With fixed<br>
+reward, large <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta$</math-renderer> resists movement; small <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta$</math-renderer> concentrates mass more<br>
+strongly. Adding a prompt-dependent constant to rewards multiplies numerator<br>
+and partition function by the same factor, so the policy is unchanged. This<br>
+is Chapter 10's reward gauge appearing inside an optimization problem.</p>
+<h3 dir="auto">Three answers make the anchor visible</h3>
+<p dir="auto">Use <a href="../../notebooks/day-17/01_kl_regularized_optimum.ipynb">Day 17's existing categorical fixture</a>:<br>
+reference <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$(0.6,0.3,0.1)$</math-renderer>, rewards <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$(0,0.5,1)$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta=0.5$</math-renderer>.<br>
+The computation is a reward-weighted reallocation of a fixed total:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Complete answer</th>
+<th align="right">Reference probability</th>
+<th align="right">Reward</th>
+<th align="right">Reference × exponential tilt</th>
+<th align="right">Normalized optimum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td align="right">0.6</td>
+<td align="right">0</td>
+<td align="right">0.600000</td>
+<td align="right">0.278501</td>
+</tr>
+<tr>
+<td>1</td>
+<td align="right">0.3</td>
+<td align="right">0.5</td>
+<td align="right">0.815485</td>
+<td align="right">0.378522</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="right">0.1</td>
+<td align="right">1</td>
+<td align="right">0.738906</td>
+<td align="right">0.342977</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The unnormalized weights sum to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$Z=2.154390$</math-renderer>. Dividing by that same number<br>
+preserves their ratios and makes their probabilities sum to one. Answer 2 has<br>
+the largest reward but still less mass than answer 1: its smaller reference<br>
+probability matters. This is precisely what anchoring adds to reward seeking.</p>
+<p dir="auto"><strong>Controlled change:</strong> double <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta$</math-renderer> to one, holding the reward and reference<br>
+fixed. Predict whether the high-reward answer gains more mass.</p>
+<p dir="auto"><strong>Reference reasoning:</strong> the tilt becomes weaker; the optimum is now<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$(0.439096,0.361973,0.198931)$</math-renderer>, closer to the reference. The existing<br>
+<a href="../../src/dongxi_llms/dpo_lab.py"><code class="notranslate">optimal_policy</code> helper</a> computes both<br>
+cases as <code class="notranslate">softmax(reference.log() + reward / beta)</code>. Adding fifty to all<br>
+rewards instead leaves the normalized result unchanged because the shared<br>
+factor cancels. The notebook checks that cancellation and the constant<br>
+stationarity derivative directly.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-11/day-17-01_kl_regularized_optimum-01.png"><img src="../../notebooks/figures/chapter-11/day-17-01_kl_regularized_optimum-01.png" alt="Optimal probabilities of three complete answers against beta for a fixed reference and fixed rewards" style="max-width: 100%;"></a></p>
+<p dir="auto">Follow each answer's curve as beta changes; the horizontal axis is logarithmic.<br>
+The middle-reward answer can first gain and then lose mass because both the<br>
+reference and the competing highest-reward answer matter. This is an exact<br>
+finite optimization plot generated by the notebook's beta sweep, not a neural<br>
+training trajectory. Its beta comparison holds reward fixed; the DPO gradient<br>
+comparison in §11.4 holds a preference example fixed.</p>
+<p dir="auto">The solution is exact for unrestricted finite distributions. A transformer<br>
+shares parameters across prompts and may not represent every independently<br>
+specified optimum. Optimization, preference coverage, and finite sample noise<br>
+are further limitations. The closed form is the reason for the loss design,<br>
+not a certificate that a short neural training run reaches the ideal policy.</p>
+<h2 dir="auto">11.3 Replace the latent reward with policy log ratios</h2>
+<p dir="auto">Take logarithms of the optimum:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+r(x,y)=\beta\log\frac{\pi^*(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)}
++\beta\log Z(x).
+$$</math-renderer></p>
+<p dir="auto">For two responses to the same prompt, the <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\log Z(x)$</math-renderer> terms cancel. Define<br>
+the policy's reference-relative pair margin</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+m_\theta=\beta\left[
+\log\pi_\theta(y_w\mid x)-\log\pi_{\mathrm{ref}}(y_w\mid x)
+-\log\pi_\theta(y_l\mid x)+\log\pi_{\mathrm{ref}}(y_l\mid x)
+\right].
+$$</math-renderer></p>
+<p dir="auto">Substitute this into the Bradley–Terry preference likelihood. For an ordered<br>
+winning pair,</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+L_{\text{DPO}}=\mathrm{softplus}(-m_\theta).
+$$</math-renderer></p>
+<p dir="auto">For an explicit soft preference target <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q$</math-renderer>, use<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathrm{softplus}(m_\theta)-q m_\theta$</math-renderer>. The model is now a language policy,<br>
+but the classification target is still a preference. Offline DPO needs the<br>
+recorded pair's likelihoods; it does not require generating a fresh response<br>
+for every update. That operational advantage does not remove biases inherited<br>
+from the recorded comparisons.</p>
+<p dir="auto">The reference-relative term asks “How has the policy changed the relative odds<br>
+since initialization?” It does not simply ask whether the chosen completion<br>
+is more probable than the rejected completion. An answer initially unlikely<br>
+under the reference can receive a favorable implicit reward after a modest<br>
+probability increase while still remaining unlikely in absolute terms.</p>
+<p dir="auto">This explains the computational shortcut. For each recorded pair, score the<br>
+chosen and rejected complete responses under the trainable policy and fixed<br>
+reference. Their four log probabilities supply a classification margin; no<br>
+separately fitted reward model or fresh policy rollout is needed for that<br>
+update. The eliminated object is the explicit reward model, rather than the<br>
+judgment process. DPO still learns from the rubric, noise and coverage of the<br>
+recorded comparisons. A reward-model-plus-policy route can score newly sampled<br>
+responses, but adds the problem of reward extrapolation developed in Chapter 10.</p>
+<h2 dir="auto">11.4 The gradient and the meaning of beta</h2>
+<p dir="auto">Write <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$c=\log\pi_\theta(y_w\mid x)$</math-renderer> and<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$l=\log\pi_\theta(y_l\mid x)$</math-renderer>. With a frozen reference,</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\frac{\partial L}{\partial c}=\beta(\sigma(m_\theta)-q),\qquad
+\frac{\partial L}{\partial l}=-\beta(\sigma(m_\theta)-q).
+$$</math-renderer></p>
+<p dir="auto">At initialization <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\pi_\theta=\pi_{\mathrm{ref}}$</math-renderer>, every relative margin is<br>
+zero. For a hard winning pair the derivatives are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$-\beta/2$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta/2$</math-renderer>.<br>
+At this point larger <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta$</math-renderer> gives a larger local gradient for fixed learning<br>
+rate. Yet in the fixed-reward optimum larger <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta$</math-renderer> means stronger restraint.<br>
+These statements concern different comparisons and are compatible.</p>
+<p dir="auto">For a fixed noisy target <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q$</math-renderer>, the optimal classifier margin is<br>
+$m^<em>=\log(q/(1-q))$. The corresponding change in pair log odds is $m^</em>/\beta$.<br>
+Thus changing beta alters both gradient scale and the policy displacement<br>
+needed to fit the same preference probability. Report beta with learning rate,<br>
+update count, and data noise. It is not inference temperature: sampling<br>
+temperature modifies decoding after training, while beta defines the training<br>
+objective relative to a reference.</p>
+<p dir="auto">The full parameter gradient combines both answer branches through shared<br>
+transformer weights. Just as in Chapter 10, independent scalar derivatives do<br>
+not imply independent changes in every sequence probability. DPO can increase<br>
+the pair ratio while decreasing <em>both</em> answers' absolute likelihoods. Probability<br>
+mass can move toward a third continuation absent from the comparison.</p>
+<h3 dir="auto">A better pair can be a worse source of the chosen answer</h3>
+<p dir="auto">Return to the opening puzzle using the normalized distributions from worked<br>
+exercise 5. Freeze the first distribution as the reference and set <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta=0.5$</math-renderer>:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Constructed policy</th>
+<th align="right">Chosen probability</th>
+<th align="right">Rejected probability</th>
+<th align="right">Third-answer probability</th>
+<th align="right">Chosen/rejected odds</th>
+<th align="right">DPO margin</th>
+<th align="right">Hard-pair loss</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Initial/reference</td>
+<td align="right">0.20</td>
+<td align="right">0.10</td>
+<td align="right">0.70</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0.693147</td>
+</tr>
+<tr>
+<td>Changed</td>
+<td align="right">0.10</td>
+<td align="right">0.01</td>
+<td align="right">0.89</td>
+<td align="right">10</td>
+<td align="right">0.804719</td>
+<td align="right">0.369640</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The relative odds improve fivefold, giving margin <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$0.5\log(10/2)=0.804719$</math-renderer>.<br>
+The chosen answer is now only half as likely, yet the pair loss is lower.<br>
+The rejected answer lost proportionally more mass. These are deliberately<br>
+constructed probability vectors, not a claimed optimizer path or a new model<br>
+result. They show that the loss itself cannot exclude this behavior.</p>
+<p dir="auto"><strong>Reader prediction:</strong> hold the third answer's mass fixed instead. Could the<br>
+chosen answer decrease while its odds over the rejected answer increase?</p>
+<p dir="auto"><strong>Reference reasoning:</strong> with their combined mass fixed, increasing the chosen<br>
+share relative to the rejected one must increase its absolute probability.<br>
+The extra available outcomes make the counterexample possible. A language<br>
+model has many such outcomes, and one parameter can influence both compared<br>
+responses and their alternatives. The local score derivatives above give<br>
+the loss's pressures; their composition with the network determines movement.</p>
+<p dir="auto">A frozen reference supplies a fixed origin for the log-odds change. It does<br>
+not put an upper bound on the fitted margin: a hard separable pair can approach<br>
+zero rejected probability and an arbitrarily large log-odds ratio. Response<br>
+probabilities remain bounded between zero and one. The KL-regularized finite<br>
+reward optimum motivated the parameterization, but fitting noisy or incomplete<br>
+pair data is not a per-step guarantee of that optimum's restraint.</p>
+<h2 dir="auto">11.5 Sequence likelihood is a sum with a boundary</h2>
+<p dir="auto">An autoregressive completion has</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\log\pi_\theta(y\mid x)
+=\sum_{t=1}^{|y|}\log\pi_\theta(y_t\mid x,y_{&lt;t}).
+$$</math-renderer></p>
+<p dir="auto">Include a termination token under the declared template when it belongs to the<br>
+response. Otherwise a model can assign high prefix likelihood without learning<br>
+when to stop. Do not sum prompt likelihood into the DPO response score. The<br>
+prompt supplies context and can receive gradients through attention, but its<br>
+tokens are not the completion being compared.</p>
+<p dir="auto">For a batch, predictive logits have shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[B,n,V]$</math-renderer>, aligned labels and the<br>
+completion mask have shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[B,n]$</math-renderer>, and the gathered token log-probabilities<br>
+have shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[B,n]$</math-renderer>. Summing the masked values produces <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[B]$</math-renderer> sequence scores.<br>
+Chosen and rejected branches each produce one vector. The DPO loss reduces the<br>
+pair vector only after these sums.</p>
+<p dir="auto">Perform causal shifting exactly once: run the model on <code class="notranslate">input_ids[:, :-1]</code>,<br>
+score <code class="notranslate">input_ids[:, 1:]</code>, and shift the completion mask with the target tokens.<br>
+The first response token is predicted at the final prompt position. A mask<br>
+shifted by the input positions instead of target positions drops that token and<br>
+may accidentally score another boundary. Padding masks affect attention;<br>
+completion masks affect which targets enter the score. They have different jobs.</p>
+<p dir="auto">Use <code class="notranslate">log_softmax</code>, gather safe labels, then mask. Labels set to <code class="notranslate">-100</code> cannot<br>
+be gathered directly; replace unscored labels by a valid temporary index before<br>
+gathering. Reject an empty scored completion instead of quietly assigning zero<br>
+likelihood. Every branch must use the same tokenizer, template, EOS convention,<br>
+precision policy, and response boundary for policy and reference.</p>
+<h2 dir="auto">11.6 Length normalization changes the model</h2>
+<p dir="auto">Long sequences often have more negative log-probability because they contain<br>
+more terms. Summing is nevertheless the log-likelihood of the full response.<br>
+Dividing by response length gives average token log-probability, which describes<br>
+a different comparison. Replacing sums by averages in the standard derivation<br>
+does not preserve its response distribution interpretation.</p>
+<p dir="auto">This does not mean every length-adjusted preference algorithm is invalid; it<br>
+means an adjustment requires a named objective and a separate argument. First<br>
+audit preference length differences, EOS handling, truncation, and the generation<br>
+length distribution. Compare independent quality slices at matched length as<br>
+well as ordinary prompts. Do not declare a loss-mask or sequence-sum bug to be<br>
+“length debiasing.” The Day 17 heatmap lab exposes prompt, response, and pad<br>
+positions so that this boundary is visible.</p>
+<h2 dir="auto">11.7 A frozen reference is an implementation contract</h2>
+<p dir="auto">Put the reference in evaluation mode, disable gradients, and score it under<br>
+<code class="notranslate">no_grad</code>. Do not update it with the policy optimizer. Disabling dropout matters:<br>
+otherwise two identical checkpoints can produce different log-probabilities at<br>
+initialization because of stochastic layers. Freezing weights alone is not<br>
+evaluation mode, and evaluation mode alone is not freezing gradients.</p>
+<p dir="auto">Reference scores may be cached for a fixed dataset. The cache identity must<br>
+include checkpoint hashes, tokenized sequence hashes, template and tokenizer<br>
+revisions, completion boundaries, dtype, and any normalization convention.<br>
+Changing any of these invalidates the cache. A detached tensor from the current<br>
+policy is not a fixed reference: it prevents one backward path but changes every<br>
+step, producing a different objective.</p>
+<p dir="auto">Reference memory is a real cost: the transparent full-weight path holds a<br>
+policy, the original frozen reference and one policy optimizer. A cached-score<br>
+or adapter-based implementation can reduce that cost only after checking that<br>
+it preserves the response scores and reference identity.</p>
+<p dir="auto">Recovery has the same objective boundary. Copying the restored trained policy<br>
+into the reference changes every reference-relative margin. Retain the original<br>
+reference, optimizer, pair sampler and RNG together with the policy. Restoring<br>
+only weights may produce valid tensors while changing the experiment. Failed<br>
+attempts also remain spent work even when numerical state is rolled back.<br>
+<a href="../appendices/d-reproduction-and-environments.md#policy-reference-and-pending-rollout-identity">Appendix D</a><br>
+separates this principle from snapshot, journal and supervision mechanics.</p>
+<h2 dir="auto">11.8 Controlled experiments and an instructive negative result</h2>
+<p dir="auto">Two CPU experiments answer different questions. The categorical experiment has<br>
+two contexts and three possible complete answers. It uses known soft preferences<br>
+and compares DPO, flipped-label DPO, and chosen-only SFT from the same reference.<br>
+Exact expected reward and reference KL are available because the entire response<br>
+space can be enumerated. An oracle exponential tilt is an analysis benchmark,<br>
+not an extra training label secretly supplied to DPO.</p>
+<p dir="auto">The sequence experiment trains the actual tiny decoder from Chapter 5. Six<br>
+short prompts prefer an answer token called A over B; both branches include<br>
+EOS. A held-out prompt measures <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$P(A\mid x_{\text{heldout}})$</math-renderer> independently of<br>
+the pair loss. It is intentionally a severe simplification: answers are symbolic,<br>
+the prompt set is tiny, and no English capability is being tested.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-04-preference-policy-cpu.md">report</a><br>
+retains the resulting curves, including failures. A favorable pair margin can<br>
+coexist with worse absolute probability of the desired answer. That is a concrete<br>
+reason to evaluate free generation and independent tasks after preference<br>
+training. The chosen-SFT arm provides a useful control, but it sees demonstration<br>
+supervision rather than identical information; equal update count does not make<br>
+the two datasets semantically equivalent.</p>
+<p dir="auto">For a pretrained comparison, preserve the SFT parent, include an untouched<br>
+parent and a chosen-only control, and freeze independent generation panels.<br>
+Match actual draws, not merely seeds. Section 11.8.4 reports the executed<br>
+100-update comparison; the CPU controls above remain evidence about a different<br>
+model and response space. The <a href="../labs/11-direct-preference-optimization.md">lab route</a><br>
+lets you inspect both without treating a larger pair margin as the final verdict.</p>
+<h3 dir="auto">11.8.1 Chosen likelihood and rehearsal: extra objectives, not free repairs</h3>
+<p dir="auto">A preference comparison says which of two recorded responses should win. It<br>
+does not supervise every other response or every other task. To give an absolute<br>
+chosen-likelihood objective a voice, augment the pair loss explicitly:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+L_{\lambda_{\mathrm{SFT}},\gamma}=L_{\text{DPO}}
++\lambda_{\mathrm{SFT}} N_{\text{chosen}}+\gamma N_{\text{rehearsal}},\qquad
+N_{\text{chosen}}=-\frac{\sum_{i=1}^B c_i}{\sum_{i=1}^B n_{w,i}}.
+$$</math-renderer></p>
+<p dir="auto">Here <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$c_i$</math-renderer> is the summed chosen-response log-likelihood, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$n_{w,i}$</math-renderer> counts<br>
+its valid response tokens including EOS, and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$B$</math-renderer> is the number of pairs.<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$N_{\text{rehearsal}}$</math-renderer> is a separate supervised next-token loss on retained<br>
+demonstrations, also normalized by its own valid-token count. <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda_{\mathrm{SFT}}$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\gamma$</math-renderer><br>
+are nonnegative coefficients. This global token mean is not a mean of<br>
+per-response averages; variable response lengths make the distinction matter.<br>
+Neither auxiliary changes the DPO response sums into token averages. The<br>
+companion API names the chosen-NLL coefficient <code class="notranslate">alpha</code>; here it is written<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda_{\mathrm{SFT}}$</math-renderer> to distinguish it from other objective weights.</p>
+<p dir="auto">With hard recorded preferences and frozen references, the direct chosen-score<br>
+derivative is</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\frac{\partial L_{\lambda_{\mathrm{SFT}},\gamma}}{\partial c_i}
+=\frac{\beta}{B}(\sigma(m_i)-1)
+-\frac{\lambda_{\mathrm{SFT}}}{\sum_j n_{w,j}}.
+$$</math-renderer></p>
+<p dir="auto">The extra negative term pushes recorded chosen likelihood upward. Rehearsal<br>
+adds its own parameter gradient; it is not a new direct derivative of this<br>
+pair's score. Through shared embeddings, attention and MLP weights, those<br>
+directions can reinforce or compete. Setting <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda_{\mathrm{SFT}}=0$</math-renderer> recovers ordinary DPO<br>
+<strong>only when <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\gamma$</math-renderer> is also zero</strong>. A positive rehearsal coefficient still<br>
+defines a different objective.</p>
+<p dir="auto">This added pressure is not a correctness guarantee. If the recorded winner is<br>
+wrong, chosen NLL imitates the wrong response. If it is unnecessarily verbose,<br>
+the auxiliary teaches that style too. Rehearsal protects only the supplied<br>
+distribution under its weight and budget; it neither bounds every forgotten<br>
+capability nor ensures transfer to new inputs. These terms change supervision,<br>
+not just numerical stability.</p>
+<p dir="auto">The <a href="../../notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb">retention and preference-control notebook</a><br>
+uses the actual shared decoder and supervised stack, rather than another<br>
+independent logit table. A frozen recipe jointly warms the model on symbolic<br>
+first-slot copying and a separate parity task, then copies that warm state<br>
+into DPO, DPO+chosen NLL, DPO+rehearsal and the combined arm. All three seeds,<br>
+fixed coefficients, final checkpoints and four data conditions are retained:<br>
+clean pairs, fixed label swaps, longer chosen responses, and matched-length<br>
+long responses. The parity pairs never enter preference training, while their<br>
+training demonstrations supply rehearsal. Common boundary tokens are shared;<br>
+the operands and answer alphabets otherwise differ.</p>
+<p dir="auto">The evaluation asks two different questions: can the policy preserve the<br>
+trained parity skill, and can it freely generate the right first-slot response<br>
+for unseen ordered pairs? It consumes its own emitted tokens, not a gold<br>
+continuation, and records EOS, truncation and full canonical completion.<br>
+First-answer correctness is weaker than answer-plus-EOS success. The symbolic<br>
+parity held-out uses previously unseen numeral tokens, so it is a severe input<br>
+novelty slice rather than isolated arithmetic extrapolation. No held-out row<br>
+chooses a coefficient, warm checkpoint or favorable seed.</p>
+<p dir="auto">Inspect absolute chosen and rejected sequence log-likelihood alongside margin;<br>
+then inspect generated rows and the separate-task slice. The<br>
+<a href="../../experiments/specs/2026-10-04-dpo-retention.md">predeclared protocol</a> and<br>
+<a href="../../experiments/reports/2026-10-04-dpo-retention.md">retained evidence</a><br>
+disclose pair tokens, chosen auxiliary supervision and additional rehearsal<br>
+forwards. Chosen NLL reuses the chosen scores: it adds an objective but not a<br>
+new chosen forward. Rehearsal adds different targets and another forward.<br>
+Equal update counts are consequently neither equal information nor equal<br>
+processing budgets. This new comparison does not replace or relabel the<br>
+earlier negative DPO result and establishes no universal repair or Qwen claim.</p>
+<p dir="auto">The fixed experiment also retains failures in the warm control: all three<br>
+warm states solve their four training copying prompts, none solves an unseen<br>
+copying pair, and parity succeeds on only 3/4, 2/4 and 2/4 trained rows.<br>
+Under clean DPO those parity scores become 2/4, 0/4 and 2/4. Chosen NLL keeps<br>
+absolute chosen likelihood high here but does not protect parity; rehearsal<br>
+arms reach 4/4, 3/4 and 4/4 parity successes. Because parity was not fully<br>
+learned initially, this last change includes further supervised learning, not<br>
+only protection of an already perfect capability. Held-out copying stays low,<br>
+and fixed noisy-label controls fail it entirely. These observations are useful<br>
+precisely because the added objectives do not repair every failure.</p>
+<h3 dir="auto">11.8.2 What a matched chosen-SFT control actually matches</h3>
+<p dir="auto">Suppose DPO improves the location task. Did the comparison teach a useful<br>
+distinction, or would simply showing the preferred answer again have helped?<br>
+An untouched-parent arm and a chosen-only SFT arm make that question testable.<br>
+They do not make the supervision identical: chosen-SFT never sees the rejected<br>
+answer, while DPO evaluates both responses against the original frozen reference.</p>
+<p dir="auto">The <a href="../../src/dongxi_llms/chosen_sft_control.py">paired-path implementation</a><br>
+uses the existing preference runner's encoding, collator and DPO update, and<br>
+the existing SFT runner's summed cross-entropy. It converts the exact chosen<br>
+response mask into SFT labels, retaining prompt masking, one shift and the<br>
+terminal target. All arms start from the same independently identified parent;<br>
+the trainable arms use the same private with-replacement draws. Equal seed<br>
+numbers alone would not establish that equality if one runner instead shuffled<br>
+through a cyclic data stream.</p>
+<p dir="auto">Chosen-SFT divides the accumulation window's summed cross-entropies by its<br>
+total valid chosen targets. DPO uses complete-response log-probability sums<br>
+inside a mean-pair loss. These are explicit objective reductions, not interchangeable<br>
+uses of a common learning rate. A longer preferred response therefore contributes<br>
+through all its valid targets; it is not silently reduced to one equally weighted<br>
+per-response token average.</p>
+<p dir="auto">Report what is matched: parent, actual draw indices, chosen IDs/masks, valid<br>
+chosen targets, updates and declared optimizer recipe. Then report what is not:<br>
+rejected supervision, policy input geometry, reference calls, reduction and<br>
+compute. Equal chosen exposure is a useful control for demonstration repetition;<br>
+it is not an equal-information or equal-FLOP experiment.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-matched-chosen-sft-control.md">two-seed CPU report</a><br>
+uses saved and reloaded random 6,592-parameter parents, not pretrained weights.<br>
+Each trained arm makes 12 identical pair draws and sees 48 chosen targets.<br>
+Chosen-SFT submits 12 policy forwards over 288 input positions, with no reference<br>
+forwards. DPO additionally supervises 36 rejected targets and submits 24 policy<br>
+and 24 reference forwards, over 540 positions in each lane. These training<br>
+counters exclude the separate validation/generation work; they are not FLOPs.</p>
+<p dir="auto">All six fixed arm/seed rows receive 0/4 independent exact match. Both chosen-SFT<br>
+rows stop naturally on all four prompts, while DPO stops on four and one.<br>
+Emitting EOS is not answering correctly. The report retains the actual wrong<br>
+texts and caps; no arm, coefficient or checkpoint is chosen to conceal this<br>
+failure. The successful matching and mask checks establish an instrument, not<br>
+a useful location assistant or a prediction of the pretrained outcome.</p>
+<p dir="auto">The original location fixtures keep training, validation and publication<br>
+scenarios separate. The held-out generation consumes its own emitted tokens<br>
+and is graded against independently authored answers after generation. Keep<br>
+raw failures, EOS versus caps and absolute chosen/rejected likelihoods; neither<br>
+the final arm nor its hyperparameters are selected from those held-out scores.<br>
+The <a href="../labs/11-direct-preference-optimization.md">lab</a> links the runnable<br>
+matching microscope. Its pretrained counterpart is the separately measured<br>
+comparison in section 11.8.4; random-model correctness checks do not substitute<br>
+for those actual outputs.</p>
+<h3 dir="auto">11.8.3 Recovery must preserve what the comparison matched</h3>
+<p dir="auto">A chosen-only control and DPO can share draws while requiring different<br>
+restart checks. Chosen-only needs its chosen-token objective and replacement<br>
+sampler; DPO additionally needs rejected scores and its original reference.<br>
+Restoring a shuffled cyclic sampler instead of the declared replacement sampler<br>
+changes future exposure. A failed attempt remains part of the physical cost,<br>
+although its partial numerical state must not become a completed checkpoint.</p>
+<p dir="auto"><a href="../../experiments/reports/2026-10-05-chosen-sft-accounted-recovery.md">CPU chosen-control replay</a>,<br>
+<a href="../../experiments/reports/2026-10-05-native-chosen-replay.md">native chosen-control replay</a><br>
+and <a href="../../experiments/reports/native-dpo-replay-20261005-run-03/acceptance.json">native DPO replay</a><br>
+provide distinct evidence for these boundaries. Their technical success says<br>
+nothing by itself about location answers. The snapshot and supervision details<br>
+are collected in <a href="../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence">Appendix D</a>.</p>
+<h3 dir="auto">11.8.4 The preferred answer can win a pair without winning generation</h3>
+<p dir="auto">Consider two different questions. In a preference pair, does the policy favor<br>
+the recorded chosen answer over its recorded alternative, relative to the<br>
+reference? In free generation, does the policy actually emit the required<br>
+answer? DPO directly trains the first question. A common independent generation<br>
+panel is needed for the second.</p>
+<h3 dir="auto">Reader prediction</h3>
+<p dir="auto">Before revealing the comparison, suppose DPO greatly increases its validation<br>
+chosen/rejected margin. Must it emit more exact location answers than chosen-only<br>
+SFT? Write a prediction for absolute chosen likelihood, exact answer content and<br>
+natural stopping separately. This is a reader exercise; it is not a claim about<br>
+the historical pre-run hypothesis.</p>
+<h3 dir="auto">Comparison settings</h3>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Control</th>
+<th>Declared comparison</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parent</td>
+<td>Same original full400 SFT export; recovery weights are not pilot parents</td>
+</tr>
+<tr>
+<td>Exposure</td>
+<td>100 updates; identical 400 replacement draws and 2,047 chosen targets</td>
+</tr>
+<tr>
+<td>Chosen-only objective</td>
+<td>Global valid-chosen-token NLL</td>
+</tr>
+<tr>
+<td>DPO objective</td>
+<td>Mean pair loss using complete-response sums, original reference and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta=0.1$</math-renderer>
+</td>
+</tr>
+<tr>
+<td>Common generation</td>
+<td>Saved template, greedy decoding, 64-token cap; BF16-loaded policies</td>
+</tr>
+<tr>
+<td>Pair scoring</td>
+<td>FP32 weights with BF16 autocast; four separate validation pairs</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-native-preference-comparison.md">actual Spark pilots</a><br>
+make this distinction concrete. Both begin afresh from the original full400 SFT<br>
+export after their separate native recovery gates pass. Both make 100 updates<br>
+using the same 400 replacement draws and 2,047 chosen targets. Chosen-only uses<br>
+global chosen-token NLL; DPO uses complete-response log-probability sums,<br>
+mean-pair loss, beta 0.1, rejected answers and the original frozen reference.<br>
+The parent, actual draws, IDs and response masks are matched, not simply their<br>
+seed numbers. Neither recovery's trained weights initializes its pilot.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Training work, excluding validation and generation</th>
+<th align="right">Chosen-only 100</th>
+<th align="right">DPO100</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chosen targets</td>
+<td align="right">2,047</td>
+<td align="right">2,047</td>
+</tr>
+<tr>
+<td>Rejected targets</td>
+<td align="right">0</td>
+<td align="right">1,600</td>
+</tr>
+<tr>
+<td>Policy forwards</td>
+<td align="right">400</td>
+<td align="right">800</td>
+</tr>
+<tr>
+<td>Policy positions</td>
+<td align="right">13,343</td>
+<td align="right">25,439</td>
+</tr>
+<tr>
+<td>Reference forwards</td>
+<td align="right">0</td>
+<td align="right">800</td>
+</tr>
+<tr>
+<td>Reference positions</td>
+<td align="right">0</td>
+<td align="right">25,439</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Equal chosen exposure is not equal information or compute. Chosen-only<br>
+processes full chosen inputs, whereas the DPO path uses its single-shift<br>
+chosen/rejected scoring geometry. Validation reference calls in the chosen-only<br>
+observer are separate diagnostics, not a hidden reference training objective.<br>
+Counts describe processed operations, not FLOPs. Native elapsed time also<br>
+includes saving, validation, generation and integrity work; differing observer<br>
+paths prevent interpreting its ratio as a universal algorithmic speed comparison.</p>
+<p dir="auto">The two pilots completed their fixed training boundaries. Their own-run<br>
+location diagnostics use FP32-loaded weights with BF16 autocast; the common<br>
+comparison below uses BF16-loaded generation. Both diagnostic baselines give<br>
+0/4 exact location answers and 4/4 natural stops. After training, chosen-only<br>
+gets 4/4 exact answers and DPO 1/4, with natural stopping on all four prompts.<br>
+Agreement across the two loading paths was measured; it is not assumed.</p>
+<h3 dir="auto">Read the emitted answer</h3>
+<p dir="auto">The following are the first three location items in the fixed common panel,<br>
+not examples selected for a favorable outcome. Complete DPO scoring text is<br>
+retained; the third output's trailing newline is shown explicitly. All three<br>
+responses stop naturally. The <a href="../../experiments/reports/2026-10-05-native-preference-comparison.md#separate-generated-answer-and-retention-populations">common comparison report</a><br>
+retains their exact-match contract and output provenance.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Prompt fact and question</th>
+<th>Required whole answer</th>
+<th>DPO emitted scoring text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inez put the ring in the purple pouch. Where is the ring?</td>
+<td><code class="notranslate">the purple pouch</code></td>
+<td><code class="notranslate">purple pouch</code></td>
+</tr>
+<tr>
+<td>Jun left the brush in the tall vase. Where is the brush?</td>
+<td><code class="notranslate">the tall vase</code></td>
+<td><code class="notranslate">the tall vase</code></td>
+</tr>
+<tr>
+<td>Elin placed the ticket in the green folder. Where is the ticket?</td>
+<td><code class="notranslate">the green folder</code></td>
+<td><code class="notranslate">green\n</code></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Each full prompt begins <code class="notranslate">Answer with the location only.</code> Missing an article and<br>
+missing a noun are distinct errors. A strict nonmatch need not mean that every<br>
+semantic location is wrong; the frozen whole-answer rule still counts the<br>
+response as a nonmatch. Qualitative inspection supplements that rule rather<br>
+than replacing it after seeing the outputs.</p>
+<p dir="auto">Why can the four validation margins improve without perfect answers? A relative<br>
+chosen/rejected margin constrains two recorded sequence likelihoods against a<br>
+reference. It neither constrains every other possible continuation nor requires<br>
+each chosen token to be the greedy winner at each generated prefix. A sequence<br>
+can improve its relative odds while an alternative token still wins the first<br>
+decoding decision. Once generation takes that alternative, later predictions<br>
+condition on a different prefix. Exact stopping is another separate property.</p>
+<p dir="auto">The completed common evaluation now checks the unchanged parent, chosen 100<br>
+and DPO100 on four validation pairs, four location prompts, 120 instruction<br>
+items and 20 annotated reasoning items. Pair scoring uses FP32 weights/BF16 autocast;<br>
+generation uses BF16-loaded policies and the same saved-template greedy 64<br>
+contract. These code-path labels are not instrumented kernel traces.</p>
+<p dir="auto">In the four-pair likelihood panel, mean chosen logp changes from −11.486888<br>
+to −0.003524 for chosen-only and −6.642914 for DPO. Both improve absolute<br>
+chosen likelihood here; this native case is not the earlier CPU example of<br>
+falling chosen likelihood. DPO also strongly suppresses the rejected answers:<br>
+its mean unscaled reference-relative margin is 71.370116 nats versus 13.488587<br>
+for chosen-only. Multiplication by beta 0.1 gives the loss's scaled margin.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../experiments/reports/native-preference-figures-20261005-run-01/likelihood-and-margin.png"><img src="../../experiments/reports/native-preference-figures-20261005-run-01/likelihood-and-margin.png" alt="Absolute answer likelihood and unscaled relative margin" style="max-width: 100%;"></a></p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Independent common generation</th>
+<th align="right">Unchanged full400</th>
+<th align="right">Chosen-only 100</th>
+<th align="right">DPO100</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strict location answers</td>
+<td align="right">0/4</td>
+<td align="right">4/4</td>
+<td align="right">1/4</td>
+</tr>
+<tr>
+<td>Original instruction answers</td>
+<td align="right">120/120</td>
+<td align="right">120/120</td>
+<td align="right">120/120</td>
+</tr>
+<tr>
+<td>Annotated reasoning, bounded-parser correct</td>
+<td align="right">5/20</td>
+<td align="right">6/20</td>
+<td align="right">6/20</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">All these responses stop naturally; none hits the output cap. The own-run and<br>
+common location counts agree, but that agreement had to be measured across<br>
+their distinct loading paths. Neither intervention loses a correct instruction<br>
+or reasoning item in these panels. Both retain the same five correct reasoning<br>
+IDs and add only <code class="notranslate">math-10</code>. Nine seen/development items remain 5/9; the eleven<br>
+controlled held-out items change 0/11→1/11. A parser score and this narrow<br>
+retention panel do not establish mathematical-step validity, faithful reasoning<br>
+or broad assistant competence. Known overlap stays annotated.</p>
+<p dir="auto">The four validation likelihood pairs and four independent location prompts<br>
+are different populations. Their aggregate comparison is not a same-prompt<br>
+causal diagnosis of an omitted article or noun. Tracing a particular decoding<br>
+failure would require its own prefix-level evidence. The nine diagnostic math<br>
+rows label eight original fixture-development items plus an additional known<br>
+RLVR-overlap item, not math examples used in these assistant policies' training.</p>
+<p dir="auto">Read the source-bound report for raw answers, source-group uncertainty and<br>
+separate likelihood/generation work. The plotted observations come from retained records; the figure is not another<br>
+training or generation experiment.<br>
+Keep margins, absolute likelihoods, exact answers, stopping, retention and<br>
+costs in their own lanes. One recipe and four location prompts cannot establish<br>
+that either training method is universally superior.</p>
+<h3 dir="auto">A preference margin and a delivered answer</h3>
+<p dir="auto">The common post-training comparison retains the chapter's chosen-SFT control. A pairwise objective changes relative likelihood; supervised learning on the chosen response changes its likelihood directly. Even when both improve a chosen-versus-rejected margin, their absolute chosen likelihood, ending behavior and generated text can diverge. Assignment E uses the existing paired native and microscopic evidence to examine those quantities together.</p>
+<p dir="auto">A compatible interface is necessary before comparing checkpoints, but it does not match every budget. Count labeled response targets, optimizer updates and generation work separately. For a policy arm, include unsuccessful collected responses and discarded groups. For a chosen-SFT arm, include the supervision used to choose and train on an accepted answer. Neither an equal update count nor an equal retained-token count implies equal collection cost.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">integration notebook</a> adds a supervised-parent genealogy and two explicitly named sibling interventions. Its reward branch is a symbolic control; it does not replace the chapter's DPO experiment. Combine their lessons by defending the claim with delivered behavior and independent evaluation, rather than a margin alone.</p>
+<h2 dir="auto">11.9 Companion route and exercises</h2>
+<p dir="auto">Study <a href="../../notebooks/day-17/01_kl_regularized_optimum.ipynb">the finite optimum</a>,<br>
+<a href="../../notebooks/day-17/02_sequence_likelihood_and_masks.ipynb">the sequence boundary audit</a>,<br>
+then <a href="../../notebooks/day-18/01_dpo_controlled_comparison.ipynb">the controlled DPO comparison</a><br>
+and <a href="../../notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb">retention/preference controls</a>.<br>
+<a href="../solutions/11-direct-preference-optimization.md">Worked answers</a> explain the<br>
+following questions; each notebook also contains adjacent runnable solutions.</p>
+<ol dir="auto">
+<li>Derive the exponential-tilt optimum and state its support assumptions.</li>
+<li>Why does the partition function disappear from a within-prompt preference?</li>
+<li>Derive the chosen/rejected log-probability gradients with a soft target.</li>
+<li>Reconcile larger initial gradients at larger beta with stronger fixed-reward restraint.</li>
+<li>Why can both chosen and rejected likelihoods fall while the DPO margin improves?</li>
+<li>Draw the single-shift alignment for prompt, first answer token, EOS, and padding.</li>
+<li>Why is average token log-probability a different objective from sequence likelihood?</li>
+<li>What invalidates a reference-log-probability cache?</li>
+<li>Design a DPO/SFT/control comparison and explain unequal information versus unequal compute.</li>
+<li>If held-out preference accuracy rises but generation correctness falls, what conclusions and next checks are justified?</li>
+<li>Derive the chosen-NLL contribution to the chosen-score gradient. Why does <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda_{\mathrm{SFT}}=0$</math-renderer> not remove a nonzero rehearsal term?</li>
+<li>Can chosen NLL correct a noisy recorded winner or guarantee parity retention? Explain the supervision and shared-parameter boundaries.</li>
+<li>Why compare longer-chosen and matched-long pairs, absolute likelihoods, free generation and extra token costs together?</li>
+<li>Why is copying the resumed policy into a new DPO reference an objective change, even when tensor shapes and tokenizer identities agree?</li>
+<li>Two arms use the same seed and update count. One cycles through shuffled pairs; the other samples with replacement. Why is chosen exposure not necessarily matched, and what must be compared before making that claim?</li>
+<li>A chosen-only control restores update 2 after a failed update 3 attempt, then completes six updates. Why can its journal still show seven reserved windows, and why must it not inherit a DPO-specific recovery validator?</li>
+<li>Two native pilots see exactly 2,047 chosen targets. DPO improves all four validation margins but produces fewer strict whole answers. Why are those observations compatible, what is actually matched, and what does the completed common evaluation establish—and leave unproved?</li>
+</ol>
+<p dir="auto">DPO made preference learning a supervised likelihood problem over log ratios.<br>
+Chapter 12 returns to explicit sampled rewards. Its central difficulty is then<br>
+estimating how expected reward changes when the policy itself changes the<br>
+responses it generates.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-16</h1>
+<h1 dir="auto">12. Language Generation as a Policy</h1>
+<p dir="auto">The model answers <code class="notranslate">2 + 3 =</code> with <code class="notranslate">4</code>, <code class="notranslate">The answer is 5</code>, or <code class="notranslate">5</code>. A judge can<br>
+distinguish these complete responses without supplying the desired token at<br>
+every position. How does that final judgment reach the earlier choices that<br>
+produced the answer? And if we generate the same responses once and train on<br>
+them several times, when does their original probability cease to describe<br>
+the policy being updated?</p>
+<p dir="auto">Until now, training usually scored responses already present in a dataset.<br>
+Here the policy supplies its own candidates. We will first make their reward<br>
+and probability completely inspectable, then introduce the uncertainty hidden<br>
+by that small example. A story-continuity judgment or a program test changes<br>
+the source of reward; the reward-to-gradient mechanism remains the question.</p>
+<p dir="auto">Days 19–21 derive and test that mechanism before adding a large rollout system.<br>
+The prerequisites are autoregressive likelihood, the softmax gradient, and<br>
+gradient descent. We will inspect an exact finite policy, prove when baselines<br>
+preserve its gradient, examine leave-one-out rewards and proximal policy<br>
+optimization (PPO) clipping, and<br>
+compare estimators under explicit sampling and update budgets.</p>
+<h2 dir="auto">12.1 Tokens are actions; prefixes are states</h2>
+<p dir="auto">For a fixed prompt <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$x$</math-renderer>, define state <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$s_t=(x,y_{&amp;lt;t})$</math-renderer>, action <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a_t=y_t$</math-renderer>, and<br>
+policy <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\pi_\theta(a_t\mid s_t)$</math-renderer>. Appending a token determines the next state.<br>
+A trajectory is the complete sequence <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$y$</math-renderer>, including termination under the<br>
+chosen convention. Its probability factorizes:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\pi_\theta(y\mid x)=\prod_t\pi_\theta(y_t\mid x,y_{&lt;t}),\qquad
+\log\pi_\theta(y\mid x)=\sum_t\log\pi_\theta(y_t\mid x,y_{&lt;t}).
+$$</math-renderer></p>
+<p dir="auto">The environment here can be unusually simple: text concatenation is deterministic,<br>
+and a terminal verifier evaluates the answer. That does not make the sampling<br>
+problem disappear. Different prefixes lead to different states, and a mistake<br>
+can change all subsequent predictions. A terminal reward gives credit to many<br>
+actions at once; it does not identify which intermediate step was responsible.</p>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R(x,y)$</math-renderer> be a fixed reward and define<br>
+$J(\theta)=\mathbb{E}<em>{y\sim\pi</em>\theta}[R(x,y)]$. For now reward has no<br>
+direct parameter dependence. Chapter 11's positive <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta$</math-renderer> weights the<br>
+reference penalty in <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$J_\beta=\mathbb E[R]-\beta,\mathrm{KL}(\pi_\theta\Vert\pi_{\mathrm{ref}})$</math-renderer>;<br>
+we retain that objective and KL direction when a penalty is added. If a reward includes policy-dependent KL terms,<br>
+we must account for that dependence explicitly rather than reuse this assumption<br>
+without checking it.</p>
+<h2 dir="auto">12.2 Derive REINFORCE from the probability distribution</h2>
+<p dir="auto">For a finite response space, differentiate the expectation:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\nabla_\theta J=\sum_y R(y)\nabla_\theta\pi_\theta(y)
+=\sum_y\pi_\theta(y)R(y)\nabla_\theta\log\pi_\theta(y)
+=\mathbb{E}[R(y)\nabla_\theta\log\pi_\theta(y)].
+$$</math-renderer></p>
+<p dir="auto">The identity <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\nabla\pi=\pi\nabla\log\pi$</math-renderer> replaces a derivative through<br>
+discrete sampling with a derivative of the sampled sequence's log-probability.<br>
+This score-function family originates in<br>
+<a href="https://doi.org/10.1007/BF00992696" rel="nofollow">Williams' REINFORCE paper</a>.<br>
+For terminal reward and autoregressive text,</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\nabla_\theta J=\mathbb{E}\left[R(y)\sum_t
+\nabla_\theta\log\pi_\theta(y_t\mid x,y_{&lt;t})\right].
+$$</math-renderer></p>
+<p dir="auto">A sampled ascent estimate can be implemented by minimizing<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$L=-\mathrm{stopgrad}(R)\sum_t\log\pi_\theta(y_t\mid s_t)$</math-renderer>. The minus<br>
+sign matters: the optimizer minimizes a loss while the objective maximizes<br>
+reward. Sampled token IDs and verifier rewards are treated as data. This<br>
+estimator is noisy but its expectation is the desired gradient under the stated<br>
+sampling assumptions. It is not backpropagation through an argmax decision.</p>
+<p dir="auto">Do not confuse teacher forcing during likelihood scoring with using a demonstration<br>
+target. Rollouts are generated by the policy; then their sampled tokens are<br>
+fed back to compute likelihoods and gradients. A demonstration-based SFT update<br>
+instead scores externally selected targets. Both use log-probabilities, but the<br>
+distribution of sequences and their weights differ.</p>
+<h2 dir="auto">12.3 A categorical microscope with an exact answer</h2>
+<p dir="auto">Temporarily collapse each complete response into one action. This is a<br>
+single-decision, or bandit, version of the problem; no claim about a model's<br>
+language understanding follows from it. Use the following <strong>illustrative</strong><br>
+reward rule: correct arithmetic earns one point, and obeying the bare-integer<br>
+format earns a second point only when the answer is correct.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Action</th>
+<th>Complete response</th>
+<th align="right">Probability <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$p_i$</math-renderer>
+</th>
+<th align="right">Fixed reward <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R_i$</math-renderer>
+</th>
+<th align="right">Contribution <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$p_iR_i$</math-renderer>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td><code class="notranslate">4</code></td>
+<td align="right">0.5</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>1</td>
+<td><code class="notranslate">The answer is 5</code></td>
+<td align="right">0.3</td>
+<td align="right">1</td>
+<td align="right">0.3</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code class="notranslate">5</code></td>
+<td align="right">0.2</td>
+<td align="right">2</td>
+<td align="right">0.4</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The mean reward is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$J=0.7$</math-renderer>. The numbers specify a distribution; they are not<br>
+observed frequencies from a trained checkpoint. Logits <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$z_i=\log p_i$</math-renderer> produce<br>
+exactly these probabilities under softmax.</p>
+<p dir="auto"><strong>Reader prediction.</strong> The verbose answer earns positive reward. Should we<br>
+always raise its probability? What if the bare answer's reward changes from<br>
+two to four while all probabilities stay fixed?</p>
+<p dir="auto">Use three complete answers with logits <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$z_i$</math-renderer>, probabilities <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$p_i$</math-renderer>, and fixed<br>
+rewards <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R_i$</math-renderer>. Then <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$J=\sum_i p_i R_i$</math-renderer>. Since<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\partial\log p_a/\partial z_i=\mathbf{1}[a=i]-p_i$</math-renderer>,</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\frac{\partial J}{\partial z_i}=p_i(R_i-J).
+$$</math-renderer></p>
+<p dir="auto">For our distribution this is</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\nabla_zJ=[0.5(0-0.7),;0.3(1-0.7),;0.2(2-0.7)]
+=[-0.35,0.09,0.26].
+$$</math-renderer></p>
+<p dir="auto">Gradient ascent with learning rate 0.1 adds <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.035,0.009,0.026]$</math-renderer> to the<br>
+logits. The coordinates sum to zero, reflecting softmax's insensitivity to<br>
+a common logit shift. They are logit changes, not probability changes; we<br>
+must renormalize to obtain the next distribution. A minimized actor loss<br>
+has the opposite gradient, and gradient descent makes the same update.</p>
+<p dir="auto">Increasing the last reward to four gives <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$J=1.1$</math-renderer> and gradient<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.55,-0.03,0.58]$</math-renderer>. Now the reward-one response is below average: its logit<br>
+receives negative pressure. After the stated learning-rate-0.1 update and<br>
+softmax normalization, however, its probability still rises from 0.3 to<br>
+approximately 0.303876, compared with 0.305528 under the original rewards.<br>
+The first answer's logit falls more sharply, so the verbose answer gains<br>
+probability despite its own falling logit. Thus positive reward alone does<br>
+not determine either logit pressure or the normalized probability change.<br>
+Adding five to <strong>every</strong> reward instead leaves<br>
+the original gradient unchanged. The differences from mean reward, rather<br>
+than an absolute zero point, determine this exact update.</p>
+<p dir="auto">The correction depends on relative reward, not just whether reward is positive.<br>
+An answer receiving reward one can lose probability if the policy's expected<br>
+reward is two. At equal rewards every logit gradient is zero: no sampled outcome<br>
+distinguishes the actions. Adding a constant to every reward leaves the exact<br>
+gradient unchanged because <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R_i-J$</math-renderer> is unchanged.</p>
+<p dir="auto">Enumerate the three possible sampled gradients<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$g_a=R_a(e_a-p)$</math-renderer>, weight them by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$p_a$</math-renderer>, and compare their mean with both the<br>
+formula and automatic differentiation of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$J$</math-renderer>. This three-way check catches sign,<br>
+normalization, and detachment errors. The notebook also plots individual sample<br>
+vectors: a single update can point away from the expected direction even when<br>
+the estimator is unbiased.</p>
+<p dir="auto">For example, sampling action 1 alone gives<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R_1(e_1-p)=[-0.5,0.7,-0.2]$</math-renderer>. This sample suppresses action 2 even though the<br>
+exact expected gradient favors it. Sampling action 2 gives <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-1,-0.6,1.6]$</math-renderer>;<br>
+sampling action 0 gives zero. Weighting these three vectors by 0.3, 0.2 and<br>
+0.5 recovers <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.35,0.09,0.26]$</math-renderer>. The disagreement is sampling noise, not<br>
+an autograd error.</p>
+<p dir="auto">The same operations are available in<br>
+<a href="../../src/dongxi_llms/policy_gradient_lab.py"><code class="notranslate">exact_gradient</code> and <code class="notranslate">estimator_moments</code></a>.<br>
+The <a href="../../notebooks/day-19/01_exact_reinforce_gradient.ipynb">Day 19 companion</a><br>
+uses another declared three-action fixture and compares enumeration with<br>
+automatic differentiation. Change its reward vector before changing the<br>
+learning rate: does the expected direction change as you predicted?</p>
+<h2 dir="auto">12.4 A baseline changes variance, not the expected gradient</h2>
+<p dir="auto">Subtract a value <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$b(x)$</math-renderer> independent of the sampled action. The return-minus-<br>
+baseline difference is an advantage estimate: here it is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R-b$</math-renderer>, a comparison<br>
+with what this prompt was expected to achieve. Then</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\mathbb{E}[(R-b)\nabla\log\pi]
+=\nabla J-b\sum_y\nabla\pi(y)=\nabla J.
+$$</math-renderer></p>
+<p dir="auto">The probability mass sums to one, so its derivative is zero. For token-level<br>
+estimators a baseline may depend on the pre-action state <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$s_t$</math-renderer>, but not on the<br>
+current sampled action conditional on that state. A learned value model should<br>
+be detached in the policy loss; train it with its own prediction objective.<br>
+Action independence is a statistical condition, while detachment is an autograd<br>
+condition. One does not replace the other.</p>
+<p dir="auto">Not every baseline reduces variance. In the categorical example, the covariance<br>
+trace is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathbb{E}[|g-\mathbb{E}g|^2]$</math-renderer>. Minimizing its baseline-dependent<br>
+part gives</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+b^*=\frac{\mathbb{E}[R|\nabla\log\pi|^2]}{
+\mathbb{E}[|\nabla\log\pi|^2]}.
+$$</math-renderer></p>
+<p dir="auto">In detail, write <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$s=\nabla\log\pi$</math-renderer>. The mean gradient is independent of<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$b$</math-renderer>, so only <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathbb E[(R-b)^2|s|^2]$</math-renderer> matters to this minimization.<br>
+Its derivative is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$2b\mathbb E[|s|^2]-2\mathbb E[R|s|^2]$</math-renderer>.<br>
+Setting it to zero gives the displayed optimum when the denominator is positive.</p>
+<p dir="auto">Expected reward is a useful baseline, but it need not equal this variance-optimal<br>
+scalar. A wildly inaccurate yet action-independent baseline preserves expectation<br>
+and can increase variance dramatically. The lab enumerates exact means and<br>
+variances for several choices; it avoids mistaking one noisy batch for a theorem<br>
+about variance reduction.</p>
+<h3 dir="auto">Keep the gradient, change the noise</h3>
+<p dir="auto">Return to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$p=[0.5,0.3,0.2]$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R=[0,1,2]$</math-renderer>. With baseline <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$b=J=0.7$</math-renderer>, the<br>
+three possible sampled ascent vectors become</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Sampled action</th>
+<th align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R_a-b$</math-renderer></th>
+<th><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$(R_a-b)(e_a-p)$</math-renderer></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td align="right">−0.7</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.35,0.21,0.14]$</math-renderer></td>
+</tr>
+<tr>
+<td>1</td>
+<td align="right">0.3</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.15,0.21,-0.06]$</math-renderer></td>
+</tr>
+<tr>
+<td>2</td>
+<td align="right">1.3</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.65,-0.39,1.04]$</math-renderer></td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Even a zero-reward response now supplies a useful comparison: it was worse<br>
+than this prompt's expected outcome. The probability-weighted mean remains<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.35,0.09,0.26]$</math-renderer>. Exact enumeration gives these covariance traces:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="right">Detached scalar baseline</th>
+<th>Mean ascent gradient</th>
+<th align="right">Covariance trace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">0</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.35,0.09,0.26]$</math-renderer></td>
+<td align="right">0.8198</td>
+</tr>
+<tr>
+<td align="right">0.7</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.35,0.09,0.26]$</math-renderer></td>
+<td align="right">0.2472</td>
+</tr>
+<tr>
+<td align="right">5</td>
+<td><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.35,0.09,0.26]$</math-renderer></td>
+<td align="right">10.0598</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The score-vector squared norms here are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[0.38,0.78,0.98]$</math-renderer>, so the scalar<br>
+optimum is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$b^*=0.626/0.62\approx1.009677$</math-renderer>, rather than 0.7. Expected reward<br>
+is a natural prediction target; the minimum-variance scalar additionally<br>
+weights outcomes by their gradient magnitudes.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-12/day-20-01_baselines_and_rloo-01.png"><img src="../../notebooks/figures/chapter-12/day-20-01_baselines_and_rloo-01.png" alt="Exact sampled-gradient covariance trace as the detached baseline changes" style="max-width: 100%;"></a></p>
+<p dir="auto">The saved <a href="../../notebooks/day-20/01_baselines_and_rloo.ipynb">baseline notebook</a><br>
+plots the same calculation for its original logits and rewards, not the<br>
+numbers in our table. Read the horizontal coordinate as a baseline choice<br>
+and the vertical coordinate as estimator noise, not task performance. Moving<br>
+far from its minimum makes the noise worse while leaving the expected<br>
+gradient unchanged. No optimizer tuning or model training is represented.</p>
+<p dir="auto">An action-dependent “baseline” such as <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$b=R$</math-renderer> makes every advantage zero and<br>
+erases learning. More subtly, the mean reward of a batch includes the sample<br>
+whose gradient it weights. That dependence changes expectation unless corrected<br>
+or otherwise justified.</p>
+<h2 dir="auto">12.5 RLOO and the self-inclusion factor</h2>
+<p dir="auto">For one prompt sample <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$G\ge2$</math-renderer> independent completions. An advantage estimate<br>
+compares a realized return with a pre-action baseline: return minus baseline.<br>
+For these complete responses, return is the fixed terminal reward, and the<br>
+other responses provide the baseline. Define</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+b_{-i}=\frac{1}{G-1}\sum_{j\ne i}R_j,
+\qquad \hat A_i=R_i-b_{-i}.
+$$</math-renderer></p>
+<p dir="auto">For response <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$i$</math-renderer>, write the estimator as <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\hat A_i=R_i-b_{-i}$</math-renderer>.<br>
+The same scalar may weight every token in that response through the sequence<br>
+log-probability sum. A state-dependent token estimator <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\hat A_{i,t}$</math-renderer>, including<br>
+GAE below, is generally different; broadcasting a response advantage does not<br>
+turn it into a learned token-level return estimate.</p>
+<p dir="auto">Other samples are independent of completion <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$i$</math-renderer> conditional on the prompt, so<br>
+the leave-one-out baseline is action-independent for that sample. Averaging<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\hat A_i\nabla\log\pi(y_i)$</math-renderer> preserves the policy gradient. This is the estimator<br>
+studied in <a href="https://aclanthology.org/2024.acl-long.662/" rel="nofollow">the RLOO paper</a>.<br>
+It saves a separate value model but requires multiple sampled completions and<br>
+can still have high variance.</p>
+<p dir="auto">Compare against subtracting the inclusive group mean <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\bar R$</math-renderer>:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+R_i-\bar R=\frac{G-1}{G}(R_i-b_{-i}).
+$$</math-renderer></p>
+<p dir="auto">For iid samples, the mean-gradient expectation is therefore scaled by<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$(G-1)/G$</math-renderer>. Multiplying by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$G/(G-1)$</math-renderer> recovers the leave-one-out estimator. This<br>
+is a precise finite-sample effect. Standardizing by a random sample standard<br>
+deviation introduces another dependence and changes the estimator again; do<br>
+not call it unbiased merely because the centered group sums to zero.</p>
+<p dir="auto">To see where the factor comes from, let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$s_i=\nabla\log\pi(y_i)$</math-renderer>.<br>
+In <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathbb E[\bar R s_i]$</math-renderer>, the own-reward term contributes<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\nabla J/G$</math-renderer>. Each other-reward term contributes zero because it is independent<br>
+of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$s_i$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathbb E[s_i]=0$</math-renderer>. Thus<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathbb E[(R_i-\bar R)s_i]=(1-1/G)\nabla J$</math-renderer>.<br>
+For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$G=4$</math-renderer> our running example's inclusive-centered mean gradient is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.2625,0.0675,0.195]$</math-renderer>; RLOO restores <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.35,0.09,0.26]$</math-renderer> in expectation.<br>
+This statement concerns all iid groups, not one observed group's usefulness.</p>
+<p dir="auto">Independence needs actual independent sampling conditional on the prompt.<br>
+Duplicating one completion, imposing a coupled diversity rule, or accidentally<br>
+resetting the random generator for every sample violates the proof. Rewards<br>
+from different prompts should not be pooled as though they shared the same<br>
+conditional value. Chapter 13 will use grouped relative advantages, while<br>
+keeping these distinctions visible.</p>
+<h2 dir="auto">12.6 Old policies, references, and importance ratios</h2>
+<p dir="auto">An old policy <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\pi_{\mathrm{old}}$</math-renderer> generated a rollout batch. A reference policy<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\pi_{\mathrm{ref}}$</math-renderer> anchors long-term behavioral movement. These may start at<br>
+the same checkpoint but play different roles. The old policy usually updates<br>
+when a new batch is collected; the reference often remains fixed.</p>
+<p dir="auto">If data come from an old distribution, the exact full-trajectory importance<br>
+ratio is</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\rho(y)=\frac{\pi_\theta(y\mid x)}{\pi_{\mathrm{old}}(y\mid x)}
+=\exp\left(\sum_t[\log\pi_\theta(y_t\mid s_t)-\log\pi_{\mathrm{old}}(y_t\mid s_t)]\right).
+$$</math-renderer></p>
+<p dir="auto">With support coverage, weighting an old-policy expectation by this ratio<br>
+recovers a current-policy expectation. Long sequence ratios can have enormous<br>
+variance because many small token changes multiply. Token-level ratios<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\rho_t$</math-renderer> used in PPO provide a local surrogate at states visited by the old<br>
+policy. They are not the same as exact full-sequence importance correction when<br>
+the state distribution changes.</p>
+<p dir="auto">Stored old log-probabilities and advantages must stay detached during multiple<br>
+optimization epochs. Replacing them with freshly recomputed current values<br>
+changes the objective. Aggressive reuse makes the old state distribution less<br>
+representative, even if a local clipping rule seems quiet.</p>
+<h3 dir="auto">What changes when we reuse the answers?</h3>
+<p dir="auto">Collection was <strong>on-policy</strong> when our three answers came from the distribution<br>
+being differentiated. After an update, the saved answers come from an earlier<br>
+policy: their reuse is <strong>off-policy</strong> relative to the new one. Keep the old<br>
+probabilities <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[0.5,0.3,0.2]$</math-renderer> and let the new probabilities be <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[0.4,0.3,0.3]$</math-renderer>.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Action</th>
+<th align="right">Old probability</th>
+<th align="right">Current probability</th>
+<th align="right">Current/old ratio</th>
+<th align="right">Old probability × ratio × reward</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td align="right">0.5</td>
+<td align="right">0.4</td>
+<td align="right">0.8</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>1</td>
+<td align="right">0.3</td>
+<td align="right">0.3</td>
+<td align="right">1.0</td>
+<td align="right">0.3</td>
+</tr>
+<tr>
+<td>2</td>
+<td align="right">0.2</td>
+<td align="right">0.3</td>
+<td align="right">1.5</td>
+<td align="right">0.6</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The weighted old-policy expectation is 0.9, exactly the current expected<br>
+reward. Without the ratios it remains 0.7. In this one-state example every<br>
+current action has old-policy support, so the correction is exact. It cannot<br>
+create evidence about an action the collector never sampled.</p>
+<p dir="auto">For a text trajectory, four token ratios of 1.1 already multiply to 1.4641.<br>
+The <a href="../../notebooks/day-20/02_ppo_clipping_and_kl.ipynb">PPO/KL companion</a><br>
+checks this product. More positions can magnify variation in trajectory<br>
+weights. PPO's next step limits a local sampled incentive, rather than<br>
+pretending that the growing product is always a useful estimator.</p>
+<p dir="auto">The <a href="../../notebooks/day-20/03_behavior_probabilities_and_support.ipynb">Day 20 probability-accounting notebook</a><br>
+turns the coverage assumption into an exact counterexample. It keeps raw model,<br>
+temperature/filter-transformed collector and declared update target separate.<br>
+Using raw likelihood as the denominator after transformed collection changes both<br>
+the expected reward and its gradient. Conditional fixed-support repair is a<br>
+different objective, not a universal fix for a full-support target. Chapter 14<br>
+§14.3 develops the measured example and its boundary masks.</p>
+<h2 dir="auto">12.7 What PPO clipping actually clips</h2>
+<p dir="auto">For one response, write <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\hat A_t=\hat A_{i,t}$</math-renderer> and suppress its index <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$i$</math-renderer>.<br>
+The clipped per-token surrogate is</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+L_{\text{clip}}(\theta)=\mathbb{E}\left[
+\min\left(\rho_t \hat A_t,
+\mathrm{clip}(\rho_t,1-\epsilon,1+\epsilon)\hat A_t\right)\right].
+$$</math-renderer></p>
+<p dir="auto">Maximize this expression, or minimize its negative. For positive advantage,<br>
+increasing the ratio beyond <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$1+\epsilon$</math-renderer> gains no more surrogate benefit. For<br>
+negative advantage, decreasing it below <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$1-\epsilon$</math-renderer> gains no more benefit.<br>
+Movement in a harmful direction is still penalized. The clipping is asymmetric<br>
+with respect to advantage sign; it does not simply clamp every gradient to a<br>
+fixed interval. The objective and multiple-epoch rollout reuse are introduced<br>
+in <a href="https://arxiv.org/abs/1707.06347" rel="nofollow">the PPO paper</a>.</p>
+<p dir="auto"><strong>Reader prediction.</strong> At <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\epsilon=0.2$</math-renderer>, is every ratio outside<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[0.8,1.2]$</math-renderer> ignored? Evaluate both advantage signs before inspecting the table.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="right">Advantage</th>
+<th align="right">Ratio</th>
+<th align="right">Unclipped product</th>
+<th align="right">Clipped surrogate</th>
+<th align="right">Slope with respect to ratio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">+1</td>
+<td align="right">1.3</td>
+<td align="right">1.3</td>
+<td align="right">1.2</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td align="right">+1</td>
+<td align="right">0.7</td>
+<td align="right">0.7</td>
+<td align="right">0.7</td>
+<td align="right">+1</td>
+</tr>
+<tr>
+<td align="right">−1</td>
+<td align="right">1.3</td>
+<td align="right">−1.3</td>
+<td align="right">−1.3</td>
+<td align="right">−1</td>
+</tr>
+<tr>
+<td align="right">−1</td>
+<td align="right">0.7</td>
+<td align="right">−0.7</td>
+<td align="right">−0.8</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Beneficial movement becomes flat beyond the appropriate boundary; harmful<br>
+movement remains visible. A blanket clamp would miss the second and third<br>
+rows. The value 0.2 is a declared lab choice, not a constant derived from<br>
+the reward problem or a universal stable-update threshold.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-12/day-20-02_ppo_clipping_and_kl-01.png"><img src="../../notebooks/figures/chapter-12/day-20-02_ppo_clipping_and_kl-01.png" alt="PPO surrogate versus probability ratio for positive and negative advantages" style="max-width: 100%;"></a></p>
+<p dir="auto">The <a href="../../notebooks/day-20/02_ppo_clipping_and_kl.ipynb">plot's runnable source</a><br>
+uses advantages +1 and −1. Compare each solid curve with its unclipped dashed<br>
+line; the flat region switches sides with the sign. These are objective<br>
+schematics evaluated numerically, not measured learning curves.</p>
+<p dir="auto">Our old-policy baseline gives advantages <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[-0.7,0.3,1.3]$</math-renderer>. With the changed<br>
+distribution above, the unmodified expected ratio-weighted advantage is<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$0.9-0.7=0.2$</math-renderer>. Clipping reduces it to<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$0.5(-0.56)+0.3(0.3)+0.2(1.56)=0.122$</math-renderer>: the third action's ratio 1.5 receives<br>
+no further benefit above 1.2. This is deliberately a modified objective.<br>
+At the initial ratios one, the mean advantage and surrogate value are zero,<br>
+yet their derivative is the nonzero policy gradient. A loss value alone<br>
+cannot tell us whether learning signal exists.</p>
+<p dir="auto">PPO commonly trains a value function to estimate returns and uses advantages<br>
+derived from it. Value error, reward shaping, terminal handling, and padding<br>
+can all affect the policy update. Our categorical comparison uses the exact<br>
+pre-rollout expected reward as a detached baseline, making critic error zero<br>
+so the clipping mechanism can be isolated. That is an oracle analysis control,<br>
+not a claim about how a neural critic performs.</p>
+<p dir="auto">Clipping is not a hard bound on policy KL. Shared parameters can alter unsampled<br>
+actions, repeated updates can move outside the interval, and the average hides<br>
+rare changes. Monitor approximate and, where possible, exact KL, entropy, clip<br>
+fractions, length, and independent task outcomes. A low clipped loss alone<br>
+cannot establish stable learning.</p>
+<h2 dir="auto">12.8 KL estimates depend on direction and support</h2>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$p$</math-renderer> be the distribution generating actions and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q$</math-renderer> a positive reference on<br>
+the same finite support. For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a\sim p$</math-renderer>, define <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$d(a)=\log p(a)-\log q(a)$</math-renderer>.<br>
+Then</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+k_1=d,\qquad k_2=\frac12d^2,\qquad
+k_3=\exp(-d)-1+d.
+$$</math-renderer></p>
+<p dir="auto"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathbb{E}_p[k_1]=\mathrm{KL}(p\Vert q)$</math-renderer>. Individual samples of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$k_1$</math-renderer> can<br>
+be negative although the expectation is nonnegative. <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$k_2$</math-renderer> is nonnegative but<br>
+generally biased for KL; its usefulness comes from a local quadratic<br>
+approximation near equal distributions. For common full support,<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\mathbb{E}_p[\exp(-d)]=\sum_a q(a)=1$</math-renderer>, so <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$k_3$</math-renderer> has the same expectation<br>
+as <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$k_1$</math-renderer> and nonnegative individual values because <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$u-1-\log u\ge0$</math-renderer>.</p>
+<p dir="auto">This control-variate identity does not guarantee lower variance everywhere.<br>
+Rare actions with very large <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q/p$</math-renderer> can give <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$k_3$</math-renderer> large tails. The notebook<br>
+enumerates exact expectations and variances, then perturbs the distributions.<br>
+If <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$p$</math-renderer> is zero on some reference mass, the expectation of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q/p$</math-renderer> over sampled<br>
+support is less than one and the simple identity fails. If <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$q$</math-renderer> is zero where<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$p$</math-renderer> is positive, forward KL is infinite. Sampling temperature or top-$k$ changes<br>
+the distribution: log-probabilities must describe the sampler required by the<br>
+estimator, not a convenient unmodified model distribution.</p>
+<p dir="auto">Estimator values used for monitoring and a differentiable KL regularizer also<br>
+have different gradient contracts. Differentiating a sampled estimate while<br>
+treating the sampled distribution as constant may omit score-function terms.<br>
+For the finite microscope, compute the exact sum for objective gradients and<br>
+use sampled estimators to study measurement variance.</p>
+<h2 dir="auto">12.9 A comparison with declared budgets</h2>
+<p dir="auto">The CPU task has six arithmetic prompts <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$(a,b)$</math-renderer> and three answer actions;<br>
+the correct action is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$(a+b)\bmod3$</math-renderer>. Independent logits per prompt intentionally<br>
+remove representation learning. We compare REINFORCE, an exact-value baseline,<br>
+RLOO, and PPO using the same prompt set, four samples per prompt, rollout update<br>
+count, seed schedule, and exact success metric.</p>
+<p dir="auto"><strong>Reader prediction:</strong> should the four methods finish at the same success<br>
+probability when sampled completions match but PPO reuses each rollout three<br>
+times? State which comparison would test sampling efficiency and which would<br>
+test gradient-work efficiency before revealing the results. PPO uses three gradient epochs<br>
+per rollout, so it consumes more optimizer work despite equal sampled tokens.<br>
+The report exposes both clocks rather than calling the run compute-matched.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-04-preference-policy-cpu.md">retained CPU report</a><br>
+records 160 rollout updates, six contexts and four sampled actions per context:<br>
+3,840 sampled completions per arm, with learning rate 1.5 and fixed seeds.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Arm</th>
+<th>Final exact success probability, seeds 1921 / 1922 / 1923</th>
+<th align="right">Gradient passes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>REINFORCE</td>
+<td>0.980054 / 0.980184 / 0.980117</td>
+<td align="right">160</td>
+</tr>
+<tr>
+<td>Exact-value baseline</td>
+<td>0.980135 / 0.981667 / 0.981941</td>
+<td align="right">160</td>
+</tr>
+<tr>
+<td>RLOO</td>
+<td>0.980318 / 0.981902 / 0.982335</td>
+<td align="right">160</td>
+</tr>
+<tr>
+<td>PPO, three epochs</td>
+<td>0.991820 / 0.991509 / 0.991530</td>
+<td align="right">480</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-12/day-21-01_policy_algorithm_comparison-01.png"><img src="../../notebooks/figures/chapter-12/day-21-01_policy_algorithm_comparison-01.png" alt="Measured success trajectories against sampled completions and gradient passes" style="max-width: 100%;"></a></p>
+<p dir="auto">Read the left panel at matched sampling cost and the right at optimizer work.<br>
+Shading is the range of three seeds, not a confidence interval. PPO's higher<br>
+endpoint uses more gradient work and an exact pre-rollout value; it supplies<br>
+neither a wall-time ranking nor evidence of neural critic quality.</p>
+<h3 dir="auto">The finite update in transparent code</h3>
+<p dir="auto">The loop below follows <a href="../../src/dongxi_llms/policy_gradient_lab.py">the canonical policy module</a>.<br>
+Each row of <code class="notranslate">logits</code> is one independent context; columns are the three possible<br>
+answers. <code class="notranslate">correct</code> contains the verifier's answer action. The surrounding module<br>
+initializes the seeded generator and applies this block for the declared updates.</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-s1">old_logp</span> <span class="pl-c1">=</span> <span class="pl-s1">logits</span>.<span class="pl-c1">detach</span>().<span class="pl-c1">log_softmax</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>)
+<span class="pl-s1">old_p</span> <span class="pl-c1">=</span> <span class="pl-s1">old_logp</span>.<span class="pl-c1">exp</span>()
+<span class="pl-s1">actions</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">multinomial</span>(<span class="pl-s1">old_p</span>, <span class="pl-s1">group</span>, <span class="pl-s1">replacement</span><span class="pl-c1">=</span><span class="pl-c1">True</span>, <span class="pl-s1">generator</span><span class="pl-c1">=</span><span class="pl-s1">generator</span>)
+<span class="pl-s1">rewards</span> <span class="pl-c1">=</span> (<span class="pl-s1">actions</span> <span class="pl-c1">==</span> <span class="pl-s1">correct</span>[:, <span class="pl-c1">None</span>]).<span class="pl-c1">to</span>(<span class="pl-s1">logits</span>.<span class="pl-c1">dtype</span>)
+<span class="pl-k">if</span> <span class="pl-s1">mode</span> <span class="pl-c1">==</span> <span class="pl-s">"rloo"</span>:
+    <span class="pl-s1">advantage</span> <span class="pl-c1">=</span> <span class="pl-en">rloo_advantages</span>(<span class="pl-s1">rewards</span>)
+<span class="pl-k">elif</span> <span class="pl-s1">mode</span> <span class="pl-c1">in</span> (<span class="pl-s">"baseline"</span>, <span class="pl-s">"ppo"</span>):
+    <span class="pl-s1">advantage</span> <span class="pl-c1">=</span> <span class="pl-s1">rewards</span> <span class="pl-c1">-</span> <span class="pl-s1">old_p</span>.<span class="pl-c1">gather</span>(<span class="pl-c1">1</span>, <span class="pl-s1">correct</span>[:, <span class="pl-c1">None</span>])
+<span class="pl-k">else</span>:
+    <span class="pl-s1">advantage</span> <span class="pl-c1">=</span> <span class="pl-s1">rewards</span>
+<span class="pl-k">for</span> <span class="pl-s1">_</span> <span class="pl-c1">in</span> <span class="pl-en">range</span>(<span class="pl-s1">epochs</span> <span class="pl-k">if</span> <span class="pl-s1">mode</span> <span class="pl-c1">==</span> <span class="pl-s">"ppo"</span> <span class="pl-k">else</span> <span class="pl-c1">1</span>):
+    <span class="pl-s1">selected</span> <span class="pl-c1">=</span> <span class="pl-s1">logits</span>.<span class="pl-c1">log_softmax</span>(<span class="pl-c1">-</span><span class="pl-c1">1</span>).<span class="pl-c1">gather</span>(<span class="pl-c1">1</span>, <span class="pl-s1">actions</span>)
+    <span class="pl-k">if</span> <span class="pl-s1">mode</span> <span class="pl-c1">==</span> <span class="pl-s">"ppo"</span>:
+        <span class="pl-s1">ratio</span> <span class="pl-c1">=</span> (<span class="pl-s1">selected</span> <span class="pl-c1">-</span> <span class="pl-s1">old_logp</span>.<span class="pl-c1">gather</span>(<span class="pl-c1">1</span>, <span class="pl-s1">actions</span>)).<span class="pl-c1">exp</span>()
+        <span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-c1">-</span><span class="pl-en">ppo_surrogate</span>(<span class="pl-s1">ratio</span>, <span class="pl-s1">advantage</span>).<span class="pl-c1">mean</span>()
+    <span class="pl-k">else</span>:
+        <span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-c1">-</span>(<span class="pl-s1">selected</span> <span class="pl-c1">*</span> <span class="pl-s1">advantage</span>).<span class="pl-c1">mean</span>()
+    (<span class="pl-s1">gradient</span>,) <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">autograd</span>.<span class="pl-c1">grad</span>(<span class="pl-s1">loss</span>, <span class="pl-s1">logits</span>)
+    <span class="pl-k">with</span> <span class="pl-s1">torch</span>.<span class="pl-c1">no_grad</span>():
+        <span class="pl-s1">logits</span> <span class="pl-c1">-=</span> <span class="pl-c1">1.5</span> <span class="pl-c1">*</span> <span class="pl-s1">gradient</span></pre></div>
+<p dir="auto"><code class="notranslate">rloo_advantages</code> subtracts the mean of the other samples from the same context;<br>
+<code class="notranslate">ppo_surrogate</code> returns the minimum of <code class="notranslate">ratio * advantage</code> and the clipped-ratio<br>
+product. The old probabilities and these rewards/advantages have no actor<br>
+gradient. The negative sign converts ascent to a minimized loss. Deliberately<br>
+recomputing the old probabilities inside each epoch would change this experiment.</p>
+<p dir="auto">This experiment checks estimator behavior and implementation. It has no unseen<br>
+arithmetic distribution, no language vocabulary, and no neural generalization<br>
+claim. Multiple seeds show sampling variability. A model-scale extension needs<br>
+new evidence for rollout memory, throughput, verifier integrity, and retained<br>
+capabilities. These operational questions lead into Chapters 13 and 14.</p>
+<h2 dir="auto">12.10 A critic predicts the return before an action</h2>
+<p dir="auto">The exact-value comparison above deliberately removed representation error.<br>
+Now put that difficulty back. A neural critic reads the same pre-action prefix<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$s_t$</math-renderer> as the actor and predicts <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$V_\psi(s_t)$</math-renderer>: the expected discounted future<br>
+reward under the current policy. It does not judge the next token alone and<br>
+must not see that action when constructing its baseline. Even a prefix with<br>
+the correct color can continue into repetition or missing termination.</p>
+<p dir="auto">The critic supplies an estimate before we discover which continuation occurs.<br>
+Subtracting that prediction from the realized return gives an <strong>advantage</strong>: how much better<br>
+or worse that continuation was than expected at this state. An exact tabular<br>
+value, a small value head sharing actor features, or a separate network can<br>
+play this role. A critic need not be another policy-sized model; architecture,<br>
+shared gradient paths and fitting cost are separate choices. The local<br>
+experiment uses separate small backbones to expose those paths.</p>
+<p dir="auto">The critic parameters <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\psi$</math-renderer> are separate from the learned reward parameters<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\phi$</math-renderer>. Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R_t$</math-renderer> be the collected reward earned after action <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$a_t$</math-renderer>. A frozen<br>
+learned score <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$r_\phi(x,y)$</math-renderer> can supply a terminal <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R_t$</math-renderer>, while a verifier can<br>
+supply it directly; the return calculation treats either as fixed observed data.<br>
+The companion's local per-step reward variables map to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R_t$</math-renderer> here.</p>
+<p dir="auto">For discount <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\gamma$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$n$</math-renderer> observed<br>
+actions, the bootstrapped return is</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+G_t=\sum_{k=t}^{n-1}\gamma^{k-t}R_k
++\gamma^{n-t}c_{n-1}V_\psi(s_n).
+$$</math-renderer></p>
+<p dir="auto">Here <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$c_t=0$</math-renderer> after true termination and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$1$</math-renderer> otherwise. Sampled EOS ends the<br>
+episode: no continuation value follows it. A collector cap stops observation;<br>
+unless the task defines that boundary as terminal, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$c_{n-1}=1$</math-renderer>. Bootstrap<br>
+estimates unobserved continuation, not a secretly generated EOS or an observed<br>
+future reward. Padding contributes no action, reward, target or loss.</p>
+<p dir="auto">With two zero-reward actions, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\gamma=0.9$</math-renderer> and bootstrap <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$1.2$</math-renderer>, returns are<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$0.972$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$1.08$</math-renderer>. Relabeling the cap as EOS makes both zero. Conversely,<br>
+appending a value of nine after actual EOS must not change the completed<br>
+return. These checks catch a bug that a finite loss curve can hide.</p>
+<h2 dir="auto">12.11 TD residuals and generalized advantage estimation</h2>
+<p dir="auto">A temporal-difference residual compares the present prediction with one<br>
+observed transition and its continuation estimate:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\delta_t=R_t+\gamma c_tV_\psi(s_{t+1})-V_\psi(s_t).
+$$</math-renderer></p>
+<p dir="auto">Generalized advantage estimation combines those residuals. Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$m_t$</math-renderer> indicate<br>
+a valid action and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$m_n=0$</math-renderer> immediately beyond observation:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+\hat A_t=\delta_t+\gamma\lambda c_t m_{t+1}\hat A_{t+1},
+\qquad \hat G_t=\hat A_t+V_\psi(s_t).
+$$</math-renderer></p>
+<p dir="auto">The last residual includes a nonterminal bootstrap, but no residual is invented<br>
+beyond the collected prefix. At <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda=0$</math-renderer>, the target is one-step TD. At<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda=1$</math-renderer>, intermediate values telescope, leaving <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$G_t$</math-renderer>. Only completed<br>
+trajectories remove the final estimate and give fully observed Monte Carlo<br>
+returns. The <a href="https://arxiv.org/abs/1506.02438v6" rel="nofollow">original GAE paper</a> motivates<br>
+a bias–variance trade-off, not a guarantee for this text experiment.</p>
+<p dir="auto">An inaccurate critic can distort bootstrapped targets, particularly at states<br>
+never observed beyond the cap. Smaller <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda$</math-renderer> trusts short value predictions<br>
+more. Larger <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda$</math-renderer> uses more observed rewards but cannot recover experience<br>
+never collected. “Use GAE” cannot replace checking what terminated and what<br>
+was censored.</p>
+<h3 dir="auto">Give credit across three positions</h3>
+<p dir="auto">Consider a newly calculated, completed three-action trajectory. It earns<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[0,0,1]$</math-renderer> and ends with EOS. Use <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\gamma=0.9$</math-renderer>, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda=0.95$</math-renderer> and detached<br>
+pre-action value predictions <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[0.4,0.5,0.8]$</math-renderer>; terminal continuation value is zero.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="right">Position <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$t$</math-renderer>
+</th>
+<th align="right">Reward <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$R_t$</math-renderer>
+</th>
+<th align="right">Predicted value <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$V_t$</math-renderer>
+</th>
+<th align="right">TD residual <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\delta_t$</math-renderer>
+</th>
+<th align="right">GAE <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\hat A_t$</math-renderer>
+</th>
+<th align="right">Value target <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\hat A_t+V_t$</math-renderer>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0.4</td>
+<td align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$0+0.9(0.5)-0.4=0.05$</math-renderer></td>
+<td align="right">0.384305</td>
+<td align="right">0.784305</td>
+</tr>
+<tr>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">0.5</td>
+<td align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$0+0.9(0.8)-0.5=0.22$</math-renderer></td>
+<td align="right">0.391000</td>
+<td align="right">0.891000</td>
+</tr>
+<tr>
+<td align="right">2</td>
+<td align="right">1</td>
+<td align="right">0.8</td>
+<td align="right"><math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$1-0.8=0.20$</math-renderer></td>
+<td align="right">0.200000</td>
+<td align="right">1.000000</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Work backward: <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\hat A_1=0.22+0.855(0.20)=0.391$</math-renderer> and<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\hat A_0=0.05+0.855(0.391)=0.384305$</math-renderer>. Thus the final reward influences<br>
+earlier actions even though neither earned an immediate reward. The value<br>
+predictions decide how surprising each transition is.</p>
+<p dir="auto"><strong>Controlled change.</strong> Set <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda=0$</math-renderer>: the targets are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[0.45,0.72,1]$</math-renderer>,<br>
+using only the next value estimate. Set <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\lambda=1$</math-renderer>: the completed-trajectory<br>
+targets become <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$[0.81,0.9,1]$</math-renderer>, the observed discounted returns. Our intermediate<br>
+choice trades dependence on the imperfect critic against dependence on more<br>
+sampled rewards. The discount 0.9 makes that arithmetic visible; a text task<br>
+can choose <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\gamma=1$</math-renderer> to value its eventual terminal reward without discount.<br>
+These values are not suggested defaults for every task.</p>
+<p dir="auto">Detach advantages in the actor loss and return targets in the critic loss.<br>
+Otherwise the actor can change its supposedly fixed comparison through the<br>
+critic computation, or the critic can chase a target that moves through its<br>
+own gradient path. This computational separation does not itself establish<br>
+that the predictions are accurate. The<br>
+<a href="../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb">learned-critic companion</a><br>
+provides runnable return/GAE and EOS/cap controls for that distinction.</p>
+<h2 dir="auto">12.12 Three separate gradient contracts</h2>
+<p dir="auto">For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$N$</math-renderer> sampled responses, the actor minimizes a negative clipped token sum per<br>
+response; the critic minimizes valid-state mean-square error:</p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+L_\pi=-\frac1N\sum_{i,t}m_{it}
+\min\left(\rho_{it},\mathrm{stopgrad}(\hat A_{i,t}),
+\mathrm{clip}(\rho_{it},1-\epsilon,1+\epsilon)
+,\mathrm{stopgrad}(\hat A_{i,t})\right),
+$$</math-renderer></p>
+<p dir="auto"><math-renderer class="js-display-math" style="display: block" data-run-id="d979ff09bb835e9ed327343799224467">$$
+L_V=\frac{\sum_{i,t}m_{it}
+\left(V_\psi(s_{it})-\mathrm{stopgrad}(\hat G_{i,t})\right)^2}
+{\sum_{i,t}m_{it}}.
+$$</math-renderer></p>
+<p dir="auto">Actor gradients reach current sampled-action likelihoods; old likelihoods and<br>
+advantages are data. Critic gradients reach value predictions; targets are<br>
+data. The reward is saved, reloaded and frozen: neither loss updates it or<br>
+differentiates through sampled IDs. Separate actor/critic causal backbones<br>
+make the boundaries directly testable. Shared features would deliberately<br>
+receive both objectives and require another analysis.</p>
+<p dir="auto">An exact conditional KL penalty at collected states anchors the initial actor;<br>
+the positive coefficient <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$\beta$</math-renderer> weights that penalty separately from <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$L_\pi$</math-renderer>.<br>
+Collection and current/old/reference scoring use identical finite support.<br>
+One fresh actor step per rollout starts at ratios one: clipping has not reached<br>
+its flat region. This isolates advantage/critic behavior, not PPO epoch reuse<br>
+or exact correction of changing state distributions.</p>
+<h2 dir="auto">12.13 Actual fitted rewards and generated text</h2>
+<p dir="auto">Chapter 10 fitted a reward from text pairs. Can a policy exploit what those<br>
+pairs did not constrain? Our original task asks for a color. The actor reads<br>
+actual prompt word tokens and emits color/style tokens and EOS. The reward<br>
+reads printable ASCII prompt/completion characters. Neither model receives an<br>
+injected quality feature or reference answer.</p>
+<p dir="auto">Balanced preferences match style; confounded preferences associate correctness<br>
+with fancy style. Budgets/source groups match, but information does not.<br>
+Actual fitted models are exported and reloaded before policy updates. Training<br>
+response strings alone determine score centering/scaling; tanh then bounds the<br>
+proxy. Bradley–Terry scores are not success probabilities, and pair margins<br>
+do not identify their absolute offset.</p>
+<p dir="auto">Independent quality checks requested color, at most one style word and EOS<br>
+within the delivered cap. It never enters rewards, critic targets or checkpoint<br>
+selection. Four training, two calibration, two final and two control sources<br>
+have distinct actual actor/reward encodings. Fourteen finite terminal paths<br>
+define the task: early EOS is sampled; a fourth-position syntax boundary<br>
+allows only EOS. Main delivery caps at three, so continuation values belong<br>
+to this declared environment, not open language.</p>
+<h2 dir="auto">12.14 The measured experiment retains critic and reward failures</h2>
+<p dir="auto">Three fixed seeds compare oracle, learned and noisy critics under balanced<br>
+reward; confounded reward uses the same learned-critic recipe. Every row<br>
+receives forty batches of four prompts and eight paths per prompt. Learned<br>
+rows also take one critic step per batch. Oracle/noisy rows enumerate futures<br>
+without training a critic. Equal sampled-path budgets do not imply equal<br>
+optimizer work, enumeration cost or wall time. No best seed or final-test<br>
+checkpoint is selected.</p>
+<p dir="auto">Reward fitting drove pair losses below <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$7\times10^{-6}$</math-renderer>, yet color matching<br>
+remained unreliable. Balanced oracle rows emitted constant blue and obtained<br>
+quality <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$0.5$</math-renderer>; bare colors were outside styled reward-training pairs. Two<br>
+learned-critic seeds collapsed to capped style prefixes with quality zero;<br>
+their high value errors remain in the report. A noisy critic also retains<br>
+severe failures. The observations are compatible with reward extrapolation and<br>
+bootstrap error, but do not uniquely establish either cause or a universal<br>
+ranking of critic methods.</p>
+<p dir="auto">Separate observed rewards at emitted EOS, critic continuation estimates after<br>
+a cap, and diagnostic reward scores of delivered prefixes. A positive prefix<br>
+score is not earned terminal reward. A cap-four diagnostic supplies the<br>
+declared last EOS but cannot repair wrong color or repeated style. All training<br>
+paths, frozen controls and withheld responses are in the<br>
+<a href="../../experiments/reports/2026-10-04-critic-policy.md">report</a>.<br>
+The <a href="../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb">new notebook</a><br>
+traces the difference from return tensors to actual sampled text.</p>
+<h3 dir="auto">Measure the gradient component that answers the question</h3>
+<p dir="auto">A policy loss can contain task reward, KL pressure and entropy terms. A nonzero total gradient does not identify which term provides it. If all sampled answers in every group receive the same reward, the task's centered advantages vanish even while a reference penalty moves the parameters. Assignment E asks for the task-only gradient norm as well as the total objective's diagnostics.</p>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">compatible decoder reference</a> samples answers and the ending action, then reevaluates their likelihood under the declared conditional grammar. Its support and masks therefore remain part of the probability contract. Compare its frozen parent with accepted-response SFT and the reward-based sibling using the same held-out source pairs. Their different losses need not imply different task success.</p>
+<p dir="auto">Reuse this chapter's likelihood-ratio, baseline and support derivations to explain the observed update. The small reference has genuine sampled successes, failures and mixed groups, so it clears a mechanism gate that the earlier all-zero native run did not. Clearing that gate establishes an opportunity for task-directed learning; the independent constant baseline still tests whether the policy acquired the underlying relation.</p>
+<h2 dir="auto">12.15 Companion route and exercises</h2>
+<p dir="auto">Use <a href="../../notebooks/day-19/01_exact_reinforce_gradient.ipynb">Day 19's exact gradient</a>,<br>
+<a href="../../notebooks/day-20/01_baselines_and_rloo.ipynb">Day 20's baseline microscope</a>,<br>
+<a href="../../notebooks/day-20/02_ppo_clipping_and_kl.ipynb">Day 20's PPO/KL laboratory</a>,<br>
+and <a href="../../notebooks/day-21/01_policy_algorithm_comparison.ipynb">Day 21's algorithm comparison</a>.<br>
+The <a href="../labs/12-language-generation-as-a-policy.md">lab guide</a>,<br>
+<a href="../solutions/12-language-generation-as-a-policy.md">worked solutions</a>, and<br>
+<a href="../../experiments/reports/2026-10-04-preference-policy-cpu.md">report</a> supply<br>
+reproduction and evidence boundaries.</p>
+<ol dir="auto">
+<li>Derive the score-function gradient and explain why reward is detached.</li>
+<li>Derive <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$p_i(R_i-J)$</math-renderer> and interpret a positive reward with a negative gradient.</li>
+<li>Prove the action-independent baseline identity and give a biased counterexample.</li>
+<li>Derive the variance-optimal scalar baseline; why need it differ from expected reward?</li>
+<li>Derive the self-inclusion factor for a group mean and explain RLOO's independence condition.</li>
+<li>Distinguish a rollout's old policy from the fixed reference policy.</li>
+<li>Explain why multiplying token ratios differs from PPO's local token surrogate.</li>
+<li>Draw the clipped objective for both advantage signs and explain which directions remain penalized.</li>
+<li>Prove the <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d979ff09bb835e9ed327343799224467">$k_3$</math-renderer> expectation identity and identify the missing-support failure.</li>
+<li>Design a fair algorithm comparison when one method reuses samples for several epochs.</li>
+<li>Connect SFT, DPO, REINFORCE, RLOO, and PPO without claiming identical supervision or objectives.</li>
+<li>If training reward increases and exact task success decreases, what would you inspect before changing the learning rate?</li>
+<li>Derive lambda-zero and lambda-one targets including a nonterminal final bootstrap.</li>
+<li>Why do collector caps and emitted EOS need different return masks?</li>
+<li>Draw actor, critic and frozen reward gradient paths; what changes with shared features?</li>
+<li>How can a fitted pair reward mis-score bare or repeated-style policy responses?</li>
+<li>Compare critics without confusing rollout budget, critic work, prefix scores and quality.</li>
+</ol>
+<p dir="auto">We began with a reward on three complete answers, then separated the expected<br>
+gradient from the noisy sampled one. Baselines changed its noise; reuse required<br>
+probability accounting; clipping changed its incentive; critics supplied<br>
+state-level comparisons whose targets depend on termination. None of those<br>
+operations made the reward a trustworthy definition of success.</p>
+<p dir="auto">Chapter 13 now removes the learned critic and compares answers within a prompt<br>
+group. The next question is sharp: if every sampled answer is equally wrong,<br>
+where could a relative improvement signal come from?</p>

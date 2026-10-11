@@ -10,7 +10,7 @@ At training time include the completed answer. At generation time include contex
 
 ## 2. First assistant target
 
-The ASSISTANT header's logit predicts the first assistant body token. In an unshifted ownership array, mark that body token as supervised. Then align logits at positions $0,\ldots,n-2$ with labels at $1,\ldots,n-1$.
+The ASSISTANT header's logit predicts the first assistant body token. In an unshifted ownership array, mark that body token as supervised. Then align logits at positions $`0,\ldots,n-2`$ with labels at $`1,\ldots,n-1`$.
 
 Do not mark the preceding header merely because its logit supplies the prediction. Ownership concerns the target being taught. The notebook prints the exact producing-position/target pairs; this catches an off-by-one error that a target-count check can miss.
 
@@ -22,7 +22,7 @@ Attention masking, loss masking and parameter freezing are distinct. To forbid a
 
 ## 4. END-as-pad failure
 
-Imagine IDs $[7,5,5,5]$ where the second position is a real END and the last two are padding, also represented by 5. Masking all IDs equal to 5 removes the real termination target. A length-derived validity mask $[1,1,0,0]$ retains it.
+Imagine IDs $`[7,5,5,5]`$ where the second position is a real END and the last two are padding, also represented by 5. Masking all IDs equal to 5 removes the real termination target. A length-derived validity mask $`[1,1,0,0]`$ retains it.
 
 Build padding validity before combining it with assistant ownership. Confirm that all padded labels are ignored and that the final real assistant END remains supervised. Termination quality requires its own free-generation check too.
 
@@ -36,11 +36,11 @@ A production policy may instead truncate or segment, but must state which side i
 
 Use
 
-$$
+```math
 M_{t,u}=\mathbf{1}\{u\le t\}\mathbf{1}\{s_u=s_t\}.
-$$
+```
 
-For segment IDs $[0,0,1,1]$, query 3 can see positions 2 and 3, while query 2 cannot see 3 or either earlier segment position. Position IDs may reset within segments or continue, according to the chosen positional scheme. Compare with independent forwards to establish equivalence.
+For segment IDs $`[0,0,1,1]`$, query 3 can see positions 2 and 3, while query 2 cannot see 3 or either earlier segment position. Position IDs may reset within segments or continue, according to the chosen positional scheme. Compare with independent forwards to establish equivalence.
 
 Also ignore boundary targets that would ask the last token of one segment to predict the first token of another. The teaching policy ignores BOS and headers; another policy needs its own explicit boundary mask.
 
@@ -54,10 +54,10 @@ The visualization shows this difference directly: the ordinary lower-left triang
 
 Equal example sampling with answer lengths 10 and 90 gives token shares
 
-$$
+```math
 \pi_{\mathrm{short}}=\frac{0.5\cdot10}{0.5\cdot10+0.5\cdot90}=0.1,
 \qquad \pi_{\mathrm{long}}=0.9.
-$$
+```
 
 Inverse-length weights produce equal expected token shares but sample short examples more often. Example averaging is another objective with different weights. The correct unit depends on the desired behavior and should be defended using the evaluation slices.
 
@@ -95,8 +95,8 @@ not establish exactly-once API requests or exact model-state resume.
 ## 13. Three budget units
 
 All arms have twelve samples and twelve prompts. Top/length-random each expose
-$80\cdot42=3360$ assistant-plus-END targets; unstratified random exposes
-$80\cdot46=3680$. The primary comparison therefore does not match token exposure.
+$`80\cdot42=3360`$ assistant-plus-END targets; unstratified random exposes
+$`80\cdot46=3680`$. The primary comparison therefore does not match token exposure.
 The sensitivity does, because each prompt has an eligible correct and wrong
 response at the same length. It does not establish equal gradient distributions,
 wall time, teacher quality, or broad-method superiority.
@@ -105,9 +105,9 @@ wall time, teacher quality, or broad-method superiority.
 
 The top twelve correct candidates include six two-word and six three-word
 responses. Correctness ties plus shorter-answer preference make global top 6
-select the six short prompts, giving coverage $6/12=0.5$ and no three-word
+select the six short prompts, giving coverage $`6/12=0.5`$ and no three-word
 examples. One candidate per prompt retains all twelve prompts by construction.
-Different global $K$ values have different example budgets; their coverage plots
+Different global $`K`$ values have different example budgets; their coverage plots
 are audits, not extra matched student outcomes.
 
 ## 15. Optimization and independent generation

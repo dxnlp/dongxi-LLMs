@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "status": "client-decoding-established-semantic-replay-pending",
+  "reviewer": "editorial_routes",
+  "utc": "2026-10-11T20:49:48.409365+00:00",
+  "scope": "Read-only first-party GitHub client serialization investigation; no TeX/source edits or browser-layout claim.",
+  "assets": [
+    {
+      "role": "live element registry",
+      "url": "https://github.githubassets.com/assets/element-registry-10109ffb41067b06.js",
+      "sha256": "dc0248e7612cf4c43f05bfd99b464d1a8893151961861149e41c2ba1f5c4c86c"
+    },
+    {
+      "role": "live filename resolver",
+      "url": "https://github.githubassets.com/assets/wp-runtime-e7610307df12a842.js",
+      "sha256": "31aaf33140a7e3120f690962c2fc87efdc5afa6bb5619055eb767a274eeb087a"
+    },
+    {
+      "role": "actual math renderer client",
+      "url": "https://github.githubassets.com/assets/chunk-lazy-element-math-renderer-d17ebb6b582fcc67.js",
+      "sha256": "b3bf5e2ab18da3343ac3cf9bf8a4a02bd267b39c3bbd911ae93e8b5f6fad0b73",
+      "bytes": 6774,
+      "temporary_file": "/tmp/dongxi-github-math-client.js"
+    },
+    {
+      "role": "published first-party source map",
+      "url": "https://github.githubassets.com/assets/chunk-lazy-element-math-renderer-d17ebb6b582fcc67-63e02431e2f3a8bd.js.map",
+      "sha256": "9518c65e350fff00fb31c1426e9bf0307cdb0a972e2489692f8b654da159b730",
+      "bytes": 35859,
+      "temporary_file": "/tmp/dongxi-github-math-client.js.map"
+    }
+  ],
+  "filename_resolution": {
+    "method": "Evaluate only isolated n.u filename resolver in Node vm, with empty context and1000ms timeout; do not execute whole GitHub client.",
+    "input_chunk": "ktj",
+    "actual_output": "chunk-lazy-element-math-renderer-d17ebb6b582fcc67.js",
+    "initial_investigation_failure": "The manually assembled URL omitted chunk- and returned404. That was a filename-reading error, not an unavailable-client boundary; correct resolver output returned200."
+  },
+  "client_functions": {
+    "published_source": "packages/math-renderer-element/math-renderer-element.ts",
+    "temporary_document": {
+      "minified_name": "#t()",
+      "source_name": "#tempDocumentContentForSanitization()",
+      "start_line": 192,
+      "end_line": 209,
+      "writer_excerpt": "    doc.write(`\n      <html>\n        <body>\n          ${this.textContent}\n        </body>\n      </html>\n    `)",
+      "return_excerpt": "return doc.body.textContent ?? ''",
+      "behavior": "Creates a new HTMLDocument, opens it, writes an HTML body interpolating the existing element textContent, closes it, and reads that body textContent. This reparses HTML rather than assigning textContent."
+    },
+    "tex_conversion": {
+      "source_name": "convertTexToMathML()",
+      "start_line": 440,
+      "end_line": 458,
+      "renderer_call_excerpt": "const mathMl = mathJax.tex2mml(tex, {display: !this.isInline})",
+      "behavior": "Reads the temporary-document body, trims exterior whitespace, removes leading/trailing one or two dollar delimiters, then calls tex2mml with display equal to the negation of isInline."
+    }
+  },
+  "entity_findings": {
+    "protected_inline": "API raw &amp;lt; becomes &lt; in first parsed DOM text; temporary document reparses that entity into literal < text. The second decoding is established by actual client code.",
+    "display_caution": "Some fenced displays use raw API &lt;, which becomes literal < in first DOM text before document.write. A following letter can be interpreted as an HTML tag during the temporary-document parse. Exact browser/HTML parsing is required; applying html.unescape alone cannot reproduce this client behavior.",
+    "concrete_display_examples": [
+      {
+        "path": "book/chapters/03-learning-the-next-token.md",
+        "line": 371,
+        "fragment": "x_{<t}"
+      },
+      {
+        "path": "book/chapters/12-language-generation-as-a-policy.md",
+        "line": 31,
+        "fragment": "y_{<t}"
+      },
+      {
+        "path": "book/chapters/06-pretraining-as-a-controlled-system.md",
+        "line": 380,
+        "fragment": "W<u\\leq S"
+      }
+    ],
+    "actual_browser_result": "Not executed by this subagent; root owns replay/renderer evidence."
+  },
+  "backslash_newline": {
+    "client_behavior": "No client slash-before-newline removal exists in the inspected functions. Dimension-argument safety clamping is a separate transformation and does not remove that slash.",
+    "serialized_shape": "Original two-backslash row separator immediately before physical newline becomes three backslashes plus newline in saved API HTML/DOM text.",
+    "pinned_local_mathjax_interpretation": "In3.2.2, GetCS sees a newline after the final slash, consumes it and returns a space control sequence; BaseMappings expands that sequence as text containing a space. The original two-backslash row separator survives. This preserves mathematical content/row structure in the relevant examples but can add visible spacing; it is not literal source equality.",
+    "primary_sources": [
+      {
+        "url": "https://raw.githubusercontent.com/mathjax/MathJax-src/3.2.2/ts/input/tex/TexParser.ts",
+        "sha256": "b2306654ecd919960615a083bbed7d0d6a351e155c795fc8aed4c52ef459d927",
+        "function": "GetCS()"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/mathjax/MathJax-src/3.2.2/ts/input/tex/base/BaseMappings.ts",
+        "sha256": "85e605b5ee6472f35a0817de6bd339f06ec9ea2c9a42a9e5803a280d418c2fa0",
+        "mapping": "space control sequence -> Macro with text-space replacement"
+      }
+    ],
+    "limit": "This3.2.2 source reading is not a claim about GitHub deployed MathJax version. Actual API-derived payloads should undergo the established temporary-document parse and independent MathJax semantic replay."
+  },
+  "acceptance_boundary": [
+    "Committed-to-current TeX source preservation remains accepted in routes-peer-review.json.",
+    "This receipt establishes client decoding logic and distinguishes raw API serialization from actual TeX input.",
+    "It does not declare all1871 decoded payloads equivalent or all browser formulas/layout passed; root replay is pending."
+  ]
+}

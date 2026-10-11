@@ -14,11 +14,11 @@ is executable now; the model-scale Qwen results later in the chapter are a separ
 
 ## 13.1 A baseline from alternative answers
 
-Let $x$ be a prompt and $y_i=(y_{i1},\ldots,y_{in_i})$ a response. A behavior
-policy $\pi_{\mathrm{old}}$ generates $G$ responses independently conditional on
-the same prompt. The verifier returns $R_i=R(x,y_i)$; a learned reward model would instead
-return $r_\phi(x,y_i)$. The reference fixture uses verifier rewards.
-Archived code may use `r_i` and `bar_r` for $R_i$ and $\bar R$.
+Let $`x`$ be a prompt and $`y_i=(y_{i1},\ldots,y_{in_i})`$ a response. A behavior
+policy $`\pi_{\mathrm{old}}`$ generates $`G`$ responses independently conditional on
+the same prompt. The verifier returns $`R_i=R(x,y_i)`$; a learned reward model would instead
+return $`r_\phi(x,y_i)`$. The reference fixture uses verifier rewards.
+Archived code may use `r_i` and `bar_r` for $`R_i`$ and $`\bar R`$.
 The group supplies a local comparison. Getting reward 1 is an improvement within
 a group of mostly failures, but offers no comparison within a group where every
 answer succeeds. GRPO replaces a learned value baseline with group statistics;
@@ -40,19 +40,19 @@ comparison and pays for the additional sampled responses.
 
 We declare the course convention explicitly:
 
-$$
+```math
 \bar R=\frac1G\sum_{j=1}^{G}R_j,\qquad
 s=\sqrt{\frac1G\sum_{j=1}^{G}(R_j-\bar R)^2},\qquad
 \hat A_i=\frac{R_i-\bar R}{s+\epsilon_{\mathrm{adv}}},\quad \epsilon_{\mathrm{adv}}=10^{-8}.
-$$
+```
 
-The small constant $\epsilon_{\mathrm{adv}}$ stabilizes normalization; archived
-code may name it `delta`. It is distinct from Chapter 12's TD residual $\delta_t$.
+The small constant $`\epsilon_{\mathrm{adv}}`$ stabilizes normalization; archived
+code may name it `delta`. It is distinct from Chapter 12's TD residual $`\delta_t`$.
 
 The implementation uses population standard deviation: Torch's `correction=0`.
-Sample standard deviation divides the squared deviations by $G-1$. For a
-nonconstant group it is larger by $\sqrt{G/(G-1)}$, so the corresponding normalized
-advantages are smaller. At $G=2$ that difference is substantial. An implementation
+Sample standard deviation divides the squared deviations by $`G-1`$. For a
+nonconstant group it is larger by $`\sqrt{G/(G-1)}`$, so the corresponding normalized
+advantages are smaller. At $`G=2`$ that difference is substantial. An implementation
 that changes this choice has changed update scale, even when its code looks
 almost identical.
 
@@ -73,7 +73,7 @@ For this newly calculated illustration, tokens are the displayed words or
 integers plus EOS. They are an explicit teaching alphabet, not Qwen token
 counts. Consider this possible group of four independently sampled responses:
 
-| Response | Valid generated tokens | $R_i$ | $R_i-\bar R$ | Rounded $\hat A_i$ |
+| Response | Valid generated tokens | $`R_i`$ | $`R_i-\bar R`$ | Rounded $`\hat A_i`$ |
 |---:|---|---:|---:|---:|
 | 1 | `4`, EOS | 0 | −0.5 | −1 |
 | 2 | `The`, `answer`, `is`, `5`, EOS | 0 | −0.5 | −1 |
@@ -81,7 +81,7 @@ counts. Consider this possible group of four independently sampled responses:
 | 4 | `5`, EOS | 1 | +0.5 | +1 |
 
 The squared deviations are four copies of 0.25. Their population mean is
-0.25, giving $s=0.5$. With the declared $10^{-8}$ stabilizer the absolute
+0.25, giving $`s=0.5`$. With the declared $`10^{-8}`$ stabilizer the absolute
 advantage is approximately 0.99999998; the table rounds it to one. Independent
 sampling can legitimately produce identical successful strings. Copying one
 saved success twice would instead violate the independence assumption.
@@ -89,7 +89,7 @@ saved success twice would instead violate the independence assumption.
 ![Mixed, all-success and all-failure groups and their relative advantages](../../notebooks/figures/chapter-13/day-22-01_group_advantages-01.png)
 
 The [original group notebook](../../notebooks/day-22/01_group_advantages.ipynb)
-uses the exact reward rows $[0,0,1,1]$, $[1,1,1,1]$ and $[0,0,0,0]$.
+uses the exact reward rows $`[0,0,1,1]`$, $`[1,1,1,1]`$ and $`[0,0,0,0]`$.
 Read the response index horizontally and signed advantage vertically.
 The two flat zero lines have opposite task outcomes, so advantage alone
 cannot tell us whether a group succeeded. Changing the same reward row
@@ -101,13 +101,13 @@ the signs survive while the update scale changes.
 Subtracting a baseline and dividing by a standard deviation are different
 operations. Centering compares each response to the group's mean. Scaling changes
 how strongly groups with different reward spreads contribute. For binary rewards
-with empirical success fraction $\hat p$, the population standard deviation is
-$\sqrt{\hat p(1-\hat p)}$. A successful answer in a mostly failing group can then
+with empirical success fraction $`\hat p`$, the population standard deviation is
+$`\sqrt{\hat p(1-\hat p)}`$. A successful answer in a mostly failing group can then
 receive a large positive advantage. Across prompts, this is a weighting choice.
 
 The statistics contain the sampled response's own reward. For unnormalized
 centering and independent group samples, the expected score-function estimator
-has a factor $(G-1)/G$ compared with the estimator using the true expected reward
+has a factor $`(G-1)/G`$ compared with the estimator using the true expected reward
 as baseline. A leave-one-out baseline removes that simple self-inclusion factor.
 After standard-deviation normalization, the denominator also depends on all
 sampled rewards, so this is no longer merely the same estimator with a fixed
@@ -119,63 +119,63 @@ of expected reward under the **behavior policy at this prompt**. Yet using
 that mean to weight its own response's score vector creates dependence.
 Value-estimate unbiasedness therefore does not imply policy-gradient
 unbiasedness. For our mixed group the RLOO advantages are
-$[-2/3,-2/3,2/3,2/3]$; inclusive centering gives
-$[-1/2,-1/2,1/2,1/2]$, exactly three quarters as large. Dividing either by
+$`[-2/3,-2/3,2/3,2/3]`$; inclusive centering gives
+$`[-1/2,-1/2,1/2,1/2]`$, exactly three quarters as large. Dividing either by
 the group's random standard deviation changes the statistical argument again.
 
 If a group is constant, its centered rewards are exactly zero. The implementation
-returns exact zero advantages rather than allowing $0/0$. Epsilon protects
+returns exact zero advantages rather than allowing $`0/0`$. Epsilon protects
 near-zero denominators; it cannot invent exploration. Track the fraction of
 zero-variance groups. A high fraction may reflect successful saturation, failure
 saturation, insufficient sampling, an overly forgiving verifier or an overly
 strict one. Its interpretation requires the rewards and representative outputs.
 
-With independent binary success probability $p$, the probability that all $G$
-answers are failures is $(1-p)^G$. A larger group may expose an occasional success,
+With independent binary success probability $`p`$, the probability that all $`G`$
+answers are failures is $`(1-p)^G`$. A larger group may expose an occasional success,
 but requires additional decoding. If outputs are effectively duplicates, the
 independence approximation exaggerates the benefit. Group size belongs in a
 cost-quality comparison, with actual generated token counts recorded.
 
-For a declared iid success probability $p=0.1$, four responses are all wrong
+For a declared iid success probability $`p=0.1`$, four responses are all wrong
 with probability 0.6561; eight responses with probability approximately
 0.430467. A group has a nonconstant binary reward with probability
-$1-(1-p)^G-p^G$: approximately 0.3438 for four and 0.569533 for eight.
+$`1-(1-p)^G-p^G`$: approximately 0.3438 for four and 0.569533 for eight.
 More draws improve the chance of a comparison while roughly doubling
-collection work at unchanged response lengths. At $p=0$ they help neither
-signal nor correctness; at $p=1$ constant groups indicate success instead.
+collection work at unchanged response lengths. At $`p=0`$ they help neither
+signal nor correctness; at $`p=1`$ constant groups indicate success instead.
 Those are sampling calculations, not forecasts of the native pilot.
 
 ## 13.3 The objective we will implement
 
-At response position $t$, define state $s_{it}=(x,y_{i,<t})$ and token ratio
+At response position $`t`$, define state $`s_{it}=(x,y_{i,<t})`$ and token ratio
 
-$$
+```math
 \rho_{it}(\theta)=
 \exp\left(\log\pi_\theta(y_{it}\mid s_{it})-
 \log\pi_{\mathrm{old}}(y_{it}\mid s_{it})\right).
-$$
+```
 
 The behavior log probability is recorded at collection time and held fixed.
 Our educational objective averages token contributions inside each response,
 then averages responses:
 
-$$
+```math
 J(\theta)=\frac1G\sum_{i=1}^{G}\frac1{n_i}\sum_{t=1}^{n_i}
 \left[
 \min\left(\rho_{it}\hat A_i,
 \mathrm{clip}(\rho_{it},1-\epsilon,1+\epsilon)\hat A_i\right)
 -\beta D_{it}(\theta)
 \right],\qquad L=-J.
-$$
+```
 
-Here $\epsilon=0.2$ in the lab. For several prompts we average this expression
+Here $`\epsilon=0.2`$ in the lab. For several prompts we average this expression
 over the prompt batch. The advantages, sampled token IDs, behavior log
 probabilities and reference parameters are detached. The current policy logits
-and chosen KL term remain differentiable. The optimizer minimizes $L$.
+and chosen KL term remain differentiable. The optimizer minimizes $`L`$.
 
-For $\hat A_i>0$, raising a token's ratio improves the surrogate until the upper
+For $`\hat A_i>0`$, raising a token's ratio improves the surrogate until the upper
 clip boundary; beyond it that branch supplies no further positive pressure.
-For $\hat A_i<0$, reducing its ratio improves the surrogate until the lower
+For $`\hat A_i<0`$, reducing its ratio improves the surrogate until the lower
 boundary. An unfavorable movement remains penalized. Clipping is a modification
 to a sampled surrogate, not a guarantee that every vocabulary probability stays
 inside a range or that the next policy has small KL.
@@ -188,15 +188,15 @@ correction. Our readable baseline uses one update per freshly collected batch.
 
 ### Turn relative rewards into token pressure
 
-Return to the four-response illustration. Set $\beta=0$ for this isolated
+Return to the four-response illustration. Set $`\beta=0`$ for this isolated
 policy-signal calculation and use a fresh behavior snapshot. Every ratio is
-one. The response means are $[-1,-1,+1,+1]$ to the displayed precision,
-so $J=0$ and $L=0$. The derivative is nevertheless informative:
+one. The response means are $`[-1,-1,+1,+1]`$ to the displayed precision,
+so $`J=0`$ and $`L=0`$. The derivative is nevertheless informative:
 
-$$
+```math
 \frac{\partial L}{\partial\log\pi_\theta(y_{it}\mid s_{it})}
 =-\frac{\hat A_i}{Gn_i}.
-$$
+```
 
 For response 1, each of its two valid tokens has coefficient approximately
 +0.125. Response 2's five tokens each have +0.05. Responses 3 and 4 each
@@ -210,8 +210,8 @@ The [canonical clipped objective](../../src/dongxi_llms/grpo_lab.py)
 accepts selected log probabilities and a valid-token mask with precisely
 this reduction. The [token-ratio companion](../../notebooks/day-22/02_token_ratios_kl.ipynb)
 lets the reader inspect that loss independently of an entire training run.
-For one positive-advantage response with ratios $[1.05,0.9,1.4]$, clipping
-at 0.2 gives contributions $[1.05,0.9,1.2]$ and response mean 1.05.
+For one positive-advantage response with ratios $`[1.05,0.9,1.4]`$, clipping
+at 0.2 gives contributions $`[1.05,0.9,1.2]`$ and response mean 1.05.
 Only the last token's beneficial increase has reached its flat region.
 
 **Controlled change.** Counterfactually replace the reward row by all zeros, leaving tokens,
@@ -229,23 +229,23 @@ distinction consequential.
 
 ## 13.4 KL values and KL gradients
 
-The reference policy $\pi_{\mathrm{ref}}$ is a fixed anchor. It differs from the
+The reference policy $`\pi_{\mathrm{ref}}`$ is a fixed anchor. It differs from the
 behavior snapshot, which is refreshed every update. At an enumerable vocabulary
 state, the course computes exact forward categorical KL:
 
-$$
+```math
 D_{it}=\sum_v p_v\log\frac{p_v}{q_v},\qquad
 p_v=\pi_\theta(v\mid s_{it}),\quad q_v=\pi_{\mathrm{ref}}(v\mid s_{it}).
-$$
+```
 
-For current logits $z_v$, its derivative is
+For current logits $`z_v`$, its derivative is
 
-$$
+```math
 \frac{\partial D}{\partial z_v}
 =p_v\left(\log\frac{p_v}{q_v}-D\right).
-$$
+```
 
-This follows by differentiating $p$ through softmax and summing the Jacobian
+This follows by differentiating $`p`$ through softmax and summing the Jacobian
 terms. The expression includes how changing logits changes the distribution
 that weights the log ratios. Reference logits are constants. Exact vocabulary
 KL avoids sampling noise over candidate tokens at the visited state; it still
@@ -254,14 +254,14 @@ current-policy trajectory.
 
 A common sampled nonnegative estimator is
 
-$$
+```math
 k_3(v)=\frac{q_v}{p_v}-\log\frac{q_v}{p_v}-1.
-$$
+```
 
-When $v$ is sampled from $p$, its expectation is forward KL because
-$\sum_v p_v(q_v/p_v)=1$ on common positive support. Its individual value
+When $`v`$ is sampled from $`p`$, its expectation is forward KL because
+$`\sum_v p_v(q_v/p_v)=1`$ on common positive support. Its individual value
 is nonnegative, but its variance is not universally smaller than that of
-$\log(p_v/q_v)$; rare actions with large $q_v/p_v$ can have large tails.
+$`\log(p_v/q_v)`$; rare actions with large $`q_v/p_v`$ can have large tails.
 This value identity does not mean that differentiating
 the integrand while treating samples as fixed produces the gradient of the
 full expectation. Sampling from an old policy introduces another distribution
@@ -285,7 +285,7 @@ response ten times as much total weight, all else equal. Neither reduction is
 just a display setting. Both interact with advantage signs, EOS, truncation and
 the distribution of lengths.
 
-Use a valid-response mask $m_{it}$ that includes sampled EOS and excludes padding.
+Use a valid-response mask $`m_{it}`$ that includes sampled EOS and excludes padding.
 Prompt tokens participate in the forward context but receive no direct response
 policy-loss term. Their embeddings and earlier states can still receive gradients
 through the response computations, as Chapter 3's loss-mask discussion explains.
@@ -308,22 +308,22 @@ holds responses and initial shared-decoder parameters fixed. Three reductions
 and three reward-scaling rules expose objective differences; filtering is a
 separate collection experiment.
 
-Write $L=-\sum_{i,t}w_{it}u_{it}$. With $N$ responses, valid-action count $n_i$
-and declared generation cap $C$, the coefficients are
+Write $`L=-\sum_{i,t}w_{it}u_{it}`$. With $`N`$ responses, valid-action count $`n_i`$
+and declared generation cap $`C`$, the coefficients are
 
-$$
+```math
 w_{it}^{\mathrm{response}}=\frac{m_{it}}{Nn_i},\qquad
 w_{it}^{\mathrm{token}}=\frac{m_{it}}{\sum_j n_j},\qquad
 w_{it}^{\mathrm{fixed}}=\frac{m_{it}}{NC}.
-$$
+```
 
 The fixed denominator uses the declared cap, not padded tensor width. At initial
 ratio one and away from clipping, the chosen log-probability derivative is
 
-$$
+```math
 \frac{\partial L}{\partial\ell_{it}}=-w_{it}\hat A_i,
 \qquad \ell_{it}=\log\pi_\theta(y_{it}\mid s_{it}).
-$$
+```
 
 Changing these coefficients changes the signal reaching shared parameters.
 Global-token and fixed-cap derivatives differ by one scalar on a fixed pool.
@@ -331,22 +331,22 @@ Response means change individual responses' relative weights, so the parameter
 gradient can change direction too. This does not alone predict final generation
 length or accuracy.
 
-For reward components $R_{ic}$ with weights $\alpha_c$, normalizing the weighted
+For reward components $`R_{ic}`$ with weights $`\alpha_c`$, normalizing the weighted
 total and normalizing components before aggregation are different:
 
-$$
+```math
 A_i^{\mathrm{total}}=
 \frac{\sum_c\alpha_c R_{ic}-\mathrm{mean}_j\sum_c\alpha_c R_{jc}}
 {\mathrm{std}_j(\sum_c\alpha_c R_{jc})+\epsilon_{\mathrm{adv}}},\qquad
 A_i^{\mathrm{component}}=\sum_c\alpha_c
 \frac{R_{ic}-\mathrm{mean}_j R_{jc}}
 {\mathrm{std}_j(R_{jc})+\epsilon_{\mathrm{adv}}}.
-$$
+```
 
 Statistics are within one prompt's group, using population moments. A constant
 component contributes zero. A large raw-scale component can dominate total
 normalization; component normalization changes that balance. Subsequent weights
-still matter: multiplying every $\alpha_c$ by ten multiplies the component-based
+still matter: multiplying every $`\alpha_c`$ by ten multiplies the component-based
 advantage by ten. Normalization cannot decide what behavior ought to be rewarded.
 
 The proxy deliberately combines answer-only correctness, one-numeral completion
@@ -356,8 +356,8 @@ credit while failing the complete task. Save both measurements rather than
 defining the shortcut away.
 
 Asymmetric clipping declares lower and upper widths separately. The derivative
-is zero for positive advantage above $1+\epsilon_+$, or negative advantage below
-$1-\epsilon_-$. Elsewhere it is $-w_{it}\hat A_i\rho_{it}$. At initial ratio one,
+is zero for positive advantage above $`1+\epsilon_+`$, or negative advantage below
+$`1-\epsilon_-`$. Elsewhere it is $`-w_{it}\hat A_i\rho_{it}`$. At initial ratio one,
 symmetric and asymmetric branches agree. A labeled constructed score fixture
 exposes clipping boundaries without pretending those ratios were model outputs.
 
@@ -513,16 +513,16 @@ embeddings, one causal attention block and an MLP produce the outputs; there is
 no per-problem lookup in this decoder and no SFT warm-start.
 
 We deliberately supply a syntax grammar, not the answer. The first response
-position permits $C_1=\{0,1\}$; the next permits
-$C_2=\{0,1,\mathrm{EOS}\}$. The model samples EOS and receives its loss: termination
-is not inserted free. With independently fixed correct answer $a^\ast$, the
+position permits $`C_1=\{0,1\}`$; the next permits
+$`C_2=\{0,1,\mathrm{EOS}\}`$. The model samples EOS and receives its loss: termination
+is not inserted free. With independently fixed correct answer $`a^\ast`$, the
 complete-path probability is
 
-$$
+```math
 P_\theta(\text{complete correct}\mid x)=
 p_\theta(a^\ast\mid x,C_1)
 p_\theta(\mathrm{EOS}\mid x,a^\ast,C_2).
-$$
+```
 
 This exact probability is a diagnostic, not the training objective. Actual
 rollouts supply binary complete-path rewards and group advantages to the sampled
@@ -693,11 +693,11 @@ relative advantages? Can an optimizer call still change weights?
 Use the first retained G8 training record, update 1 and source `train-0`, rather
 than selecting a successful group. The prompt is `Return only the integer answer. 2 + 3 =`.
 The native Instruct/thinking-off pilot uses group size eight, temperature one,
-full support, a 64-action cap, seed 2323, learning rate $10^{-6}$ and sixteen
+full support, a 64-action cap, seed 2323, learning rate $`10^{-6}`$ and sixteen
 iterations. The common evaluation later changes the cap under its own matched
 contract. These are actual saved completions:
 
-| Response | Complete scoring text | Stop | Valid actions including stop | Strict reward $R_i$ | $\hat A_i$ |
+| Response | Complete scoring text | Stop | Valid actions including stop | Strict reward $`R_i`$ | $`\hat A_i`$ |
 |---:|---|---|---:|---:|---:|
 | 1 | `2 + 3 = 5.` | EOS | 9 | 0 | 0 |
 | 2 | `2 + 3 = 5` | EOS | 8 | 0 | 0 |
@@ -717,7 +717,7 @@ a new task, rather than a corrected version of these measurements.
 
 This constant group supplies no relative reward signal. Its first scalar loss
 and pre-update exact KL are zero, yet the retained gradient norm is about
-$4.27\times10^{-7}$ and the policy hash changes after the optimizer call.
+$`4.27\times10^{-7}`$ and the policy hash changes after the optimizer call.
 Finite-precision regularizer gradients and AdamW state/decay must be distinguished
 from learning driven by reward advantages. A changed weight hash alone does not
 identify which path moved it or establish improved answers. Later groups can
@@ -761,13 +761,13 @@ serving-throughput benchmarks.
 
 ### Difficulty changes which prompts contribute
 
-For independent binary-reward samples with success probability $p$ and group size $G$, the probability of observing both reward classes is
+For independent binary-reward samples with success probability $`p`$ and group size $`G`$, the probability of observing both reward classes is
 
-$$
+```math
 P(\text{mixed group})=1-p^G-(1-p)^G.
-$$
+```
 
-At $p=0.5$ and $G=4$, this is 0.875. At $p=0.1$ or $p=0.9$, it is 0.3438. Drawing prompts from a uniform mixture and rejecting nonmixed groups favors intermediate-difficulty prompts in the retained population. Retrying each prompt until it yields a mixed group instead preserves a fixed prompt quota, while changing its conditional estimator and collection cost. In either policy, collection cost rises where mixed groups are rare. The [reward audit](../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb) enumerates the finite outcomes rather than treating the group's normalizer as independent of an answer's reward.
+At $`p=0.5`$ and $`G=4`$, this is 0.875. At $`p=0.1`$ or $`p=0.9`$, it is 0.3438. Drawing prompts from a uniform mixture and rejecting nonmixed groups favors intermediate-difficulty prompts in the retained population. Retrying each prompt until it yields a mixed group instead preserves a fixed prompt quota, while changing its conditional estimator and collection cost. In either policy, collection cost rises where mixed groups are rare. The [reward audit](../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb) enumerates the finite outcomes rather than treating the group's normalizer as independent of an answer's reward.
 
 That dependence matters for standardized advantages: the same samples determine each action, the mean and the standard deviation. A large-group approximation can describe a limit while misrepresenting a small group's expected gradient and variance. The companion compares normalized and unnormalized estimators, selection populations and attempts per retained group on one fixed Bernoulli policy. It does not infer autoregressive reasoning quality from that enumeration.
 

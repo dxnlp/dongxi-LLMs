@@ -63,28 +63,28 @@ from the learned vectors and transformations associated with those addresses.
 
 The first vector is the second plus a shared constant 1000:
 
-$$
+```math
 [1002,1001,999]=[2,1,-1]+1000.
-$$
+```
 
 Softmax cancels that constant:
 
-$$
+```math
 \frac{e^{z_i+1000}}{\sum_je^{z_j+1000}}
 =
 \frac{e^{1000}e^{z_i}}{e^{1000}\sum_je^{z_j}}
 =
 \frac{e^{z_i}}{\sum_je^{z_j}}.
-$$
+```
 
 The two vectors therefore produce the same mathematical distribution.
 
-Computing $e^{1002}$ directly can overflow in finite precision. Stable softmax
-subtracts $m=\max_i z_i$ first:
+Computing $`e^{1002}`$ directly can overflow in finite precision. Stable softmax
+subtracts $`m=\max_i z_i`$ first:
 
-$$
+```math
 [1002,1001,999]-1002=[0,-1,-3].
-$$
+```
 
 Every exponential is now at most one. This is not a changed model or an
 approximate probability rule; it is an algebraically identical computation with
@@ -96,15 +96,15 @@ zero.
 
 The target is class 1, so:
 
-$$
+```math
 q=[0,1,0].
-$$
+```
 
 Therefore:
 
-$$
+```math
 p-q=[0.7054,-0.7405,0.0351].
-$$
+```
 
 Interpretation by coordinate:
 
@@ -116,7 +116,7 @@ Interpretation by coordinate:
   because the model had assigned it little probability.
 
 The gradient sign is not the update direction; the optimizer moves opposite the
-gradient under the SGD sketch $z\leftarrow z-\eta\nabla z$.
+gradient under the SGD sketch $`z\leftarrow z-\eta\nabla z`$.
 
 Class 0 receives more correction because it captured most of the limited
 probability budget. Lowering an already unlikely class 2 would release little
@@ -125,63 +125,63 @@ the observed mistake.
 
 ## Exercise 5 — From logits into parameters
 
-Let $h$ and $g$ be row vectors of lengths $D$ and $V$, and let the stored
-output weight have shape $[V,D]$:
+Let $`h`$ and $`g`$ be row vectors of lengths $`D`$ and $`V`$, and let the stored
+output weight have shape $`[V,D]`$:
 
-$$
+```math
 z=hW_{\mathrm{out}}^\top+b,
 \qquad
 g=\frac{\partial L}{\partial z}=p-q.
-$$
+```
 
 The chain rule gives:
 
-$$
+```math
 \frac{\partial L}{\partial b}=g,
 \qquad
 \frac{\partial L}{\partial W_{\mathrm{out}}}=g^\top h,
 \qquad
 \frac{\partial L}{\partial h}=gW_{\mathrm{out}}.
-$$
+```
 
-$g^\top h$ is an outer product with shape `[V,D]`. Under a simple gradient step,
+$`g^\top h`$ is an outer product with shape `[V,D]`. Under a simple gradient step,
 the target row is strengthened in the direction of the current hidden state,
 while non-target rows are weakened in proportion to their probabilities. The
 output head is learning how to read contextual geometry as token evidence.
 
-$gW_{\mathrm{out}}$ has shape `[D]` and tells the transformer how the state should change
+$`gW_{\mathrm{out}}`$ has shape `[D]` and tells the transformer how the state should change
 to make the target more competitive. Backpropagation sends this signal through
-the layers that created $h$. The transformer is learning to construct better
+the layers that created $`h`$. The transformer is learning to construct better
 contextual geometry.
 
 The local logit update is explanatory, but logits are normally disposable
-activations. Reusable learning lives in $W_{\mathrm{out}}$, $b$, transformer parameters, and
+activations. Reusable learning lives in $`W_{\mathrm{out}}`$, $`b`$, transformer parameters, and
 possibly a tied embedding table.
 
 ## Exercise 6 — Nonzero loss, zero expected gradient
 
-At $p=[0.7,0.3]$, the `dog` one-hot target produces:
+At $`p=[0.7,0.3]`$, the `dog` one-hot target produces:
 
-$$
+```math
 g_{dog}=[0.7,0.3]-[1,0]=[-0.3,0.3].
-$$
+```
 
 The `cat` target produces:
 
-$$
+```math
 g_{cat}=[0.7,0.3]-[0,1]=[0.7,-0.7].
-$$
+```
 
 Weighting by target frequencies:
 
-$$
+```math
 \begin{aligned}
 \mathbb{E}[g]
-&=0.7g_{dog}+0.3g_{cat}\\
-&=0.7[-0.3,0.3]+0.3[0.7,-0.7]\\
+&=0.7g_{dog}+0.3g_{cat}\\%
+&=0.7[-0.3,0.3]+0.3[0.7,-0.7]\\%
 &=[0,0].
 \end{aligned}
-$$
+```
 
 Each sample still prefers its observed outcome, but across the distribution the
 corrections balance. With small stochastic minibatches, realized gradients can
@@ -189,11 +189,11 @@ fluctuate around this zero expectation.
 
 The cross-entropy decomposition is:
 
-$$
+```math
 H(q,p)=H(q)+D_{KL}(q\|p).
-$$
+```
 
-At $p=q$, KL mismatch is zero while $H(q)$ remains positive because both outcomes
+At $`p=q`$, KL mismatch is zero while $`H(q)`$ remains positive because both outcomes
 can occur. The optimizer has reached the best calibrated prediction available
 for that empirical distribution. Positive loss measures irreducible uncertainty,
 not necessarily residual model error.
@@ -202,15 +202,15 @@ not necessarily residual model error.
 
 Model A's product is:
 
-$$
+```math
 0.5^4=0.0625.
-$$
+```
 
 Model B's product is approximately:
 
-$$
+```math
 0.99^3\times0.0644\approx0.0625.
-$$
+```
 
 The products and therefore total sequence NLLs are equal. This establishes one
 narrow claim: both models assign approximately the same probability to this
@@ -234,28 +234,28 @@ forgets this information when it reduces many factors to one product.
 
 For tokenizer A:
 
-$$
+```math
 \mathrm{NLL}_{total}=-\log0.25\approx1.386.
-$$
+```
 
 There is one token, so mean NLL is 1.386 and:
 
-$$
+```math
 \mathrm{PPL}_A=e^{1.386}=4.
-$$
+```
 
 For tokenizer B, the complete text probability remains:
 
-$$
+```math
 0.5\times0.5=0.25,
-$$
+```
 
 so total NLL is still 1.386. There are two tokens, however, so mean NLL is
-$1.386/2=0.693$ and:
+$`1.386/2=0.693`$ and:
 
-$$
+```math
 \mathrm{PPL}_B=e^{0.693}=2.
-$$
+```
 
 The lower number does not indicate a more probable text. The denominator counts
 different units.
@@ -264,12 +264,12 @@ A multilingual comparison should freeze the corpora, domains, preprocessing,
 special tokens, target masks, and context policy; report tokenizer compression
 such as tokens per UTF-8 byte; and normalize total NLL to a common unit such as:
 
-$$
+```math
 \text{bits per byte}
 =
 \frac{\mathrm{NLL}_{total}}
 {N_{bytes}\ln2}.
-$$
+```
 
 It should also compare how much raw text fits inside the fixed token context.
 Even then, lower predictive loss does not by itself establish comprehension,
@@ -286,11 +286,11 @@ The supervised pairs are:
 <BOS> I love dogs     → <EOS>
 ```
 
-The state at position $t$ sees tokens through $x_t$ and predicts $x_{t+1}$. The
+The state at position $`t`$ sees tokens through $`x_t`$ and predicts $`x_{t+1}`$. The
 final EOS position has no later target in this sequence.
 
-An unshifted objective compares the position-$t$ logits with $x_t$. Because the
-current token is already part of the position-$t$ input, a model can learn an
+An unshifted objective compares the position-$`t`$ logits with $`x_t`$. Because the
+current token is already part of the position-$`t`$ input, a model can learn an
 identity-like map from the current embedding to the same token's output row. It
 can achieve very low loss on that objective without learning the continuation
 relationships listed above.
@@ -311,8 +311,8 @@ causal attention mask.
    values. Its loss therefore backpropagates into earlier prompt representations,
    input embeddings, and shared transformer parameters.
 
-The activation-level qualifier matters. At layer $\ell$, a response position
-reads prompt states from layer $\ell-1$. Those earlier-layer states can lie on the
+The activation-level qualifier matters. At layer $`\ell`$, a response position
+reads prompt states from layer $`\ell-1`$. Those earlier-layer states can lie on the
 loss path. The final-layer output at a masked prompt position need not receive a
 gradient merely because a later final-layer response output exists; that exact
 activation may have no consumer. Explicit detaching, blocked attention, or frozen
@@ -336,7 +336,7 @@ sampling low-probability candidates. It cannot guarantee a good trajectory:
 - positive temperature does not change greedy ranking;
 - sharpening can amplify systematic model bias;
 - deterministic choices can enter repetition loops;
-- if $p$ is calibrated, $\tau<1$ distorts its frequencies away from the data by
+- if $`p`$ is calibrated, $`\tau<1`$ distorts its frequencies away from the data by
   overrepresenting the mode.
 
 Temperature changes the decoder's risk profile. It does not eliminate the
@@ -348,7 +348,7 @@ A supported claim is:
 
 > In the precommitted two-logit, full-batch PyTorch experiment, repeated 70/30
 > one-hot targets produced probabilities approximately `[0.7,0.3]`; autograd
-> matched $p-r$, and final mean cross-entropy matched empirical entropy within
+> matched $`p-r`$, and final mean cross-entropy matched empirical entropy within
 > the declared tolerances.
 
 A plausible but unsupported interpretation is:

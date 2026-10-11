@@ -5,17 +5,17 @@ Runnable references immediately follow predictions in the [notebooks](../labs/10
 
 ## 1. Soft-target gradients
 
-For the fixed prompt, $r_a=r_\phi(x,a)$ and $r_b=r_\phi(x,b)$.
-Writing $L=\mathrm{softplus}(r_a-r_b)-q(r_a-r_b)$ gives
-$\partial L/\partial r_a=\sigma(r_a-r_b)-q$ and the opposite derivative
-for $r_b$. When the predicted probability is below the observed preference
+For the fixed prompt, $`r_a=r_\phi(x,a)`$ and $`r_b=r_\phi(x,b)`$.
+Writing $`L=\mathrm{softplus}(r_a-r_b)-q(r_a-r_b)`$ gives
+$`\partial L/\partial r_a=\sigma(r_a-r_b)-q`$ and the opposite derivative
+for $`r_b`$. When the predicted probability is below the observed preference
 frequency, gradient descent raises the first score and lowers the second.
 These are score derivatives. A shared network's parameter update combines both
 score Jacobians and may affect other answers too.
 
 ## 2. Offset versus scale
 
-Adding $c(x)$ cancels in $r_a-r_b$, leaving loss, ranking, and probability
+Adding $`c(x)`$ cancels in $`r_a-r_b`$, leaving loss, ranking, and probability
 unchanged. Multiplying scores by two doubles the margin, preserving ranking
 but changing probability toward more extreme confidence. An additive offset is
 unidentified by within-prompt pair data. Scale is identified only relative to
@@ -23,9 +23,9 @@ the assumed preference-noise model; changing it requires calibration evidence.
 
 ## 3. Nonzero converged loss
 
-For repeated identical comparisons with fraction $q$ favoring the first answer,
-the optimum predicts $p=q$. Its expected loss is
-$-q\log q-(1-q)\log(1-q)$, positive whenever $0<q<1$. Zero expected gradient
+For repeated identical comparisons with fraction $`q`$ favoring the first answer,
+the optimum predicts $`p=q`$. Its expected loss is
+$`-q\log q-(1-q)\log(1-q)`$, positive whenever $`0<q<1`$. Zero expected gradient
 at that point indicates a fitted distribution. Individual votes still produce
 opposing gradients. Do not interpret irreducible label disagreement as a failed
 optimizer or manufacture unanimous labels to force the loss down.
@@ -33,7 +33,7 @@ optimizer or manufacture unanimous labels to force the loss down.
 ## 4. Cyclic judgments
 
 Take strong preferences A over B, B over C, and C over A. A single scalar model
-would require $r_A>r_B>r_C>r_A$, an impossibility. A population mixing different
+would require $`r_A>r_B>r_C>r_A`$, an impossibility. A population mixing different
 criteria can produce such judgments without any one annotator being careless.
 Inspect subgroup and rubric differences; fit a richer contextual judgment model
 if the intended objective needs them. A scalar ranking is a modeling assumption.
@@ -49,14 +49,14 @@ similar comparisons as independent evidence and can leak answer content.
 ## 6. Accuracy does not measure confidence
 
 On ten unanimous positive labels, probabilities .51 and .99 both produce ten
-correct rankings. Their mean binary Brier scores are $.49^2$ and $.01^2$.
+correct rankings. Their mean binary Brier scores are $`.49^2`$ and $`.01^2`$.
 If the labels actually favor the first answer only six times, .99 becomes
 overconfident. Ranking, NLL, and calibration must be interpreted against the
 same declared label population; a model can win one metric and lose another.
 
 ## 7. Temperature fitting is training
 
-Choosing $\tau$ to minimize calibration-set NLL estimates a parameter from
+Choosing $`\tau`$ to minimize calibration-set NLL estimates a parameter from
 those labels. Its measured performance on the same set is optimistic. Freeze
 the temperature before final evaluation and report both the original and
 calibrated mapping. Temperature changes certainty but cannot repair wrong

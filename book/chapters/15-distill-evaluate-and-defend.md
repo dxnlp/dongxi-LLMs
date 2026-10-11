@@ -28,7 +28,7 @@ product comparison, but it does not isolate a weight improvement.
 
 Begin with three distinct rules. Single sampling emits one candidate. Majority
 voting extracts a canonical answer from several candidates and selects the most
-frequent answer. Best-of-$N$ ranks candidates using a verifier or scorer and
+frequent answer. Best-of-$`N`$ ranks candidates using a verifier or scorer and
 returns the highest-ranked one. Record tie rules, invalid-output handling and
 candidate token costs for each. Candidate generation may be parallel, so total
 compute, latency and peak memory are related but different costs.
@@ -42,12 +42,12 @@ aggregation rule can identify them.
 
 ## 15.2 An oracle ceiling and a real selection rule
 
-If independent candidates are correct with probability $p$, the probability
+If independent candidates are correct with probability $`p`$, the probability
 that at least one is correct is
 
-$$
+```math
 P(\text{some correct among }N)=1-(1-p)^N.
-$$
+```
 
 This is an availability ceiling for an ideal selector. It is not the accuracy
 of a deployed ranker. Correlated errors invalidate the independent approximation;
@@ -58,7 +58,7 @@ diversity and extraction failures can be examined.
 Our original categorical simulator samples answer classes with probabilities
 0.45 correct,0.40 one repeated wrong answer,0.15 another wrong answer. A fixed
 imperfect ranker gives the frequent wrong answer a higher score than the correct
-one. Increasing $N$ can increase oracle availability while reducing the ranker's
+one. Increasing $`N`$ can increase oracle availability while reducing the ranker's
 selected accuracy. Majority voting faces its own question: does the correct
 answer have the largest probability mass after canonicalization? Shared wrong
 answers can win the vote.
@@ -118,8 +118,8 @@ to inspect available answers, actual decisions and measured work separately.
 
 ## 15.3 Selection amplifies scorer errors
 
-Let a scorer return $S(y)=Q(y)+e(y)$, where $Q$ denotes the desired quality and $e$
-denotes scoring error. Selecting the maximum $S$ favors candidates that combine
+Let a scorer return $`S(y)=Q(y)+e(y)`$, where $`Q`$ denotes the desired quality and $`e`$
+denotes scoring error. Selecting the maximum $`S`$ favors candidates that combine
 good quality with favorable error. Increasing the candidate pool gives the
 selection procedure more opportunities to exploit systematic errors. Even
 unbiased errors before selection need not remain unbiased among selected winners.
@@ -128,7 +128,7 @@ This is the selection form of the reward problem from Chapter 14. A strong
 score on selected candidates cannot independently validate the scorer that
 selected them. Use an external frozen evaluator, adversarial examples or
 human assessment under a clear rubric. [Reward-model overoptimization
-research](https://arxiv.org/abs/2210.10760) studies this issue for best-of-$N$
+research](https://arxiv.org/abs/2210.10760) studies this issue for best-of-$`N`$
 and policy optimization. Our simulator isolates one understandable case rather
 than reproducing the paper's scale relationships.
 
@@ -144,8 +144,8 @@ Rejection sampling generates candidates, applies a criterion and keeps accepted
 responses for training. The conditional accepted distribution generally differs
 from the original teacher's distribution. Easy prompts with frequent success
 can contribute many examples; difficult prompts can disappear. If acceptance
-rate is $a$ and one candidate costs $c$ tokens on average, the simple expected
-generation cost per accepted example is $c/a$. This estimate assumes stable
+rate is $`a`$ and one candidate costs $`c`$ tokens on average, the simple expected
+generation cost per accepted example is $`c/a`$. This estimate assumes stable
 independent attempts and omits variable lengths and batch overhead.
 
 Record teacher revision, exact prompt, sampling settings, candidate index,
@@ -187,12 +187,12 @@ disappeared; preserve source IDs and excluded prompts alongside the score.
 
 ### Equal demonstrations need not mean equal supervision
 
-Let $n_{a,j}$ count assistant-body plus END targets for example $j$ in arm $a$.
-With $U$ full-batch updates, valid target exposure is
+Let $`n_{a,j}`$ count assistant-body plus END targets for example $`j`$ in arm $`a`$.
+With $`U`$ full-batch updates, valid target exposure is
 
-$$
+```math
 E_a=U\sum_j n_{a,j}.
-$$
+```
 
 Here the three datasets expose 42,46,42 targets per update. Over 80 updates that
 means 3360,3680,3360 targets per student. Top versus primary random matches examples
@@ -240,8 +240,8 @@ not ground truth.
 ### One teacher, two different lessons
 
 Use the [existing three-logit teacher](../../src/dongxi_llms/distillation_lab.py)
-$u=(2,0.5,-1)$ at temperature one. Its probabilities are approximately
-$q=(0.785597,0.175290,0.039113)$. Compare two forms of supervision at the same
+$`u=(2,0.5,-1)`$ at temperature one. Its probabilities are approximately
+$`q=(0.785597,0.175290,0.039113)`$. Compare two forms of supervision at the same
 prefix for a student starting uniformly:
 
 | Teaching signal | Target used by the student | Student-logit loss gradient |
@@ -256,10 +256,10 @@ The scalar losses are not directly comparable quality scores, because KL
 subtracts the teacher's constant entropy while hard-token NLL does not.
 
 **Reader prediction:** after the student becomes concentrated at
-$(0.9,0.05,0.05)$, must the soft loss still increase outcome 0 because the
+$`(0.9,0.05,0.05)`$, must the soft loss still increase outcome 0 because the
 teacher's most likely token is 0?
 
-**Reference reasoning:** the residual is $p-q$. Outcome 0 is now overrepresented
+**Reference reasoning:** the residual is $`p-q`$. Outcome 0 is now overrepresented
 relative to the teacher, so its logit derivative is positive. Outcome 1 is
 underrepresented, so its derivative is negative and descent raises its logit.
 Soft-target fitting asks for the distribution, rather than unlimited certainty
@@ -269,7 +269,7 @@ semantic similarity or correctness.
 
 Reproduce the comparison with `distillation_loss(student_logits,
 teacher_logits, temperature=1)` and Chapter 9's token-NLL helper. Change only
-the student logits to the logarithms of $(0.9,0.05,0.05)$ to inspect the
+the student logits to the logarithms of $`(0.9,0.05,0.05)`$ to inspect the
 second correction. These are finite gradient calculations, separate from the
 generating neural students evaluated below.
 
@@ -310,10 +310,10 @@ valid or wrong.
 
 This experiment minimizes response NLL, not the KL of a full teacher vector:
 
-$$
+```math
 L_{\mathrm{response}}=-\frac{1}{N_{\mathrm{targets}}}
-\sum_{t\in\mathrm{response+EOS}}\log p_\theta(y_t\mid x,y_{<t}).
-$$
+\sum_{t\in\mathrm{response+EOS}}\log p_\theta(y_t\mid x,y_{\lt t}).
+```
 
 Prompt labels and padding are ignored and the causal shift occurs once.
 Complete responses expose 7200 student targets over all campaigns versus 4320
@@ -327,15 +327,15 @@ remains prepared, not executed.
 
 ## 15.6 Distillation loss and its derivative
 
-Let student logits be $z$, frozen teacher logits $u$, temperature $\tau>0$ and
+Let student logits be $`z`$, frozen teacher logits $`u`$, temperature $`\tau>0`$ and
 
-$$
+```math
 p_i^{(\tau)}=\frac{e^{z_i/\tau}}{\sum_j e^{z_j/\tau}},\qquad
 q_i^{(\tau)}=\frac{e^{u_i/\tau}}{\sum_j e^{u_j/\tau}}.
-$$
+```
 
 Temperature divides logit differences before normalization. For the same
-teacher $u=(2,0.5,-1)$, the targets change as follows:
+teacher $`u=(2,0.5,-1)`$, the targets change as follows:
 
 | Temperature | Teacher probabilities: outcomes 0, 1, 2 |
 |---:|---|
@@ -350,56 +350,56 @@ extra correctness information.
 
 The distribution-distillation term is
 
-$$
+```math
 L_{\mathrm{KD}}=\tau^2 D_{\mathrm{KL}}(q^{(\tau)}\Vert p^{(\tau)})
 =\tau^2\sum_i q_i^{(\tau)}\log\frac{q_i^{(\tau)}}{p_i^{(\tau)}}.
-$$
+```
 
-Teacher probabilities are detached. The entropy of $q$ is constant with respect
+Teacher probabilities are detached. The entropy of $`q`$ is constant with respect
 to student parameters, so minimizing this KL has the same student gradient as
 minimizing soft-target cross-entropy. First differentiate each student
 log-softmax coordinate:
 
-$$
+```math
 \frac{\partial\log p_j^{(\tau)}}{\partial z_i}
 =\frac{\mathbf{1}\{i=j\}-p_i^{(\tau)}}{\tau}.
-$$
+```
 
-Only the $-\tau^2\sum_jq_j^{(\tau)}\log p_j^{(\tau)}$ part depends on the
+Only the $`-\tau^2\sum_jq_j^{(\tau)}\log p_j^{(\tau)}`$ part depends on the
 student. Weighting the derivative above by the detached teacher probabilities
-and using $\sum_jq_j^{(\tau)}=1$ produces
+and using $`\sum_jq_j^{(\tau)}=1`$ produces
 
-$$
+```math
 \frac{\partial L_{\mathrm{KD}}}{\partial z_i}
 =\tau\left(p_i^{(\tau)}-q_i^{(\tau)}\right).
-$$
+```
 
-Without the $\tau^2$ factor, the derivative is $(p_i^{(\tau)}-q_i^{(\tau)})/\tau$.
+Without the $`\tau^2`$ factor, the derivative is $`(p_i^{(\tau)}-q_i^{(\tau)})/\tau`$.
 At sufficiently high temperature, probability differences shrink roughly as
-$1/\tau$ for fixed centered logits; the multiplier compensates the resulting
+$`1/\tau`$ for fixed centered logits; the multiplier compensates the resulting
 gradient shrinkage. It does not make every temperature produce the same
 gradient or require that inference use the training temperature. The classical
 motivation is described in [Hinton et al.](https://arxiv.org/abs/1503.02531).
 
 **Controlled change:** retain the same teacher and zero student logits, but
-remove the $\tau^2$ factor. Predict how the first logit's correction changes
+remove the $`\tau^2`$ factor. Predict how the first logit's correction changes
 between temperatures one and four.
 
-**Reference reasoning:** at temperature one its derivative is $-0.452264$
-with either convention. At temperature four it is $-0.032426$ without scaling
-and $-0.518814$ with scaling. The unscaled correction shrinks from both the
-explicit $1/\tau$ and the flatter target. The scaled correction is substantial
+**Reference reasoning:** at temperature one its derivative is $`-0.452264`$
+with either convention. At temperature four it is $`-0.032426`$ without scaling
+and $`-0.518814`$ with scaling. The unscaled correction shrinks from both the
+explicit $`1/\tau`$ and the flatter target. The scaled correction is substantial
 but differs from its temperature-one value. [Day 26's temperature reference](../../notebooks/day-26/01_temperature_distillation.ipynb)
 checks every component against the analytical residual for temperatures 1, 2
 and 4 while verifying that the teacher receives no gradient.
 
 A mixed objective may use
 
-$$
+```math
 L=\lambda_{\mathrm{KD}} L_{\mathrm{KD}}+(1-\lambda_{\mathrm{KD}})L_{\mathrm{hard}},\quad 0\le\lambda_{\mathrm{KD}}\le1.
-$$
+```
 
-At $\lambda_{\mathrm{KD}}=1$, only the teacher-distribution term supplies
+At $`\lambda_{\mathrm{KD}}=1`$, only the teacher-distribution term supplies
 correction; at zero, only hard targets do. Intermediate values blend their
 gradients. Changing temperature or reduction changes the terms' scale, so the
 coefficient alone is not a percentage of “knowledge transferred.” Inspect the
@@ -410,19 +410,19 @@ are valid and what data each term uses. The scaling changes their relative
 influence. If Torch `kl_div` is used, its input/target conventions and reduction
 must be checked explicitly; a visually similar expression can reverse the KL or
 divide by vocabulary width unexpectedly. The source module writes the sum directly. Its temperature argument and archived
-reports may use `T`; $\tau$ here denotes the same temperature, while $n$ or
-$\lvert y\rvert$ denotes sequence length.
+reports may use `T`; $`\tau`$ here denotes the same temperature, while $`n`$ or
+$`\lvert y\rvert`$ denotes sequence length.
 
 ## 15.7 A bounded distillation experiment
 
 The executable microscope fits three student logits to a fixed teacher with
 logits 2, 0.5, −1. It runs 80 SGD updates and records temperature-scaled loss,
 student probabilities and teacher probabilities. Autograd is compared with the
-analytical $\tau(p-q)$ derivative at several temperatures. The teacher receives no
+analytical $`\tau(p-q)`$ derivative at several temperatures. The teacher receives no
 gradient. The experiment verifies target geometry and optimization mechanics.
 
 The [measured scaled KL](../../experiments/reports/2026-10-04-grpo-diagnostics-distillation.md)
-falls from 0.657134229 to approximately $9.77\times10^{-8}$ at $\tau=2$.
+falls from 0.657134229 to approximately $`9.77\times10^{-8}`$ at $`\tau=2`$.
 This is a successful fit to the specified teacher distribution. The report
 retains both probability vectors so the claim can be checked beyond one loss.
 
@@ -452,15 +452,15 @@ and source identity conventions already established for SFT and RL.
 ## 15.8 Refinement is a state machine, not a guarantee
 
 Instead of drawing independent alternatives, we can revisit a current draft.
-Separate critique, proposed revision and acceptance. For question $x$, draft
-$d_r$, critique function $C$ and reviser $R$, write
+Separate critique, proposed revision and acceptance. For question $`x`$, draft
+$`d_r`$, critique function $`C`$ and reviser $`R`$, write
 
-$$
+```math
 c_r=C(x,d_r),\qquad u_r=R(x,d_r,c_r),\qquad
 d_{r+1}=\begin{cases}u_r,&a_r=1,\\d_r,&a_r=0.\end{cases}
-$$
+```
 
-The acceptance decision $a_r$ determines what the user eventually receives.
+The acceptance decision $`a_r`$ determines what the user eventually receives.
 Advice can be unhelpful, a revision can be worse, and a permissive gate can accept
 it. A high score or well-formed output is not a correctness certificate. The
 mechanism therefore needs a declared stopping rule, round ceiling, failure path
@@ -485,10 +485,10 @@ evidence that repeated neural thought improves reasoning.
 
 Count the draft and every critique/revision, even rejected ones:
 
-$$
+```math
 B=n_{\mathrm{draft}}+\sum_{r=1}^{R}
 (n_{\mathrm{critique},r}+n_{\mathrm{revision},r}).
-$$
+```
 
 The exact control matches this serialized-symbol budget with three or five
 independent binary/EOS draws. It does not match neural computation. Replayed
@@ -512,31 +512,31 @@ Teacher-produced text supplies teacher-produced histories. During deployment,
 the student also visits histories created by its own errors. A perfect fit to
 teacher targets at one set of states can leave those other states unconstrained.
 
-KL direction and prefix source are independent choices. Let a state $s$ be the
-question plus generated history, $q(\cdot\mid s)$ the frozen teacher distribution
-and $p_\theta(\cdot\mid s)$ the student. Offline trajectories supply one state
+KL direction and prefix source are independent choices. Let a state $`s`$ be the
+question plus generated history, $`q(\cdot\mid s)`$ the frozen teacher distribution
+and $`p_\theta(\cdot\mid s)`$ the student. Offline trajectories supply one state
 distribution; the current student supplies another, including its own mistakes.
 At those states we may minimize either conditional objective:
 
-$$
+```math
 L_F(s)=\sum_i q_i(s)\log\frac{q_i(s)}{p_i(s)},\qquad
 L_R(s)=\sum_i p_i(s)\log\frac{p_i(s)}{q_i(s)}.
-$$
+```
 
 Forward KL weights the discrepancy by teacher probability. Reverse KL weights
-it by the student's probability, so its correction is not the same $p-q$
+it by the student's probability, so its correction is not the same $`p-q`$
 residual. If the student can freely represent the complete teacher vector at
-this fixed state, both objectives minimize at $p=q$. Different compromises
+this fixed state, both objectives minimize at $`p=q`$. Different compromises
 arise when the student is constrained or shares parameters across states; a
 different KL direction alone does not prove that a fitted neural policy must
 cover or discard a particular mode. At temperature 1, with full positive support and
-$\ell_i=\log(p_i/q_i)$, the student-logit derivatives are
+$`\ell_i=\log(p_i/q_i)`$, the student-logit derivatives are
 
-$$
+```math
 \frac{\partial L_F}{\partial z_i}=p_i-q_i,\qquad
 \frac{\partial L_R}{\partial z_i}
 =p_i\left(\ell_i-\sum_jp_j\ell_j\right).
-$$
+```
 
 Teacher targets are detached and coordinates must denote the same vocabulary
 outcomes. Zero teacher support can make reverse KL infinite. Adding an arbitrary
@@ -560,7 +560,7 @@ prefix necessarily supply a helpful correction?
 repeats a wrong-prefix symbol. Without a hint, it assigns probability 0.8 to
 `C`. With the private intended sequence `[B, A]`, it assigns probability 0.8
 to `A`, the target for the next position. Each other vocabulary outcome has
-probability $0.2/7$. The hint changes what the teacher teaches at the same
+probability $`0.2/7`$. The hint changes what the teacher teaches at the same
 visited state; it does not erase the student's already emitted wrong `C`.
 This example is an authored conditional rule checked by `teacher_distribution`,
 not a claim that a real teacher reliably recovers from arbitrary mistakes.
@@ -603,27 +603,27 @@ arms, EOS/caps, invalid responses, work and negative outcomes remain recorded.
 These are results of this frozen task and finite teacher, not a universal
 ranking of distillation methods or model-scale reasoning evidence.
 
-### A top-$k$ tail is a coarser lesson
+### A top-$`k`$ tail is a coarser lesson
 
 Large vocabularies motivate retaining selected coordinates and aggregating the
-rest. Let $T$ contain unselected outcomes, $q_T=\sum_{i\in T}q_i$ and
-$p_T=\sum_{i\in T}p_i$. An exact tail bucket conserves both distributions'
-mass but loses distinctions within $T$. For forward KL,
+rest. Let $`T`$ contain unselected outcomes, $`q_T=\sum_{i\in T}q_i`$ and
+$`p_T=\sum_{i\in T}p_i`$. An exact tail bucket conserves both distributions'
+mass but loses distinctions within $`T`$. For forward KL,
 
-$$
+```math
 D_{\mathrm{KL}}(q\Vert p)=D_{\mathrm{KL}}(q_{\mathrm{bucket}}\Vert
 p_{\mathrm{bucket}})+q_TD_{\mathrm{KL}}(q(\cdot\mid T)\Vert p(\cdot\mid T)).
-$$
+```
 
-To see the missing detail, write $q_i=q_T\bar q_i$ and $p_i=p_T\bar p_i$
-for $i\in T$, with $\bar q$ and $\bar p$ normalized inside the tail. Its
+To see the missing detail, write $`q_i=q_T\bar q_i`$ and $`p_i=p_T\bar p_i`$
+for $`i\in T`$, with $`\bar q`$ and $`\bar p`$ normalized inside the tail. Its
 contribution splits into
 
-$$
+```math
 \sum_{i\in T}q_i\log\frac{q_i}{p_i}
 =q_T\log\frac{q_T}{p_T}
 +q_T\sum_{i\in T}\bar q_i\log\frac{\bar q_i}{\bar p_i}.
-$$
+```
 
 The first term is the bucket's mass comparison; the second compares how the
 mass is distributed within it. The retained outcomes contribute identically
@@ -631,12 +631,12 @@ to full and bucketed KL. This derivation assumes positive tail masses and
 defined conditionals; the implementation's zero-support controls below keep
 their separate contracts.
 
-Reverse KL has the corresponding $p_T$-weighted conditional term. This is an
+Reverse KL has the corresponding $`p_T`$-weighted conditional term. This is an
 exact decomposition, not a guarantee that bucket and full gradients agree.
 Two vectors can match their retained coordinates and total tail mass perfectly
 while distributing that mass differently inside the tail. Bucketed KL is then
 zero although full KL is positive. At full vocabulary width no detail is lost.
-Choosing top-$k$ indices is also discrete; our microscope freezes that selection
+Choosing top-$`k`$ indices is also discrete; our microscope freezes that selection
 for differentiation and does not claim large-vocabulary compute savings. Its
 finite tail-detail helper explicitly requires strictly positive full vectors;
 zero-support controls use full KL separately, with infinities disclosed rather
@@ -798,7 +798,7 @@ The [six assignment briefs](../../docs/COURSE_ASSIGNMENTS.md) specify artifacts 
 3. How can a scorer's errors become larger among selected winners?
 4. Which prompts disappear from a rejection-sampled training set?
 5. What information does a soft teacher target add beyond one generated token?
-6. Derive the temperature-scaled student-logit gradient and explain the $\tau^2$ factor.
+6. Derive the temperature-scaled student-logit gradient and explain the $`\tau^2`$ factor.
 7. Why can equal token IDs be insufficient when teacher and student tokenizers differ?
 8. How do teacher-prefix and student-prefix training distributions differ?
 9. What does a genealogy consistency check establish, and what does it leave unverified?
@@ -814,7 +814,7 @@ The [six assignment briefs](../../docs/COURSE_ASSIGNMENTS.md) specify artifacts 
 19. Why should a capped critique be retained but forbidden from invoking revision?
 20. Which two independent choices change in an offline-forward-KL versus student-prefix-reverse-KL comparison?
 21. Why does differentiating conditional KL at sampled student states not include the state-occupancy derivative?
-22. How can a zero-loss top-$k$ tail bucket still hide a positive full KL and a different gradient?
+22. How can a zero-loss top-$`k`$ tail bucket still hide a positive full KL and a different gradient?
 23. Why can 120/120 held-out answers and a degenerate bootstrap interval still be insufficient evidence for a general assistant?
 
 [Worked answers](../solutions/15-distill-evaluate-and-defend.md) and the

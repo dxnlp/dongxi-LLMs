@@ -16,9 +16,9 @@ also move them; “zero relative signal” is narrower than “no weight movemen
 ## 2. Population versus sample standard deviation
 
 For rewards 0, 1, the mean is 0.5. Population standard deviation is 0.5 and sample
-standard deviation is $\sqrt{0.5}$. Normalized advantages are approximately
+standard deviation is $`\sqrt{0.5}`$. Normalized advantages are approximately
 −1, +1 with the population convention and−0.707, +0.707 with the sample convention.
-The sample convention reduces this group's scale by $\sqrt{(G-1)/G}$.
+The sample convention reduces this group's scale by $`\sqrt{(G-1)/G}`$.
 It must be declared because the change affects optimization, especially for small groups.
 
 ## 3. The denominator changes prompt weighting
@@ -36,9 +36,9 @@ while retaining signs and exposes the changed advantage magnitudes.
 At initial ratio 1, centered advantages can sum to zero, producing a zero average
 surrogate value. The derivative contains each answer's log-probability derivative:
 
-$$
+```math
 \nabla J=\frac1G\sum_i\hat A_i\nabla\log\pi_\theta(y_i\mid x)
-$$
+```
 
 for the simple one-token, unclipped case. Those gradients point in different
 directions. The scalar sum of advantages being zero does not make this vector
@@ -46,7 +46,7 @@ sum zero. The actual decoder experiment records a first-update gradient norm.
 
 ## 5. Negative-advantage clipping
 
-With $A=-1$, ratio 0.5 and clip interval[0.8, 1.2], the unclipped product is−0.5
+With $`A=-1`$, ratio 0.5 and clip interval[0.8, 1.2], the unclipped product is−0.5
 and clipped product−0.8. The minimum is−0.8, stopping further reward for reducing
 the ratio below 0.8. At ratio 1.5, the minimum is−1.5 rather than−1.2, so the
 unfavorable increase remains penalized. Clipping treats direction relative to
@@ -54,7 +54,7 @@ advantage, not merely numerical distance from one.
 
 ## 6. A value identity does not specify a full derivative
 
-The expectation of $k_3$ under the current distribution equals forward KL.
+The expectation of $`k_3`$ under the current distribution equals forward KL.
 When differentiating that expectation, both the integrand and its distribution
 weights depend on parameters. Autograd through a fixed sample includes only the
 integrand's path unless a score-function or equivalent correction supplies the
@@ -152,8 +152,8 @@ limitation. Keep those measured rows separate from the historical symbolic contr
 ## 14. Changing scale versus changing direction
 
 Global token mean and fixed-cap mean share the same numerator on a fixed pool.
-Their parameter gradients differ by $\sum_in_i/(NC)$. Response means insert a
-separate $1/n_i$ inside that numerator. They change relative contributions from
+Their parameter gradients differ by $`\sum_in_i/(NC)`$. Response means insert a
+separate $`1/n_i`$ inside that numerator. They change relative contributions from
 short and long responses, so the summed gradient can rotate when individual
 token gradients are not collinear. Cosine one still does not imply equal
 magnitudes or equal behavior after repeated training.

@@ -1,0 +1,402 @@
+{
+  "schema_version": 1,
+  "utc": "2026-10-11T20:55:07.418197+00:00",
+  "reviewer": "editorial_depth",
+  "status": "accepted",
+  "scope": "Independent final single-inline-table-header repair after the separately accepted24-display client-safety stage. Read-only source, existing focused regression and existing root-owned API/client replay review; no model jobs, renderer rerun or source changes.",
+  "path": "book/chapters/03-learning-the-next-token.md",
+  "line": 700,
+  "before_stage_sha256": "ee7d81badd4246a8ffbe94de669bc8b558765cb3ea1591ebaef9ac8284e56b84",
+  "final_source_sha256": "c7ba89598b0d25368dc4d8c4297a6ca3116f9e77ccc4cb8911ee8e54daf58626",
+  "before_inline_tex": "D_{KL}(q\\|p)",
+  "after_inline_tex": "D_{KL}(q\\Vert p)",
+  "mathematical_assessment": "\\Vert produces the same double vertical bar as\\| while avoiding a literal pipe consumed by GFM table parsing. All other glyphs, labels and values in the table are unchanged. Whole-file reversal proves no other prose, math, exercises, links or literal code changed in this final stage.",
+  "checks": {
+    "single_exact_inline_header_change": true,
+    "reversal_restores_entire_pre_table_stage_file_sha256": true,
+    "all55_api_source_bindings_current": true,
+    "all1871_source_and_client_mathml_matches_reported": true,
+    "api_receipt_binding": true,
+    "client_replay_program_binding": true,
+    "all_saved_api_response_hashes": true
+  },
+  "focused_regression_review": {
+    "test_path": "tests/test_book_math.py",
+    "test_sha256": "0b6d6c218e718f7862fdcfbc0a6c33837da2652bd1dbf90fc5adc19b954b3ca2",
+    "focused_table_case_present": true,
+    "checker_path": "scripts/check_book_math.py",
+    "checker_sha256": "8c654c511a3ea9db2d51c549954311f69a20ac3811cfd7bd7c31609ac0e28b21",
+    "leading_pipe_table_guard_present": true,
+    "assessment": "Focused test rejects the observed table header escape, accepts its Vert equivalent and keeps ordinary outside-table protected math with\\| valid. This receipt inspects the test and guard; root owns fresh test-execution evidence."
+  },
+  "prior_display_review": {
+    "path": "experiments/reports/2026-10-11-github-math-repair/final-safety-review.json",
+    "sha256": "cf376908cfbd69bceb1c6e760ee0870c8e841df2432fbecfc377a0efc6c3e82a",
+    "accepted_changes": {
+      "display_expressions": 24,
+      "files": 13,
+      "less_than_substitutions": 17,
+      "physical_row_comments": 16
+    }
+  },
+  "final_existing_replay": {
+    "path": "experiments/reports/2026-10-11-github-math-repair/final-client-mathml-03.json",
+    "sha256": "497fd4f8f27e65ef01b0b30bb9fc7ec18df7820857fc43a0d3c4c2c2d946b36e",
+    "total_expressions": 1871,
+    "source_mathml_matches": 1871,
+    "client_mathml_matches": 1871,
+    "specific_repaired_inline_row": {
+      "path": "book/chapters/03-learning-the-next-token.md",
+      "index": 124,
+      "baseline_tex_sha256": "82e0378442fd8d7660883a8a77c1fd8a7b6298934b942c3888a8ec3ba0c64b90",
+      "source_tex_sha256": "8345a0ce4b36a0b1cbebe8f4e766188bdf5ee697b315fbf26df9e37a2a0ca097",
+      "client_tex_sha256": "8345a0ce4b36a0b1cbebe8f4e766188bdf5ee697b315fbf26df9e37a2a0ca097",
+      "baseline_mathml_sha256": "1c1b6f3d1837e1c02a88a3ebcf725a456b49d4bd926a97e16c852ce171b20e67",
+      "source_mathml_equal": true,
+      "client_mathml_sha256": "1c1b6f3d1837e1c02a88a3ebcf725a456b49d4bd926a97e16c852ce171b20e67",
+      "client_mathml_equal": true
+    },
+    "api_receipt": "experiments/reports/2026-10-11-github-math-repair/github-after-03/receipt.json",
+    "api_receipt_sha256": "0a6d928ae110b5cca0de620da66a1c51327b4859ba91356f6a61b8cb6dc62654",
+    "all_source_bindings": [
+      {
+        "path": "book/README.md",
+        "current_sha256": "5ecaba37bdb69717a7e4e33a08f16dde945846743c5252075c7ac7e638fdc765",
+        "api_source_sha256": "5ecaba37bdb69717a7e4e33a08f16dde945846743c5252075c7ac7e638fdc765",
+        "matches": true
+      },
+      {
+        "path": "book/appendices/a-laboratory-setup.md",
+        "current_sha256": "63587e04b9e596cac89194f6db4b8690724e6c779ad188562549acae24e410bc",
+        "api_source_sha256": "63587e04b9e596cac89194f6db4b8690724e6c779ad188562549acae24e410bc",
+        "matches": true
+      },
+      {
+        "path": "book/appendices/b-mathematical-and-tensor-notation.md",
+        "current_sha256": "868364011ec569e51de494e8fe0b0a9483e395f3bc6888f3b1a722e31299dd95",
+        "api_source_sha256": "868364011ec569e51de494e8fe0b0a9483e395f3bc6888f3b1a722e31299dd95",
+        "matches": true
+      },
+      {
+        "path": "book/appendices/c-evaluation-and-experiment-templates.md",
+        "current_sha256": "0a3e2fe746a41e467cd0e87aa91853f85e7becf20a78bfbffb711f1c2a5564c5",
+        "api_source_sha256": "0a3e2fe746a41e467cd0e87aa91853f85e7becf20a78bfbffb711f1c2a5564c5",
+        "matches": true
+      },
+      {
+        "path": "book/appendices/d-reproduction-and-environments.md",
+        "current_sha256": "0337d4bb91824bbe5526f3f9fad069264796aa844b611cfba5998b67bef69e68",
+        "api_source_sha256": "0337d4bb91824bbe5526f3f9fad069264796aa844b611cfba5998b67bef69e68",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/01-evidence-before-optimization.md",
+        "current_sha256": "cb64a89c353ee1ea9d71636f851736dcf8ca6de2e3622a949133bd5a8d0754f4",
+        "api_source_sha256": "cb64a89c353ee1ea9d71636f851736dcf8ca6de2e3622a949133bd5a8d0754f4",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/02-text-tokens-and-embeddings.md",
+        "current_sha256": "f40c9946840583d7f6dc0da666b304ee87acd891643d030e9eebe25d8e42e3a2",
+        "api_source_sha256": "f40c9946840583d7f6dc0da666b304ee87acd891643d030e9eebe25d8e42e3a2",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/03-learning-the-next-token.md",
+        "current_sha256": "c7ba89598b0d25368dc4d8c4297a6ca3116f9e77ccc4cb8911ee8e54daf58626",
+        "api_source_sha256": "c7ba89598b0d25368dc4d8c4297a6ca3116f9e77ccc4cb8911ee8e54daf58626",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/04-attention-and-the-causal-information-boundary.md",
+        "current_sha256": "6dbc3507c7c30c034379d85a70c671ea61faa35550122233cd87400ede53894d",
+        "api_source_sha256": "6dbc3507c7c30c034379d85a70c671ea61faa35550122233cd87400ede53894d",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/05-building-a-modern-decoder.md",
+        "current_sha256": "e20c199cbea76808ed35de7ccb82d75819695c3c23b38bc67cbefe13b8708a31",
+        "api_source_sha256": "e20c199cbea76808ed35de7ccb82d75819695c3c23b38bc67cbefe13b8708a31",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/06-pretraining-as-a-controlled-system.md",
+        "current_sha256": "68a74e5f84d97fdea2f7f3e204bc42da025640c89c5f6129a0f6f0f110d7325b",
+        "api_source_sha256": "68a74e5f84d97fdea2f7f3e204bc42da025640c89c5f6129a0f6f0f110d7325b",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/07-evaluation-is-a-contract.md",
+        "current_sha256": "a690220a1ee311b9bf906c90da1e5c372af4ac62cfc5b81c7275a27a1beda0d2",
+        "api_source_sha256": "a690220a1ee311b9bf906c90da1e5c372af4ac62cfc5b81c7275a27a1beda0d2",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/08-instruction-data-as-an-interface.md",
+        "current_sha256": "3af2becd8e247f165d3e9cefa4b28e8445378caf6025d55ef1147a3c395891c4",
+        "api_source_sha256": "3af2becd8e247f165d3e9cefa4b28e8445378caf6025d55ef1147a3c395891c4",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/09-supervised-fine-tuning.md",
+        "current_sha256": "98fb871e8336a7e646b5fd0675bf2cbc761cfdec05d094b3e4b4693ed671b107",
+        "api_source_sha256": "98fb871e8336a7e646b5fd0675bf2cbc761cfdec05d094b3e4b4693ed671b107",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/10-preferences-and-reward-models.md",
+        "current_sha256": "e090f4227bee75c5cab33336cd5a72221571bce771a1b278dde285a498c96084",
+        "api_source_sha256": "e090f4227bee75c5cab33336cd5a72221571bce771a1b278dde285a498c96084",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/11-direct-preference-optimization.md",
+        "current_sha256": "359a26625076fdf9f72515b36c4354319dcdabbd1b7c07b6a2bf75d392cf693f",
+        "api_source_sha256": "359a26625076fdf9f72515b36c4354319dcdabbd1b7c07b6a2bf75d392cf693f",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/12-language-generation-as-a-policy.md",
+        "current_sha256": "b3ad909a886543c432bcfa3205e6377be22997caf5a3d911018d00b576852af1",
+        "api_source_sha256": "b3ad909a886543c432bcfa3205e6377be22997caf5a3d911018d00b576852af1",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/13-group-relative-policy-optimization.md",
+        "current_sha256": "4a56253be7e435861d02728ed8edfc79aedf53fda643343faf94d3c163d8a871",
+        "api_source_sha256": "4a56253be7e435861d02728ed8edfc79aedf53fda643343faf94d3c163d8a871",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/14-when-optimization-goes-wrong.md",
+        "current_sha256": "eefdf4446f4e071fa99f0a99b236cc89753ea06b1c50f84361c8cc503b09a886",
+        "api_source_sha256": "eefdf4446f4e071fa99f0a99b236cc89753ea06b1c50f84361c8cc503b09a886",
+        "matches": true
+      },
+      {
+        "path": "book/chapters/15-distill-evaluate-and-defend.md",
+        "current_sha256": "7faa39c5700738550da3f1c3dcbfb3af838b4ed456e985435050c877f296fed2",
+        "api_source_sha256": "7faa39c5700738550da3f1c3dcbfb3af838b4ed456e985435050c877f296fed2",
+        "matches": true
+      },
+      {
+        "path": "book/front-matter/how-to-use.md",
+        "current_sha256": "92dc1e5a56ee14c7a1eddd8dc1b40c0e8b3ae4df42c034feaad7836fd641fbf2",
+        "api_source_sha256": "92dc1e5a56ee14c7a1eddd8dc1b40c0e8b3ae4df42c034feaad7836fd641fbf2",
+        "matches": true
+      },
+      {
+        "path": "book/front-matter/notation.md",
+        "current_sha256": "b30baffdcc9f53f305ac3f65690d99bacbc77ae04ac09528b980423b3fc29ab9",
+        "api_source_sha256": "b30baffdcc9f53f305ac3f65690d99bacbc77ae04ac09528b980423b3fc29ab9",
+        "matches": true
+      },
+      {
+        "path": "book/front-matter/preface.md",
+        "current_sha256": "44d42fa6dadd16a3e9ec9f0d23fad4cd952c33a3a0b7ed5f58bafafe3ce9fbec",
+        "api_source_sha256": "44d42fa6dadd16a3e9ec9f0d23fad4cd952c33a3a0b7ed5f58bafafe3ce9fbec",
+        "matches": true
+      },
+      {
+        "path": "book/labs/01-evidence-before-optimization.md",
+        "current_sha256": "4c0e6ab48dcb8cd0f30e4d8ff76d15db3a71671f9138a67b80fcd393fefac901",
+        "api_source_sha256": "4c0e6ab48dcb8cd0f30e4d8ff76d15db3a71671f9138a67b80fcd393fefac901",
+        "matches": true
+      },
+      {
+        "path": "book/labs/02-text-tokens-and-embeddings.md",
+        "current_sha256": "ab195338049f5d82211e31895c2464bab463c1381fe0ab7faca8d7ec12812b64",
+        "api_source_sha256": "ab195338049f5d82211e31895c2464bab463c1381fe0ab7faca8d7ec12812b64",
+        "matches": true
+      },
+      {
+        "path": "book/labs/03-learning-the-next-token.md",
+        "current_sha256": "58730da20a7dce085c71f5736930238fc7f3b1f4e791f78d440ba4da1f628984",
+        "api_source_sha256": "58730da20a7dce085c71f5736930238fc7f3b1f4e791f78d440ba4da1f628984",
+        "matches": true
+      },
+      {
+        "path": "book/labs/04-attention-and-the-causal-information-boundary.md",
+        "current_sha256": "79b4f0722f7246e00403735ba574bba9da88ab556ad856b26cef768901baeb01",
+        "api_source_sha256": "79b4f0722f7246e00403735ba574bba9da88ab556ad856b26cef768901baeb01",
+        "matches": true
+      },
+      {
+        "path": "book/labs/05-building-a-modern-decoder.md",
+        "current_sha256": "033140e519e80948cdd8bbb46cf321119b5b962353cae28b350d1d7df21e32ac",
+        "api_source_sha256": "033140e519e80948cdd8bbb46cf321119b5b962353cae28b350d1d7df21e32ac",
+        "matches": true
+      },
+      {
+        "path": "book/labs/06-pretraining-as-a-controlled-system.md",
+        "current_sha256": "383e3c3937a26985836e124d3d9eb1706b294c36668a62aee126cd4f2b8e760f",
+        "api_source_sha256": "383e3c3937a26985836e124d3d9eb1706b294c36668a62aee126cd4f2b8e760f",
+        "matches": true
+      },
+      {
+        "path": "book/labs/06-reading-a-pretraining-run.md",
+        "current_sha256": "410c974404d620587c5a297f9202cc8816fada63088bbd107828868a387ffacb",
+        "api_source_sha256": "410c974404d620587c5a297f9202cc8816fada63088bbd107828868a387ffacb",
+        "matches": true
+      },
+      {
+        "path": "book/labs/07-evaluation-is-a-contract.md",
+        "current_sha256": "8b5d689bb34677c1be572ff41749ab9c84f61df65a69f33831d4c23aca98d5c3",
+        "api_source_sha256": "8b5d689bb34677c1be572ff41749ab9c84f61df65a69f33831d4c23aca98d5c3",
+        "matches": true
+      },
+      {
+        "path": "book/labs/08-instruction-data-as-an-interface.md",
+        "current_sha256": "5a630b802b67c69e321f40b6eed8983b184fef47514702dc704e084910134e1e",
+        "api_source_sha256": "5a630b802b67c69e321f40b6eed8983b184fef47514702dc704e084910134e1e",
+        "matches": true
+      },
+      {
+        "path": "book/labs/09-supervised-fine-tuning.md",
+        "current_sha256": "7867d1aa415e88f4df0fc7f0aa24820446682c136824234dca5001bc4deac6a0",
+        "api_source_sha256": "7867d1aa415e88f4df0fc7f0aa24820446682c136824234dca5001bc4deac6a0",
+        "matches": true
+      },
+      {
+        "path": "book/labs/10-preferences-and-reward-models.md",
+        "current_sha256": "23b01259ede42776e2e669b2ed190ba07df02279684e412aefd4242641aa878e",
+        "api_source_sha256": "23b01259ede42776e2e669b2ed190ba07df02279684e412aefd4242641aa878e",
+        "matches": true
+      },
+      {
+        "path": "book/labs/11-direct-preference-optimization.md",
+        "current_sha256": "000df660efbf5f3c6117ba03d6f5596ce698735ee8cbb11a31fe91a9a1ef5b02",
+        "api_source_sha256": "000df660efbf5f3c6117ba03d6f5596ce698735ee8cbb11a31fe91a9a1ef5b02",
+        "matches": true
+      },
+      {
+        "path": "book/labs/12-language-generation-as-a-policy.md",
+        "current_sha256": "9570ac8d73831b4a11d43025843040099aa75b154b99da535c4f48042ba7338e",
+        "api_source_sha256": "9570ac8d73831b4a11d43025843040099aa75b154b99da535c4f48042ba7338e",
+        "matches": true
+      },
+      {
+        "path": "book/labs/13-group-relative-policy-optimization.md",
+        "current_sha256": "30f640a816b6b137f1de8a0e3c0fed43c6ef342be7ef516168a80e288b15931c",
+        "api_source_sha256": "30f640a816b6b137f1de8a0e3c0fed43c6ef342be7ef516168a80e288b15931c",
+        "matches": true
+      },
+      {
+        "path": "book/labs/14-when-optimization-goes-wrong.md",
+        "current_sha256": "cc080d15d213d75c076b9c875848c4af1991ce3d713f433956c3d8c84c1d59e3",
+        "api_source_sha256": "cc080d15d213d75c076b9c875848c4af1991ce3d713f433956c3d8c84c1d59e3",
+        "matches": true
+      },
+      {
+        "path": "book/labs/15-distill-evaluate-and-defend.md",
+        "current_sha256": "be8e4573c9e4db695a3f9555d46e58e710b60da1de79e1bc08a2719cf3dc7f3c",
+        "api_source_sha256": "be8e4573c9e4db695a3f9555d46e58e710b60da1de79e1bc08a2719cf3dc7f3c",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/01-evidence-before-optimization.md",
+        "current_sha256": "ddf0e4b62b3df215b2e4769c1671087806412134e2bc8baaf312ef4b8b769313",
+        "api_source_sha256": "ddf0e4b62b3df215b2e4769c1671087806412134e2bc8baaf312ef4b8b769313",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/02-text-tokens-and-embeddings.md",
+        "current_sha256": "e3dc22f249771060ccfcd6168013c3b37b1d26c69796b4b3c63bdd3e706f9c5c",
+        "api_source_sha256": "e3dc22f249771060ccfcd6168013c3b37b1d26c69796b4b3c63bdd3e706f9c5c",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/03-learning-the-next-token.md",
+        "current_sha256": "b17a55701e547898da3410e349a765e37b7d235f36c3adcdcc073a52f352d35a",
+        "api_source_sha256": "b17a55701e547898da3410e349a765e37b7d235f36c3adcdcc073a52f352d35a",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/04-attention-and-the-causal-information-boundary.md",
+        "current_sha256": "70d435485322b5df6b0d61b169abc54bdecd865822cbab59354d133e7a3e9664",
+        "api_source_sha256": "70d435485322b5df6b0d61b169abc54bdecd865822cbab59354d133e7a3e9664",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/05-decoder-notebook-solutions.md",
+        "current_sha256": "4a555e0f406c7aaf56ec560bf4eab360569d3cb7ea838241c5584528ff517639",
+        "api_source_sha256": "4a555e0f406c7aaf56ec560bf4eab360569d3cb7ea838241c5584528ff517639",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/06-pretraining-as-a-controlled-system.md",
+        "current_sha256": "96597b2b55d357c3e3d58bf340ec2c803f66bc4fe4a9ec888c51ee8aea2edfaa",
+        "api_source_sha256": "96597b2b55d357c3e3d58bf340ec2c803f66bc4fe4a9ec888c51ee8aea2edfaa",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/07-evaluation-is-a-contract.md",
+        "current_sha256": "b8dc213d4419f74a13dcd59c0ab017a67b16a7fb7d88cfc73db57cfe26397055",
+        "api_source_sha256": "b8dc213d4419f74a13dcd59c0ab017a67b16a7fb7d88cfc73db57cfe26397055",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/08-instruction-data-as-an-interface.md",
+        "current_sha256": "e7dca954e2ee90a17561b30729fbc238f672151ec063ae46b424bc6abff1a8dd",
+        "api_source_sha256": "e7dca954e2ee90a17561b30729fbc238f672151ec063ae46b424bc6abff1a8dd",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/09-supervised-fine-tuning.md",
+        "current_sha256": "344adfefeb8412c718d918474e633cddc85910fd70ddae7168eb3bc9b7be4057",
+        "api_source_sha256": "344adfefeb8412c718d918474e633cddc85910fd70ddae7168eb3bc9b7be4057",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/10-preferences-and-reward-models.md",
+        "current_sha256": "1d21c776ae8eddfc29822275ecb2bfd292ae476fd98a2e308eba8a68ab72dee9",
+        "api_source_sha256": "1d21c776ae8eddfc29822275ecb2bfd292ae476fd98a2e308eba8a68ab72dee9",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/11-direct-preference-optimization.md",
+        "current_sha256": "594da1d787cab43beb8926aa3a1c55809b5994e9598964127b513dde0c97211f",
+        "api_source_sha256": "594da1d787cab43beb8926aa3a1c55809b5994e9598964127b513dde0c97211f",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/12-language-generation-as-a-policy.md",
+        "current_sha256": "7924df3d3961071be1b1f774e57bd7f3ffe3cc60bece01ef9512b16bfa7c148b",
+        "api_source_sha256": "7924df3d3961071be1b1f774e57bd7f3ffe3cc60bece01ef9512b16bfa7c148b",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/13-group-relative-policy-optimization.md",
+        "current_sha256": "1dec1ddf86d17e3f9f4c0f9aa33361c975a49f43acde7758c0f15639753bed22",
+        "api_source_sha256": "1dec1ddf86d17e3f9f4c0f9aa33361c975a49f43acde7758c0f15639753bed22",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/14-when-optimization-goes-wrong.md",
+        "current_sha256": "db4023b73068d337724599f5c6c16f1e991aaf860f509cdb3f1a57d533984fa6",
+        "api_source_sha256": "db4023b73068d337724599f5c6c16f1e991aaf860f509cdb3f1a57d533984fa6",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/15-distill-evaluate-and-defend.md",
+        "current_sha256": "34f1c261cce09c74053a7f8cd0e730046d57b4d842a4a3b398b4de783f073f78",
+        "api_source_sha256": "34f1c261cce09c74053a7f8cd0e730046d57b4d842a4a3b398b4de783f073f78",
+        "matches": true
+      },
+      {
+        "path": "book/solutions/cs336-posttraining-assignment.md",
+        "current_sha256": "e38301f23772fb3dd8892f6d6685f7d4a679ff5e8f33bde5a0d8783c545faf82",
+        "api_source_sha256": "e38301f23772fb3dd8892f6d6685f7d4a679ff5e8f33bde5a0d8783c545faf82",
+        "matches": true
+      }
+    ],
+    "boundary": "Original versus repaired MathML and actual GitHub API HTML through the observed client document.write decode, emulated by jsdom27; pinned local MathJax3.2.2. Not live browser layout or GitHub deployed MathJax."
+  },
+  "preserved_prior_failure": {
+    "path": "experiments/reports/2026-10-11-github-math-repair/final-client-mathml.json",
+    "sha256": "6f666209132d47ab82aeab9448a75cec7a821a5d3fb7030a2b9734b6dc4d626e",
+    "client_matches": 1870,
+    "meaning": "The first safety-stage replay retained the single table-pipe failure; the new03receipt records its resolution without rewriting that failed result."
+  },
+  "remaining_issues": []
+}

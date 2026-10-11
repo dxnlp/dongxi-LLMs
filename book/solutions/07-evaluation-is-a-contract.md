@@ -16,13 +16,13 @@ Report separate answer and format scores rather than deleting formatting require
 
 ## 3. Derive pass@3
 
-There are $\binom{10}{3}=120$ equally sized three-candidate subsets. With two correct candidates, eight are incorrect, and $\binom{8}{3}=56$ subsets contain only incorrect answers. Therefore
+There are $`\binom{10}{3}=120`$ equally sized three-candidate subsets. With two correct candidates, eight are incorrect, and $`\binom{8}{3}=56`$ subsets contain only incorrect answers. Therefore
 
-$$
+```math
 \widehat{\mathrm{pass@}3}=1-\frac{56}{120}=0.533333\ldots.
-$$
+```
 
-The fixture tests the product implementation against combinatorial counts for many small $n,c,k$ combinations, including zero successes and all-success cases. The event is at least one verified success; it does not identify which candidate a user should receive.
+The fixture tests the product implementation against combinatorial counts for many small $`n,c,k`$ combinations, including zero successes and all-success cases. The event is at least one verified success; it does not identify which candidate a user should receive.
 
 ## 4. Duplicate draws
 
@@ -38,7 +38,7 @@ A statistical score interval describes uncertainty in an estimate over a declare
 
 ## 6. Paired comparison
 
-Use the same item index for A and B, compute $d_j=b_j-a_j$, and bootstrap indices once for both scores. Shared task difficulty remains paired. Independent resampling breaks that correlation and can obscure a precise comparison.
+Use the same item index for A and B, compute $`d_j=b_j-a_j`$, and bootstrap indices once for both scores. Shared task difficulty remains paired. Independent resampling breaks that correlation and can obscure a precise comparison.
 
 The notebook also duplicates all items ten times. The naive binomial interval narrows, although the source information is unchanged. That deliberate failure illustrates why the unit of independence belongs in the contract. A percentile interval that crosses zero means the sign is unresolved at the chosen precision, not that the models are equivalent.
 
@@ -146,10 +146,10 @@ replay; scripted stop and failure controls are separately labeled.
 
 ## 17. Availability and a deployable decision
 
-A correct candidate already in $C_N$ remains in every longer nested prefix, so
+A correct candidate already in $`C_N`$ remains in every longer nested prefix, so
 the any-correct event cannot become false. Majority counts can change: three
 correct 0 votes lose to five wrong 1 votes in the actual seed 10052 `train-11`
-pool. A selector returning one candidate satisfies $d_N\le o_N$, but may not
+pool. A selector returning one candidate satisfies $`d_N\le o_N`$, but may not
 find the available correct answer. An oracle seeing correctness labels is not
 the same selector. The worked notebook keeps oracle results in evaluator inputs,
 not the strict selection projection.

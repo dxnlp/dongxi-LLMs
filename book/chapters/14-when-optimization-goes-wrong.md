@@ -21,17 +21,17 @@ Imagine a task whose correct answer is 35. Our policy can choose `35`, `35 0` or
 `0`. Strict correctness accepts only one integer equal 35. A deliberately broken
 proxy accepts text that contains 35 and adds a bonus for apparent extra work:
 
-$$
+```math
 R_{\mathrm{proxy}}=(1,2,0),\qquad
 R_{\mathrm{truth}}=(1,0,0).
-$$
+```
 
-With logits $z$ and $p=\mathrm{softmax}(z)$, optimize the exact expected proxy:
+With logits $`z`$ and $`p=\mathrm{softmax}(z)`$, optimize the exact expected proxy:
 
-$$
+```math
 J(z)=\sum_a p_a R_a,\qquad
 \frac{\partial J}{\partial z_a}=p_a(R_a-J).
-$$
+```
 
 The derivative follows from the same softmax Jacobian used for cross-entropy.
 Actions above expected reward receive positive logit pressure under ascent;
@@ -41,16 +41,16 @@ the highest-reward malformed answer is favored. No noisy reward estimator,
 model-size limitation or distributed bug is needed to create the problem.
 
 **Reader prediction.** The correct answer receives positive reward. Can its
-probability still decline on the very first update? At $p=[1/3,1/3,1/3]$,
-the proxy mean is one and its ascent gradient is $[0,1/3,-1/3]$.
+probability still decline on the very first update? At $`p=[1/3,1/3,1/3]`$,
+the proxy mean is one and its ascent gradient is $`[0,1/3,-1/3]`$.
 With the source experiment's learning rate 0.4, the next logits are
-$[0,0.133333,-0.133333]$ and probabilities approximately
-$[0.331367,0.378630,0.290003]$. The correct answer's logit did not move,
+$`[0,0.133333,-0.133333]`$ and probabilities approximately
+$`[0.331367,0.378630,0.290003]`$. The correct answer's logit did not move,
 yet its probability fell from one third because the competing normalization
 changed. The malformed answer won the comparison the proxy actually defined.
 
 Change only the reward vector to strict correctness. At the same uniform
-initialization, its ascent gradient becomes $[2/9,-1/9,-1/9]$, explicitly
+initialization, its ascent gradient becomes $`[2/9,-1/9,-1/9]`$, explicitly
 favoring the sole correct action. Lowering the original learning rate would
 slow the proxy's wrong pressure; it would not turn that pressure into the
 strict gradient. This is the causal distinction between an objective failure
@@ -152,9 +152,9 @@ this particular incentive, while new outputs can expose another boundary.
 
 At a state, categorical entropy is
 
-$$
+```math
 H(p)=-\sum_v p_v\log p_v.
-$$
+```
 
 Low entropy indicates a concentrated next-token distribution. It may reflect
 mastery of an easy deterministic answer, repetition of one successful template,
@@ -166,9 +166,9 @@ conditional entropy over prompts.
 
 ### Losing alternatives can look like gaining confidence
 
-For three actions, uniform probabilities have entropy $\log3\approx1.098612$
-nats. Probabilities $[0.9,0.05,0.05]$ have approximately 0.394398 nats.
-Permuting them to $[0.05,0.9,0.05]$ leaves entropy exactly unchanged.
+For three actions, uniform probabilities have entropy $`\log3\approx1.098612`$
+nats. Probabilities $`[0.9,0.05,0.05]`$ have approximately 0.394398 nats.
+Permuting them to $`[0.05,0.9,0.05]`$ leaves entropy exactly unchanged.
 If action 0 is the only correct one, accuracy changes from 0.9 to 0.05.
 The entropy number measures concentration, not whether its favored action
 deserves that concentration.
@@ -184,7 +184,7 @@ the independently graded responses beside it.
 temperature or top-p. Sampling entropy and observed diversity can change
 without any training. Conversely, under a declared iid policy with only
 0.01 probability on the correct alternative, ten draws expose it at least
-once with probability $1-0.99^{10}\approx0.095618$. More samples cannot
+once with probability $`1-0.99^{10}\approx0.095618`$. More samples cannot
 reliably repair a missing alternative at arbitrarily low probability or
 restore support that a truncating sampler removed. Before increasing group
 size, inspect whether the intended successful responses can actually appear.
@@ -214,7 +214,7 @@ with held-out failure. The two arms also consume different rollout counts; this
 trace neither ranks group sizes at equal compute nor measures natural-language
 reasoning. Mean length includes the sampled EOS and excludes post-stop padding.
 
-An entropy bonus $\lambda_H H(p)$ encourages broader distributions locally. It
+An entropy bonus $`\lambda_H H(p)`$ encourages broader distributions locally. It
 does not make low-probability actions useful. On a strict syntax task it can
 increase invalid outputs; on a nearly saturated task it can trade correctness
 for exploration. Compare valid fraction, correctness and diversity along with
@@ -235,15 +235,15 @@ its probability has. An update that divides by 0.30 anyway is not using a
 record of what generated that action. This can alter an otherwise finite,
 apparently healthy gradient.
 
-At one fixed prefix, distinguish raw model probabilities $p$, actual collection
-probabilities $b$, and separately declared target probabilities $t_\theta$.
+At one fixed prefix, distinguish raw model probabilities $`p`$, actual collection
+probabilities $`b`$, and separately declared target probabilities $`t_\theta`$.
 The old policy describes collection; the reference policy defines an anchor.
-For collection temperature $\tau_b$ and retained support $S$, our sampler is
+For collection temperature $`\tau_b`$ and retained support $`S`$, our sampler is
 
-$$
+```math
 b(a)=\frac{\boldsymbol{1}_{a\in S}e^{z_a^{\mathrm{old}}/\tau_b}}
 {\sum_{j\in S}e^{z_j^{\mathrm{old}}/\tau_b}}.
-$$
+```
 
 Its explicit order is temperature, top-k, renormalization, top-p, then final
 renormalization. Top-p retains the action crossing its cumulative threshold;
@@ -252,13 +252,13 @@ Save the transformation and selected action log probabilities during collection.
 A later raw model forward pass need not reproduce them.
 
 A conditional target on the **fixed** retained support can declare its own
-temperature $\tau_t$:
+temperature $`\tau_t`$:
 
-$$
+```math
 t_\theta(a)=\frac{\boldsymbol{1}_{a\in S}e^{z_a^\theta/\tau_t}}
 {\sum_{j\in S}e^{z_j^\theta/\tau_t}},\qquad
 \rho(a)=\frac{t_\theta(a)}{b(a)}.
-$$
+```
 
 Matching logits and support do not imply ratio 1: temperature and renormalization
 must match too. Fixing support defines a local conditional objective, not a
@@ -267,15 +267,15 @@ after an update is a different procedure with different boundary behavior.
 
 For fixed rewards, exact enumeration verifies
 
-$$
+```math
 J(\theta)=\sum_a t_\theta(a)R(a)
 =\sum_{a:b(a)>0}b(a)\rho(a)R(a),\qquad
 t_\theta(a)>0\Rightarrow b(a)>0.
-$$
+```
 
-On fixed support the logit gradient is $t_i(R_i-J)/\tau_t$ and is zero outside
+On fixed support the logit gradient is $`t_i(R_i-J)/\tau_t`$ and is zero outside
 it. Collection probabilities and rewards detach. Replacing the denominator
-with raw model probabilities leaves a multiplier $b/p$ in the sum, changing
+with raw model probabilities leaves a multiplier $`b/p`$ in the sum, changing
 both value and gradient. PPO clipping does not make an incorrect denominator
 true. This single-state action identity also does not solve a complete
 autoregressive off-policy problem: different prefix-state distributions and
@@ -294,7 +294,7 @@ support removal; the orange-versus-blue difference reflects collection rules.
 These are retained finite-fixture probabilities from the notebook and
 [sampling-support report](../../experiments/reports/2026-10-04-sampling-support.md),
 not a measured training trajectory. The figure's `T` denotes the temperature
-written as $\tau$ in this chapter.
+written as $`\tau`$ in this chapter.
 
 The [original CPU microscope](../../src/dongxi_llms/sampling_likelihood_lab.py)
 starts with raw probabilities 0.55,0.30,0.15 and rewards 0,1,4. Temperature 0.5,
@@ -322,54 +322,54 @@ its implementation, prose and fixtures are independent.
 
 ### A correct KL value can provide a different KL gradient
 
-At one fixed prefix with positive full-support current $p$ and frozen raw
-reference $q$, two sample statistics are
+At one fixed prefix with positive full-support current $`p`$ and frozen raw
+reference $`q`$, two sample statistics are
 
-$$
+```math
 k_1(a)=\log\frac{p(a)}{q(a)},\qquad
 k_3(a)=\frac{q(a)}{p(a)}-1+\log\frac{p(a)}{q(a)}.
-$$
+```
 
-Both have expectation $D_{\mathrm{KL}}(p\Vert q)$ under $a\sim p$.
-For $k_3$ the extra terms cancel because $\sum_a q(a)=\sum_a p(a)=1$.
+Both have expectation $`D_{\mathrm{KL}}(p\Vert q)`$ under $`a\sim p`$.
+For $`k_3`$ the extra terms cancel because $`\sum_a q(a)=\sum_a p(a)=1`$.
 Shared full support matters: reference mass outside truncated support can
 invalidate that cancellation.
 
 Already collected actions do not resample when parameters move. Freeze their
-distribution at $b=p_0$ and differentiate each sample term alone. At the fresh
-point $p=p_0$, expected current-logit gradients are
+distribution at $`b=p_0`$ and differentiate each sample term alone. At the fresh
+point $`p=p_0`$, expected current-logit gradients are
 
-$$
+```math
 \mathbb{E}_b[\nabla_z k_1]=0,\qquad
 \mathbb{E}_b[\nabla_z k_3]=p-q.
-$$
+```
 
 Neither generally equals the full categorical forward-KL derivative:
 
-$$
+```math
 \frac{\partial D_{\mathrm{KL}}(p\Vert q)}{\partial z_i}
 =p_i\left(\log\frac{p_i}{q_i}-D_{\mathrm{KL}}(p\Vert q)\right).
-$$
+```
 
 Their forward values agree; their autodiff contracts differ. Exact categorical
 KL differentiates both probabilities and log probabilities. Alternatively,
 in this finite full-support example, differentiating the **entire**
-$\mathbb{E}_b[(p_\theta/b)k_\theta]$ expression restores the action-distribution
+$`\mathbb{E}_b[(p_\theta/b)k_\theta]`$ expression restores the action-distribution
 derivative. Detaching its weight removes that term again. This identity is not
 a recipe for every trajectory-KL or policy-gradient implementation. Declare
 whether an expression is a diagnostic or a chosen differentiable surrogate,
 its sampling distribution and its detached terms.
 
-For a concrete full-support example, set $p=[0.5,0.3,0.2]$ and
-$q=[0.2,0.3,0.5]$. Both statistics have mean
-$D_{\mathrm{KL}}(p\Vert q)=0.3\log2.5\approx0.274887$ nats.
+For a concrete full-support example, set $`p=[0.5,0.3,0.2]`$ and
+$`q=[0.2,0.3,0.5]`$. Both statistics have mean
+$`D_{\mathrm{KL}}(p\Vert q)=0.3\log2.5\approx0.274887`$ nats.
 Their gradients under the contracts above are:
 
-| Differentiated expression at $b=p_0=p$ | Expected current-logit gradient |
+| Differentiated expression at $`b=p_0=p`$ | Expected current-logit gradient |
 |---|---|
-| Fixed-sample $k_1$ | $[0,0,0]$ |
-| Fixed-sample $k_3$ | $[0.3,0,-0.3]$ |
-| Complete categorical forward KL | approximately $[0.320702,-0.082466,-0.238236]$ |
+| Fixed-sample $`k_1`$ | $`[0,0,0]`$ |
+| Fixed-sample $`k_3`$ | $`[0.3,0,-0.3]`$ |
+| Complete categorical forward KL | approximately $`[0.320702,-0.082466,-0.238236]`$ |
 
 The middle coordinate is the revealing one: current and reference probabilities
 both equal 0.3, yet changing that logit changes the other probabilities through
@@ -418,8 +418,8 @@ in full precision; verify ratios equal 1 before an update with fresh rollouts;
 test whether exact KL is zero for identical policies. Then make one bounded
 intervention with a predicted result.
 
-Increasing $\beta$ strengthens the penalty in Chapter 13's objective. If
-$\beta$ is too large, it can suppress useful adaptation. If too small, it may
+Increasing $`\beta`$ strengthens the penalty in Chapter 13's objective. If
+$`\beta`$ is too large, it can suppress useful adaptation. If too small, it may
 allow harmful drift. A finite per-token KL does not bound total sequence KL
 independently of length, and average KL can hide a few extreme prompts. Record
 quantiles, length-stratified summaries and representative high-KL cases when
@@ -541,9 +541,9 @@ universal repair for a weak representation or an incorrect preference target.
 
 ## 14.6 The rollout system is part of the experiment
 
-A synchronous update has a clear sequence: publish policy version $k$, generate
-responses under $k$, verify them, optimize, then publish version $k+1$. The rollout
-records retain behavior log probabilities and version $k$. The reference version
+A synchronous update has a clear sequence: publish policy version $`k`$, generate
+responses under $`k`$, verify them, optimize, then publish version $`k+1`$. The rollout
+records retain behavior log probabilities and version $`k`$. The reference version
 is separate and fixed. This makes freshness inspectable without guessing from
 timestamps.
 
@@ -554,8 +554,8 @@ Record the lag distribution, policy weight identity, tokenizer/chat template,
 sampling rules, prompt ID, group ID and verifier identity. Every answer in one
 group should correspond to the intended prompt and collection contract.
 
-A rollout generated under $k$ does not become a rollout under $k+2$ after weights
-are synchronized. Its probabilities must still use $k$ as behavior. Overwriting
+A rollout generated under $`k`$ does not become a rollout under $`k+2`$ after weights
+are synchronized. Its probabilities must still use $`k`$ as behavior. Overwriting
 the stored denominator defeats the correction. A tokenizer mismatch is more
 severe: the token IDs can represent different actions, making the probability
 ratio uninterpretable.
@@ -569,18 +569,18 @@ harmless. Those require integration checks with the actual engine.
 
 ## 14.7 Generation can dominate the budget
 
-For $B$ prompts, group size $G$, average valid response length $n$ and useful
-generation rate $q$, a first projected synchronous budget is
+For $`B`$ prompts, group size $`G`$, average valid response length $`n`$ and useful
+generation rate $`q`$, a first projected synchronous budget is
 
-$$
+```math
 N= BGn,\qquad
 \Delta t_{\mathrm{update}}\approx N/q+
 \Delta t_{\mathrm{verify}}+\Delta t_{\mathrm{learn}}+\Delta t_{\mathrm{sync}}.
-$$
+```
 
 The estimate ignores queuing and changes in throughput with batch geometry. It
 is labeled projected. The lab's default 128 tokens/s is an illustrative control,
-not a Spark benchmark. Vary $G$ and $n$, then inspect how the same 6-second optimizer
+not a Spark benchmark. Vary $`G`$ and $`n`$, then inspect how the same 6-second optimizer
 step becomes a small fraction of total elapsed time. A faster backward pass
 may barely change throughput if generation dominates.
 
@@ -617,12 +617,12 @@ latency. Cached batching is slightly slower on this tiny CPU workload; Python
 bookkeeping and small kernels can outweigh the work reduction. Do not carry
 that timing, or an assumed batching speedup, into a Spark serving claim.
 
-For $L$ layers, active batch $B$, compact KV heads $H_{\mathrm{kv}}$, physical
-cache length $S$, head width $d_h$ and element bytes $b$, tensor payload is
+For $`L`$ layers, active batch $`B`$, compact KV heads $`H_{\mathrm{kv}}`$, physical
+cache length $`S`$, head width $`d_h`$ and element bytes $`b`$, tensor payload is
 
-$$
+```math
 M_{\mathrm{KV}}=2LBH_{\mathrm{kv}}Sd_hb.
-$$
+```
 
 The factor 2 counts keys and values. This excludes allocator overhead,
 snapshots, query-head expansion, activations and model/optimizer storage. Our

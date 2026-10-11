@@ -6,17 +6,17 @@ These answers accompany [Chapter 9](../chapters/09-supervised-fine-tuning.md) an
 
 The assistant response factorizes causally:
 
-$$
-p_\theta(y\mid x)=\prod_t p_\theta(y_t\mid x,y_{<t}).
-$$
+```math
+p_\theta(y\mid x)=\prod_t p_\theta(y_t\mid x,y_{\lt t}).
+```
 
 Apply negative natural logs to get a sum of token surprise. Sum across demonstrations and divide by the total supervised count for a token-mean objective. Include the intended ending in the response targets. The logarithm does not choose the most likely token; it scores the demonstrated token's probability.
 
 ## 2. Shapes
 
-Input IDs and full labels are $[B,n]$; logits are $[B,n,V]$; hidden states are $[B,n,D]$; the output weight is $[V,D]$. Ownership and padding masks are $[B,n]$. After one shift, logits are $[B,n-1,V]$ and target labels are $[B,n-1]$.
+Input IDs and full labels are $`[B,n]`$; logits are $`[B,n,V]`$; hidden states are $`[B,n,D]`$; the output weight is $`[V,D]`$. Ownership and padding masks are $`[B,n]`$. After one shift, logits are $`[B,n-1,V]`$ and target labels are $`[B,n-1]`$.
 
-Flattening for cross-entropy produces $[B(n-1),V]$ logits and $[B(n-1)]$ labels. This preserves the vocabulary axis. A tensor with correct dimensions can still have a wrong shift, so print position/target identities in addition to shapes.
+Flattening for cross-entropy produces $`[B(n-1),V]`$ logits and $`[B(n-1)]`$ labels. This preserves the vocabulary axis. A tensor with correct dimensions can still have a wrong shift, so print position/target identities in addition to shapes.
 
 ## 3. Prompt gradient path
 
@@ -44,9 +44,9 @@ The notebook copies weights plus optimizer state after one update, applies the s
 
 ## 7. LoRA count and initial gradient
 
-A $d_{\mathrm{out}}\times d_{\mathrm{in}}$ matrix has $d_{\mathrm{out}}d_{\mathrm{in}}$ scalars. Rank-$r$ LoRA trains $r(d_{\mathrm{in}}+d_{\mathrm{out}})$ adapter scalars. For a $5\times6$ teaching matrix at rank 2, that is 22 adapter parameters alongside 30 frozen base scalars.
+A $`d_{\mathrm{out}}\times d_{\mathrm{in}}`$ matrix has $`d_{\mathrm{out}}d_{\mathrm{in}}`$ scalars. Rank-$`r`$ LoRA trains $`r(d_{\mathrm{in}}+d_{\mathrm{out}})`$ adapter scalars. For a $`5\times6`$ teaching matrix at rank 2, that is 22 adapter parameters alongside 30 frozen base scalars.
 
-With $B=0$ and random $A$, the initial effective update is zero. The derivative of $A$ includes $B$ and is zero on the first step; the derivative of $B$ can be nonzero because $A$ is present. The tested merged matrix gives the same linear output as the separate adapter path.
+With $`B=0`$ and random $`A`$, the initial effective update is zero. The derivative of $`A`$ includes $`B`$ and is zero on the first step; the derivative of $`B`$ can be nonzero because $`A`$ is present. The tested merged matrix gives the same linear output as the separate adapter path.
 
 ## 8. Memory accounting
 
@@ -100,7 +100,7 @@ The exercise IDs and retained measured outcomes below remain unchanged.
 
 ## 13. Response supervision versus a teacher distribution
 
-An actual emitted response supplies target IDs. Sequence NLL pushes the student toward each observed target under the demonstrated prefix. It does not reveal the teacher's probabilities for alternative tokens. Forward KL needs the teacher distribution, an aligned vocabulary and a declared temperature; the existing three-logit $\tau^2$ microscope remains a separate mechanism lesson.
+An actual emitted response supplies target IDs. Sequence NLL pushes the student toward each observed target under the demonstrated prefix. It does not reveal the teacher's probabilities for alternative tokens. Forward KL needs the teacher distribution, an aligned vocabulary and a declared temperature; the existing three-logit $`\tau^2`$ microscope remains a separate mechanism lesson.
 
 A teacher can emit a wrong but well-formed response. Response NLL still imitates that response unless a separately declared review/filter intervention changes the dataset. It cannot infer semantic truth simply because the example came from a larger model.
 

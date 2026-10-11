@@ -5,10 +5,10 @@ The [lab route](../labs/11-direct-preference-optimization.md) links the runnable
 
 ## 1. Exponential tilt and support
 
-Differentiate the Lagrangian with respect to $\pi_y$:
-$r_y-\beta(\log(\pi_y/\pi_{\mathrm{ref},y})+1)+\lambda=0$.
-Exponentiation gives a reference weight times $\exp(r_y/\beta)$ times a
-shared constant; normalization determines $Z$. Positive reference support,
+Differentiate the Lagrangian with respect to $`\pi_y`$:
+$`r_y-\beta(\log(\pi_y/\pi_{\mathrm{ref},y})+1)+\lambda=0`$.
+Exponentiation gives a reference weight times $`\exp(r_y/\beta)`$ times a
+shared constant; normalization determines $`Z`$. Positive reference support,
 finite reward, positive beta, and an unrestricted probability simplex establish
 the finite optimum. A neural policy's capacity and shared prompts impose
 additional constraints. Zero reference mass forbids positive current mass under
@@ -16,26 +16,26 @@ finite forward KL.
 
 ## 2. Partition cancellation
 
-The reconstructed reward is $\beta\log(\pi/\pi_{\mathrm{ref}})+\beta\log Z(x)$.
-Both answers share $x$, so subtracting rewards removes $\log Z(x)$. Responses
+The reconstructed reward is $`\beta\log(\pi/\pi_{\mathrm{ref}})+\beta\log Z(x)`$.
+Both answers share $`x`$, so subtracting rewards removes $`\log Z(x)`$. Responses
 to different prompts generally have different partition terms, so the same
 pairwise cancellation does not justify arbitrary cross-prompt reward comparisons.
 
 ## 3. Log-probability derivatives
 
-Let $m=\beta(c-l-c_{\mathrm{ref}}+l_{\mathrm{ref}})$ and
-$L=\mathrm{softplus}(m)-qm$. The derivatives are
-$\beta(\sigma(m)-q)$ for $c$ and its negative for $l$. At policy/reference
-equality with a hard winning pair, they are $-\beta/2$ and $\beta/2$.
+Let $`m=\beta(c-l-c_{\mathrm{ref}}+l_{\mathrm{ref}})`$ and
+$`L=\mathrm{softplus}(m)-qm`$. The derivatives are
+$`\beta(\sigma(m)-q)`$ for $`c`$ and its negative for $`l`$. At policy/reference
+equality with a hard winning pair, they are $`-\beta/2`$ and $`\beta/2`$.
 Reference derivatives are absent because it is fixed; code must enforce that
 boundary, not assume it from a variable name.
 
 ## 4. Two beta comparisons
 
-For fixed reward, increasing beta reduces the exponential tilt $r/\beta$.
+For fixed reward, increasing beta reduces the exponential tilt $`r/\beta`$.
 For fixed current/reference equality and one preference example, the initial
 gradient magnitude is beta over two. For fixed soft preference target, the
-required pair log-odds movement is $\log(q/(1-q))/\beta$. These compare
+required pair log-odds movement is $`\log(q/(1-q))/\beta`$. These compare
 different held-fixed quantities. Learning rate and training duration mediate
 actual neural movement, so beta is not a one-dimensional “aggressiveness” knob.
 
@@ -48,8 +48,8 @@ that change. Shared transformer updates make such movements possible; independen
 generation evaluation is therefore needed. The tiny decoder experiment preserves
 an instance of this diagnostic tension rather than hiding it.
 
-With the first distribution as reference and $\beta=0.5$, the margin changes
-from zero to $0.5\log(10/2)=0.804719$ and hard-pair loss from 0.693147 to
+With the first distribution as reference and $`\beta=0.5`$, the margin changes
+from zero to $`0.5\log(10/2)=0.804719`$ and hard-pair loss from 0.693147 to
 0.369640. The chapter's three-answer table makes the missing mass explicit.
 This is a constructed counterexample to what pair loss guarantees, rather
 than a measured training path. Keeping the third probability fixed would
@@ -103,12 +103,12 @@ comparison and its confidence intervals.
 
 ## 11. Explicit auxiliary gradients
 
-Global chosen-token NLL is $-\sum_i c_i/\sum_i n_{w,i}$, so its derivative
-with respect to any $c_i$ is $-1/\sum_i n_{w,i}$. Multiply by $\lambda_{\mathrm{SFT}}$ and add
-the mean-pair derivative $\beta(\sigma(m_i)-1)/B$. The counts are fixed data,
+Global chosen-token NLL is $`-\sum_i c_i/\sum_i n_{w,i}`$, so its derivative
+with respect to any $`c_i`$ is $`-1/\sum_i n_{w,i}`$. Multiply by $`\lambda_{\mathrm{SFT}}`$ and add
+the mean-pair derivative $`\beta(\sigma(m_i)-1)/B`$. The counts are fixed data,
 not differentiable policy outputs. Rehearsal adds a separate parameter
-gradient and remains present when gamma is nonzero, even if $\lambda_{\mathrm{SFT}}=0$.
-Only $\lambda_{\mathrm{SFT}}=\gamma=0$ recovers ordinary DPO; the independent parameter-gradient
+gradient and remains present when gamma is nonzero, even if $`\lambda_{\mathrm{SFT}}=0`$.
+Only $`\lambda_{\mathrm{SFT}}=\gamma=0`$ recovers ordinary DPO; the independent parameter-gradient
 tests verify exact recovery and the explicit combined expression.
 
 ## 12. More supervision can teach the wrong thing

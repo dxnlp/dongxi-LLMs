@@ -91,27 +91,27 @@ difficulty, or checkpoint.
 
 ## Finite groups and the cost of difficulty selection
 
-Let $r_i$ be an independent Bernoulli reward with success probability $p$ and
-let $p$ be parameterized by a logit $\theta$. Its score is $r_i-p$, and the true
-reward gradient is $p(1-p)$. For the inclusive group baseline
-$\bar r=G^{-1}\sum_i r_i$, the center-only estimate is
+Let $`r_i`$ be an independent Bernoulli reward with success probability $`p`$ and
+let $`p`$ be parameterized by a logit $`\theta`$. Its score is $`r_i-p`$, and the true
+reward gradient is $`p(1-p)`$. For the inclusive group baseline
+$`\bar r=G^{-1}\sum_i r_i`$, the center-only estimate is
 
-$$
+```math
 \hat g=\frac{1}{G}\sum_{i=1}^{G}(r_i-\bar r)(r_i-p),\qquad
 \mathbb{E}[\hat g]=\frac{G-1}{G}p(1-p).
-$$
+```
 
 The response participates in its own baseline. Dividing by the group's sampled
 population standard deviation introduces another dependence. The reference
 enumerates every joint group and its probability; it never substitutes the
 expected denominator or sums independent normalized response variances. At
-$G=2$, std-normalized mixed pairs give expectation
-$p(1-p)/(1+2\varepsilon)$, with the kernel's $\varepsilon=10^{-8}$. All-constant
+$`G=2`$, std-normalized mixed pairs give expectation
+$`p(1-p)/(1+2\varepsilon)`$, with the kernel's $`\varepsilon=10^{-8}`$. All-constant
 groups give zero. The large-group std-normalized limit is
-$\sqrt{p(1-p)}$, while center-only approaches $p(1-p)$; those are different
+$`\sqrt{p(1-p)}`$, while center-only approaches $`p(1-p)`$; those are different
 scales, not a promise of universal variance reduction.
 
-Keeping mixed groups has probability $1-p^G-(1-p)^G$. Originally uniform
+Keeping mixed groups has probability $`1-p^G-(1-p)^G`$. Originally uniform
 prompt slices are reweighted by that probability after selection. Discarded
 groups still consume collection work, and the conditional expected gradient is
 a different estimand. The assignment chooses prompt eligibility once from

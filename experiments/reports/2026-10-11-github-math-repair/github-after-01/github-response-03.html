@@ -1,0 +1,1546 @@
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-11</h1>
+<h1 dir="auto">7. Evaluation Is a Contract</h1>
+<p dir="auto">A model continues a story without spelling errors, yet changes the main character's name halfway through. Another model has lower development loss but repeatedly returns a paragraph when the user asks for one word. Which is better? The question has no answer until we name the work we want the model to do, the population of inputs, and the rules for judging its outputs.</p>
+<p dir="auto">Chapter 6 established evidence about prediction on TinyStories. Its completed run improved fixed-development NLL, while inspected generations still contained repetition and inconsistencies. This chapter makes the next decision possible: define behavior precisely enough to compare before choosing another training intervention. Day 10 begins with four executable companions: <a href="../../notebooks/day-10/01_metrics_and_contracts.ipynb">metrics</a>, <a href="../../notebooks/day-10/02_paired_uncertainty.ipynb">uncertainty</a>, <a href="../../notebooks/day-10/03_slices_and_contamination.ipynb">slices and leakage</a>, and <a href="../../notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb">mathematical grading and response replay</a>. The <a href="../labs/07-evaluation-is-a-contract.md">lab guide</a> and <a href="../solutions/07-evaluation-is-a-contract.md">worked answers</a> extend the argument.</p>
+<h2 dir="auto">What you should be able to explain</h2>
+<ul dir="auto">
+<li>Define an input-to-score contract and separate correctness, format and stopping.</li>
+<li>Compare aligned responses with source-group uncertainty and explicit coverage.</li>
+<li>Distinguish oracle candidate availability from a deployable selection decision.</li>
+<li>Defend a behavioral rubric without treating a phrase match or EOS as coherence.</li>
+</ul>
+<p dir="auto"><strong>Prerequisites:</strong> sequence likelihood and sampling from Chapter 3; the training<br>
+and held-out measurement boundaries from Chapter 6.</p>
+<h2 dir="auto">7.1 Name a capability that can fail</h2>
+<p dir="auto">“Good at reasoning” is too broad to evaluate directly. “Given an original two-step integer arithmetic problem, return the correct integer within 64 generated tokens” is narrower and testable. It specifies an input family, a behavior, a correctness rule and a generation budget. It still leaves choices: must the model explain? Can it use a calculator? How is an answer extracted? Those belong in the contract too.</p>
+<p dir="auto">For our storyteller, define five separate properties. Grammar concerns sentence structure. Character consistency asks whether entities and attributes remain stable. Causal continuity asks whether events follow from what came before. Repetition asks whether language cycles without advancing the story. Ending quality asks whether the narrative resolves within the permitted budget. These properties can disagree, so a single “story score” obscures useful evidence unless its aggregation is defended.</p>
+<p dir="auto">Write a rubric before looking at candidate outputs. For character consistency, a three-level scale could mean: 0, contradictory identities; 1, an unresolved reference; 2, stable identities throughout. Include examples created independently of candidate models. A second reader should be able to apply the rubric with similar judgments. Disagreement is evidence about the instrument, and should be preserved instead of silently averaged away.</p>
+<h2 dir="auto">7.2 Freeze the complete input-to-score path</h2>
+<p dir="auto">An evaluation item is more than a question. It includes an identifier, provenance, expected answers or verifier, slice labels and split membership. A model identity is more than its public name: record the exact checkpoint revision, tokenizer revision, adapter revision if any, and inference mode.</p>
+<p dir="auto">The full path is:</p>
+<blockquote>
+<p dir="auto">item → message serialization → tokenization → decoding → output extraction → metric → aggregation.</p>
+</blockquote>
+<p dir="auto">Changes anywhere in this path can change the result. A chat template can add a reasoning prefix; truncation can remove a decisive condition; a parser can accept an answer buried in an otherwise incorrect response. Version all of them. In the notebook, an immutable contract produces a SHA-256 identity from canonical JSON. The hash proves that two records refer to identical serialized settings; it does not prove that those settings are appropriate.</p>
+<p dir="auto">Training, development and publication test splits serve different purposes. Training examples update parameters. Development examples support recipe selection. Publication test examples support a final claim after the selection process is complete. Once repeatedly consulted, a nominal test split becomes development evidence. Renaming it does not restore independence.</p>
+<p dir="auto">Keep a small development suite for rapid feedback and a larger final suite with a stronger source audit. The same examples should not quietly migrate between roles. When data is scarce, use grouped cross-validation and explain exactly which decisions each fold informed.</p>
+<h2 dir="auto">7.3 Exact match measures a particular agreement</h2>
+<p dir="auto">For item <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$j$</math-renderer>, let the model prediction be <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$\hat a_j$</math-renderer>, the set of accepted references be <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$R_j$</math-renderer>, and a fixed normalization function be <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$f$</math-renderer>. Exact match is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$e_j=\mathbf{1}\{f(\hat a_j)\in f(R_j)\},\qquad
+\hat s=\frac{1}{N}\sum_{j=1}^{N}e_j.$$</math-renderer>
+<p dir="auto">Here <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$N$</math-renderer> counts evaluation items, not generated tokens. The fixture normalizer applies Unicode NFC, case folding and whitespace collapse. Thus “ RED ” matches “red”, while “1.0” does not match “1”. This is deliberate: numeric equivalence belongs in a separately specified numeric verifier.</p>
+<p dir="auto">Removing punctuation can make a parser accept a response that violates a JSON requirement. Removing all words except the final number can reward an incorrect derivation that happens to end correctly. Conversely, raw string comparison rejects harmless capitalization. The correct policy depends on the capability. Report answer correctness and format validity separately when both matter.</p>
+<p dir="auto">An output such as “The answer is red” can be correct in ordinary conversation yet fail a one-word instruction. The observed failure should be attributed to the contract's format criterion, not automatically to a missing fact. Error categories guide training choices; a scalar score alone cannot.</p>
+<h2 dir="auto">7.4 pass@k includes an attempt budget</h2>
+<p dir="auto">Suppose a code task permits <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$k$</math-renderer> independently sampled attempts and an executable verifier accepts a candidate. The event of interest is “at least one passes.” If the success probability for one independent sample is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$p$</math-renderer>, its probability is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$\mathrm{pass@}k=1-(1-p)^k.$$</math-renderer>
+<p dir="auto">The evaluation usually samples <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$n$</math-renderer> candidates, counts <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$c$</math-renderer> correct candidates, and estimates the chance that a uniformly chosen subset of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$k$</math-renderer> candidates contains a success:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$\widehat{\mathrm{pass@}k}
+=1-\frac{\binom{n-c}{k}}{\binom{n}{k}},
+\qquad n\ge k.$$</math-renderer>
+<p dir="auto">The fraction counts all-incorrect subsets divided by all subsets. If fewer than <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$k$</math-renderer> incorrect candidates exist, every subset contains a success and the estimate is one. For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$n=10,c=2,k=3$</math-renderer>, the estimate is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$1-56/120=0.5333\ldots$</math-renderer>. The notebook verifies the product implementation against exact combinatorial counts. The estimator is established in the <a href="https://arxiv.org/abs/2107.03374" rel="nofollow">original code-evaluation paper</a>.</p>
+<p dir="auto">The procedure assumes candidates come from the stated sampling process. Copying one completion ten times supplies no new independent attempts. Picking the best answer with an oracle after generation measures an oracle budget, not single-response deployment quality. If a user must receive one answer without access to the verifier, pass@10 does not describe that experience. Record temperature, top-p, seeds, maximum output length, execution limits and verifier version.</p>
+<p dir="auto">A verifier itself can be incomplete. Passing three tests does not prove a program works on all inputs. Add adversarial and boundary cases, and report verifier coverage. Never execute untrusted generated programs as part of this lightweight lesson; its correctness flags are purpose-built fixtures.</p>
+<h2 dir="auto">7.5 Confidence has several meanings</h2>
+<p dir="auto">The probability of a token is not confidence that the entire answer is true. A model can assign high probability to a common misconception, a boilerplate sentence or a copied phrase. Sequence probabilities also shrink with length, so comparing raw probabilities of answers with different lengths is misleading.</p>
+<p dir="auto">Calibration instead asks whether cases assigned a stated confidence succeed at the corresponding frequency. For example, among cases rated 0.8, roughly 80% should be correct under the same population and grading rule. A reliability diagram groups predicted confidence and compares it with observed correctness. Its bins, sample counts and uncertainty must remain visible. Verbal confidence elicited by a prompt is another model output, not a guarantee.</p>
+<p dir="auto">Statistical confidence intervals describe uncertainty in a score estimate under a sampling model. They do not describe an individual model's internal certainty. For <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$x$</math-renderer> successes in <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$N$</math-renderer> independent Bernoulli items, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$\hat p=x/N$</math-renderer>. The Wilson interval uses</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$\mathrm{center}=\frac{\hat p+z^2/(2N)}{1+z^2/N},\qquad
+\mathrm{halfwidth}=
+\frac{z\sqrt{\hat p(1-\hat p)/N+z^2/(4N^2)}}{1+z^2/N}.$$</math-renderer>
+<p dir="auto">For a nominal 95% interval, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$z$</math-renderer> is approximately 1.96. Unlike the simplest normal approximation, this interval does not pretend zero observed failures establishes a zero failure rate. Ten successes out of ten still leave uncertainty about the underlying population. The confidence level refers to repeated interval construction; it is not a posterior probability that a fixed parameter lies in a particular computed interval.</p>
+<p dir="auto">For ten successes out of ten, the interval is approximately <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$[0.7225,1]$</math-renderer>.<br>
+The lower endpoint is wide because only ten independent opportunities were<br>
+observed. Copying those ten records repeatedly does not create more evidence.<br>
+The <a href="../../notebooks/day-10/02_paired_uncertainty.ipynb">uncertainty companion</a><br>
+shows both the sample-size calculation and that duplication failure.</p>
+<p dir="auto">If many items share a document, author or problem template, independence at the item level is doubtful. Resample the independent groups, or explicitly narrow the interpretation to the fixed evaluated set. A hundred paraphrases of one question are not a hundred independent subject areas.</p>
+<h2 dir="auto">7.6 Compare models on aligned items</h2>
+<p dir="auto">The <a href="../../src/dongxi_llms/evaluation_lab.py">existing forty-item fixture</a><br>
+gives A 25 successes and B 28: 62.5% versus 70%. These are authored binary<br>
+scores, not generated checkpoint results. Should we replace A? Separate score<br>
+intervals discard useful information: which A failures did B fix, and which<br>
+A successes did it lose? Preserve item identifiers and compare the same inputs.</p>
+<p dir="auto">For per-item scores <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$a_j$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$b_j$</math-renderer>, define</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$d_j=b_j-a_j,\qquad \hat\Delta=\frac{1}{N}\sum_j d_j.$$</math-renderer>
+<p dir="auto">The paired bootstrap samples item indices with replacement and recalculates <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$\hat\Delta$</math-renderer> for each resampled set. Percentile endpoints summarize the resampling distribution. Pairing retains shared item difficulty. Our implementation fixes the seed and number of draws; the notebook shows the full resampling distribution and its interval.</p>
+<h3 dir="auto">Account for the improvement before naming a winner</h3>
+<p dir="auto"><strong>Reader prediction.</strong> B has three more successes. Does that mean it only<br>
+changed three answers for the better? The aligned records say otherwise:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>A outcome</th>
+<th>B outcome</th>
+<th align="right">Items</th>
+<th align="right">Per-item difference <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$d_j$</math-renderer>
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Correct</td>
+<td>Correct</td>
+<td align="right">18</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Wrong</td>
+<td>Wrong</td>
+<td align="right">5</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>Wrong</td>
+<td>Correct</td>
+<td align="right">10</td>
+<td align="right">+1</td>
+</tr>
+<tr>
+<td>Correct</td>
+<td>Wrong</td>
+<td align="right">7</td>
+<td align="right">−1</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The net change is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$(10-7)/40=0.075$</math-renderer>, or 7.5 percentage points. Seventeen<br>
+items changed outcome, and seven are regressions. A difference calculation<br>
+contains the information the two totals concealed.</p>
+<p dir="auto">To reproduce the resampling rather than treating “bootstrap” as a magic word:</p>
+<ol dir="auto">
+<li>Keep each item's A and B scores together and compute its difference.</li>
+<li>Draw forty item indices with replacement from those same forty IDs.</li>
+<li>Average the differences at the drawn indices; duplicates are ordinary<br>
+resampling weights, not new observations.</li>
+<li>Repeat with a declared seed and draw count.</li>
+<li>Sort those means and read the declared percentile endpoints.</li>
+</ol>
+<p dir="auto">The canonical <code class="notranslate">paired_bootstrap</code> uses Python's seeded sampler, 2,000 draws<br>
+and seed 1010. It gives <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$\hat\Delta=0.075$</math-renderer> and interval <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$[-0.125,0.275]$</math-renderer><br>
+for this fixture. The notebook additionally draws its histogram with a<br>
+separately seeded NumPy sampler; finite-draw endpoints need not be identical.<br>
+Neither construction resolves a population-wide gain here. The observed<br>
+three-success gain remains an exact statement about the fixed forty records.</p>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-07/day-10-02_paired_uncertainty-03.png"><img src="../../notebooks/figures/chapter-07/day-10-02_paired_uncertainty-03.png" alt="Paired bootstrap distribution of mean score changes on the forty-item fixture" style="max-width: 100%;"></a></p>
+<p dir="auto">The <a href="../../notebooks/day-10/02_paired_uncertainty.ipynb">runnable plot</a><br>
+marks zero and the observed difference. Read its horizontal axis as B minus<br>
+A, not either model's accuracy. Draws on both sides of zero express the<br>
+limited resolution of this authored example, not negative accuracy or a<br>
+claim that the two systems are equivalent.</p>
+<p dir="auto"><strong>Controlled change.</strong> Reorder B's records without aligning IDs. The totals<br>
+remain 25 and 28, so the observed mean difference stays 0.075, but the apparent<br>
+disagreements and resampling distribution can change. Equal suite length is<br>
+therefore insufficient: pairing is an identity join, not a positional guess.</p>
+<p dir="auto">This interval has limits. Few rare events, strong grouping or a selected evaluation population can make it uninformative or optimistic. Trying twenty recipes and reporting only the winning interval adds selection bias. Publish the candidates tested, reserve final confirmation data, and avoid interpreting an interval containing zero as proof of equality. It indicates that the evidence does not resolve the sign at the stated precision.</p>
+<h2 dir="auto">7.7 Aggregate scores can hide regressions</h2>
+<p dir="auto">A benchmark contains frequent easy tasks and rare structured outputs. A recipe improves frequent tasks but harms JSON validity. Its average rises because common tasks dominate. The rare failure is still consequential.</p>
+<p dir="auto">Report the item count, denominator and uncertainty for each predeclared slice: task family, input length, language, reasoning depth, format constraint and source. Distinguish a micro-average over all items from a macro-average giving each slice equal weight. Neither is automatically right; the deployment distribution should inform the choice.</p>
+<p dir="auto">Our fixture assigns two models to forty items and deliberately creates a rare-format regression. It demonstrates the accounting. It does not measure Qwen or DongxiGPT. Inspect the paired disagreement table, then a fixed sample of failures from each category. Select that sample by a documented rule, such as the first five identifiers per category. Attractive examples should not control the evaluation population.</p>
+<p dir="auto">Here is the same comparison split by its declared task family:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Slice</th>
+<th align="right">Items</th>
+<th align="right">A correct</th>
+<th align="right">B correct</th>
+<th align="right">Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Common</td>
+<td align="right">30</td>
+<td align="right">20</td>
+<td align="right">26</td>
+<td align="right">+20 percentage points</td>
+</tr>
+<tr>
+<td>Rare format</td>
+<td align="right">10</td>
+<td align="right">5</td>
+<td align="right">2</td>
+<td align="right">−30 percentage points</td>
+</tr>
+<tr>
+<td>All items, micro-average</td>
+<td align="right">40</td>
+<td align="right">25</td>
+<td align="right">28</td>
+<td align="right">+7.5 percentage points</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Giving the two slice accuracies equal weight instead gives A approximately<br>
+58.33% and B 53.33%, a five-point decrease. That macro-average is not a<br>
+correction of the micro-average; it answers a different weighting question.<br>
+If valid structured output is essential to the intended use, its decline<br>
+can block replacement even when common-task performance rises. Declare that<br>
+decision rule before evaluating candidates. The fixture supports explaining<br>
+the trade-off, not selecting a real model.</p>
+<p dir="auto">For stories, a fixed prompt grid should cover different characters, event structures and openings. Include unfamiliar openings alongside common “Once upon a time” prompts. Evaluate greedy and sampled decoding as separate settings. Have reviewers blind to checkpoint identity, retain disagreement, and show how token-limit truncation affects the ending rubric.</p>
+<h2 dir="auto">7.8 Contamination is a provenance problem</h2>
+<p dir="auto">An exact overlap between training and test text is easy to detect with normalized hashes. Semantic paraphrases, shared source documents and solutions copied into explanations are harder. Deduplicate before splitting and group related records by their source or generation template.</p>
+<p dir="auto">The leakage notebook creates a deliberate normalized duplicate across train and test, finds it, and demonstrates how a fictional lookup baseline obtains misleading success. Exact matching catches that constructed failure. Its absence cannot prove a clean benchmark. Search near duplicates, inspect source genealogy and audit synthetic-data prompts that may have included evaluation questions.</p>
+<p dir="auto">Leakage can enter through evaluation infrastructure too. A retrieved document may contain the answer key. A judge prompt may reveal the reference when it should assess independent reasoning. A developer may rewrite a parser after inspecting candidate mistakes. Record these changes as contract revisions rather than folding them silently into a favorable score.</p>
+<h2 dir="auto">7.9 A runnable evidence workflow</h2>
+<p dir="auto">The CPU route has four stages. First inspect accepted strings and verify metric edge cases. Then compare aligned fixture panels with paired uncertainty. Inspect slices and contamination, then replay complete responses through a frozen mathematical grader. Each notebook puts an explanation and runnable reference answer immediately after the prediction.</p>
+<p dir="auto">For the campaign route, the <a href="../../experiments/specs/2026-10-04-evaluation-and-sft-course.md">experiment specification</a> declares a fixed development suite and a separately frozen publication suite. The later <a href="../../experiments/reports/2026-10-05-native-sft400-comparison.md">actual 120-item publication comparison</a> measures unchanged Base, fresh full400 and merged LoRA400 under the same prompts and decoding. Those held-out values still use three shared training task templates; they do not establish transfer to arbitrary instructions. A distinct actual Base/short-SFT development replay supplies model events for the smaller mathematical/behavioral instrument in section 7.16. Keep its 15-item results separate from the 120-item publication test. The original CPU report supplies evidence only for the metric, masking and optimization mechanisms.</p>
+<p dir="auto">Before training, answer: what observation would cause us to reject the recipe? A decline in held-out format validity might be unacceptable even if response NLL improves. A confidence interval that is too broad might justify collecting more evaluation items. A parser disagreement might justify improving the instrument before changing model weights.</p>
+<h2 dir="auto">7.10 Mathematical equivalence has a boundary</h2>
+<p dir="auto">The strings <code class="notranslate">1/2</code>, <code class="notranslate">0.5</code> and a boxed fraction can express the same answer. A<br>
+strict string matcher would reject some of them. A parser that accepts any<br>
+number found anywhere can fail in the other direction: “Perhaps 1; perhaps 2”<br>
+does not supply one unambiguous answer. A stronger instrument separates four<br>
+questions: where is the claimed answer, is its expression supported, does it<br>
+equal the reference, and does the response obey the required interface?</p>
+<h3 dir="auto">Supported equivalence and instrument coverage</h3>
+<p dir="auto">Our independent <a href="../../src/dongxi_llms/reasoning_evaluation.py">bounded grader</a><br>
+extracts one balanced box or one explicit <code class="notranslate">Final answer:</code> line; without either,<br>
+it tries the whole response. Nested fraction braces are balanced. Two explicit<br>
+answer markers remain ambiguous, even if they agree. This conservative rule can<br>
+reject a valid model response. That is a visible contract limitation, not a<br>
+reason to quietly rescue the last number after seeing the output.</p>
+<p dir="auto">Supported scalar expressions contain finite integer/decimal constants, exact<br>
+fractions, addition, subtraction, multiplication, division and grouping. Values<br>
+are stored as rational numerator/denominator pairs. Decimal text is converted<br>
+directly, not first through a binary floating-point approximation; Python's<br>
+<a href="https://docs.python.org/3.12/library/fractions.html" rel="nofollow">Fraction documentation</a><br>
+explains this distinction. Thus <code class="notranslate">0.5</code> equals <code class="notranslate">1/2</code>, while the finite decimal<br>
+<code class="notranslate">0.3333333333333333</code> is not exactly <code class="notranslate">1/3</code>. A tolerance would be a separately<br>
+declared metric, not an invisible kindness to one checkpoint.</p>
+<p dir="auto">Finite sets ignore element order and duplicates. Real intervals preserve both<br>
+endpoints and open/closed boundaries: <code class="notranslate">[1,2)</code> differs from <code class="notranslate">[1,2]</code>. Named units<br>
+remain part of the answer. <code class="notranslate">3 seconds</code> and <code class="notranslate">3 s</code> share a declared alias, but<br>
+<code class="notranslate">100 cm</code> and <code class="notranslate">1 m</code> do not match because unit conversion is outside this grammar.<br>
+The instrument deliberately chooses limited coverage over unsafe generality.</p>
+<p dir="auto">Variables, square roots, unknown units and arbitrary code are <code class="notranslate">UNSUPPORTED</code>.<br>
+Malformed expressions, zero denominators and exceeded size/depth bounds are<br>
+<code class="notranslate">INVALID</code>. Multiple explicit answers are <code class="notranslate">AMBIGUOUS</code>. These are not the same<br>
+failure as a supported expression equal to the wrong number. Report all of<br>
+them. The parser never calls <code class="notranslate">eval</code>, runs generated programs or asks an<br>
+unbounded symbolic engine to simplify arbitrary text. The exact limits and<br>
+<a href="../../fixtures/reasoning-evaluation/README.md">reviewed adversarial cases</a><br>
+are part of its reproducible definition.</p>
+<h3 dir="auto">Correctness, format and termination</h3>
+<p dir="auto">Correctness and formatting also remain separate. Unsupported grammar does not<br>
+automatically fail an unconstrained format criterion: the grader can lack<br>
+coverage while the response obeys its interface. <code class="notranslate">Final answer: 4</code> can receive<br>
+the right arithmetic score while failing “return only one integer.” A JSON<br>
+task uses a bounded object parser that rejects duplicate keys, nonfinite values<br>
+and surrounding prose; it does not discard the prose and congratulate the<br>
+model on valid JSON. The original integer-only RLVR verifier remains unchanged.<br>
+Accepting boxed fractions here does not automatically loosen that other task.</p>
+<h2 dir="auto">7.11 Replay complete responses before interpreting a gain</h2>
+<p dir="auto">A score should be reproducible without rerunning generation. Freeze item and<br>
+source-group IDs, split membership, prompt, reference, task/rubric, parser<br>
+version, serialization, thinking mode, decoding and stopping budget. Hash the<br>
+suite and those settings. Each response records the contract identity,<br>
+checkpoint and sample identities, full raw text, token IDs/counts, stop reason,<br>
+truncation, error and cost boundaries. Unknown values are explicit <code class="notranslate">null</code>, not<br>
+estimated from text length. A response error stays in the ledger; dropping it<br>
+would change the denominator in favor of the failing system.</p>
+<p dir="auto">Replay performs extraction, supported equivalence and task scoring on every<br>
+record. Our <code class="notranslate">task_success</code> metric is correctness AND required format. Natural<br>
+termination is reported separately. A correct string stopped by its maximum<br>
+token cap is not evidence of an emitted EOS. If a deployment requires natural<br>
+termination as part of success, define a new metric before the comparison.</p>
+<p dir="auto">The <a href="../../fixtures/reasoning-evaluation/">authored replay panel</a> has fifteen<br>
+development items from fourteen source groups. Its two response panels are<br>
+named <code class="notranslate">authored-baseline</code> and <code class="notranslate">authored-candidate</code>, not Qwen checkpoints. The<br>
+candidate improves the aggregate while deliberately regressing on finite-set<br>
+membership and JSON validity. The<br>
+<a href="../../experiments/reports/2026-10-04-reasoning-evaluation.md">executed report</a><br>
+preserves those failures, an ambiguous answer, unsupported grammar and a<br>
+simulated execution error. No model generation or token-cost measurement occurs.</p>
+<h3 dir="auto">Preserve the estimand when resampling groups</h3>
+<p dir="auto">Related items must remain paired and grouped. If source group <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$g$</math-renderer> contains<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$n_g$</math-renderer> aligned item/sample differences <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$d_{gj}$</math-renderer>, a cluster-bootstrap draw<br>
+resamples groups with replacement and computes</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$\Delta^*=\frac{\sum_{g\ \mathrm{drawn}}\sum_{j=1}^{n_g}d_{gj}}
+{\sum_{g\ \mathrm{drawn}}n_g}.$$</math-renderer>
+<p dir="auto">Every sibling item travels with its group, including repeated groups in a draw.<br>
+This preserves the micro-average estimand while avoiding independent resampling<br>
+of variants as though they had unrelated sources. Few authored groups still<br>
+give fragile, population-dependent uncertainty. A favorable interval on a<br>
+constructed instrument panel does not establish a capability gain.</p>
+<p dir="auto">The original panel also includes positive/negative examples for a benign<br>
+computer-process request and a false arithmetic premise. Its required/forbidden<br>
+phrase checks make the chosen rubric inspectable; they are not a semantic judge<br>
+of helpfulness, sycophancy or safety. A polished response can exploit phrase<br>
+checks just as a policy can exploit another verifier. Preserve human review and<br>
+do not promote these fixtures into a broad behavioral certification.</p>
+<p dir="auto">Finally, candidate selection must not receive held-out reference answers or<br>
+correctness flags. The reusable <code class="notranslate">candidate_view</code> returns generation metadata<br>
+without those fields, even when passed a graded record. Selection uses the<br>
+declared ranker or voting rule; evaluation happens afterward. The local generation<br>
+adapter below connects the instrument to actual HF forward calls. Its later<br>
+pretrained Base/short-SFT comparison is recorded separately in section 7.16;<br>
+authored response panels never become pretrained evidence retrospectively.</p>
+<h2 dir="auto">7.12 A model event must survive the trip to a score</h2>
+<p dir="auto">Generation and grading are different jobs. The<br>
+<a href="../../src/dongxi_llms/reasoning_generation.py">local adapter</a> consumes an existing<br>
+frozen contract, exact suite and local checkpoint; replay consumes its saved<br>
+records without a model. A tokenizer-only preparation step binds the contract<br>
+to actual encoding rules, special IDs and the complete input template. Before<br>
+weights load, the chosen tokenizer must match both the frozen interface and the<br>
+one saved with the checkpoint. Equal vocabulary sizes cannot establish this.<br>
+Actual local file digests identify bytes; a model's familiar name does not.</p>
+<h3 dir="auto">Bind likelihoods to the actual sampling rule</h3>
+<p dir="auto">Raw completion and chat evaluation serialize different inputs. Chat also records<br>
+the explicit thinking-template keyword and verifies rendered-text tokenization<br>
+against the template's direct tokenization. Passing <code class="notranslate">enable_thinking</code> is an<br>
+interface setting, not proof of an architecture or a faithful reasoning trace.<br>
+Greedy chooses a maximum logit; stochastic sampling uses the frozen temperature<br>
+and top-k/top-p transformation. A greedy contract rejects sampling settings it<br>
+would otherwise ignore. Each item's sample seed derives from its stable item ID<br>
+and sample coordinate, not its position in the execution loop.</p>
+<h3 dir="auto">Retain the stopping action</h3>
+<p dir="auto">Every generated action remains in the token ledger, including a stopping token.<br>
+The complete raw decode preserves special tokens. A separately declared<br>
+<code class="notranslate">response_text</code> excludes only the final chosen EOS or turn stop for grading:<br>
+the sequence <code class="notranslate">4, EOS</code> should not fail “return one integer” merely because the<br>
+instrument prints the special-token spelling. Neither its EOS action nor its<br>
+cost disappears. Truncated responses keep all their text; an arbitrary trailing<br>
+answer or unwanted explanation is never trimmed into compliance.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Observed boundary</th>
+<th>Recorded stop</th>
+<th>Natural termination</th>
+<th>Truncated</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chosen declared EOS</td>
+<td><code class="notranslate">eos</code></td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Chosen declared end-of-turn token</td>
+<td><code class="notranslate">turn_stop</code></td>
+<td>Yes</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Full output budget consumed</td>
+<td><code class="notranslate">max_tokens</code></td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Context budget exhausted first</td>
+<td><code class="notranslate">context_limit</code></td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Forward, decoding or execution failure</td>
+<td><code class="notranslate">error</code></td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">An EOS in the prompt is not an EOS emitted by the model. An EOS-valued padding<br>
+ID also does not make padding a generated action. Context exhaustion can leave<br>
+zero output tokens; it must not masquerade as a full output-cap response.<br>
+On failure, retain the partial IDs, text, exact stage and attempted work.</p>
+<p dir="auto">The transparent implementation recomputes the complete prefix at each forward.<br>
+Consequently, generated actions and model-forward token positions differ:<br>
+four output actions after a three-token prompt require forwards over 3, 4, 5 and<br>
+6 positions. These are counted input positions, not FLOPs or billing units.<br>
+The adapter separates attempted from completed forwards and records wall time;<br>
+offline grading consumes zero additional model scoring tokens. This is an<br>
+evidence microscope, not an optimized KV-cache inference benchmark.</p>
+<p dir="auto">An interrupted run can leave useful partial evidence without establishing<br>
+exact resume. The <a href="../../experiments/reports/2026-10-04-reasoning-generation-adapter.md">bounded adapter report</a><br>
+tests original random-model CPU forwards and scripted failure cases;<br>
+<a href="../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence">Appendix D</a><br>
+records its output and identity checks. These verify the measurement path,<br>
+not pretrained reasoning or independent human agreement.</p>
+<h2 dir="auto">7.13 A correct candidate is not yet a correct decision</h2>
+<p dir="auto">Suppose eight sampled solutions include three correct answers and five copies<br>
+of the same wrong answer. An evaluator can report that a correct answer exists.<br>
+A majority selector can still return the wrong one. These are different events:<br>
+one measures the supply of useful candidates, the other measures a decision<br>
+made without access to the answer key.</p>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$C_N=(c_1,\ldots,c_N)$</math-renderer> be an ordered candidate prefix, let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$v(c)$</math-renderer> be a fixed<br>
+independent complete-task verifier, and let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$s(C_N)$</math-renderer> select one candidate or<br>
+abstain. Define</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$o_N=\mathbf{1}\{\exists c\in C_N:v(c)=1\},\qquad
+d_N=\mathbf{1}\{s(C_N)\ne\varnothing\ \mathrm{and}\ v(s(C_N))=1\}.$$</math-renderer>
+<p dir="auto">The diagnostic <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$o_N$</math-renderer> is any-correct oracle availability. A deployable selector<br>
+does not receive <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$v(c)$</math-renderer> or the reference answer. Always <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$d_N\le o_N$</math-renderer>. Nested<br>
+prefixes make <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$o_N$</math-renderer> nondecreasing: adding candidates cannot remove an available<br>
+correct answer. There is no corresponding monotonic guarantee for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$d_N$</math-renderer>.<br>
+New wrong votes can overturn the decision, and a confident wrong candidate can<br>
+outrank a correct one.</p>
+<p dir="auto">The <a href="../../notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb">actual candidate lesson</a><br>
+connects this distinction to real causal forwards from the original tiny<br>
+symbolic decoder. Three fixed seeds each supply an initial policy and a<br>
+train-only fixed 80-update policy. Eighteen original items cover training,<br>
+held-out sources, their alias-template siblings and an unseen task family.<br>
+Each policy genuinely samples eight EOS/0/1 paths per item, with immediate EOS,<br>
+repeated numerals and caps allowed. Its English strings are descriptions, not<br>
+model-parsed language; success here is not natural-language reasoning evidence.</p>
+<h3 dir="auto">Candidate supply and selector behavior</h3>
+<p dir="auto">First-attempt, majority, unique-answer-support and likelihood selectors reuse<br>
+the same prefixes 1,2,4,8. Unsupported or malformed outputs cannot vote, but<br>
+remain in attempt and cost denominators. Independent draws with identical<br>
+strings still count as repeated votes; copying a stored record is not a new<br>
+draw. Ties choose the earliest eligible sample. Counting each distinct answer<br>
+once instead changes the estimator and can reduce a binary vote to an<br>
+earliest-support tie. Deduplication is not automatically an improvement.<br>
+The constructed longest-output control is also deliberately weak: every<br>
+eligible answer has one numeral and EOS, so length cannot distinguish them.<br>
+It supplies no measured evidence of verbosity-ranking damage.</p>
+<h3 dir="auto">Likelihood is a ranker, not a truth label</h3>
+<p dir="auto">The likelihood ranker uses the mean conditional action log probability,<br>
+including EOS:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$s_{\mathrm{lik}}(c)=\frac{1}{n_c}\sum_{t=1}^{n_c}\log p_\theta(c_t\mid x,c_{&lt;t}).$$</math-renderer>
+<p dir="auto">Here <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$n_c$</math-renderer> counts generated actions including the chosen EOS. The fitted policy<br>
+supplies learned probabilities, not a separately trained correctness judge.<br>
+Length normalization addresses one scoring convention; it does not turn<br>
+likelihood into truth. The strict candidate view removes gold fields even when<br>
+the evaluator keeps them in a separate ledger. The selector's code and input<br>
+contract, not a reassuring name, enforce that separation.</p>
+<p dir="auto">In the <a href="../../experiments/reports/2026-10-04-inference-selection.md">measured CPU panel</a>,<br>
+seed 10052's training item <code class="notranslate">train-11</code> produces answers 1,0,0,1,1,1,1,0, while the<br>
+reference is 0. Availability is 1 and majority success is 0. Fitting also increases<br>
+within-pool raw repetition, while unseen-family majority success at eight<br>
+attempts is 0.50,0.00,0.00 for the three final policies. The four-item family slice<br>
+is imbalanced: a constructed constant 1 reference control scores 0.75. No learned<br>
+reasoning or general inference-scaling benefit follows from these results.</p>
+<h2 dir="auto">7.14 Failed attempts belong in the compute budget</h2>
+<p dir="auto">Equal candidate counts need not imply equal work. Immediate EOS consumes one<br>
+action; a repeated-numeral cap can consume three and still supply no usable<br>
+answer. Prompt processing and path scoring consume additional model work.<br>
+Keep generated actions, rescored actions and forward input positions distinct.<br>
+With an uncached loop, three actions after a four-token prompt require forwards<br>
+over 4,5,6 positions. Their sum 15 is not the output-token count 3, and neither is<br>
+a FLOP estimate.</p>
+<p dir="auto">The lesson records all 864 candidates and 1736 generated actions. Its token-cap<br>
+controls accept only complete attempts that fit the remaining cap. If the next<br>
+attempt crosses the boundary, that generated attempt is charged but rejected<br>
+from selection, and replay stops. It cannot skip ahead for a cheaper correct<br>
+candidate. The resulting whole-attempt overshoot is explicit; this is not an<br>
+exact token-level interruption policy. Equal caps can yield unequal accepted<br>
+attempts, actual actions, prompt positions and time.</p>
+<p dir="auto">For one final policy, majority success on the fixed full panel declines from<br>
+0.388889 at cap 6 to 0.333333 at cap 12, while oracle availability stays 0.388889.<br>
+Extra budget changes votes rather than guaranteeing a better decision. These<br>
+descriptive scores include training items and grouped siblings; a population<br>
+capability claim would require a larger independent final suite.</p>
+<p dir="auto">The accuracy–token–time plots use observed attempt costs plus retrospective<br>
+selector time, rather than an adaptive production service. Mandatory rescoring<br>
+is charged to every selector under this protocol. <a href="../appendices/d-reproduction-and-environments.md#budget-boundaries-and-spent-work">Appendix D</a><br>
+defines these timers and counters. Unknown timing remains unknown, rather than<br>
+zero or an estimate from characters.</p>
+<p dir="auto">Finally, measure diversity and errors rather than assuming fresh seeds make<br>
+all mistakes unrelated. Record distinct answers and strings, wrong-answer<br>
+agreement and across-item sample-ordinal error covariance. Identical strings<br>
+can come from independent draws; shared wrong answers can persist across many<br>
+draws. A small source-related panel supports descriptive diagnostics, not a<br>
+universal correlation claim. The evidence question is whether the declared<br>
+selector uses extra attempted work well on the specified population.</p>
+<h2 dir="auto">7.15 A card is an index into evidence, not a certificate</h2>
+<p dir="auto">A model card can make a weak experiment look finished if its polished summary<br>
+quietly fills missing fields. An evaluation card should do the opposite: make<br>
+the claim easy to inspect and the missing evidence hard to overlook. Preserve<br>
+the frozen contract, raw responses and replay alongside the readable card.<br>
+Someone should be able to recover its denominators, failures, slices and<br>
+paired comparison without loading the model or trusting the author's prose.</p>
+<p dir="auto">Our <a href="../../src/dongxi_llms/evaluation_model_card.py">offline exporter</a> uses the<br>
+same grader as response replay. It accepts complete recorded panels rather than<br>
+selecting favorable examples. Actual input-byte hashes identify what it read;<br>
+settings identify what the contract prescribed. Neither proves that a named<br>
+pretrained model ran. When no matching run identity is available, checkpoint<br>
+provenance and generation resources remain explicitly unverified or unknown.<br>
+A configured device is not an observed hardware measurement.</p>
+<p dir="auto">Consider the authored baseline/candidate panel. Its arithmetic scores can be<br>
+replayed exactly, including the candidate's set/JSON regressions and simulated<br>
+error. Exporting those results creates a useful instrument-check card. It does<br>
+not create model accuracy, measured token cost, training lineage or independent<br>
+behavioral review. An actual local random-model panel supports a different,<br>
+still narrow claim: this identified adapter emitted and graded those responses.<br>
+Neither becomes evidence about Qwen by changing the title.</p>
+<p dir="auto">Keep selection history and missing coverage visible. A partial run must not<br>
+look like a complete planned panel, and unavailable measurements must not be<br>
+printed as zero. A paired interval requires aligned item/sample coverage and<br>
+the declared source groups. A model card may link that analysis, but cannot<br>
+repair unpaired data. The <a href="../labs/07-evaluation-is-a-contract.md">lab</a> shows the<br>
+export route. Capability and cost claims require the corresponding actual<br>
+experiment records, rather than the export alone.</p>
+<h2 dir="auto">7.16 A real response can pass a weak rubric and still fail the user</h2>
+<p dir="auto"><strong>Reader prediction:</strong> a response contains both phrases required by an<br>
+automatic rubric, repeats corrupted text and ends mid-sentence. Should the<br>
+phrase score, whole-response usefulness and natural termination agree?</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-pretrained-evaluation-replay.md">actual development replay</a><br>
+uses the unchanged fifteen-item, fourteen-source-group instrument with two<br>
+identified local checkpoints: acquired Qwen3-0.6B-Base and the disposable<br>
+twenty-update full-SFT profile. One fixed template, greedy decoding and a<br>
+64-token cap produce thirty raw responses. Each retains measured IDs, work,<br>
+stop reason and complete text. Offline grading uses the original rules,<br>
+not rules adjusted to favor the observed responses.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Frozen fifteen-item development observation</th>
+<th align="right">Base</th>
+<th align="right">Short SFT, 20 updates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Automatic passes</td>
+<td align="right">0/15</td>
+<td align="right">1/15</td>
+</tr>
+<tr>
+<td>Format-valid records</td>
+<td align="right">12/15</td>
+<td align="right">12/15</td>
+</tr>
+<tr>
+<td>Natural stops</td>
+<td align="right">0/15</td>
+<td align="right">0/15</td>
+</tr>
+<tr>
+<td>Truncated responses</td>
+<td align="right">15/15</td>
+<td align="right">15/15</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The paired source-group interval for the automatic-score difference is<br>
+[0, 0.214286]. These are real model measurements, but a small authored development population<br>
+does not become a general reasoning benchmark because its outputs are genuine.<br>
+Nor does a successful generation-process exit mean that its answers succeeded.<br>
+Most instrument items have an unconstrained <code class="notranslate">any</code> format policy, so 12/15<br>
+format-valid records are not twelve clean or helpful answers.</p>
+<h3 dir="auto">Read the proxy-success case</h3>
+<p dir="auto">Inspect the SFT <code class="notranslate">benign-a</code> answer. It includes the rubric's <code class="notranslate">terminate</code> and<br>
+<code class="notranslate">task manager</code> phrases, but repeats <code class="notranslate">.nasa</code> fragments and ends mid-sentence.<br>
+The positive phrase match is correctly reported under the frozen instrument;<br>
+an independent whole-response review can still judge the text unhelpful or<br>
+unfinished. Preserve both observations. Do not replace the automatic score<br>
+after seeing it, or promote that score to “one useful assistant answer.”</p>
+<p dir="auto">This is the same distinction as reward optimization: a measurable proxy can<br>
+reward a fragment without capturing the whole intended behavior. Diagnose<br>
+the instrument and the policy separately. A new semantic rubric would be a<br>
+named next evaluation contract, not a silent repair of this comparison.<br>
+Likewise, the parser's <code class="notranslate">UNSUPPORTED</code> status reports its own bounded grammar;<br>
+it cannot by itself diagnose the model's mathematical knowledge.</p>
+<p dir="auto">The two panels cost 1,920 generated actions and 94,656 full-prefix forward<br>
+positions. These are separate units because this transparent adapter has no<br>
+KV cache. Both externally supervised processes exit 0; every answer still<br>
+reaches its output cap. The readable card indexes the raw evidence rather<br>
+than certifying training genealogy, independent human agreement or safety.<br>
+This instrument case and Chapter 9's lower-NLL/failed-generation case connect<br>
+measurement choices to the next training decision without inventing a quality<br>
+gain, using the publication test or claiming broader capability.</p>
+<h2 dir="auto">7.17 Story coherence needs a separate rating instrument</h2>
+<p dir="auto">A copy/extraction score cannot answer whether a story preserves its characters,<br>
+causal links and ending. The original campaign therefore freezes twelve story<br>
+openings, five independent 0–2 rubric dimensions and four decoding recipes.<br>
+Greedy and three seeded temperature 0.8 continuations supply repeated views of<br>
+an opening, not four independent opening populations. Predetermined checkpoints<br>
+keep an attractive story from choosing its own comparison point.</p>
+<h3 dir="auto">Rate and pair the complete delivered response</h3>
+<p dir="auto">The <a href="../../src/dongxi_llms/story_rubric.py">story-rating consumer</a> now turns that<br>
+contract into two artifacts. Reviewers receive a shuffled anonymous packet<br>
+with the original opening and complete emitted text. A private codebook binds<br>
+the anonymous IDs back to checkpoint, recipe and source group; it stays out of<br>
+the reviewers' packet. Empty templates do not assign neutral scores or imply<br>
+that two independent reviews occurred. Rater type, independence and known<br>
+prior exposure still need disclosure: an anonymous label is not proof of<br>
+successful human blinding.</p>
+<p dir="auto">For each continuation, retain grammar, entity/object consistency, causal<br>
+continuity, repetition and ending separately. A readable story can contradict<br>
+an object's location; a consistent story can still loop without resolving its<br>
+setup. An output stopped by a 256-token cap is the actual incomplete response<br>
+being rated. Do not silently discard it or invent its ending. Natural EOS and<br>
+narrative resolution remain different measurements.</p>
+<p dir="auto">Two ratings can disagree. Preserve both and apply only the adjudication policy<br>
+declared before review. A mean score is a declared summary, not evidence of<br>
+agreement. Missing responses, abstentions and absent reviews remain visible<br>
+in coverage; a missing checkpoint does not receive 0 or a flattering inferred<br>
+score. Reject changed packet hashes, unknown/duplicate IDs and invalid rubric<br>
+values before computing any comparison.</p>
+<p dir="auto">After joining through the codebook, compare matched checkpoint/recipe cells.<br>
+Resample source openings with both arms kept together. Forty-eight outputs<br>
+from twelve openings and four recipes are not forty-eight independent opening<br>
+groups; two raters do not double that sample either. This consumer conservatively<br>
+refuses a paired interval until all twelve openings/four recipes have complete<br>
+paired scores. Its coverage report retains missing cells instead of substituting<br>
+an interval from an easier partial cohort. The<br>
+<a href="../../notebooks/day-10/02_paired_uncertainty.ipynb">uncertainty notebook</a><br>
+supplies the runnable mathematical mechanism; the<br>
+<a href="../labs/07-evaluation-is-a-contract.md">rating lab</a> supplies the operational<br>
+failure controls and adjacent empty-rating example.</p>
+<p dir="auto">The fixtures are explicitly authored demonstrations, not generated model<br>
+stories or human scores. The corpus audit is separate again: exact and a<br>
+defined lexical near-overlap check can inspect the pinned training bytes but<br>
+cannot prove all semantic contamination absent. The frozen publication panel<br>
+must not choose learning rate, decoder or checkpoint. Implementing this<br>
+instrument does not fabricate a trained comparison.</p>
+<p dir="auto">For the actual story problem, the same decision now has richer scores rather<br>
+than binary flags. Would fewer loops justify weaker grammar or less continuity?<br>
+Keep that question open until the dimensions, paired units and stopping<br>
+coverage have been read together.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-native-story-first400-comparison.md">actual first 400 comparison</a><br>
+now supplies that separate evidence. Two fresh anonymous AI instances each read<br>
+all 192 continuations from the four available checkpoints. They received only<br>
+the public packet and rubric, not the arm codebook or one another's judgments.<br>
+The frozen two-rater mean preserves 56 continuations with at least one axis<br>
+disagreement; neither reader abstained. Separate instances do not establish<br>
+independent underlying models, human agreement or perfectly successful blinding.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Observed at update 400</th>
+<th align="right">Control</th>
+<th align="right">Half learning rate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Grammar mean,0–2</td>
+<td align="right">0.0729</td>
+<td align="right">0.0000</td>
+</tr>
+<tr>
+<td>Entity/object consistency mean,0–2</td>
+<td align="right">0.2604</td>
+<td align="right">0.1458</td>
+</tr>
+<tr>
+<td>Causal continuity mean,0–2</td>
+<td align="right">0.1979</td>
+<td align="right">0.0938</td>
+</tr>
+<tr>
+<td>Repetition mean,0–2; higher means less repetition</td>
+<td align="right">0.8438</td>
+<td align="right">0.9792</td>
+</tr>
+<tr>
+<td>Narrative ending mean,0–2</td>
+<td align="right">0.0208</td>
+<td align="right">0.0000</td>
+</tr>
+<tr>
+<td>Natural EOS</td>
+<td align="right">45/48</td>
+<td align="right">25/48</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Each mean uses 48 continuations and two supplied judgments, not 96 independent<br>
+stories. Both models remain poor by this rubric despite their lower NLL and<br>
+many natural stops. The half-rate arm has a slightly higher mean repetition<br>
+score but lower means on the other axes; no single overall winner is defined.<br>
+The initial random checkpoints receive repetition 1.5 while grammar/continuity<br>
+are zero: absence of repetitive loops is not competence.</p>
+<p dir="auto">The <a href="../../experiments/reports/native-story-publication-20261005-01/ratings-evaluation-01/report.json">retained rating report</a><br>
+keeps both raw ratings, recipe slices and the frozen 800-draw seed 1010 paired<br>
+resampling. It carries four recipes together within each of twelve source<br>
+openings. Its intervals describe these supplied ratings and sampled openings,<br>
+not training-seed variability or a general population of human judgments.<br>
+The 288 cells at later checkpoints remain missing, with null scores and<br>
+incomplete paired comparisons. Completing this bounded comparison does not<br>
+complete the original 14,000-update training schedule.</p>
+<h3 dir="auto">Related sources can cross a boundary without exact equality</h3>
+<p dir="auto">Exact hashes detect identical text, but independently edited copies can still contaminate an evaluation. In Assignment B, MinHash and locality-sensitive hashing propose candidate pairs; exact shingle Jaccard checks whether each candidate meets the declared threshold. Candidate retrieval and duplicate confirmation are different operations. The <a href="../../notebooks/extensions/cs336/06_corpus_curation.ipynb">curation companion</a> compares candidates with an all-pairs reference on the small fixture, so a missed edge remains visible.</p>
+<p dir="auto">Grouping introduces a further decision. If A resembles B and B resembles C, a connected-component policy puts all three in one source group even when A does not meet the threshold with C. The policy is deliberately transitive; pairwise similarity is not. A source-group split prevents that component from appearing on both sides of the evaluation boundary. It can also create larger groups than a reader expects from looking at one pair.</p>
+<p dir="auto">Record normalization and extraction before interpreting an overlap. Case folding and accent removal may help identify a copied source while erasing distinctions that matter to the task. Keep raw text, matched text, candidate edges, verified edges and component membership separately. The resulting audit supports a claim about the declared matching procedure and available sources. It cannot establish that a large pretrained model has never encountered semantically similar material.</p>
+<h2 dir="auto">7.18 Exercises and transition</h2>
+<ol dir="auto">
+<li>Define a testable claim about story coherence, including prompt population and rubric.</li>
+<li>Explain why “1.0” and “1” should or should not match in a chosen task.</li>
+<li>Derive pass@3 from a pool with ten samples and two successes.</li>
+<li>Explain why ten copies of one sampled answer do not supply ten attempts.</li>
+<li>Describe two different meanings of confidence in model evaluation.</li>
+<li>Compare paired and independent resampling on the same candidate models.</li>
+<li>Design a slice report that makes a rare format regression visible.</li>
+<li>Explain what an exact overlap audit can establish and what it cannot.</li>
+<li>Decide when a repeatedly consulted test split should be relabeled development.</li>
+<li>Defend a stopping rule for a story evaluation before inspecting the outputs.</li>
+<li>Explain why a rounded decimal, an interval boundary and a unit require three different equivalence decisions.</li>
+<li>Can a response be arithmetically correct, format-invalid and truncated at once? State the three resulting metrics.</li>
+<li>Design a source-group paired comparison that keeps related variants together without converting the estimand to an equal-group mean.</li>
+<li>Why must a candidate selector be unable to inspect reference answers, even when the evaluator retains them?</li>
+<li>Why can <code class="notranslate">4, EOS</code> have two generated actions but a one-token grading surface? Which quantities must the instrument retain?</li>
+<li>A forward fails after one output token. Which costs are known, which planned attempts are missing, and why is restarting not automatically exact resume?</li>
+<li>Why is any-correct availability monotonic on nested prefixes while majority-selected correctness need not be?</li>
+<li>Explain how eight independently sampled duplicate strings differ from eight copies of one response record. What changes when each distinct answer receives one vote?</li>
+<li>A generated three-action candidate exceeds a token budget with only two actions remaining. State the accepted pool, charged work and rejected-boundary rule without peeking ahead.</li>
+<li>Does a higher mean sequence log probability imply a more correct answer? Which additional measurements are needed before claiming inference-time compute helps?</li>
+<li>Which fields can an authored response-panel replay support, which remain unknown, and why would renaming its checkpoint to Qwen invalidate the claim? The <a href="../solutions/07-evaluation-is-a-contract.md#21-a-reproducible-summary-does-not-invent-a-model-event">evidence-reading guide</a> supplies the original card-export task.</li>
+<li>In the real Base/short-SFT replay, a response earns a phrase-rubric pass but repeats artifacts and ends mid-sentence. Which measurements remain valid, what should independent review add, and why must the original score not be silently replaced?</li>
+<li>Two arms each have four continuations per opening and two raters. Which objects should be blinded, retained and paired? Why should neither a missing review nor an absent checkpoint become a score? The <a href="../solutions/07-evaluation-is-a-contract.md#23-blind-records-without-inventing-reviews">evidence-reading guide</a> supplies the empty-rating control.</li>
+</ol>
+<p dir="auto"><a href="../solutions/07-evaluation-is-a-contract.md">Worked solutions</a> give reasoning, implementation and evidence limits. The next chapter turns behavioral requirements into training examples. Its data engineering choices must preserve this evaluation contract, because a well-executed optimizer can faithfully learn a badly specified interface.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-12</h1>
+<h1 dir="auto">8. Instruction Data as an Interface</h1>
+<p dir="auto">A user writes “Reply with one color.” The model answers “Here is a short story<br>
+about a red balloon.” The words are plausible, but the model has continued a<br>
+conversation in a way the user did not request. How do we turn “answer briefly”<br>
+from our intention into something a next-token predictor can learn?</p>
+<p dir="auto">Supervised fine-tuning, or SFT, supplies demonstrations: a context and the<br>
+response to produce after it. A pretrained base model already models language;<br>
+these demonstrations can teach how to use that language through a particular<br>
+interface. They can also introduce task associations, style and mistakes.<br>
+Learning the interface and acquiring a new ability are separate questions.</p>
+<p dir="auto">We will follow <code class="notranslate">copy red</code> → <code class="notranslate">red</code> → END through messages, token IDs and target<br>
+ownership. The important object is the complete training sequence, including<br>
+its boundary. Later chapters ask how comparisons and teacher responses change<br>
+this lesson. This symbolic example connects the ideas; it is separate from the<br>
+real checkpoint ancestry recorded in Chapter 15.</p>
+<p dir="auto">An instruction dataset expresses desired behavior through sequences. A wrong<br>
+role marker or shifted mask can change what it teaches without changing the<br>
+visible answer. We must make those choices inspectable before optimizing them.</p>
+<p dir="auto">Day 11 uses <a href="../../notebooks/day-11/01_roles_templates_and_masks.ipynb">roles and serialization</a>, <a href="../../notebooks/day-11/02_padding_packing_boundaries.ipynb">padding and packing</a>, and <a href="../../notebooks/day-11/03_mixtures_and_data_cards.ipynb">mixtures and provenance</a>. Follow the <a href="../labs/08-instruction-data-as-an-interface.md">lab guide</a>; <a href="../solutions/08-instruction-data-as-an-interface.md">worked solutions</a> explain each exercise.</p>
+<h2 dir="auto">What you should be able to explain</h2>
+<ul dir="auto">
+<li>Trace messages through IDs, target ownership and one causal label shift.</li>
+<li>Distinguish supervision, attention visibility and parameter freezing.</li>
+<li>Audit padding, packing, mixture exposure and teacher selection before training.</li>
+</ul>
+<p dir="auto"><strong>Prerequisites:</strong> tokenization from Chapter 2, causal attention from Chapters 4–5,<br>
+and source-group evaluation contracts from Chapter 7.</p>
+<h2 dir="auto">8.1 Begin with the user's desired behavior</h2>
+<p dir="auto">Consider three examples: copy one word, reverse two words, and return an object with a required key. They all concern instruction following, but they require different output structure. A dataset with only copy tasks cannot establish a general assistant. A dataset with only beautifully formatted answers might teach presentation while leaving factual mistakes untouched.</p>
+<p dir="auto">Write a compact capability table first. Name the input family, answer policy, permitted transformations and regression risk. For a small course dataset, copying and extraction are useful because correctness can be checked exactly. Include held-out values and phrasings when testing transfer. Reusing every value in every training prompt makes a clean-looking score a memorization check.</p>
+<p dir="auto">The model sees demonstrations, not the data designer's intent. If every response begins “Certainly!”, the model can learn that phrase. If long answers dominate the supervised tokens, it receives more corrective pressure for verbosity than the example count suggests. If refusal examples are mixed without defining scope, benign questions may receive refusals. These effects should be anticipated in the card and evaluation suite.</p>
+<h2 dir="auto">8.2 Messages become one token sequence</h2>
+<p dir="auto">A conversation often has system, user and assistant messages. A system message supplies behavior instructions or application context. A user message supplies the request. An assistant message supplies a demonstrated response. Tool messages are a separate interface and are outside this chapter's executable fixture.</p>
+<p dir="auto">Roles are encoded through text and special tokens according to a chat template. A decoder does not receive Python dictionaries; preprocessing converts them to IDs. The model learns the significance of those markers through training. The <a href="https://huggingface.co/docs/transformers/chat_templating" rel="nofollow">Transformers chat-template guide</a> documents this serialization boundary.</p>
+<p dir="auto">The symbolic notebook format is intentionally small:</p>
+<blockquote>
+<p dir="auto">BOS → SYSTEM → short answer → END → USER → copy red → END → ASSISTANT → red → END.</p>
+</blockquote>
+<p dir="auto">Think of a template as a function from structured messages to this single<br>
+sequence. It inserts the role and boundary tokens; the tokenizer supplies the<br>
+IDs consumed by the decoder. The model then receives an ordinary causal<br>
+sequence, with previous messages available as context. The roles acquire their<br>
+meaning from the examples in which they occur, rather than from a separate<br>
+instruction-following switch inside the attention layer.</p>
+<p dir="auto">The <a href="../../src/dongxi_llms/instruction_data_lab.py">symbolic encoder</a> makes<br>
+that function small enough to inspect:</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-k">from</span> <span class="pl-s1">dongxi_llms</span>.<span class="pl-s1">instruction_data_lab</span> <span class="pl-k">import</span> <span class="pl-s1">encode_messages</span>
+<span class="pl-s1">conversation</span> <span class="pl-c1">=</span> <span class="pl-en">encode_messages</span>([
+    {<span class="pl-s">"role"</span>: <span class="pl-s">"system"</span>, <span class="pl-s">"content"</span>: <span class="pl-s">"short answer"</span>},
+    {<span class="pl-s">"role"</span>: <span class="pl-s">"user"</span>, <span class="pl-s">"content"</span>: <span class="pl-s">"copy red"</span>},
+    {<span class="pl-s">"role"</span>: <span class="pl-s">"assistant"</span>, <span class="pl-s">"content"</span>: <span class="pl-s">"red"</span>},
+])
+<span class="pl-en">print</span>(<span class="pl-s1">conversation</span>.<span class="pl-c1">ids</span>)
+<span class="pl-en">print</span>(<span class="pl-s1">conversation</span>.<span class="pl-c1">supervised</span>)</pre></div>
+<p dir="auto">It returns both the sequence and the ownership decisions. A <strong>collator</strong> then<br>
+combines several such examples into rectangular batch tensors, adding padding<br>
+and preserving the decisions. Serialization answers “what sequence?”; collation<br>
+answers “how can several sequences share one batch?”</p>
+<p dir="auto">These labels denote discrete teaching IDs. They are not literal Qwen tokenization or an interchangeable industry standard. A real checkpoint's template can use distinct start and end markers, newlines, reasoning delimiters and tool structures. Inspect the actual decoded result from its pinned tokenizer.</p>
+<p dir="auto">For training a complete assistant demonstration, use the full conversation without an extra unfinished generation prompt. For inference, append whatever assistant-start prefix the model expects. A template that already contains BOS or end tokens must not be followed by another automatic special-token insertion. If formatting text first and tokenizing separately, verify the equivalent direct-template path and control additional special tokens.</p>
+<h2 dir="auto">8.3 Ownership is explicit</h2>
+<p dir="auto">The role header is not the same as its body. A useful supervision policy learns assistant body tokens and the assistant's termination marker, while treating system/user content and role headers as context. Other policies can also learn headers; the choice must be written and tested.</p>
+<p dir="auto">Our encoder produces three aligned lists: token IDs, a boolean supervised flag, and a human-readable owner. The supervised flag is attached to the token being predicted. This detail matters when the model's logit at position <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$t$</math-renderer> predicts token <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$t+1$</math-renderer>.</p>
+<p dir="auto"><strong>Reader prediction:</strong> <code class="notranslate">red</code> occurs once in the user's request and once in the<br>
+assistant's answer. Can the token ID alone tell us which occurrence to train?</p>
+<p dir="auto"><strong>Reference reasoning:</strong> both occurrences have ID 6 in this fixture. Their<br>
+roles and positions differ. Assistant-only supervision scores the answer's<br>
+occurrence, leaving the request's occurrence available as context. This puts<br>
+direct loss on the response we want the model to supply at inference. Full<br>
+transcript supervision is a possible different objective: it also spends loss<br>
+on reconstructing user and system text. Its effect depends on their lengths and<br>
+the task, so masking is an objective choice rather than a rule that every<br>
+unmasked prompt must cause a bad assistant.</p>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$x_{b,t}$</math-renderer> be the full conversation IDs, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$m_{b,t}$</math-renderer> the ownership mask, and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$a_{b,t}$</math-renderer> the padding-validity mask. Define labels</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$\ell_{b,t}=
+\begin{cases}
+x_{b,t}, &amp; m_{b,t}=1\ \text{and}\ a_{b,t}=1,\\\
+-100, &amp; \text{otherwise}.
+\end{cases}$$</math-renderer>
+<p dir="auto">The sentinel <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$-100$</math-renderer> is an implementation convention for ignored labels, not a token ID. For logits <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$Z\in\mathbb{R}^{B\times n\times V}$</math-renderer>, train using <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$Z[:,:-1,:]$</math-renderer> against <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$\ell[:,1:]$</math-renderer>. Shift exactly once. Some high-level model APIs shift labels internally; the transparent teaching module performs the shift itself. Combining both shifts predicts two positions ahead.</p>
+<p dir="auto">In the symbolic example, the final assistant body “red” and its END marker are supervised. The ASSISTANT header is ignored. The logit at the header predicts “red”; the logit at “red” predicts END. The target belongs to the assistant even though the producing position may be the header.</p>
+<h3 dir="auto">Read the target ownership</h3>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-08/day-11-01_roles_templates_and_masks-02.png"><img src="../../notebooks/figures/chapter-08/day-11-01_roles_templates_and_masks-02.png" alt="Assistant body and END ownership across the symbolic transcript" style="max-width: 100%;"></a></p>
+<p dir="auto">Columns are serialized tokens; the two rows show target and label ownership.<br>
+The symbolic IDs are <code class="notranslate">[1, 2, 16, 17, 5, 3, 10, 6, 5, 4, 6, 5]</code> and the<br>
+unshifted labels are <code class="notranslate">[-100, -100, -100, -100, -100, -100, -100, -100, -100, -100, 6, 5]</code> for this saved reference. The notebook prints both arrays and<br>
+the producing-position/target pairs; rerun it to inspect changes. Removing END<br>
+changes direct supervision without removing the prompt's forward context.</p>
+<p dir="auto">Trace the repeated IDs using zero-based positions:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Target position and owner</th>
+<th align="right">Target ID</th>
+<th align="right">Producing logit position</th>
+<th>Scored?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>7: user <code class="notranslate">red</code></td>
+<td align="right">6</td>
+<td align="right">6: user <code class="notranslate">copy</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>8: user END</td>
+<td align="right">5</td>
+<td align="right">7: user <code class="notranslate">red</code></td>
+<td>No</td>
+</tr>
+<tr>
+<td>10: assistant <code class="notranslate">red</code></td>
+<td align="right">6</td>
+<td align="right">9: ASSISTANT header</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>11: assistant END</td>
+<td align="right">5</td>
+<td align="right">10: assistant <code class="notranslate">red</code></td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">There are twelve input positions and two scored targets. The output at the<br>
+ASSISTANT header is trained to predict <code class="notranslate">red</code>; the header itself is not a<br>
+scored target. This distinction explains both the mask's shift and why the<br>
+model needs the prompt even when the prompt receives no direct token loss.</p>
+<h2 dir="auto">8.4 Assistant-only loss still teaches from the prompt</h2>
+<p dir="auto">Ignoring a user token's direct loss does not remove it from the forward graph. Its embedding and hidden states can influence later assistant positions through causal attention. The answer loss can therefore update shared parameters and prompt embeddings through those paths.</p>
+<p dir="auto">There are three different controls. The loss mask decides which predictions are scored. The attention mask decides which positions can exchange information. The parameter's trainable flag decides whether an optimizer updates that parameter. They solve different problems. A frozen embedding can participate in useful computation without receiving an update. A zero-loss prompt position can receive a gradient through later outputs. An attention-masked position can be excluded as context even if a careless label still asks the model to predict it.</p>
+<p dir="auto">This distinction links the present chapter to attention's causal boundary. An answer token is permitted to learn from earlier user text, while the earlier user representation cannot use the future answer in that forward pass. Backward information from the answer's loss updates parameters; it does not grant the forward computation access to future tokens.</p>
+<h2 dir="auto">8.5 Termination is part of the demonstration</h2>
+<p dir="auto">A model that generates the right answer and continues indefinitely has not learned the complete interface. Include the intended assistant termination token as a supervised target. A maximum-token limit is a runtime cap, not the desired learned stopping behavior.</p>
+<p dir="auto"><strong>Controlled change:</strong> remove only the assistant END target from our example.<br>
+The answer text still reads <code class="notranslate">red</code>, but the two-part lesson becomes one part:<br>
+produce the word. At the state after <code class="notranslate">red</code>, there is now no direct correction<br>
+telling the model to end. Other examples and shared parameters may still affect<br>
+that state; this change removes this example's stopping supervision. Chapter 9<br>
+computes the corresponding loss and gradient, then compares it with a real<br>
+model that prints the right prefix and keeps going.</p>
+<p dir="auto">Do not assume a tokenizer's generic EOS ID equals every model's end-of-assistant marker. Inspect both template output and generation stop settings. Some formats distinguish a message end from conversation end. Suppressing all special tokens while inspecting text can hide whether the correct marker appeared, so retain raw IDs in the audit.</p>
+<p dir="auto">Truncation can erase the termination target or cut a response after only its opening. A recipe must say whether overlength examples are rejected, truncated, split or summarized. Report how many supervised targets survive and how many answers lose their natural ending. Prompt truncation should also preserve the task-defining instruction; chopping off the user's decisive condition changes the example.</p>
+<p dir="auto">The fixture keeps all sequences within a small bound. The Spark runner rejects examples that exceed its maximum length, rather than quietly selecting a different target policy.</p>
+<h2 dir="auto">8.6 Padding is not an instruction</h2>
+<p dir="auto">Batches contain different lengths. Padding creates a rectangular tensor <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$X\in\mathbb{N}^{B\times n}$</math-renderer>. Padded labels must be ignored and padded context must be masked appropriately. The attention-validity mask is separate from the supervision mask because valid user context is visible even when its labels are ignored.</p>
+<p dir="auto">Our right-padded microscope has no future influence on earlier real positions under a causal decoder. Its padding loss is still explicitly ignored. A production model should receive the actual attention mask; left padding changes position handling and generation conventions and requires an independent equivalence check.</p>
+<p dir="auto">If a model reuses EOS as its pad value, masking every token whose ID equals EOS can remove genuine end targets. Build padding masks from lengths or tokenizer-provided attention metadata, then combine them with ownership. Values alone cannot distinguish “real EOS here” from “padding placed here.”</p>
+<p dir="auto">A useful audit shows IDs, owners, labels and masks in the same heatmap. The reader can follow one assistant target across the causal shift. Summarized target counts are insufficient: an off-by-one mask can preserve the count while teaching the wrong token.</p>
+<h2 dir="auto">8.7 Packing changes the information boundary</h2>
+<p dir="auto">Packing several short conversations into one long sequence reduces padding. A naive concatenation with only a triangular causal mask lets a later conversation attend to all earlier ones. An EOS marker supplies a learned clue; it does not mathematically prevent information flow.</p>
+<p dir="auto"><strong>Reader prediction:</strong> pack <code class="notranslate">copy red</code> and <code class="notranslate">copy blue</code> in that order. Would<br>
+changing the first answer be permitted to change the second answer's logits?</p>
+<p dir="auto"><strong>Reference reasoning:</strong> an ordinary causal triangle permits that influence.<br>
+If the examples are intended to be independent, the second example should have<br>
+the same available context as in its separate forward pass. The segment mask<br>
+below makes that intended independence a computation we can check, instead of<br>
+asking the model to learn it from an END marker.</p>
+<p dir="auto">For independent conversations, assign a segment identifier <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$s_t$</math-renderer> to each position. An allowed-attention mask is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$M_{t,u}=\mathbf{1}\{u\le t\}\mathbf{1}\{s_u=s_t\}.$$</math-renderer>
+<p dir="auto">This block-diagonal causal structure allows a conversation to see its own past and excludes preceding independent examples. Whether position IDs reset within segments is another explicit choice. Test equivalence with independent forwards at the chosen positional convention.</p>
+<p dir="auto">Packing also creates an accidental cross-boundary next-token target unless the first token of each new segment is ignored. In our teaching policy BOS and role headers are ignored, so the boundary loss is excluded, but that property must be checked rather than assumed. Some throughput-oriented recipes intentionally allow cross-example context. Such recipes describe a different conditional distribution and should be compared as a controlled change.</p>
+<p dir="auto">The notebook visualizes ordinary causal visibility beside segment-isolated visibility. Change one segment ID and observe precisely which information paths open. No production packing backend is claimed by this schematic alone.</p>
+<h3 dir="auto">Compare the information paths</h3>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-08/day-11-02_padding_packing_boundaries-02.png"><img src="../../notebooks/figures/chapter-08/day-11-02_padding_packing_boundaries-02.png" alt="Ordinary causal visibility versus segment-isolated visibility for nine positions" style="max-width: 100%;"></a></p>
+<p dir="auto">Both matrices are <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$9\times9$</math-renderer>: rows are receiving/query positions and columns<br>
+are source/key positions. Five positions belong to segment zero and four to<br>
+segment one. The lower-left block is visible under the ordinary triangle and<br>
+blocked by the isolated mask. Change one segment ID in the notebook and track<br>
+exactly which context paths appear; this figure is a mask computation, not<br>
+evidence of a production packing backend.</p>
+<h2 dir="auto">8.8 Mixture weights need a unit</h2>
+<p dir="auto">Suppose half the sampled examples belong to short-answer tasks and half to explanation tasks. Short answers average ten supervised tokens; explanations average ninety. Under a global token mean, explanation tokens contribute approximately 90% of the objective, although example sampling is balanced.</p>
+<p dir="auto">If task family <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$r$</math-renderer> has example probability <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$w_r$</math-renderer> and mean supervised length <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$\bar n_r$</math-renderer>, its expected token share is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$\pi_r=\frac{w_r\bar n_r}{\sum_q w_q\bar n_q}.$$</math-renderer>
+<p dir="auto">To target equal supervised-token shares, one possible sampling strategy chooses <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$w_r$</math-renderer> proportional to <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$1/\bar n_r$</math-renderer>. This changes the example distribution and increases the frequency of short tasks. Another approach averages each example's loss before averaging examples; that changes gradient weighting. Neither should be introduced silently.</p>
+<p dir="auto">Report examples, input tokens, assistant tokens and source proportions separately. A high fraction of explanation tokens is not necessarily bad; it becomes a problem when it contradicts the intended interface. Use an evaluation slice for concise-output instructions to see whether the behavior transfers.</p>
+<p dir="auto">Data-mixture changes and learning-rate changes should be tested separately when diagnosing a regression. If both change, a resulting score cannot identify the cause.</p>
+<h3 dir="auto">Count the objective's exposure</h3>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../notebooks/figures/chapter-08/day-11-03_mixtures_and_data_cards-02.png"><img src="../../notebooks/figures/chapter-08/day-11-03_mixtures_and_data_cards-02.png" alt="Equal example shares yield 10 percent short-answer and 90 percent explanation-token shares" style="max-width: 100%;"></a></p>
+<p dir="auto">The vertical axis is a fraction. Example share is one half for both families;<br>
+supervised-token share is 0.1 versus 0.9 for mean lengths 10 and 90. Change the<br>
+lengths or sampler in the notebook and recompute the denominator. Equal example<br>
+counts do not by themselves equalize loss pressure.</p>
+<h2 dir="auto">8.9 Provenance survives preprocessing</h2>
+<p dir="auto">A data card should include creator/source, license, intended use, excluded use, collection or generation procedure, revisions, languages, task families, split rules, filtering, deduplication, template identity, mask policy, truncation counts and known limitations.</p>
+<p dir="auto">Content hashes are useful but do not replace source information. Identical answers to different tasks may be legitimate; identical instruction-answer pairs across train and test are suspicious. Group exact normalized pairs first, then audit near duplicates and shared document origins. Synthetic examples derived from the same template belong in related groups when assessing transfer.</p>
+<p dir="auto">The original fixture is authored for this course, without copied upstream examples; its data card records authorship and the release's declared license policy. It contains four symbolic copy conversations and intentionally lacks broad instruction diversity. The optional Spark dataset generator creates original deterministic copy/reverse/extraction examples with separate value groups. Its card explicitly limits the resulting claim to these task families.</p>
+<p dir="auto">Do not claim that synthetic authoring eliminates contamination risks. A generator may repeat a benchmark template or leak test values into a training vocabulary. Save the generation code and seeds, record grouping decisions, and verify train/development/test identities before any optimizer step.</p>
+<h2 dir="auto">8.10 From audited data to SFT</h2>
+<p dir="auto">A compact acceptance audit checks that every example contains permitted roles, a nonempty assistant response, at least one surviving supervised target, valid vocabulary IDs, a correct termination target, no padded labels, and an understood length policy. Print representative examples selected by rule, including longest, shortest and multi-turn cases.</p>
+<p dir="auto">The automatic audit can verify syntax and alignment; a human or task verifier still needs to check whether the answer obeys the instruction. A well-formed wrong answer is a powerful wrong lesson.</p>
+<p dir="auto">The accepted dataset is now an explicit interface contract: IDs, visibility, labels, endings and source membership must agree.</p>
+<h2 dir="auto">8.11 A teacher response is an attempt before it is a demonstration</h2>
+<p dir="auto">Who writes the demonstrated answer? A person can supply it, or another model<br>
+can generate candidates. In the latter case the generating system is the<br>
+<strong>teacher</strong>, and the model trained on the selected responses is the <strong>student</strong>.<br>
+The attraction is reusable supervision: generate and inspect examples, then<br>
+train the student to produce the desired response with its own forward pass.<br>
+The student learns the selected sequences, including their errors; it does<br>
+not inherit the teacher's internal computation merely because the text looks<br>
+good. We therefore need to distinguish generating, accepting and selecting.</p>
+<p dir="auto">Teacher-generated data adds another interface before the one the student sees.<br>
+A request is sent, an execution succeeds or fails, a response is parsed, and a<br>
+selection procedure decides whether to teach from it. Saving only the final<br>
+accepted examples hides the evidence needed to explain that decision.</p>
+<p dir="auto">Begin with an attempt record, not an answer string. Bind it to an item and source<br>
+group, sample coordinate, retry coordinate, teacher implementation, sampler,<br>
+verifier, content terms and actual input/interface identity. Preserve raw text,<br>
+trace and final-answer fields, token IDs when representable, stopping, errors,<br>
+and costs even when the attempt is rejected. A trace can be useful provenance<br>
+without being a faithful explanation or a suitable student target.</p>
+<p dir="auto">The <a href="../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb">teacher-data laboratory</a><br>
+uses an explicitly programmatic copy/reverse teacher. Its controlled faults<br>
+produce wrong answers, empty text, unsupported symbols, long answers, a missing<br>
+END and an actual local exception. It is not a pretrained model or an API. The<br>
+recorded text-serialization costs are therefore not language-model inference<br>
+tokens, API charges or GPU throughput. This small teacher makes the accounting<br>
+visible before a real, separately specified teacher is substituted.</p>
+<p dir="auto">Retries have distinct identities but share their originating source. If a retry<br>
+repeats the same correct answer, it consumed another execution without adding<br>
+another independent demonstration. Record that repetition. Do not make a failed<br>
+request disappear merely because a later request succeeded.</p>
+<h2 dir="auto">8.12 Resumption and filtering preserve the rejected evidence</h2>
+<p dir="auto">An interrupted teacher call may run again without creating an independent<br>
+demonstration. Keep failed and rejected attempts alongside committed results,<br>
+and distinguish unique saved records from exactly-once physical execution.<br>
+The collector's locks and explicit crash controls are described in<br>
+<a href="../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence">Appendix D</a>.</p>
+<p dir="auto">Next separate acceptance from ranking. This lesson's acceptance policy rejects<br>
+format, length, stopping, unsupported IDs, source leakage and within-prompt<br>
+duplicates. It deliberately does <strong>not</strong> reject well-formed wrong answers.<br>
+Otherwise a top-versus-random comparison could secretly compare two sets already<br>
+made equally correct by the filter. Multiple reasons may apply to one attempt,<br>
+so rejection-reason counts are not a partition of rejected records.</p>
+<p dir="auto">The original reference retains 108 attempts, including twelve error retries.<br>
+Seventy-two attempts are rejected and 36 unique candidates survive: twelve<br>
+correct and 24 wrong. The fixed task verifier computes correctness from training<br>
+prompts and candidate text, not teacher mode labels or held-out reference fields.<br>
+Every surviving candidate and every rejection remains linked to its attempt.<br>
+Source-group and actual student-ID collisions are gated before collection; an<br>
+unseen polite prefix does not make a reused underlying task a new source group.</p>
+<h2 dir="auto">8.13 Selection changes both answers and exposure</h2>
+<p dir="auto">Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$C_i$</math-renderer> be the frozen accepted candidate pool for training prompt <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$x_i$</math-renderer>, and<br>
+let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$s(x_i,y)$</math-renderer> be the declared training-task score. A per-prompt selection is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$y_i^\star=\underset{y\in C_i}{\mathrm{argmax}}\,s(x_i,y).$$</math-renderer>
+<p dir="auto">The implementation resolves ties by shorter supervised length and stable<br>
+attempt identity. Its random control samples uniformly from the same <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$C_i$</math-renderer>,<br>
+using an independently item-keyed seeded stream. Both choose one demonstration<br>
+per prompt, preserving prompt coverage. Neither can query the held-out panel.</p>
+<p dir="auto">A global top-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$K$</math-renderer> ranking over all pools solves a different problem. It can spend<br>
+several selections on one source or omit an entire difficulty slice. Define<br>
+prompt coverage as the fraction of training prompts represented at least once.<br>
+In this fixture global top 6 covers only six of twelve prompts, all two-word<br>
+tasks, because correctness ties favor shorter answers. Global top 12 covers all<br>
+twelve. These are separate coverage audits at different sample budgets, not<br>
+additional matched student results.</p>
+<p dir="auto">Matching examples and prompts does not match supervised tokens. Let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$n_{a,j}$</math-renderer><br>
+count the final-answer and END targets in example <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$j$</math-renderer> of arm <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$a$</math-renderer>. Under <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$U$</math-renderer><br>
+full-batch updates, target exposure is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$E_a=U\sum_j n_{a,j}.$$</math-renderer>
+<p dir="auto">All three selected datasets contain twelve examples and all twelve prompts.<br>
+Top and length-stratified random each contain 42 targets per batch; unstratified<br>
+random contains 46. At eighty updates their exposures are 3,360, 3,360 and 3,680<br>
+respectively. Report that difference; do not redefine the denominator to claim<br>
+the primary comparison controls everything.</p>
+<p dir="auto">The length-stratified sensitivity samples from candidates with the top answer's<br>
+target length for each prompt, without filtering on correctness. Here every<br>
+stratum contains both a correct and a wrong response. In a different pool, a<br>
+single eligible candidate offers no meaningful alternative; an empty pool<br>
+cannot be repaired by inventing a response. Availability and degeneracy belong<br>
+in the audit.</p>
+<h2 dir="auto">8.14 A demonstration score is not student capability</h2>
+<p dir="auto">Only selected final answers and their real END markers become student targets.<br>
+Traces and audit labels do not enter the loss. The existing encoder, collator<br>
+and exactly-once shift from this chapter feed an actual tiny causal sequence<br>
+student; the next chapter develops that supervised objective in detail.</p>
+<p dir="auto">The experiment pairs initialization across top, random and length-random data<br>
+with three fixed student seeds and eighty updates each. Development, test and<br>
+polite-prefix control prompts are independently generated source groups under<br>
+the frozen task contract. Evaluation records full-vocabulary free generation,<br>
+not a forced answer grammar, and scores correctness, format and natural END<br>
+separately. Wrong or truncated outputs remain in the denominator.</p>
+<p dir="auto">The measured result is deliberately not a success story. Top chooses twelve<br>
+correct demonstrations, but its held-out greedy test accuracy ranges from zero<br>
+to 0.25 across seeds. Length-random ranges from zero to 0.5; unstratified random<br>
+remains zero. All nine students score zero on the greedy polite-prefix control.<br>
+The random data can also attain lower demonstration NLL while teaching wrong<br>
+answers. These tiny four-prompt held-out slices cannot rank selection methods<br>
+generally, and no recipe was retuned after their inspection.</p>
+<p dir="auto">The <a href="../../experiments/specs/2026-10-04-teacher-data.md">specification</a> and<br>
+<a href="../../experiments/reports/2026-10-04-teacher-data.md">complete report</a> preserve<br>
+the declared teacher, selected IDs, exposure, learning curves and all negative<br>
+outputs. The durable lesson is the comparison contract: provenance survives<br>
+rejection, controls share a pool, budgets have explicit units, and student<br>
+evaluation is independent of the score that selected its demonstrations.<br>
+Chapter 15 returns to selection and distillation with reasoning responses; this<br>
+programmatic control alone establishes no pretrained-model transfer.</p>
+<h3 dir="auto">Exposure and coverage have different denominators</h3>
+<p dir="auto">Suppose two recipes present 768 supervised target tokens. One uses eight distinct source problems; another repeats two. They share a token-exposure budget while providing different coverage. A source can have several template forms, so counting rows or rendered prompts is not enough. The <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">integrated post-training companion</a> identifies the underlying problem before serialization, and pairs direct and alias forms in its held-out evaluation.</p>
+<p dir="auto">For a fixed retained corpus, effective exposure can be described as presented valid targets divided by available valid target slots. That ratio measures repeated opportunities to learn from the retained material. It is not a count of independent facts learned, and comparisons need the retained denominator as well as the ratio. Filtering can increase repetition at fixed presented-token budget simply by shrinking the corpus.</p>
+<p dir="auto">Assignment E therefore reports unique source groups, rendered examples, valid supervised targets, optimizer updates and generated response tokens separately. It matches targets per update in the coverage comparison, keeping the optimizer clock aligned. Subsequent accepted-response SFT and policy updates use different observations and objectives; their labels and rollout work are disclosed rather than declared equivalent. Before running either arm, predict whether extra coverage will transfer to held-out sources or merely help a familiar rendering.</p>
+<h2 dir="auto">8.15 Exercises</h2>
+<ol dir="auto">
+<li>Draw the serialized sequence for a system-user-assistant conversation.</li>
+<li>Identify which logit predicts the first assistant body token.</li>
+<li>Explain why zero prompt loss does not imply zero prompt gradient.</li>
+<li>Give a case where masking by pad token value removes a valid ending.</li>
+<li>Specify a safe overlength-example policy and its measurable cost.</li>
+<li>Construct an attention mask isolating two packed conversations.</li>
+<li>Explain why EOS alone does not isolate packed context.</li>
+<li>Calculate token exposure for equally sampled ten-token and ninety-token answers.</li>
+<li>Design grouping rules for related synthetic examples.</li>
+<li>Write a data-card limitation that prevents a four-copy-task fixture from becoming a claim about general assistance.</li>
+<li>Explain why the format filter deliberately retains wrong answers in a top-versus-random experiment.</li>
+<li>Distinguish a unique committed attempt from an exactly-once physical execution after interruption.</li>
+<li>Identify what the 42-versus-46 target counts do and do not control at eighty updates.</li>
+<li>Explain why a shorter-answer tie-break can remove the harder slice under global top 6 but not one-per-prompt selection.</li>
+<li>Interpret a very low selected-dataset NLL alongside zero held-out control accuracy.</li>
+<li>Describe how to audit an unsupported response without deleting its raw text or claiming token costs that the programmatic teacher never incurred.</li>
+</ol>
+<p dir="auto">The <a href="../solutions/08-instruction-data-as-an-interface.md">worked solutions</a> include executable checks and an interpretation of each failure.</p>
+<h2 dir="auto">What follows</h2>
+<p dir="auto">The next chapter derives the objective and follows answer gradients through the<br>
+whole decoder, then compares full tuning with a constrained low-rank update.<br>
+Its CPU fixture teaches mechanics; its retained real-model comparison measures<br>
+narrow held-out-value instruction behavior under the audited interface.</p>
+<h1 dir="auto">DONGXI-MATH-AUDIT-FILE-13</h1>
+<h1 dir="auto">9. Supervised Fine-Tuning</h1>
+<p dir="auto">A pretrained decoder can continue text without reliably answering a request. Supervised fine-tuning supplies demonstrations of the conditional behavior we want: given this conversation, produce this response and stop at this boundary. The model remains a next-token predictor. We change the distribution of contexts, the targets receiving loss, and often which parameters can move.</p>
+<p dir="auto">This chapter spans Days 12–14. It combines the <a href="../../notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb">objective and gradient notebook</a>, <a href="../../notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb">accumulation and restart notebook</a>, <a href="../../notebooks/day-13/01_tiny_assistant_training.ipynb">bounded training notebook</a>, and <a href="../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb">full versus low-rank adaptation (LoRA) notebook</a>. The <a href="../labs/09-supervised-fine-tuning.md">lab guide</a> provides the run order; <a href="../solutions/09-supervised-fine-tuning.md">worked solutions</a> explain the deep questions.</p>
+<h2 dir="auto">What you should be able to explain</h2>
+<ul dir="auto">
+<li>Derive assistant-only token NLL and follow its gradients through the decoder.</li>
+<li>Implement one correct update and token-weighted gradient accumulation.</li>
+<li>Compare full tuning and LoRA while separating likelihood, whole-answer correctness and stopping.</li>
+</ul>
+<p dir="auto"><strong>Prerequisites:</strong> causal decoding and cross-entropy from Chapters 3–5, the evaluation contract from Chapter 7, and role ownership/label alignment from Chapter 8.</p>
+<h3 dir="auto">Begin with the answer the user actually receives</h3>
+<p dir="auto">The retained real-model comparison gives us a concrete puzzle. Base, full SFT<br>
+and merged LoRA receive the same held-out request, template and greedy decoding<br>
+contract. Both fitted arms had improved their teacher-forced answer NLL. Read<br>
+one complete response before asking what the loss teaches.</p>
+<p dir="auto"><strong>Reader prediction:</strong> if a model begins with the requested word, has it learned<br>
+this interface? What must happen at the next state for the response to succeed?</p>
+<h3 dir="auto">Read one aligned response, including how it stopped</h3>
+<p dir="auto">The selection rule is the first held-out item, <code class="notranslate">test-100-copy</code>, in each retained<br>
+panel. Its request is <code class="notranslate">Reply with exactly this word: item100</code>; the expected<br>
+whole answer is <code class="notranslate">item100</code>. The following are exact <code class="notranslate">response_text</code> records,<br>
+not a favorable prefix extracted for scoring:</p>
+<p dir="auto"><strong>Base:</strong> <a href="../../experiments/reports/native-assistant-publication-20261005-base-run-01/generation/responses.jsonl">max_tokens, 64 generated actions</a>.</p>
+<pre lang="text" class="notranslate"><code class="notranslate">Reply with exactly this word: item101 ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇ ⚇
+</code></pre>
+<p dir="auto"><strong>Full400:</strong> <a href="../../experiments/reports/native-assistant-publication-20261005-full400-run-01/generation/responses.jsonl">turn_stop, 5 generated actions</a>.</p>
+<pre lang="text" class="notranslate"><code class="notranslate">item100
+</code></pre>
+<p dir="auto"><strong>Merged LoRA400:</strong> <a href="../../experiments/reports/native-assistant-publication-20261005-lora400-fp32-run-01/generation/responses.jsonl">max_tokens, 64 generated actions</a>.</p>
+<pre lang="text" class="notranslate"><code class="notranslate">item100 dólairement
+Follow the requested output format exactly.完整热
+.REACTuser
+reply with exactly this word: item100 dólairement
+.REACTassistant
+item100 dólairement
+.REACTuser
+reply with exactly this word: item100 dólairement
+.REACTassistant
+item10
+</code></pre>
+<p dir="auto">Full400 chooses the requested value and the natural turn-ending action.<br>
+LoRA starts with the requested value, then continues into unwanted content;<br>
+Base gives another value and continues. The correct prefix is insufficient<br>
+under the frozen whole-answer rule. All emitted stop IDs and capped text remain<br>
+in the raw records. This example explains the table; the entire panel supplies<br>
+the denominator and the result.</p>
+<p dir="auto">We will trace how pressure on content and ending passes through a particular<br>
+set of trainable parameters, while generation follows the resulting policy's<br>
+own trajectory.<br>
+The complete 120-item panel and its narrow transfer boundary appear in §9.9;<br>
+this first item was selected by its fixed order, not because it looked striking.</p>
+<h2 dir="auto">9.1 What transfers from pretraining?</h2>
+<p dir="auto">Pretraining establishes representations and continuation patterns across a broad corpus. SFT supplies a narrower distribution of demonstrations. It can make an existing ability accessible through an interface, strengthen a task behavior, teach format compliance or introduce new factual associations. These are distinct outcomes and require distinct evaluation slices.</p>
+<p dir="auto">A model that already knows a fact may answer it correctly after learning when to give a direct response. That does not prove SFT created the fact. Conversely, a model can memorize a new answer without learning a transferable instruction. Compare held-out values, unseen phrasings and unrelated regression tasks.</p>
+<p dir="auto">Model naming matters. The official <a href="https://huggingface.co/Qwen/Qwen3-0.6B-Base" rel="nofollow">Qwen3-0.6B-Base card</a> describes a base checkpoint; <a href="https://huggingface.co/Qwen/Qwen3-0.6B" rel="nofollow">Qwen3-0.6B</a> is a separately released post-trained model. Fine-tuning the latter is useful continued adaptation, but does not test a first base-to-assistant transition. Record exact revisions so the comparison cannot change when a repository updates.</p>
+<p dir="auto">Our CPU model begins randomly initialized. Its task is deliberately tiny: map four symbolic copy requests to a word and END. Its results verify optimization and gradient mechanics. A real base-to-assistant claim belongs to the separately specified Spark experiment.</p>
+<h3 dir="auto">The next training signal changes the question</h3>
+<p dir="auto">Here is the generic reading route through the remaining chapters. Arrows denote<br>
+possible teaching choices, rather than the ancestry of every measured model:</p>
+<section class="js-render-needs-enrichment render-needs-enrichment position-relative" data-identity="ea8d14cb-0c07-4f08-976c-c3a40ca6c25a" data-host="https://viewscreen.githubusercontent.com" data-src="https://viewscreen.githubusercontent.com/markdown/mermaid?docs_host=https%3A%2F%2Fdocs.github.com" data-type="mermaid" aria-label="mermaid rendered output container">
+  <div class="js-render-enrichment-target" data-json="{&quot;data&quot;:&quot;flowchart LR\n  B[\&quot;Base: continuation patterns\&quot;] --&gt; S[\&quot;SFT: demonstrated response + ending\&quot;]\n  S --&gt; P[\&quot;Preferences: compare two responses\&quot;]\n  P --&gt; D[\&quot;DPO: fit reference-relative pair odds\&quot;]\n  P --&gt; R[\&quot;Reward model: score fresh responses\&quot;]\n  R --&gt; U[\&quot;Policy update: weight sampled choices\&quot;]\n  S --&gt; V[\&quot;Verifier: test a sampled response\&quot;]\n  V --&gt; U\n  D --&gt; T[\&quot;Teacher data or probabilities → student\&quot;]\n  U --&gt; T\n&quot;}" data-plain="flowchart LR
+  B[&quot;Base: continuation patterns&quot;] --&gt; S[&quot;SFT: demonstrated response + ending&quot;]
+  S --&gt; P[&quot;Preferences: compare two responses&quot;]
+  P --&gt; D[&quot;DPO: fit reference-relative pair odds&quot;]
+  P --&gt; R[&quot;Reward model: score fresh responses&quot;]
+  R --&gt; U[&quot;Policy update: weight sampled choices&quot;]
+  S --&gt; V[&quot;Verifier: test a sampled response&quot;]
+  V --&gt; U
+  D --&gt; T[&quot;Teacher data or probabilities → student&quot;]
+  U --&gt; T
+" dir="auto">
+    <div class="render-plaintext-hidden" dir="auto">
+      <pre lang="mermaid" aria-label="Raw mermaid code" class="notranslate">flowchart LR
+  B["Base: continuation patterns"] --&gt; S["SFT: demonstrated response + ending"]
+  S --&gt; P["Preferences: compare two responses"]
+  P --&gt; D["DPO: fit reference-relative pair odds"]
+  P --&gt; R["Reward model: score fresh responses"]
+  R --&gt; U["Policy update: weight sampled choices"]
+  S --&gt; V["Verifier: test a sampled response"]
+  V --&gt; U
+  D --&gt; T["Teacher data or probabilities → student"]
+  U --&gt; T
+</pre>
+    </div>
+  </div>
+  <span class="js-render-enrichment-loader d-flex flex-justify-center flex-items-center width-full" style="min-height:100px" role="presentation">
+    <span data-view-component="true">
+  <svg style="box-sizing: content-box; color: var(--color-icon-primary);" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" data-view-component="true" class="octospinner mx-auto tmp-mx-auto anim-rotate">
+    <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-opacity="0.25" stroke-width="2" vector-effect="non-scaling-stroke" fill="none"></circle>
+    <path d="M15 8a7.002 7.002 0 00-7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" vector-effect="non-scaling-stroke"></path>
+</svg>    <span class="sr-only">Loading</span>
+</span>
+  </span>
+</section>
+
+<p dir="auto">A demonstration says what to produce. A comparison says which of two responses<br>
+is preferred. A learned reward or verifier supplies a scalar on a fresh sample.<br>
+A teacher can supply selected text or a conditional probability vector. These<br>
+signals constrain different things, even when every training loop eventually<br>
+calls <code class="notranslate">backward()</code> on log probabilities. Evaluation asks the independent<br>
+question of what the fitted system actually delivers.</p>
+<p dir="auto">An SFT checkpoint commonly supplies a frozen reference for subsequent preference<br>
+or policy training, but a reference is a declared choice. The actual native<br>
+DPO comparison starts from this chapter's full-SFT parent; the native RLVR<br>
+campaign starts from an independently acquired Instruct model. The exact roots<br>
+remain in <a href="15-distill-evaluate-and-defend.md#1510-the-checkpoint-genealogy-is-part-of-the-claim">Chapter 15's genealogy</a>.</p>
+<h2 dir="auto">9.2 Derive the supervised objective</h2>
+<p dir="auto">For demonstration <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$j$</math-renderer>, let <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$x_j$</math-renderer> be its conversation context and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$y_j=(y_{j,1},\ldots,y_{j,n_j})$</math-renderer> its assistant sequence, including the intended ending. The causal model gives</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$p_\theta(y_j\mid x_j)=\prod_{t=1}^{n_j}
+p_\theta(y_{j,t}\mid x_j,y_{j,&lt;t}).$$</math-renderer>
+<p dir="auto">Taking negative natural logs turns products into sums:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$L_j(\theta)=-\sum_{t=1}^{n_j}
+\log p_\theta(y_{j,t}\mid x_j,y_{j,&lt;t}).$$</math-renderer>
+<p dir="auto">The common token-mean objective divides the total sum by the number of supervised targets, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$N=\sum_jn_j$</math-renderer>:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$L(\theta)=\frac{1}{N}\sum_jL_j(\theta).$$</math-renderer>
+<p dir="auto">For a padded full transcript, use ownership mask <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$m_{b,t}$</math-renderer> and validity mask <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$v_{b,t}$</math-renderer>. Logits <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$Z$</math-renderer> have shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$[B,n,V]$</math-renderer> and labels have shape <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$[B,n]$</math-renderer>. After one causal shift, the logit gradient is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$\frac{\partial L}{\partial z_{b,t,i}}=
+\frac{m_{b,t+1}v_{b,t+1}}{N}
+\left(p_{b,t,i}-\mathbf{1}\{i=x_{b,t+1}\}\right).$$</math-renderer>
+<p dir="auto">At a directly ignored prediction position, this gradient is zero. At an answer prediction, the observed target gets upward pressure through gradient descent and competing logits get downward pressure. The hidden state, output head and earlier context receive gradients according to the chain rule. The equation gives a derivative with respect to logits; actual parameter updates depend on the entire computation and optimizer.</p>
+<h3 dir="auto">Follow the word and its ending through one loss</h3>
+<p dir="auto">Reduce the vocabulary to three outcomes for this arithmetic microscope:<br>
+<code class="notranslate">red</code>, <code class="notranslate">blue</code>, END. This is an illustrative categorical calculation using the<br>
+canonical loss helper, separate from the symbolic model's full vocabulary and<br>
+the retained Qwen outputs. Suppose the two relevant prediction rows are:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>State producing the prediction</th>
+<th>Probabilities: red, blue, END</th>
+<th>Demonstrated next target</th>
+<th align="right">NLL, nats</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>After the assistant header</td>
+<td>(0.6, 0.3, 0.1)</td>
+<td>red</td>
+<td align="right">0.510826</td>
+</tr>
+<tr>
+<td>After demonstrated <code class="notranslate">red</code></td>
+<td>(0.2, 0.3, 0.5)</td>
+<td>END</td>
+<td align="right">0.693147</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The complete demonstrated answer has probability <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$0.6\times0.5=0.3$</math-renderer>.<br>
+Its summed NLL is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$-\log(0.3)=1.203973$</math-renderer>; the two-target mean is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$0.601986$</math-renderer>.<br>
+These are different units: a sequence loss and nats per supervised target.<br>
+The prompt supplies the first state but contributes no direct target here.</p>
+<p dir="auto"><strong>Reader prediction:</strong> remove only END from supervision. Will a lower reported<br>
+mean NLL now mean that stopping improved?</p>
+<p dir="auto"><strong>Reference reasoning:</strong> the remaining loss is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$-\log(0.6)=0.510826$</math-renderer>, which is<br>
+lower because we removed the harder target. No update or generation occurred.<br>
+The direct logit gradients under the original two-target mean are<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$(-0.2,0.15,0.05)$</math-renderer> at the first row and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$(0.1,0.15,-0.25)$</math-renderer> at the second.<br>
+Gradient descent favors <code class="notranslate">red</code> at the header and END after <code class="notranslate">red</code>. Removing END<br>
+makes the second row's direct gradient zero; the first row's gradient doubles<br>
+because its denominator changes from two targets to one. Loss masking changes<br>
+both which corrections exist and how the surviving corrections are weighted.</p>
+<p dir="auto">The <a href="../../src/dongxi_llms/sft_lab.py">existing loss helper</a> reproduces this<br>
+calculation with one shift. The final row is an unscored post-END position:</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-k">import</span> <span class="pl-s1">torch</span>
+<span class="pl-k">from</span> <span class="pl-s1">dongxi_llms</span>.<span class="pl-s1">sft_lab</span> <span class="pl-k">import</span> <span class="pl-s1">token_loss_sum</span>
+<span class="pl-s1">probabilities</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>([
+    [[<span class="pl-c1">0.6</span>, <span class="pl-c1">0.3</span>, <span class="pl-c1">0.1</span>], [<span class="pl-c1">0.2</span>, <span class="pl-c1">0.3</span>, <span class="pl-c1">0.5</span>], [<span class="pl-c1">1</span><span class="pl-c1">/</span><span class="pl-c1">3</span>, <span class="pl-c1">1</span><span class="pl-c1">/</span><span class="pl-c1">3</span>, <span class="pl-c1">1</span><span class="pl-c1">/</span><span class="pl-c1">3</span>]]
+], <span class="pl-s1">dtype</span><span class="pl-c1">=</span><span class="pl-s1">torch</span>.<span class="pl-c1">float64</span>)
+<span class="pl-s1">logits</span> <span class="pl-c1">=</span> <span class="pl-s1">probabilities</span>.<span class="pl-c1">log</span>().<span class="pl-c1">requires_grad_</span>()
+<span class="pl-s1">labels</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">tensor</span>([[<span class="pl-c1">-</span><span class="pl-c1">100</span>, <span class="pl-c1">0</span>, <span class="pl-c1">2</span>]])  <span class="pl-c"># header, red, END</span>
+<span class="pl-s1">total</span>, <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-en">token_loss_sum</span>(<span class="pl-s1">logits</span>, <span class="pl-s1">labels</span>)
+(<span class="pl-s1">total</span> <span class="pl-c1">/</span> <span class="pl-s1">count</span>).<span class="pl-c1">backward</span>()
+<span class="pl-en">print</span>(<span class="pl-en">float</span>(<span class="pl-s1">total</span>.<span class="pl-c1">detach</span>() <span class="pl-c1">/</span> <span class="pl-s1">count</span>), <span class="pl-s1">logits</span>.<span class="pl-c1">grad</span>)</pre></div>
+<p dir="auto">Change <code class="notranslate">labels[0, 2]</code> to <code class="notranslate">-100</code>, reset the leaf logits and recompute. This<br>
+deliberate broken variant explains why learning a correct prefix is weaker<br>
+than learning the complete response. It does not attribute the measured LoRA<br>
+failure to missing END labels: that real recipe included its ending targets.</p>
+<p dir="auto">An example-mean objective instead averages <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$L_j/n_j$</math-renderer> across examples. This weights each conversation equally even when answer lengths differ. Choose intentionally and retain the denominator in logs; the two objectives need not prefer the same parameters.</p>
+<p dir="auto">For answers with two and eight scored targets, a global token mean gives the<br>
+long answer eight of ten target positions; an example mean gives each answer<br>
+half the weight after averaging within it. Neither knows whether length means<br>
+useful explanation or unwanted verbosity. Chapter 8's 10/90 exposure figure<br>
+shows the same weighting mechanism at the data-mixture level.</p>
+<h2 dir="auto">9.3 Gradients reach the shared decoder</h2>
+<p dir="auto">Let the final hidden state be <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$h_t\in\mathbb{R}^D$</math-renderer> and output matrix <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$W_{\mathrm{out}}\in\mathbb{R}^{V\times D}$</math-renderer>. With row-vector batch notation, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$z_t=h_tW_{\mathrm{out}}^\top$</math-renderer>. The loss derivative sends pressure to both sides:</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$\frac{\partial L}{\partial h_t}
+=\frac{\partial L}{\partial z_t}W_{\mathrm{out}},
+\qquad
+\frac{\partial L}{\partial W_{\mathrm{out}}}
+=\left(\frac{\partial L}{\partial z_t}\right)^\top h_t.$$</math-renderer>
+<p dir="auto">Backward propagation traverses final normalization, residual additions, MLP transformations and attention. Attention reaches earlier prompt states through the value path and changes routing through the Q/K paths. It eventually reaches token embeddings unless those parameters are frozen.</p>
+<p dir="auto">The gradient notebook displays parameter-family norms from the actual tiny model. A nonzero Q gradient proves that a local training signal reaches that projection for this batch. It does not prove useful specialization, a large update or general capability. A zero gradient may arise from masking, symmetry, frozen parameters or a saturated/unused path; its cause should be investigated in the graph.</p>
+<p dir="auto">Tied input/output embeddings deserve care. A row unused as an input can still receive an output-head gradient because the softmax considers the whole vocabulary. This is why “only looked-up embedding rows update” is true for an isolated lookup experiment but incomplete for a tied language model.</p>
+<h2 dir="auto">9.4 A readable update loop</h2>
+<p dir="auto">The transparent implementation separates loss sum from target count. Its main loop performs: clear old gradients, run the model, align labels once, compute summed answer NLL, divide by the correct denominator, backpropagate, check finiteness, clip, and step the optimizer.</p>
+<p dir="auto">For a small experiment, AdamW is a reasonable declared choice. Learning rate controls the scale of updates; clipping bounds the accumulated gradient norm before the step. Clipping is not a substitute for finite-value checks. Weight decay acts through the optimizer and should be reported separately from loss terms.</p>
+<p dir="auto">For a production BF16 path, autocast changes eligible forward operations. It does not imply every parameter, optimizer state or reduction uses two bytes. The runner loads BF16 weights explicitly, uses SDPA, checks the hardware, and records the actual choices. It does not claim a throughput estimate before profiling.</p>
+<p dir="auto">Teacher forcing supplies the demonstrated answer prefix during training. During free generation, the model consumes its own previous outputs. Low answer NLL can coexist with drifting generations, as Chapter 6 showed. Evaluation therefore needs both teacher-forced likelihood and free-response task behavior.</p>
+<h3 dir="auto">From the objective to one update</h3>
+<p dir="auto">This is the CPU reference loop from <a href="../../src/dongxi_llms/sft_lab.py">the SFT module</a>.<br>
+The module's <code class="notranslate">token_loss_sum</code> shifts logits and labels once and returns summed<br>
+cross-entropy plus the valid target count. Here <code class="notranslate">batch</code> is the audited symbolic<br>
+fixture, and <code class="notranslate">parameters</code> contains only the parameters allowed to train:</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-s1">optimizer</span>.<span class="pl-c1">zero_grad</span>(<span class="pl-s1">set_to_none</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">total</span>, <span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-en">token_loss_sum</span>(<span class="pl-en">model</span>(<span class="pl-s1">batch</span>[<span class="pl-s">"input_ids"</span>]), <span class="pl-s1">batch</span>[<span class="pl-s">"labels"</span>])
+<span class="pl-s1">loss</span> <span class="pl-c1">=</span> <span class="pl-s1">total</span> <span class="pl-c1">/</span> <span class="pl-s1">count</span>
+<span class="pl-s1">loss</span>.<span class="pl-c1">backward</span>()
+<span class="pl-s1">norm</span> <span class="pl-c1">=</span> <span class="pl-s1">torch</span>.<span class="pl-c1">nn</span>.<span class="pl-c1">utils</span>.<span class="pl-c1">clip_grad_norm_</span>(<span class="pl-s1">parameters</span>, <span class="pl-c1">1.0</span>)
+<span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-s1">torch</span>.<span class="pl-c1">isfinite</span>(<span class="pl-s1">loss</span>) <span class="pl-c1">or</span> <span class="pl-c1">not</span> <span class="pl-s1">torch</span>.<span class="pl-c1">isfinite</span>(<span class="pl-s1">norm</span>):
+    <span class="pl-k">raise</span> <span class="pl-en">RuntimeError</span>(<span class="pl-s">"Nonfinite optimization state"</span>)
+<span class="pl-s1">optimizer</span>.<span class="pl-c1">step</span>()</pre></div>
+<p dir="auto">The denominator is supervised targets, including END, rather than padded input<br>
+positions. The finite check precedes <code class="notranslate">step</code>; this snippet demonstrates the<br>
+tiny CPU path, while the real-model runner separately supplies attention masks,<br>
+precision and checkpointing controls.</p>
+<h2 dir="auto">9.5 Accumulation must preserve weighting</h2>
+<p dir="auto">A logical batch can be split into microbatches when memory is limited. Suppose microbatch <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$r$</math-renderer> has summed loss <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$S_r$</math-renderer> and supervised count <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$N_r$</math-renderer>. The desired accumulated objective is</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$L=\frac{\sum_rS_r}{\sum_rN_r}.$$</math-renderer>
+<p dir="auto">Backward each <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$S_r/\sum_qN_q$</math-renderer>, then perform one optimizer step. Averaging microbatch means instead gives <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$\frac{1}{R}\sum_rS_r/N_r$</math-renderer>, which overweights short-answer microbatches when counts differ.</p>
+<p dir="auto">The accumulation notebook compares gradients from a joint batch with token-weighted split batches. It also deliberately averages means to expose the failure. Use a shared initialization, no stochastic dropout and identical context masks so the only difference is weighting. Floating-point reduction order may introduce tiny numerical differences; define a justified tolerance rather than demanding impossible bitwise equality.</p>
+<p dir="auto">An incomplete final accumulation window needs its own denominator and update policy. Silently dividing it by a fixed full-window count weakens its gradient. The Spark runner materializes the bounded window and counts its labels before backpropagation.</p>
+<h3 dir="auto">One denominator across the accumulation window</h3>
+<p dir="auto">The canonical <a href="../../src/dongxi_llms/sft_lab.py">accumulation helper</a> uses:</p>
+<div class="highlight highlight-source-python" dir="auto"><pre class="notranslate"><span class="pl-s1">model</span>.<span class="pl-c1">zero_grad</span>(<span class="pl-s1">set_to_none</span><span class="pl-c1">=</span><span class="pl-c1">True</span>)
+<span class="pl-s1">count</span> <span class="pl-c1">=</span> <span class="pl-en">sum</span>(<span class="pl-en">int</span>((<span class="pl-s1">b</span>[<span class="pl-s">"labels"</span>][:, <span class="pl-c1">1</span>:] <span class="pl-c1">!=</span> <span class="pl-c1">-</span><span class="pl-c1">100</span>).<span class="pl-c1">sum</span>()) <span class="pl-k">for</span> <span class="pl-s1">b</span> <span class="pl-c1">in</span> <span class="pl-s1">batches</span>)
+<span class="pl-k">if</span> <span class="pl-c1">not</span> <span class="pl-s1">count</span>:
+    <span class="pl-k">raise</span> <span class="pl-en">ValueError</span>(<span class="pl-s">"Empty accumulation window"</span>)
+<span class="pl-k">for</span> <span class="pl-s1">batch</span> <span class="pl-c1">in</span> <span class="pl-s1">batches</span>:
+    <span class="pl-s1">total</span>, <span class="pl-s1">_</span> <span class="pl-c1">=</span> <span class="pl-en">token_loss_sum</span>(<span class="pl-en">model</span>(<span class="pl-s1">batch</span>[<span class="pl-s">"input_ids"</span>]), <span class="pl-s1">batch</span>[<span class="pl-s">"labels"</span>])
+    (<span class="pl-s1">total</span> <span class="pl-c1">/</span> <span class="pl-s1">count</span>).<span class="pl-c1">backward</span>()</pre></div>
+<p dir="auto">Perform clipping and one optimizer step only after the window. The notebook<br>
+compares these gradients with a joint batch, then breaks the denominator by<br>
+averaging microbatch means. Shared initial weights and disabled dropout isolate<br>
+the weighting change; numerical equality uses the declared floating-point tolerance.</p>
+<h3 dir="auto">Count labels before setting a budget</h3>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-base-tokenizer-sizing.md">pinned tokenizer measurement</a><br>
+makes this distinction concrete without loading a model. The proposed 20-update<br>
+profile selects 80 original examples. Their full transcripts contain 3,154 input<br>
+positions but only 455 shifted assistant targets. The mask includes each answer's<br>
+message-end marker and trailing template newline; counting answer words would<br>
+give the wrong denominator. The maximum context is a ceiling, not the number of<br>
+targets actually present.</p>
+<p dir="auto">Both baseline and final evaluation score all 60 development examples, adding<br>
+360 targets each. A whole-run work allowance therefore needs 1,175 target<br>
+presentations, while training exposure remains 455. Evaluation does not add<br>
+optimizer supervision. Generation has a separate allowance: sixteen proposed<br>
+attempts of at most 64 new tokens, not another teacher-forced target count.<br>
+These are measured token encodings and schedule requirements, not executed<br>
+updates, sampled completions, memory-fit evidence or a learned assistant.</p>
+<h3 dir="auto">A real profile can improve NLL without producing a correct answer</h3>
+<p dir="auto">The subsequent <a href="../../experiments/reports/2026-10-05-native-base-profile.md">native Spark profile</a><br>
+executed this exact schedule. All 20 updates had finite loss and gradient norms;<br>
+the process exited 0 in 61.636 seconds and the external sampled memory minimum<br>
+was 105.10455GiB, above the 25GiB reserve. Both committed snapshots fit their<br>
+declared envelopes. This is actual pinned pretrained BF16/SDPA evidence, not the<br>
+tiny random model's result extrapolated to Qwen.</p>
+<p dir="auto">Development answer NLL fell from 4.061965 to 1.100189. Yet both fixed eight-prompt<br>
+generation panels produced zero exact answers and zero message-end stops; every<br>
+continuation hit 64 tokens. This is not contradictory. NLL asks how much<br>
+probability the model assigns to each demonstrated token under the demonstrated<br>
+prefix. Generation asks which path the model follows under its own selected<br>
+tokens, including whether it chooses the ending. Increasing the right token's<br>
+probability need not make it the winner, and correct-prefix likelihood need not<br>
+protect a wrong-prefix continuation.</p>
+<p dir="auto">The labels already included the message-end marker and template newline, so<br>
+“put END in the loss” is necessary supervision, not proof of learned stopping.<br>
+Keep likelihood, task correctness and natural termination as separate outcomes.<br>
+The short profile verifies the runtime and supplies a resource measurement; its<br>
+weights do not replace a fresh initialization in the predeclared full/LoRA<br>
+comparison. No publication-test result or broad assistant improvement follows.</p>
+<h2 dir="auto">9.6 Checkpoint identity is wider than weights</h2>
+<p dir="auto">Saving weights permits a forward reconstruction. Resuming optimization also needs optimizer state, scheduler state if present, update index, data order, random states, template, tokenizer, mask policy and configuration. A correct restart should reproduce the next update under the same deterministic assumptions.</p>
+<p dir="auto">The CPU demo verifies state-dictionary forward equality. The second Day 12 notebook adds an optimizer-state continuation check: copy the model and AdamW state, feed the same next batch, and compare the resulting parameters. This verifies the stated local boundary; it does not establish bitwise reproducibility across different hardware or backend versions.</p>
+<h3 dir="auto">A saved file is not yet a committed training boundary</h3>
+<p dir="auto">Imagine that update 2 is durable, update 3 changes the model in memory, and a<br>
+crash occurs before its snapshot commits. Recovery must start from update 2 and<br>
+retry update 3. A log saying “update 3 finished” does not supply the missing Adam<br>
+moments or establish a durable update. Conversely, a committed update 3 snapshot<br>
+can survive a crash before its metric reaches the journal. Carry the numerical<br>
+metric history inside the snapshot, so that a new invocation can reconstruct<br>
+the record without silently losing or counting the update twice.</p>
+<p dir="auto">Keep scientific identity separate from operational choices:</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Preserved across a same-recipe restart</th>
+<th>Separately declared for the new invocation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Actual input/source/lock bytes, token meanings, template and ending rules</td>
+<td>New output directory, command and invocation ID</td>
+</tr>
+<tr>
+<td>Objective, optimizer, accumulation, precision and schedule horizon</td>
+<td>Deadline, memory reserve and snapshot-size envelope</td>
+</tr>
+<tr>
+<td>Policy, Adam moments, RNG, fixed data order/cursor and cumulative work</td>
+<td>Journal attempts and failed operations after the last durable boundary</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">Moving identical input bytes is not changing their scientific identity. Changing<br>
+the schedule horizon, tokenizer or loss denominator is. It requires a declared<br>
+new experiment or migration, not a relaxed equality check. Cumulative targets<br>
+also must not reset merely because the resumed process has a new directory.</p>
+<p dir="auto">The <a href="../../experiments/reports/2026-10-05-native-sft-replay.md">actual native full/LoRA replay</a><br>
+now tests this on the pinned pretrained model. Both fresh update 10→20 processes<br>
+match all ten numerical updates, serialized tensor entries and final generated<br>
+token/stop records. The physical journals count 30 executed updates and 684<br>
+training targets, although each final numerical trajectory ends at 20 updates<br>
+and 455 cumulative targets. Keep those two clocks separate. The earlier full<br>
+resume's conflict stop remains an additional failed invocation and wall cost.<br>
+This is same-Spark completed-boundary proof, not cross-machine reproducibility<br>
+or improved generation quality.</p>
+<p dir="auto">Operational snapshot validation and the separate replay gates are described in<br>
+<a href="../appendices/d-reproduction-and-environments.md#supervised-fine-tuning-state-and-adapter-exports">Appendix D</a>.</p>
+<p dir="auto">Checkpoint selection uses development criteria declared in advance. “Choose whichever sample looks best” encourages selection on noise. Save fixed intervals and compare the same prompt grid; retain regressions and stopping reasons.</p>
+<h2 dir="auto">9.7 Full tuning changes all allowed parameters</h2>
+<p dir="auto">Full SFT allows the optimizer to update every trainable parameter. It offers flexible adaptation, but its optimizer state and gradients can dominate memory. A rough AdamW accounting for <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$P$</math-renderer> parameters distinguishes weights, gradients and two moment tensors. Additional master weights, activations, temporary buffers and allocator overhead depend on the implementation. Do not promise memory sufficiency from a parameter-only estimate.</p>
+<p dir="auto">Full tuning can alter useful broad behavior while improving the target interface. Evaluate general continuation, arithmetic, format compliance and concise-answer behavior with the same contract before and after. A narrowly successful recipe may be appropriate for a specialized system; its limitations should remain visible.</p>
+<p dir="auto">The microscopic full run uses fixed seed, a bounded update budget and four known requests. It learns the fixture if the observed report supports that conclusion. There is no unseen-language generalization claim, and no best-seed selection.</p>
+<h2 dir="auto">9.8 LoRA constrains an update</h2>
+<p dir="auto">For a linear weight <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$W_0\in\mathbb{R}^{d_{\mathrm{out}}\times d_{\mathrm{in}}}$</math-renderer>, LoRA freezes <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$W_0$</math-renderer> and learns</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$W=W_0+\frac{\alpha_{\mathrm{LoRA}}}{r}BA,
+\qquad
+A\in\mathbb{R}^{r\times d_{\mathrm{in}}},
+\quad B\in\mathbb{R}^{d_{\mathrm{out}}\times r}.$$</math-renderer>
+<p dir="auto">The trainable adapter count is <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$r(d_{\mathrm{in}}+d_{\mathrm{out}})$</math-renderer> rather than <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$d_{\mathrm{in}}d_{\mathrm{out}}$</math-renderer>. The rank of the update is at most <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$r$</math-renderer>. The base matrix remains present, so small trainable state does not mean the whole base model occupies little memory. Activations also remain necessary for adapter training.</p>
+<p dir="auto">The <a href="https://arxiv.org/abs/2106.09685" rel="nofollow">LoRA paper</a> introduces this parameterization. Our implementation uses a random <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$A$</math-renderer> and zero <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$B$</math-renderer>. Initially the adapter output is exactly zero. The first gradient of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$A$</math-renderer> is zero because it is multiplied by <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$B$</math-renderer>; <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$B$</math-renderer> can receive a nonzero gradient through the initialized <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$A$</math-renderer>. This asymmetry explains why “all trainable parameters must have nonzero gradients on the first step” is a poor health check.</p>
+<p dir="auto">For row-batch input <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$X$</math-renderer>, compute <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$XW_0^\top+\frac{\alpha_{\mathrm{LoRA}}}{r}(XA^\top)B^\top$</math-renderer>. The notebook compares this with a merged matrix and verifies equality. The microscopic adapter targets Q and V projections only. This is a declared design, not a universal optimal target set.</p>
+<h3 dir="auto">What the rank restriction buys, and what it excludes</h3>
+<p dir="auto">Each column of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$B$</math-renderer> is one output direction. The corresponding row of <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$A$</math-renderer><br>
+computes how strongly an input uses that direction. Their product can combine<br>
+at most <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$r$</math-renderer> independent output directions for this matrix update. With<br>
+<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$d_{\mathrm{in}}=d_{\mathrm{out}}=1024$</math-renderer> and <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$r=8$</math-renderer>, the adapter has 16,384<br>
+trainable scalars versus 1,048,576 in the full matrix. This reduces the<br>
+trainable state while requiring the desired correction to pass through those<br>
+factorized directions. A whole network can contain many adapted matrices;<br>
+the matrix rank bound is not a rank bound on the network's behavior.</p>
+<p dir="auto"><strong>Reader prediction:</strong> initialize both factors to zero instead of only <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$B$</math-renderer>.<br>
+Does that make a safer unchanged starting policy?</p>
+<p dir="auto"><strong>Reference reasoning:</strong> it makes the first-order adapter unable to start.<br>
+For gradient <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$G_W=\partial L/\partial W$</math-renderer>, the two paths are</p>
+<math-renderer class="js-display-math" style="display: block" data-run-id="d967080b832f670b73d32be100398594">$$\frac{\partial L}{\partial A}=\frac{\alpha_{\mathrm{LoRA}}}{r}B^\top G_W,
+\qquad
+\frac{\partial L}{\partial B}=\frac{\alpha_{\mathrm{LoRA}}}{r}G_WA^\top.$$</math-renderer>
+<p dir="auto">Both vanish if both factors are zero. Random <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$A$</math-renderer> with zero <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$B$</math-renderer> keeps the<br>
+initial function unchanged while supplying directions through which <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$B$</math-renderer> can<br>
+begin learning. After <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$B$</math-renderer> moves, <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$A$</math-renderer> can receive signal too. The Day 14<br>
+<a href="../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb">initialization and merge reference</a><br>
+checks this asymmetry directly. The factor <math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$\alpha_{\mathrm{LoRA}}/r$</math-renderer> scales<br>
+the correction and its gradients; changing rank or scale is a recipe change,<br>
+not a guarantee of proportionally stronger useful adaptation.</p>
+<p dir="auto">Return now to <code class="notranslate">item100</code>. Full tuning can directly move the embedding and<br>
+output layers as well as the attention paths. The measured Q/V-only adapter<br>
+must change its content and stopping behavior through those selected paths.<br>
+That makes update-space constraints a plausible question to investigate.<br>
+The fixed common learning rate, rank, module choice and single seed also vary<br>
+the outcome's possibilities, so this comparison does not isolate rank as the<br>
+cause. The next section puts the same outputs in their complete denominator.</p>
+<h2 dir="auto">9.9 Compare recipes under named constraints</h2>
+<p dir="auto">A full-versus-LoRA comparison changes capacity, optimizer state and often preferred learning rate. Using the same learning rate is a useful mechanism control, but may not give each method its best recipe. Conversely, tuning LoRA extensively while giving full tuning one attempt is an unequal selection budget.</p>
+<p dir="auto">Report two comparisons when feasible: a fixed-recipe intervention and a separately declared tuned-recipe comparison. Match training data, token exposure, seed policy and evaluation contract. State whether compute, wall time, updates or supervised tokens define the budget; all four cannot usually be equal at once.</p>
+<p dir="auto">The Day 14 notebook runs both microscopic modes from the same base initialization and plots observed loss against optimizer updates. Its evidence concerns the four symbolic examples, not the general usefulness of LoRA. The Spark plan proposes full SFT versus LoRA at a frozen data/token budget, followed by a Qwen3-1.7B-Base transfer check only after the smaller recipe is healthy. The smaller fixed-recipe runs are now measured below; the larger transfer check remains unexecuted.</p>
+<p dir="auto">The short native acceptance runs now supply a narrower observation: full and<br>
+rank-8 Q/V LoRA both recover exactly, but neither answers the eight fixed<br>
+development prompts correctly after 20 updates. Full tuning has 596,049,920<br>
+trainable parameters versus LoRA's 1,146,880; observed CUDA peaks are 6.03GB and<br>
+2.06GB respectively. These are specific allocated-byte peaks, not total unified<br>
+memory or a universal ratio. The 400-update comparison is a separate fresh run.</p>
+<p dir="auto">That <a href="../../experiments/reports/2026-10-05-native-sft400-comparison.md">fixed-recipe comparison</a><br>
+has now completed. Both arms see 9,321 successful training labels and 63,378<br>
+processed training positions. Full tuning reaches development NLL 0.000276425<br>
+and answers/stops correctly on all eight fixed development prompts. LoRA<br>
+reaches 1.320048 but answers/stops correctly on none: all eight exhaust 64 tokens,<br>
+often after printing a plausible answer prefix. Both run safely and export their<br>
+declared artifact. This separates execution success, likelihood learning and<br>
+whole-response behavior within one measured experiment.</p>
+<p dir="auto">Equal exposure does not make the update spaces equal. Full tuning can change<br>
+the output and embedding layers directly; the constrained Q/V adapter can only<br>
+change its selected low-rank paths. The observed result is not a proof that this<br>
+capacity difference alone caused the gap, nor that every LoRA recipe would fail.<br>
+The learning rate, target modules, rank and single seed remain fixed. The eight<br>
+development prompts share task templates with training; they are not the<br>
+original 120-item publication panel or a broad assistant benchmark.</p>
+<h3 dir="auto">Predict before comparing the generated answers</h3>
+<p dir="auto"><strong>Reader prediction:</strong> both methods receive the same labels and both improve<br>
+development NLL. Must they produce equally correct, naturally ended answers?<br>
+Explain how each update space might change content and the probability of END<br>
+before reading the held-out results. This is a reader exercise, not a historical<br>
+prediction of the measured winner.</p>
+<h3 dir="auto">Test held-out values without changing the answer rule</h3>
+<p dir="auto">The subsequent <a href="../../experiments/reports/native-assistant-comparison-20261005-run-02/README.md">original publication comparison</a><br>
+contains 120 items: copy, reverse and extract for each of 40 held-out lexical-value<br>
+source groups. All three policies use identical actual prompt token IDs,<br>
+the original template, greedy seed 1010, context 512, cap 64 and BF16 generation.<br>
+Strict scoring compares the entire decoded answer case-sensitively, excluding<br>
+only a terminal special stop from the scoring text. Raw text and stop tokens<br>
+remain stored; a correct prefix followed by unwanted text is not repaired.</p>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th>Actual held-out-value observation</th>
+<th align="right">Base</th>
+<th align="right">Full400</th>
+<th align="right">Merged LoRA400</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strict correct answers</td>
+<td align="right">0/120</td>
+<td align="right">120/120</td>
+<td align="right">0/120</td>
+</tr>
+<tr>
+<td>Natural message-end stops</td>
+<td align="right">0/120</td>
+<td align="right">120/120</td>
+<td align="right">0/120</td>
+</tr>
+<tr>
+<td>Responses reaching 64-token cap</td>
+<td align="right">120/120</td>
+<td align="right">0/120</td>
+<td align="right">120/120</td>
+</tr>
+<tr>
+<td>Emitted tokens, including stops</td>
+<td align="right">7,680</td>
+<td align="right">760</td>
+<td align="right">7,680</td>
+</tr>
+<tr>
+<td>Full-prefix forward input positions</td>
+<td align="right">515,840</td>
+<td align="right">29,720</td>
+<td align="right">515,840</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
+<p dir="auto">The first aligned response near this chapter's opening shows why correct<br>
+content and natural stopping are both needed to interpret these totals.</p>
+<p dir="auto">Each task family has 40/40 strict successes for full400 and 0/40 for the other<br>
+two policies; all producers completed with no response errors. The generic<br>
+case-folded parser gives the same correctness results here, but remains a<br>
+different scoring rule. Its unconstrained format check passes all 120 outputs<br>
+in every arm, including the capped wrong answers. Neither execution success<br>
+nor format validity establishes answer correctness.</p>
+<p dir="auto">Source-group resampling of the aligned 120 greedy IDs uses 2,000 draws and<br>
+seed 1010. The observed full-minus-Base strict gain is 100 percentage points;<br>
+all group draws return the same gain. A degenerate interval is not a promise<br>
+about unseen tasks: there are only three shared synthetic templates and one<br>
+training seed. This supports held-out-value interface learning under the<br>
+measured recipe, not general assistant capability or a universal method rank.<br>
+LoRA's development NLL improvement to 1.320048 remains a separate teacher-forced<br>
+observation, despite its 0/120 generated whole answers. The model's update<br>
+subspace, rank 8 Q/V targets and common learning rate were not retuned.</p>
+<p dir="auto">Full400 also performs less measured generation work because it ends correctly<br>
+after short answers. Summed response-attempt times are 27.540 seconds for full,<br>
+159.574 for Base and 157.873 for LoRA. These are uncached full-prefix loop times,<br>
+not optimized inference-engine benchmarks; input-position counts are not FLOPs.<br>
+Keep the populations, precision, stopping behavior and cost boundaries visible.</p>
+<p dir="auto">Merging is a separate numerical experiment: BF16 rounding can violate a<br>
+declared tolerance even when the algebra agrees. The published LoRA panel uses<br>
+an independently checked FP32 merged export loaded in BF16. That export check<br>
+does not establish equivalence to every unmerged BF16 adapter forward or task<br>
+success. <a href="../appendices/d-reproduction-and-environments.md#supervised-fine-tuning-state-and-adapter-exports">Appendix D</a><br>
+retains the failed BF16 check, distinct later FP32 checks and their evidence.</p>
+<h2 dir="auto">9.10 Interpret gains and regressions</h2>
+<p dir="auto"><a target="_blank" rel="noopener noreferrer" href="../../experiments/reports/native-sft400-comparison-figures/learning-curves.png"><img src="../../experiments/reports/native-sft400-comparison-figures/learning-curves.png" alt="Measured full/LoRA training NLL and gradient norm against successful training-label exposure" style="max-width: 100%;"></a></p>
+<p dir="auto">Both lines come from the actual fixed 400-update runs. They share label exposure,<br>
+not trainable capacity; the log-scale plot does not measure publication quality.</p>
+<p dir="auto">Suppose answer accuracy rises while natural endings decline. Inspect whether EOS targets survived preprocessing, whether decoding uses the correct stop IDs, and whether the token cap differs between comparisons. If one-word tasks become verbose, inspect example weighting and the explanation-token share. If held-out values fail but seen values succeed, test whether the model learned an instruction or a lookup table.</p>
+<p dir="auto">A fall in training loss alone cannot settle these diagnoses. Use the item-level evaluation from Chapter 7 and the alignment audit from Chapter 8. Preserve raw completions and exact settings. For stochastic generation, use multiple declared seeds and compare uncertainty at the item/group level.</p>
+<p dir="auto">Training should stop on nonfinite states, exhausted declared runtime, violated memory reserve or completion of the fixed budget. Choosing an unplanned extension after seeing disappointing examples changes the experiment. Write the new hypothesis and budget as a follow-up run.</p>
+<h2 dir="auto">9.11 Read the experiment at its actual boundary</h2>
+<p dir="auto">The <a href="../../experiments/specs/2026-10-04-evaluation-and-sft-course.md">original contract</a><br>
+separates the tiny CPU mechanisms from the real-model comparison. The actual<br>
+0.6B runs and held-out-value evaluation above are measured; the proposed<br>
+Qwen3-1.7B-Base transfer remains unexecuted. A runnable tool or successful smoke<br>
+does not establish the outcome of an unrun stage. <a href="../appendices/d-reproduction-and-environments.md#supervised-fine-tuning-state-and-adapter-exports">Appendix D</a><br>
+and the <a href="../labs/09-supervised-fine-tuning.md">lab</a> provide the operational route.</p>
+<h2 dir="auto">9.12 Teacher text uses the same supervised objective</h2>
+<p dir="auto">A teacher's emitted sequence can supply SFT targets. Response NLL still scores<br>
+those observed targets; it does not reveal the teacher's probability vector or<br>
+establish that its answer or printed explanation is true. Chapter 15 develops<br>
+<a href="15-distill-evaluate-and-defend.md">response-level distillation</a>, its<br>
+actual source-controlled experiment and its complete-response/answer-only comparison.</p>
+<h3 dir="auto">Follow one supervised parent into two interventions</h3>
+<p dir="auto">The <a href="../../notebooks/extensions/cs336/07_posttraining_integration.ipynb">compatible post-training assignment</a> gives every stage the same tiny decoder interface: vocabulary, prompt encoding, response masks and sampled ending token. It first compares broad source coverage with repetition at equal supervised-target exposure, then freezes one SFT checkpoint. Accepted-response SFT and GRPO start as siblings of that checkpoint. The checkpoint hashes make the ancestry inspectable rather than inferred from matching tensor shapes.</p>
+<p dir="auto">The original task asks about parity on balanced source pairs. The rollout grammar exposes a binary answer and an ending action; SFT uses the full vocabulary. That distinction is visible in the likelihood and entropy calculations. It makes the reward mechanism small enough to inspect while limiting what the experiment can say about free-form English generation. Constant-answer and majority baselines show how far a shortcut can go without learning the relationship.</p>
+<p dir="auto">In the three-seed reference, broader coverage has higher held-out complete-path probability than repetition for each seed, but the difference is small for one seed. After policy updates, complete-path probability remains below the always-terminated constant baseline's 0.5. Usable gradients and improved termination therefore coexist with weak relational generalization. Read the source-level paired results before proposing a larger recipe. The existing full/LoRA native result remains a separate checkpoint family and a separate empirical comparison.</p>
+<h2 dir="auto">9.13 Follow the distillation extension before exercises 13–16</h2>
+<p dir="auto">Use Chapter 15 and <a href="../../notebooks/day-26/03_response_level_distillation.ipynb">the Day 26 response notebook</a><br>
+for the selection rule, missing-source coverage, printed-step versus final-answer<br>
+checks and teacher/student cost boundaries. These are an optional forward-reading<br>
+extension of the present SFT mechanism. The numbered exercises and their worked<br>
+solutions remain stable.</p>
+<h2 dir="auto">9.14 Exercises and the next question</h2>
+<ol dir="auto">
+<li>Derive answer-only NLL from the conditional sequence probability.</li>
+<li>State the shapes of logits, labels, ownership masks and output projection.</li>
+<li>Explain how a user embedding receives a gradient with zero direct user loss.</li>
+<li>Compare token and example averaging on unequal response lengths.</li>
+<li>Design an accumulation test that exposes incorrect microbatch weighting.</li>
+<li>Identify what a weights-only restart can and cannot reproduce.</li>
+<li>Calculate LoRA parameter count and explain the zero-<math-renderer class="js-inline-math" style="display: inline-block" data-run-id="d967080b832f670b73d32be100398594">$B$</math-renderer> first-step gradients.</li>
+<li>Explain why the base matrix still consumes memory during LoRA training.</li>
+<li>Defend a full/LoRA comparison budget and identify its remaining confounders.</li>
+<li>Diagnose improved likelihood with worse stopping behavior.</li>
+<li>Explain why a post-trained starting checkpoint changes a base-transition claim.</li>
+<li>Specify a regression gate before a larger-model comparison.</li>
+<li>Distinguish response NLL from forward KL when only teacher text is available.</li>
+<li>Explain why first format-eligible selection differs from best-correct teacher selection, and what missing source coverage should do.</li>
+<li>Interpret a correct final answer with a wrong printed step, a valid step with a wrong answer, and a missing step without claiming internal faithfulness.</li>
+<li>Defend the complete-response versus answer-only budget and separate teacher cost from student cost.</li>
+<li>Update 3 was logged after a durable update 2 snapshot, then saving failed. Which boundary is authoritative? What changes if update 3 committed but its metric append failed?</li>
+<li>The actual 20-update profile improves NLL from 4.061965 to 1.100189 but generates 0/8 exact answers and 0/8 message-end stops in both panels. Why is this consistent, and which claims does each measurement support?</li>
+<li>Full400 answers/stops correctly on 120/120 held-out-value publication items while Base and merged rank 8 Q/V LoRA400 remain 0/120 and cap every answer. Both trained arms saw 9,321 labels, and LoRA's development NLL improved. What does this intervention establish, why does generic format validity not rescue the failures, and why does a degenerate 40-group bootstrap interval not establish a universal method ranking?</li>
+</ol>
+<p dir="auto">SFT demonstrates desired answers. It cannot directly express every trade-off between two plausible answers. Chapter 10 introduces preference observations and asks what a reward model can learn when humans disagree about which response is better.</p>

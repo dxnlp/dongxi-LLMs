@@ -104,7 +104,7 @@ byte-level foundation discussed in Chapter 2, without learned merges.
 For each document we create `[BOS] + bytes + [EOS]`. Inputs omit the final token;
 labels omit the first. Thus every byte and the ending EOS is predicted once.
 BOS provides context but is not a target. The loss receives logits of shape
-$[B,n,V]$ and integer labels of shape $[B,n]$. It does not shift them a second
+$`[B,n,V]`$ and integer labels of shape $`[B,n]`$. It does not shift them a second
 time. Remember that a vocabulary-sized output is produced at every training
 position, even though there is only one observed target ID at that position.
 
@@ -144,24 +144,24 @@ into it. A zero loss mask alone would not make arbitrary padding invisible.
 
 ## 6.5 A run has several clocks
 
-Let a microbatch contain $b$ windows of length $n$. Accumulate gradients over
-$A$ microbatches before an optimizer update, using $R$ data-parallel ranks. If
+Let a microbatch contain $`b`$ windows of length $`n`$. Accumulate gradients over
+$`A`$ microbatches before an optimizer update, using $`R`$ data-parallel ranks. If
 every position is a valid target, one update accounts for
 
-$$
+```math
 N_{\mathrm{update}}=bnAR.
-$$
+```
 
-For $S$ such updates, the target presentation budget is
+For $`S`$ such updates, the target presentation budget is
 
-$$
+```math
 N_{\mathrm{run}}=SbnAR.
-$$
+```
 
 These are exact only under the full-valid-position assumption. Padding, ignored
 prompt positions, variable lengths, or a partial accumulation window change the
 count. The runtime should count valid labels explicitly. Our 24-update,
-single-rank recipe uses $b=1$, $n=16$, and $A=2$: 768 processed positions is a
+single-rank recipe uses $`b=1`$, $`n=16`$, and $`A=2`$: 768 processed positions is a
 ceiling on supervised targets, not a promise that all 768 carry loss.
 
 Track optimizer updates, processed positions, valid target presentations, and
@@ -179,13 +179,13 @@ and evidence-lab 6 make that distinction measurable without the full corpus.
 
 ### A target budget is an update-boundary contract
 
-A configured ceiling does not enforce itself. Let $C$ be a cumulative valid-
-target cap, $c$ the targets already learned from, and $n$ the valid labels in the
+A configured ceiling does not enforce itself. Let $`C`$ be a cumulative valid-
+target cap, $`c`$ the targets already learned from, and $`n`$ the valid labels in the
 entire next accumulation group. Accept that optimizer update only when
 
-$$
+```math
 c+n\le C.
-$$
+```
 
 Otherwise leave the update unperformed. Do not silently remove labels or shorten
 the group: that would change the examples and loss weighting rather than merely
@@ -220,28 +220,28 @@ workers, prefetch queues, or rank-specific state.
 
 Gradient accumulation is often described as “simulating a larger batch.” The
 essential condition is more precise: it must differentiate the same objective
-at the same parameters. Let microbatch $j$ contain $n_j$ valid targets, each
-with negative log-likelihood $\ell_{jk}$. The desired mean loss is
+at the same parameters. Let microbatch $`j`$ contain $`n_j`$ valid targets, each
+with negative log-likelihood $`\ell_{jk}`$. The desired mean loss is
 
-$$
+```math
 L=\frac{\sum_j\sum_{k=1}^{n_j}\ell_{jk}}{N},\qquad N=\sum_j n_j.
-$$
+```
 
 By linearity of differentiation,
 
-$$
+```math
 \nabla_\theta L=\sum_j\frac{1}{N}\nabla_\theta\left(\sum_{k=1}^{n_j}\ell_{jk}\right).
-$$
+```
 
 Thus each microbatch can backpropagate its summed NLL divided by the same total
-$N$. Do not zero the gradients or update the parameters between these backward
+$`N`$. Do not zero the gradients or update the parameters between these backward
 calls. Step once after the accumulation window.
 
 The tempting alternative is to average each microbatch's mean. It equals the
 desired objective only when their valid target counts are equal. A one-target
 tail should not receive the same aggregate influence as a sixteen-target
-window. If there are 17 targets total, their correct weights are $1/17$ and
-$16/17$, not one half each.
+window. If there are 17 targets total, their correct weights are $`1/17`$ and
+$`16/17`$, not one half each.
 
 Notebook 1 compares these two implementations against a single full-batch
 backward pass through the actual decoder. The correct form agrees to floating
@@ -267,43 +267,43 @@ distributed accumulation implementation.
 
 The loss gradient describes local sensitivity: how an infinitesimal parameter
 change would affect this objective. SGD turns it directly into an update,
-$\Delta\theta=-\eta g$. AdamW uses history as well. With elementwise operations,
+$`\Delta\theta=-\eta g`$. AdamW uses history as well. With elementwise operations,
 its first and second moment estimates are
 
-$$
+```math
 m_t=\beta_1m_{t-1}+(1-\beta_1)g_t,\qquad
 v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2.
-$$
+```
 
 The first moment remembers signed gradients. The second remembers squared
 magnitudes; it is not a mean-subtracted variance estimate. Starting both at zero
 introduces an initial bias, addressed by
 
-$$
+```math
 \widehat m_t=\frac{m_t}{1-\beta_1^t},\qquad
 \widehat v_t=\frac{v_t}{1-\beta_2^t}.
-$$
+```
 
-Why those divisors? If every gradient equals a constant $g$ and $m_0=0$,
-the geometric series gives $m_t=(1-\beta_1^t)g$. The uncorrected moment
-underestimates even this constant input. Dividing by $1-\beta_1^t$ restores
-$g$; the same argument restores $g^2$ from $v_t$. Bias correction addresses
+Why those divisors? If every gradient equals a constant $`g`$ and $`m_0=0`$,
+the geometric series gives $`m_t=(1-\beta_1^t)g`$. The uncorrected moment
+underestimates even this constant input. Dividing by $`1-\beta_1^t`$ restores
+$`g`$; the same argument restores $`g^2`$ from $`v_t`$. Bias correction addresses
 zero initialization, not every source of error in a changing gradient history.
 
 For the unfused, non-AMSGrad variant used here, the update is
 
-$$
+```math
 \theta_t=(1-\eta_t\lambda)\theta_{t-1}
 -\eta_t\frac{\widehat m_t}{\sqrt{\widehat v_t}+\epsilon}.
-$$
+```
 
 The denominator converts the remembered signed gradient into a change relative
 to that coordinate's remembered magnitude. At the first step, with gradients
-$[1,0.01]$, zero moments, $\eta=0.01$ and no decay, corrected Adam changes
+$`[1,0.01]`$, zero moments, $`\eta=0.01`$ and no decay, corrected Adam changes
 both coordinates by approximately −0.01. SGD changes them by −0.01 and
 −0.0001. The second coordinate's smaller raw gradient does not automatically
 make its normalized update smaller. This first-step calculation ignores only
-the negligible effect of $\epsilon=10^{-8}$; later updates depend on history.
+the negligible effect of $`\epsilon=10^{-8}`$; later updates depend on history.
 It explains the mechanism, not which optimizer wins after a fair tuning budget.
 
 The decay term shrinks the old parameter separately from the gradient moments.
@@ -319,16 +319,16 @@ zero movement: past moments or weight decay can still matter. An absent gradient
 explicit zero tensor.
 
 **Reader prediction.** A scalar gradient reverses from +1 to −0.1. Does Adam
-immediately reverse its update? Use $\beta_1=0.9$, $\beta_2=0.999$,
-$\eta=0.01$, zero initial moments and no decay:
+immediately reverse its update? Use $`\beta_1=0.9`$, $`\beta_2=0.999`$,
+$`\eta=0.01`$, zero initial moments and no decay:
 
-| Update | Current gradient | First moment $m_t$ | Corrected first moment | Parameter change |
+| Update | Current gradient | First moment $`m_t`$ | Corrected first moment | Parameter change |
 |---:|---:|---:|---:|---:|
 | 1 | +1 | 0.100 | 1.000000 | −0.010000 |
 | 2 | +1 | 0.190 | 1.000000 | −0.010000 |
 | 3 | −0.1 | 0.161 | 0.594096 | −0.007260 |
 
-The third first moment is $0.9(0.19)+0.1(-0.1)=0.161$. Its corrected
+The third first moment is $`0.9(0.19)+0.1(-0.1)=0.161`$. Its corrected
 second moment is approximately 0.669670, so the remembered direction remains
 positive and the minimized-loss update remains negative. SGD would instead
 add 0.001 on that third gradient. The
@@ -370,23 +370,23 @@ warmup is a separate recipe intervention, not a second correction of the same
 zero-initialization bias. Later decay reduces
 the rate as the allocated optimization budget is consumed.
 
-For one-based update number $u$, warmup length $W$, total updates $S$, peak
-$\eta_{\max}$ and floor $\eta_{\min}$, our exact schedule is
+For one-based update number $`u`$, warmup length $`W`$, total updates $`S`$, peak
+$`\eta_{\max}`$ and floor $`\eta_{\min}`$, our exact schedule is
 
-$$
+```math
 \eta_u=\begin{cases}
-\eta_{\max}u/W,&1\leq u\leq W,\\
+\eta_{\max}u/W,&1\leq u\leq W,\\%
 \eta_{\min}+\frac{\eta_{\max}-\eta_{\min}}{2}
-\left[1+\cos\left(\pi\frac{u-W}{S-W}\right)\right],&W<u\leq S.
+\left[1+\cos\left(\pi\frac{u-W}{S-W}\right)\right],&W\lt u\leq S.
 \end{cases}
-$$
+```
 
-Here $W=3$, $S=24$, peak 0.01 and floor 0.001. These are bounded teaching values,
+Here $`W=3`$, $`S=24`$, peak 0.01 and floor 0.001. These are bounded teaching values,
 not proposed defaults for a larger model. The schedule ticks once per optimizer
 update, not once per microbatch. In code the input is the number of already
 completed updates; the notebook makes the conversion explicit.
 
-The first update uses $0.01/3\approx0.003333$, the third reaches 0.01,
+The first update uses $`0.01/3\approx0.003333`$, the third reaches 0.01,
 and the twenty-fourth reaches 0.001. A schedule indexed by microbatches would
 reach these points before the declared number of parameter changes when
 accumulation is enabled. Holding the batch stream fixed and changing only
@@ -408,9 +408,9 @@ measurement conventions, so compare a fixed checkpoint under matched scoring
 before attributing it to training duration.
 
 Weight decay discourages large stored parameters through the shrinkage already
-shown. With $\theta=2$, $\eta=0.01$, $\lambda=0.1$ and an explicit zero
-gradient and fresh moments, decoupled decay gives $\theta'=1.998$.
-Adding an L2 gradient $\lambda\theta=0.2$ to a fresh Adam step instead gives
+shown. With $`\theta=2`$, $`\eta=0.01`$, $`\lambda=0.1`$ and an explicit zero
+gradient and fresh moments, decoupled decay gives $`\theta'=1.998`$.
+Adding an L2 gradient $`\lambda\theta=0.2`$ to a fresh Adam step instead gives
 approximately 1.99: the adaptive denominator transforms the penalty too.
 These are different updates, even though both can be described as penalties
 on parameter magnitude. This fixture decays all trainable parameters; excluding
@@ -436,9 +436,9 @@ and story case later in this chapter remain separate.
 
 Global gradient-norm clipping applies one scale to the concatenated gradient:
 
-$$
+```math
 g'=g\min\left(1,\frac{c}{\lVert g\rVert_2}\right),
-$$
+```
 
 with the zero-norm case left unchanged and numerical safeguards in code. When
 active, it preserves direction while limiting norm. Clip after accumulation:
@@ -468,12 +468,12 @@ CUDA BF16 training recipe.
 
 ## 6.10 Memory and throughput are measured quantities
 
-For $P$ unique parameters with FP32 weights, gradients and two FP32 Adam moments,
+For $`P`$ unique parameters with FP32 weights, gradients and two FP32 Adam moments,
 a simple persistent tensor ledger is
 
-$$
+```math
 M_{\mathrm{persistent}}\approx(4+4+8)P=16P\ \text{bytes}.
-$$
+```
 
 That estimate excludes activations, attention intermediates, temporary optimizer
 buffers, allocator overhead, framework state and other processes. It is not
@@ -505,7 +505,7 @@ the original field names and measured values retain their historical identity.
 Held-out loss should use a fixed split, tokenizer, alignment, context policy,
 mask and reduction. Sum the valid targets' NLL across the corpus, then divide
 by their total count. Do not average unequal batch means. For that fixed unit,
-perplexity is $\exp(L)$; comparing it across tokenizers without reconciling units
+perplexity is $`\exp(L)`$; comparing it across tokenizers without reconciling units
 can be misleading.
 
 Evaluation must not update parameters. In PyTorch, `eval()` selects evaluation
@@ -579,15 +579,15 @@ attempt's cost. If the retry succeeds, completed training exposure is 17 targets
 the three admitted groups reserved 25 target places. These are different answers
 to different questions, not inconsistent measurements.
 
-For a vector of declared logical-work units, let $\mathbf{c}_j$ be the whole
-reservation for attempt $j$. A cumulative allowance uses
+For a vector of declared logical-work units, let $`\mathbf{c}_j`$ be the whole
+reservation for attempt $`j`$. A cumulative allowance uses
 
-$$
+```math
 \mathbf{W}_{\mathrm{reserved}}=\sum_{j\in\mathrm{admitted}}\mathbf{c}_j,
 \qquad
 \mathbf{W}_{\mathrm{reserved}}+\mathbf{c}_{\mathrm{next}}
 \le\mathbf{C}.
-$$
+```
 
 The inequality is componentwise: fitting the target allowance cannot compensate
 for an exhausted forward-call or generation-position allowance. Record completed
@@ -1001,7 +1001,7 @@ provide complete reasoning.
 1. Why can document-level splitting still leave development contamination?
 2. If shorter windows preserve the target count, what learning condition changes?
 3. Explain why EOS, a loss mask, and an attention boundary are not interchangeable.
-4. What does $SbnAR$ count when some labels are ignored? What does it not count?
+4. What does $`SbnAR`$ count when some labels are ignored? What does it not count?
 5. Derive the contribution of a short microbatch to a valid-token mean objective.
 6. Why can AdamW move a parameter against the newest gradient's suggested direction?
 7. What changes when accumulation doubles but the update-based schedule stays fixed?
