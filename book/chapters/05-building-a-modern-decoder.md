@@ -268,6 +268,17 @@ the [Chapter 5 figure workflow](../../docs/NOTEBOOK_VISUALS.md#dependencies-and-
 Inspect $`X+XW`$, isolate the two gradient contributions, and compare the zero-
 branch control with the cancellation case.
 
+
+<!-- chapter-gif: residual-stream -->
+**Predict:** How does the identity path contribute to the backward derivative?
+
+![An additive branch revises the residual stream while the identity path carries both state and a direct gradient contribution. The numeric branch is a two-feature fixture.](../../visuals/chapters/rendered/residual-stream.gif)
+
+*An additive branch revises the residual stream while the identity path carries both state and a direct gradient contribution. The numeric branch is a two-feature fixture.*
+
+[Try the notebook](../../notebooks/day-05/03_residual_stream.ipynb) · [View a still image](../../visuals/chapters/rendered/residual-stream.png)
+<!-- /chapter-gif: residual-stream -->
+
 ## 5.5 Normalize the branch's reading of the stream
 
 As states are transformed and updated, their numerical scale can change.
@@ -917,6 +928,17 @@ toy implementation compatible with every checkpoint's coordinate layout.
 **Companion:** [Rotary positions](../../notebooks/day-06/02_rotary_positions.ipynb).
 Check pair norms, derivatives, and the relative-position identity before using a cache.
 
+
+<!-- chapter-gif: rope-rotation -->
+**Predict:** What changes if both positions increase by the same amount?
+
+![Rotate one Q/K frequency pair while preserving each norm. Their dot product depends on relative position; V bypasses the rotation.](../../visuals/chapters/rendered/rope-rotation.gif)
+
+*Rotate one Q/K frequency pair while preserving each norm. Their dot product depends on relative position; V bypasses the rotation.*
+
+[Try the notebook](../../notebooks/day-06/02_rotary_positions.ipynb) · [View a still image](../../visuals/chapters/rendered/rope-rotation.png)
+<!-- /chapter-gif: rope-rotation -->
+
 ## 5.15 Correct caching requires consistent positions
 
 For a fixed causal prefix under unchanged weights, past per-layer keys and
@@ -1076,6 +1098,17 @@ reference attention operation. Repetition is useful for explanation and gradient
 verification, but introduces temporary tensors. An optimized grouped-attention
 kernel need not implement the same physical expansion. Do not confuse our
 mathematical equivalence test with a serving-speed benchmark.
+
+
+<!-- chapter-gif: grouped-query-attention -->
+**Predict:** Does sharing K/V force two query heads to produce identical outputs?
+
+![Four queries route to two shared K/V groups. Each query still computes its own attention distribution and output.](../../visuals/chapters/rendered/grouped-query-attention.gif)
+
+*Four queries route to two shared K/V groups. Each query still computes its own attention distribution and output.*
+
+[Try the notebook](../../notebooks/day-06/03_gqa_qknorm_and_costs.ipynb) · [View a still image](../../visuals/chapters/rendered/grouped-query-attention.png)
+<!-- /chapter-gif: grouped-query-attention -->
 
 ## 5.17 Q/K normalization is not one universal formula
 

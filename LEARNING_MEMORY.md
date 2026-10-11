@@ -1,5 +1,24 @@
 # Learning Memory and Production Queue
 
+Chapter GIF production, 2026-10-11: the learner explicitly requested a goal to
+finish the reviewed plan and put every GIF in its corresponding chapter.
+`ANIM-CHAPTER-GIFS-001` is approved for 28 placements over all fifteen chapters:
+one retained BPE, four reused assets and 23 new/adapted short loops. The
+[packet](visuals/chapters/README.md) declares base commit, allowed scope,
+reproduction, numerical/media/reader checks and evidence boundaries. This
+authorization covers the chapter loops and integration, superseding older
+unapproved-production wording for these bounded extensions only. Mac rendering,
+no video in Git, unchanged learner Day 9 and preserved historical evidence apply.
+Current state: complete locally. The [verification](visuals/chapters/verification.json)
+records 28 placements/15 chapters, all 464 local chapter links, exact original
+chapter preservation and unchanged retained assets. The
+[review record](visuals/chapters/review-record.json) records all 23 contact
+sheets/full-size stills, gallery controls, normal/narrow layout and fifteen
+actual local chapter-page checks. Numerical fixtures, media checks, 1,871 math
+expressions and 25 book regression tests pass. New GIFs total 6.64 MiB; no video
+was produced. Historical proposal text is preserved; original signature-film
+scopes remain separate. Next: learner reviews the chapters or local gallery.
+
 GitHub math repair, 2026-10-11: the learner reported a broken Chapter 3 mean-loss
 formula. GitHub Markdown interpreted its standalone equality as a heading and
 also stripped TeX escapes or left adjacent inline math literal. All fifteen

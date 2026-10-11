@@ -1,0 +1,421 @@
+{
+  "purpose": "Approved short chapter mechanisms; illustrative except declared finite-policy replay",
+  "command": "uv run --project visuals/animations python visuals/chapters/render.py",
+  "last_executed_argv": [
+    "visuals/chapters/render.py",
+    "--only",
+    "cross-entropy-gradient",
+    "causal-shift",
+    "assistant-loss-mask",
+    "--qa-dir",
+    "/tmp/dongxi-chapter-qa"
+  ],
+  "environment": {
+    "python": "3.12.11",
+    "pillow": "12.3.0",
+    "platform": "macOS-15.7.9-arm64-arm-64bit",
+    "font": "/System/Library/Fonts/Supplemental/Arial.ttf",
+    "font_sha256": "525979822591a3447cfc49d943d6f7683508e25543407871c0ed8fed05fd2bd9",
+    "ffmpeg": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"
+  },
+  "sources": {
+    "visuals/chapters/render.py": "41b9fdb9b611dcccea5450edb3545eef2d689e995679e69843c84e4470ffee7e",
+    "visuals/chapters/fixtures.py": "e51854b0a42b65007ded4ba8c1c64cc969f85cda34afdcbd95a9b1991899006a",
+    "visuals/readme/render.py": "1603515fb3bf38ef0f1818522c7fa0226638102653f8c39b6a233ecf5aa7d86f"
+  },
+  "numeric_checks": [
+    "cross-entropy p-minus-q finite difference and descent",
+    "ignored prompt target still permits contextual embedding gradient",
+    "residual identity plus branch derivative",
+    "RoPE norms and relative-angle dot products",
+    "valid-target-weighted loss and gradient accumulation",
+    "RNG continuation after checkpoint restore",
+    "single causal shift, answer END ownership, block-diagonal causal packing",
+    "LoRA zero-output initialization and asymmetric first gradients",
+    "Bradley-Terry score derivatives",
+    "DPO relative-margin gradient and absolute-probability counterexample",
+    "exact REINFORCE mean and baseline covariance",
+    "PPO asymmetric clipping and harmful-direction slope",
+    "response weighting: equal responses versus equal tokens",
+    "60-update finite-policy replay agrees with recorded chapter endpoints",
+    "temperature-squared KL gradient and student descent"
+  ],
+  "outputs": [
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 71,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 228399,
+      "sha256": "e3a786d68f41575c6933459ac966b553660fa262cc16746284ea159cbc76edcc",
+      "gif": "visuals/chapters/rendered/evidence-gap.gif",
+      "poster": "visuals/chapters/rendered/evidence-gap.png",
+      "poster_sha256": "ae631be90be9419c51b4ab147b0639879c75eb196ef39a985560497f2331237e",
+      "scene": "evidence-gap"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 85,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 300005,
+      "sha256": "ed9e74fcdc60dc4cf885e14a96ffbff5e6e625d4c3f7a750bfd0e86e1a901928",
+      "gif": "visuals/chapters/rendered/embedding-gradient.gif",
+      "poster": "visuals/chapters/rendered/embedding-gradient.png",
+      "poster_sha256": "9cf364d131fe92426ee101a81ed507c10b8948b255b59eb7bdf4a44055a74ac9",
+      "scene": "embedding-gradient"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 55,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 297010,
+      "sha256": "6f8f659836057f2e642186e79049f644ec49ef3029a628ed41e2761a46bee87f",
+      "gif": "visuals/chapters/rendered/cross-entropy-gradient.gif",
+      "poster": "visuals/chapters/rendered/cross-entropy-gradient.png",
+      "poster_sha256": "79f0e0a7f96ec1bae67b83e4bd7bb30ed602b7a606b4c5f929deb374b7600e47",
+      "scene": "cross-entropy-gradient"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 52,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 320199,
+      "sha256": "9adcf42c22f43548a5e4e8011c81b8f49dcff30c02054367bb45ec31ce9bce8a",
+      "gif": "visuals/chapters/rendered/causal-shift.gif",
+      "poster": "visuals/chapters/rendered/causal-shift.png",
+      "poster_sha256": "b37183dffdb12630e764d5b215ae56d9ea6f82bf3b57144e2bc55309d6cfd5f4",
+      "scene": "causal-shift"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 102,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 254054,
+      "sha256": "ff900abfddb09f8526d295e369dcf81647a57ccd6c2d575466cdc0f76f52e6ec",
+      "gif": "visuals/chapters/rendered/residual-stream.gif",
+      "poster": "visuals/chapters/rendered/residual-stream.png",
+      "poster_sha256": "a18e7ac7276ca203112fd0657a0246b1eed3f9fb211f3520caaccdb1506606f9",
+      "scene": "residual-stream"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 78,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 355252,
+      "sha256": "b4449c088196664b91f2b5252d4d203ac1134d4662c0acd8d9f9c525e143907d",
+      "gif": "visuals/chapters/rendered/rope-rotation.gif",
+      "poster": "visuals/chapters/rendered/rope-rotation.png",
+      "poster_sha256": "8ca8fa8c29f91090443939a5937ae484b07050f45aa426be18a590a0cd3b09a9",
+      "scene": "rope-rotation"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 67,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 353753,
+      "sha256": "b5c78328c6991a7b4c1a4807dc93f88770da82e046e6964c24a0e67c9f0185a3",
+      "gif": "visuals/chapters/rendered/grouped-query-attention.gif",
+      "poster": "visuals/chapters/rendered/grouped-query-attention.png",
+      "poster_sha256": "98e7cd5d99079a24fa1efdf235dc501cff2487a764012ba5ccbc2aa158cfffd1",
+      "scene": "grouped-query-attention"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 79,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 239998,
+      "sha256": "1e4d38b01db23c64e369c8fc2ddbe0fe9a0b3edc4d7f4e68759effbd01f24151",
+      "gif": "visuals/chapters/rendered/gradient-accumulation.gif",
+      "poster": "visuals/chapters/rendered/gradient-accumulation.png",
+      "poster_sha256": "157162a4ea78d1c542a91ba6aba1a73d2ad0d99a7bd2898d5c7cf113ede1a210",
+      "scene": "gradient-accumulation"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 86,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 301879,
+      "sha256": "6a99f5c931b42ed79192813f0f915d75fefc7ad9fc243df2835fcc7daae106b6",
+      "gif": "visuals/chapters/rendered/checkpoint-recovery.gif",
+      "poster": "visuals/chapters/rendered/checkpoint-recovery.png",
+      "poster_sha256": "248f53503ac830af1571f23e4e4408ac1d4635bb8cb107bc424b2af23912e3cd",
+      "scene": "checkpoint-recovery"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 55,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 243415,
+      "sha256": "a63eb2c48df3ba3059a62bcec80c354896b2cbd4455b67f6433d09893854b585",
+      "gif": "visuals/chapters/rendered/evaluation-contract.gif",
+      "poster": "visuals/chapters/rendered/evaluation-contract.png",
+      "poster_sha256": "fcf6bb4b6646e65c9fb1d618ce411bd55eab26cbbeced662425359099dd511b4",
+      "scene": "evaluation-contract"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 71,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 315859,
+      "sha256": "0777773d97df1781bb80c3c8e5a2867b7e2e98933d83db6c7b0c2d2c2d4a8d1f",
+      "gif": "visuals/chapters/rendered/assistant-loss-mask.gif",
+      "poster": "visuals/chapters/rendered/assistant-loss-mask.png",
+      "poster_sha256": "70daa6ff1d114dec98e6c7bd2dad11a13377e1b007949a80a78dadd18ea8b70d",
+      "scene": "assistant-loss-mask"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 55,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 306920,
+      "sha256": "905d6613ea7df8abd7820fc671c403dfdcd4db90b90386fbcafbe4799aa34f91",
+      "gif": "visuals/chapters/rendered/packed-attention.gif",
+      "poster": "visuals/chapters/rendered/packed-attention.png",
+      "poster_sha256": "2944f0e92a43fd994989f537ce1f8f6ae8f59e849b3bb68b0c60e906d43c2471",
+      "scene": "packed-attention"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 78,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 213116,
+      "sha256": "aed8d5f68c5434f2dddde099fedb50a419b05c46afb1ff0848188d14671790e4",
+      "gif": "visuals/chapters/rendered/teacher-forcing.gif",
+      "poster": "visuals/chapters/rendered/teacher-forcing.png",
+      "poster_sha256": "5cef18a8c8df9d65bc3d7779148b11218824afb020cef58a5ddfa792e8c6e37b",
+      "scene": "teacher-forcing"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 54,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 257334,
+      "sha256": "560582e50108825defe5874cafce789be7ca5d71cd14854ab02cf4cb1b991a4e",
+      "gif": "visuals/chapters/rendered/lora-update.gif",
+      "poster": "visuals/chapters/rendered/lora-update.png",
+      "poster_sha256": "babc75223fe056cf860d8ca34e88eed585b5942eb712a2d064726c0d893ccb21",
+      "scene": "lora-update"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 66,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 292632,
+      "sha256": "41cca37aff72f041556555049b396443a86d443f0d5752a1442df1e0415fefc0",
+      "gif": "visuals/chapters/rendered/preference-margin.gif",
+      "poster": "visuals/chapters/rendered/preference-margin.png",
+      "poster_sha256": "12a73af10ad6f59ebb99f6ffce445e99a82c7ab71c4152b2117e6919a951145d",
+      "scene": "preference-margin"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 76,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 300821,
+      "sha256": "9ffc294c8fe476a60665f772a9943e9fc36d6bdd2b1afa62a4f6b5a4493b9844",
+      "gif": "visuals/chapters/rendered/dpo-reference.gif",
+      "poster": "visuals/chapters/rendered/dpo-reference.png",
+      "poster_sha256": "3be59b4f5e88c0b2be09ac0907d3702060134e18cf0533e51b698197b1f1b45c",
+      "scene": "dpo-reference"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 77,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 399604,
+      "sha256": "ce7c73a1d2e31a14e6dbe0ccffbad1a49c52be0b6116003b0118061fbef91b9e",
+      "gif": "visuals/chapters/rendered/dpo-counterexample.gif",
+      "poster": "visuals/chapters/rendered/dpo-counterexample.png",
+      "poster_sha256": "fe740f68cd8d8b81a9fa3e2f99dfd3f2bb87bddbb22c30627adc98a5b16452cf",
+      "scene": "dpo-counterexample"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 79,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 411645,
+      "sha256": "3a6e94751b9c943ecdb23f6de897e79b8d1d8e1bb51c7674d2717342fa57db04",
+      "gif": "visuals/chapters/rendered/policy-baseline.gif",
+      "poster": "visuals/chapters/rendered/policy-baseline.png",
+      "poster_sha256": "1910ea2f88d7c1f4c75456cb02118a922c14de46cc101d1a69eb4cd862309e99",
+      "scene": "policy-baseline"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 78,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 399833,
+      "sha256": "9498a2688685c8e64ae452e2e7036ff855c35b2013280946d58ff0aa208556b0",
+      "gif": "visuals/chapters/rendered/ppo-clipping.gif",
+      "poster": "visuals/chapters/rendered/ppo-clipping.png",
+      "poster_sha256": "bf37b097082e319a25c10cc2ccd0e25bb60ce1f36b8ea596c7ce84f0f9536244",
+      "scene": "ppo-clipping"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 50,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 254639,
+      "sha256": "9ea1ac18a1bea890eae72100b31e723a45d51bab3f42e4471e7a11165e6ccc2e",
+      "gif": "visuals/chapters/rendered/response-weighting.gif",
+      "poster": "visuals/chapters/rendered/response-weighting.png",
+      "poster_sha256": "8e2732a2d08429426225e69923656cde23faef0225379cecb82fa545b54664cc",
+      "scene": "response-weighting"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 67,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 377512,
+      "sha256": "b86f3ab719af80b486322768c5f31376c18febbabff338d9664b5c879d8a06b7",
+      "gif": "visuals/chapters/rendered/reward-hacking.gif",
+      "poster": "visuals/chapters/rendered/reward-hacking.png",
+      "poster_sha256": "19426ff4f8c29543f2f22b7278d89717ff36fe9eec090dc15e3ee5a5dd49e191",
+      "scene": "reward-hacking"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 53,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 187991,
+      "sha256": "1dba8e7d77803f8d71c6052726a85f3a0c82a2d56a776a72d984dc547e2e0a7f",
+      "gif": "visuals/chapters/rendered/candidate-selection.gif",
+      "poster": "visuals/chapters/rendered/candidate-selection.png",
+      "poster_sha256": "e50785f28c62d3b77118d185002430ee808d640176a06144215ca69aacc0a6a3",
+      "scene": "candidate-selection"
+    },
+    {
+      "dimensions": [
+        1120,
+        560
+      ],
+      "frames": 144,
+      "unique_frames": 88,
+      "duration_seconds": 12.0,
+      "loop": 0,
+      "bytes": 354409,
+      "sha256": "3c553d77840a1a6e1408a2bc9eefa4f55e443856f9af7d5f3595361a297eb8bb",
+      "gif": "visuals/chapters/rendered/distillation.gif",
+      "poster": "visuals/chapters/rendered/distillation.png",
+      "poster_sha256": "6de3b6531856ecaefa0f839be5fccab6fb47fcf993cb8e0e59165bf0746faae6",
+      "scene": "distillation"
+    }
+  ],
+  "limitations": [
+    "Animation time is editorial time, not measured compute latency.",
+    "White fade resets the illustration; it is not reversal of an update.",
+    "Constructed logit/probability paths do not claim shared-parameter training behavior.",
+    "The reward-hacking recurrence uses actual integer SGD updates; no interpolated measurements.",
+    "LoRA changes illustrate factorization; only first-step derivatives are asserted.",
+    "No model-scale experiments, publication, video outputs or learner-mastery claims."
+  ]
+}

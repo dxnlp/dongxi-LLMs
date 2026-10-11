@@ -119,6 +119,17 @@ also collapse to a constant answer, and a reward can favor text outside its
 training distribution. Diagnose the first failed invariant rather than naming
 all three phenomena “reward hacking.”
 
+
+<!-- chapter-gif: reward-hacking -->
+**Predict:** Why can the correct action lose probability while its logit stays unchanged on the first update?
+
+![Replay the chapter's deterministic 60-update finite policy: the programmed proxy rises while strict accuracy falls. Only actual integer-update values are drawn.](../../visuals/chapters/rendered/reward-hacking.gif)
+
+*Replay the chapter's deterministic 60-update finite policy: the programmed proxy rises while strict accuracy falls. Only actual integer-update values are drawn.*
+
+[Try the notebook](../../notebooks/day-24/01_reward_hacking.ipynb) · [View a still image](../../visuals/chapters/rendered/reward-hacking.png)
+<!-- /chapter-gif: reward-hacking -->
+
 ## 14.2 Separate the task from its checker
 
 A verifier should have a test suite independent of the model's favored outputs.

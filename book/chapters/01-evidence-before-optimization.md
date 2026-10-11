@@ -130,6 +130,17 @@ Even a perfectly measured reduction in training loss can coexist with:
 Later chapters will build evaluation contracts for those questions. For now, the
 important habit is to name what a metric measures instead of calling it “better.”
 
+
+<!-- chapter-gif: evidence-gap -->
+**Predict:** Which observation would justify a claim about coherent stories?
+
+![A constructed loss curve falls while the displayed response remains repetitive. Token loss and story quality need separate measurements.](../../visuals/chapters/rendered/evidence-gap.gif)
+
+*A constructed loss curve falls while the displayed response remains repetitive. Token loss and story quality need separate measurements.*
+
+[Try the notebook](../../notebooks/day-01/02_smoke_criteria_and_claims.ipynb) · [View a still image](../../visuals/chapters/rendered/evidence-gap.png)
+<!-- /chapter-gif: evidence-gap -->
+
 ## 1.3 The identity of an experiment
 
 “I trained Qwen3 with seed 42” does not identify a reproducible experiment. A

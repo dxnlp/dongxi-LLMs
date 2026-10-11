@@ -1448,3 +1448,30 @@ production dependencies.
   matrix. The refusal was saved before the held-out96M budget was collected.
 - Production dependency: Approved storyboard plus Mac Studio rendering; no
   animation task has been promoted or rendered by this course goal.
+
+### Approved chapter GIF package — 2026-10-11
+
+- Source: user. After reviewing the fifteen-chapter plan, the learner requested
+  setting a goal to finish all its GIFs and put them in the corresponding chapters.
+- Promotion: `ANIM-CHAPTER-GIFS-001`, with its complete bounded packet in
+  [`../chapters/README.md`](../chapters/README.md) and route/caption manifest
+  [`../chapters/catalog.py`](../chapters/catalog.py). The package retains one
+  BPE loop, reuses four existing assets and produces/adapts 23 short mechanisms,
+  for exactly 28 placements across all fifteen chapters.
+- Reuse existing candidates 001, 003, 008, 009, 013, 016–019 and 022–029, plus
+  `ANIM-EMB-001` and `ANIM-BPE-001`. These are supporting chapter loops;
+  original signature-film scopes and historical evidence remain separate.
+- Scope: chapter inserts, editable GIF source, numerical fixtures, PNG stills,
+  media/source hashes, local review gallery and verification. No model-scale
+  campaign, learner progress change or external publication is included.
+- Precision: independently checked gradients, correct target shifting and
+  masking, relative DPO margin versus absolute probability, sign-aware PPO
+  clipping, response/token reduction and finite-policy reward-hacking replay.
+  Constructed paths and actual integer-update replay remain explicitly distinct.
+- Production dependency: authorized Mac rendering and local chapter/media/math
+  checks. Video files remain excluded from Git. Current state: done locally.
+  All 28 chapter placements, 23 new loops and PNG fallbacks are verified;
+  [`../chapters/verification.json`](../chapters/verification.json) and
+  [`../chapters/review-record.json`](../chapters/review-record.json) retain
+  actual numerical, media, source-preservation and browser-review evidence.
+  Original full-film scopes and learner Day 9 remain unchanged.

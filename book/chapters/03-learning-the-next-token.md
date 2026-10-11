@@ -361,6 +361,17 @@ distribution by overrepresenting the mode.
 These are decoding transformations. Ordinary maximum-likelihood training uses
 the unfiltered model distribution in its cross-entropy objective.
 
+
+<!-- chapter-gif: next-token -->
+**Predict:** Which object becomes the next step's input?
+
+![Read the prefix, score a toy vocabulary, select a token, and feed it back. The decoder is schematic and its logits are constructed.](../../visuals/readme/next-token.gif)
+
+*Read the prefix, score a toy vocabulary, select a token, and feed it back. The decoder is schematic and its logits are constructed.*
+
+[Try the notebook](../../notebooks/day-03/01_logits_softmax_nll.ipynb) · [View a still image](../../visuals/readme/next-token.png)
+<!-- /chapter-gif: next-token -->
+
 ## 3.5 Likelihood becomes additive surprise
 
 For a causal model, the probability of a token sequence follows the chain rule:
@@ -613,6 +624,17 @@ its NLL smoothly. Its horizontal axis is a logit, not a probability. Source:
 The [saved-preview workflow](../../docs/NOTEBOOK_VISUALS.md#reference-previews-versus-live-plots)
 with `--days 3` regenerates the figure. The new parameter arithmetic above is
 retained in the [calculation receipt](../../experiments/reports/2026-10-10-book-foundations-pass/run-01/depth-calculations.json).
+
+
+<!-- chapter-gif: cross-entropy-gradient -->
+**Predict:** Why do non-target logits also have derivatives?
+
+![One independent-logit descent step follows the exact probability-minus-target gradient. Shared model parameters can produce more complicated probability changes.](../../visuals/chapters/rendered/cross-entropy-gradient.gif)
+
+*One independent-logit descent step follows the exact probability-minus-target gradient. Shared model parameters can produce more complicated probability changes.*
+
+[Try the notebook](../../notebooks/day-03/01_logits_softmax_nll.ipynb) · [View a still image](../../visuals/chapters/rendered/cross-entropy-gradient.png)
+<!-- /chapter-gif: cross-entropy-gradient -->
 
 ## 3.7 How one-hot observations teach a distribution
 
@@ -937,6 +959,17 @@ called exposure bias:
 It can occur even with perfect shifting and causal masking. Lowering temperature
 may reduce random low-probability deviations, but it cannot repair a wrong mode
 and can make systematic errors more deterministic.
+
+
+<!-- chapter-gif: causal-shift -->
+**Predict:** Why is using a future token as a label compatible with causal attention?
+
+![Next-token targets move one position left relative to the inputs. The final input has no target in this finite example.](../../visuals/chapters/rendered/causal-shift.gif)
+
+*Next-token targets move one position left relative to the inputs. The final input has no target in this finite example.*
+
+[Try the notebook](../../notebooks/day-03/02_causal_shift_and_masks.ipynb) · [View a still image](../../visuals/chapters/rendered/causal-shift.png)
+<!-- /chapter-gif: causal-shift -->
 
 ## 3.11 Loss masks grade targets; attention masks control visibility
 

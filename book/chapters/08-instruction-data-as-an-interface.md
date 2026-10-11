@@ -137,6 +137,17 @@ ASSISTANT header is trained to predict `red`; the header itself is not a
 scored target. This distinction explains both the mask's shift and why the
 model needs the prompt even when the prompt receives no direct token loss.
 
+
+<!-- chapter-gif: assistant-loss-mask -->
+**Predict:** Which prediction positions receive direct cross-entropy gradients?
+
+![Ownership marks the answer and END before the single causal shift. The assistant header's logits predict the first answer even though the header token is not a scored target.](../../visuals/chapters/rendered/assistant-loss-mask.gif)
+
+*Ownership marks the answer and END before the single causal shift. The assistant header's logits predict the first answer even though the header token is not a scored target.*
+
+[Try the notebook](../../notebooks/day-11/01_roles_templates_and_masks.ipynb) · [View a still image](../../visuals/chapters/rendered/assistant-loss-mask.png)
+<!-- /chapter-gif: assistant-loss-mask -->
+
 ## 8.4 Assistant-only loss still teaches from the prompt
 
 Ignoring a user token's direct loss does not remove it from the forward graph. Its embedding and hidden states can influence later assistant positions through causal attention. The answer loss can therefore update shared parameters and prompt embeddings through those paths.
@@ -208,6 +219,17 @@ segment one. The lower-left block is visible under the ordinary triangle and
 blocked by the isolated mask. Change one segment ID in the notebook and track
 exactly which context paths appear; this figure is a mask computation, not
 evidence of a production packing backend.
+
+
+<!-- chapter-gif: packed-attention -->
+**Predict:** Which condition must be added to the ordinary causal mask?
+
+![A causal triangle still lets a later packed example read an earlier one. A segment-aware causal mask removes those cross-example edges; END alone does not.](../../visuals/chapters/rendered/packed-attention.gif)
+
+*A causal triangle still lets a later packed example read an earlier one. A segment-aware causal mask removes those cross-example edges; END alone does not.*
+
+[Try the notebook](../../notebooks/day-11/02_padding_packing_boundaries.ipynb) · [View a still image](../../visuals/chapters/rendered/packed-attention.png)
+<!-- /chapter-gif: packed-attention -->
 
 ## 8.8 Mixture weights need a unit
 

@@ -116,6 +116,17 @@ source siblings; they are not evidence of independent population samples.
 Use the [visual notebook](../../notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb)
 to inspect available answers, actual decisions and measured work separately.
 
+
+<!-- chapter-gif: candidate-selection -->
+**Predict:** What would the oracle ceiling conceal if reported as actual selected accuracy?
+
+![A constructed pool contains a correct response, yet a flawed scorer selects an incorrect one. Oracle availability and the deployed selection result are separate measurements.](../../visuals/chapters/rendered/candidate-selection.gif)
+
+*A constructed pool contains a correct response, yet a flawed scorer selects an incorrect one. Oracle availability and the deployed selection result are separate measurements.*
+
+[Try the notebook](../../notebooks/day-26/02_selection_and_sampling.ipynb) · [View a still image](../../visuals/chapters/rendered/candidate-selection.png)
+<!-- /chapter-gif: candidate-selection -->
+
 ## 15.3 Selection amplifies scorer errors
 
 Let a scorer return $`S(y)=Q(y)+e(y)`$, where $`Q`$ denotes the desired quality and $`e`$
@@ -412,6 +423,17 @@ must be checked explicitly; a visually similar expression can reverse the KL or
 divide by vocabulary width unexpectedly. The source module writes the sum directly. Its temperature argument and archived
 reports may use `T`; $`\tau`$ here denotes the same temperature, while $`n`$ or
 $`\lvert y\rvert`$ denotes sequence length.
+
+
+<!-- chapter-gif: distillation -->
+**Predict:** Why must teacher and student probabilities describe the same conditioning prefix?
+
+![Temperature spreads the frozen teacher's mass across alternatives. A student descent step then fits that same-prefix distribution using temperature-squared KL.](../../visuals/chapters/rendered/distillation.gif)
+
+*Temperature spreads the frozen teacher's mass across alternatives. A student descent step then fits that same-prefix distribution using temperature-squared KL.*
+
+[Try the notebook](../../notebooks/day-26/01_temperature_distillation.ipynb) · [View a still image](../../visuals/chapters/rendered/distillation.png)
+<!-- /chapter-gif: distillation -->
 
 ## 15.7 A bounded distillation experiment
 

@@ -263,6 +263,17 @@ reduction order can complicate equivalence. Distributed gradient averaging
 adds another normalization factor. The single-rank fixture does not validate a
 distributed accumulation implementation.
 
+
+<!-- chapter-gif: gradient-accumulation -->
+**Predict:** Which denominator preserves the large-batch token-mean objective?
+
+![Unequal micro-batches contribute loss and gradient sums, divided by the total valid-target count before one update. Averaging their means equally gives a different objective.](../../visuals/chapters/rendered/gradient-accumulation.gif)
+
+*Unequal micro-batches contribute loss and gradient sums, divided by the total valid-target count before one update. Averaging their means equally gives a different objective.*
+
+[Try the notebook](../../notebooks/day-08/01_data_batches_and_token_budget.ipynb) · [View a still image](../../visuals/chapters/rendered/gradient-accumulation.png)
+<!-- /chapter-gif: gradient-accumulation -->
+
 ## 6.7 AdamW: the gradient is not the update
 
 The loss gradient describes local sensitivity: how an infinitesimal parameter
@@ -602,6 +613,17 @@ boundary; never treat half-mutated weights as a completed update. A restored
 checkpoint does not refund the work of later failed attempts. [Appendix D](../appendices/d-reproduction-and-environments.md#budget-boundaries-and-spent-work)
 retains journal binding and snapshot implementation details. The local CPU
 evidence does not extend the historical GPU replay to another backend.
+
+
+<!-- chapter-gif: checkpoint-recovery -->
+**Predict:** What changes if only model weights are restored?
+
+![Weights, optimizer, data cursor and RNG state reconnect the next update. The local fixture verifies RNG continuation; hardware and budget recovery require their own evidence.](../../visuals/chapters/rendered/checkpoint-recovery.gif)
+
+*Weights, optimizer, data cursor and RNG state reconnect the next update. The local fixture verifies RNG continuation; hardware and budget recovery require their own evidence.*
+
+[Try the notebook](../../notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb) · [View a still image](../../visuals/chapters/rendered/checkpoint-recovery.png)
+<!-- /chapter-gif: checkpoint-recovery -->
 
 ## 6.13 From understanding to a bounded experiment
 

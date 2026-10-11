@@ -286,6 +286,15 @@ characters:
 
 ![Byte-level BPE coverage and merge progression](../../visuals/animations/rendered/bpe-byte-merges.gif)
 
+<!-- chapter-gif: bpe-byte-merges -->
+**Predict:** Does a learned merge rule change when a new text is encoded?
+
+*Follow byte coverage and successive BPE merges in the existing worked example.*
+
+[Try the notebook](../../notebooks/day-02/01_byte_bpe_training_and_encoding.ipynb) · [View a still image](../../visuals/chapters/rendered/bpe-byte-merges.png)
+<!-- /chapter-gif: bpe-byte-merges -->
+
+
 This progression is a transparent mechanism, not a reconstruction of any
 particular production tokenizer's historical merge sequence.
 
@@ -715,6 +724,17 @@ The lab verifies gradient routing, not that tying is universally superior.
 Production LLMs commonly use AdamW rather than the simple update
 $`E \leftarrow E-\eta\nabla E`$, but the optimizer still acts on the accumulated
 gradient produced by these paths.
+
+
+<!-- chapter-gif: embedding-gradient -->
+**Predict:** Can an ignored prompt target still have a nonzero embedding gradient?
+
+![IDs select embedding rows; a contextual answer loss sends gradients back to the prompt rows it used. This toy uses fixed mixing weights and a three-outcome head.](../../visuals/chapters/rendered/embedding-gradient.gif)
+
+*IDs select embedding rows; a contextual answer loss sends gradients back to the prompt rows it used. This toy uses fixed mixing weights and a three-outcome head.*
+
+[Try the notebook](../../notebooks/day-02/03_embedding_gradient_paths.ipynb) · [View a still image](../../visuals/chapters/rendered/embedding-gradient.png)
+<!-- /chapter-gif: embedding-gradient -->
 
 ## 2.8 Qwen3's concrete interface
 

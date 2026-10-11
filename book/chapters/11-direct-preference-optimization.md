@@ -197,6 +197,17 @@ judgment process. DPO still learns from the rubric, noise and coverage of the
 recorded comparisons. A reward-model-plus-policy route can score newly sampled
 responses, but adds the problem of reward extrapolation developed in Chapter 10.
 
+
+<!-- chapter-gif: dpo-reference -->
+**Predict:** Which terms stay fixed when the policy changes?
+
+![Chosen and rejected probabilities are compared against a frozen reference. These normalized vectors illustrate the relative margin rather than a training trajectory.](../../visuals/chapters/rendered/dpo-reference.gif)
+
+*Chosen and rejected probabilities are compared against a frozen reference. These normalized vectors illustrate the relative margin rather than a training trajectory.*
+
+[Try the notebook](../../notebooks/day-17/01_kl_regularized_optimum.ipynb) · [View a still image](../../visuals/chapters/rendered/dpo-reference.png)
+<!-- /chapter-gif: dpo-reference -->
+
 ## 11.4 The gradient and the meaning of beta
 
 Write $`c=\log\pi_\theta(y_w\mid x)`$ and
@@ -259,6 +270,17 @@ zero rejected probability and an arbitrarily large log-odds ratio. Response
 probabilities remain bounded between zero and one. The KL-regularized finite
 reward optimum motivated the parameterization, but fitting noisy or incomplete
 pair data is not a per-step guarantee of that optimum's restraint.
+
+
+<!-- chapter-gif: dpo-counterexample -->
+**Predict:** Why is the third continuation necessary for this counterexample?
+
+![The chapter's constructed distributions improve pair odds while halving chosen probability. Motion interpolates the two vectors; it does not depict an observed optimizer path.](../../visuals/chapters/rendered/dpo-counterexample.gif)
+
+*The chapter's constructed distributions improve pair odds while halving chosen probability. Motion interpolates the two vectors; it does not depict an observed optimizer path.*
+
+[Try the notebook](../../notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb) · [View a still image](../../visuals/chapters/rendered/dpo-counterexample.png)
+<!-- /chapter-gif: dpo-counterexample -->
 
 ## 11.5 Sequence likelihood is a sum with a boundary
 

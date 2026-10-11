@@ -1,0 +1,854 @@
+{
+  "base_commit": "4e5a5ccda6327a7a8a7d88ebfc5b73c2280a778e",
+  "placements": [
+    {
+      "id": "evidence-gap",
+      "chapter": "book/chapters/01-evidence-before-optimization.md",
+      "section": "1.2",
+      "gif": "visuals/chapters/rendered/evidence-gap.gif",
+      "poster": "visuals/chapters/rendered/evidence-gap.png",
+      "mode": "new",
+      "caption": "A constructed loss curve falls while the displayed response remains repetitive. Token loss and story quality need separate measurements.",
+      "question": "Which observation would justify a claim about coherent stories?",
+      "notebook": "notebooks/day-01/02_smoke_criteria_and_claims.ipynb",
+      "candidate": "CAND-ANIM-022",
+      "gif_sha256": "e3a786d68f41575c6933459ac966b553660fa262cc16746284ea159cbc76edcc",
+      "bytes": 228399,
+      "poster_sha256": "ae631be90be9419c51b4ab147b0639879c75eb196ef39a985560497f2331237e",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 71
+    },
+    {
+      "id": "bpe-byte-merges",
+      "chapter": "book/chapters/02-text-tokens-and-embeddings.md",
+      "section": "2.3",
+      "gif": "visuals/animations/rendered/bpe-byte-merges.gif",
+      "poster": "visuals/chapters/rendered/bpe-byte-merges.png",
+      "mode": "retain",
+      "caption": "Follow byte coverage and successive BPE merges in the existing worked example.",
+      "question": "Does a learned merge rule change when a new text is encoded?",
+      "notebook": "notebooks/day-02/01_byte_bpe_training_and_encoding.ipynb",
+      "candidate": "ANIM-BPE-001",
+      "gif_sha256": "d2b5409b222a6faa2366737d66ac5074c4e553fb70a453f7bcb58a2ce9ff4715",
+      "bytes": 881792,
+      "poster_sha256": "4d48225c1ee689d2fb9cb4ae0293ceadd083b4c06757b2758b38d5d9471806ad",
+      "dimensions": [
+        960,
+        540
+      ],
+      "poster_dimensions": [
+        960,
+        540
+      ],
+      "duration_seconds": 10.82,
+      "unique_frames": 38
+    },
+    {
+      "id": "embedding-gradient",
+      "chapter": "book/chapters/02-text-tokens-and-embeddings.md",
+      "section": "2.7",
+      "gif": "visuals/chapters/rendered/embedding-gradient.gif",
+      "poster": "visuals/chapters/rendered/embedding-gradient.png",
+      "mode": "new",
+      "caption": "IDs select embedding rows; a contextual answer loss sends gradients back to the prompt rows it used. This toy uses fixed mixing weights and a three-outcome head.",
+      "question": "Can an ignored prompt target still have a nonzero embedding gradient?",
+      "notebook": "notebooks/day-02/03_embedding_gradient_paths.ipynb",
+      "candidate": "ANIM-EMB-001",
+      "gif_sha256": "ed9e74fcdc60dc4cf885e14a96ffbff5e6e625d4c3f7a750bfd0e86e1a901928",
+      "bytes": 300005,
+      "poster_sha256": "9cf364d131fe92426ee101a81ed507c10b8948b255b59eb7bdf4a44055a74ac9",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 85
+    },
+    {
+      "id": "next-token",
+      "chapter": "book/chapters/03-learning-the-next-token.md",
+      "section": "3.4",
+      "gif": "visuals/readme/next-token.gif",
+      "poster": "visuals/readme/next-token.png",
+      "mode": "reuse",
+      "caption": "Read the prefix, score a toy vocabulary, select a token, and feed it back. The decoder is schematic and its logits are constructed.",
+      "question": "Which object becomes the next step's input?",
+      "notebook": "notebooks/day-03/01_logits_softmax_nll.ipynb",
+      "candidate": "CAND-ANIM-001",
+      "gif_sha256": "671569d4ba6f2156def2f8380dfa52cf5d233351cbb770d8c3d76ace32aafe77",
+      "bytes": 356318,
+      "poster_sha256": "42f53824fb194c5c56515ddd4370f219fe5522e29ab4cdfa3e010ed4ce3c3f85",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 13.5,
+      "unique_frames": 95
+    },
+    {
+      "id": "cross-entropy-gradient",
+      "chapter": "book/chapters/03-learning-the-next-token.md",
+      "section": "3.6",
+      "gif": "visuals/chapters/rendered/cross-entropy-gradient.gif",
+      "poster": "visuals/chapters/rendered/cross-entropy-gradient.png",
+      "mode": "new",
+      "caption": "One independent-logit descent step follows the exact probability-minus-target gradient. Shared model parameters can produce more complicated probability changes.",
+      "question": "Why do non-target logits also have derivatives?",
+      "notebook": "notebooks/day-03/01_logits_softmax_nll.ipynb",
+      "candidate": "CAND-ANIM-003",
+      "gif_sha256": "6f8f659836057f2e642186e79049f644ec49ef3029a628ed41e2761a46bee87f",
+      "bytes": 297010,
+      "poster_sha256": "79f0e0a7f96ec1bae67b83e4bd7bb30ed602b7a606b4c5f929deb374b7600e47",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 55
+    },
+    {
+      "id": "causal-shift",
+      "chapter": "book/chapters/03-learning-the-next-token.md",
+      "section": "3.10",
+      "gif": "visuals/chapters/rendered/causal-shift.gif",
+      "poster": "visuals/chapters/rendered/causal-shift.png",
+      "mode": "new",
+      "caption": "Next-token targets move one position left relative to the inputs. The final input has no target in this finite example.",
+      "question": "Why is using a future token as a label compatible with causal attention?",
+      "notebook": "notebooks/day-03/02_causal_shift_and_masks.ipynb",
+      "candidate": "CAND-ANIM-001",
+      "gif_sha256": "9adcf42c22f43548a5e4e8011c81b8f49dcff30c02054367bb45ec31ce9bce8a",
+      "bytes": 320199,
+      "poster_sha256": "b37183dffdb12630e764d5b215ae56d9ea6f82bf3b57144e2bc55309d6cfd5f4",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 52
+    },
+    {
+      "id": "causal-attention",
+      "chapter": "book/chapters/04-attention-and-the-causal-information-boundary.md",
+      "section": "4.6",
+      "gif": "visuals/readme/causal-attention.gif",
+      "poster": "visuals/readme/causal-attention.png",
+      "mode": "reuse",
+      "caption": "Each query reads its allowed prefix and forms a weighted value mixture. These are calculated one-head toy weights, with future attention exactly zero.",
+      "question": "Would changing a future value alter an earlier output?",
+      "notebook": "notebooks/day-04/01_causal_attention_forward.ipynb",
+      "candidate": "CAND-ANIM-008",
+      "gif_sha256": "7d6c956d372175fc06ba46e83a68d224015b16ba2dc53b46001dbb4581f764cf",
+      "bytes": 342005,
+      "poster_sha256": "db7df33d84045ead4d96e4e5e119d8be91a72fe91260a01c41da1c0eeff38a84",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 81
+    },
+    {
+      "id": "kv-decode-step",
+      "chapter": "book/chapters/04-attention-and-the-causal-information-boundary.md",
+      "section": "4.10",
+      "gif": "visuals/animations/projects/kv-decode-step/rendered/decode-step/decode-step.gif",
+      "poster": "visuals/animations/projects/kv-decode-step/rendered/decode-step/still.png",
+      "mode": "reuse",
+      "caption": "Append the current K/V before its query reads past and self; retain K/V after the temporary query clears. This one-head close-up ends at the attention output.",
+      "question": "Which state must survive for the next decode step?",
+      "notebook": "notebooks/day-04/03_kv_cache_equivalence.ipynb",
+      "candidate": "CAND-ANIM-009",
+      "gif_sha256": "b0a7df0eba51f3f702a75883bc6aa758f6b19c5343747c7121e8c027def72c2a",
+      "bytes": 744617,
+      "poster_sha256": "9bb84b0fd555bd8e88c2c344cce711d81426a86efe554be2365d4aa599ca1c99",
+      "dimensions": [
+        960,
+        540
+      ],
+      "poster_dimensions": [
+        1920,
+        1080
+      ],
+      "duration_seconds": 8.6,
+      "unique_frames": 112
+    },
+    {
+      "id": "residual-stream",
+      "chapter": "book/chapters/05-building-a-modern-decoder.md",
+      "section": "5.4",
+      "gif": "visuals/chapters/rendered/residual-stream.gif",
+      "poster": "visuals/chapters/rendered/residual-stream.png",
+      "mode": "new",
+      "caption": "An additive branch revises the residual stream while the identity path carries both state and a direct gradient contribution. The numeric branch is a two-feature fixture.",
+      "question": "How does the identity path contribute to the backward derivative?",
+      "notebook": "notebooks/day-05/03_residual_stream.ipynb",
+      "candidate": "CAND-ANIM-013",
+      "gif_sha256": "ff900abfddb09f8526d295e369dcf81647a57ccd6c2d575466cdc0f76f52e6ec",
+      "bytes": 254054,
+      "poster_sha256": "a18e7ac7276ca203112fd0657a0246b1eed3f9fb211f3520caaccdb1506606f9",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 102
+    },
+    {
+      "id": "rope-rotation",
+      "chapter": "book/chapters/05-building-a-modern-decoder.md",
+      "section": "5.14",
+      "gif": "visuals/chapters/rendered/rope-rotation.gif",
+      "poster": "visuals/chapters/rendered/rope-rotation.png",
+      "mode": "new",
+      "caption": "Rotate one Q/K frequency pair while preserving each norm. Their dot product depends on relative position; V bypasses the rotation.",
+      "question": "What changes if both positions increase by the same amount?",
+      "notebook": "notebooks/day-06/02_rotary_positions.ipynb",
+      "candidate": "CAND-ANIM-016",
+      "gif_sha256": "b4449c088196664b91f2b5252d4d203ac1134d4662c0acd8d9f9c525e143907d",
+      "bytes": 355252,
+      "poster_sha256": "8ca8fa8c29f91090443939a5937ae484b07050f45aa426be18a590a0cd3b09a9",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 78
+    },
+    {
+      "id": "grouped-query-attention",
+      "chapter": "book/chapters/05-building-a-modern-decoder.md",
+      "section": "5.16",
+      "gif": "visuals/chapters/rendered/grouped-query-attention.gif",
+      "poster": "visuals/chapters/rendered/grouped-query-attention.png",
+      "mode": "new",
+      "caption": "Four queries route to two shared K/V groups. Each query still computes its own attention distribution and output.",
+      "question": "Does sharing K/V force two query heads to produce identical outputs?",
+      "notebook": "notebooks/day-06/03_gqa_qknorm_and_costs.ipynb",
+      "candidate": "CAND-ANIM-017",
+      "gif_sha256": "b5c78328c6991a7b4c1a4807dc93f88770da82e046e6964c24a0e67c9f0185a3",
+      "bytes": 353753,
+      "poster_sha256": "98e7cd5d99079a24fa1efdf235dc501cff2487a764012ba5ccbc2aa158cfffd1",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 67
+    },
+    {
+      "id": "gradient-accumulation",
+      "chapter": "book/chapters/06-pretraining-as-a-controlled-system.md",
+      "section": "6.6",
+      "gif": "visuals/chapters/rendered/gradient-accumulation.gif",
+      "poster": "visuals/chapters/rendered/gradient-accumulation.png",
+      "mode": "new",
+      "caption": "Unequal micro-batches contribute loss and gradient sums, divided by the total valid-target count before one update. Averaging their means equally gives a different objective.",
+      "question": "Which denominator preserves the large-batch token-mean objective?",
+      "notebook": "notebooks/day-08/01_data_batches_and_token_budget.ipynb",
+      "candidate": "CAND-ANIM-018",
+      "gif_sha256": "1e4d38b01db23c64e369c8fc2ddbe0fe9a0b3edc4d7f4e68759effbd01f24151",
+      "bytes": 239998,
+      "poster_sha256": "157162a4ea78d1c542a91ba6aba1a73d2ad0d99a7bd2898d5c7cf113ede1a210",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 79
+    },
+    {
+      "id": "checkpoint-recovery",
+      "chapter": "book/chapters/06-pretraining-as-a-controlled-system.md",
+      "section": "6.12",
+      "gif": "visuals/chapters/rendered/checkpoint-recovery.gif",
+      "poster": "visuals/chapters/rendered/checkpoint-recovery.png",
+      "mode": "new",
+      "caption": "Weights, optimizer, data cursor and RNG state reconnect the next update. The local fixture verifies RNG continuation; hardware and budget recovery require their own evidence.",
+      "question": "What changes if only model weights are restored?",
+      "notebook": "notebooks/day-08/03_validation_and_checkpoint_recovery.ipynb",
+      "candidate": "CAND-ANIM-019",
+      "gif_sha256": "6a99f5c931b42ed79192813f0f915d75fefc7ad9fc243df2835fcc7daae106b6",
+      "bytes": 301879,
+      "poster_sha256": "248f53503ac830af1571f23e4e4408ac1d4635bb8cb107bc424b2af23912e3cd",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 86
+    },
+    {
+      "id": "evaluation-contract",
+      "chapter": "book/chapters/07-evaluation-is-a-contract.md",
+      "section": "7.12",
+      "gif": "visuals/chapters/rendered/evaluation-contract.gif",
+      "poster": "visuals/chapters/rendered/evaluation-contract.png",
+      "mode": "new",
+      "caption": "The same raw response reaches different verdicts under strict parsing and a permissive substring rule. This constructed contrast exposes the grading contract.",
+      "question": "Should invalid extraction be recorded as a mathematical error or as an interface outcome?",
+      "notebook": "notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb",
+      "candidate": "CAND-ANIM-022",
+      "gif_sha256": "a63eb2c48df3ba3059a62bcec80c354896b2cbd4455b67f6433d09893854b585",
+      "bytes": 243415,
+      "poster_sha256": "fcf6bb4b6646e65c9fb1d618ce411bd55eab26cbbeced662425359099dd511b4",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 55
+    },
+    {
+      "id": "assistant-loss-mask",
+      "chapter": "book/chapters/08-instruction-data-as-an-interface.md",
+      "section": "8.3",
+      "gif": "visuals/chapters/rendered/assistant-loss-mask.gif",
+      "poster": "visuals/chapters/rendered/assistant-loss-mask.png",
+      "mode": "new",
+      "caption": "Ownership marks the answer and END before the single causal shift. The assistant header's logits predict the first answer even though the header token is not a scored target.",
+      "question": "Which prediction positions receive direct cross-entropy gradients?",
+      "notebook": "notebooks/day-11/01_roles_templates_and_masks.ipynb",
+      "candidate": "CAND-ANIM-023",
+      "gif_sha256": "0777773d97df1781bb80c3c8e5a2867b7e2e98933d83db6c7b0c2d2c2d4a8d1f",
+      "bytes": 315859,
+      "poster_sha256": "70daa6ff1d114dec98e6c7bd2dad11a13377e1b007949a80a78dadd18ea8b70d",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 71
+    },
+    {
+      "id": "packed-attention",
+      "chapter": "book/chapters/08-instruction-data-as-an-interface.md",
+      "section": "8.7",
+      "gif": "visuals/chapters/rendered/packed-attention.gif",
+      "poster": "visuals/chapters/rendered/packed-attention.png",
+      "mode": "new",
+      "caption": "A causal triangle still lets a later packed example read an earlier one. A segment-aware causal mask removes those cross-example edges; END alone does not.",
+      "question": "Which condition must be added to the ordinary causal mask?",
+      "notebook": "notebooks/day-11/02_padding_packing_boundaries.ipynb",
+      "candidate": "CAND-ANIM-023",
+      "gif_sha256": "905d6613ea7df8abd7820fc671c403dfdcd4db90b90386fbcafbe4799aa34f91",
+      "bytes": 306920,
+      "poster_sha256": "2944f0e92a43fd994989f537ce1f8f6ae8f59e849b3bb68b0c60e906d43c2471",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 55
+    },
+    {
+      "id": "teacher-forcing",
+      "chapter": "book/chapters/09-supervised-fine-tuning.md",
+      "section": "9.2",
+      "gif": "visuals/chapters/rendered/teacher-forcing.gif",
+      "poster": "visuals/chapters/rendered/teacher-forcing.png",
+      "mode": "new",
+      "caption": "The demonstrated token enters the next training prefix; a sampled error enters the generation prefix. Conditional probabilities here are constructed, not measured SFT behavior.",
+      "question": "Can low teacher-forced loss alone establish reliable free generation?",
+      "notebook": "notebooks/day-13/01_tiny_assistant_training.ipynb",
+      "candidate": "CAND-ANIM-023",
+      "gif_sha256": "aed8d5f68c5434f2dddde099fedb50a419b05c46afb1ff0848188d14671790e4",
+      "bytes": 213116,
+      "poster_sha256": "5cef18a8c8df9d65bc3d7779148b11218824afb020cef58a5ddfa792e8c6e37b",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 78
+    },
+    {
+      "id": "lora-update",
+      "chapter": "book/chapters/09-supervised-fine-tuning.md",
+      "section": "9.8",
+      "gif": "visuals/chapters/rendered/lora-update.gif",
+      "poster": "visuals/chapters/rendered/lora-update.png",
+      "mode": "new",
+      "caption": "The frozen base receives a rank-one factorized correction. With random A and zero B, the initial output is unchanged; B can learn before A receives a gradient.",
+      "question": "What happens to both first-step gradients if both factors start at zero?",
+      "notebook": "notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb",
+      "candidate": "CAND-ANIM-023",
+      "gif_sha256": "560582e50108825defe5874cafce789be7ca5d71cd14854ab02cf4cb1b991a4e",
+      "bytes": 257334,
+      "poster_sha256": "babc75223fe056cf860d8ca34e88eed585b5942eb712a2d064726c0d893ccb21",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 54
+    },
+    {
+      "id": "preference-margin",
+      "chapter": "book/chapters/10-preferences-and-reward-models.md",
+      "section": "10.3",
+      "gif": "visuals/chapters/rendered/preference-margin.gif",
+      "poster": "visuals/chapters/rendered/preference-margin.png",
+      "mode": "new",
+      "caption": "A score gap becomes a preference probability, then a hard judged pair sends opposing scalar gradients. The animation performs one independent-score update.",
+      "question": "Can increasing a preference probability establish factual correctness?",
+      "notebook": "notebooks/day-15/01_bradley_terry_margin.ipynb",
+      "candidate": "CAND-ANIM-024",
+      "gif_sha256": "41cca37aff72f041556555049b396443a86d443f0d5752a1442df1e0415fefc0",
+      "bytes": 292632,
+      "poster_sha256": "12a73af10ad6f59ebb99f6ffce445e99a82c7ab71c4152b2117e6919a951145d",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 66
+    },
+    {
+      "id": "dpo-reference",
+      "chapter": "book/chapters/11-direct-preference-optimization.md",
+      "section": "11.3",
+      "gif": "visuals/chapters/rendered/dpo-reference.gif",
+      "poster": "visuals/chapters/rendered/dpo-reference.png",
+      "mode": "new",
+      "caption": "Chosen and rejected probabilities are compared against a frozen reference. These normalized vectors illustrate the relative margin rather than a training trajectory.",
+      "question": "Which terms stay fixed when the policy changes?",
+      "notebook": "notebooks/day-17/01_kl_regularized_optimum.ipynb",
+      "candidate": "CAND-ANIM-025",
+      "gif_sha256": "9ffc294c8fe476a60665f772a9943e9fc36d6bdd2b1afa62a4f6b5a4493b9844",
+      "bytes": 300821,
+      "poster_sha256": "3be59b4f5e88c0b2be09ac0907d3702060134e18cf0533e51b698197b1f1b45c",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 76
+    },
+    {
+      "id": "dpo-counterexample",
+      "chapter": "book/chapters/11-direct-preference-optimization.md",
+      "section": "11.4",
+      "gif": "visuals/chapters/rendered/dpo-counterexample.gif",
+      "poster": "visuals/chapters/rendered/dpo-counterexample.png",
+      "mode": "new",
+      "caption": "The chapter's constructed distributions improve pair odds while halving chosen probability. Motion interpolates the two vectors; it does not depict an observed optimizer path.",
+      "question": "Why is the third continuation necessary for this counterexample?",
+      "notebook": "notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb",
+      "candidate": "CAND-ANIM-025",
+      "gif_sha256": "ce7c73a1d2e31a14e6dbe0ccffbad1a49c52be0b6116003b0118061fbef91b9e",
+      "bytes": 399604,
+      "poster_sha256": "fe740f68cd8d8b81a9fa3e2f99dfd3f2bb87bddbb22c30627adc98a5b16452cf",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 77
+    },
+    {
+      "id": "policy-baseline",
+      "chapter": "book/chapters/12-language-generation-as-a-policy.md",
+      "section": "12.4",
+      "gif": "visuals/chapters/rendered/policy-baseline.gif",
+      "poster": "visuals/chapters/rendered/policy-baseline.png",
+      "mode": "new",
+      "caption": "An action-independent detached baseline changes the three sampled-gradient vectors and their covariance while leaving their exact weighted mean unchanged.",
+      "question": "Would using each action's own reward as its baseline preserve the gradient?",
+      "notebook": "notebooks/day-20/01_baselines_and_rloo.ipynb",
+      "candidate": "CAND-ANIM-026",
+      "gif_sha256": "3a6e94751b9c943ecdb23f6de897e79b8d1d8e1bb51c7674d2717342fa57db04",
+      "bytes": 411645,
+      "poster_sha256": "1910ea2f88d7c1f4c75456cb02118a922c14de46cc101d1a69eb4cd862309e99",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 79
+    },
+    {
+      "id": "ppo-clipping",
+      "chapter": "book/chapters/12-language-generation-as-a-policy.md",
+      "section": "12.7",
+      "gif": "visuals/chapters/rendered/ppo-clipping.gif",
+      "poster": "visuals/chapters/rendered/ppo-clipping.png",
+      "mode": "new",
+      "caption": "For positive advantage, the surrogate flattens above the upper ratio boundary; for negative advantage it flattens below the lower boundary. Harmful directions retain a slope.",
+      "question": "Does this objective impose a hard bound on policy probabilities or KL?",
+      "notebook": "notebooks/day-20/02_ppo_clipping_and_kl.ipynb",
+      "candidate": "CAND-ANIM-026",
+      "gif_sha256": "9498a2688685c8e64ae452e2e7036ff855c35b2013280946d58ff0aa208556b0",
+      "bytes": 399833,
+      "poster_sha256": "bf37b097082e319a25c10cc2ccd0e25bb60ce1f36b8ea596c7ce84f0f9536244",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 78
+    },
+    {
+      "id": "group-relative-rewards",
+      "chapter": "book/chapters/13-group-relative-policy-optimization.md",
+      "section": "13.2",
+      "gif": "visuals/readme/group-relative-rewards.gif",
+      "poster": "visuals/readme/group-relative-rewards.png",
+      "mode": "reuse",
+      "caption": "Center and population-normalize rewards within one prompt group. Equal rewards give zero relative advantages; a separate KL term may still supply gradients.",
+      "question": "What task signal remains when every response gets the same reward?",
+      "notebook": "notebooks/day-22/01_group_advantages.ipynb",
+      "candidate": "CAND-ANIM-027",
+      "gif_sha256": "c82dfc2162ea32d91db15853aff59d0fe3f1704e8037dfb829ef200ca8b1e029",
+      "bytes": 480819,
+      "poster_sha256": "d7eb82e82dbc0535701f98f0f1a28429eaf4065e465be8519b9eea26abc86c28",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 15.0,
+      "unique_frames": 45
+    },
+    {
+      "id": "response-weighting",
+      "chapter": "book/chapters/13-group-relative-policy-optimization.md",
+      "section": "13.5",
+      "gif": "visuals/chapters/rendered/response-weighting.gif",
+      "poster": "visuals/chapters/rendered/response-weighting.png",
+      "mode": "new",
+      "caption": "Responses of lengths two and six receive equal total weight under a response mean, and one-quarter versus three-quarters under a global token mean. The transition compares two objectives.",
+      "question": "Which reduction gives the longer response more total weight?",
+      "notebook": "notebooks/day-22/03_objective_weighting_and_filtering.ipynb",
+      "candidate": "CAND-ANIM-027",
+      "gif_sha256": "9ea1ac18a1bea890eae72100b31e723a45d51bab3f42e4471e7a11165e6ccc2e",
+      "bytes": 254639,
+      "poster_sha256": "8e2732a2d08429426225e69923656cde23faef0225379cecb82fa545b54664cc",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 50
+    },
+    {
+      "id": "reward-hacking",
+      "chapter": "book/chapters/14-when-optimization-goes-wrong.md",
+      "section": "14.1",
+      "gif": "visuals/chapters/rendered/reward-hacking.gif",
+      "poster": "visuals/chapters/rendered/reward-hacking.png",
+      "mode": "new",
+      "caption": "Replay the chapter's deterministic 60-update finite policy: the programmed proxy rises while strict accuracy falls. Only actual integer-update values are drawn.",
+      "question": "Why can the correct action lose probability while its logit stays unchanged on the first update?",
+      "notebook": "notebooks/day-24/01_reward_hacking.ipynb",
+      "candidate": "CAND-ANIM-028",
+      "gif_sha256": "b86f3ab719af80b486322768c5f31376c18febbabff338d9664b5c879d8a06b7",
+      "bytes": 377512,
+      "poster_sha256": "19426ff4f8c29543f2f22b7278d89717ff36fe9eec090dc15e3ee5a5dd49e191",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 67
+    },
+    {
+      "id": "candidate-selection",
+      "chapter": "book/chapters/15-distill-evaluate-and-defend.md",
+      "section": "15.2",
+      "gif": "visuals/chapters/rendered/candidate-selection.gif",
+      "poster": "visuals/chapters/rendered/candidate-selection.png",
+      "mode": "new",
+      "caption": "A constructed pool contains a correct response, yet a flawed scorer selects an incorrect one. Oracle availability and the deployed selection result are separate measurements.",
+      "question": "What would the oracle ceiling conceal if reported as actual selected accuracy?",
+      "notebook": "notebooks/day-26/02_selection_and_sampling.ipynb",
+      "candidate": "CAND-ANIM-029",
+      "gif_sha256": "1dba8e7d77803f8d71c6052726a85f3a0c82a2d56a776a72d984dc547e2e0a7f",
+      "bytes": 187991,
+      "poster_sha256": "e50785f28c62d3b77118d185002430ee808d640176a06144215ca69aacc0a6a3",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 53
+    },
+    {
+      "id": "distillation",
+      "chapter": "book/chapters/15-distill-evaluate-and-defend.md",
+      "section": "15.6",
+      "gif": "visuals/chapters/rendered/distillation.gif",
+      "poster": "visuals/chapters/rendered/distillation.png",
+      "mode": "new",
+      "caption": "Temperature spreads the frozen teacher's mass across alternatives. A student descent step then fits that same-prefix distribution using temperature-squared KL.",
+      "question": "Why must teacher and student probabilities describe the same conditioning prefix?",
+      "notebook": "notebooks/day-26/01_temperature_distillation.ipynb",
+      "candidate": "CAND-ANIM-029",
+      "gif_sha256": "3c553d77840a1a6e1408a2bc9eefa4f55e443856f9af7d5f3595361a297eb8bb",
+      "bytes": 354409,
+      "poster_sha256": "6de3b6531856ecaefa0f839be5fccab6fb47fcf993cb8e0e59165bf0746faae6",
+      "dimensions": [
+        1120,
+        560
+      ],
+      "poster_dimensions": [
+        1120,
+        560
+      ],
+      "duration_seconds": 12.0,
+      "unique_frames": 88
+    }
+  ],
+  "chapter_counts": {
+    "book/chapters/01-evidence-before-optimization.md": 1,
+    "book/chapters/02-text-tokens-and-embeddings.md": 2,
+    "book/chapters/03-learning-the-next-token.md": 3,
+    "book/chapters/04-attention-and-the-causal-information-boundary.md": 2,
+    "book/chapters/05-building-a-modern-decoder.md": 3,
+    "book/chapters/06-pretraining-as-a-controlled-system.md": 2,
+    "book/chapters/07-evaluation-is-a-contract.md": 1,
+    "book/chapters/08-instruction-data-as-an-interface.md": 2,
+    "book/chapters/09-supervised-fine-tuning.md": 2,
+    "book/chapters/10-preferences-and-reward-models.md": 1,
+    "book/chapters/11-direct-preference-optimization.md": 2,
+    "book/chapters/12-language-generation-as-a-policy.md": 2,
+    "book/chapters/13-group-relative-policy-optimization.md": 2,
+    "book/chapters/14-when-optimization-goes-wrong.md": 1,
+    "book/chapters/15-distill-evaluate-and-defend.md": 2
+  },
+  "new_gifs": 23,
+  "reused_gifs": 4,
+  "retained_gifs": 1,
+  "new_gif_bytes": 6966279,
+  "all_embedded_gif_bytes": 9771830,
+  "local_chapter_links_checked": 464,
+  "chapter_preservation": {
+    "book/chapters/01-evidence-before-optimization.md": {
+      "baseline_sha256": "cb64a89c353ee1ea9d71636f851736dcf8ca6de2e3622a949133bd5a8d0754f4",
+      "current_sha256": "cdc9c7c2f73284b85316547a6bd18ff23560a0351f63e1ddaf7b7db65f684593",
+      "placements": 1,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/02-text-tokens-and-embeddings.md": {
+      "baseline_sha256": "f40c9946840583d7f6dc0da666b304ee87acd891643d030e9eebe25d8e42e3a2",
+      "current_sha256": "3d81d10ff6941c284c981524dbf4660b8f03c6b69b3a6d2a251eec465fb9308a",
+      "placements": 2,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/03-learning-the-next-token.md": {
+      "baseline_sha256": "c7ba89598b0d25368dc4d8c4297a6ca3116f9e77ccc4cb8911ee8e54daf58626",
+      "current_sha256": "fda4740e25b76958feaf11f5b76ce4260a8d69311cfd27a4d944ab1be0d11447",
+      "placements": 3,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/04-attention-and-the-causal-information-boundary.md": {
+      "baseline_sha256": "6dbc3507c7c30c034379d85a70c671ea61faa35550122233cd87400ede53894d",
+      "current_sha256": "5e5ea94aa799505ecbfbd01a8e2c5627ea41c16921bbf544574049ba9328b2a9",
+      "placements": 2,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/05-building-a-modern-decoder.md": {
+      "baseline_sha256": "e20c199cbea76808ed35de7ccb82d75819695c3c23b38bc67cbefe13b8708a31",
+      "current_sha256": "4800e8c85c2b09acde4000d1d6d157c8326a82a17189424e53d62a4f34fa2c60",
+      "placements": 3,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/06-pretraining-as-a-controlled-system.md": {
+      "baseline_sha256": "68a74e5f84d97fdea2f7f3e204bc42da025640c89c5f6129a0f6f0f110d7325b",
+      "current_sha256": "0b0e225fbbe2a953206195fd12117126d8007b5b59af9a625bed0ac70d2c2c73",
+      "placements": 2,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/07-evaluation-is-a-contract.md": {
+      "baseline_sha256": "a690220a1ee311b9bf906c90da1e5c372af4ac62cfc5b81c7275a27a1beda0d2",
+      "current_sha256": "f5ed639c782541699bd481266dabbb9b3e076712ad7a10ae32a8386bd09522c7",
+      "placements": 1,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/08-instruction-data-as-an-interface.md": {
+      "baseline_sha256": "3af2becd8e247f165d3e9cefa4b28e8445378caf6025d55ef1147a3c395891c4",
+      "current_sha256": "3f45488ae8fb7166ed5b638d48928debb8dab6180780ab8c32e3cf837e0b92db",
+      "placements": 2,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/09-supervised-fine-tuning.md": {
+      "baseline_sha256": "98fb871e8336a7e646b5fd0675bf2cbc761cfdec05d094b3e4b4693ed671b107",
+      "current_sha256": "03e5d93bfec3d2bde2a8d3911c48a895719f70571a024c1c68839041fb30604f",
+      "placements": 2,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/10-preferences-and-reward-models.md": {
+      "baseline_sha256": "e090f4227bee75c5cab33336cd5a72221571bce771a1b278dde285a498c96084",
+      "current_sha256": "40adc059c0362e564f9699b728a7041d18cbc14155a1ed3f51e01758aa7c48c7",
+      "placements": 1,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/11-direct-preference-optimization.md": {
+      "baseline_sha256": "359a26625076fdf9f72515b36c4354319dcdabbd1b7c07b6a2bf75d392cf693f",
+      "current_sha256": "71118cbfa81729e63f389dd8e9bf88ca77760d46f9c637dd802866df0946f048",
+      "placements": 2,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/12-language-generation-as-a-policy.md": {
+      "baseline_sha256": "b3ad909a886543c432bcfa3205e6377be22997caf5a3d911018d00b576852af1",
+      "current_sha256": "83153d13d8ffc22a0eecccbfd3bfa321702e173c53c49661be48f6510138ad16",
+      "placements": 2,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/13-group-relative-policy-optimization.md": {
+      "baseline_sha256": "4a56253be7e435861d02728ed8edfc79aedf53fda643343faf94d3c163d8a871",
+      "current_sha256": "d1d6e5b04c63ad7d4d53dc4fb80c1dcc40eee514e35f29ca79364c1d778e35ac",
+      "placements": 2,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/14-when-optimization-goes-wrong.md": {
+      "baseline_sha256": "eefdf4446f4e071fa99f0a99b236cc89753ea06b1c50f84361c8cc503b09a886",
+      "current_sha256": "ee91b6fad62657be79a5e154b2afdc925fd8bbd29b0ba909fa3c098497d20832",
+      "placements": 1,
+      "existing_prose_and_math_unchanged": true
+    },
+    "book/chapters/15-distill-evaluate-and-defend.md": {
+      "baseline_sha256": "7faa39c5700738550da3f1c3dcbfb3af838b4ed456e985435050c877f296fed2",
+      "current_sha256": "3eec8f23f310ef34843778708fa73279045fbd290c32da774a7d7d463b53d8e6",
+      "placements": 2,
+      "existing_prose_and_math_unchanged": true
+    }
+  },
+  "historical_proposal_prefix_preserved": true,
+  "production_source_hashes": {
+    "visuals/chapters/catalog.py": "88e377aba771cb78b71e2d373f288f32c57d4ede540c75364d56e30344446ae9",
+    "visuals/chapters/fixtures.py": "e51854b0a42b65007ded4ba8c1c64cc969f85cda34afdcbd95a9b1991899006a",
+    "visuals/chapters/render.py": "41b9fdb9b611dcccea5450edb3545eef2d689e995679e69843c84e4470ffee7e",
+    "visuals/chapters/integrate.py": "fa3a560816c0c102e7bb9199a72368fb8b06278719f5938d88c4a20f57ffa640"
+  },
+  "numeric_checks": [
+    "cross-entropy p-minus-q finite difference and descent",
+    "ignored prompt target still permits contextual embedding gradient",
+    "residual identity plus branch derivative",
+    "RoPE norms and relative-angle dot products",
+    "valid-target-weighted loss and gradient accumulation",
+    "RNG continuation after checkpoint restore",
+    "single causal shift, answer END ownership, block-diagonal causal packing",
+    "LoRA zero-output initialization and asymmetric first gradients",
+    "Bradley-Terry score derivatives",
+    "DPO relative-margin gradient and absolute-probability counterexample",
+    "exact REINFORCE mean and baseline covariance",
+    "PPO asymmetric clipping and harmful-direction slope",
+    "response weighting: equal responses versus equal tokens",
+    "60-update finite-policy replay agrees with recorded chapter endpoints",
+    "temperature-squared KL gradient and student descent"
+  ],
+  "historical_policy_replay": {
+    "report_sha256": "f8f8bd4c47c0dd3c08dc3fd812f83240be1e7971db4bf89ce4277aa493607e51",
+    "arms": 2,
+    "integer_updates_per_arm": 61,
+    "maximum_absolute_error": 4.440892098500626e-16
+  },
+  "media_verified": true,
+  "no_video_outputs": true,
+  "notebook_source_changes": false,
+  "new_model_experiments": false
+}

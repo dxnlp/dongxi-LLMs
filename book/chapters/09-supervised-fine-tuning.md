@@ -200,6 +200,17 @@ half the weight after averaging within it. Neither knows whether length means
 useful explanation or unwanted verbosity. Chapter 8's 10/90 exposure figure
 shows the same weighting mechanism at the data-mixture level.
 
+
+<!-- chapter-gif: teacher-forcing -->
+**Predict:** Can low teacher-forced loss alone establish reliable free generation?
+
+![The demonstrated token enters the next training prefix; a sampled error enters the generation prefix. Conditional probabilities here are constructed, not measured SFT behavior.](../../visuals/chapters/rendered/teacher-forcing.gif)
+
+*The demonstrated token enters the next training prefix; a sampled error enters the generation prefix. Conditional probabilities here are constructed, not measured SFT behavior.*
+
+[Try the notebook](../../notebooks/day-13/01_tiny_assistant_training.ipynb) · [View a still image](../../visuals/chapters/rendered/teacher-forcing.png)
+<!-- /chapter-gif: teacher-forcing -->
+
 ## 9.3 Gradients reach the shared decoder
 
 Let the final hidden state be $`h_t\in\mathbb{R}^D`$ and output matrix $`W_{\mathrm{out}}\in\mathbb{R}^{V\times D}`$. With row-vector batch notation, $`z_t=h_tW_{\mathrm{out}}^\top`$. The loss derivative sends pressure to both sides:
@@ -436,6 +447,17 @@ That makes update-space constraints a plausible question to investigate.
 The fixed common learning rate, rank, module choice and single seed also vary
 the outcome's possibilities, so this comparison does not isolate rank as the
 cause. The next section puts the same outputs in their complete denominator.
+
+
+<!-- chapter-gif: lora-update -->
+**Predict:** What happens to both first-step gradients if both factors start at zero?
+
+![The frozen base receives a rank-one factorized correction. With random A and zero B, the initial output is unchanged; B can learn before A receives a gradient.](../../visuals/chapters/rendered/lora-update.gif)
+
+*The frozen base receives a rank-one factorized correction. With random A and zero B, the initial output is unchanged; B can learn before A receives a gradient.*
+
+[Try the notebook](../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb) · [View a still image](../../visuals/chapters/rendered/lora-update.png)
+<!-- /chapter-gif: lora-update -->
 
 ## 9.9 Compare recipes under named constraints
 

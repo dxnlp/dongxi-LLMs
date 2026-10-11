@@ -145,6 +145,17 @@ collection work at unchanged response lengths. At $`p=0`$ they help neither
 signal nor correctness; at $`p=1`$ constant groups indicate success instead.
 Those are sampling calculations, not forecasts of the native pilot.
 
+
+<!-- chapter-gif: group-relative-rewards -->
+**Predict:** What task signal remains when every response gets the same reward?
+
+![Center and population-normalize rewards within one prompt group. Equal rewards give zero relative advantages; a separate KL term may still supply gradients.](../../visuals/readme/group-relative-rewards.gif)
+
+*Center and population-normalize rewards within one prompt group. Equal rewards give zero relative advantages; a separate KL term may still supply gradients.*
+
+[Try the notebook](../../notebooks/day-22/01_group_advantages.ipynb) · [View a still image](../../visuals/readme/group-relative-rewards.png)
+<!-- /chapter-gif: group-relative-rewards -->
+
 ## 13.3 The objective we will implement
 
 At response position $`t`$, define state $`s_{it}=(x,y_{i,<t})`$ and token ratio
@@ -387,6 +398,17 @@ and [reasoning objective extensions](https://github.com/rasbt/reasoning-from-scr
 Our original implementation is not a complete named-method reproduction. It uses
 a symbolic conditional grammar, not unrestricted language, and does not execute
 a Spark campaign.
+
+
+<!-- chapter-gif: response-weighting -->
+**Predict:** Which reduction gives the longer response more total weight?
+
+![Responses of lengths two and six receive equal total weight under a response mean, and one-quarter versus three-quarters under a global token mean. The transition compares two objectives.](../../visuals/chapters/rendered/response-weighting.gif)
+
+*Responses of lengths two and six receive equal total weight under a response mean, and one-quarter versus three-quarters under a global token mean. The transition compares two objectives.*
+
+[Try the notebook](../../notebooks/day-22/03_objective_weighting_and_filtering.ipynb) · [View a still image](../../visuals/chapters/rendered/response-weighting.png)
+<!-- /chapter-gif: response-weighting -->
 
 ## 13.6 The verifier is an executable task definition
 

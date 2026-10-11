@@ -385,6 +385,17 @@ $`A`$'s columns index source positions. The stored vocabulary head has
 shape $`[V,D]`$, so the row state multiplies its transpose. The final vocabulary logits' columns index
 candidate output tokens. These are different competitions with different axes.
 
+
+<!-- chapter-gif: causal-attention -->
+**Predict:** Would changing a future value alter an earlier output?
+
+![Each query reads its allowed prefix and forms a weighted value mixture. These are calculated one-head toy weights, with future attention exactly zero.](../../visuals/readme/causal-attention.gif)
+
+*Each query reads its allowed prefix and forms a weighted value mixture. These are calculated one-head toy weights, with future attention exactly zero.*
+
+[Try the notebook](../../notebooks/day-04/01_causal_attention_forward.ipynb) · [View a still image](../../visuals/readme/causal-attention.png)
+<!-- /chapter-gif: causal-attention -->
+
 ## 4.7 A transparent implementation
 
 The implementation below handles one unpadded sequence and one head. Finite
@@ -673,6 +684,17 @@ For multi-token chunks, the mask must include the cached-prefix offset.
 KV retention is an optional inference optimization. A full-sequence training
 pass normally computes positions in parallel and retains activations for
 backward, which is a different purpose. The cache does not add learned knowledge.
+
+
+<!-- chapter-gif: kv-decode-step -->
+**Predict:** Which state must survive for the next decode step?
+
+![Append the current K/V before its query reads past and self; retain K/V after the temporary query clears. This one-head close-up ends at the attention output.](../../visuals/animations/projects/kv-decode-step/rendered/decode-step/decode-step.gif)
+
+*Append the current K/V before its query reads past and self; retain K/V after the temporary query clears. This one-head close-up ends at the attention output.*
+
+[Try the notebook](../../notebooks/day-04/03_kv_cache_equivalence.ipynb) · [View a still image](../../visuals/animations/projects/kv-decode-step/rendered/decode-step/still.png)
+<!-- /chapter-gif: kv-decode-step -->
 
 ## 4.11 Cache cost, lifecycle, and inference systems
 

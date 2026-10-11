@@ -1,0 +1,243 @@
+{
+  "date": "2026-10-11",
+  "state": "complete locally",
+  "reviewer": "Codex local numerical, source and visual review",
+  "scope": {
+    "placements": 28,
+    "chapters": 15,
+    "new_gifs": 23,
+    "reused_gifs": 4,
+    "retained_gifs": 1
+  },
+  "visual_review": {
+    "contact_sheets_reviewed": [
+      "evidence-gap",
+      "embedding-gradient",
+      "cross-entropy-gradient",
+      "causal-shift",
+      "residual-stream",
+      "rope-rotation",
+      "grouped-query-attention",
+      "gradient-accumulation",
+      "checkpoint-recovery",
+      "evaluation-contract",
+      "assistant-loss-mask",
+      "packed-attention",
+      "teacher-forcing",
+      "lora-update",
+      "preference-margin",
+      "dpo-reference",
+      "dpo-counterexample",
+      "policy-baseline",
+      "ppo-clipping",
+      "response-weighting",
+      "reward-hacking",
+      "candidate-selection",
+      "distillation"
+    ],
+    "full_size_posters_reviewed": [
+      "evidence-gap",
+      "embedding-gradient",
+      "cross-entropy-gradient",
+      "causal-shift",
+      "residual-stream",
+      "rope-rotation",
+      "grouped-query-attention",
+      "gradient-accumulation",
+      "checkpoint-recovery",
+      "evaluation-contract",
+      "assistant-loss-mask",
+      "packed-attention",
+      "teacher-forcing",
+      "lora-update",
+      "preference-margin",
+      "dpo-reference",
+      "dpo-counterexample",
+      "policy-baseline",
+      "ppo-clipping",
+      "response-weighting",
+      "reward-hacking",
+      "candidate-selection",
+      "distillation"
+    ],
+    "half_size_review": "Six decoded GIF samples per scene in 560-by-280 contact-sheet cells",
+    "sample_seconds": [
+      0.7,
+      2.5,
+      4.3,
+      6.2,
+      8.0,
+      10.7
+    ],
+    "text_bounds_and_collisions_checked_frames": 138,
+    "text_collision_count": 0,
+    "semantic_refinements": [
+      "Longer target-shift pause",
+      "Gradient return reaches both context rows",
+      "Residual branch gradient returns through the branch",
+      "Packed permission removed before its final claim",
+      "Teacher-given token distinct from generated sample",
+      "Baseline scatter shares coordinates and a fixed exact mean",
+      "Labels clear of prediction arrows and signed bars"
+    ]
+  },
+  "browser_review": {
+    "surface": "Codex in-app browser, localhost previews",
+    "chapter_gif_counts": [
+      1,
+      2,
+      3,
+      2,
+      3,
+      2,
+      1,
+      2,
+      2,
+      1,
+      2,
+      2,
+      2,
+      1,
+      2
+    ],
+    "all_28_chapter_gifs_loaded": true,
+    "gallery_all_28_images_loaded": true,
+    "gallery_normal_width_css_pixels": 819,
+    "gallery_narrow_width_css_pixels": 390,
+    "horizontal_overflow": false,
+    "pause_control": {
+      "png_images_loaded": 28
+    },
+    "resume_control": {
+      "gif_images_loaded": 28
+    },
+    "reduced_motion": "Source support present; OS preference was not changed",
+    "limitation": "Local Markdown previews; no claim of live GitHub publication/rendering"
+  },
+  "local_checks": [
+    {
+      "command": "python3 scripts/check_book_math.py",
+      "exit_code": 0,
+      "markdown_files": 55,
+      "math_expressions": 1871,
+      "issues": 0
+    },
+    {
+      "command": "python3 scripts/check_book_prose.py",
+      "exit_code": 0,
+      "markdown_files": 54,
+      "mechanical_matches": 0,
+      "narrative_matches": 0,
+      "reviewed_exemptions": 2
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p 'test_book_*.py'",
+      "exit_code": 0,
+      "tests_passed": 25
+    },
+    {
+      "command": "uv run --project visuals/animations python -m compileall -q visuals/chapters",
+      "exit_code": 0
+    }
+  ],
+  "asset_review_hashes": {
+    "evidence-gap": {
+      "contact_sheet_sha256": "2a88c4b6622e863dbd7309947fb6da676f0517c7036237b753db3320f3b73d8d",
+      "poster_sha256": "ae631be90be9419c51b4ab147b0639879c75eb196ef39a985560497f2331237e"
+    },
+    "embedding-gradient": {
+      "contact_sheet_sha256": "060cd9240b3a18aff441a3acdcd2627eb24b9334111540ec0a5634886abae05f",
+      "poster_sha256": "9cf364d131fe92426ee101a81ed507c10b8948b255b59eb7bdf4a44055a74ac9"
+    },
+    "cross-entropy-gradient": {
+      "contact_sheet_sha256": "ba7a6fa55457cf3da6752b912f774286a6760405a287a615c10fd937de3e2acb",
+      "poster_sha256": "79f0e0a7f96ec1bae67b83e4bd7bb30ed602b7a606b4c5f929deb374b7600e47"
+    },
+    "causal-shift": {
+      "contact_sheet_sha256": "c7e4ceee98890d164e11bc3408e921f918629a8af5ba313910e0f743fd85bc80",
+      "poster_sha256": "b37183dffdb12630e764d5b215ae56d9ea6f82bf3b57144e2bc55309d6cfd5f4"
+    },
+    "residual-stream": {
+      "contact_sheet_sha256": "327afa7d5a83dab77d5e424280e2a67cb764b50b993e3c14430b9ef055aa7624",
+      "poster_sha256": "a18e7ac7276ca203112fd0657a0246b1eed3f9fb211f3520caaccdb1506606f9"
+    },
+    "rope-rotation": {
+      "contact_sheet_sha256": "e3f7cf87c3543f5420e322854b2fc19cd2883d1733155f525c0347faf6402226",
+      "poster_sha256": "8ca8fa8c29f91090443939a5937ae484b07050f45aa426be18a590a0cd3b09a9"
+    },
+    "grouped-query-attention": {
+      "contact_sheet_sha256": "3ae17775ec3d51e10eccd7fed909dd346ab31202bc446950ffcf6681c03c3768",
+      "poster_sha256": "98e7cd5d99079a24fa1efdf235dc501cff2487a764012ba5ccbc2aa158cfffd1"
+    },
+    "gradient-accumulation": {
+      "contact_sheet_sha256": "22fc20b463852f02abf228be47c846d3ac1bf594fa47804fc47a71a226da913a",
+      "poster_sha256": "157162a4ea78d1c542a91ba6aba1a73d2ad0d99a7bd2898d5c7cf113ede1a210"
+    },
+    "checkpoint-recovery": {
+      "contact_sheet_sha256": "bbc1cf13464e5edb70a1382c43d3dbade65f7f1638cea01d798ed817996f66cb",
+      "poster_sha256": "248f53503ac830af1571f23e4e4408ac1d4635bb8cb107bc424b2af23912e3cd"
+    },
+    "evaluation-contract": {
+      "contact_sheet_sha256": "684259b64b3ad6d0cf9050281eee03cd288a40391715c495f06117355a65e6ce",
+      "poster_sha256": "fcf6bb4b6646e65c9fb1d618ce411bd55eab26cbbeced662425359099dd511b4"
+    },
+    "assistant-loss-mask": {
+      "contact_sheet_sha256": "d7b73e90ac2289fa5afc63d506bfad51136c655936a17345c85633a3dc577b3e",
+      "poster_sha256": "70daa6ff1d114dec98e6c7bd2dad11a13377e1b007949a80a78dadd18ea8b70d"
+    },
+    "packed-attention": {
+      "contact_sheet_sha256": "f5cbb9e1277f519721af124ee455178a5fab5d4aa4f12087b0a3d222a7b8feb4",
+      "poster_sha256": "2944f0e92a43fd994989f537ce1f8f6ae8f59e849b3bb68b0c60e906d43c2471"
+    },
+    "teacher-forcing": {
+      "contact_sheet_sha256": "044fc8c6bedaa4454121a0cee3d5e89d70a65f284906774b30c0226d071e2fe5",
+      "poster_sha256": "5cef18a8c8df9d65bc3d7779148b11218824afb020cef58a5ddfa792e8c6e37b"
+    },
+    "lora-update": {
+      "contact_sheet_sha256": "37bba385b0cd6c0d58dd214932ad3ab97ea4275912d314e8fc9b8d132a4b78f2",
+      "poster_sha256": "babc75223fe056cf860d8ca34e88eed585b5942eb712a2d064726c0d893ccb21"
+    },
+    "preference-margin": {
+      "contact_sheet_sha256": "57f0fd12685ada894eb0198c703b5a2dcab95896b31dac52edc725a5d47e85e7",
+      "poster_sha256": "12a73af10ad6f59ebb99f6ffce445e99a82c7ab71c4152b2117e6919a951145d"
+    },
+    "dpo-reference": {
+      "contact_sheet_sha256": "5cc2c601269959506f1902c1cde59442ab8ec687e3e0145c6e1a0f5e662dbd52",
+      "poster_sha256": "3be59b4f5e88c0b2be09ac0907d3702060134e18cf0533e51b698197b1f1b45c"
+    },
+    "dpo-counterexample": {
+      "contact_sheet_sha256": "9222c73650f93682ee8b6423a055a8f725079640ac1a44d2ca17ce2a3b9cb6de",
+      "poster_sha256": "fe740f68cd8d8b81a9fa3e2f99dfd3f2bb87bddbb22c30627adc98a5b16452cf"
+    },
+    "policy-baseline": {
+      "contact_sheet_sha256": "a49bdc47ba01546917a4408c109a07eadf95f1a04a0b353ef3989b9a34a53e49",
+      "poster_sha256": "1910ea2f88d7c1f4c75456cb02118a922c14de46cc101d1a69eb4cd862309e99"
+    },
+    "ppo-clipping": {
+      "contact_sheet_sha256": "e90a5746722a598d3f8d17d5dd1e9e02bf015c0a3ab2dcd28a3e2c36fe2a6964",
+      "poster_sha256": "bf37b097082e319a25c10cc2ccd0e25bb60ce1f36b8ea596c7ce84f0f9536244"
+    },
+    "response-weighting": {
+      "contact_sheet_sha256": "993f8566e6486ccd0ee4407c223e93cada60f04f4cf7640084a64ad9d21a56ec",
+      "poster_sha256": "8e2732a2d08429426225e69923656cde23faef0225379cecb82fa545b54664cc"
+    },
+    "reward-hacking": {
+      "contact_sheet_sha256": "9ca71963ede6a3a4f14e66b3128c18c43e20be4e78c48e4375b313d37795cf4f",
+      "poster_sha256": "19426ff4f8c29543f2f22b7278d89717ff36fe9eec090dc15e3ee5a5dd49e191"
+    },
+    "candidate-selection": {
+      "contact_sheet_sha256": "16e115617e7aa9f432706c7f2cce79f891b3e738b727c8bcb1282db04dffbca4",
+      "poster_sha256": "e50785f28c62d3b77118d185002430ee808d640176a06144215ca69aacc0a6a3"
+    },
+    "distillation": {
+      "contact_sheet_sha256": "26232047836fbd55c5b768f073d838db3611ec80a6c5bb3cc8cf2dc286afd4bb",
+      "poster_sha256": "6de3b6531856ecaefa0f839be5fccab6fb47fcf993cb8e0e59165bf0746faae6"
+    }
+  },
+  "boundaries": {
+    "new_video_outputs": false,
+    "new_model_campaign": false,
+    "learner_day": 9,
+    "commit_or_publication_claim": false
+  }
+}

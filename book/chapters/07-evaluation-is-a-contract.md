@@ -373,6 +373,17 @@ tests original random-model CPU forwards and scripted failure cases;
 records its output and identity checks. These verify the measurement path,
 not pretrained reasoning or independent human agreement.
 
+
+<!-- chapter-gif: evaluation-contract -->
+**Predict:** Should invalid extraction be recorded as a mathematical error or as an interface outcome?
+
+![The same raw response reaches different verdicts under strict parsing and a permissive substring rule. This constructed contrast exposes the grading contract.](../../visuals/chapters/rendered/evaluation-contract.gif)
+
+*The same raw response reaches different verdicts under strict parsing and a permissive substring rule. This constructed contrast exposes the grading contract.*
+
+[Try the notebook](../../notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb) · [View a still image](../../visuals/chapters/rendered/evaluation-contract.png)
+<!-- /chapter-gif: evaluation-contract -->
+
 ## 7.13 A correct candidate is not yet a correct decision
 
 Suppose eight sampled solutions include three correct answers and five copies

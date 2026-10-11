@@ -4,6 +4,19 @@ This file is the operational source of truth for resuming work. Update it at the
 
 ## Current position
 
+- Chapter GIF goal, 2026-10-11, Mac: complete locally. All 28 approved
+  placements are embedded across fifteen chapters: one retained BPE loop,
+  four reused assets and 23 new focused mechanisms (6.64 MiB). Every placement
+  includes a prediction, caption, notebook route and PNG fallback. The
+  [packet](visuals/chapters/README.md), [verification](visuals/chapters/verification.json)
+  and [review record](visuals/chapters/review-record.json) retain editable source,
+  numerical/source/media hashes and actual checks. All 464 chapter links,
+  fifteen local browser previews, 1,871 formulas and 25 book regression tests
+  pass. Removing only the inserts recovers exact base chapter bytes; notebooks,
+  model code, historical reports and the proposal prefix remain unchanged.
+  Next: learner reviews the chapter GIFs or [gallery](visuals/chapters/review.html).
+  Learner Day 9 and the requested English-story discussion on Spark are unchanged.
+
 - GitHub math repair, 2026-10-11: complete. All fifteen chapters and affected
   solutions/notation use protected inline/display forms. The
   [repair record](experiments/reports/2026-10-11-github-math-repair.md) retains

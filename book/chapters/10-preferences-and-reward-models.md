@@ -157,6 +157,17 @@ These are exact scalar computations, not measured judge accuracy. The source
 is the notebook's margin-sweep reference; execute that companion in a fresh
 copy using [Appendix D](../appendices/d-reproduction-and-environments.md).
 
+
+<!-- chapter-gif: preference-margin -->
+**Predict:** Can increasing a preference probability establish factual correctness?
+
+![A score gap becomes a preference probability, then a hard judged pair sends opposing scalar gradients. The animation performs one independent-score update.](../../visuals/chapters/rendered/preference-margin.gif)
+
+*A score gap becomes a preference probability, then a hard judged pair sends opposing scalar gradients. The animation performs one independent-score update.*
+
+[Try the notebook](../../notebooks/day-15/01_bradley_terry_margin.ipynb) · [View a still image](../../visuals/chapters/rendered/preference-margin.png)
+<!-- /chapter-gif: preference-margin -->
+
 ## 10.4 Disagreement carries information
 
 Suppose ten independent judgments favor $`a`$ seven times and $`b`$ three times.

@@ -240,6 +240,17 @@ erases learning. More subtly, the mean reward of a batch includes the sample
 whose gradient it weights. That dependence changes expectation unless corrected
 or otherwise justified.
 
+
+<!-- chapter-gif: policy-baseline -->
+**Predict:** Would using each action's own reward as its baseline preserve the gradient?
+
+![An action-independent detached baseline changes the three sampled-gradient vectors and their covariance while leaving their exact weighted mean unchanged.](../../visuals/chapters/rendered/policy-baseline.gif)
+
+*An action-independent detached baseline changes the three sampled-gradient vectors and their covariance while leaving their exact weighted mean unchanged.*
+
+[Try the notebook](../../notebooks/day-20/01_baselines_and_rloo.ipynb) · [View a still image](../../visuals/chapters/rendered/policy-baseline.png)
+<!-- /chapter-gif: policy-baseline -->
+
 ## 12.5 RLOO and the self-inclusion factor
 
 For one prompt sample $`G\ge2`$ independent completions. An advantage estimate
@@ -414,6 +425,17 @@ actions, repeated updates can move outside the interval, and the average hides
 rare changes. Monitor approximate and, where possible, exact KL, entropy, clip
 fractions, length, and independent task outcomes. A low clipped loss alone
 cannot establish stable learning.
+
+
+<!-- chapter-gif: ppo-clipping -->
+**Predict:** Does this objective impose a hard bound on policy probabilities or KL?
+
+![For positive advantage, the surrogate flattens above the upper ratio boundary; for negative advantage it flattens below the lower boundary. Harmful directions retain a slope.](../../visuals/chapters/rendered/ppo-clipping.gif)
+
+*For positive advantage, the surrogate flattens above the upper ratio boundary; for negative advantage it flattens below the lower boundary. Harmful directions retain a slope.*
+
+[Try the notebook](../../notebooks/day-20/02_ppo_clipping_and_kl.ipynb) · [View a still image](../../visuals/chapters/rendered/ppo-clipping.png)
+<!-- /chapter-gif: ppo-clipping -->
 
 ## 12.8 KL estimates depend on direction and support
 
