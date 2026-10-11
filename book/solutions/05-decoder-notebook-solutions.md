@@ -469,3 +469,11 @@ The [Day 25 extension](../../notebooks/day-25/02_ragged_kv_cache_and_exact_recov
 provides adjacent runnable answers and five figures; the
 [report](../../experiments/reports/2026-10-04-batched-cache-recovery.md) retains
 every natural cap, interrupted/pending collection and broken recovery branch.
+
+## Assignment C — Work divided by modeled movement
+
+**Prediction/checkpoint.** How much modeled arithmetic intensity does a square FP32 matrix multiplication of width 32 have under one-read/one-write payload accounting?
+
+**Reference reasoning.** It counts 2×32³ = 65,536 FLOPs and 4×3×32² = 12,288 bytes, giving 16/3 ≈ 5.333 FLOPs per byte. This is a logical movement model. Timed throughput may be affected by caches, launch costs and excluded operations. A roofline ceiling must match the measured hardware and precision; a CPU time cannot establish DGX Spark utilization.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/01_resource_accounting.ipynb) exposes the intermediate values and deliberate failure where applicable.

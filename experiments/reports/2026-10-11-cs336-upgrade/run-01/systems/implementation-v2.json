@@ -1,0 +1,118 @@
+{
+  "status": "implemented-independent-peer-review-completing",
+  "source_sha256": {
+    "src/dongxi_llms/systems_performance_lab.py": "3bfcca82a74a38015fc3dc43469e007283ba1dfa9cd767114034f778c86d0895",
+    "src/dongxi_llms/online_attention_lab.py": "63db6e3c68f400ec1eefbb13efe2ed1f2758714270059ba0a119532df0ca118b",
+    "src/dongxi_llms/scaling_lab.py": "58ef9f427ddcda6843ac08ef57571fc6f626db4c027bf6fb67e0e30519ba88b8",
+    "tests/test_systems_performance_lab.py": "35342bb4ecc150dee7a2040d6e6357b8d3a4d4db60d21029eafcec1ed48e1c9c",
+    "tests/test_online_attention_lab.py": "066b97776c0f424c1ae67c059c66ca66dd042d9b7fc3271a490bfc1ab24fd7f4",
+    "tests/test_scaling_lab.py": "d164cc825c56edd5f222c7542130e667d4bbd26d3859112f3fa3af2ecad577c4",
+    "scripts/run_cs336_systems.py": "9ea865be96c25c62650139292dfaab56d37e00fbb1b2be1baf82b7ed80f7660a",
+    "notebooks/extensions/cs336/01_resource_accounting.ipynb": "13ee7d77544f675d43b4c5dd878812806977622081d5e1133637793fdaa891a6",
+    "notebooks/extensions/cs336/02_online_attention.ipynb": "80c1f10a71b1d96457c163a7811e2e5f363cce19cf1dbc7704dfb69df84626a7",
+    "notebooks/extensions/cs336/03_scaling_prediction.ipynb": "1f21f0f855f469de511a2acc2c8bf280ba6f5d335bbf0abc103467e97f8269fc",
+    "notebooks/extensions/cs336/SYSTEMS_SOLUTIONS.md": "a25ae89896e478e0702e77b67d06dbb6605b7b0312b631360b940b6467f7397f"
+  },
+  "packages": {
+    "CS33604": {
+      "question": "What work and traffic explain a decoder phase?",
+      "reused": [
+        "decoder_lab.cost_estimate",
+        "stories_training.StoriesDecoder activation_checkpointing",
+        "existing cache correctness"
+      ],
+      "instrument": "Logical counts, synchronized timings, forward saved-storage hooks, observed block re-entry",
+      "scope": "CPU reference; actual Spark profile belongs root",
+      "controlled_changes": [
+        "query tile",
+        "matrix size",
+        "bandwidth only",
+        "checkpoint switch",
+        "prefix length"
+      ]
+    },
+    "CS33605": {
+      "question": "Can scores arrive in tiles without changing attention?",
+      "original": "Stable running max/normalizer/value recurrence; ordinary autograd",
+      "independent_reference": "PyTorch SDPA and numerical gradcheck",
+      "controlled_changes": [
+        "tile partition",
+        "causal mask",
+        "padding/empty rows",
+        "cached query offset",
+        "omitted rescale",
+        "direct-exp overflow"
+      ],
+      "boundary": "Forward workspace model and actual saved storage separately labeled; no fused/backward-memory/performance claim"
+    },
+    "CS33606": {
+      "question": "Which allocation can a budget predict under a defensible calibration?",
+      "simulation": "Original separable surface; known0.5/-0.25 exponents; entire384M budget withheld until freeze",
+      "empirical": "24 fresh tiny CPU runs, three widths/four budgets/two seeds",
+      "refinement": "Four rather than three budgets retain three calibration budgets plus one entire heldout",
+      "negative_result": {
+        "status": "fit-refused-before-holdout",
+        "error": "Minimum at grid boundary; optimum not bracketed",
+        "diagnostics": [
+          {
+            "budget": 12000000,
+            "best": 5456,
+            "sizes": [
+              5456,
+              12024,
+              21152
+            ]
+          }
+        ],
+        "target_budget": 96000000,
+        "calibration_sha256": "92dd4e4d764e2badbe78bc3874a77ff810e19295c99137a83b1990888e9e4470"
+      },
+      "boundary": "Local finite repeated corpus; three discrete widths; approximate quantized 6ND; assumed zero floor is a diagnostic fit convention, not known asymptotic loss; no stories/capability/large-model extrapolation"
+    }
+  },
+  "checks": {
+    "focused_tests": "focused-tests-v1.json",
+    "tests_run": 20,
+    "notebooks": "notebook-v3/notebook-execution-v3.json",
+    "notebook_count": 3,
+    "prompt_reference_groups": 15,
+    "rendered_figures": 15,
+    "checkpoint_loss_error": 0.0,
+    "checkpoint_gradient_error": 0.0,
+    "attention": {
+      "output_max_abs_error": 1.6653345369377348e-16,
+      "gradient_max_abs_error": 8.881784197001252e-16,
+      "finite_lse_max_abs_error": 4.440892098500626e-16
+    },
+    "matrix_runs": 24,
+    "matrix_seconds": 1.3676029000198469,
+    "presented_targets": 18880
+  },
+  "receipts": [
+    "cpu-smoke-v1-failure.json",
+    "cpu-smoke-v2.json",
+    "tiny-scaling-spec.json",
+    "tiny-scaling-matrix.json",
+    "matrix-runs/frozen-prediction.json",
+    "cpu-reference-v1.json",
+    "focused-tests-v1.json",
+    "notebook-execution-v1.json",
+    "notebook-v2/notebook-execution-v2.json",
+    "notebook-edit-v2-failure.json",
+    "notebook-v3/notebook-execution-v3.json",
+    "preview-integration-delta.json",
+    "phase-profile-spec.json",
+    "run_cs336_systems-profile-v1-source.py"
+  ],
+  "figure_review": "All15 v1 plots inspected; finalv3 adverse tile, two-bandwidth and4panel empirical plots re-inspected, labeled units/provenance/boundaries readable.",
+  "attribution": "Independent original implementations and fixtures. Conceptual Stanford references pinned by root; no upstream code/prose copied.",
+  "preserved": "No old notebook, canonical decoder/trainer, chapter/lab/manifest/tracker or old-report edits by this agent.",
+  "limits": [
+    "No empirical optimal-size exponent: interior optimum not bracketed",
+    "No GPU execution by this agent",
+    "Labels/hash/adjacency are not semantic-proof; independent reviewer audits notebooks",
+    "No Triton/distributed/backward recomputation/large-model forecast"
+  ],
+  "source_binding_note": "v1 preserved as authored pre-preview identities. v2 restricts ownership to my three notebooks/notes and binds root-added previews plus separately frozen phase-profile runner supplement. v1 accidentally globbed other authors extension paths; those extra hashes never represent my ownership or preservation authority.",
+  "phase_supplement": "Frozen source/spec, CPU syntax check passed; actual launch/evidence belongs root. Existing runner v1 snapshot matches original measured receipts."
+}

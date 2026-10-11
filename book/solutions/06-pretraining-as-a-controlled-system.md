@@ -317,3 +317,13 @@ If a run has decreasing loss but
 leaked development, an incorrect loss denominator or violated memory reserve,
 do not call the whole experiment successful. Completion is a conjunction of
 its stated criteria, not one attractive curve.
+
+## Assignment B/D — A disappointing filter and a refused fit
+
+**Prediction/checkpoint.** Curated NLL is worse on all three reference seeds and the scaling fit refuses a boundary optimum. What should be reported?
+
+**Reference reasoning.** Retain the filter, target exposure, validation population and all seed outcomes. Conclude that this curation recipe did not improve this fixture at the declared budget. Preserve the scaling refusal before examining the held-out budget; the sampled grid did not identify an interior optimum. Do not retune the grid on held-out results or report an empirical exponent from the refused fit.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/06_corpus_curation.ipynb) exposes the intermediate values and deliberate failure where applicable.
+
+For the refused allocation fit, inspect the separate [scaling prediction reference](../../notebooks/extensions/cs336/03_scaling_prediction.ipynb), including its prediction/refusal frozen before the held-out budget.

@@ -783,6 +783,14 @@ model behavior and unexecuted protocols. [Appendix D](../appendices/d-reproducti
 provides reproduction and verification routes. An evidence review supports only
 the claims demonstrated by its records; release decisions are a separate step.
 
+### Defend a result across data, execution and behavior
+
+Assignment F asks the reader to build one argument from the previous comparisons. Begin with the desired behavior and trace its evidence backward: delivered response, independent evaluation, checkpoint ancestry, objective, source population and execution contract. A proposed improvement can fail at any of these boundaries even when another layer is working.
+
+Include one retained negative result. The curated fixture's worse held-out loss, the symbolic policy's sub-baseline complete-path probability or an unidentifiable scaling optimum gives the defense a concrete limit. State whether the next experiment would change data, objective, measurement or implementation. That choice should follow the observed failure rather than the attractiveness of a new algorithm.
+
+The [six assignment briefs](../../docs/COURSE_ASSIGNMENTS.md) specify artifacts and reference reasoning, while the [extension notebooks](../../notebooks/extensions/cs336/README.md) expose the computations. Their prepared and executed references are course evidence. A learner's mastery still requires the reader's own prediction, modification and explanation. Keep that distinction when using this chapter to prepare a final report or a public argument.
+
 ## 15.12 Deep questions
 
 1. Why can the probability of finding a correct candidate rise while selected accuracy falls?

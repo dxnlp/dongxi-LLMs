@@ -1088,6 +1088,18 @@ without improving held-out behavior.
 
 Visible prompt computations can remain ancestors of supervised answer losses.
 
+### Comparing likelihood across text interfaces
+
+Token perplexity inherits the tokenizer's unit. To compare two tokenizations of the same held-out text, retain the total negative log-likelihood and the byte denominator, rather than averaging already averaged token losses. Let $S$ be the summed NLL in nats and $N_{\mathrm{bytes}}$ the number of UTF-8 bytes in the fixed evaluation text. The conversion is
+
+$$
+\mathrm{bits\ per\ byte}=\frac{S}{N_{\mathrm{bytes}}\ln 2}.
+$$
+
+For an illustrative four-byte text with total NLL of four nats, the value is approximately 1.443 bits per byte. Splitting it into two or four tokens does not change that arithmetic when the total NLL is held fixed. In an actual model comparison, the total NLL may change because the models learn different distributions. Byte normalization fixes a reporting unit; it does not make the models equivalent.
+
+The [tokenizer companion](../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb) exposes summed NLL, valid target count and raw-byte count together. Declare whether EOS contributes to the numerator: a scored EOS has probability cost but adds no raw-text bytes. Likewise, a loss mask may exclude a prefix while the byte denominator still describes the whole document. Such a conditional score is not an unconditional document compression claim. Assignment A requires that boundary to be explicit before interpreting an apparent perplexity improvement.
+
 ## 3.14 Exercises
 
 1. **The complete tensor bridge.** For $B=2$, $n=5$, $D=8$, and $V=10{,}000$,

@@ -495,3 +495,11 @@ therefore supports local completed 1→2 recovery within these invocation bounds
 It does not isolate a causal speedup, supply a 100-update pilot result or prove
 independent assistant/preference quality. Retain both earlier failures, their
 null native exits, all spent work and partial/intermediate artifacts.
+
+## Assignment E/C — Selecting a repair from evidence
+
+**Prediction/checkpoint.** A model emits a correct boxed answer, the strict checker gives zero, and task advantages vanish. Which next experiment is supported?
+
+**Reference reasoning.** First audit answer extraction and stopping on retained text using an independently tested, newly named instrument. Then measure training/development task signal under the new contract. A longer policy run under the unchanged zero-signal instrument does not resolve the interface question. Keep execution-phase improvements separate from task-signal repairs.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb) exposes the intermediate values and deliberate failure where applicable.

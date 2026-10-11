@@ -120,3 +120,11 @@ this receipt, with the cleanup error retained. Preserve incurred work and the
 uncommitted artifact rather than assigning a convenient native exit or calling
 the case successful. A new CPU 8 attempt keeps the original deadline and must
 produce its own complete receipts before pilot admission.
+
+## Assignment F — Evidence that identifies a comparison
+
+**Prediction/checkpoint.** Two arms have the same update count but one discards half its collected responses. What must the defense disclose?
+
+**Reference reasoning.** Report attempted prompts, generated tokens, retained responses, supervised targets and applied updates separately. Retained-token matching omits the cost and population of rejected observations. A supported defense names its matching choice, reports the excluded population and limits its conclusion to the frozen evaluation contract. The six assignment briefs provide the complete submission structure.
+
+The [executable reference and assignment route](../../docs/COURSE_ASSIGNMENTS.md) exposes the intermediate values and deliberate failure where applicable.

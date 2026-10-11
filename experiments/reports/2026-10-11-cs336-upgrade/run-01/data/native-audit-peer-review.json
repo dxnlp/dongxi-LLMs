@@ -1,0 +1,103 @@
+{
+  "status": "accepted-with-explicit-evidence-boundaries",
+  "scope": "Independent read-only review of native capability/reward audit source, original frozen tasks/protocol, tests and completed actual report; no model loading, training, new GPU job or source mutation",
+  "report": "experiments/reports/2026-10-11-cs336-upgrade/run-01/posttraining/native-audit-01/report.json",
+  "report_sha256": "6848c98cc520c3e4d74aaec9adc9c74131d61d4707c5a533a463f9f57ffc0c9f",
+  "source_sha256": {
+    "src/dongxi_llms/posttraining_native_audit.py": "2c5d55056f36487ecaee9e6bd6caf2cae201c25e364b4b2e93a93c58bd0104cc",
+    "src/dongxi_llms/posttraining_assignment.py": "7cd7569929fbdebfe1281e959dda03b99eb8460b4bc2556d5487b1296f55cea2",
+    "src/dongxi_llms/qwen_rlvr_lab.py": "7c61253d4da3a3119342f66d4f40dc31e143e68d57be22ac7d71aac5d3ee1fb7",
+    "src/dongxi_llms/grpo_lab.py": "7a6d3625d07e656b6a3facdab2e297b7e9e366f9670fc6e1de8e9e7ae879d911",
+    "src/dongxi_llms/reasoning_evaluation.py": "f163c5d03a87bc02474b48b3b55f651a10f8c0f0a6b9ab7c5974968961ca29da",
+    "experiments/fixtures/cs336/posttraining_native_items.json": "b0fd3bb9fb3a283f47f198d34e7654c6f74ddef6e25401a102e7c5d8bd353ed7",
+    "experiments/fixtures/cs336/posttraining_native_protocol.json": "9710e0cb835a2d35d74aef47ff84de0c2b5bb8ccf07c5c1e54ff39a6ecb12f28"
+  },
+  "test_source_sha256": "2cef5e3b5ee1b081fe95cbd4c1e49157392072e97e9155ef91f180c1d8aa4a9e",
+  "mathematical_contract": {
+    "loss": "-(1/G) sum_i A_i (sum_t m_it logpi(y_it|x,y_i,<t)/L_i), inclusive group mean/population std and detached advantages",
+    "head_gradient": "For each token, A_i*m_it/(G*L_i) times (p_it\u2212onehot(y_it)) outer detached hidden state; signs match minimization of negative reward-weighted log probability",
+    "sampler": "Existing collector draws unfiltered full-vocabulary softmax at temperature1; no topk/topp/answer grammar. First natural stop enters mask and likelihood; forced padded EOS after termination is excluded",
+    "precision": "Actual parent/head clone/hidden matmul is BF16; logits/logsoftmax use FP32, head-weight backward is represented in the clone's dtype, and returned gradient is cast to FP32 for aggregation. No full-FP32-gradient claim",
+    "alignment": "Reported alignment checks head projection versus full model teacher-forced old-policy scoring. It does not independently attest bitwise equality to every generation-step kernel distribution",
+    "reach": "Detached-hidden output-weight subspace only. Tied embedding/transformer pathways and KL gradients are excluded; no optimizer exists in this audit",
+    "independent_tests": "CPU Qwen random fixture matches manually accumulated softmax outer products; constant0/1 rewards give exactzero; mismatched likelihood rejects; gate requires both splits and aggregate nonzero norm"
+  },
+  "ancestry": {
+    "model_id": "Qwen/Qwen3-0.6B",
+    "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "snapshot": "/home/dongxi/.cache/huggingface/hub/models--Qwen--Qwen3-0.6B/snapshots/c1899de289a04d12100db370d81485cdf75e47ca",
+    "snapshot_file_hashes_recorded": true,
+    "license_sha256": "832dd9e00a68dd83b3c3fb9f5588dad7dcf337a0db50f7d9483f310cd292e92e",
+    "parent_before": "05ed0607ece71c40de8932ebe1e83e4e9f1a1de5902b3b092ca5b035f4d67e5f",
+    "parent_after": "05ed0607ece71c40de8932ebe1e83e4e9f1a1de5902b3b092ca5b035f4d67e5f",
+    "all_twelve_collections_match_parent": true,
+    "interface_sha256": "090149da27051f5e3040c1236e8fbd00664e22f1b7e3c3a050a6945c3e1b6f98",
+    "thinking": false,
+    "splits": [
+      "train",
+      "development"
+    ],
+    "heldout_access": false,
+    "boundary": "This cached native Qwen root is distinct from the compatible random-init CPU SFT/sibling chain and from historical trained native descendants; future same-parent SFT/RL remains unexecuted"
+  },
+  "accounting": {
+    "requested_responses": 48,
+    "completed_responses": 48,
+    "uncollected": 0,
+    "groups": 12,
+    "strata": 6,
+    "responses_per_stratum": 8,
+    "valid_response_tokens": 1141,
+    "token_cap": 1536,
+    "multinomial_draws": 1404,
+    "generation_forward_calls": 351,
+    "old_policy_score_calls": 12,
+    "head_teacher_forced_input_positions": 2604,
+    "natural_stops": 28,
+    "token_limit": 20,
+    "decode_failures": 0,
+    "richer_statuses": {
+      "UNSUPPORTED": 48
+    },
+    "strict_successes": 0,
+    "mixed_groups": 0,
+    "per_group_task_head_gradient_norms": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "aggregate_norms": {
+      "train": 0.0,
+      "development": 0.0
+    },
+    "signal_gate_passes": false,
+    "runtime_seconds": 107.77150319807697,
+    "peak_allocated_gib": 3.565479278564453,
+    "initial_host_available_gib": 117.01454544067383,
+    "failure_contract": "Decode exceptions yield strictreward0 and explicit ERROR rows, retained in requested/completed denominators. Unsupported/invalid parser outcomes remain rows. Collector/load exceptions preserve partial attempt counters through finally/atomic flush and stop; uncollected count remains separate. No retry or discarded-group selection"
+  },
+  "interpretation": {
+    "accepted": "No usable task-relative update signal under this frozen strict reward/extraction interface; absence is the actual diagnostic result",
+    "arithmetic_boundary": "All48 richer grades are UNSUPPORTED, so0 richer-correct is not established0 arithmetic capability. EOS texts visibly contain correct-looking equations/answers, such as2+3=5,\u22127+2=\u22125 and(3+4)*2=14, that these extraction contracts reject. Preserve strings/statuses; no silent parser relaxation or hindsight reward substitution",
+    "future": "No same-parent SFT/RL pilot was executed or justified by this failed signal gate"
+  },
+  "corpus_preflight_applicability": {
+    "fixture": "experiments/fixtures/cs336/corpus.json",
+    "fixture_sha256": "7237ff0e3f5842cf9ce4ebeb7108b742c7fe76210f4d7fee78369f4631cc16c9",
+    "learning_reference_matches_audited_fixture": true,
+    "declared_source_and_verified_duplicate_split_issues": [],
+    "oracle_cross_split_duplicates": [],
+    "decision": "Existing explicit whole-fixture split audit, immutable fixture hash, independent tests and notebook checkpoint4 before checkpoint6 are sufficient for this actual bounded lesson acceptance. No source edit or duplicate preflight infrastructure is necessary",
+    "api_boundary": "learning_reference accepts a custom fixture path and does not itself promise to run the source/near-duplicate preflight. TrainingSession rejects IDs and normalized-exact text overlap only. A future changed fixture must rerun existing duplicate_audit+split_audit before interpreting training; an optional convenience call can reuse these functions rather than invent a second validator"
+  },
+  "open_source_defects": []
+}

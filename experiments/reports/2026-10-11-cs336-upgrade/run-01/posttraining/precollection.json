@@ -1,0 +1,18 @@
+{
+  "created_utc": "2026-10-11T20:05:46.757194+00:00",
+  "source": {
+    "src/dongxi_llms/posttraining_assignment.py": "7cd7569929fbdebfe1281e959dda03b99eb8460b4bc2556d5487b1296f55cea2",
+    "tests/test_posttraining_assignment.py": "239d28aae7434effe755fd5e4b5cbd88a13d93b7edcd399f45f25e3a3a453805",
+    "experiments/fixtures/cs336/posttraining_items.json": "1d8d806b2a89a121485e0e2c60c6cc34a54484fa9654c1c647cca67b2ee318c9",
+    "experiments/fixtures/cs336/posttraining_protocol.json": "e18478732972299e03861e1ab23ee8c648ad2409785f651ee720ab71b428fe5b"
+  },
+  "seed_selection": "All3 predeclared seeds33671,33672,33673; no checkpoint or recipe selected from heldout.",
+  "command": "PYTHONPATH=src CUDA_VISIBLE_DEVICES='' OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 timeout180 /tmp/dongxi-cs336-g9l7v90r/venv/bin/python -m dongxi_llms.posttraining_assignment --output experiments/reports/2026-10-11-cs336-upgrade/run-01/posttraining/reference-01",
+  "mode": "reference",
+  "sft_updates_per_arm": 24,
+  "sibling_updates_per_arm": 16,
+  "cpu_runtime_cap_seconds": 180,
+  "smoke": "smoke-01/result.json (2 SFT/1 sibling,1 seed); passed before full run",
+  "reference_recipe": "Full-vocabulary SFT lr.005; conditional two-token rollout groups8, reward lr.003, beta.02; declared fixed protocol.",
+  "selection": "Parent training probability .05\u2013.95 only; dev signal audit; mixed-only filter counterfactual retained with all attempts."
+}

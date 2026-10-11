@@ -263,3 +263,11 @@ conversation or a new application distribution. Report the narrow transfer,
 natural endings, costs and failed Base/LoRA controls; do not generalize beyond
 what was sampled. A permissive format score is a separate quantity and gives
 all three models full marks despite their different answer quality.
+
+## Assignment F — The limit belongs in the defense
+
+**Prediction/checkpoint.** What makes a retained negative result useful in a final report?
+
+**Reference reasoning.** It identifies a boundary and a discriminating next observation. State the frozen comparison, observed failure, plausible interpretation and competing explanation. A worse curated NLL identifies a recipe/budget outcome; a refused scaling fit identifies lack of allocation identifiability; a constant baseline identifies a shortcut. None supports an unmeasured universal conclusion.
+
+The [executable reference and assignment route](../../docs/COURSE_ASSIGNMENTS.md) exposes the intermediate values and deliberate failure where applicable.

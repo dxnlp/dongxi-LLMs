@@ -33,7 +33,7 @@ help you explain the mechanism before judging a model result.
 
 ## How the companions fit
 
-The chapter supplies the argument; the [76 visual notebooks](../notebooks/README.md)
+The chapter supplies the argument; the [83 visual notebooks](../notebooks/README.md)
 make its mechanisms inspectable. Each exercise has adjacent runnable reference
 answers, plots and interpretation boundaries. Reusable logic lives in `src/dongxi_llms/`,
 not in copied notebook fragments. [Companion labs](labs/) provide reproducible routes

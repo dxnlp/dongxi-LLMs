@@ -236,3 +236,11 @@ bounded parsing, shared instruction templates, one recipe and one seed limit
 the claim. No universal ranking, broad reasoning gain or human preference
 assessment follows. Do not substitute own-run precision settings for the
 common results, pool the different tasks, or add overlapping cost lanes.
+
+## Assignment E — The margin is an incomplete outcome
+
+**Prediction/checkpoint.** What evidence is needed beyond a better chosen–rejected likelihood margin?
+
+**Reference reasoning.** Retain absolute chosen likelihood, natural termination, generated responses and independent task results. Use the chapter’s chosen-SFT control to distinguish relative-margin optimization from direct response supervision. Keep labeled targets, collected tokens and updates separate. The compatible GRPO branch is a different objective and does not replace the DPO comparison.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb) exposes the intermediate values and deliberate failure where applicable.

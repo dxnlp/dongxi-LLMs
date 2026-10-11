@@ -39,3 +39,7 @@ cd /home/dongxi/dongxi_ai/Dongxi_LLMs
 /home/dongxi/dgx-spark-dongxi/.venv/bin/jupyter lab \
   --no-browser --ip=127.0.0.1 --port=8888
 ```
+
+## Assignment A: compare likelihood units
+
+The [tokenizer likelihood companion](../extensions/cs336/05_tokenizer_contracts.ipynb) extends summed NLL into scored-byte aggregation. Keep raw evaluation text, EOS/context/mask policy and corpus weighting explicit before comparing token perplexity with bits per byte. The original next-token loss and learner cells remain the mechanism reference.

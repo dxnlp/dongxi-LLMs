@@ -137,3 +137,11 @@ positions. Neither unit is a pretrained inference bill.
 - [Teacher attempts and matched rejection SFT](../../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb).
 
 The corresponding plots display target alignment, actual visibility matrices and supervised-token shares.
+
+## Assignment E — Equal tokens, unequal coverage
+
+**Prediction/checkpoint.** Two SFT arms each use 768 valid targets and 24 updates. One covers eight sources, the other two. What is controlled?
+
+**Reference reasoning.** Target exposure and the optimizer clock are controlled at 32 targets per update. Source coverage is the intervention. Rendered templates are not independent underlying sources. Report group identities and repeats, then evaluate paired forms on held-out source groups. Do not claim equal independent information or equal collection cost from token matching alone.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb) exposes the intermediate values and deliberate failure where applicable.

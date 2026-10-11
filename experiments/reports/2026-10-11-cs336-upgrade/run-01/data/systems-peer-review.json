@@ -1,0 +1,323 @@
+{
+  "status": "accepted",
+  "scope": "Independent content/code/test/evidence review of CS33604/05/06 owned files only; no source edits or new training/GPU jobs",
+  "reviewed_source_sha256": {
+    "src/dongxi_llms/systems_performance_lab.py": "3bfcca82a74a38015fc3dc43469e007283ba1dfa9cd767114034f778c86d0895",
+    "src/dongxi_llms/online_attention_lab.py": "63db6e3c68f400ec1eefbb13efe2ed1f2758714270059ba0a119532df0ca118b",
+    "src/dongxi_llms/scaling_lab.py": "58ef9f427ddcda6843ac08ef57571fc6f626db4c027bf6fb67e0e30519ba88b8",
+    "tests/test_systems_performance_lab.py": "35342bb4ecc150dee7a2040d6e6357b8d3a4d4db60d21029eafcec1ed48e1c9c",
+    "tests/test_online_attention_lab.py": "066b97776c0f424c1ae67c059c66ca66dd042d9b7fc3271a490bfc1ab24fd7f4",
+    "tests/test_scaling_lab.py": "d164cc825c56edd5f222c7542130e667d4bbd26d3859112f3fa3af2ecad577c4",
+    "scripts/run_cs336_systems.py": "9ea865be96c25c62650139292dfaab56d37e00fbb1b2be1baf82b7ed80f7660a",
+    "notebooks/extensions/cs336/SYSTEMS_SOLUTIONS.md": "a25ae89896e478e0702e77b67d06dbb6605b7b0312b631360b940b6467f7397f",
+    "notebooks/extensions/cs336/01_resource_accounting.ipynb": "13ee7d77544f675d43b4c5dd878812806977622081d5e1133637793fdaa891a6",
+    "notebooks/extensions/cs336/02_online_attention.ipynb": "80c1f10a71b1d96457c163a7811e2e5f363cce19cf1dbc7704dfb69df84626a7",
+    "notebooks/extensions/cs336/03_scaling_prediction.ipynb": "1f21f0f855f469de511a2acc2c8bf280ba6f5d335bbf0abc103467e97f8269fc"
+  },
+  "current_author_receipt": {
+    "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/implementation-v2.json",
+    "sha256": "131ebb3088ed59580039201e38e5b65147193dc58678d3385035e1d5939ef2de",
+    "binding": "All eleven current owned source hashes match exactly; supplements remain separately scoped"
+  },
+  "author_receipt": {
+    "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/implementation.json",
+    "sha256": "55c6137cf039626cdce6051dc701ce2bedd0db715026afe15e16c6b5ad0e5a24",
+    "binding": "Seven module/test/solution source hashes agree; three pre-preview notebook identities match v3; current integrated notebook hashes bound separately with exact code/ID equality. The runner gained separately authorized phase_profile after author receipts; its current source is bound, its unchanged CPU paths were reread, and actual GPU acceptance belongs root. Incidental other-agent hashes are outside this review"
+  },
+  "runner_history": {
+    "author_execution_sha256": "e3236ed0bac34e6a50f3fc31672bfa9016471d99ff5a3fb6b622369502dbc4a0",
+    "current_source_sha256": "9ea865be96c25c62650139292dfaab56d37e00fbb1b2be1baf82b7ed80f7660a",
+    "difference": "Added explicit CUDA phase-profile function and dispatch; original CPU reference/smoke/matrix paths retained. Earlier matrix receipts keep their own original source identity; no new execution is claimed by this review."
+  },
+  "tests": {
+    "receipt": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/focused-tests-v1.json",
+    "sha256": "57c7680b03ca530a134a5f51ea522cfd39dbf04204f8140dbd26fd257d1fbe70",
+    "count": 20,
+    "independent_basis": [
+      "Closed matmul/traffic counts and actual synchronization event order",
+      "Existing checkpoint gradients/re-entry and independent stored-storage boundary",
+      "PyTorch SDPA output and gradients across dtype/tiles/ragged masks/cache offset",
+      "Numerical gradcheck and direct logsumexp",
+      "Authored analytic optimum, frozen identity, pooling refusal and bootstrap failure accounting"
+    ]
+  },
+  "notebooks": [
+    {
+      "path": "notebooks/extensions/cs336/01_resource_accounting.ipynb",
+      "current_integrated_source_sha256": "13ee7d77544f675d43b4c5dd878812806977622081d5e1133637793fdaa891a6",
+      "author_execution_source_sha256": "1a897575732c487080db592a5d89be2801473e05ed7fb2b82462efa6db00a2cc",
+      "executed_sha256": "bb04f96d2595d7b282b45628a84ad7e074cebf72f4728a6a027a34e250b82b22",
+      "reference_cells": [
+        "01_resource_accounting-01-reference",
+        "01_resource_accounting-02-reference",
+        "01_resource_accounting-03-reference",
+        "01_resource_accounting-04-reference",
+        "01_resource_accounting-05-reference"
+      ],
+      "integration_changes": "Static preview Markdown appended to explanations only; code, IDs, prompts and prior explanations preserved"
+    },
+    {
+      "path": "notebooks/extensions/cs336/02_online_attention.ipynb",
+      "current_integrated_source_sha256": "80c1f10a71b1d96457c163a7811e2e5f363cce19cf1dbc7704dfb69df84626a7",
+      "author_execution_source_sha256": "9a5b6d0e8b74d3eba0fe72002597cba9a36cbfd3f7925f780e7e88185f5776f9",
+      "executed_sha256": "65b8974ea12242dc6cbba87b21cf94aa32cfe3f6e77de7e4ef20d05f08ea815b",
+      "reference_cells": [
+        "02_online_attention-01-reference",
+        "02_online_attention-02-reference",
+        "02_online_attention-03-reference",
+        "02_online_attention-04-reference",
+        "02_online_attention-05-reference"
+      ],
+      "integration_changes": "Static preview Markdown appended to explanations only; code, IDs, prompts and prior explanations preserved"
+    },
+    {
+      "path": "notebooks/extensions/cs336/03_scaling_prediction.ipynb",
+      "current_integrated_source_sha256": "1f21f0f855f469de511a2acc2c8bf280ba6f5d335bbf0abc103467e97f8269fc",
+      "author_execution_source_sha256": "7e9edf2327561ca7e52fdc15f6385358ec599e97f73d0e837d851a196431981a",
+      "executed_sha256": "48fb5bab4da8ff85ffacb0734806544e52f1dbc7d393636acd8a20bd065f83a6",
+      "reference_cells": [
+        "03_scaling_prediction-01-reference",
+        "03_scaling_prediction-02-reference",
+        "03_scaling_prediction-03-reference",
+        "03_scaling_prediction-04-reference",
+        "03_scaling_prediction-05-reference"
+      ],
+      "integration_changes": "Static preview Markdown appended to explanations only; code, IDs, prompts and prior explanations preserved"
+    }
+  ],
+  "semantic_review": {
+    "pairs": 15,
+    "adjacency_and_stable_ids": true,
+    "concrete_controls_match_prompts": true,
+    "observations": [
+      "Traffic plot now contains an adverse tile4 curve under the same dimensions",
+      "Bandwidth-only change20\u219210GB/s shown separately from actual CPU timing; queue labeled untimed",
+      "Checkpoint storage excludes peak claims and visibly adds two backward block entries",
+      "Late maximum control returns1 versus0.5 and overflow; causal changes preserve early rows",
+      "Invalid/cached/ragged rows have explicit zero-output and negative-infinite LSE contracts",
+      "Online ordinary-autograd saves can exceed dense despite smaller modeled forward tiles",
+      "Scaling prediction freezes before revealing entire384M grid; known floor/design separated from real LM uncertainty",
+      "Bootstrap preserves failures and warns that conditional discrete grid can miss known optimum",
+      "Actual measured study visibly includes both seeds, train/dev/test and target-actual quantization"
+    ]
+  },
+  "mathematical_review": {
+    "matmul_example": {
+      "flops": 48,
+      "bytes": 208,
+      "intensity": 0.23076923076923078
+    },
+    "roofline_ridges_flops_per_byte": [
+      5.0,
+      10.0
+    ],
+    "online_recurrence": "Old normalizer/numerator rescale by exp(old_max\u2212new_max); new terms use exp(score\u2212new_max); finalu/l and LSE=m+logl",
+    "known_surface": {
+      "parameter_exponent": 0.5,
+      "excess_loss_exponent": -0.25,
+      "heldout_optimal_parameters": 8000.0,
+      "heldout_optimal_loss": 2.447213595499958
+    },
+    "cached_query": "Added prefix attention4*layers*batch*query_heads*prefix*head_dim; compact KV useskv_heads; projections/head run once"
+  },
+  "measured_reference": {
+    "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/tiny-scaling-matrix.json",
+    "sha256": "92f38fc17d79257f985e85398eda09853d36c81e0d6028f802f8d991244ab0df",
+    "verified": "24rows=18calibration+6entireheldout;18,880targets; all32target/update,6ND and256-slot repetition counts reconcile; separate frozen-refusal file matches final receipt",
+    "negative_outcome": "Smallest12M calibration budget prefers the boundary N5456; no empirical exponent/optimal-size prediction asserted"
+  },
+  "visual_review": {
+    "count": 15,
+    "figures": [
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/01_resource_accounting-01_resource_accounting-01-reference-2.png",
+        "sha256": "92d6581abcbf4e8624fdef967257de2fe42cd8501c5ee3b88c1dc2fc1ff2d839",
+        "source_cell_id": "01_resource_accounting-01-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/01_resource_accounting-01_resource_accounting-02-reference-0.png",
+        "sha256": "853a04e3733235ce9cf516052e17dbc209515d3882fb5973ea635291620e13a8",
+        "source_cell_id": "01_resource_accounting-02-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/01_resource_accounting-01_resource_accounting-03-reference-0.png",
+        "sha256": "dc0e604417be453953d2978176bf0743cece906bed7c5bd5c9fa662f0349810c",
+        "source_cell_id": "01_resource_accounting-03-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/01_resource_accounting-01_resource_accounting-04-reference-1.png",
+        "sha256": "2b671d963ecc7cd6ea49734df3b999b58c8a7c6ec119cef728ed53450aaac39f",
+        "source_cell_id": "01_resource_accounting-04-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/01_resource_accounting-01_resource_accounting-05-reference-0.png",
+        "sha256": "eaee2b754cfc1a9e27827cd1ec8908043ff9d9f376ccaa96f9a48aea8b4e0ea1",
+        "source_cell_id": "01_resource_accounting-05-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/02_online_attention-02_online_attention-01-reference-2.png",
+        "sha256": "487ceb2385a04f89fca00f671ec37df25a3aae9e5805a7f41a5b6d7bbbcf99e0",
+        "source_cell_id": "02_online_attention-01-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/02_online_attention-02_online_attention-02-reference-1.png",
+        "sha256": "bdd2be271eac1568b924e13ae29fa2a83375f8dbe0351d8c4f41163c1d2d7096",
+        "source_cell_id": "02_online_attention-02-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/02_online_attention-02_online_attention-03-reference-1.png",
+        "sha256": "d961638ccf267badebeab49cae7f305bf61f7e63bab54524a39661c16443539d",
+        "source_cell_id": "02_online_attention-03-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/02_online_attention-02_online_attention-04-reference-0.png",
+        "sha256": "32a318b14292289d089e5ad63e482055316d0b958f3ab802a0d731095be761b2",
+        "source_cell_id": "02_online_attention-04-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/02_online_attention-02_online_attention-05-reference-0.png",
+        "sha256": "c277fa1ebef2b54e1df930b29aaaff0dc5052073767dd5496a9a7eadd242f25d",
+        "source_cell_id": "02_online_attention-05-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/03_scaling_prediction-03_scaling_prediction-01-reference-0.png",
+        "sha256": "14c93575dd88366e0292e4d12e32bea21083d5b266450ac6603478430c29cc97",
+        "source_cell_id": "03_scaling_prediction-01-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/03_scaling_prediction-03_scaling_prediction-02-reference-1.png",
+        "sha256": "9d4eb004de7b4d91127b0b9020dabeb7efcebfe9919df4ac63f77a1444f32500",
+        "source_cell_id": "03_scaling_prediction-02-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/03_scaling_prediction-03_scaling_prediction-03-reference-0.png",
+        "sha256": "6ba4ac2d17374a443ae108b2d48fd4d491fbcb89d02d13be0a3bcce7f46dd551",
+        "source_cell_id": "03_scaling_prediction-03-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/03_scaling_prediction-03_scaling_prediction-04-reference-1.png",
+        "sha256": "bcb358758e9204c7e8e4489730c71ce94737b8972fdb54a575affd5641b0baba",
+        "source_cell_id": "03_scaling_prediction-04-reference"
+      },
+      {
+        "path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/notebook-v3/figures/03_scaling_prediction-03_scaling_prediction-05-reference-0.png",
+        "sha256": "a7c8872c2163f9e866cc2c056f8782591e6f330b2c264f58fc9c29ed8ca54a7b",
+        "source_cell_id": "03_scaling_prediction-05-reference"
+      }
+    ],
+    "method": "All15 v1 PNGs inspected in original-resolution contact sheets; unchanged figure mechanisms retained; three correctedv3 PNGs inspected individually at original resolution",
+    "accepted": "Axis/shape/units/legends readable; modeled, authored-simulated and measured plots labeled; empty rows and adverse storage result visible"
+  },
+  "canonical_preview_provenance": {
+    "manifest": "experiments/reports/2026-10-11-cs336-upgrade/run-01/preview-execution-01/manifest.json",
+    "sha256": "22f8c6ef3a9413693b858a253a100fb463b3bccf8b7d2441427c269a0e75d6c2",
+    "figures": [
+      {
+        "cell": 2,
+        "path": "notebooks/figures/chapter-06/cs336-01_resource_accounting-01.png",
+        "sha256": "92d6581abcbf4e8624fdef967257de2fe42cd8501c5ee3b88c1dc2fc1ff2d839"
+      },
+      {
+        "cell": 5,
+        "path": "notebooks/figures/chapter-06/cs336-01_resource_accounting-02.png",
+        "sha256": "853a04e3733235ce9cf516052e17dbc209515d3882fb5973ea635291620e13a8"
+      },
+      {
+        "cell": 8,
+        "path": "notebooks/figures/chapter-06/cs336-01_resource_accounting-03.png",
+        "sha256": "90013f8c211433cc7d5c3f51e054b4948915e240624e4191af41283bf820086b"
+      },
+      {
+        "cell": 11,
+        "path": "notebooks/figures/chapter-06/cs336-01_resource_accounting-04.png",
+        "sha256": "2b671d963ecc7cd6ea49734df3b999b58c8a7c6ec119cef728ed53450aaac39f"
+      },
+      {
+        "cell": 14,
+        "path": "notebooks/figures/chapter-06/cs336-01_resource_accounting-05.png",
+        "sha256": "eaee2b754cfc1a9e27827cd1ec8908043ff9d9f376ccaa96f9a48aea8b4e0ea1"
+      },
+      {
+        "cell": 2,
+        "path": "notebooks/figures/chapter-04/cs336-02_online_attention-01.png",
+        "sha256": "487ceb2385a04f89fca00f671ec37df25a3aae9e5805a7f41a5b6d7bbbcf99e0"
+      },
+      {
+        "cell": 5,
+        "path": "notebooks/figures/chapter-04/cs336-02_online_attention-02.png",
+        "sha256": "bdd2be271eac1568b924e13ae29fa2a83375f8dbe0351d8c4f41163c1d2d7096"
+      },
+      {
+        "cell": 8,
+        "path": "notebooks/figures/chapter-04/cs336-02_online_attention-03.png",
+        "sha256": "d961638ccf267badebeab49cae7f305bf61f7e63bab54524a39661c16443539d"
+      },
+      {
+        "cell": 11,
+        "path": "notebooks/figures/chapter-04/cs336-02_online_attention-04.png",
+        "sha256": "32a318b14292289d089e5ad63e482055316d0b958f3ab802a0d731095be761b2"
+      },
+      {
+        "cell": 14,
+        "path": "notebooks/figures/chapter-04/cs336-02_online_attention-05.png",
+        "sha256": "c277fa1ebef2b54e1df930b29aaaff0dc5052073767dd5496a9a7eadd242f25d"
+      },
+      {
+        "cell": 2,
+        "path": "notebooks/figures/chapter-06/cs336-03_scaling_prediction-01.png",
+        "sha256": "14c93575dd88366e0292e4d12e32bea21083d5b266450ac6603478430c29cc97"
+      },
+      {
+        "cell": 5,
+        "path": "notebooks/figures/chapter-06/cs336-03_scaling_prediction-02.png",
+        "sha256": "9d4eb004de7b4d91127b0b9020dabeb7efcebfe9919df4ac63f77a1444f32500"
+      },
+      {
+        "cell": 8,
+        "path": "notebooks/figures/chapter-06/cs336-03_scaling_prediction-03.png",
+        "sha256": "6ba4ac2d17374a443ae108b2d48fd4d491fbcb89d02d13be0a3bcce7f46dd551"
+      },
+      {
+        "cell": 11,
+        "path": "notebooks/figures/chapter-06/cs336-03_scaling_prediction-04.png",
+        "sha256": "bcb358758e9204c7e8e4489730c71ce94737b8972fdb54a575affd5641b0baba"
+      },
+      {
+        "cell": 14,
+        "path": "notebooks/figures/chapter-06/cs336-03_scaling_prediction-05.png",
+        "sha256": "a7c8872c2163f9e866cc2c056f8782591e6f330b2c264f58fc9c29ed8ca54a7b"
+      }
+    ],
+    "binding": "All15 canonical previews match root fresh preview execution. Resource3 timing PNG differs from authorv3 because it comes from a distinct root execution; that distinction is preserved and its canonical PNG was independently inspected."
+  },
+  "findings": [
+    {
+      "id": "SYS-PEER-01",
+      "location": "01_resource_accounting checkpoint2",
+      "issue": "Worse blockwise traffic predicted but neither displayed tile supplied it",
+      "resolution": "Added fixed-dimension tile4 curve; inspected v3 shows traffic exceeds dense",
+      "status": "resolved"
+    },
+    {
+      "id": "SYS-PEER-02",
+      "location": "01_resource_accounting checkpoint3",
+      "issue": "Requested bandwidth-only control absent; untimed queue described as measured interval",
+      "resolution": "Second10GB/s curve added and queue described as untimed submission/completion illustration",
+      "status": "resolved"
+    },
+    {
+      "id": "SYS-PEER-03",
+      "location": "03_scaling_prediction checkpoint5",
+      "issue": "Requested train/dev/test and target-vs-actual coordinates missing; dev plot showed one seed",
+      "resolution": "Both-seed means, three split means, actual-target percentage panel and all24 independenttest points now present",
+      "status": "resolved"
+    }
+  ],
+  "open_issues": [],
+  "evidence_boundaries": [
+    "This review does not validate actual Spark profile or hardware kernel selection",
+    "No Triton/distributed/recomputed-backward implementation claimed",
+    "Finite repeated corpus, discrete widths and budget-specific schedules limit tiny study; refusal is not a general scaling result",
+    "Root integration chapters/labs/manifest and other-author post-training/token/corpus files are outside this receipt"
+  ]
+}

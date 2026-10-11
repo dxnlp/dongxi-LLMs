@@ -1395,3 +1395,56 @@ The `v0.1` target remains four excellent signature animations. Additional ideas
 may become short supporting animations or move to the `v0.2` backlog. Recording
 an idea is cheap; production competes for course-development time and requires an
 explicit priority decision.
+
+
+## CS336 assignment mechanism extensions — 2026-10-11
+
+Source: agent, arising from the implemented assignment/chapter mathematics.
+These are candidate captures, not production approval. All rendering remains
+assigned to Mac Studio; source/code/tests and final storyboard approval are
+production dependencies.
+
+- Extend **CAND-ANIM-008** with tiled causal attention. Keep a query row fixed,
+  move key/value tiles through it, and update `m, ell, u`. Canonical recurrence:
+  `m'=max(m,max(s)); ell'=exp(m-m')ell+sum(exp(s-m'));
+  u'=exp(m-m')u+sum(exp(s-m')v); output=u'/ell'`.
+  Show the omitted-rescale failure and fully masked-row convention. Evidence:
+  original CPU implementation with dense/SDPA output and gradient comparisons,
+  `src/dongxi_llms/online_attention_lab.py` and its visual notebook. Do not
+  present Python/autograd tiling as fused backward-memory or speed evidence.
+- Extend **CAND-ANIM-005** with fixed-text likelihood units. Keep total NLL and
+  UTF-8 bytes fixed while splitting tokens: `bits/byte=S/(N_bytes ln2)`.
+  EOS contributes to the numerator only under a declared scoring policy;
+  masked prefixes make the score conditional. Pair it with tokenizer framing:
+  chunks of one buffered record versus independent record boundaries.
+  Evidence: `tokenizer_contracts.py` and the new tokenizer notebook; synthetic
+  probability arithmetic is explicitly separate from learned likelihood.
+- Extend **CAND-ANIM-027** with finite groups and difficulty. Enumerate binary
+  outcomes while keeping each reward linked to its own group normalizer.
+  Canonical mixed probability: `1-p^G-(1-p)^G`. Show selection changing prompt
+  mass and attempted groups per retained group. Evidence:
+  `posttraining_assignment.finite_group_audit`, three-seed symbolic signal
+  checks, and the unchanged historical192-response strict reward replay.
+  Original/richer instruments remain separately labeled.
+- Extend **CAND-ANIM-009** with a phase-specific roofline. Move operation/byte
+  tiles into `I=F/B` and `P<=min(P_compute,I*bandwidth)`. Distinguish hypothetical
+  ceilings from actual GB10 timing and forward-only allocation. Evidence:
+  systems ledger/checkpoint tests and frozen Spark profile; no hardware-peak
+  utilization or bottleneck inference from the nearly flat tiny timings.
+
+### CAND-ANIM-030 — Freeze a scaling prediction before the next budget
+
+- Source: agent.
+- Learning objective: Explain why a fitted curve needs identifiable interior
+  optima, a frozen prediction and an untouched whole-budget check.
+- Canonical mechanism: `C≈6ND`; for the authored symmetric surface
+  `L=L0+a/sqrt(N)+a/sqrt(D)`, `N*=D*=sqrt(C/6)`. This is a known simulation,
+  not an empirical large-model law.
+- Motion: Keep calibration slices fixed, fit their optima, seal the predicted
+  next optimum, then reveal the entire new slice. In the actual tiny-study
+  branch, the smallest tested size wins and the prediction seal instead shows
+  a refusal. Retain all failures and repetitions.
+- Evidence: `scaling_lab.py`, independent tests and the24-run original CPU
+  matrix. The refusal was saved before the held-out96M budget was collected.
+- Production dependency: Approved storyboard plus Mac Studio rendering; no
+  animation task has been promoted or rendered by this course goal.

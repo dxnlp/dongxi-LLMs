@@ -54,3 +54,7 @@ whole microscope, not merely30 in the five initially returned buckets.
 Machine: Mac or Spark CPU. Model-scale execution requires its own frozen config,
 resource guard and measured report. Animation production remains Mac-only and
 requires its own instruction.
+
+## Explain a measured inference phase
+
+Return to the [resource-accounting companion](../extensions/cs336/01_resource_accounting.ipynb) when interpreting this day's prefill/cache measurements. It separates modeled projection/attention work, cache payload, saved storage and synchronized elapsed phases. Assignment C's [brief](../../docs/COURSE_ASSIGNMENTS.md#c-explain-runtime) connects the counted operations to the separately measured Spark profile; no hypothetical roofline ceiling substitutes for actual device evidence.

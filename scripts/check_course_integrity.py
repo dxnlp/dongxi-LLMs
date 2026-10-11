@@ -51,7 +51,8 @@ def main():
             problems.append(f'Missing front matter: {name}')
     if len(list((root/'book/appendices').glob('*.md'))) != 4:
         problems.append('Expected4 appendices')
-    notebooks = sorted((root/'notebooks').glob('day-*/*.ipynb'))
+    notebooks = sorted([*(root/'notebooks').glob('day-*/*.ipynb'),
+                        *(root/'notebooks').glob('extensions/cs336/*.ipynb')])
     days = []
     for day in range(1,29):
         files = [p for p in notebooks if p.parent.name==f'day-{day:02d}']
@@ -80,6 +81,9 @@ def main():
               root/'README.md',root/'BOOK.md',root/'PROGRESS.md',root/'LEARNING_MEMORY.md',
               root/'docs/handoffs/CURRENT.md',root/'visuals/animations/COURSE_STORYBOARDS.md']
     prose += list((root/'notebooks').glob('day-*/README.md'))
+    prose += list((root/'notebooks/extensions').glob('*/README.md'))
+    if (root/'docs/COURSE_ASSIGNMENTS.md').exists():
+        prose.append(root/'docs/COURSE_ASSIGNMENTS.md')
     for path in prose:
         if not path.exists():
             problems.append(f'Missing route file: {path.relative_to(root)}'); continue

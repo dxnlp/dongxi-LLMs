@@ -73,6 +73,29 @@ class ManifestTests(unittest.TestCase):
         row['improvement'] = 'DXI-99'
         self.assertTrue(any('known improvement' in p for p in validate_manifest(self.document)))
 
+    def test_assignment_extension_preserves_day_chapter_and_namespace(self):
+        row = dict(path='notebooks/extensions/cs336/fixture.ipynb', day=8,
+                   chapter=6, lane='extension', execution='cpu-offline',
+                   improvement='CS336-03', requires=[])
+        self.document['notebooks'].append(row)
+        self.assertEqual(validate_manifest(self.document), [])
+        row['chapter'] = 9
+        self.assertTrue(any('mismatch' in p for p in validate_manifest(self.document)))
+        row['chapter'] = 6
+        row['improvement'] = 'CS336-99'
+        self.assertTrue(validate_manifest(self.document))
+        row['improvement'] = 'DXI-03'
+        self.assertTrue(any('mismatch' in p for p in validate_manifest(self.document)))
+
+    def test_assignment_extension_inventory_is_checked(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            p = root/'notebooks/extensions/cs336/unregistered.ipynb'
+            p.parent.mkdir(parents=True)
+            p.write_text('{}')
+            self.assertTrue(any('Unregistered notebook' in p for p in
+                                validate_manifest(self.document, root)))
+
     def test_empty_unknown_and_intersecting_selectors(self):
         for arguments in ({'days': []}, {'days': [29]}, {'days': 1}, {'paths': [{}]}, {'paths': ['missing']},
                           {'lane': 'maybe'}, {'days': [1], 'paths': [self.document['notebooks'][-1]['path']]}):

@@ -1,0 +1,391 @@
+{
+  "command": [
+    "scripts/run_cs336_systems.py",
+    "--mode",
+    "phase-profile",
+    "--device",
+    "cuda",
+    "--output",
+    "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/spark-phase-profile-01/result.json"
+  ],
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 13:59:30) [Clang 22.1.3 ]",
+    "executable": "/tmp/dongxi-cs336-g9l7v90r/gpu/bin/python",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "torch": "2.13.0+cu130",
+    "numpy": "2.5.2",
+    "torch_threads": 1,
+    "cuda_visible_devices": null,
+    "cuda_available": true,
+    "source_sha256": {
+      "scripts/run_cs336_systems.py": "9ea865be96c25c62650139292dfaab56d37e00fbb1b2be1baf82b7ed80f7660a",
+      "src/dongxi_llms/systems_performance_lab.py": "3bfcca82a74a38015fc3dc43469e007283ba1dfa9cd767114034f778c86d0895",
+      "src/dongxi_llms/online_attention_lab.py": "63db6e3c68f400ec1eefbb13efe2ed1f2758714270059ba0a119532df0ca118b",
+      "src/dongxi_llms/scaling_lab.py": "58ef9f427ddcda6843ac08ef57571fc6f626db4c027bf6fb67e0e30519ba88b8",
+      "src/dongxi_llms/stories_training.py": "199169d994b2faa35a5dc69226c9c83dca4573c04210c0d65bdf86b96e3e5ef5",
+      "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826"
+    }
+  },
+  "elapsed_seconds": 1.3377748499624431,
+  "result": {
+    "device": "cuda",
+    "device_name": "NVIDIA GB10",
+    "dtype": "torch.float32",
+    "config": {
+      "vocab": 256,
+      "width": 128,
+      "heads": 4,
+      "kv_heads": 4,
+      "head_dim": 32,
+      "layers": 2,
+      "hidden": 256,
+      "max_length": 128,
+      "modern": true,
+      "qk_norm": false,
+      "tied": true
+    },
+    "phases": [
+      {
+        "phase": "preallocated-matmul",
+        "boundary": "512x512 FP32 inputs already resident; allocation/transfer excluded",
+        "repetitions": [
+          {
+            "repetition": 0,
+            "warmup": 5,
+            "repeats": 10,
+            "host_synchronized_seconds": [
+              0.0009120600298047066,
+              4.5806984417140484e-05,
+              4.3823965825140476e-05,
+              4.169589374214411e-05,
+              4.270405042916536e-05,
+              4.185503348708153e-05,
+              4.185596480965614e-05,
+              4.102394450455904e-05,
+              4.12320950999856e-05,
+              4.07990301027894e-05
+            ],
+            "cuda_event_span_seconds": [
+              0.0001974399983882904,
+              3.657599911093712e-05,
+              3.587200120091438e-05,
+              3.440000116825104e-05,
+              3.5199999809265136e-05,
+              3.455999866127968e-05,
+              3.4464001655578615e-05,
+              3.3792000263929365e-05,
+              3.372799977660179e-05,
+              3.3567998558282853e-05
+            ],
+            "host_median_seconds": 4.1855499148368835e-05,
+            "device_span_median_seconds": 3.451200015842915e-05
+          },
+          {
+            "repetition": 1,
+            "warmup": 5,
+            "repeats": 10,
+            "host_synchronized_seconds": [
+              5.8879959397017956e-05,
+              4.273501690477133e-05,
+              4.2048050090670586e-05,
+              4.191999323666096e-05,
+              4.13600355386734e-05,
+              3.993499558418989e-05,
+              4.022405482828617e-05,
+              4.324805922806263e-05,
+              4.127994179725647e-05,
+              4.116701893508434e-05
+            ],
+            "cuda_event_span_seconds": [
+              3.577600046992302e-05,
+              3.500799834728241e-05,
+              3.4495998173952105e-05,
+              3.433600068092346e-05,
+              3.3984001725912096e-05,
+              3.235200047492981e-05,
+              3.2767999917268756e-05,
+              3.603199869394302e-05,
+              3.404799848794937e-05,
+              3.3792000263929365e-05
+            ],
+            "host_median_seconds": 4.164001438766718e-05,
+            "device_span_median_seconds": 3.419199958443642e-05
+          },
+          {
+            "repetition": 2,
+            "warmup": 5,
+            "repeats": 10,
+            "host_synchronized_seconds": [
+              4.244700539857149e-05,
+              3.998400643467903e-05,
+              4.4079963117837906e-05,
+              4.092790186405182e-05,
+              4.1424063965678215e-05,
+              4.22879820689559e-05,
+              4.120008088648319e-05,
+              4.1072024032473564e-05,
+              4.1328021325170994e-05,
+              4.119891673326492e-05
+            ],
+            "cuda_event_span_seconds": [
+              3.363199904561043e-05,
+              3.2767999917268756e-05,
+              3.670400008559227e-05,
+              3.376000002026558e-05,
+              3.407999873161316e-05,
+              3.411199897527695e-05,
+              3.385600075125694e-05,
+              3.4015998244285585e-05,
+              3.4015998244285585e-05,
+              3.3984001725912096e-05
+            ],
+            "host_median_seconds": 4.126405110582709e-05,
+            "device_span_median_seconds": 3.399999998509884e-05
+          }
+        ]
+      },
+      {
+        "phase": "preallocated-decoder-forward",
+        "boundary": "B1,L128,width128,2blocks FP32 resident input; allocation/transfer excluded",
+        "repetitions": [
+          {
+            "repetition": 0,
+            "warmup": 5,
+            "repeats": 10,
+            "host_synchronized_seconds": [
+              0.0007365720812231302,
+              0.0006960609462112188,
+              0.0006941240280866623,
+              0.0006926689529791474,
+              0.0006890679942443967,
+              0.000685245031490922,
+              0.0006895320257171988,
+              0.0006875169929116964,
+              0.0006679319776594639,
+              0.0006632129661738873
+            ],
+            "cuda_event_span_seconds": [
+              0.0007097600102424622,
+              0.0006874560117721558,
+              0.0006859520077705383,
+              0.0006844800114631653,
+              0.0006811519861221314,
+              0.0006771839857101441,
+              0.0006814079880714417,
+              0.0006796799898147584,
+              0.0006599360108375549,
+              0.0006553279757499695
+            ],
+            "host_median_seconds": 0.0006893000099807978,
+            "device_span_median_seconds": 0.0006812799870967866
+          },
+          {
+            "repetition": 1,
+            "warmup": 5,
+            "repeats": 10,
+            "host_synchronized_seconds": [
+              0.0006682039238512516,
+              0.0006663809763267636,
+              0.00066326092928648,
+              0.0006579809123650193,
+              0.0006602049106732011,
+              0.0006569890538230538,
+              0.0006611970020458102,
+              0.000663949060253799,
+              0.0006580130429938436,
+              0.0006526049692183733
+            ],
+            "cuda_event_span_seconds": [
+              0.0006570879817008972,
+              0.0006581760048866272,
+              0.0006553599834442139,
+              0.0006500800251960754,
+              0.0006524159908294678,
+              0.0006493120193481445,
+              0.0006534079909324646,
+              0.0006560320258140564,
+              0.0006501439809799194,
+              0.0006448000073432923
+            ],
+            "host_median_seconds": 0.0006607009563595057,
+            "device_span_median_seconds": 0.0006529119908809662
+          },
+          {
+            "repetition": 2,
+            "warmup": 5,
+            "repeats": 10,
+            "host_synchronized_seconds": [
+              0.0006642040098086,
+              0.000653933035209775,
+              0.0006593730067834258,
+              0.0006564760114997625,
+              0.0006573729915544391,
+              0.0006581729976460338,
+              0.0006636760663241148,
+              0.0006599329644814134,
+              0.0006577089661732316,
+              0.0006587960524484515
+            ],
+            "cuda_event_span_seconds": [
+              0.0006536319851875305,
+              0.0006462399959564209,
+              0.0006517120003700257,
+              0.0006487039923667908,
+              0.0006495040059089661,
+              0.0006505280137062073,
+              0.0006558399796485901,
+              0.0006520000100135804,
+              0.0006497600078582764,
+              0.0006508160233497619
+            ],
+            "host_median_seconds": 0.0006584845250472426,
+            "device_span_median_seconds": 0.0006506720185279846
+          }
+        ]
+      },
+      {
+        "phase": "input-generation-transfer-forward",
+        "boundary": "Seeded CPU generator/input creation, blocking transfer, resident-model forward included; model construction/load excluded",
+        "repetitions": [
+          {
+            "repetition": 0,
+            "warmup": 5,
+            "repeats": 10,
+            "host_synchronized_seconds": [
+              0.0006822040304541588,
+              0.0006764129502698779,
+              0.0006687960121780634,
+              0.0006757089868187904,
+              0.0006745089776813984,
+              0.0006705719279125333,
+              0.0006734529742971063,
+              0.000673661008477211,
+              0.0006688770372420549,
+              0.0006727169966325164
+            ],
+            "cuda_event_span_seconds": [
+              0.0006713280081748962,
+              0.0006685119867324829,
+              0.0006607360243797302,
+              0.0006676160097122192,
+              0.0006665920019149781,
+              0.0006637120246887207,
+              0.000665440022945404,
+              0.0006657599806785584,
+              0.0006607040166854858,
+              0.0006646400094032287
+            ],
+            "host_median_seconds": 0.0006735569913871586,
+            "device_span_median_seconds": 0.0006656000018119813
+          },
+          {
+            "repetition": 1,
+            "warmup": 5,
+            "repeats": 10,
+            "host_synchronized_seconds": [
+              0.0006732438923791051,
+              0.0006752449553459883,
+              0.0006758690578863025,
+              0.0006687319837510586,
+              0.0006762850098311901,
+              0.000677275937050581,
+              0.0006686369888484478,
+              0.0006743649719282985,
+              0.0006748440209776163,
+              0.0006692289607599378
+            ],
+            "cuda_event_span_seconds": [
+              0.0006625279784202576,
+              0.0006672319769859314,
+              0.0006678079962730408,
+              0.0006606079936027527,
+              0.0006681600213050842,
+              0.0006692159771919251,
+              0.0006606400012969971,
+              0.0006663359999656678,
+              0.0006669759750366211,
+              0.0006613119840621948
+            ],
+            "host_median_seconds": 0.0006746044964529574,
+            "device_span_median_seconds": 0.0006666559875011444
+          },
+          {
+            "repetition": 2,
+            "warmup": 5,
+            "repeats": 10,
+            "host_synchronized_seconds": [
+              0.0006787170423194766,
+              0.0006707810098305345,
+              0.0006762680131942034,
+              0.0006735489005222917,
+              0.0006651480216532946,
+              0.0006747649749740958,
+              0.0006731649627909064,
+              0.0006649879505857825,
+              0.0006696130149066448,
+              0.0006718049990013242
+            ],
+            "cuda_event_span_seconds": [
+              0.0006683520078659057,
+              0.0006627519726753235,
+              0.0006682559847831726,
+              0.0006656960248947143,
+              0.0006572480201721191,
+              0.000666815996170044,
+              0.000665343999862671,
+              0.0006570879817008972,
+              0.0006615999937057495,
+              0.0006639999747276306
+            ],
+            "host_median_seconds": 0.0006724849808961153,
+            "device_span_median_seconds": 0.0006646719872951507
+          }
+        ]
+      }
+    ],
+    "profiling": {
+      "status": "kernel-events-observed",
+      "trace_path": "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/spark-phase-profile-01/phase-profiler-trace.json",
+      "trace_sha256": "dd6ef152dc4e5f9692f3a0228cdc3cc23885336ba2f1d880365a5fe6e273d268",
+      "actual_kernel_names": [
+        "fmha_cutlassF_f32_aligned_64x64_rf_sm80(PyTorchMemEffAttention::AttentionKernel<float, cutlass::arch::Sm80, true, 64, 64, 64, true, true>::Params)",
+        "void (anonymous namespace)::elementwise_kernel_with_index<int, at::native::arange_cuda_out(c10::Scalar const&, c10::Scalar const&, c10::Scalar const&, at::Tensor&)::{lambda()#1}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>(int, at::native::arange_cuda_out(c10::Scalar const&, c10::Scalar const&, c10::Scalar const&, at::Tensor&)::{lambda()#1}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}, function_traits<at::native::arange_cuda_out(c10::Scalar const&, c10::Scalar const&, c10::Scalar const&, at::Tensor&)::{lambda()#1}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}>::result_type*)",
+        "void (anonymous namespace)::elementwise_kernel_with_index<int, at::native::arange_cuda_out(c10::Scalar const&, c10::Scalar const&, c10::Scalar const&, at::Tensor&)::{lambda()#1}::operator()() const::{lambda()#7}::operator()() const::{lambda(long)#1}>(int, at::native::arange_cuda_out(c10::Scalar const&, c10::Scalar const&, c10::Scalar const&, at::Tensor&)::{lambda()#1}::operator()() const::{lambda()#7}::operator()() const::{lambda(long)#1}, function_traits<at::native::arange_cuda_out(c10::Scalar const&, c10::Scalar const&, c10::Scalar const&, at::Tensor&)::{lambda()#1}::operator()() const::{lambda()#7}::operator()() const::{lambda(long)#1}>::result_type*)",
+        "void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> > >(at::TensorIteratorBase&, at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> > const&)::{lambda(int)#1})",
+        "void at::native::elementwise_kernel<128, 2, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1} const&)::{lambda(int)#1})",
+        "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl<at::native::(anonymous namespace)::pow_tensor_tensor_kernel(at::TensorIteratorBase&)::{lambda()#1}::operator()() const::{lambda()#7}::operator()() const::{lambda(float, float)#1}>(at::TensorIteratorBase&, at::native::(anonymous namespace)::pow_tensor_tensor_kernel(at::TensorIteratorBase&)::{lambda()#1}::operator()() const::{lambda()#7}::operator()() const::{lambda(float, float)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl<at::native::(anonymous namespace)::pow_tensor_tensor_kernel(at::TensorIteratorBase&)::{lambda()#1}::operator()() const::{lambda()#7}::operator()() const::{lambda(float, float)#1}>(at::TensorIteratorBase&, at::native::(anonymous namespace)::pow_tensor_tensor_kernel(at::TensorIteratorBase&)::{lambda()#1}::operator()() const::{lambda()#7}::operator()() const::{lambda(float, float)#1} const&)::{lambda(int)#1})",
+        "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::MeanOps<float, float, float, float>, unsigned int, float, 4, 4> >(at::native::ReduceOp<float, at::native::MeanOps<float, float, float, float>, unsigned int, float, 4, 4>)",
+        "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+        "void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<double>, std::array<char*, 1ul> >(int, at::native::FillFunctor<double>, std::array<char*, 1ul>)",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::pow_tensor_scalar_kernel_impl<float, float>(at::TensorIteratorBase&, float)::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::(anonymous namespace)::pow_tensor_scalar_kernel_impl<float, float>(at::TensorIteratorBase&, float)::{lambda(float)#1}, std::array<char*, 2ul>)",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::(anonymous namespace)::silu_kernel(at::TensorIteratorBase&)::{lambda()#1}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::(anonymous namespace)::silu_kernel(at::TensorIteratorBase&)::{lambda()#1}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>)",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::BUnaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 2ul> >(int, at::native::BUnaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 2ul>)",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 3ul> >(int, at::native::BinaryFunctor<float, float, float, at::native::binary_internal::MulFunctor<float> >, std::array<char*, 3ul>)",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctorOnSelf_add<float>, std::array<char*, 2ul> >(int, at::native::CUDAFunctorOnSelf_add<float>, std::array<char*, 2ul>)",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctor_add<float>, std::array<char*, 3ul> >(int, at::native::CUDAFunctor_add<float>, std::array<char*, 3ul>)",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::cos_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::cos_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>)",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::neg_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::neg_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>)",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::rsqrt_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::rsqrt_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>)",
+        "void at::native::vectorized_elementwise_kernel<4, at::native::sin_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul> >(int, at::native::sin_kernel_cuda(at::TensorIteratorBase&)::{lambda()#2}::operator()() const::{lambda()#2}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>)",
+        "void at::native::vectorized_gather_kernel<16, long>(char*, char*, long*, int, long, long, long, long, bool)",
+        "void cublasLt::splitKreduce_kernel<32, 16, int, float, float, float, float, false, float, float, float, true, false, false, false>(cublasLt::cublasSplitKParams<float>, float const*, float const*, float*, float*, float const*, float const*, float const*, float const*, float*, void*, long, float*, int*, float*, float*, float const*, float const*, float const*, float const*, float const*)",
+        "void cutlass::Kernel2<cutlass_80_simt_sgemm_64x64_8x5_tn_align1>(cutlass_80_simt_sgemm_64x64_8x5_tn_align1::Params)"
+      ],
+      "profiled_steps": 1,
+      "boundary": "One preallocated decoder forward; names observed in this trace only; no timing conclusions with profiler overhead"
+    },
+    "float32_matmul_precision": "highest",
+    "allow_tf32_matmul": false,
+    "allow_tf32_cudnn": true,
+    "cuda_max_memory_allocated": 38145536,
+    "cuda_max_memory_reserved": 39845888,
+    "resource_gates": {
+      "seconds_cap": 120,
+      "host_reserve_gib": 25,
+      "allocator_limit_gib": 8,
+      "cadence": "Between repetitions/profile steps; root wrapper enforces total child deadline"
+    },
+    "event_boundary": "CUDA-event stream spans may include host-dispatch idle time, especially CPU creation; not individual kernel durations. Host span includes event-record/synchronization overhead.",
+    "boundary": "Separate actual single-device phase supplement; allocator excludes host/other-process UMA; no peak-utilization, speedup or multi-GPU claim"
+  }
+}

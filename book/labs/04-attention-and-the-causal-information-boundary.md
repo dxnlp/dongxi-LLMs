@@ -38,3 +38,9 @@ notebooks and learner attempts remain intact. Exact runner/replay/export command
 and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
 
 </details>
+
+### Assignment C: connect the mechanism to a comparison
+
+Before opening the [companion route](../../notebooks/extensions/cs336/02_online_attention.ipynb), predict your answer to this question: The retained row maximum rises from two to four. How should the old denominator and value numerator change?
+
+Use the [worked reasoning](../solutions/04-attention-and-the-causal-information-boundary.md) after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The [assignment brief](../../docs/COURSE_ASSIGNMENTS.md) specifies the combined deliverable.

@@ -151,3 +151,11 @@ reward or tuning criterion; finite controls do not rank pretrained PPO stacks.
 
 The [new notebook](../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb)
 supplies adjacent runnable answers, saved reward identities and measured plots.
+
+## Assignment E — A moving policy with no task signal
+
+**Prediction/checkpoint.** Can a nonzero policy gradient prove that reward distinguishes task outcomes?
+
+**Reference reasoning.** No. KL or entropy pressure can supply the total gradient when every task advantage is zero. Differentiate the task term independently and report its norm, sampled successes/failures and mixed-group fraction. The integrated fixture clears those mechanism checks while still failing to exceed its constant-answer baseline.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb) exposes the intermediate values and deliberate failure where applicable.

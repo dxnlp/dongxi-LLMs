@@ -39,3 +39,7 @@ Continue with the [conceptual solutions](../../book/solutions/06-pretraining-as-
 [companion lab guide](../../book/labs/06-pretraining-as-a-controlled-system.md),
 and [bounded experiment specification](../../experiments/specs/2026-09-09-day8-bounded-pretraining.md).
 Live discussion can use these experiments without requiring a notebook session.
+
+## Assignment B: prepare a corpus
+
+Track raw, extracted, matching and training text through the [curation reference](../extensions/cs336/06_corpus_curation.ipynb). Compare three seeds at matched targets per update; retain useful removals, omitted tails and worse held-out outcomes.

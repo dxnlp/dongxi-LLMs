@@ -1,0 +1,36 @@
+{
+  "id": "CS33604-Spark-phase-supplement-01",
+  "status_at_creation": "frozen-before-root-launch",
+  "authority": "Root-owned separately bounded single-GB10 profile; this agent does not execute GPU",
+  "device": "actual singleGB10",
+  "mode": "phase-profile",
+  "caps": {
+    "seconds": 120,
+    "host_reserve_gib": 25,
+    "allocator_gib": 8
+  },
+  "shapes": [
+    "FP32 matmul512x512",
+    "StoriesDecoderB1,L128,width128,heads4,2blocks,vocab256,modernMHA,noQKnorm"
+  ],
+  "repetitions": 3,
+  "warmup_per_repetition": 5,
+  "timed_calls_per_repetition": 10,
+  "phases": [
+    "preallocated-matmul",
+    "preallocated-decoder-forward",
+    "seeded-CPU-input-generation/blocking-transfer/resident-forward"
+  ],
+  "instruments": [
+    "synchronized-host-elapsed span",
+    "CUDA-event stream span, not per-kernel time",
+    "one separate torch.profiler decoder-forward trace, preserve unavailableCUPTI/failure/no-kernel observation"
+  ],
+  "limits": "No hardware peak/utilization/speedup/multiGPU claim. Model load/construction excluded from end-to-end input pipeline. Profiler overhead excluded from timing repetitions; event spans may include dispatch idle.",
+  "command": "python scripts/run_cs336_systems.py --mode phase-profile --device cuda --output <new root-wrapper report directory>/result.json",
+  "source_sha256": "9ea865be96c25c62650139292dfaab56d37e00fbb1b2be1baf82b7ed80f7660a",
+  "previous_source": {
+    "path": "run_cs336_systems-profile-v1-source.py",
+    "sha256": "e3236ed0bac34e6a50f3fc31672bfa9016471d99ff5a3fb6b622369502dbc4a0"
+  }
+}

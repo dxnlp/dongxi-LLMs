@@ -1,0 +1,44 @@
+{
+  "status": "CPU implementation and native audit runner/spec complete",
+  "source_sha256": {
+    "src/dongxi_llms/posttraining_assignment.py": "7cd7569929fbdebfe1281e959dda03b99eb8460b4bc2556d5487b1296f55cea2",
+    "src/dongxi_llms/posttraining_native_audit.py": "2c5d55056f36487ecaee9e6bd6caf2cae201c25e364b4b2e93a93c58bd0104cc",
+    "tests/test_posttraining_assignment.py": "239d28aae7434effe755fd5e4b5cbd88a13d93b7edcd399f45f25e3a3a453805",
+    "tests/test_posttraining_native_audit.py": "2cef5e3b5ee1b081fe95cbd4c1e49157392072e97e9155ef91f180c1d8aa4a9e",
+    "book/solutions/cs336-posttraining-assignment.md": "e13ffbee6c22c42dc9586df57a949a8e6014047599ec3085ea3b16b47d468e2a",
+    "notebooks/extensions/cs336/04_reward_signal_audit.ipynb": "b2468d8b1396e74931b7c049d7e33bcad90e6c68473c6e2ab09deb43f6d7004a",
+    "notebooks/extensions/cs336/07_posttraining_integration.ipynb": "d4c759521ce56d739e4d6a4c1a61f97499bca4c221f0136858e76d5928334fa9",
+    "experiments/fixtures/cs336/posttraining_native_protocol.json": "9710e0cb835a2d35d74aef47ff84de0c2b5bb8ccf07c5c1e54ff39a6ecb12f28",
+    "experiments/fixtures/cs336/posttraining_native_items.json": "b0fd3bb9fb3a283f47f198d34e7654c6f74ddef6e25401a102e7c5d8bd353ed7",
+    "experiments/fixtures/cs336/posttraining_items.json": "1d8d806b2a89a121485e0e2c60c6cc34a54484fa9654c1c647cca67b2ee318c9",
+    "experiments/fixtures/cs336/posttraining_protocol.json": "e18478732972299e03861e1ab23ee8c648ad2409785f651ee720ab71b428fe5b"
+  },
+  "completed": [
+    "3 frozen seeds24 SFT/16 sibling updates; actual compatible checkpoints",
+    "equal768 SFT target comparison;8 vs2 sources",
+    "balanced parity source groups and paired heldout templates; withheld equality family",
+    "same actual SFT parent into accepted-response CE and GRPO std/center siblings",
+    "all attempted IDs/masks/stops/rewards/advantages retained",
+    "independent task/KL gradients; conditional support likelihood alignment",
+    "exact finite joint-group gradient/variance; counterfactual mixed-selection population/cost",
+    "192 old native strict rewards replay unchanged;1 richer diagnostic disagreement",
+    "19 meaningful independent CPU tests;12 notebook prompt/reference/explanation pairs;9 visually reviewed executed figures",
+    "separate root-supervised optional native audit with no optimizer or heldout access"
+  ],
+  "limitations": [
+    "Final exact heldout complete probabilities remain below always-terminated constant baseline.5; no established parity generalization or English capability.",
+    "Equality-family negatives and source regressions retained; tiny paired-source standard errors descriptive.",
+    "Siblings match attempt/update caps, not accepted supervised labels or all physical work.",
+    "Head-only native gradient is a partial derivative on detached hidden states and a cloned output projection; original tied-weight whole-model gradient is not asserted.",
+    "Native execution/result is root-owned; future native SFT/RL pilot remains unexecuted."
+  ],
+  "receipts": [
+    "reference-execution.json",
+    "reference-01/result.json",
+    "focused-tests.json",
+    "notebook-execution-02/receipt.json",
+    "notebook-semantic-review.json",
+    "native-audit-freeze.json"
+  ],
+  "preservation": "No shared chapters/labs/manifest/trackers, old notebook sources, old reports, or native archived outputs modified by this agent."
+}

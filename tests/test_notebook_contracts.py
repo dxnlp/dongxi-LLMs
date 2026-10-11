@@ -205,6 +205,37 @@ class NotebookContractTests(unittest.TestCase):
         self.assertEqual(result['problems'][0]['check'], 'input')
         self.assertTrue(result['limits'])
 
+    def test_new_frozen_source_has_distinct_preservation_authority(self):
+        from unittest.mock import patch
+        snapshot = 'captures/new.ipynb'
+        self.write(snapshot, self.original)
+        self.baseline['notebooks'][self.path]['introduced_source'] = snapshot
+        with patch.object(contracts.subprocess, 'check_output', return_value=''):
+            originals = contracts.load_git_originals(self.root, self.baseline)
+        self.originals = originals
+        result = self.check()
+        self.assertEqual(result['problems'], [])
+        self.assertEqual(result['preservation_authorities']['frozen-introduced-source'], 1)
+        self.assertEqual(result['preservation_authorities']['independent-git-objects'], 0)
+        changed = copy.deepcopy(self.original)
+        changed['cells'][2]['source'] = ['print(999)\n']
+        self.write(snapshot, changed)
+        with patch.object(contracts.subprocess, 'check_output', return_value=''), \
+                self.assertRaisesRegex(ValueError, 'identity disagrees'):
+            contracts.load_git_originals(self.root, self.baseline)
+
+    def test_frozen_source_cannot_replace_git_original_or_escape_root(self):
+        from unittest.mock import patch
+        captured = self.baseline['notebooks'][self.path]
+        captured['introduced_source'] = 'captures/new.ipynb'
+        with patch.object(contracts.subprocess, 'check_output', return_value=self.path+'\n'), \
+                self.assertRaisesRegex(ValueError, 'cannot replace'):
+            contracts.load_git_originals(self.root, self.baseline)
+        captured['introduced_source'] = '../outside.ipynb'
+        with patch.object(contracts.subprocess, 'check_output', return_value=''), \
+                self.assertRaisesRegex(ValueError, 'Unsafe introduced'):
+            contracts.load_git_originals(self.root, self.baseline)
+
 
 if __name__ == '__main__':
     unittest.main()

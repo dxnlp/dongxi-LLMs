@@ -288,3 +288,11 @@ actual model text, not human review or a new training-seed sweep.
 5. [Actual candidates and answer selection](../../notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb): real causal samples, gold-blind choices, attempted costs and oracle gaps.
 
 Each lesson contains prediction, reference answer, runnable computation and a labeled data-derived plot.
+
+## Assignment B — A transitive source group
+
+**Prediction/checkpoint.** A–B and B–C pass the duplicate threshold, while A–C does not. May A and C be placed in different splits?
+
+**Reference reasoning.** Under connected-component grouping, all three share one source group and must remain together. The transitive grouping is a declared split policy, not a claim that every pair is sufficiently similar. Record candidate retrieval and verified edges separately, and compare retrieval with the all-pairs reference on the small fixture.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/06_corpus_curation.ipynb) exposes the intermediate values and deliberate failure where applicable.

@@ -1,0 +1,83 @@
+{
+  "status": "accepted",
+  "reviewer": "editorial_routes independent read-only receipt/source/trace review",
+  "source_sha256": "9ea865be96c25c62650139292dfaab56d37e00fbb1b2be1baf82b7ed80f7660a",
+  "declared_source_sha256": "9ea865be96c25c62650139292dfaab56d37e00fbb1b2be1baf82b7ed80f7660a",
+  "source_matches_spec_and_execution": true,
+  "receipt_sha256": "7eb1e143b6ed449639325e0e8091f0ce6eda2ef3f34988eae89b54a2df1e6bf2",
+  "trace_sha256_matches": true,
+  "trace_names_equal_report": true,
+  "actual_device": "NVIDIA GB10",
+  "elapsed_seconds": 1.3377748499624431,
+  "phase_repetition_counts": [
+    3,
+    3,
+    3
+  ],
+  "actual_dtype": "torch.float32",
+  "matmul_precision": "highest",
+  "matmul_tf32": false,
+  "cudnn_tf32": true,
+  "timings": [
+    {
+      "phase": "preallocated-matmul",
+      "host_medians_microseconds": [
+        41.855499148368835,
+        41.64001438766718,
+        41.26405110582709
+      ],
+      "device_span_medians_microseconds": [
+        34.512000158429146,
+        34.191999584436424,
+        33.99999998509884
+      ]
+    },
+    {
+      "phase": "preallocated-decoder-forward",
+      "host_medians_microseconds": [
+        689.3000099807978,
+        660.7009563595057,
+        658.4845250472426
+      ],
+      "device_span_medians_microseconds": [
+        681.2799870967866,
+        652.9119908809662,
+        650.6720185279846
+      ]
+    },
+    {
+      "phase": "input-generation-transfer-forward",
+      "host_medians_microseconds": [
+        673.5569913871586,
+        674.6044964529574,
+        672.4849808961153
+      ],
+      "device_span_medians_microseconds": [
+        665.6000018119812,
+        666.6559875011444,
+        664.6719872951508
+      ]
+    }
+  ],
+  "allocator_peak_bytes": 38145536,
+  "allocator_reserved_peak_bytes": 39845888,
+  "constraints": {
+    "declared_seconds_cap": 120,
+    "actual_seconds_below_cap": true,
+    "allocator_below8GiB": true,
+    "host_reserve": "Source checks25GiB between repetitions; root wrapper/monitor owns process-level independent resource evidence"
+  },
+  "actual_kernel_observation": [
+    "fmha_cutlassF_f32_aligned_64x64_rf_sm80(PyTorchMemEffAttention::AttentionKernel<float, cutlass::arch::Sm80, true, 64, 64, 64, true, true>::Params)"
+  ],
+  "kernel_scope": "Observed float memory-efficient attention-named kernel on baselineB1,L128,width128 forward only; sm80 in implementation name does not identify the actual GB10 as anA100. No kernel inferred for other shapes.",
+  "boundaries": [
+    "CUDA event values are stream spans, may include dispatch/CPU-idle time and are not individual kernel durations",
+    "Synchronized host includes event and sync overhead; end-to-end includes CPU input generation/transfer/forward, excludes model load/construction",
+    "Small overlapping repetitions/phase ordering do not identify causal copy overhead or speedup by median subtraction",
+    "Allocator memory is not host/otherprocess UMA; no device-peak-utilization or multiGPU claim"
+  ],
+  "book_source_hashes_still_match": true,
+  "book_changed_after_review": [],
+  "remaining_issues": []
+}

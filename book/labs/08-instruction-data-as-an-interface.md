@@ -39,3 +39,9 @@ notebooks and learner attempts remain intact. Exact runner/replay/export command
 and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
 
 </details>
+
+### Assignment E: connect the mechanism to a comparison
+
+Before opening the [companion route](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb), predict your answer to this question: Two SFT arms each use 768 valid targets and 24 updates. One covers eight sources, the other two. What is controlled?
+
+Use the [worked reasoning](../solutions/08-instruction-data-as-an-interface.md) after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The [assignment brief](../../docs/COURSE_ASSIGNMENTS.md) specifies the combined deliverable.

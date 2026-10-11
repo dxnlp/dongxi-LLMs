@@ -40,3 +40,9 @@ notebooks and learner attempts remain intact. Exact runner/replay/export command
 and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
 
 </details>
+
+### Assignment E: connect the mechanism to a comparison
+
+Before opening the [companion route](../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb), predict your answer to this question: A richer parser accepts a boxed answer that the original bare-integer verifier rejects. Has the historical reward changed?
+
+Use the [worked reasoning](../solutions/10-preferences-and-reward-models.md) after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The [assignment brief](../../docs/COURSE_ASSIGNMENTS.md) specifies the combined deliverable.

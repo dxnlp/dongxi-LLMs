@@ -1,0 +1,42 @@
+{
+  "mode": "measured-tiny-CPU",
+  "architecture": "StoriesDecoder-MHA-2-block",
+  "data_policy": "finite256-target-slots-repeated",
+  "width": 24,
+  "parameters": 12024,
+  "compute_budget": 12000000,
+  "actual_6ND_coordinate": 11543040,
+  "presented_tokens": 160,
+  "unique_available_target_slots": 256,
+  "source_repetitions": 0.625,
+  "seed": 6602,
+  "updates": 5,
+  "loss": 2.688723564147949,
+  "train_loss": 2.6445131301879883,
+  "training_loss_by_update": [
+    2.817650318145752,
+    2.7585232257843018,
+    2.6900088787078857,
+    2.6259846687316895,
+    2.6937530040740967
+  ],
+  "actual_runtime_seconds": 0.00957955897320062,
+  "config": {
+    "vocab": 16,
+    "width": 24,
+    "heads": 4,
+    "kv_heads": 4,
+    "head_dim": 6,
+    "layers": 2,
+    "hidden": 48,
+    "max_length": 8,
+    "modern": true,
+    "qk_norm": false,
+    "tied": true
+  },
+  "dtype": "torch.float32",
+  "attention_backend": "SDPA actual kernel not inspected",
+  "lr_policy": "one peak warmup update then cosine to floor, horizon=run updates",
+  "counted_forward_matmul": 811008,
+  "loss_boundary": "dev NLL over independent exact-deduplicated authored sequences; budget means target 6ND coordinate, quantization reported"
+}

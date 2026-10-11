@@ -539,6 +539,14 @@ a downstream handoff. [Appendix D](../appendices/d-reproduction-and-environments
 provides manifests, validation controls and adapter-export details; Chapter 9
 develops the training and numerical handoff mechanisms.
 
+### A comparison begins before the first update
+
+Two training runs can share a seed and still answer different questions. A tokenizer change alters the number of targets; a corpus filter changes the population; a reward filter changes which prompts survive collection. Before using the six [course assignments](../../docs/COURSE_ASSIGNMENTS.md), write the estimand in one sentence: the quantity the comparison is meant to identify. Then list the quantities held fixed and those permitted to vary.
+
+For example, “Does curation reduce validation NLL at equal target exposure?” holds the tokenizer, validation sources, optimizer and targets per update fixed. It permits the training text to change. “Does a larger batch improve forward throughput?” holds model, precision and sequence length fixed, while permitting batch size to change. The first comparison measures a learning outcome; the second measures an execution phase. Neither can substitute for a generated-story judgment.
+
+Assignment F joins these distinctions into a defense. Its evidence table must contain the prediction, frozen protocol, retained failure and strongest supported conclusion for each selected comparison. A refused scaling fit or an unchanged task score can be a successful investigation when the evidence identifies why the original claim was unsupported. The assignment is complete when another reader can reconstruct that argument from the artifacts.
+
 ## 1.11 Exercises
 
 Questions 1–7 develop the core evidence argument. Questions 8–9 are optional

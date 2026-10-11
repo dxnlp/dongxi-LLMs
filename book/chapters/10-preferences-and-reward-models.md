@@ -642,6 +642,14 @@ balanced/confounded fits need their own fixture, selection rule and exports,
 plus independent factual measurements. Freezing an imperfect reward does not
 make its score true.
 
+### A reward interface belongs in the comparison
+
+Assignment E separates a learned preference score from the task's independent checker. The existing reward-model microscopes show that a model can rank familiar answers while depending on length, style or another shortcut. Carry that result into the common comparison: report the reward's input representation, labels, frozen version and out-of-distribution probes before treating policy reward as task quality.
+
+The [reward-signal audit](../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb) supplies a complementary example. Two instruments can grade the same retained text differently because their answer-extraction contracts differ. That disagreement can be understood without fitting another reward model. Preserve the emitted answer and both reason codes, then state which instrument defines the new task.
+
+Use the current reward-model lab as Assignment E's preference branch and compare its independent task metric with the policy's reward. A rising score can support optimization progress for that frozen scorer while leaving the intended quality claim unresolved. This distinction lets the reader connect preference judgments, verifiable answers and optimization without treating their numerical scores as interchangeable.
+
 ## 10.17 Companion route and exercises
 
 Run [Day 15's margin microscope](../../notebooks/day-15/01_bradley_terry_margin.ipynb),

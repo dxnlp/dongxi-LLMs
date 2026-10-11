@@ -138,8 +138,13 @@ def main():
     # Bind lesson inputs before testing so one receipt represents one revision.
     lesson_paths = sorted([*(ROOT/'book').rglob('*.md'),
                            *(ROOT/'notebooks').glob('day-*/*.ipynb'),
+                           *(ROOT/'notebooks').glob('extensions/cs336/*.ipynb'),
                            *(ROOT/'docs/runbooks').glob('*.md'),
                            ROOT/'scripts/book_prose_exemptions.json',
+                           ROOT/'docs/COURSE_ASSIGNMENTS.md',
+                           ROOT/'notebooks/extensions/cs336/README.md',
+                           ROOT/'experiments/reports/2026-10-11-cs336-upgrade/run-01/notebook-contract-baseline.json',
+                           ROOT/'experiments/reports/2026-10-11-cs336-upgrade/run-01/notebook-contract-review.json',
                            ROOT/'experiments/reports/2026-10-10-book-editorial-pass/run-01/notebook-contract-review.json'])
     manifest['lesson_hashes'] = {
         path.relative_to(ROOT).as_posix():hashlib.sha256(path.read_bytes()).hexdigest()

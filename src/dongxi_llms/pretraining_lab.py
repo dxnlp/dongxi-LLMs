@@ -209,22 +209,42 @@ def evaluate(model, windows, batch=3):
 
 class TrainingSession:
     """Bounded float32 CPU fixture. Checkpoints only at completed update boundaries."""
-    def __init__(self, total=24):
+    def __init__(self, total=24, *, train_documents=None, valid_documents=None,
+                 seed=808, length=16, full_windows_only=False):
         if total <= 3:
             raise ValueError("Need more updates than warmup")
-        self.train, self.valid = fixture()
-        self.model = make_model()
+        train_documents = tuple(TRAIN if train_documents is None else train_documents)
+        valid_documents = tuple(VALID if valid_documents is None else valid_documents)
+        if not isinstance(seed, int) or not 1 <= length <= 64:
+            raise ValueError("Integer seed and context within the model's 64 positions required")
+        check_splits(train_documents, valid_documents)
+        self.train = make_windows(train_documents, length)
+        self.valid = make_windows(valid_documents, length)
+        self.omitted_train_targets = 0
+        if full_windows_only:
+            counts = (self.train["y"] != IGNORE).sum(1)
+            keep = counts == length
+            self.omitted_train_targets = int(counts[~keep].sum())
+            if not bool(keep.any()):
+                raise ValueError("No complete training window survives the declared policy")
+            self.train = {"x": self.train["x"][keep], "y": self.train["y"][keep],
+                          "documents": [owner for owner, use in zip(self.train["documents"], keep) if use]}
+        self.model = make_model(seed=seed)
         self.optimizer = torch.optim.AdamW(self.model.parameters(), lr=.01,
                                           weight_decay=.01, foreach=False)
-        self.stream = WindowStream(len(self.train["x"]))
+        self.stream = WindowStream(len(self.train["x"]), seed=seed)
         self.step, self.tokens, self.total = 0, 0, total
         self.contract = {"format": 1, "tokenizer": TOKENIZER,
-                         "train_sha256": fingerprint(TRAIN), "valid_sha256": fingerprint(VALID),
-                         "model": asdict(self.model.cfg), "length": 16,
+                         "train_sha256": fingerprint(train_documents), "valid_sha256": fingerprint(valid_documents),
+                         "model": asdict(self.model.cfg), "length": length,
                          "total": total, "warmup": 3, "peak": .01, "floor": .001,
                          "microbatch": 1, "accumulation": 2, "clip": 1.,
-                         "precision": "cpu-float32", "seed": 808,
+                         "precision": "cpu-float32", "seed": seed,
                          "optimizer": "AdamW:betas=.9,.999;eps=1e-8;decay=.01;all-parameters"}
+        # Keep the original default contract byte-for-byte compatible.
+        if full_windows_only:
+            self.contract["window_policy"] = "complete-only; tails omitted and counted"
+            self.contract["omitted_train_targets"] = self.omitted_train_targets
 
     def update(self):
         lr = learning_rate(self.step, total=self.total)

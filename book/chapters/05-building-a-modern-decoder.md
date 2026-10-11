@@ -1613,6 +1613,14 @@ comparison. Its placeholders for concrete budgets and data must be resolved
 before training. The correct conclusion today is that the experiment has a
 testable structure—not that recurrence has won.
 
+### A FLOP count needs a movement model
+
+A decoder's operation count describes work; execution also moves values. For matrix multiplication with input shapes $(m,k)$ and $(k,n)$, the companion counts $2mkn$ arithmetic operations. Its simple movement model reads each input once and writes the $(m,n)$ output once. With $b$ bytes per element, the modeled payload is $b(mk+kn+mn)$. Dividing the operation count by that payload gives an arithmetic intensity in FLOPs per byte.
+
+That quotient is a model, not a measured traffic counter. Cache reuse, kernel launch overhead, temporary storage and fusion can all change what reaches memory. The [resource-accounting notebook](../../notebooks/extensions/cs336/01_resource_accounting.ipynb) varies shapes and plots the modeled intensity beside actual CPU timings. Its roofline demonstration uses explicitly simulated ceilings. A hardware comparison requires compute and bandwidth ceilings for the same device and precision as the measurement.
+
+Prefill and cached decoding expose different movement patterns. Prefill processes many positions together; a cached new token reuses stored keys and values but still invokes projections, attention and the output head. Assignment C asks which phase was timed and which objects were already allocated. Its checkpoint audit reuses the existing story decoder and checks output and parameter-gradient equivalence while counting retained saved tensors. This gives a mechanism-level memory observation without equating saved tensors with total host or CUDA allocator memory. The [online attention reference](../../notebooks/extensions/cs336/02_online_attention.ipynb) then connects the movement model to tiled normalization, while exposing why ordinary autograd is a different backward-storage contract.
+
 ## 5.26 Architecture-defense exercises
 
 Use the [Day 7 worked answers](../solutions/05-decoder-notebook-solutions.md#day-7-architecture-defense--worked-conceptual-solutions)

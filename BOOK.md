@@ -27,6 +27,19 @@ the learner's active position remains Day 9. Fresh-kernel reference checks and
 bounded CPU measurements are distinct from the separately measured native campaign
 and from learner mastery.
 
+## Integrated experiment assignments — 2026-10-11
+
+The [CS336 comparison plan](docs/CS336_IMPROVEMENT_PLAN.md) adds six
+[assignments](docs/COURSE_ASSIGNMENTS.md) within the same fifteen chapters and
+28 days. All chapters, solutions and labs connect to the comparisons; seven
+original [visual companions](notebooks/extensions/cs336/README.md) bring the
+registered inventory to 83 notebooks. Post-training receives the deepest
+integration: one compatible SFT parent, source-coverage controls, accepted-response
+SFT and policy siblings, plus historical verifier replay and finite-group audits.
+The [implementation record](experiments/reports/2026-10-11-cs336-upgrade.md)
+separates actual CPU/Spark results, negative outcomes and optional future work.
+Learner Day 9 and the original campaign evidence remain unchanged.
+
 ## Reference comparison and improvement goal
 
 The [foundations and reader-experience plan](docs/BOOK_FOUNDATIONS_PLAN.md),

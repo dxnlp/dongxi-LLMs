@@ -17,3 +17,7 @@ well-formed wrong answers. Top/random share the frozen pool and prompt counts;
 the length-random sensitivity makes target exposure explicit. All fixed-seed
 held-out failures remain visible. This is neither pretrained teacher evidence
 nor demonstrated general instruction-following transfer.
+
+## Assignment B: source capacity and repetition
+
+The [curation/exposure companion](../extensions/cs336/06_corpus_curation.ipynb) pairs objective shares with available source-token capacity and effective exposures. Equal shares can imply very different repetitions and distinct coverage.

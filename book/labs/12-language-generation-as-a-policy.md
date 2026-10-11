@@ -41,3 +41,9 @@ notebooks and learner attempts remain intact. Exact runner/replay/export command
 and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
 
 </details>
+
+### Assignment E: connect the mechanism to a comparison
+
+Before opening the [companion route](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb), predict your answer to this question: Can a nonzero policy gradient prove that reward distinguishes task outcomes?
+
+Use the [worked reasoning](../solutions/12-language-generation-as-a-policy.md) after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The [assignment brief](../../docs/COURSE_ASSIGNMENTS.md) specifies the combined deliverable.

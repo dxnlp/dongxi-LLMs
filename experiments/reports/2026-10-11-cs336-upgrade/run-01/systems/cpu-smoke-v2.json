@@ -1,0 +1,77 @@
+{
+  "command": [
+    "scripts/run_cs336_systems.py",
+    "--mode",
+    "smoke",
+    "--output",
+    "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/cpu-smoke-v2.json"
+  ],
+  "environment": {
+    "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+    "executable": "/tmp/dongxi-cs336-g9l7v90r/venv/bin/python",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.5.3",
+    "torch_threads": 1,
+    "cuda_visible_devices": "",
+    "cuda_available": false,
+    "source_sha256": {
+      "scripts/run_cs336_systems.py": "0307f8046b0f59caa1746387906b08f207da111f372f118b3ff57a37cf7e3c60",
+      "src/dongxi_llms/systems_performance_lab.py": "5b88662125697c009565e729d2ee726533817b05c1c17b4c84c3773a50b68f82",
+      "src/dongxi_llms/online_attention_lab.py": "63db6e3c68f400ec1eefbb13efe2ed1f2758714270059ba0a119532df0ca118b",
+      "src/dongxi_llms/scaling_lab.py": "58ef9f427ddcda6843ac08ef57571fc6f626db4c027bf6fb67e0e30519ba88b8",
+      "src/dongxi_llms/stories_training.py": "199169d994b2faa35a5dc69226c9c83dca4573c04210c0d65bdf86b96e3e5ef5",
+      "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826"
+    }
+  },
+  "elapsed_seconds": 0.46059629099909216,
+  "result": {
+    "mode": "measured-tiny-CPU",
+    "architecture": "StoriesDecoder-MHA-2-block",
+    "data_policy": "finite256-target-slots-repeated",
+    "width": 16,
+    "parameters": 5456,
+    "compute_budget": 12000000.0,
+    "actual_6ND_coordinate": 11523072,
+    "presented_tokens": 352,
+    "unique_available_target_slots": 256,
+    "source_repetitions": 1.375,
+    "seed": 6601,
+    "updates": 11,
+    "loss": 2.6560471057891846,
+    "train_loss": 2.610929250717163,
+    "training_loss_by_update": [
+      2.792369842529297,
+      2.763334035873413,
+      2.7187247276306152,
+      2.6514248847961426,
+      2.70116925239563,
+      2.6427793502807617,
+      2.718031883239746,
+      2.688220977783203,
+      2.612584352493286,
+      2.5810117721557617,
+      2.59604811668396
+    ],
+    "actual_runtime_seconds": 0.4545934380730614,
+    "config": {
+      "vocab": 16,
+      "width": 16,
+      "heads": 4,
+      "kv_heads": 4,
+      "head_dim": 4,
+      "layers": 2,
+      "hidden": 32,
+      "max_length": 8,
+      "modern": true,
+      "qk_norm": false,
+      "tied": true
+    },
+    "dtype": "torch.float32",
+    "attention_backend": "SDPA actual kernel not inspected",
+    "lr_policy": "one peak warmup update then cosine to floor, horizon=run updates",
+    "counted_forward_matmul": 376832,
+    "loss_boundary": "dev NLL over independent exact-deduplicated authored sequences; budget means target 6ND coordinate, quantization reported",
+    "smoke_cap_seconds": 30
+  }
+}

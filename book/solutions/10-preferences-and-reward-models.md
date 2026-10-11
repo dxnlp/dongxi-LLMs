@@ -221,3 +221,11 @@ record that difference rather than replacing an old checkpoint. The notebook
 retains its initial historical-retraining equality failure and verifies exact
 same-state reload, while the new character fit/export/reload remains exact in
 its locked CPU environment.
+
+## Assignment E — Two instruments, one response
+
+**Prediction/checkpoint.** A richer parser accepts a boxed answer that the original bare-integer verifier rejects. Has the historical reward changed?
+
+**Reference reasoning.** No. Preserve the historical score and record a separately named diagnostic with full text, stop reason and extraction reason codes. If the richer instrument becomes a training reward, freeze a new protocol and adversarial tests first. A learned reward model also needs independent task evaluation; scorer agreement alone cannot establish behavior quality.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb) exposes the intermediate values and deliberate failure where applicable.

@@ -759,6 +759,20 @@ faithfulness claim is justified by these measurements. Some evaluation time
 overlaps CPU notebook verification; recorded whole-child times are not isolated
 serving-throughput benchmarks.
 
+### Difficulty changes which prompts contribute
+
+For independent binary-reward samples with success probability $p$ and group size $G$, the probability of observing both reward classes is
+
+$$
+P(\text{mixed group})=1-p^G-(1-p)^G.
+$$
+
+At $p=0.5$ and $G=4$, this is 0.875. At $p=0.1$ or $p=0.9$, it is 0.3438. Drawing prompts from a uniform mixture and rejecting nonmixed groups favors intermediate-difficulty prompts in the retained population. Retrying each prompt until it yields a mixed group instead preserves a fixed prompt quota, while changing its conditional estimator and collection cost. In either policy, collection cost rises where mixed groups are rare. The [reward audit](../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb) enumerates the finite outcomes rather than treating the group's normalizer as independent of an answer's reward.
+
+That dependence matters for standardized advantages: the same samples determine each action, the mean and the standard deviation. A large-group approximation can describe a limit while misrepresenting a small group's expected gradient and variance. The companion compares normalized and unnormalized estimators, selection populations and attempts per retained group on one fixed Bernoulli policy. It does not infer autoregressive reasoning quality from that enumeration.
+
+The native replay preserves all 192 historical strict zero rewards. A richer diagnostic accepts one retained boxed-answer response, while the original instrument rejects it. This is evidence about answer extraction, not a successful rerun. Assignment E requires a newly named reward protocol before changing training semantics, and usable training/development signal before interpreting a longer policy campaign.
+
 ## 13.9 Deep questions
 
 1. Why does an all-correct group produce no relative policy signal?

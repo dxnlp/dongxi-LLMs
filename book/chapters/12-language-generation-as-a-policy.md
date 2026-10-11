@@ -711,6 +711,14 @@ paths, frozen controls and withheld responses are in the
 The [new notebook](../../notebooks/day-20/04_learned_critics_and_frozen_text_rewards.ipynb)
 traces the difference from return tensors to actual sampled text.
 
+### Measure the gradient component that answers the question
+
+A policy loss can contain task reward, KL pressure and entropy terms. A nonzero total gradient does not identify which term provides it. If all sampled answers in every group receive the same reward, the task's centered advantages vanish even while a reference penalty moves the parameters. Assignment E asks for the task-only gradient norm as well as the total objective's diagnostics.
+
+The [compatible decoder reference](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb) samples answers and the ending action, then reevaluates their likelihood under the declared conditional grammar. Its support and masks therefore remain part of the probability contract. Compare its frozen parent with accepted-response SFT and the reward-based sibling using the same held-out source pairs. Their different losses need not imply different task success.
+
+Reuse this chapter's likelihood-ratio, baseline and support derivations to explain the observed update. The small reference has genuine sampled successes, failures and mixed groups, so it clears a mechanism gate that the earlier all-zero native run did not. Clearing that gate establishes an opportunity for task-directed learning; the independent constant baseline still tests whether the policy acquired the underlying relation.
+
 ## 12.15 Companion route and exercises
 
 Use [Day 19's exact gradient](../../notebooks/day-19/01_exact_reinforce_gradient.ipynb),

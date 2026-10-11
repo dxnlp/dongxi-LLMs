@@ -8,10 +8,10 @@ optimization, and reinforcement learning. The course connects mathematical
 derivations to readable PyTorch implementations, visual notebooks, and real
 training evidence from an NVIDIA DGX Spark.
 
-**15 chapters · 28 learning days · 76 visual notebooks · worked solutions**
+**15 chapters · 28 learning days · 83 visual notebooks · worked solutions**
 
 [Read the book](book/README.md) · [Explore the notebooks](notebooks/README.md) ·
-[Follow the daily route](docs/COURSE_SEQUENCE.md) · [Inspect the experiments](docs/EXPERIMENT_MATRIX.md)
+[Follow the daily route](docs/COURSE_SEQUENCE.md) · [Inspect the experiments](docs/EXPERIMENT_MATRIX.md) · [Six assignments](docs/COURSE_ASSIGNMENTS.md)
 
 [![A decoder scores a toy vocabulary, selects the next token, appends it to the prefix, and repeats.](visuals/readme/next-token.gif)](book/chapters/03-learning-the-next-token.md)
 

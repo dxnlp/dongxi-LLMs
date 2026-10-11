@@ -1,0 +1,88 @@
+{
+  "name": "cs336-compatible-posttraining-v1",
+  "authorship": "Original Dongxi symbolic fixture; no upstream prose/code copied.",
+  "seeds": [
+    33671,
+    33672,
+    33673
+  ],
+  "full": {
+    "sft_updates": 24,
+    "sibling_updates": 16,
+    "runtime_cap_seconds": 180
+  },
+  "smoke": {
+    "seeds": [
+      33671
+    ],
+    "sft_updates": 2,
+    "sibling_updates": 1,
+    "runtime_cap_seconds": 180
+  },
+  "sft_lr": 0.005,
+  "sibling_lr": 0.003,
+  "weight_decay": 0.0,
+  "gradient_clip": 1.0,
+  "group_size": 8,
+  "beta": 0.02,
+  "epsilon": 0.2,
+  "dtype": "float64",
+  "sibling_arms": [
+    "accepted-sft",
+    "grpo-std",
+    "grpo-center"
+  ],
+  "sibling_initial_rng_offset": 500,
+  "evaluation_rng_offset": 100,
+  "sampled_evaluations_per_item": 4,
+  "difficulty": {
+    "name": "parent-training-complete-path-probability-v1",
+    "min_probability": 0.05,
+    "max_probability": 0.95,
+    "scope": "Select eligible train prompts once from frozen SFT parent; development is a signal audit only. Never use heldout for selection. All eligible groups enter updates; mixed-only filtering is a separately labeled counterfactual population/cost audit."
+  },
+  "comparison": {
+    "coverage": "8 distinct train sources, two templates each",
+    "repetition": "2 distinct train sources (0,0) and (0,1), two templates each repeated four times",
+    "rows_per_update": 16,
+    "targets_per_row": 2,
+    "target_tokens_per_sft_arm": 768,
+    "matching": "SFT arms match supervised target exposure and optimizer updates; siblings match attempted fresh groups and update caps, not accepted labels or later sampled paths."
+  },
+  "interface": {
+    "name": "parity-symbolic-two-token-v1",
+    "vocab_size": 10,
+    "tokens": {
+      "PAD": 0,
+      "BOS": 1,
+      "EOS": 2,
+      "EQUALITY": 3,
+      "PARITY_ALIAS": 4,
+      "PARITY_DIRECT": 5,
+      "NUMBER_START": 6
+    },
+    "prompt": "[BOS, operation, NUMBER_START+a, NUMBER_START+b]",
+    "response": "[NUMBER_START+answer, EOS]",
+    "first_sampling_support": [
+      6,
+      7
+    ],
+    "second_sampling_support": [
+      2,
+      6,
+      7
+    ],
+    "cap": 2,
+    "sft_distribution": "full ten-token vocabulary",
+    "rl_distribution": "conditional position-specific syntax support; EOS is sampled, not forced",
+    "supervised_mask": "labels first four positions -100; both response tokens supervised after exactly one causal shift",
+    "response_mask": "generated positions through and including EOS; later PAD excluded"
+  },
+  "oracle": "Parity: exact integer (a+b)%2. Withheld equality: int(a==b). No neural response parsing in task oracle.",
+  "hypotheses": [
+    "Coverage may transfer better than repetition on paired heldout sources; all seeds and negative outcomes retained.",
+    "Accepted-response SFT and reward updates can improve termination without learning unseen parity sources.",
+    "Inclusive group normalization changes finite-group estimators; mixed filtering changes population and cost."
+  ],
+  "stop_rules": "No heldout recipe selection, cap increase or native/GPU execution. Nonfinite state, interface mismatch, or deadline aborts with failure record. Absent reward signal is a diagnostic, not permission to extend a run."
+}

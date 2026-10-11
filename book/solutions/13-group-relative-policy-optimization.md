@@ -517,3 +517,11 @@ ranking or proof that GRPO fails. Correct-but-capped sample counts 2/2/1 also sh
 why stopping is a separate outcome. Read the matched per-seed receipts, retain
 the frozen parser and distinguish four new 100-record evaluations from reused
 baseline records.
+
+## Assignment E — The population induced by mixed-group selection
+
+**Prediction/checkpoint.** For p=0.5 and G=4, what fraction of independent groups is mixed? How does selection affect easier prompts?
+
+**Reference reasoning.** The fraction is 1−0.5⁴−0.5⁴ = 0.875. For p=0.1 or 0.9 it is 1−0.1⁴−0.9⁴ = 0.3438. Requiring a mixed group favors intermediate success probabilities and increases collection cost for extreme ones. Enumerate action/reward/normalizer jointly for standardized finite groups; a marginal standard deviation treated as independent changes the calculation.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb) exposes the intermediate values and deliberate failure where applicable.

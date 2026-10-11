@@ -367,3 +367,11 @@ frequencies on those held-out combinations. The report would need separate
 training and held-out losses, calibration error or frequency comparisons, fixed
 seeds and splits, and failure criteria. A successful result would support
 generalization only within that synthetic family, not natural language broadly.
+
+## Assignment A — A fixed likelihood unit
+
+**Prediction/checkpoint.** A four-byte evaluation text has summed NLL of four nats. What happens to bits per byte when it is represented by two instead of four tokens?
+
+**Reference reasoning.** At fixed summed NLL and byte count, both give 4/(4 ln 2), approximately 1.443 bits per byte. Their token-average NLLs are two and one nats, so token perplexity differs. State EOS and masking policies before interpreting the byte-normalized score. This arithmetic illustrates reporting units; it does not predict equal learned NLL across real tokenizers.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb) exposes the intermediate values and deliberate failure where applicable.

@@ -658,6 +658,14 @@ Keep margins, absolute likelihoods, exact answers, stopping, retention and
 costs in their own lanes. One recipe and four location prompts cannot establish
 that either training method is universally superior.
 
+### A preference margin and a delivered answer
+
+The common post-training comparison retains the chapter's chosen-SFT control. A pairwise objective changes relative likelihood; supervised learning on the chosen response changes its likelihood directly. Even when both improve a chosen-versus-rejected margin, their absolute chosen likelihood, ending behavior and generated text can diverge. Assignment E uses the existing paired native and microscopic evidence to examine those quantities together.
+
+A compatible interface is necessary before comparing checkpoints, but it does not match every budget. Count labeled response targets, optimizer updates and generation work separately. For a policy arm, include unsuccessful collected responses and discarded groups. For a chosen-SFT arm, include the supervision used to choose and train on an accepted answer. Neither an equal update count nor an equal retained-token count implies equal collection cost.
+
+The [integration notebook](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb) adds a supervised-parent genealogy and two explicitly named sibling interventions. Its reward branch is a symbolic control; it does not replace the chapter's DPO experiment. Combine their lessons by defending the claim with delivered behavior and independent evaluation, rather than a margin alone.
+
 ## 11.9 Companion route and exercises
 
 Study [the finite optimum](../../notebooks/day-17/01_kl_regularized_optimum.ipynb),

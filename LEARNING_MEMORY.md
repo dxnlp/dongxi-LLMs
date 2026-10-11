@@ -1,5 +1,32 @@
 # Learning Memory and Production Queue
 
+CS336 improvement goal, 2026-10-11: complete. The [plan](docs/CS336_IMPROVEMENT_PLAN.md)
+and [implementation record](experiments/reports/2026-10-11-cs336-upgrade.md) link
+six integrated assignments, all fifteen chapters/solutions, sixteen labs and
+seven substantial CPU companions. Independent reviews and fresh local verification
+pass 1,614 tests/all 83 notebooks: 575 executed cells, 242 images, 376 reviewed pairs; original
+76 notebook files and four unfinished learner cells remain intact. Protected
+history is byte-identical except authorized append-only animation candidates.
+Negative evidence is retained: curated NLL is worse on all three seeds, the tiny
+scaling fit refuses an unbracketed optimum, and the symbolic policy remains below
+its constant baseline. Actual bounded GB10 phases are measured. The new 48-response
+native audit has no usable strict reward signal and all richer grades unsupported;
+raw responses can show correct arithmetic despite that extraction failure. No
+longer RL run or native capability gain is claimed. The task-only head gradient
+is a detached-hidden partial derivative, distinct from a whole-model gradient.
+Candidate extensions reuse 008/005/027/009 plus scaling candidate 030, with Mac
+production still unapproved. Learner Day 9, 15 chapters/28 days and D005 are preserved;
+next live discussion returns to the retained English-story objective on Spark.
+
+CS336 comparison, 2026-10-11: the learner requested a concrete improvement plan
+for course content and labs. The [CS336 plan](docs/CS336_IMPROVEMENT_PLAN.md)
+compares pinned Spring 2026 assignments and lectures with the completed local
+upgrades. It proposes six integrated assignments and seven implementation
+packages, prioritizing corpus curation and post-training reward/evaluation
+audits, then hardware, tokenizer and scaling lessons. This initial proposal
+precedes the implementation authorization above. Preserve
+the fifteen chapters, twenty-eight days, D005 priority and learner Day 9.
+
 Book foundations goal, 2026-10-10: complete. The learner requested autonomous
 improvement of explanatory depth and reader experience in all fifteen chapters.
 The [foundations plan](docs/BOOK_FOUNDATIONS_PLAN.md) and

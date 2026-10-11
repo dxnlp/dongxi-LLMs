@@ -658,6 +658,14 @@ The 288 cells at later checkpoints remain missing, with null scores and
 incomplete paired comparisons. Completing this bounded comparison does not
 complete the original 14,000-update training schedule.
 
+### Related sources can cross a boundary without exact equality
+
+Exact hashes detect identical text, but independently edited copies can still contaminate an evaluation. In Assignment B, MinHash and locality-sensitive hashing propose candidate pairs; exact shingle Jaccard checks whether each candidate meets the declared threshold. Candidate retrieval and duplicate confirmation are different operations. The [curation companion](../../notebooks/extensions/cs336/06_corpus_curation.ipynb) compares candidates with an all-pairs reference on the small fixture, so a missed edge remains visible.
+
+Grouping introduces a further decision. If A resembles B and B resembles C, a connected-component policy puts all three in one source group even when A does not meet the threshold with C. The policy is deliberately transitive; pairwise similarity is not. A source-group split prevents that component from appearing on both sides of the evaluation boundary. It can also create larger groups than a reader expects from looking at one pair.
+
+Record normalization and extraction before interpreting an overlap. Case folding and accent removal may help identify a copied source while erasing distinctions that matter to the task. Keep raw text, matched text, candidate edges, verified edges and component membership separately. The resulting audit supports a claim about the declared matching procedure and available sources. It cannot establish that a large pretrained model has never encountered semantically similar material.
+
 ## 7.18 Exercises and transition
 
 1. Define a testable claim about story coherence, including prompt population and rubric.

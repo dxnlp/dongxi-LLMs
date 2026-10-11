@@ -385,6 +385,14 @@ evaluation is independent of the score that selected its demonstrations.
 Chapter 15 returns to selection and distillation with reasoning responses; this
 programmatic control alone establishes no pretrained-model transfer.
 
+### Exposure and coverage have different denominators
+
+Suppose two recipes present 768 supervised target tokens. One uses eight distinct source problems; another repeats two. They share a token-exposure budget while providing different coverage. A source can have several template forms, so counting rows or rendered prompts is not enough. The [integrated post-training companion](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb) identifies the underlying problem before serialization, and pairs direct and alias forms in its held-out evaluation.
+
+For a fixed retained corpus, effective exposure can be described as presented valid targets divided by available valid target slots. That ratio measures repeated opportunities to learn from the retained material. It is not a count of independent facts learned, and comparisons need the retained denominator as well as the ratio. Filtering can increase repetition at fixed presented-token budget simply by shrinking the corpus.
+
+Assignment E therefore reports unique source groups, rendered examples, valid supervised targets, optimizer updates and generated response tokens separately. It matches targets per update in the coverage comparison, keeping the optimizer clock aligned. Subsequent accepted-response SFT and policy updates use different observations and objectives; their labels and rollout work are disclosed rather than declared equivalent. Before running either arm, predict whether extra coverage will transfer to held-out sources or merely help a familiar rendering.
+
 ## 8.15 Exercises
 
 1. Draw the serialized sequence for a system-user-assistant conversation.

@@ -947,6 +947,14 @@ supervised later loss to shared parameters.
 `tie_word_embeddings: true` is evidence of intent. Runtime object and storage
 identity verified the actual loaded behavior in the inspected stack.
 
+### Where a learned merge is allowed to act
+
+A merge table does not define the entire text interface. Consider a learned merge spanning `red blue`. A whole-record encoder may apply it; a word-segmented encoder presents `red`, the space and `blue` separately, so the same table cannot cross those boundaries. The vocabulary is only one part of the contract. Segmentation, normalization and reserved-marker admission determine which byte sequences reach it.
+
+A literal reserved marker creates a second boundary. If ordinary text contains `<END>`, the encoder must either admit it as a control token, reject it, or encode its bytes as ordinary text. Those policies can produce different IDs while decoding to identical visible strings. Round-trip text equality therefore does not prove control-token equivalence. The [tokenizer contracts microscope](../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb) wraps the existing byte BPE and makes these choices observable, including save/load identity and adversarial Unicode probes.
+
+Streaming needs its own statement of equivalence. Encoding independent records means resetting the merge boundary between records. Encoding chunks of one record must agree with encoding their concatenation, even when a chunk ends inside a likely merge. The reference achieves that by buffering the complete framed record and checking its declared size limit. This is a transparent correctness reference; its storage grows with record length. Use Assignment A to predict these differences before revealing the token IDs.
+
 ## 2.12 Exercises
 
 1. **Interface corruption.** Two tokenizers both produce tensors of shape

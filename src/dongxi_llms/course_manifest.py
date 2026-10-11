@@ -94,17 +94,23 @@ def validate_manifest(document: Any, root: Path | None = None) -> list[str]:
         entries[path] = row
         matches_path = (_integer(day) and bool(re.fullmatch(
             rf"notebooks/day-{day:02d}/[^/]+\.ipynb", path)))
+        # Named CS336 companions keep their declared day/chapter dependency
+        # while living together as a reusable assignment pathway.
+        cs336_path = (row.get("lane") == "extension"
+                      and isinstance(row.get("improvement"), str)
+                      and bool(re.fullmatch(r"CS336-0[1-7]", row["improvement"]))
+                      and bool(re.fullmatch(r"notebooks/extensions/cs336/[^/]+\.ipynb", path)))
         if (not _integer(day) or day not in day_chapters
                 or not _integer(row.get("chapter"))
                 or row.get("chapter") != day_chapters.get(day)
-                or not matches_path):
+                or not (matches_path or cs336_path)):
             problems.append(f"Notebook day/chapter/path mismatch: {path}")
         lane = row.get("lane")
         if lane not in ("core", "optional", "extension") or row.get("execution") != "cpu-offline":
             problems.append(f"Unknown lane/execution: {path}")
         improvement = row.get("improvement")
         if lane == "extension":
-            if not isinstance(improvement, str) or not re.fullmatch(r"DXI-(0[1-9]|1[0-8])", improvement):
+            if not isinstance(improvement, str) or not re.fullmatch(r"(?:DXI-(0[1-9]|1[0-8])|CS336-0[1-7])", improvement):
                 problems.append(f"Extension needs a known improvement ID: {path}")
         elif improvement is not None:
             problems.append(f"Non-extension improvement ID: {path}")
@@ -147,7 +153,9 @@ def validate_manifest(document: Any, root: Path | None = None) -> list[str]:
             problems.append(f"Path escapes repository: {path}")
         elif not actual.is_file() or not actual.stat().st_size:
             problems.append(f"Missing/empty artifact: {path}")
-    physical = {p.relative_to(root).as_posix() for p in (root / "notebooks").glob("day-*/*.ipynb")}
+    physical = {p.relative_to(root).as_posix() for pattern in
+                ("day-*/*.ipynb", "extensions/cs336/*.ipynb")
+                for p in (root / "notebooks").glob(pattern)}
     for path in sorted(physical - set(entries)):
         problems.append(f"Unregistered notebook: {path}")
     for path in entries:

@@ -753,6 +753,21 @@ prefill requires 12 cached versus 40 uncached layer-position projections for
 each of K and $V_{\mathrm{val}}$. Final logical cache storage is 768 bytes. This is neither a
 measured speedup nor a model-quality result.
 
+### A row can be normalized without keeping every score
+
+Softmax needs a row's global normalization, but the row need not remain materialized. After visiting one key block, retain a maximum $m$, a scaled denominator $\ell$ and a scaled value numerator $u$. If the next block has scores $s_j$ and a larger maximum, set $m'=\max(m,\max_j s_j)$ and update
+
+$$
+\ell'=e^{m-m'}\ell+\sum_j e^{s_j-m'},\qquad
+u'=e^{m-m'}u+\sum_j e^{s_j-m'}v_j.
+$$
+
+Initialize $m=-\infty$, $\ell=0$ and $u=0$. Skip a block with no allowed keys. For the first nonempty block, its maximum is finite and the old accumulators contribute zero; an implementation must handle the empty state explicitly to avoid subtracting two negative infinities.
+
+Here $s_j$ is a scaled query–key dot product, $v_j$ is a value vector, and the final row output is $u'/\ell'$. The factor multiplying the old state preserves its contribution in the new coordinate system. Removing that factor can yield plausible-looking values while violating dense attention. The [online attention microscope](../../notebooks/extensions/cs336/02_online_attention.ipynb) shows this failure beside the correct blockwise result.
+
+Apply the causal and padding masks before each block's reduction. An entirely masked row has zero output under the companion's declared convention, with log-sum-exp equal to negative infinity. The tests also compare gradients and exercise uneven tiles. These checks establish a transparent implementation's mathematical behavior. Python tiling with ordinary autograd can still retain intermediate graphs; its smaller forward workspace is not evidence of FlashAttention's fused backward memory or GPU speed. Assignment C asks the reader to defend both the recurrence and that boundary.
+
 ## 4.13 Exercises
 
 1. **Shapes and meaning.** For $n=5,D=8,d_h=4,d_v=3$, give every shape

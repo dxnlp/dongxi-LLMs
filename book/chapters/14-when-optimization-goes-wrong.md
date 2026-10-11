@@ -705,6 +705,14 @@ did groups become uniformly correct or uniformly wrong, did an evaluator change,
 or did ratios become extreme? Pair the alert with the relevant measurement and
 one stated intervention. Chapter 15 turns those records into a technical defense.
 
+### Choose a repair from the first failed contract
+
+The [reward-signal audit](../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb) starts with the emitted response, its stop reason and the two grading instruments. An unsupported answer format, a truncated answer and a mathematically wrong answer are different failures. Preserve their denominators before considering a training intervention. Changing a parser can repair measurement compatibility while leaving the model's ability unchanged.
+
+Next inspect task advantages and their gradient component. All-zero task rewards do not justify a larger policy run merely because the total objective moves. Conversely, mixed rewards do not guarantee that the task is learnable from the available prompts: the compatible reference can improve termination while remaining below a constant-answer baseline. Difficulty selection and additional source coverage address different possible causes.
+
+Assignment E combines this diagnosis with Assignment C's phase-specific performance observations. Faster collection is useful only when the collected observations answer the scientific question. A memory or latency improvement cannot repair a missing task signal, and a better checker cannot establish faster execution. Choose the next intervention from the failed mechanism and write what new observation would distinguish that hypothesis from the alternatives.
+
 ## 14.9 Deep questions
 
 1. How can rising reward and falling accuracy both indicate successful optimization?

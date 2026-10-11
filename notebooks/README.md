@@ -53,7 +53,7 @@ regeneration instructions: [`Notebook visuals`](../docs/NOTEBOOK_VISUALS.md).
 
 ## Complete daily session index — 2026-10-04
 
-The current course has76 accepted focused notebooks across all28 learning days.
+The current course has 83 registered focused notebooks across all 28 learning days. Seven [assignment companions](extensions/cs336/README.md) add tokenizer contracts, corpus curation, systems measurements, online attention, scaling prediction and integrated post-training. The earlier reference-audit inventory contained 76 notebooks.
 Fifteen reference-audit extensions add checkpoint-interface protection (Day1),
 mathematical grading/response replay (Day10), preference/judge auditing (Day15),
 text reward/outcome/process labels and vocabulary controls (Day16), DPO retention

@@ -43,7 +43,7 @@ math-grading, judge-bias, text-reward/process-label, critic/GAE,
 sampling-support, GRPO-denominator, selection/control, response-distillation,
 batching/recovery and refinement microscopes. They deepen existing chapters;
 no additional mandatory day or empty notebook placeholder is created here.
-The accepted inventory is76 notebooks. Fifteen verified extensions are:
+The current inventory is 83 notebooks. The seven [assignment companions](../notebooks/extensions/cs336/README.md) connect mechanisms to the six [integrated assignments](COURSE_ASSIGNMENTS.md); their registered prerequisites preserve the core day sequence. The preceding reference-audit snapshot contained 76 notebooks. Its fifteen verified extensions are:
 
 - [Day1 checkpoint interface](../notebooks/day-01/04_checkpoint_interface.ipynb):
   five code cells/one mapping figure; actual local save/reload and controlled failure.

@@ -24,3 +24,7 @@ scientific figures distinguish any-correct availability from first/vote/likeliho
 decisions, charge every invalid attempt and whole-attempt token overshoot, and
 inspect source/template/family failures plus error dependence. It has no English
 parser or pretrained capability claim; the full measured panel remains immutable.
+
+## Assignment B: source contamination beyond exact hashes
+
+Use the [verified duplicate graph](../extensions/cs336/06_corpus_curation.ipynb) to distinguish approximate candidate retrieval, exact Jaccard confirmation and transitive source groups. Freeze split ancestry before choosing filters.

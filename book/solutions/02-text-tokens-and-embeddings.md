@@ -329,3 +329,11 @@ decoded text for every input. Therefore numeric relationships such as “ID 100 
 close to ID 101” cannot carry the language knowledge. The knowledge resides in
 the parameters and computation associated with those categorical addresses and
 in the text interface that maps the addresses back to symbols.
+
+## Assignment A — Text equality versus interface equality
+
+**Prediction/checkpoint.** A special marker decodes to the same visible string whether it is reserved or ordinary. Are the encodings equivalent?
+
+**Reference reasoning.** No. Reserved admission can emit one control ID; ordinary admission emits byte/BPE IDs. The decoded text alone hides this distinction. Compare IDs, control-token counts and policy identity. For streamed chunks of one record, check IDs against concatenated-record encoding; for independent records, preserve the declared reset boundary.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb) exposes the intermediate values and deliberate failure where applicable.

@@ -1,0 +1,2233 @@
+{
+  "command": [
+    "scripts/run_cs336_systems.py",
+    "--mode",
+    "reference",
+    "--output",
+    "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/cpu-reference-v1.json"
+  ],
+  "environment": {
+    "python": "3.12.3 (main, Jul 15 2026, 23:46:41) [GCC 13.3.0]",
+    "executable": "/tmp/dongxi-cs336-g9l7v90r/venv/bin/python",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "torch": "2.14.1+cpu",
+    "numpy": "2.5.3",
+    "torch_threads": 1,
+    "cuda_visible_devices": "",
+    "cuda_available": false,
+    "source_sha256": {
+      "scripts/run_cs336_systems.py": "e3236ed0bac34e6a50f3fc31672bfa9016471d99ff5a3fb6b622369502dbc4a0",
+      "src/dongxi_llms/systems_performance_lab.py": "3bfcca82a74a38015fc3dc43469e007283ba1dfa9cd767114034f778c86d0895",
+      "src/dongxi_llms/online_attention_lab.py": "63db6e3c68f400ec1eefbb13efe2ed1f2758714270059ba0a119532df0ca118b",
+      "src/dongxi_llms/scaling_lab.py": "58ef9f427ddcda6843ac08ef57571fc6f626db4c027bf6fb67e0e30519ba88b8",
+      "src/dongxi_llms/stories_training.py": "199169d994b2faa35a5dc69226c9c83dca4573c04210c0d65bdf86b96e3e5ef5",
+      "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826"
+    }
+  },
+  "elapsed_seconds": 0.49432296492159367,
+  "result": {
+    "checkpoint": {
+      "config": {
+        "vocab": 16,
+        "width": 16,
+        "heads": 4,
+        "kv_heads": 4,
+        "head_dim": 4,
+        "layers": 2,
+        "hidden": 32,
+        "max_length": 16,
+        "modern": true,
+        "qk_norm": false,
+        "tied": true
+      },
+      "arms": [
+        {
+          "checkpointing": false,
+          "loss": 2.7712693294963078,
+          "forward_block_entries": 2,
+          "total_block_entries": 2,
+          "recomputed_block_entries": 0,
+          "saved_tensors": [
+            {
+              "shape": [
+                2,
+                8
+              ],
+              "dtype": "torch.int64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                4,
+                8,
+                4
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                4,
+                8,
+                4
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                4,
+                8,
+                4
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                4,
+                8
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 512
+            },
+            {
+              "shape": [
+                2,
+                4,
+                8,
+                4
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                16,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                2,
+                8,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                32,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                16,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                8,
+                2
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                4,
+                8,
+                4
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                4,
+                8,
+                4
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                4,
+                8,
+                4
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                4,
+                8
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 512
+            },
+            {
+              "shape": [
+                2,
+                4,
+                8,
+                4
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                16,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                2,
+                8,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                32,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                16,
+                32
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 4096
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16
+              ],
+              "dtype": "torch.int64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [],
+              "dtype": "torch.float64",
+              "logical_bytes": 8
+            }
+          ],
+          "logical_saved_tensor_bytes": 158856,
+          "unique_backing_storage_bytes": 132632,
+          "boundary": "Forward saves only; aliases deduplicated for storage; includes saved parameter storage; not peak memory"
+        },
+        {
+          "checkpointing": true,
+          "loss": 2.7712693294963078,
+          "forward_block_entries": 2,
+          "total_block_entries": 4,
+          "recomputed_block_entries": 2,
+          "saved_tensors": [
+            {
+              "shape": [
+                2,
+                8
+              ],
+              "dtype": "torch.int64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                1
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [
+                2,
+                8,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16,
+                16
+              ],
+              "dtype": "torch.float64",
+              "logical_bytes": 2048
+            },
+            {
+              "shape": [
+                16
+              ],
+              "dtype": "torch.int64",
+              "logical_bytes": 128
+            },
+            {
+              "shape": [],
+              "dtype": "torch.float64",
+              "logical_bytes": 8
+            }
+          ],
+          "logical_saved_tensor_bytes": 19080,
+          "unique_backing_storage_bytes": 14872,
+          "boundary": "Forward saves only; aliases deduplicated for storage; includes saved parameter storage; not peak memory"
+        }
+      ],
+      "gradient_max_abs_difference": 0.0,
+      "loss_abs_difference": 0.0,
+      "analytical_cost": {
+        "parameters": 5456,
+        "dense_forward_matmul_flops": 188416,
+        "logical_kv_bytes": 8192
+      },
+      "boundary": "CPU FP64, ordinary autograd, existing non-reentrant checkpointing, no speedup/peak-memory claim"
+    },
+    "matmul": [
+      {
+        "device": "cpu",
+        "dtype": "torch.float64",
+        "ledger": {
+          "rows": 32,
+          "inner": 32,
+          "columns": 32,
+          "element_bytes": 8,
+          "matmul_flops": 65536,
+          "modeled_minimum_io_bytes": 24576,
+          "arithmetic_intensity": 2.6666666666666665,
+          "assumption": "Read each input once; write output once. No cache/launch/reduction overhead."
+        },
+        "timing": {
+          "seconds": [
+            9.711948223412037e-06,
+            5.792011506855488e-06,
+            5.743931978940964e-06,
+            5.600042641162872e-06,
+            5.6639546528458595e-06,
+            5.615060217678547e-06,
+            5.584093742072582e-06
+          ],
+          "median_seconds": 5.6639546528458595e-06,
+          "min_seconds": 5.584093742072582e-06,
+          "max_seconds": 9.711948223412037e-06,
+          "population_std_seconds": 1.41740206942532e-06,
+          "warmup": 3,
+          "repeats": 7
+        },
+        "estimated_matmul_flops_per_second": 11570714106.454113,
+        "timed_phase": "Preallocated matmul only; input creation/transfer excluded; no utilization claim"
+      },
+      {
+        "device": "cpu",
+        "dtype": "torch.float64",
+        "ledger": {
+          "rows": 64,
+          "inner": 64,
+          "columns": 64,
+          "element_bytes": 8,
+          "matmul_flops": 524288,
+          "modeled_minimum_io_bytes": 98304,
+          "arithmetic_intensity": 5.333333333333333,
+          "assumption": "Read each input once; write output once. No cache/launch/reduction overhead."
+        },
+        "timing": {
+          "seconds": [
+            1.6608042642474174e-05,
+            1.6480102203786373e-05,
+            1.6527948901057243e-05,
+            2.2351974621415138e-05,
+            1.6415957361459732e-05,
+            1.6367994248867035e-05,
+            1.6350997611880302e-05
+          ],
+          "median_seconds": 1.6480102203786373e-05,
+          "min_seconds": 1.6350997611880302e-05,
+          "max_seconds": 2.2351974621415138e-05,
+          "population_std_seconds": 2.063987755860486e-06,
+          "warmup": 3,
+          "repeats": 7
+        },
+        "estimated_matmul_flops_per_second": 31813394936.32161,
+        "timed_phase": "Preallocated matmul only; input creation/transfer excluded; no utilization claim"
+      },
+      {
+        "device": "cpu",
+        "dtype": "torch.float64",
+        "ledger": {
+          "rows": 128,
+          "inner": 128,
+          "columns": 128,
+          "element_bytes": 8,
+          "matmul_flops": 4194304,
+          "modeled_minimum_io_bytes": 393216,
+          "arithmetic_intensity": 10.666666666666666,
+          "assumption": "Read each input once; write output once. No cache/launch/reduction overhead."
+        },
+        "timing": {
+          "seconds": [
+            9.289593435823917e-05,
+            9.387102909386158e-05,
+            9.823997970670462e-05,
+            9.350304026156664e-05,
+            9.343994315713644e-05,
+            9.351898916065693e-05,
+            9.36960568651557e-05
+          ],
+          "median_seconds": 9.351898916065693e-05,
+          "min_seconds": 9.289593435823917e-05,
+          "max_seconds": 9.823997970670462e-05,
+          "population_std_seconds": 1.686226882218709e-06,
+          "warmup": 3,
+          "repeats": 7
+        },
+        "estimated_matmul_flops_per_second": 44849757655.0424,
+        "timed_phase": "Preallocated matmul only; input creation/transfer excluded; no utilization claim"
+      }
+    ],
+    "attention": {
+      "output_max_abs_error": 1.6653345369377348e-16,
+      "gradient_max_abs_error": 8.881784197001252e-16,
+      "finite_lse_max_abs_error": 4.440892098500626e-16,
+      "trace": [
+        {
+          "query_start": 0,
+          "query_end": 3,
+          "key_start": 0,
+          "key_end": 2,
+          "row_max": [
+            0.7606353717290757,
+            0.48580888925903964,
+            0.4613616711899622
+          ],
+          "normalizer": [
+            1.0,
+            1.5852085416210344,
+            1.9170057148207693
+          ],
+          "value_numerator": [
+            [
+              0.5323329537184233,
+              -0.3595653708791304,
+              -0.5013322650024308,
+              1.6001367912448115
+            ],
+            [
+              0.6355846710579721,
+              -0.2496442542520492,
+              0.07197272587263409,
+              1.9996155493653807
+            ],
+            [
+              0.6645881267965962,
+              -0.1418911140386822,
+              0.519934749056516,
+              2.1499609104758313
+            ]
+          ]
+        },
+        {
+          "query_start": 0,
+          "query_end": 3,
+          "key_start": 2,
+          "key_end": 4,
+          "row_max": [
+            0.7606353717290757,
+            0.48580888925903964,
+            0.4613616711899622
+          ],
+          "normalizer": [
+            1.0,
+            1.5852085416210344,
+            2.270585569256176
+          ],
+          "value_numerator": [
+            [
+              0.5323329537184233,
+              -0.3595653708791304,
+              -0.5013322650024308,
+              1.6001367912448115
+            ],
+            [
+              0.6355846710579721,
+              -0.2496442542520492,
+              0.07197272587263409,
+              1.9996155493653807
+            ],
+            [
+              0.12463108839701198,
+              -0.2548503597343274,
+              0.21506146232854095,
+              2.607098068466529
+            ]
+          ]
+        },
+        {
+          "query_start": 0,
+          "query_end": 3,
+          "key_start": 4,
+          "key_end": 6,
+          "row_max": [
+            0.7606353717290757,
+            0.48580888925903964,
+            0.4613616711899622
+          ],
+          "normalizer": [
+            1.0,
+            1.5852085416210344,
+            2.270585569256176
+          ],
+          "value_numerator": [
+            [
+              0.5323329537184233,
+              -0.3595653708791304,
+              -0.5013322650024308,
+              1.6001367912448115
+            ],
+            [
+              0.6355846710579721,
+              -0.2496442542520492,
+              0.07197272587263409,
+              1.9996155493653807
+            ],
+            [
+              0.12463108839701198,
+              -0.2548503597343274,
+              0.21506146232854095,
+              2.607098068466529
+            ]
+          ]
+        },
+        {
+          "query_start": 0,
+          "query_end": 3,
+          "key_start": 6,
+          "key_end": 7,
+          "row_max": [
+            0.7606353717290757,
+            0.48580888925903964,
+            0.4613616711899622
+          ],
+          "normalizer": [
+            1.0,
+            1.5852085416210344,
+            2.270585569256176
+          ],
+          "value_numerator": [
+            [
+              0.5323329537184233,
+              -0.3595653708791304,
+              -0.5013322650024308,
+              1.6001367912448115
+            ],
+            [
+              0.6355846710579721,
+              -0.2496442542520492,
+              0.07197272587263409,
+              1.9996155493653807
+            ],
+            [
+              0.12463108839701198,
+              -0.2548503597343274,
+              0.21506146232854095,
+              2.607098068466529
+            ]
+          ]
+        },
+        {
+          "query_start": 3,
+          "query_end": 6,
+          "key_start": 0,
+          "key_end": 2,
+          "row_max": [
+            0.03158254366951038,
+            0.1764060980689489,
+            -0.3231596452557537
+          ],
+          "normalizer": [
+            1.6250998521983098,
+            1.1260374641779147,
+            1.6712016856902836
+          ],
+          "value_numerator": [
+            [
+              0.5091970167390579,
+              -0.03693187428304506,
+              0.666276576332522,
+              1.6828716001135802
+            ],
+            [
+              0.24352966163439124,
+              0.14251367835733272,
+              0.9164726536963087,
+              0.8843035119156523
+            ],
+            [
+              0.6507569373068249,
+              -0.23349195682969462,
+              0.1562167092898559,
+              2.0583167335697503
+            ]
+          ]
+        },
+        {
+          "query_start": 3,
+          "query_end": 6,
+          "key_start": 2,
+          "key_end": 4,
+          "row_max": [
+            0.03158254366951038,
+            0.1764060980689489,
+            0.36590584477180155
+          ],
+          "normalizer": [
+            3.483898042243414,
+            2.3523081539723094,
+            2.7888368956112615
+          ],
+          "value_numerator": [
+            [
+              -1.3283181363235421,
+              -0.8868822572686559,
+              -0.09222584174375559,
+              2.8622981941586474
+            ],
+            [
+              -1.157845332822846,
+              -0.3698180938732276,
+              0.2565685877586946,
+              1.8936064355877047
+            ],
+            [
+              -1.6403613530407546,
+              -0.998668205771134,
+              -0.7505931164295367,
+              2.3189292074722188
+            ]
+          ]
+        },
+        {
+          "query_start": 3,
+          "query_end": 6,
+          "key_start": 4,
+          "key_end": 6,
+          "row_max": [
+            0.03158254366951038,
+            0.1764060980689489,
+            0.7980280291564049
+          ],
+          "normalizer": [
+            3.483898042243414,
+            2.433666015464626,
+            3.1680173259366473
+          ],
+          "value_numerator": [
+            [
+              -1.3283181363235421,
+              -0.8868822572686559,
+              -0.09222584174375559,
+              2.8622981941586474
+            ],
+            [
+              -1.1668295306452086,
+              -0.3268248199675508,
+              0.12479426756354162,
+              1.7956595661860661
+            ],
+            [
+              -1.386689529407294,
+              0.21565307905000308,
+              -2.0624165014847318,
+              -0.21197081520352357
+            ]
+          ]
+        },
+        {
+          "query_start": 3,
+          "query_end": 6,
+          "key_start": 6,
+          "key_end": 7,
+          "row_max": [
+            0.03158254366951038,
+            0.1764060980689489,
+            0.7980280291564049
+          ],
+          "normalizer": [
+            3.483898042243414,
+            2.433666015464626,
+            3.1680173259366473
+          ],
+          "value_numerator": [
+            [
+              -1.3283181363235421,
+              -0.8868822572686559,
+              -0.09222584174375559,
+              2.8622981941586474
+            ],
+            [
+              -1.1668295306452086,
+              -0.3268248199675508,
+              0.12479426756354162,
+              1.7956595661860661
+            ],
+            [
+              -1.386689529407294,
+              0.21565307905000308,
+              -2.0624165014847318,
+              -0.21197081520352357
+            ]
+          ]
+        },
+        {
+          "query_start": 6,
+          "query_end": 7,
+          "key_start": 0,
+          "key_end": 2,
+          "row_max": [
+            0.5980981336510603
+          ],
+          "normalizer": [
+            1.9225026769232985
+          ],
+          "value_numerator": [
+            [
+              0.6675143408691137,
+              -0.1438676312557866,
+              0.5171789445950226,
+              2.1587568017761662
+            ]
+          ]
+        },
+        {
+          "query_start": 6,
+          "query_end": 7,
+          "key_start": 2,
+          "key_end": 4,
+          "row_max": [
+            1.1293660524438198
+          ],
+          "normalizer": [
+            2.2880952083047337
+          ],
+          "value_numerator": [
+            [
+              -0.3119795245743117,
+              -0.7266918994938796,
+              0.20283166105121542,
+              1.4655279737828038
+            ]
+          ]
+        },
+        {
+          "query_start": 6,
+          "query_end": 7,
+          "key_start": 4,
+          "key_end": 6,
+          "row_max": [
+            2.631478755044523
+          ],
+          "normalizer": [
+            1.525058817008353
+          ],
+          "value_numerator": [
+            [
+              -0.1891112025255752,
+              0.3812660820014707,
+              -1.5725852082836946,
+              -0.8999671648692817
+            ]
+          ]
+        },
+        {
+          "query_start": 6,
+          "query_end": 7,
+          "key_start": 6,
+          "key_end": 7,
+          "row_max": [
+            2.631478755044523
+          ],
+          "normalizer": [
+            1.525058817008353
+          ],
+          "value_numerator": [
+            [
+              -0.1891112025255752,
+              0.3812660820014707,
+              -1.5725852082836946,
+              -0.8999671648692817
+            ]
+          ]
+        }
+      ],
+      "workspace": {
+        "dense_score_probability_bytes": 3136,
+        "block_score_weight_bytes": 384,
+        "block_accumulator_statistics_bytes": 672,
+        "boundary": "Logical forward intermediates only; input/output, masks, temporaries, autograd saves and process/device peak excluded"
+      }
+    },
+    "simulation": {
+      "calibration": [
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 500,
+          "presented_tokens": 2000.0,
+          "unique_tokens": 2000.0,
+          "seed": 6601,
+          "loss": 3.3416407864998736
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 500,
+          "presented_tokens": 2000.0,
+          "unique_tokens": 2000.0,
+          "seed": 6602,
+          "loss": 3.3416407864998736
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 500,
+          "presented_tokens": 2000.0,
+          "unique_tokens": 2000.0,
+          "seed": 6603,
+          "loss": 3.3416407864998736
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 750,
+          "presented_tokens": 1333.3333333333333,
+          "unique_tokens": 1333.3333333333333,
+          "seed": 6601,
+          "loss": 3.2780193008453873
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 750,
+          "presented_tokens": 1333.3333333333333,
+          "unique_tokens": 1333.3333333333333,
+          "seed": 6602,
+          "loss": 3.2780193008453873
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 750,
+          "presented_tokens": 1333.3333333333333,
+          "unique_tokens": 1333.3333333333333,
+          "seed": 6603,
+          "loss": 3.2780193008453873
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 1000,
+          "presented_tokens": 1000.0,
+          "unique_tokens": 1000.0,
+          "seed": 6601,
+          "loss": 3.264911064067352
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 1000,
+          "presented_tokens": 1000.0,
+          "unique_tokens": 1000.0,
+          "seed": 6602,
+          "loss": 3.264911064067352
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 1000,
+          "presented_tokens": 1000.0,
+          "unique_tokens": 1000.0,
+          "seed": 6603,
+          "loss": 3.264911064067352
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 1500,
+          "presented_tokens": 666.6666666666666,
+          "unique_tokens": 666.6666666666666,
+          "seed": 6601,
+          "loss": 3.290994448735806
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 1500,
+          "presented_tokens": 666.6666666666666,
+          "unique_tokens": 666.6666666666666,
+          "seed": 6602,
+          "loss": 3.290994448735806
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 1500,
+          "presented_tokens": 666.6666666666666,
+          "unique_tokens": 666.6666666666666,
+          "seed": 6603,
+          "loss": 3.290994448735806
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 2000,
+          "presented_tokens": 500.0,
+          "unique_tokens": 500.0,
+          "seed": 6601,
+          "loss": 3.3416407864998736
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 2000,
+          "presented_tokens": 500.0,
+          "unique_tokens": 500.0,
+          "seed": 6602,
+          "loss": 3.3416407864998736
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 6000000.0,
+          "parameters": 2000,
+          "presented_tokens": 500.0,
+          "unique_tokens": 500.0,
+          "seed": 6603,
+          "loss": 3.3416407864998736
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 1000,
+          "presented_tokens": 4000.0,
+          "unique_tokens": 4000.0,
+          "seed": 6601,
+          "loss": 2.948683298050514
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 1000,
+          "presented_tokens": 4000.0,
+          "unique_tokens": 4000.0,
+          "seed": 6602,
+          "loss": 2.948683298050514
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 1000,
+          "presented_tokens": 4000.0,
+          "unique_tokens": 4000.0,
+          "seed": 6603,
+          "loss": 2.948683298050514
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 1500,
+          "presented_tokens": 2666.6666666666665,
+          "unique_tokens": 2666.6666666666665,
+          "seed": 6601,
+          "loss": 2.903696114115064
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 1500,
+          "presented_tokens": 2666.6666666666665,
+          "unique_tokens": 2666.6666666666665,
+          "seed": 6602,
+          "loss": 2.903696114115064
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 1500,
+          "presented_tokens": 2666.6666666666665,
+          "unique_tokens": 2666.6666666666665,
+          "seed": 6603,
+          "loss": 2.903696114115064
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 2000,
+          "presented_tokens": 2000.0,
+          "unique_tokens": 2000.0,
+          "seed": 6601,
+          "loss": 2.8944271909999157
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 2000,
+          "presented_tokens": 2000.0,
+          "unique_tokens": 2000.0,
+          "seed": 6602,
+          "loss": 2.8944271909999157
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 2000,
+          "presented_tokens": 2000.0,
+          "unique_tokens": 2000.0,
+          "seed": 6603,
+          "loss": 2.8944271909999157
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 3000,
+          "presented_tokens": 1333.3333333333333,
+          "unique_tokens": 1333.3333333333333,
+          "seed": 6601,
+          "loss": 2.912870929175277
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 3000,
+          "presented_tokens": 1333.3333333333333,
+          "unique_tokens": 1333.3333333333333,
+          "seed": 6602,
+          "loss": 2.912870929175277
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 3000,
+          "presented_tokens": 1333.3333333333333,
+          "unique_tokens": 1333.3333333333333,
+          "seed": 6603,
+          "loss": 2.912870929175277
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 4000,
+          "presented_tokens": 1000.0,
+          "unique_tokens": 1000.0,
+          "seed": 6601,
+          "loss": 2.948683298050514
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 4000,
+          "presented_tokens": 1000.0,
+          "unique_tokens": 1000.0,
+          "seed": 6602,
+          "loss": 2.948683298050514
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 24000000.0,
+          "parameters": 4000,
+          "presented_tokens": 1000.0,
+          "unique_tokens": 1000.0,
+          "seed": 6603,
+          "loss": 2.948683298050514
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 2000,
+          "presented_tokens": 8000.0,
+          "unique_tokens": 8000.0,
+          "seed": 6601,
+          "loss": 2.670820393249937
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 2000,
+          "presented_tokens": 8000.0,
+          "unique_tokens": 8000.0,
+          "seed": 6602,
+          "loss": 2.670820393249937
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 2000,
+          "presented_tokens": 8000.0,
+          "unique_tokens": 8000.0,
+          "seed": 6603,
+          "loss": 2.670820393249937
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 3000,
+          "presented_tokens": 5333.333333333333,
+          "unique_tokens": 5333.333333333333,
+          "seed": 6601,
+          "loss": 2.6390096504226936
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 3000,
+          "presented_tokens": 5333.333333333333,
+          "unique_tokens": 5333.333333333333,
+          "seed": 6602,
+          "loss": 2.6390096504226936
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 3000,
+          "presented_tokens": 5333.333333333333,
+          "unique_tokens": 5333.333333333333,
+          "seed": 6603,
+          "loss": 2.6390096504226936
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 4000,
+          "presented_tokens": 4000.0,
+          "unique_tokens": 4000.0,
+          "seed": 6601,
+          "loss": 2.632455532033676
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 4000,
+          "presented_tokens": 4000.0,
+          "unique_tokens": 4000.0,
+          "seed": 6602,
+          "loss": 2.632455532033676
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 4000,
+          "presented_tokens": 4000.0,
+          "unique_tokens": 4000.0,
+          "seed": 6603,
+          "loss": 2.632455532033676
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 6000,
+          "presented_tokens": 2666.6666666666665,
+          "unique_tokens": 2666.6666666666665,
+          "seed": 6601,
+          "loss": 2.6454972243679027
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 6000,
+          "presented_tokens": 2666.6666666666665,
+          "unique_tokens": 2666.6666666666665,
+          "seed": 6602,
+          "loss": 2.6454972243679027
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 6000,
+          "presented_tokens": 2666.6666666666665,
+          "unique_tokens": 2666.6666666666665,
+          "seed": 6603,
+          "loss": 2.6454972243679027
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 8000,
+          "presented_tokens": 2000.0,
+          "unique_tokens": 2000.0,
+          "seed": 6601,
+          "loss": 2.670820393249937
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 8000,
+          "presented_tokens": 2000.0,
+          "unique_tokens": 2000.0,
+          "seed": 6602,
+          "loss": 2.670820393249937
+        },
+        {
+          "mode": "authored-simulation",
+          "architecture": "surface-A",
+          "data_policy": "unique-token-coordinate",
+          "compute_budget": 96000000.0,
+          "parameters": 8000,
+          "presented_tokens": 2000.0,
+          "unique_tokens": 2000.0,
+          "seed": 6603,
+          "loss": 2.670820393249937
+        }
+      ],
+      "frozen_prediction": {
+        "status": "prediction-frozen-before-holdout",
+        "law": {
+          "log_parameter_intercept": -0.8958797346140308,
+          "parameter_exponent": 0.5000000000000002,
+          "log_excess_loss_intercept": 4.13681932142095,
+          "excess_loss_exponent": -0.25,
+          "assumed_loss_floor": 2.0,
+          "calibration_sha256": "9bdc564d7d5562d840d4da50d70956fb1b198deb2d08be6688f7cf4f024b8835",
+          "observed_budgets": [
+            6000000.0,
+            24000000.0,
+            96000000.0
+          ],
+          "optima": [
+            {
+              "compute_budget": 6000000.0,
+              "parameters": 1000,
+              "loss": 3.264911064067352
+            },
+            {
+              "compute_budget": 24000000.0,
+              "parameters": 2000,
+              "loss": 2.8944271909999153
+            },
+            {
+              "compute_budget": 96000000.0,
+              "parameters": 4000,
+              "loss": 2.632455532033676
+            }
+          ],
+          "log_parameter_residuals": [
+            -8.881784197001252e-16,
+            0.0,
+            0.0
+          ],
+          "contract": [
+            "authored-simulation",
+            "surface-A",
+            "unique-token-coordinate"
+          ]
+        },
+        "prediction": {
+          "compute_budget": 384000000.0,
+          "parameters": 8000.0,
+          "presented_tokens": 8000.0,
+          "loss": 2.4472135954999583
+        },
+        "calibration_sha256": "9bdc564d7d5562d840d4da50d70956fb1b198deb2d08be6688f7cf4f024b8835",
+        "assumption": "Loss-floor known by authored design; no claim it is known for a real LM",
+        "prediction_sha256": "6da1d3a84b08e1c76d449335ccb371ded1c254ee2c82ca9e2e270219e00ac925"
+      },
+      "holdout": {
+        "heldout_sha256": "150f1ab37eaeeddce12ad51fd3ef9b0dfd6fecf8ce71efc2d02050394c119519",
+        "entire_budget_rows": [
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 4000,
+            "presented_tokens": 16000.0,
+            "unique_tokens": 16000.0,
+            "seed": 6601,
+            "loss": 2.474341649025257
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 4000,
+            "presented_tokens": 16000.0,
+            "unique_tokens": 16000.0,
+            "seed": 6602,
+            "loss": 2.474341649025257
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 4000,
+            "presented_tokens": 16000.0,
+            "unique_tokens": 16000.0,
+            "seed": 6603,
+            "loss": 2.474341649025257
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 6000,
+            "presented_tokens": 10666.666666666666,
+            "unique_tokens": 10666.666666666666,
+            "seed": 6601,
+            "loss": 2.451848057057532
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 6000,
+            "presented_tokens": 10666.666666666666,
+            "unique_tokens": 10666.666666666666,
+            "seed": 6602,
+            "loss": 2.451848057057532
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 6000,
+            "presented_tokens": 10666.666666666666,
+            "unique_tokens": 10666.666666666666,
+            "seed": 6603,
+            "loss": 2.451848057057532
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 8000,
+            "presented_tokens": 8000.0,
+            "unique_tokens": 8000.0,
+            "seed": 6601,
+            "loss": 2.4472135954999583
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 8000,
+            "presented_tokens": 8000.0,
+            "unique_tokens": 8000.0,
+            "seed": 6602,
+            "loss": 2.4472135954999583
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 8000,
+            "presented_tokens": 8000.0,
+            "unique_tokens": 8000.0,
+            "seed": 6603,
+            "loss": 2.4472135954999583
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 12000,
+            "presented_tokens": 5333.333333333333,
+            "unique_tokens": 5333.333333333333,
+            "seed": 6601,
+            "loss": 2.4564354645876385
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 12000,
+            "presented_tokens": 5333.333333333333,
+            "unique_tokens": 5333.333333333333,
+            "seed": 6602,
+            "loss": 2.4564354645876385
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 12000,
+            "presented_tokens": 5333.333333333333,
+            "unique_tokens": 5333.333333333333,
+            "seed": 6603,
+            "loss": 2.4564354645876385
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 16000,
+            "presented_tokens": 4000.0,
+            "unique_tokens": 4000.0,
+            "seed": 6601,
+            "loss": 2.474341649025257
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 16000,
+            "presented_tokens": 4000.0,
+            "unique_tokens": 4000.0,
+            "seed": 6602,
+            "loss": 2.474341649025257
+          },
+          {
+            "mode": "authored-simulation",
+            "architecture": "surface-A",
+            "data_policy": "unique-token-coordinate",
+            "compute_budget": 384000000.0,
+            "parameters": 16000,
+            "presented_tokens": 4000.0,
+            "unique_tokens": 4000.0,
+            "seed": 6603,
+            "loss": 2.474341649025257
+          }
+        ],
+        "mean_loss_by_size": {
+          "4000": 2.474341649025257,
+          "6000": 2.451848057057532,
+          "8000": 2.4472135954999583,
+          "12000": 2.4564354645876385,
+          "16000": 2.474341649025257
+        },
+        "observed_grid_optimum": 8000,
+        "parameter_relative_error": 0.0,
+        "optimal_loss_error": 0.0,
+        "boundary_minimum": false,
+        "boundary": "Grid optimum only; full holdout retained; no large-model or hardware prediction"
+      }
+    },
+    "boundary": "CPU correctness and timings; all scaling curves are authored simulations"
+  }
+}

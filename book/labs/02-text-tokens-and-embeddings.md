@@ -38,3 +38,9 @@ notebooks and learner attempts remain intact. Exact runner/replay/export command
 and their evidence boundaries are in the [runbook](../../docs/runbooks/evaluation_tools.md).
 
 </details>
+
+### Assignment A: connect the mechanism to a comparison
+
+Before opening the [companion route](../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb), predict your answer to this question: A special marker decodes to the same visible string whether it is reserved or ordinary. Are the encodings equivalent?
+
+Use the [worked reasoning](../solutions/02-text-tokens-and-embeddings.md) after recording the prediction. Then change one declared condition and explain whether the result changes the mechanism, the measured population or the supported claim. Retain the failed variant alongside the successful reference. The [assignment brief](../../docs/COURSE_ASSIGNMENTS.md) specifies the combined deliverable.

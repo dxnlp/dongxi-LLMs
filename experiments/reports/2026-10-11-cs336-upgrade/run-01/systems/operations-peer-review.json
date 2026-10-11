@@ -1,0 +1,99 @@
+{
+  "status": "accepted",
+  "reviewer": "editorial_routes independent read-only review",
+  "scope": "Compatible CPU posttraining consumer, independent tests, two notebook prompts/reference/explanations, solution, actual reference; no native training-run review",
+  "method": "Read actual source and notebooks; independently aggregate retained exact path probabilities and ancestry; closed Bernoulli formulas checked without fresh model execution",
+  "checks": {
+    "source_sha256": {
+      "src/dongxi_llms/posttraining_assignment.py": "7cd7569929fbdebfe1281e959dda03b99eb8460b4bc2556d5487b1296f55cea2",
+      "tests/test_posttraining_assignment.py": "239d28aae7434effe755fd5e4b5cbd88a13d93b7edcd399f45f25e3a3a453805",
+      "notebooks/extensions/cs336/04_reward_signal_audit.ipynb": "b2468d8b1396e74931b7c049d7e33bcad90e6c68473c6e2ab09deb43f6d7004a",
+      "notebooks/extensions/cs336/07_posttraining_integration.ipynb": "d4c759521ce56d739e4d6a4c1a61f97499bca4c221f0136858e76d5928334fa9",
+      "book/solutions/cs336-posttraining-assignment.md": "e13ffbee6c22c42dc9586df57a949a8e6014047599ec3085ea3b16b47d468e2a",
+      "experiments/fixtures/cs336/posttraining_items.json": "1d8d806b2a89a121485e0e2c60c6cc34a54484fa9654c1c647cca67b2ee318c9",
+      "experiments/fixtures/cs336/posttraining_protocol.json": "e18478732972299e03861e1ab23ee8c648ad2409785f651ee720ab71b428fe5b"
+    },
+    "reference_receipt_sha256": "33277890dbdeab44266b47929a8a4f7f7ab8d7eff7c4698ec4941895ea05bbd3",
+    "independent_saved_row_aggregates": [
+      {
+        "seed": 33671,
+        "exact_heldout_complete_path_probability": {
+          "coverage-sft": 0.3791665571331729,
+          "repetition-sft": 0.21037898019368634,
+          "accepted-sft": 0.46021355911248657,
+          "grpo-std": 0.4718753758632009,
+          "grpo-center": 0.47128930788458573
+        },
+        "coverage_exceeds_repetition": true,
+        "all_final_below_constant_baseline": true,
+        "actual_accepted_labels": 1692,
+        "frozen_parent_and_initial_sibling_identity_pass": true
+      },
+      {
+        "seed": 33672,
+        "exact_heldout_complete_path_probability": {
+          "coverage-sft": 0.3561973566840102,
+          "repetition-sft": 0.35049379607048775,
+          "accepted-sft": 0.44805105428629344,
+          "grpo-std": 0.4626631347914669,
+          "grpo-center": 0.46238377706157135
+        },
+        "coverage_exceeds_repetition": true,
+        "all_final_below_constant_baseline": true,
+        "actual_accepted_labels": 1572,
+        "frozen_parent_and_initial_sibling_identity_pass": true
+      },
+      {
+        "seed": 33673,
+        "exact_heldout_complete_path_probability": {
+          "coverage-sft": 0.38628709867207184,
+          "repetition-sft": 0.15385635493259772,
+          "accepted-sft": 0.46080897244582847,
+          "grpo-std": 0.4719262390902429,
+          "grpo-center": 0.47123147072887944
+        },
+        "coverage_exceeds_repetition": true,
+        "all_final_below_constant_baseline": true,
+        "actual_accepted_labels": 1746,
+        "frozen_parent_and_initial_sibling_identity_pass": true
+      }
+    ],
+    "source_hashes_match_reference": {
+      "src/dongxi_llms/posttraining_assignment.py": true,
+      "src/dongxi_llms/reasoning_controls.py": true,
+      "src/dongxi_llms/grpo_lab.py": true,
+      "src/dongxi_llms/sft_lab.py": true,
+      "src/dongxi_llms/decoder_lab.py": true,
+      "src/dongxi_llms/reasoning_evaluation.py": true,
+      "experiments/fixtures/cs336/posttraining_items.json": true,
+      "experiments/fixtures/cs336/posttraining_protocol.json": true
+    },
+    "native_reward_audit": {
+      "archived_responses": 192,
+      "saved_positive_rewards": 0.0,
+      "strict_replay_positive_rewards": 0,
+      "richer_complete_positive_rewards": 1,
+      "disagreements": 1,
+      "richer_statuses": {
+        "UNSUPPORTED": 191,
+        "CORRECT": 1
+      }
+    }
+  },
+  "accepted": [
+    "Masks have answer/EOS only and one causal shift",
+    "Full-vocabulary CE explicitly differs from grammar-conditioned sampling/scoring/KL/entropy",
+    "Sibling initialization shares actual frozen SFT state; initial pool shared, later draws fresh",
+    "Task/KL gradients differentiated separately; accepted-SFT counterfactual components labeled",
+    "Center-only inclusive baseline expected factor(G\u22121)/G; std2 expectation p(1\u2212p)/(1+2epsilon) verified analytically",
+    "Mixed-selection mixture policy reweights prompt mass; real difficulty gate training-only/all actual groups retained",
+    "Native192zero rewards rechecked by immutable instrument, richer1positive diagnostic remains separately named",
+    "Baseline0.5 and sub-baseline exact heldout scores visible, source-paired descriptive errors do not imply population guarantee"
+  ],
+  "remaining_issues": [],
+  "limits": [
+    "Symbolic finite interface and conditional grammar; no English/native task learning claim",
+    "No independent rerun of full assignment; root final suite owns execution",
+    "Source labels/hashes cannot replace review of actual fields or a future native protocol"
+  ]
+}

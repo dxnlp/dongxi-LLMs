@@ -1,0 +1,27 @@
+{
+  "mode": "authored-simulation-only",
+  "calibration_budgets": [
+    6000000.0,
+    12000000.0,
+    24000000.0,
+    96000000.0
+  ],
+  "seeds": [
+    6601,
+    6602,
+    6603
+  ],
+  "noise": 0.015,
+  "heldout_budget": 384000000.0,
+  "runtime_seconds_cap": 30,
+  "conditions": [
+    "all-four-budgets",
+    "lower-three-budgets",
+    "upper-three-budgets",
+    "drop-seed6603",
+    "omit-analytic-center-sizes",
+    "assumed-floor1.9"
+  ],
+  "prediction": "Range, point removal and assumed floor may alter the fitted exponent/prediction. Preserve every refusal; no condition is selected using heldout errors.",
+  "source_sha256": "5ee2767d337907d379d04e23184ce844de90985da4dd5d059a246ac754041dc3"
+}

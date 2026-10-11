@@ -559,6 +559,14 @@ establish that its answer or printed explanation is true. Chapter 15 develops
 [response-level distillation](15-distill-evaluate-and-defend.md), its
 actual source-controlled experiment and its complete-response/answer-only comparison.
 
+### Follow one supervised parent into two interventions
+
+The [compatible post-training assignment](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb) gives every stage the same tiny decoder interface: vocabulary, prompt encoding, response masks and sampled ending token. It first compares broad source coverage with repetition at equal supervised-target exposure, then freezes one SFT checkpoint. Accepted-response SFT and GRPO start as siblings of that checkpoint. The checkpoint hashes make the ancestry inspectable rather than inferred from matching tensor shapes.
+
+The original task asks about parity on balanced source pairs. The rollout grammar exposes a binary answer and an ending action; SFT uses the full vocabulary. That distinction is visible in the likelihood and entropy calculations. It makes the reward mechanism small enough to inspect while limiting what the experiment can say about free-form English generation. Constant-answer and majority baselines show how far a shortcut can go without learning the relationship.
+
+In the three-seed reference, broader coverage has higher held-out complete-path probability than repetition for each seed, but the difference is small for one seed. After policy updates, complete-path probability remains below the always-terminated constant baseline's 0.5. Usable gradients and improved termination therefore coexist with weak relational generalization. Read the source-level paired results before proposing a larger recipe. The existing full/LoRA native result remains a separate checkpoint family and a separate empirical comparison.
+
 ## 9.13 Follow the distillation extension before exercises 13–16
 
 Use Chapter 15 and [the Day 26 response notebook](../../notebooks/day-26/03_response_level_distillation.ipynb)

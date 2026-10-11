@@ -4,6 +4,25 @@ This file is the operational source of truth for resuming work. Update it at the
 
 ## Current position
 
+- CS336 improvement goal, 2026-10-11: complete. All seven P0/P1 packages in
+  the [CS336 plan](docs/CS336_IMPROVEMENT_PLAN.md) are implemented and independently
+  reviewed: six assignments, fifteen chapter/solution routes, sixteen labs and
+  seven new visual companions. The [implementation record](experiments/reports/2026-10-11-cs336-upgrade.md)
+  retains original criteria and new evidence. Verified Spark CPU references pass
+  1,614 tests and all 83 notebooks, 575 executed cells/242 images, with 376 reviewed pairs.
+  All 76 original notebook files and four unfinished learner cells are preserved;
+  5,776 protected files are byte-identical and animation proposals retain their
+  historical prefix with authorized candidate additions. Existing upgrade
+  criteria, model results and learner Day 9 remain unchanged. Actual bounded
+  GB10 profiles and 48-response native reward audit are recorded separately:
+  the latter has zero strict successes/mixed groups/task-head gradient, with
+  all richer grades unsupported, so no arithmetic-capability conclusion or
+  longer RL training follows. Optional native SFT/RL, P2 kernels/distributed
+  work, Mac evidence, publication and animation rendering remain separate.
+  Next learning action: resume the requested Day 9 discussion on Spark using
+  the retained English-story evidence; coherent short stories remain the first
+  DongxiGPT objective. D005 post-training depth remains the course priority.
+
 - Book foundations goal, 2026-10-10: complete. The learner requested improving
   explanatory depth and reading experience across all fifteen chapters.
   The [revised foundations plan](docs/BOOK_FOUNDATIONS_PLAN.md) classifies real

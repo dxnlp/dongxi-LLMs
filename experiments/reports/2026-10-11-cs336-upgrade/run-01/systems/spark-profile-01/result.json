@@ -1,0 +1,456 @@
+{
+  "command": [
+    "scripts/run_cs336_systems.py",
+    "--mode",
+    "profile",
+    "--device",
+    "cuda",
+    "--output",
+    "experiments/reports/2026-10-11-cs336-upgrade/run-01/systems/spark-profile-01/result.json"
+  ],
+  "environment": {
+    "python": "3.12.14 (main, Aug 25 2026, 13:59:30) [Clang 22.1.3 ]",
+    "executable": "/tmp/dongxi-cs336-g9l7v90r/gpu/bin/python",
+    "platform": "Linux-6.17.0-1031-nvidia-aarch64-with-glibc2.39",
+    "torch": "2.13.0+cu130",
+    "numpy": "2.5.2",
+    "torch_threads": 1,
+    "cuda_visible_devices": null,
+    "cuda_available": true,
+    "source_sha256": {
+      "scripts/run_cs336_systems.py": "e3236ed0bac34e6a50f3fc31672bfa9016471d99ff5a3fb6b622369502dbc4a0",
+      "src/dongxi_llms/systems_performance_lab.py": "3bfcca82a74a38015fc3dc43469e007283ba1dfa9cd767114034f778c86d0895",
+      "src/dongxi_llms/online_attention_lab.py": "63db6e3c68f400ec1eefbb13efe2ed1f2758714270059ba0a119532df0ca118b",
+      "src/dongxi_llms/scaling_lab.py": "58ef9f427ddcda6843ac08ef57571fc6f626db4c027bf6fb67e0e30519ba88b8",
+      "src/dongxi_llms/stories_training.py": "199169d994b2faa35a5dc69226c9c83dca4573c04210c0d65bdf86b96e3e5ef5",
+      "src/dongxi_llms/decoder_lab.py": "52060c8a88093b49c91e0cdfa8ba37731347a9b8e38ab2dc851ca151888e9826"
+    }
+  },
+  "elapsed_seconds": 0.8844574630493298,
+  "result": {
+    "device": "cuda",
+    "device_name": "NVIDIA GB10",
+    "results": [
+      {
+        "batch": 1,
+        "length": 128,
+        "config": {
+          "vocab": 256,
+          "width": 128,
+          "heads": 4,
+          "kv_heads": 4,
+          "head_dim": 32,
+          "layers": 2,
+          "hidden": 256,
+          "max_length": 512,
+          "modern": true,
+          "qk_norm": false,
+          "tied": true
+        },
+        "dtype": "torch.float32",
+        "timings": [
+          {
+            "seconds": [
+              0.0006906039780005813,
+              0.0006812280043959618,
+              0.0006756760412827134,
+              0.0006941399769857526,
+              0.0006888760253787041,
+              0.0006976600270718336,
+              0.0006870359648019075,
+              0.0006595649756491184,
+              0.0006766680162400007,
+              0.00066524394787848
+            ],
+            "median_seconds": 0.0006841319845989347,
+            "min_seconds": 0.0006595649756491184,
+            "max_seconds": 0.0006976600270718336,
+            "population_std_seconds": 1.1795370559639458e-05,
+            "warmup": 5,
+            "repeats": 10
+          },
+          {
+            "seconds": [
+              0.0006674680626019835,
+              0.0006627000402659178,
+              0.0006510680541396141,
+              0.0006599170155823231,
+              0.0006625080714002252,
+              0.0006641240324825048,
+              0.0006932440446689725,
+              0.0006901239976286888,
+              0.0006857879925519228,
+              0.0006942679174244404
+            ],
+            "median_seconds": 0.0006657960475422442,
+            "min_seconds": 0.0006510680541396141,
+            "max_seconds": 0.0006942679174244404,
+            "population_std_seconds": 1.5154184499738508e-05,
+            "warmup": 5,
+            "repeats": 10
+          },
+          {
+            "seconds": [
+              0.000657340046018362,
+              0.000662157079204917,
+              0.0006591640412807465,
+              0.0006540600443258882,
+              0.0006755000213161111,
+              0.0006617560284212232,
+              0.000654381001368165,
+              0.0006631800206378102,
+              0.0006596279563382268,
+              0.0006528440862894058
+            ],
+            "median_seconds": 0.0006593959988094866,
+            "min_seconds": 0.0006528440862894058,
+            "max_seconds": 0.0006755000213161111,
+            "population_std_seconds": 6.197384340410786e-06,
+            "warmup": 5,
+            "repeats": 10
+          }
+        ],
+        "analytical_cost": {
+          "parameters": 361088,
+          "dense_forward_matmul_flops": 109051904,
+          "logical_kv_bytes": 262144
+        },
+        "estimated_matmul_flops_per_second": [
+          159401850015.7255,
+          163791756353.25583,
+          165381507010.79306
+        ],
+        "cuda_max_memory_allocated": 35589632,
+        "cuda_max_memory_reserved": 37748736,
+        "attention_backend": "SDPA; actual fused kernel unknown unless independently profiled",
+        "timed_phase": "preallocated decoder forward only; no transfer/data preparation/backward",
+        "memory_boundary": "CUDA allocator bytes exclude host and other-process/unified-memory use; no device-peak utilization inference"
+      },
+      {
+        "batch": 2,
+        "length": 128,
+        "config": {
+          "vocab": 256,
+          "width": 128,
+          "heads": 4,
+          "kv_heads": 4,
+          "head_dim": 32,
+          "layers": 2,
+          "hidden": 256,
+          "max_length": 512,
+          "modern": true,
+          "qk_norm": false,
+          "tied": true
+        },
+        "dtype": "torch.float32",
+        "timings": [
+          {
+            "seconds": [
+              0.0006708120927214622,
+              0.0006754199275746942,
+              0.0006705879932269454,
+              0.0006642210064455867,
+              0.0006715960334986448,
+              0.0006717080250382423,
+              0.0006593239959329367,
+              0.000695372000336647,
+              0.0006612290162593126,
+              0.0006582040805369616
+            ],
+            "median_seconds": 0.0006707000429742038,
+            "min_seconds": 0.0006582040805369616,
+            "max_seconds": 0.000695372000336647,
+            "population_std_seconds": 1.021175207758906e-05,
+            "warmup": 5,
+            "repeats": 10
+          },
+          {
+            "seconds": [
+              0.0006651799194514751,
+              0.0006580599583685398,
+              0.0006644600071012974,
+              0.0006666530389338732,
+              0.0006560600595548749,
+              0.0006634680321440101,
+              0.0006654999451711774,
+              0.0006553409621119499,
+              0.0006623159861192107,
+              0.0006614680169150233
+            ],
+            "median_seconds": 0.0006628920091316104,
+            "min_seconds": 0.0006553409621119499,
+            "max_seconds": 0.0006666530389338732,
+            "population_std_seconds": 3.840940798520153e-06,
+            "warmup": 5,
+            "repeats": 10
+          },
+          {
+            "seconds": [
+              0.0006629090057685971,
+              0.0006546360673382878,
+              0.0006614360027015209,
+              0.0007155640050768852,
+              0.0007445720257237554,
+              0.0006670360453426838,
+              0.000770332058891654,
+              0.0006754840724170208,
+              0.0006498839939013124,
+              0.0006614039884880185
+            ],
+            "median_seconds": 0.0006649725255556405,
+            "min_seconds": 0.0006498839939013124,
+            "max_seconds": 0.000770332058891654,
+            "population_std_seconds": 3.9894077267685266e-05,
+            "warmup": 5,
+            "repeats": 10
+          }
+        ],
+        "analytical_cost": {
+          "parameters": 361088,
+          "dense_forward_matmul_flops": 218103808,
+          "logical_kv_bytes": 524288
+        },
+        "estimated_matmul_flops_per_second": [
+          325188301811.975,
+          329018610868.03015,
+          327989201986.5872
+        ],
+        "cuda_max_memory_allocated": 36180480,
+        "cuda_max_memory_reserved": 37748736,
+        "attention_backend": "SDPA; actual fused kernel unknown unless independently profiled",
+        "timed_phase": "preallocated decoder forward only; no transfer/data preparation/backward",
+        "memory_boundary": "CUDA allocator bytes exclude host and other-process/unified-memory use; no device-peak utilization inference"
+      },
+      {
+        "batch": 1,
+        "length": 256,
+        "config": {
+          "vocab": 256,
+          "width": 128,
+          "heads": 4,
+          "kv_heads": 4,
+          "head_dim": 32,
+          "layers": 2,
+          "hidden": 256,
+          "max_length": 512,
+          "modern": true,
+          "qk_norm": false,
+          "tied": true
+        },
+        "dtype": "torch.float32",
+        "timings": [
+          {
+            "seconds": [
+              0.000658379984088242,
+              0.0006684119580313563,
+              0.0006623800145462155,
+              0.0006478519644588232,
+              0.0006666850531473756,
+              0.0006684920517727733,
+              0.0006632279837504029,
+              0.0006676599150523543,
+              0.0006645879475399852,
+              0.0006572610000148416
+            ],
+            "median_seconds": 0.000663907965645194,
+            "min_seconds": 0.0006478519644588232,
+            "max_seconds": 0.0006684920517727733,
+            "population_std_seconds": 6.155366913312759e-06,
+            "warmup": 5,
+            "repeats": 10
+          },
+          {
+            "seconds": [
+              0.000722124008461833,
+              0.0006541400216519833,
+              0.000664427992887795,
+              0.000658493023365736,
+              0.0006553239654749632,
+              0.0006612439174205065,
+              0.0006572440033778548,
+              0.0006504770135506988,
+              0.0006612760480493307,
+              0.0006604280788451433
+            ],
+            "median_seconds": 0.0006594605511054397,
+            "min_seconds": 0.0006504770135506988,
+            "max_seconds": 0.000722124008461833,
+            "population_std_seconds": 1.9583184144223838e-05,
+            "warmup": 5,
+            "repeats": 10
+          },
+          {
+            "seconds": [
+              0.0006641559302806854,
+              0.0006561559857800603,
+              0.0006632599979639053,
+              0.0006603799993172288,
+              0.000658269040286541,
+              0.0006675480399280787,
+              0.000665467930957675,
+              0.0006572280544787645,
+              0.0006638210033997893,
+              0.0006612440338358283
+            ],
+            "median_seconds": 0.0006622520158998668,
+            "min_seconds": 0.0006561559857800603,
+            "max_seconds": 0.0006675480399280787,
+            "population_std_seconds": 3.546671785088168e-06,
+            "warmup": 5,
+            "repeats": 10
+          }
+        ],
+        "analytical_cost": {
+          "parameters": 361088,
+          "dense_forward_matmul_flops": 251658240,
+          "logical_kv_bytes": 524288
+        },
+        "estimated_matmul_flops_per_second": [
+          379055912901.1735,
+          381612273210.50616,
+          380003735674.6242
+        ],
+        "cuda_max_memory_allocated": 36180480,
+        "cuda_max_memory_reserved": 37748736,
+        "attention_backend": "SDPA; actual fused kernel unknown unless independently profiled",
+        "timed_phase": "preallocated decoder forward only; no transfer/data preparation/backward",
+        "memory_boundary": "CUDA allocator bytes exclude host and other-process/unified-memory use; no device-peak utilization inference"
+      },
+      {
+        "batch": 1,
+        "length": 512,
+        "config": {
+          "vocab": 256,
+          "width": 128,
+          "heads": 4,
+          "kv_heads": 4,
+          "head_dim": 32,
+          "layers": 2,
+          "hidden": 256,
+          "max_length": 512,
+          "modern": true,
+          "qk_norm": false,
+          "tied": true
+        },
+        "dtype": "torch.float32",
+        "timings": [
+          {
+            "seconds": [
+              0.000671899993903935,
+              0.0006657399935647845,
+              0.0006724279373884201,
+              0.0006647970294579864,
+              0.0006671639857813716,
+              0.0006697559729218483,
+              0.0006662519881501794,
+              0.000658523989841342,
+              0.0006645730463787913,
+              0.0006554679712280631
+            ],
+            "median_seconds": 0.000665995990857482,
+            "min_seconds": 0.0006554679712280631,
+            "max_seconds": 0.0006724279373884201,
+            "population_std_seconds": 5.107490520807479e-06,
+            "warmup": 5,
+            "repeats": 10
+          },
+          {
+            "seconds": [
+              0.0006672600284218788,
+              0.0006600279593840241,
+              0.0006647330010309815,
+              0.0006602359935641289,
+              0.000653291936032474,
+              0.0006635159952566028,
+              0.0006594050209969282,
+              0.0006551480619236827,
+              0.0006634680321440101,
+              0.0006664600223302841
+            ],
+            "median_seconds": 0.0006618520128540695,
+            "min_seconds": 0.000653291936032474,
+            "max_seconds": 0.0006672600284218788,
+            "population_std_seconds": 4.379851818755281e-06,
+            "warmup": 5,
+            "repeats": 10
+          },
+          {
+            "seconds": [
+              0.0006594359874725342,
+              0.0006496119312942028,
+              0.0006544600473716855,
+              0.0006590529810637236,
+              0.0006481079617515206,
+              0.0006615000311285257,
+              0.0006601719651371241,
+              0.0006531330291181803,
+              0.000661291996948421,
+              0.0006607479881495237
+            ],
+            "median_seconds": 0.0006592444842681289,
+            "min_seconds": 0.0006481079617515206,
+            "max_seconds": 0.0006615000311285257,
+            "population_std_seconds": 4.768309229580053e-06,
+            "warmup": 5,
+            "repeats": 10
+          }
+        ],
+        "analytical_cost": {
+          "parameters": 361088,
+          "dense_forward_matmul_flops": 637534208,
+          "logical_kv_bytes": 1048576
+        },
+        "estimated_matmul_flops_per_second": [
+          957264333046.7546,
+          963257942286.5165,
+          967067944008.313
+        ],
+        "cuda_max_memory_allocated": 37362176,
+        "cuda_max_memory_reserved": 39845888,
+        "attention_backend": "SDPA; actual fused kernel unknown unless independently profiled",
+        "timed_phase": "preallocated decoder forward only; no transfer/data preparation/backward",
+        "memory_boundary": "CUDA allocator bytes exclude host and other-process/unified-memory use; no device-peak utilization inference"
+      }
+    ],
+    "matmul": {
+      "device": "cuda",
+      "dtype": "torch.float32",
+      "ledger": {
+        "rows": 512,
+        "inner": 512,
+        "columns": 512,
+        "element_bytes": 4,
+        "matmul_flops": 268435456,
+        "modeled_minimum_io_bytes": 3145728,
+        "arithmetic_intensity": 85.33333333333333,
+        "assumption": "Read each input once; write output once. No cache/launch/reduction overhead."
+      },
+      "timing": {
+        "seconds": [
+          3.764801658689976e-05,
+          3.777502570301294e-05,
+          3.756803926080465e-05,
+          3.7056044675409794e-05,
+          3.724801354110241e-05,
+          3.6815996281802654e-05,
+          3.729504533112049e-05
+        ],
+        "median_seconds": 3.729504533112049e-05,
+        "min_seconds": 3.6815996281802654e-05,
+        "max_seconds": 3.777502570301294e-05,
+        "population_std_seconds": 3.1661570102619376e-07,
+        "warmup": 3,
+        "repeats": 7
+      },
+      "estimated_matmul_flops_per_second": 7197617099449.042,
+      "timed_phase": "Preallocated matmul only; input creation/transfer excluded; no utilization claim"
+    },
+    "resource_gates": {
+      "seconds_cap": 600,
+      "host_reserve_gib": 25,
+      "allocator_limit_gib": 8,
+      "cadence": "Between shapes and repetitions; external monitor owns intra-call resource enforcement"
+    },
+    "boundary": "Actual caller-selected single device; no multi-GPU evidence, no imported hardware peak or utilization"
+  }
+}

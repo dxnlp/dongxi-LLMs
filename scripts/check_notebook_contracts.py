@@ -20,6 +20,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 RUN = 'experiments/reports/2026-10-10-book-editorial-pass/run-01'
+CURRENT_RUN = 'experiments/reports/2026-10-11-cs336-upgrade/run-01'
 HASH_RECIPE = 'sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode())'
 KINDS = {'computation', 'interpretation', 'perturbation', 'written-reflection'}
 MARKDOWN_ROLES = {'exercise/checkpoint', 'reference-explanation', 'narrative/mechanism-context',
@@ -114,7 +115,11 @@ def safe_notebook_path(path):
 
 
 def load_git_originals(root, baseline):
-    """Read tracked original notebooks; ignored checkpoint copies have no Git object."""
+    """Read Git originals or explicitly frozen sources for newly added lessons.
+
+    A frozen introduced source never replaces a notebook present at the base
+    commit. Historical captures therefore retain their original authority.
+    """
     commit = baseline.get('base_commit')
     if not isinstance(commit, str) or not re.fullmatch(r'[0-9a-f]{40}', commit):
         raise ValueError('Baseline must name a complete Git commit identity')
@@ -122,13 +127,27 @@ def load_git_originals(root, baseline):
         ['git', 'ls-tree', '-r', '--name-only', commit, 'notebooks'], cwd=root, text=True).splitlines()
     tracked = set(inventory)
     originals = {}
-    for path in baseline['notebooks']:
+    for path, captured in baseline['notebooks'].items():
         if not safe_notebook_path(path):
             raise ValueError(f'Unsafe baseline path: {path!r}')
         if path in tracked:
+            if captured.get('introduced_source') is not None:
+                raise ValueError(f'An introduced capture cannot replace a Git original: {path}')
             raw = subprocess.check_output(['git', 'show', f'{commit}:{path}'], cwd=root)
             if hashlib.sha256(raw).hexdigest() != baseline['notebooks'][path]['sha256']:
                 raise ValueError(f'Git source and immutable original file identity disagree: {path}')
+            originals[path] = json.loads(raw)
+        elif captured.get('introduced_source') is not None:
+            source = captured['introduced_source']
+            if (not isinstance(source, str) or PurePosixPath(source).is_absolute()
+                    or '..' in PurePosixPath(source).parts or '\\' in source):
+                raise ValueError(f'Unsafe introduced source: {source!r}')
+            actual = (Path(root)/source).resolve()
+            if not actual.is_relative_to(Path(root).resolve()):
+                raise ValueError('Introduced source escapes repository')
+            raw = actual.read_bytes()
+            if hashlib.sha256(raw).hexdigest() != captured['sha256']:
+                raise ValueError(f'Frozen introduced source identity disagrees: {path}')
             originals[path] = json.loads(raw)
     return originals
 
@@ -194,7 +213,9 @@ def check_contracts(root, manifest, baseline, review, originals):
             if metadata_hash != captured.get('notebook_metadata_sha256'):
                 problem(path, 'preservation', 'Notebook metadata changed')
             original = originals.get(path)
-            authority = 'independent-git-objects' if original is not None else 'immutable-full-file-sha256'
+            authority = ('frozen-introduced-source' if captured.get('introduced_source') is not None
+                         else 'independent-git-objects' if original is not None
+                         else 'immutable-full-file-sha256')
             if original is not None:
                 if codes != code_cells(original):
                     problem(path, 'preservation', 'Complete code objects differ from Git original (missing keys remain significant)')
@@ -363,7 +384,8 @@ def check_contracts(root, manifest, baseline, review, originals):
                 reviewed_notebooks=len(records), preserved_inventory=len(preservation),
                 preserved_code_cells=sum(row['code_cells'] for row in preservation),
                 preservation_authorities={authority:sum(row['authority'] == authority for row in preservation)
-                                          for authority in ['independent-git-objects', 'immutable-full-file-sha256']},
+                                          for authority in ['independent-git-objects', 'immutable-full-file-sha256',
+                                                            'frozen-introduced-source']},
                 reviewed_prompts=sum(row['reviewed_prompts'] for row in records),
                 reference_pairs=sum(row['reference_pairs'] for row in records),
                 reference_groups=sum(row['reference_groups'] for row in records),
@@ -373,8 +395,15 @@ def check_contracts(root, manifest, baseline, review, originals):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, default=ROOT)
-    parser.add_argument('--baseline', type=Path, default=Path(RUN)/'baseline.json')
-    parser.add_argument('--review', type=Path, default=Path(RUN)/'notebook-contract-review.json')
+    # New ledgers preserve the historical capture and add named new sources.
+    # Explicit CLI paths can still reproduce the older report's exact scope.
+    current = ((ROOT/CURRENT_RUN/'notebook-contract-baseline.json').is_file()
+               and (ROOT/CURRENT_RUN/'notebook-contract-review.json').is_file())
+    parser.add_argument('--baseline', type=Path,
+                        default=Path(CURRENT_RUN)/'notebook-contract-baseline.json' if current
+                        else Path(RUN)/'baseline.json')
+    parser.add_argument('--review', type=Path,
+                        default=Path(CURRENT_RUN if current else RUN)/'notebook-contract-review.json')
     parser.add_argument('--json', action='store_true')
     args = parser.parse_args()
     root = args.root.resolve()

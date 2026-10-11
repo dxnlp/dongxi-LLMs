@@ -984,6 +984,14 @@ general final-model ranking. Neither arm is established as a reliable coherent
 storyteller. [Appendix D](../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence)
 links the execution, corpus audit and retained measurement boundaries.
 
+### Cleaning data changes more than its size
+
+A document filter changes the empirical training distribution. Removing navigation, near copies or low-information text may reduce wasted exposure, but it can also remove a useful style or domain. The [corpus curation notebook](../../notebooks/extensions/cs336/06_corpus_curation.ipynb) makes that tradeoff visible on an original HTML fixture containing stories, code and multilingual text. Extraction, filtering, matching normalization and duplicate grouping have separate outputs; the text used for matching never silently replaces the text used for training.
+
+The reference compares raw, exact-deduplicated and curated data at 768 valid targets per arm and 32 targets per update. It retains 10, 9 and 5 documents respectively. Across all three declared seeds, curated final held-out NLL is worse than exact deduplication. Generated text remains limited. This result does not establish that curation is harmful in general; it shows that this filter and this finite training budget did not improve this held-out measurement. A prettier corpus is not empirical validation of a cleaning recipe.
+
+The [scaling notebook](../../notebooks/extensions/cs336/03_scaling_prediction.ipynb) asks a related question: can several budget slices identify an allocation optimum? Its authored simulation is separate from the measured tiny-model matrix. Freeze the fit or refusal using calibration budgets before revealing the entire held-out budget. An optimum on the edge of the tested size range does not identify an interior optimum, and a repeated finite corpus does not satisfy an assumption of continually new training tokens. Assignment D requires those diagnostics alongside any prediction error.
+
 ## Exercises
 
 Use explanations and small interventions, not arithmetic speed. Adjacent

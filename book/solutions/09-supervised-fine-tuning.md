@@ -219,3 +219,11 @@ equivalence to an unmerged BF16 adapter path.
 3. [Tiny assistant training](../../notebooks/day-13/01_tiny_assistant_training.ipynb).
 4. [Full tuning, LoRA and defense](../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb).
 5. [Complete-response distillation, masks and printed-step checks](../../notebooks/day-26/03_response_level_distillation.ipynb), a Chapter 15 extension bridged here through the SFT objective.
+
+## Assignment E — Ancestry before comparison
+
+**Prediction/checkpoint.** Which model should be the parent of accepted-response SFT and GRPO in the compatible exercise?
+
+**Reference reasoning.** Both siblings start from the same frozen SFT checkpoint, with its weights, interface identity and evaluation retained. Independently constructed tiny checkpoints cannot be substituted merely because their shapes match. The reference shows usable task gradients but sub-baseline final complete-path probabilities. A termination improvement does not establish learning the parity relation.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb) exposes the intermediate values and deliberate failure where applicable.

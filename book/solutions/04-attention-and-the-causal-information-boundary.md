@@ -204,3 +204,11 @@ contains mask and invariance checks. The
 adds a stale-prefix counterexample. Together with the analytical argument, these
 give evidence at the mechanism level without substituting for broader model
 evaluation.
+
+## Assignment C — Repairing an online softmax state
+
+**Prediction/checkpoint.** The retained row maximum rises from two to four. How should the old denominator and value numerator change?
+
+**Reference reasoning.** Multiply both old accumulators by exp(2−4), approximately 0.1353, before adding the new block in coordinates relative to four. This rescales old probability mass consistently. Omitting the factor overweights earlier blocks. Check dense outputs and Q/K/V gradients, including a fully masked row and an uneven last tile. Forward workspace accounting alone does not establish fused backward savings.
+
+The [executable reference and assignment route](../../notebooks/extensions/cs336/02_online_attention.ipynb) exposes the intermediate values and deliberate failure where applicable.

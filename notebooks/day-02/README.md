@@ -13,3 +13,7 @@ Use the chapter's worked solutions after discussing the interventions. Figures
 are generated from the current computations or explicitly stored observations.
 Reference execution checks material readiness, not independent learner mastery.
 The full verification report identifies the source revision and plotted results.
+
+## Assignment A: text-interface contracts
+
+After the existing BPE mechanism, inspect the [tokenizer contract companion](../extensions/cs336/05_tokenizer_contracts.ipynb). It reuses the same byte merges and adds segmentation, special-marker admission, save/load identity and one-record versus independent-record framing. Predict whether identical decoded text implies identical control-token semantics.
