@@ -51,6 +51,20 @@ Candidate extensions reuse 008/005/027/009 plus scaling candidate 030, with Mac
 production still unapproved. Learner Day 9, 15 chapters/28 days and D005 are preserved;
 next live discussion returns to the retained English-story objective on Spark.
 
+CS336 gap analysis, 2026-10-18: the learner asked for a second comparison of
+Spring 2026 CS336 against the current chapters. The
+[gap analysis](docs/CS336_GAP_ANALYSIS.md) maps all seventeen lectures and
+five handouts to chapter coverage and ranks additions: distributed training
+on CPU, inference mechanisms, real web data through curation, scaling laws in
+practice, trained architecture ablations with a fixed-budget challenge,
+architecture hyperparameters and one public benchmark first; MoE/attention
+alternatives, GPU execution, profiling and post-training context second.
+A read-only Spark check (Torch 2.13+cu130, Triton 3.7.1, NCCL/gloo, Nsight
+tools, GB10 cc 12.1, 121.7 GiB unified) shows every item is single-device
+work except the empirical half of parallelism, which stays a CPU gloo
+mechanism lesson plus accounting. The learner reviewed the analysis; it is
+final as a planning record, nothing was executed and no package is opened.
+
 CS336 comparison, 2026-10-11: the learner requested a concrete improvement plan
 for course content and labs. The [CS336 plan](docs/CS336_IMPROVEMENT_PLAN.md)
 compares pinned Spring 2026 assignments and lectures with the completed local
