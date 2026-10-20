@@ -1449,6 +1449,23 @@ production dependencies.
 - Production dependency: Approved storyboard plus Mac Studio rendering; no
   animation task has been promoted or rendered by this course goal.
 
+### CAND-ANIM-031 — Why post-training: five beginner loops
+
+- Source: user (2026-10-20 request for "good", easy-to-understand animations in
+  the first post-training X article) and agent storyboard.
+- Learning objective: a beginner sees why a base model continues text instead
+  of answering, that post-training keeps training the same model on small
+  curated data, and that the three techniques learn from examples, comparisons
+  and a checker.
+- Canonical mechanisms: SFT loss on response tokens only (SLP3 §8.1);
+  preference pair plus KL leash to the reference (SLP3 eq. 8.6); RLVR outcome
+  verifier (book Chapter 13). No equations on screen.
+- Evidence: authored illustration; A1 probabilities are not measured.
+- Promotion: approved in discussion; `ANIM-POST-001` packet in
+  `publications/x-articles/x-post-training-001/visual-plan.md`. Rendered on
+  2026-10-20 at the learner's request in
+  `visuals/animations/projects/post-training-intro/`; visual review pending.
+
 ### Approved chapter GIF package — 2026-10-11
 
 - Source: user. After reviewing the fifteen-chapter plan, the learner requested

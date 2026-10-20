@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Why Does a Language Model Need Post-Training?</title><style>*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;background:#fff;color:#111827;font-family:Arial,"Helvetica Neue",sans-serif}
+body.zh{font-family:"PingFang SC","Songti SC",STSong,serif}
+main{max-width:860px;margin:36px auto 110px;padding:0 28px}
+nav{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#64748b;margin-bottom:18px}
+nav a{color:#2563eb;text-decoration:none;border:1px solid #cbd5e1;border-radius:6px;padding:5px 10px}
+header img{width:100%;height:auto;display:block;border-radius:10px}
+h1{font-size:42px;line-height:1.25;font-weight:700;margin:34px 0 30px}
+h2{font-size:29px;line-height:1.4;margin:58px 0 22px}
+h3{font-size:23px;line-height:1.4;margin:40px 0 16px}
+p,li{font-size:19px;line-height:1.85;overflow-wrap:anywhere}
+p{margin:0 0 20px} ul{padding-left:24px;margin:0 0 22px} li{margin-bottom:8px}
+body.zh p,body.zh li{font-size:19px;line-height:1.95}
+blockquote{margin:26px 0;padding:4px 0 4px 20px;border-left:4px solid #cbd5e1;color:#1f2937}
+blockquote p{margin:8px 0;font-size:20px}
+figure{margin:34px -10px}
+figure img{width:100%;height:auto;display:block;border:1px solid #e2e8f0;border-radius:10px}
+figcaption{font-size:15px;line-height:1.75;color:#64748b;padding:12px 8px}
+.note{font-size:14px;color:#64748b;border-top:1px solid #e2e8f0;margin-top:60px;padding-top:16px}
+@media(max-width:600px){main{padding:0 16px;margin-top:16px}h1{font-size:30px}h2{font-size:24px;margin-top:42px}
+h3{font-size:20px}p,li,body.zh p,body.zh li{font-size:17px}figure{margin:26px -6px}}</style></head><body class="en"><main><nav><span>X-POST-001 · post-training series 1/4</span><a href="zh/review.html">中文版</a></nav><header><img src="assets/cover-post-training.png" width="2000" height="800" alt="Why Does a Language Model Need Post-Training?"></header><h1>Why Does a Language Model Need Post-Training?</h1><article><h2>It has read an ocean of text. Why can't it handle a simple request?</h2>
+<p>In early 2022, when OpenAI introduced InstructGPT, it showed a telling comparison. GPT-3 was given a simple request:</p>
+<blockquote>
+<p>&quot;Explain the moon landing to a 6 year old in a few sentences.&quot;</p>
+</blockquote>
+<p>GPT-3 didn't explain the moon landing. It wrote more assignments instead:</p>
+<blockquote>
+<p>&quot;Explain the theory of gravity to a 6 year old. Explain the theory of relativity…&quot;</p>
+</blockquote>
+<p>Given the same request, InstructGPT simply answered: people went to the moon, took pictures of what they saw, and sent them back to Earth so we could all see them.</p>
+<p>GPT-3 isn't broken. It's doing exactly what it was trained to do.</p>
+<blockquote>
+<p>A pretrained model learns one thing: given some text, predict the next word.</p>
+</blockquote>
+<p>It learns this from enormous amounts of mostly web text. On the web, one question is often followed by another: worksheets, homework lists, &quot;ten questions about…&quot; pages. So &quot;write a few more questions&quot; is a perfectly reasonable guess about what comes next.</p>
+<p>A model that has only been pretrained is called a <strong>base model</strong>. Everything we do after pretraining to turn that text continuer into a useful assistant is called <strong>post-training</strong>. InstructGPT is GPT-3 after post-training.</p>
+<p>This article explains why we need it, how it differs from pretraining, and the three techniques it usually involves.</p>
+<figure><img src="assets/01-same-prompt-two-models.gif" loading="lazy" alt="The same request, two models. The base model&#x27;s likeliest next word starts another assignment; after post-training it starts an answer. Probabilities and replies are illustrative, modeled on OpenAI&#x27;s published GPT-3 vs InstructGPT example, not measured."><figcaption>The same request, two models. The base model&#x27;s likeliest next word starts another assignment; after post-training it starts an answer. Probabilities and replies are illustrative, modeled on OpenAI&#x27;s published GPT-3 vs InstructGPT example, not measured.</figcaption></figure>
+<h2>Why pretraining isn't enough</h2>
+<blockquote>
+<p>Think of someone who has read every book in a huge library but has never held a job. They can finish almost any sentence you start. But ask them for help, and they may just keep talking about whatever your words reminded them of.</p>
+</blockquote>
+<p>Base models have three gaps like this:</p>
+<ul>
+<li><strong>They don't reliably follow instructions.</strong> Ask for an explanation and you may get more questions; ask for a translation and you may get more text in the original language.</li>
+<li><strong>They can be harmful.</strong> Nothing in &quot;predict the next word&quot; says to avoid dangerous advice, abuse, or confident falsehoods, such as a wrong answer to a medical question.</li>
+<li><strong>They struggle with long, multi-step problems.</strong> Knowing what math text looks like isn't the same as reliably working a problem through to the right answer.</li>
+</ul>
+<p>All three come from the same root:</p>
+<blockquote>
+<p>The pretraining objective, success at predicting words in web text, doesn't match what people actually need: a model that is helpful and not harmful.</p>
+</blockquote>
+<p>Post-training closes that gap.</p>
+<h2>Pretraining vs. post-training</h2>
+<p>Post-training doesn't build a new model. It keeps training the same one. What changes is the data and the signal that tells the model what &quot;better&quot; means.</p>
+<figure><img src="assets/02-two-stages.gif" loading="lazy" alt="One model, two stages. Pretraining pours in a huge stream of raw text; post-training feeds the same model three small, curated streams: examples, comparisons and checked answers. Volumes are not to scale."><figcaption>One model, two stages. Pretraining pours in a huge stream of raw text; post-training feeds the same model three small, curated streams: examples, comparisons and checked answers. Volumes are not to scale.</figcaption></figure>
+<p><strong>Goal.</strong> Pretraining: predict the next word in text. Post-training: behave the way people want, which means following instructions, staying safe, and getting answers right.</p>
+<p><strong>Data.</strong> Pretraining uses raw text, trillions of words of it. Post-training uses small, carefully made sets: requests paired with good responses, comparisons between two answers, and problems with checkable answers. A large instruction dataset holds at most millions of examples.</p>
+<p><strong>Signal.</strong> In pretraining, every next word in the text is the target. In post-training, the signal is a demonstrated answer, a judgment of which answer is better, or a pass/fail from a checker.</p>
+<p><strong>Cost.</strong> Pretraining is where most of the compute goes. Post-training costs a small fraction of it.</p>
+<p><strong>How much the model changes.</strong> Pretraining builds knowledge and language from scratch. Post-training mostly nudges a model that already works well.</p>
+<blockquote>
+<p>Roughly: pretraining gives the model what it knows; post-training shapes how it uses it.</p>
+</blockquote>
+<figure><img src="assets/03-pretraining-vs-post-training.png" loading="lazy" alt="Pretraining and post-training side by side: goal, data, signal, cost and how much the model changes."><figcaption>Pretraining and post-training side by side: goal, data, signal, cost and how much the model changes.</figcaption></figure>
+<p>Small data can still change behavior a lot. In one study, mixing just 500 safety examples into a large instruction dataset was enough to substantially reduce harmful responses.</p>
+<h2>Three techniques, three kinds of teacher</h2>
+<p>Post-training is usually described as three techniques: <strong>instruction tuning</strong>, <strong>preference alignment</strong>, and <strong>reinforcement learning with verifiable rewards (RLVR)</strong>. The easiest way to tell them apart is to ask what kind of teacher each one learns from:</p>
+<blockquote>
+<p>One shows, one compares, one checks.</p>
+</blockquote>
+<h2>1. Instruction tuning: learn from examples</h2>
+<blockquote>
+<p>A new employee often learns from worked examples: here is a request, here is a good answer.</p>
+</blockquote>
+<p>Instruction tuning does the same. The data is a set of instructions paired with good responses, for example &quot;Translate this Spanish sentence into English&quot; followed by the English translation.</p>
+<p>The training rule hardly changes: the model still predicts the next word. The difference is which words count.</p>
+<blockquote>
+<p>The instruction is only context; the model is graded only on the words of the response.</p>
+</blockquote>
+<p>This is also called <strong>supervised fine-tuning (SFT)</strong>, because every instruction comes with a correct answer to imitate. Trained across many kinds of tasks, the model gets better at following instructions in general, including tasks it never saw.</p>
+<figure><img src="assets/03-instruction-tuning.gif" loading="lazy" alt="Instruction tuning. The instruction is context only; the model is graded on each word of the response. Words are revealed one at a time for readability; training grades them all in one pass."><figcaption>Instruction tuning. The instruction is context only; the model is graded on each word of the response. Words are revealed one at a time for readability; training grades them all in one pass.</figcaption></figure>
+<h2>2. Preference alignment: learn from comparisons</h2>
+<p>After instruction tuning, answers can still be wrong, unsafe, or just less helpful than they could be.</p>
+<blockquote>
+<p>Writing a perfect answer is hard. Saying which of two answers is better is much easier, the way a food critic can judge a dish they couldn't cook.</p>
+</blockquote>
+<p>Preference alignment uses exactly that. The data is a question, two answers, and a note saying which one people preferred.</p>
+<p>There are two common routes. One trains a separate <strong>reward model</strong>, a judge that gives any answer a score, and then lets the model practice to earn higher scores. This route is often called <strong>RLHF</strong> (reinforcement learning from human feedback), and <strong>PPO</strong> is a well-known algorithm for it. The other route, <strong>DPO</strong> (direct preference optimization), learns directly from the pairs, with no separate judge.</p>
+<p>Both keep a leash to the original model, known technically as a <strong>KL penalty</strong>.</p>
+<blockquote>
+<p>Without the leash, the model could chase high scores, drift far from its starting point, and forget much of what it learned in pretraining.</p>
+</blockquote>
+<figure><img src="assets/04-preference-alignment.gif" loading="lazy" alt="Preference alignment. The preferred answer becomes more likely and the other less likely, while a leash keeps the model near the original. Simplified: the judge route (RLHF) and DPO share one picture."><figcaption>Preference alignment. The preferred answer becomes more likely and the other less likely, while a leash keeps the model near the original. Simplified: the judge route (RLHF) and DPO share one picture.</figcaption></figure>
+<h2>3. RLVR: learn from a checker</h2>
+<p>Some tasks have an answer a program can check. A math problem has a final number. A coding task has tests that pass or fail.</p>
+<p>RLVR uses that <strong>verifier</strong> as the teacher. The model tries several solutions to the same problem, the checker marks each one right or wrong, and the model makes the right ones more likely.</p>
+<blockquote>
+<p>No human judge is needed, and polish or length can't fool a checker.</p>
+</blockquote>
+<p>That makes RLVR well suited to the long, multi-step problems where base models struggle. One caution: a checker is only as good as its rule. If it checks only the final answer, it says nothing about whether every step was sound.</p>
+<figure><img src="assets/05-rlvr.gif" loading="lazy" alt="RLVR. The model tries several answers; a checker marks each right or wrong, and the right answer becomes more likely round by round. This checker reads only the final answer."><figcaption>RLVR. The model tries several answers; a checker marks each right or wrong, and the right answer becomes more likely round by round. This checker reads only the final answer.</figcaption></figure>
+<h2>In short</h2>
+<ul>
+<li>Pretraining teaches a model to continue text. That's different from helping.</li>
+<li>Post-training keeps training the same model on much smaller, carefully made data to steer its behavior.</li>
+<li>Its three techniques learn from three kinds of teacher: instruction tuning learns from examples, preference alignment learns from comparisons, and RLVR learns from a checker.</li>
+</ul>
+<p>This is the first article in a series on post-training. Each of the next three takes one technique and goes deeper: what exactly the model is trained on, how its loss works, and where it can go wrong.</p>
+</article><p class="note">Local review page. Not uploaded or published. Animations are illustrations, not measurements.</p></main></body></html>
