@@ -1,18 +1,79 @@
 # 13. Group-Relative Policy Optimization
 
+> Trust, but verify.
+>
+> — Russian proverb, popularized in English by Ronald Reagan
+
+Chapter 12 trained a policy against learned numbers. A fitted reward model scored
+each finished answer, and a learned critic predicted the return before each
+action. Both are estimates, and both can be wrong. The measured runs kept those
+failures. The fitted reward drove its pair loss nearly to zero, yet color
+matching stayed unreliable, and bare colors fell outside its styled training
+pairs. Two learned-critic seeds collapsed to capped style prefixes with quality
+zero. Chapter 12 closed by noting that none of its operations made the reward a
+trustworthy definition of success.
+
+For some tasks we don't have to learn the reward at all. If the question is
+"what is 2 + 3?", a short program can read the answer and check it. Training a
+policy against such a program is **reinforcement learning with verifiable
+rewards (RLVR)**: the reward comes from an executable **verifier**, a checker
+that applies a fixed rule to the response. Compare Chapter 10. There the reward
+was a model fitted to human or model judgments, so it could be fooled by polish
+or length. A verifier can't be flattered, but it is only as good as the rule it
+runs. In this course RLVR is the third post-training technique, after instruction
+tuning (Chapters 8–9) and preference alignment (Chapters 10–11).
+
+RLVR names where the reward comes from. It doesn't say how to update the policy.
+For that we use **group-relative policy optimization (GRPO)**, which also drops
+Chapter 12's critic. Instead of predicting how good an answer should be, GRPO
+samples several answers to the same prompt and compares them with each other.
+
+The proverb splits neatly across this chapter. The verifier is the "verify"
+half: instead of trusting a learned judge, we run a program that checks each
+answer. The "trust" we must not grant is trust in that checker itself. It
+applies exactly the rule we wrote, nothing more, and that rule can reject a
+correct answer (§13.6, §13.8.3). So we verify the verifier too, and we don't
+read progress into numbers that don't show it. The chapter ends with a real case:
+eight answers with correct arithmetic, all given zero reward (§13.8.4).
+
 Four answers to the same question receive rewards 0, 0, 1, 1. There is no annotated
 reasoning trace and no learned critic. Can these comparisons still teach a language
 model? Yes: the successful sampled answers can become more probable relative to
 the unsuccessful ones. The difficulty is specifying what “relative” means, which
-tokens receive that signal, and how far one update may move the policy.
+tokens receive that signal, and how far one update may move the policy. We will
+take it in six steps:
+
+1. Turn a group of rewards into relative advantages, and see what normalization
+   changes (§13.1–13.2).
+2. Write the clipped objective, turn advantages into token-level pressure, and
+   add a KL anchor (§13.3–13.4).
+3. Decide how tokens and responses are weighted, and count what filtering costs
+   (§13.5).
+4. Treat the verifier as the task's definition (§13.6).
+5. Assemble a complete decoder update, including recovery from a crash (§13.7).
+6. Read the experiments: a tiny CPU decoder, symbolic controls, and a native
+   Qwen3-0.6B pilot (§13.8).
 
 This chapter connects the trajectory mathematics of Chapter 12 to a complete
-autoregressive update. You will calculate group advantages, differentiate a
+autoregressive update. You need Chapter 12's score-function gradient, baselines,
+importance ratios and PPO clipping, plus Chapter 3's shifted logits and loss
+masks. You will calculate group advantages, differentiate a
 clipped objective, test a verifier, and follow detached rollout tokens back to the
 decoder parameters. Days 22–23 provide the notebook route. The CPU implementation
 is executable now; the model-scale Qwen results later in the chapter are a separately measured bounded case.
 
 ## 13.1 A baseline from alternative answers
+
+Chapter 12 showed that a policy gradient needs a baseline: a reference level
+that says whether a reward was better or worse than expected. Its critic learned
+that level. Without a critic, where does the reference level come from?
+
+Think of grading on a curve. Every student in one class sits the same exam, and
+each mark is read against the class average. Scoring above average is good news
+whatever the raw score, and if everyone gets the same mark the curve says
+nothing at all. GRPO does the same thing with answers. It samples a **group** of
+responses to one prompt and judges each response against the others in that
+group.
 
 Let $`x`$ be a prompt and $`y_i=(y_{i1},\ldots,y_{in_i})`$ a response. A behavior
 policy $`\pi_{\mathrm{old}}`$ generates $`G`$ responses independently conditional on
@@ -38,7 +99,10 @@ architecture can be a small head or network, not necessarily another entire
 language model. GRPO trades this learned prediction for a within-group
 comparison and pays for the additional sampled responses.
 
-We declare the course convention explicitly:
+We declare the course convention explicitly. The **group-relative advantage**
+$`\hat A_i`$ is a response's reward minus the group mean, divided by the group's
+spread. In plain words, it says how many standard deviations above or below its
+siblings an answer landed:
 
 ```math
 \bar R=\frac1G\sum_{j=1}^{G}R_j,\qquad
@@ -98,6 +162,11 @@ the signs survive while the update scale changes.
 
 ## 13.2 What normalization changes
 
+The advantage formula in §13.1 did two things at once: it subtracted the group
+mean and divided by the group's spread. They look like one tidy step. They
+aren't, and each one has its own consequences for which prompts drive the update
+and whether Chapter 12's baseline guarantees still hold.
+
 Subtracting a baseline and dividing by a standard deviation are different
 operations. Centering compares each response to the group's mean. Scaling changes
 how strongly groups with different reward spreads contribute. For binary rewards
@@ -108,7 +177,17 @@ receive a large positive advantage. Across prompts, this is a weighting choice.
 The statistics contain the sampled response's own reward. For unnormalized
 centering and independent group samples, the expected score-function estimator
 has a factor $`(G-1)/G`$ compared with the estimator using the true expected reward
-as baseline. A leave-one-out baseline removes that simple self-inclusion factor.
+as baseline. To see where the factor comes from, split the group mean into the
+response's own reward and the mean $`\bar R_{-i}`$ of the other $`G-1`$ rewards:
+
+```math
+R_i-\bar R
+=R_i-\frac{R_i+(G-1)\bar R_{-i}}{G}
+=\frac{G-1}{G}\left(R_i-\bar R_{-i}\right).
+```
+
+A **leave-one-out baseline** uses $`\bar R_{-i}`$ directly, so it removes that
+simple self-inclusion factor.
 After standard-deviation normalization, the denominator also depends on all
 sampled rewards, so this is no longer merely the same estimator with a fixed
 learning-rate rescaling. Chapter 12's baseline identities should not be silently
@@ -123,7 +202,9 @@ $`[-2/3,-2/3,2/3,2/3]`$; inclusive centering gives
 $`[-1/2,-1/2,1/2,1/2]`$, exactly three quarters as large. Dividing either by
 the group's random standard deviation changes the statistical argument again.
 
-If a group is constant, its centered rewards are exactly zero. The implementation
+If a group is constant, its centered rewards are exactly zero. We call it a
+**zero-variance group**: every answer got the same reward, so the curve has
+nothing to compare. The implementation
 returns exact zero advantages rather than allowing $`0/0`$. Epsilon protects
 near-zero denominators; it cannot invent exploration. Track the fraction of
 zero-variance groups. A high fraction may reflect successful saturation, failure
@@ -140,6 +221,12 @@ For a declared iid success probability $`p=0.1`$, four responses are all wrong
 with probability 0.6561; eight responses with probability approximately
 0.430467. A group has a nonconstant binary reward with probability
 $`1-(1-p)^G-p^G`$: approximately 0.3438 for four and 0.569533 for eight.
+For four, subtract both constant outcomes from one:
+
+```math
+1-0.9^4-0.1^4=1-0.6561-0.0001=0.3438.
+```
+
 More draws improve the chance of a comparison while roughly doubling
 collection work at unchanged response lengths. At $`p=0`$ they help neither
 signal nor correctness; at $`p=1`$ constant groups indicate success instead.
@@ -157,6 +244,11 @@ Those are sampling calculations, not forecasts of the native pilot.
 <!-- /chapter-gif: group-relative-rewards -->
 
 ## 13.3 The objective we will implement
+
+An advantage is one number per response, but a language model chooses one token
+at a time. We need an objective that hands each response's advantage to its
+tokens, and that stops a single update from moving the policy too far. Chapter
+12's PPO clipping already does the second job, so GRPO reuses it.
 
 At response position $`t`$, define state $`s_{it}=(x,y_{i,<t})`$ and token ratio
 
@@ -184,7 +276,8 @@ over the prompt batch. The advantages, sampled token IDs, behavior log
 probabilities and reference parameters are detached. The current policy logits
 and chosen KL term remain differentiable. The optimizer minimizes $`L`$.
 
-For $`\hat A_i>0`$, raising a token's ratio improves the surrogate until the upper
+**Clipping** caps how much credit the surrogate gives for moving a token's ratio
+away from one. For $`\hat A_i>0`$, raising a token's ratio improves the surrogate until the upper
 clip boundary; beyond it that branch supplies no further positive pressure.
 For $`\hat A_i<0`$, reducing its ratio improves the surrogate until the lower
 boundary. An unfavorable movement remains penalized. Clipping is a modification
@@ -202,7 +295,18 @@ correction. Our readable baseline uses one update per freshly collected batch.
 Return to the four-response illustration. Set $`\beta=0`$ for this isolated
 policy-signal calculation and use a fresh behavior snapshot. Every ratio is
 one. The response means are $`[-1,-1,+1,+1]`$ to the displayed precision,
-so $`J=0`$ and $`L=0`$. The derivative is nevertheless informative:
+so $`J=0`$ and $`L=0`$. The derivative is nevertheless informative. Near ratio
+one the clip is inactive, and because $`\rho_{it}`$ is an exponential of the log
+probability, $`\partial\rho_{it}/\partial\log\pi_\theta(y_{it}\mid s_{it})=\rho_{it}`$.
+Each token appears in $`J`$ with weight $`1/(Gn_i)`$, so at $`\rho_{it}=1`$
+
+```math
+\frac{\partial J}{\partial\log\pi_\theta(y_{it}\mid s_{it})}
+=\frac{\hat A_i\,\rho_{it}}{Gn_i}
+=\frac{\hat A_i}{Gn_i},
+```
+
+and the loss $`L=-J`$ flips the sign:
 
 ```math
 \frac{\partial L}{\partial\log\pi_\theta(y_{it}\mid s_{it})}
@@ -240,7 +344,14 @@ distinction consequential.
 
 ## 13.4 KL values and KL gradients
 
-The reference policy $`\pi_{\mathrm{ref}}`$ is a fixed anchor. It differs from the
+Clipping limits one update. It does nothing to stop many small updates from
+drifting far from where training started. The $`\beta D_{it}`$ term in §13.3 is
+the leash: it measures how far the current policy has moved from a fixed starting
+point and charges for the distance. This section asks what that charge is and
+how its gradient is computed.
+
+The **reference policy** $`\pi_{\mathrm{ref}}`$ is a fixed anchor, usually the
+policy we started RL from. It differs from the
 behavior snapshot, which is refreshed every update. At an enumerable vocabulary
 state, the course computes exact forward categorical KL:
 
@@ -257,7 +368,19 @@ For current logits $`z_v`$, its derivative is
 ```
 
 This follows by differentiating $`p`$ through softmax and summing the Jacobian
-terms. The expression includes how changing logits changes the distribution
+terms. Write $`D=\sum_u p_u(\log p_u-\log q_u)`$. Its derivative with respect to
+one probability is $`\partial D/\partial p_u=\log(p_u/q_u)+1`$, and the softmax
+Jacobian is $`\partial p_u/\partial z_v=p_u(\mathbb 1[u=v]-p_v)`$. The chain rule
+gives
+
+```math
+\frac{\partial D}{\partial z_v}
+=\sum_u\left(\log\frac{p_u}{q_u}+1\right)p_u\left(\mathbb 1[u=v]-p_v\right)
+=p_v\left(\log\frac{p_v}{q_v}+1\right)-p_v\left(D+1\right),
+```
+
+because $`\sum_u p_u\log(p_u/q_u)=D`$ and $`\sum_u p_u=1`$. The two $`+1`$ terms
+cancel, leaving the result above. The expression includes how changing logits changes the distribution
 that weights the log ratios. Reference logits are constants. Exact vocabulary
 KL avoids sampling noise over candidate tokens at the visited state; it still
 averages over states reached by the behavior rollouts rather than every possible
@@ -270,7 +393,16 @@ k_3(v)=\frac{q_v}{p_v}-\log\frac{q_v}{p_v}-1.
 ```
 
 When $`v`$ is sampled from $`p`$, its expectation is forward KL because
-$`\sum_v p_v(q_v/p_v)=1`$ on common positive support. Its individual value
+$`\sum_v p_v(q_v/p_v)=1`$ on common positive support. Take the expectation term
+by term:
+
+```math
+\mathbb E_{v\sim p}\left[k_3(v)\right]
+=\sum_v p_v\frac{q_v}{p_v}-\sum_v p_v\log\frac{q_v}{p_v}-1
+=1+\sum_v p_v\log\frac{p_v}{q_v}-1=D.
+```
+
+Its individual value
 is nonnegative, but its variance is not universally smaller than that of
 $`\log(p_v/q_v)`$; rare actions with large $`q_v/p_v`$ can have large tails.
 This value identity does not mean that differentiating
@@ -288,6 +420,12 @@ what backpropagation should do. The course model adapter deliberately keeps
 temperature 1/full support while more complicated sampling is studied separately.
 
 ## 13.5 Token weighting is part of the algorithm
+
+The objective in §13.3 averaged tokens inside each response before averaging
+responses. That looked like bookkeeping. It isn't: the order of averaging
+decides whether a long answer counts as much as a short one or many times more.
+Think of a committee where each member gets one vote, versus one where each
+member gets a vote per page of their report.
 
 The response-mean objective gives each response the same total nominal weight.
 A response of length 2 allocates that weight across two tokens; one of length 20
@@ -311,6 +449,11 @@ declare this chapter's formula precisely. It is not evidence that a newly named
 variant automatically improves our model, hardware or target task.
 
 ### 13.5.1 Compare objectives before comparing training runs
+
+Once you see that the weighting is a choice, the natural next step is to compare
+choices. The catch is that a training run changes many things at once. Here we
+hold the sampled responses fixed and change only the formula, so any difference
+comes from the formula.
 
 Changing a loss and changing its sampled responses at the same time makes an
 algorithm comparison hard to interpret. The
@@ -380,6 +523,11 @@ this establishes objective differences, not an algorithm ranking or reasoning ga
 
 ### 13.5.2 Filtering has a collection denominator
 
+Zero-variance groups (§13.2) contribute no relative signal, so a tempting fix is
+to throw them away and sample again. That buys a cleaner batch with extra
+generation work. The question is how much work, and the answer has to count the
+groups we discarded as well as the ones we kept.
+
 Discarding constant-quality groups can increase the fraction of retained groups
 with a relative signal. Failed collection is not free. Count attempted prompts,
 groups, responses and generated actions, including sampled EOS; retain prompts
@@ -412,6 +560,12 @@ a Spark campaign.
 
 ## 13.6 The verifier is an executable task definition
 
+Every advantage so far started from a reward $`R_i`$, and in RLVR that reward
+comes from the verifier. So the verifier is not a side detail: whatever it
+accepts is, as far as training knows, the task. A strict exam marker who only
+reads the boxed answer will train students to box answers, whatever they write
+above the box.
+
 “Verifiable” means that a specified program can decide some property. It does
 not make the property a complete measure of reasoning. A correct final integer
 can accompany an invalid explanation; a valid derivation can be rejected by a
@@ -434,6 +588,11 @@ can leak through identical examples, shared templates or trivial answer coverage
 document each level rather than claiming an exact-ID check proves full isolation.
 
 ## 13.7 A complete decoder update
+
+We now have every piece: sampled groups, advantages, a clipped objective, a KL
+anchor, a weighting rule and a verifier. This section wires them into one update
+of a real, if tiny, decoder, so you can follow a sampled token from generation
+back to the parameters it changes.
 
 The [source implementation](../../src/dongxi_llms/grpo_lab.py) initializes a
 one-layer 16-wide `TinyDecoder` with 12 vocabulary outcomes. It warm-starts on 12
@@ -466,6 +625,11 @@ policy gradient is zero.
 
 ### 13.7.1 A pending rollout is already an experimental observation
 
+Long runs crash. When one does, the obvious move is to reload the last weights
+and carry on. But an update has two halves, collecting a group and applying it,
+and a crash between them leaves data that was observed but never used. Throwing
+it away and sampling again quietly changes the experiment.
+
 A crash after collection but before optimization leaves an observed group,
 not permission to draw a new one. Resampling can change answers, lengths,
 rewards, advantages and the gradient even when policy weights are unchanged.
@@ -493,6 +657,12 @@ without erasing attempts that actually consumed resources.
 
 ## 13.8 Experiments and their reach
 
+The code runs and the gradients check out. Does training actually make answers
+better, and on which questions? This section reads the experiments in order of
+size: the tiny CPU decoder, a symbolic task built so that learning is possible,
+and then a real Qwen3-0.6B pilot. At each step the useful habit is to ask what
+was measured and how far the result reaches.
+
 The [bounded specification](../../experiments/specs/2026-10-04-grpo-diagnostics-distillation.md)
 compares groups 4 and 8 at the same 12-update schedule. The latter consumes more
 rollouts, so the report includes token counts and elapsed time rather than
@@ -501,7 +671,9 @@ held-out rows are retained. Four arithmetic prompts cannot establish broad
 reasoning generalization. A failed held-out result is useful evidence about the
 limits of a tiny demonstration-trained policy, not a reason to hide the report.
 
-The [measured CPU report](../../experiments/reports/2026-10-04-grpo-diagnostics-distillation.md)
+Here is the short version before the detail. The tiny decoder learns its
+training prompts, but RL doesn't help it on the four held-out pairs at all. The
+[measured CPU report](../../experiments/reports/2026-10-04-grpo-diagnostics-distillation.md)
 retains an instructive negative result. Both arms fit all 12 warm-start training
 prompts, while greedy accuracy on the four held-out pairs is zero before and
 after the RL stage. The G4 arm consumes 192 valid response tokens; G8 consumes
@@ -518,6 +690,11 @@ declared smoke mode before a longer experiment and preserve the platform's host
 memory reserve.
 
 ### 13.8.1 Constructive controls: learning can improve without solving the task
+
+A negative result leaves two explanations open. Maybe the method can't learn
+here, or maybe this setup gave it nothing to learn from. A **positive control**
+separates them: a task chosen so that learning is known to be possible. If GRPO
+can't move even that, the problem is in the machinery.
 
 The old G4/G8 result stays intact. It begins after fitting all twelve training
 demonstrations; a successful warm-start can leave little unsaturated training
@@ -582,6 +759,11 @@ evidence of reasoning transfer.
 
 ### 13.8.2 From symbolic controls to a real reasoning protocol
 
+The symbolic control speaks four tokens, not English. To ask anything about a
+pretrained model, we need real word problems, a grader we trust, and a clear
+list of which knobs we're turning. This section builds that protocol before any
+native result appears.
+
 The companion [original math panel](../../fixtures/reasoning-controls/README.md)
 contains arithmetic, linear equations and two-step quantity problems. Its
 references are independently checked with exact arithmetic and the bounded
@@ -590,7 +772,9 @@ evaluation contract. These authored strings are not generations from the tiny
 decoder, which does not parse the English panel. They define broader questions
 for a separately specified pretrained experiment.
 
-A model's weights, prompt interface and thinking behavior are distinct choices:
+A model's weights, prompt interface and thinking behavior are distinct choices.
+Changing one is not the same as changing another, and each change needs its own
+record. The table lists the four interventions we'll meet:
 
 | Intervention | Weight identity | What must be recorded |
 |---|---|---|
@@ -616,6 +800,12 @@ execute it by implication.
 
 ### 13.8.3 Native responses: grading is an interface
 
+Before training anything, we need to know where the real model starts. This
+section runs Qwen3-0.6B on the original problems, with no RL at all, and asks
+how often the frozen grader marks it correct. The lesson is that the score
+depends on the whole interface, including the output budget, the thinking mode
+and the grader's answer rules, not just on what the model knows.
+
 **Reader prediction.** A model prints `5 + 6 = 11` and ends its turn naturally.
 Does that guarantee a positive reward under a rule requiring a supported boxed
 or final answer? Separately predict what changing only the output cap might do
@@ -626,6 +816,9 @@ compares actual Qwen3-0.6B Base and Instruct checkpoints. The conditions change
 checkpoint, raw/custom/native chat, supported thinking mode and cap 32/128.
 Base-to-Instruct also changes serialization in this comparison, so its observed
 difference cannot isolate instruction training's causal effect.
+
+The first table lists what stayed the same in every condition. Read it as the
+rules of the test, not as a result:
 
 | Setting | Fixed protocol |
 |---|---|
@@ -640,6 +833,16 @@ conditions fail decoding, each retaining 40 records and 60 missing responses.
 Total observed coverage is 680/800, including two errors; missing draws are not
 wrong answers or zero scores. The table below summarizes only the completed
 conditions, preserving held-out denominators and separate decoding rules.
+
+Each row label names three choices. "Instruct/off/cap 32" means the Instruct
+checkpoint, thinking mode off, and an output cap of 32 tokens; "Base/raw" means
+the Base checkpoint given the raw prompt with no chat template. "Declared
+graded-correct" is the frozen grader's verdict, not a human reading. "Natural
+stop" counts responses that ended on the model's own stop token, and "Capped"
+counts responses cut off by the output limit. What to look for: at cap 32 no
+row has a single graded-correct answer. Instruct with thinking off at cap 128 is
+the only setting with many correct answers, and every thinking-on response hits
+the cap.
 
 | Actual policy/interface | Decoding | Controlled held-out attempts | Declared graded-correct | Natural stop | Capped |
 |---|---|---:|---:|---:|---:|
@@ -708,6 +911,13 @@ identified exports without treating their provenance as identical.
 
 ### 13.8.4 Read the matched outcome, not the pooled count
 
+Now we train. Two native RLVR pilots, G4 and G8, ran GRPO with groups of four
+and eight. Did they make answers better? To find out we'll do
+two things: open one real training group to see what signal the optimizer
+received, then compare the trained models with the untrained one on exactly the
+same evaluation. Watch for the gap between "the weights changed" and "the
+answers improved".
+
 **Reader prediction.** Eight sampled responses contain the correct arithmetic,
 but none follows a bare-integer answer rule. What are their strict rewards and
 relative advantages? Can an optimizer call still change weights?
@@ -737,6 +947,8 @@ not additional actions. Strict grading rejects the whole equation or explanatory
 text even when its arithmetic is correct. A different extraction rule would be
 a new task, rather than a corrected version of these measurements.
 
+Every answer has the right arithmetic, and every answer gets reward zero,
+because none is a bare integer. That makes this a zero-variance group (§13.2).
 This constant group supplies no relative reward signal. Its first scalar loss
 and pre-update exact KL are zero, yet the retained gradient norm is about
 $`4.27\times10^{-7}`$ and the policy hash changes after the optimizer call.
@@ -747,6 +959,11 @@ have nonzero KL pressure while retaining zero relative advantages. This one
 group illustrates the mechanism; the frozen common panel below measures behavior.
 
 ### Common evaluation settings and result
+
+The test is simple to state. Run the unchanged Instruct model and the two RLVR
+versions, G4 and G8, on the same items, seeds and grader, at both caps. If
+training helped, the RLVR rows should beat the unchanged row on held-out
+problems. Read the table with that one question in mind: they don't.
 
 The [actual cap 32/cap 128 comparisons](../../experiments/reports/2026-10-05-native-reasoning-rlvr-evidence.md#47-actual-common20-comparisons-the-denominator-changes-the-conclusion)
 join unchanged Instruct, G4 and G8 on every original item/seed contract. Four
@@ -783,6 +1000,12 @@ serving-throughput benchmarks.
 
 ### Difficulty changes which prompts contribute
 
+In the native pilot every training group had zero relative advantages, so no
+group mixed successes with failures. That makes the chance of a mixed group
+worth one more look. It
+depends on how hard a prompt is, so any rule that keeps only mixed groups also
+decides which prompts the policy learns from.
+
 For independent binary-reward samples with success probability $`p`$ and group size $`G`$, the probability of observing both reward classes is
 
 ```math
@@ -795,7 +1018,42 @@ That dependence matters for standardized advantages: the same samples determine 
 
 The native replay preserves all 192 historical strict zero rewards. A richer diagnostic accepts one retained boxed-answer response, while the original instrument rejects it. This is evidence about answer extraction, not a successful rerun. Assignment E requires a newly named reward protocol before changing training semantics, and usable training/development signal before interpreting a longer policy campaign.
 
+## Chapter summary
+
+- **RLVR** takes its reward from an executable verifier rather than a learned
+  preference model. **GRPO** is the update rule we use with it: it drops the
+  critic and compares sampled answers to the same prompt (opening, §13.1).
+- The **group-relative advantage** centers each reward on its group mean and
+  divides by the population standard deviation. A **zero-variance group**, all
+  right or all wrong, gives zero relative advantage (§13.1).
+- Centering and scaling are different operations. Including a response's own
+  reward in the mean shrinks centered advantages by $`(G-1)/G`$, and dividing by
+  a random spread changes the statistical argument again. Larger groups make a
+  mixed group more likely at the cost of more decoding (§13.2).
+- The clipped objective hands each response's advantage to its tokens. At ratio
+  one the loss can be zero while its gradient is not. Clipping limits a sampled
+  surrogate, not every probability (§13.3).
+- The KL term anchors the policy to a fixed **reference policy**. A KL value
+  estimator with the right expectation does not automatically give the right
+  gradient (§13.4).
+- Response means, token means and fixed-cap denominators weight long and short
+  answers differently. Compare objectives on fixed rollouts, and count every
+  discarded group when filtering (§13.5).
+- The verifier is the task definition. Test it on edges and adversarial strings,
+  and record its identity whenever it changes (§13.6).
+- A complete update samples without gradients, recomputes shifted logits, masks
+  padding and logs its diagnostics. A collected but unapplied group is an
+  observation to recover, not to resample (§13.7).
+- The tiny CPU decoder shows no held-out gain. Symbolic positive controls show
+  bounded sampled learning. The native Qwen3-0.6B pilots had zero relative
+  advantages in every training group and no held-out correct-count gain over the
+  unchanged model, so weight movement there is not evidence of reward-driven
+  learning (§13.8).
+
 ## 13.9 Deep questions
+
+These questions follow the chapter's order. Try each before opening the worked
+answers, and say which section, formula or table supports your reply.
 
 1. Why does an all-correct group produce no relative policy signal?
 2. How does sample standard deviation change the scale of a two-response group?

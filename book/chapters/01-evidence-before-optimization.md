@@ -1,23 +1,43 @@
 # Chapter 1 — Evidence Before Optimization
 
+> The first principle is that you must not fool yourself—and you are the easiest
+> person to fool.
+>
+> — Richard P. Feynman, "Cargo Cult Science," in *Surely You're Joking, Mr. Feynman!*
+
 Companion: [guided laboratory route](../labs/01-evidence-before-optimization.md).
 
-A training process ends without an error. Its loss is lower than it was one minute
-ago. A checkpoint appears on disk. Did the model improve?
+You probably start where most people start. You type a training command and wait.
+The process ends without an error. Its loss is lower than it was one minute ago.
+A checkpoint appears on disk. Did the model improve?
 
 Perhaps—but none of those facts answers the question by itself.
 
-Language-model development is unusually good at producing persuasive numbers.
-Losses move every step, rewards can rise rapidly, samples are easy to cherry-pick,
-and modern frameworks can hide thousands of implementation decisions behind a
-short command. The first skill of model development is therefore not optimization.
-It is learning how to make a claim that the evidence can actually support.
+Feynman's warning fits this moment exactly. Nobody is trying to deceive you. The
+danger is that you wanted the run to work, the number moved the right way, and
+it's easy to read more into it than it says. Language-model development is
+unusually good at producing persuasive numbers. Losses move every step, rewards
+can rise rapidly, samples are easy to cherry-pick, and modern frameworks can hide
+thousands of implementation decisions behind a short command. The first skill of
+model development is therefore not optimization. It's learning how to make a
+claim that the evidence can actually support.
 
-This chapter establishes that discipline. We will define the identity of an
-experiment, separate observations from interpretations, design falsifiable tests,
-and use a three-step Qwen3-0.6B fine-tuning run as a worked example. The run is
-small on purpose: it lets us examine the logic of an experiment before scale makes
-the logic difficult to see.
+This chapter builds that discipline. We will use a three-step Qwen3-0.6B
+fine-tuning run as a worked example. The run is small on purpose: it lets us
+examine the logic of an experiment before scale makes the logic hard to see. We
+take six steps:
+
+1. Separate what a run recorded from what we conclude about it (§1.2).
+2. Say exactly which experiment ran, and see why a seed alone can't make it
+   repeat (§1.3–1.4).
+3. Write the experiment's contract, with predictions and success criteria,
+   before running it (§1.5).
+4. Learn what the smallest kind of test can and can't show, and how to read
+   memory on a machine where CPU and GPU share one pool (§1.6–1.7).
+5. Apply all of it to a real three-step Qwen3-0.6B run, then extract a reusable
+   reasoning pattern (§1.8–1.9).
+6. Check that a checkpoint keeps its token meanings when it's handed to the next
+   stage (§1.10).
 
 ## 1.1 Learning outcomes
 
@@ -50,7 +70,14 @@ and stored reports, with adjacent explanations and useful plots.
 
 ## 1.2 An experiment produces measurements, not conclusions
 
-Consider a hypothetical log:
+We start with the gap between a number and a conclusion. A run hands us numbers.
+We want to say something about the model. Between the two sits a step we take
+ourselves, and that step is where we can fool ourselves.
+
+A fever thermometer shows the same gap. A reading that falls from 39 °C to 37.5 °C
+is an observation. "The fever is coming down" is a reasonable interpretation of
+that reading. "The infection is gone" is a claim the thermometer never measured.
+A training log works the same way. Consider a hypothetical log:
 
 ```text
 step 1: loss = 2.41
@@ -143,8 +170,16 @@ important habit is to name what a metric measures instead of calling it “bette
 
 ## 1.3 The identity of an experiment
 
-“I trained Qwen3 with seed 42” does not identify a reproducible experiment. A
-useful experiment identity is a tuple:
+An observation is only useful if we know what produced it. If someone else (or
+you, next month) can't tell which code, data and settings made a number, the
+number can't be checked or compared. So before we judge results, we need a way
+to name the experiment precisely.
+
+A recipe that says "bake at 180 °C for 30 minutes" doesn't tell you which flour,
+which oven or how big the tin was. Two bakers can follow it and get different
+cakes. In the same way, “I trained Qwen3 with seed 42” does not identify a
+reproducible experiment. A useful **experiment identity**, the full list of
+things that determine what ran, is a tuple:
 
 ```math
 \mathcal{E} = (C, L, H, M, \mathcal D, \mathcal K, s),
@@ -222,6 +257,10 @@ mechanisms.
 
 ## 1.4 Reproducibility is larger than a seed
 
+The identity in §1.3 includes a seed, and it's tempting to think the seed is what
+makes a run repeatable. It isn't, or at least not by itself. This section shows
+where else variation comes from, including from arithmetic itself.
+
 A pseudorandom seed selects a repeatable stream for a particular random-number
 generator. Training involves several possible generators and several other sources
 of variation:
@@ -246,7 +285,20 @@ differences can lead to visibly different trajectories.
 
 For a concrete FP32 example, set $`a=10^8`$, $`b=-10^8`$, and $`c=1`$.
 Computing $`(a+b)+c`$ gives 1, while $`a+(b+c)`$ gives 0: at that magnitude,
-adding 1 to $`b`$ rounds back to $`b`$. The mathematical sum is the same; the
+adding 1 to $`b`$ rounds back to $`b`$. Written out step by step, with
+$`\mathrm{fl}(\cdot)`$ meaning "round to the nearest FP32 value":
+
+```math
+(a+b)+c = (10^8-10^8)+1 = 0+1 = 1,
+```
+
+```math
+a+(b+c) = 10^8+\mathrm{fl}(-10^8+1) = 10^8+(-10^8) = 0.
+```
+
+The rounding happens because FP32 numbers between $`2^{26}`$ and $`2^{27}`$ are
+spaced 8 apart, and $`10^8`$ lies in that range. There is no FP32 value for
+$`-10^8+1`$, so it rounds to the nearest neighbor, $`-10^8`$. The mathematical sum is the same; the
 intermediate rounding differs. Fixing the random seed cannot fix a reduction
 order that the execution backend changes.
 
@@ -261,8 +313,14 @@ indicate a genuine implementation difference.
 
 ## 1.5 Write the experiment contract before execution
 
-A useful experiment begins as a contract, not a command. It answers five
-questions:
+We can now name an experiment and say how much variation to expect. One danger
+from §1.2 remains: deciding what counts as success *after* seeing the numbers.
+The fix is to write the decision rule down first.
+
+Think of a sealed envelope. Before the race, you write down which horse you
+think will win and seal it. Afterward, nobody can argue about what you predicted.
+A useful experiment begins the same way, as a contract rather than a command. It
+answers five questions:
 
 1. What question are we investigating?
 2. What do we predict, and why?
@@ -302,9 +360,10 @@ links the actual recovery cases and their unchanged failure records.
 
 ### Controlled comparisons
 
-In a controlled comparison, the independent variable is the factor deliberately
-changed, dependent variables are the measured outcomes, and other important
-conditions are held fixed.
+In a **controlled comparison**, two runs differ on purpose in one way. The
+**independent variable** is the factor deliberately changed, the **dependent
+variables** are the measured outcomes, and other important conditions are held
+fixed.
 
 If batch size 1 is safe, this is an interpretable next comparison:
 
@@ -321,7 +380,15 @@ the observed difference.
 
 ## 1.6 Smoke tests occupy the first rung of evidence
 
-A smoke test asks whether a narrow path through the system executes. Depending on
+A contract tells us what to measure, but not how big the first experiment should
+be. Long runs are expensive, and a bug found after ten hours costs ten hours. So
+we begin with the smallest run that can fail in an informative way.
+
+The name borrows from hardware: switch on a new circuit for the first time and
+check that nothing starts smoking. Passing tells you the circuit didn't burn. It
+doesn't tell you the circuit computes the right answer. A **smoke test** is the
+software version, a short run that asks whether a narrow path through the system
+executes. Depending on
 the protocol, it may validate:
 
 - model, tokenizer, and dataset loading;
@@ -356,8 +423,13 @@ mode.
 
 ## 1.7 Memory on a unified-memory system
 
+One of the smoke test's success criteria in §1.5 was a memory boundary. To check
+it honestly, we have to know what our memory numbers mean. On the machine used in
+this book, that's less obvious than it sounds.
+
 On a conventional accelerator server, people often speak as though CPU RAM and
-GPU VRAM were independent budgets. NVIDIA DGX Spark uses unified memory: CPU
+GPU VRAM were independent budgets. NVIDIA DGX Spark uses **unified memory**, one
+physical pool that the CPU and GPU both draw from: CPU
 allocations, CUDA allocations, model state, activations, optimizer state, Linux
 file cache, and other processes draw from the same physical pool.
 
@@ -397,7 +469,16 @@ forward-only observation can miss a cost that appears during training.
 
 Now change only the declared storage policy: BF16 weights and gradients use two
 bytes each, with the same FP32 moments. Those four terms become 12,000,000
-bytes. If that implementation also keeps an FP32 master copy of the weights,
+bytes. Per parameter, the sum is:
+
+```math
+\underbrace{2}_{\text{weights}}+\underbrace{2}_{\text{gradients}}
++\underbrace{4}_{\text{first moment}}+\underbrace{4}_{\text{second moment}}
+=12\ \text{bytes},
+```
+
+and $`12\times 10^6=12{,}000{,}000`$ bytes for one million parameters.
+If that implementation also keeps an FP32 master copy of the weights,
 add another 4,000,000 bytes. A “BF16 run” therefore does not identify the whole
 memory budget. Inspect the actual optimizer and master-copy policy. The example
 is arithmetic about stated storage choices; it does not assert how the later
@@ -409,7 +490,10 @@ work. Increasing sequence length changes both stored states and attention
 work. The measured peak combines those effects; the ledger tells us which
 terms to investigate rather than scaling the entire peak blindly.
 
-We preserve three views:
+A shared household bank account helps with what comes next. Your card statement
+and the joint account statement both list the same grocery purchase. Adding the
+two statements together would count that purchase twice. Memory reports on a
+unified-memory machine behave the same way. We preserve three views:
 
 | View | What it tells us |
 |---|---|
@@ -427,8 +511,10 @@ stop before interactive work or the operating system is placed at risk.
 
 ## 1.8 Case study: a three-step Qwen3-0.6B smoke test
 
-We can now examine a real experiment without asking it to prove more than it was
-designed to prove.
+We now have every piece: a bounded claim (§1.2), an identity (§1.3), a contract
+(§1.5), a smoke-test scope (§1.6) and a way to read memory (§1.7). Let's put them
+together on one real run. We can now examine a real experiment without asking it
+to prove more than it was designed to prove.
 
 ### Question and prediction
 
@@ -460,6 +546,9 @@ The complete pre-run contract is preserved in the
 [experiment specification](../../experiments/specs/2026-08-29-qwen3-0.6b-sft-smoke.yaml).
 
 ### Observations
+
+In short, the run met every criterion in its contract, and the table records
+nothing beyond that.
 
 | Measurement | Observed value |
 |---|---:|
@@ -501,7 +590,9 @@ The complete measurements, warnings, and output locations are preserved in the
 
 ## 1.9 A reusable reasoning pattern
 
-For technical decisions throughout this book, use the following sequence:
+The case study followed a path from a decision to its evidence and on to the
+next question. That path is worth naming, because we'll walk it again in every
+chapter. For technical decisions throughout this book, use the following sequence:
 
 > Choice → rationale → evidence → trade-off → failure risk → next experiment
 
@@ -520,6 +611,13 @@ This pattern keeps model development attached to decisions rather than dashboard
 
 ## 1.10 A checkpoint is more than its tensor shapes
 
+The case study ended with a saved checkpoint. Later chapters will load such
+checkpoints and train them further. That handoff has its own way of fooling us:
+the files load, the shapes match, and the meaning is still wrong.
+
+Think of a row of numbered lockers. If someone swaps the number plates on
+lockers 2 and 3, both doors still open, but behind plate 2 you now find what
+used to be behind plate 3. The contents didn't move; only the labels did.
 Suppose two tokenizers each contain eight IDs. In one, IDs 2 and 3 mean `cat`
 and `dog`; in the other, those meanings are exchanged. Both fit an eight-row
 embedding and an eight-logit output. Shape checks pass while the new interface
@@ -611,18 +709,22 @@ Attempt the exercises before reading the
 ## 1.12 Chapter summary
 
 - A run produces observations; interpretations must remain bounded by them.
-- Experiment identity includes code, environment, hardware, model, data,
-  configuration, and seeds.
+  Training loss measures the chosen objective, not capability (§1.2).
+- **Experiment identity** includes code, environment, hardware, model, data,
+  configuration, and seeds (§1.3).
 - A seed controls some randomness but cannot guarantee identical training.
-- Hypotheses and success criteria are written before execution.
-- Controlled comparisons isolate one meaningful change.
-- Smoke tests validate narrow execution paths, not general capability.
+  Floating-point addition isn't associative, so reduction order matters (§1.4).
+- Hypotheses and success criteria are written before execution. When criteria
+  are conjunctive, every one must pass (§1.5).
+- Controlled comparisons isolate one meaningful change (§1.5).
+- **Smoke tests** validate narrow execution paths, not general capability (§1.6).
 - Unified-memory measurements describe overlapping accounting domains and are not
-  additive.
+  additive. Size the persistent state before interpreting a peak (§1.7).
 - Detailed records belong in experiment reports; the book uses them to support a
-  precise argument.
+  precise argument. The Qwen3-0.6B smoke run passed its contract and supports
+  nothing beyond it (§1.8–1.9).
 - Checkpoint handoffs preserve token meanings and generation interfaces, not just
-  shapes; actual file identity is distinct from declared upstream ancestry.
+  shapes; actual file identity is distinct from declared upstream ancestry (§1.10).
 
 The next chapter begins at the model's input boundary. Before a language model can
 predict a token, text must be divided into tokens and mapped to vectors. We will

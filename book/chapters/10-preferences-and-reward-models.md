@@ -1,26 +1,46 @@
 # 10. Preferences and Reward Models
 
-Our story model learned to make locally plausible predictions while still
-repeating itself and losing track of characters. Supervised fine-tuning can
-demonstrate a better continuation, but demonstrations alone leave another useful
-source of information unused: a reader can often recognize a better story
-without being able to write an ideal one. This chapter asks how that comparison
-becomes a trainable signal, and what the resulting scalar actually measures.
+> You may abuse a tragedy, though you cannot write one. You may scold a carpenter
+> who has made you a bad table, though you cannot make a table.
+>
+> — Samuel Johnson, in James Boswell's *Life of Johnson*
 
-Chapter 9 followed a demonstration through its answer and ending. Now imagine
-that we have two generated responses, neither quite the demonstration we would
-write. A comparison can still say which better serves the request. That changes
-the form of the supervision: we observe a relation between responses, rather
-than a token-by-token ideal answer. We will first make that relation numerical,
-then ask what happens when correctness and polish travel together in the data.
+Supervised fine-tuning has one demanding requirement: someone must write the
+answer. Chapter 9 trained on demonstrations, and a demonstration is only as good
+as its author. Ask a person to write the ideal bedtime story for a four-year-old
+and you will wait a long time. Show the same person two stories and ask which one
+is better, and you will get an answer in seconds.
 
-The prerequisites are next-token likelihood, gradient descent, and the evaluation
-contract from Chapter 7. By the end, the reader should be able to derive a
-pairwise preference likelihood, fit a transparent reward model, audit its
-probabilities, and explain why a high reward is a fallible measurement. Days 15
-and 16 share this argument: first define judgments; then model and challenge them.
+Johnson's point is that judging is easier than making. You don't need to be a carpenter to notice a wobbling table. Our story
+model shows the same gap. After pretraining and SFT it still repeats itself and
+loses track of characters. Perfect demonstrations are scarce, but readers who can
+tell a better story from a worse one are plentiful.
+
+This chapter turns those judgments into a training signal. The new form of
+supervision is a **preference judgment**: given a prompt and two responses,
+someone says which response serves the request better. A judgment states a
+relation between two answers. It says nothing about the ideal answer token by
+token. We will take it in four steps:
+
+1. Turn "a is better than b" into a probability, using the Bradley–Terry model (§10.2–10.5).
+2. Fit a **reward model**, a network that gives any response one number, from those
+   probabilities (§10.6–10.7).
+3. Watch a reward model learn the wrong lesson when quality and polish travel
+   together in the data (§10.8–10.9).
+4. Go back a step and ask where the judgments came from and whether the judge
+   deserves trust (§10.10–10.16).
+
+You need next-token likelihood (Chapter 3), gradient descent, and the evaluation
+contract from Chapter 7. By the end you should be able to derive a pairwise
+preference likelihood, fit a transparent reward model, audit its probabilities,
+and explain why a high reward is a fallible measurement. Days 15 and 16 share
+this argument: first define judgments, then model and challenge them.
 
 ## 10.1 A judgment needs a question
+
+Before we can learn from judgments, we need to say exactly what a judgment is.
+"Which is better?" sounds like a complete question, but it isn't one until we
+also say *better at what*.
 
 Imagine two answers to “Where is Lily's ball?” after a story explicitly puts it
 in a red box. One answer says “In the red box.” Another gives a polished paragraph
@@ -45,6 +65,17 @@ constructing the record, not only the intended lesson.
 
 ## 10.2 From two scores to one preference probability
 
+A judgment is a yes-or-no fact: $`a`$ was chosen over $`b`$. To learn from many
+such facts we want something softer, a *probability* that $`a`$ beats $`b`$.
+A probability can say "slightly better" or "far better", and the cross-entropy
+machinery of Chapter 3 can train it.
+
+Here is the intuition. Chess players don't carry a table of who beats whom. Each
+player carries one rating, and the gap between two ratings predicts how often
+the stronger player wins. Equal ratings mean an even game, a small gap means a
+slight edge, and a large gap means a near-certain win. We will give every response
+a rating in the same way and let the gap between two ratings predict the judgment.
+
 Let $`r_\phi(x,y)`$ be a real-valued score from a parameterized model. Fix one
 prompt and write $`r_y=r_\phi(x,y)`$ briefly. Give each completion a positive strength
 $`s_y=\exp(r_y)`$. If a comparison allocates probability in proportion to strength,
@@ -55,7 +86,8 @@ P(a\succ b)=\frac{\exp(r_a)}{\exp(r_a)+\exp(r_b)}
 =\frac{1}{1+\exp(-(r_a-r_b))}=\sigma(\Delta),\qquad \Delta=r_a-r_b.
 ```
 
-This is the Bradley–Terry model. The score difference is a binary classification
+This is the **Bradley–Terry model**, introduced for paired comparisons in 1952.
+The Elo ratings used in chess rest on the same logistic idea. The score difference is a binary classification
 logit. A margin of zero means probability one half. A positive margin favors
 $`a`$; a large magnitude expresses confidence under the model. The use of
 pairwise likelihoods for language-model reward fitting follows the formulation
@@ -80,8 +112,14 @@ The identity is easier to reproduce after defining
 $`\mathrm{softplus}(\Delta)=\log(1+e^\Delta)`$:
 $`\log\sigma(\Delta)=\Delta-\mathrm{softplus}(\Delta)`$ and
 $`\log(1-\sigma(\Delta))=-\mathrm{softplus}(\Delta)`$.
-Substitute these two expressions into the binary loss. The two softplus weights
-add to one; the remaining term is $`-q\Delta`$. This form also connects the
+Substitute these two expressions into the binary loss, one term at a time:
+
+```math
+L=-q\left(\Delta-\mathrm{softplus}(\Delta)\right)+(1-q)\,\mathrm{softplus}(\Delta)
+=\mathrm{softplus}(\Delta)-q\Delta.
+```
+
+The two softplus weights $`q`$ and $`1-q`$ add to one; the remaining term is $`-q\Delta`$. This form also connects the
 pairwise loss to the cross-entropy machinery we already know.
 
 Use a stable binary-cross-entropy-with-logits implementation. Computing the
@@ -92,7 +130,9 @@ absolute quality labels.
 
 ## 10.3 The gradient explains the update
 
-Differentiate the stable expression:
+We now have a loss. Before trusting it, look at what it asks the scores to do.
+The derivative turns out to be one of the simplest in the book. Differentiate
+the stable expression:
 
 ```math
 \frac{\partial L}{\partial\Delta}=\sigma(\Delta)-q,
@@ -170,6 +210,11 @@ copy using [Appendix D](../appendices/d-reproduction-and-environments.md).
 
 ## 10.4 Disagreement carries information
 
+Real judges disagree. Show the same pair of stories to ten readers and you may
+get seven votes one way and three the other. It is tempting to treat the minority
+as noise. The Bradley–Terry model suggests another reading: the split itself
+says how close the two answers are.
+
 Suppose ten independent judgments favor $`a`$ seven times and $`b`$ three times.
 Under a repeated identical comparison and the binary model, the empirical
 target is $`q=0.7`$. Minimizing expected likelihood gives
@@ -211,6 +256,13 @@ is a different event and should not automatically become a half-win label.
 
 ## 10.5 Reward has a gauge
 
+Every preference so far has depended on a *difference* between two scores.
+That has a surprising consequence: the scores themselves have no fixed zero.
+A thermometer has the same property. Celsius and Kelvin disagree about every
+temperature, yet they agree about which of two days was warmer and by how much.
+Physicists call a freedom of this kind a **gauge**: a choice that changes the
+numbers without changing anything we can observe.
+
 For any function $`c(x)`$, replacing every score for one prompt by
 $`r'_\phi(x,y)=r_\phi(x,y)+c(x)`$ leaves all within-prompt differences unchanged. Preferences
 cannot identify the absolute origin of the reward. An intercept shared by the
@@ -232,6 +284,15 @@ the purpose differs: identifiability for a preference model versus variance
 reduction for an estimator.
 
 ## 10.6 Fitting a reward model
+
+So far the scores have been free numbers attached to individual answers. That
+is fine for answers we have already judged, but useless for a new story nobody
+has rated. What we want is a function: give it any prompt and response, and it
+returns a score. A **reward model** is exactly that, a model trained on
+comparisons that can then rate answers it has never seen.
+
+We will build two versions. The first is so small that every number can be read;
+the second is a real transformer.
 
 The small lab uses three features: substantive quality, response length, and
 polished format. These are explicit synthetic coordinates, not measurements
@@ -255,8 +316,8 @@ comparison and sigmoid produce a preference probability.
 
 Both answer branches contribute gradients to shared parameters. A language-model
 initialization can supply representations, but the scalar head must still learn
-from comparisons. Outcome rewards evaluate a completed answer; process rewards
-evaluate intermediate steps under a step-level annotation contract. They are
+from comparisons. An **outcome reward** evaluates a completed answer; a
+**process reward** evaluates intermediate steps under a step-level annotation contract. They are
 not interchangeable simply because both return numbers. A process verifier
 can reward valid intermediate reasoning yet miss an invalid final claim, or
 vice versa. The earlier feature experiment fits an outcome preference model;
@@ -270,6 +331,13 @@ but a swap is not a new independent example. Score both orders during audits
 to detect an order-dependent judge or preprocessing bug.
 
 ## 10.7 Ranking accuracy and calibration ask different questions
+
+Once a reward model is trained, how do we know whether it is any good? There
+are two different questions here. Does it put the better answer first? And when
+it says "80% sure", is it right about 80% of the time? The second property is
+called **calibration**. A weather forecaster who announces 70% rain should see
+rain on about 70% of those days. A model can rank perfectly and still be badly
+calibrated.
 
 Pair accuracy checks whether the sign of $`\Delta`$ agrees with a winner. It
 does not punish unjustified certainty. Probability metrics do. On independent
@@ -300,6 +368,12 @@ instead of correctness. Calibration is a conditional statement about a specified
 population and label process, not a permanent property of the model.
 
 ## 10.8 A controlled shortcut experiment
+
+Here is the danger this chapter has been building toward. Judges often prefer
+the better answer, and the better answer is often also longer and more polished.
+A reward model trained on such data sees quality, length and polish rise together.
+Which of the three is it learning to reward? Low training loss cannot tell us.
+We need an experiment that pulls them apart.
 
 The predeclared CPU experiment changes the training distribution while keeping
 the linear score, seed, optimizer, number of examples, and held-out distribution
@@ -362,6 +436,11 @@ optimize the reward without encountering new failures.
 
 ## 10.9 When optimization changes the population
 
+A shortcut that hides inside a fixed dataset becomes much more dangerous once
+we start *optimizing* against the reward. A student who learns that the grader
+counts words will write longer essays, not better ones. A policy trained to
+maximize a reward will find the same kind of loophole, and much faster.
+
 A held-out comparison dataset usually contains responses from a fixed generation
 process. A policy maximizing the reward changes that process. It can discover
 regions where the reward extrapolates badly: repetitive praise, excessive length,
@@ -378,6 +457,13 @@ comparisons without a separately trained scalar head, but it still inherits the
 preference data's biases and coverage limits.
 
 ## 10.10 Collecting judgments without confusing identity and position
+
+Until now we have taken the judgments as given. In practice someone, or
+something, has to produce them, and every step of that process can quietly
+corrupt the labels. Preference data comes from three main sources: trained human
+annotators, implicit signals such as votes on forum answers, and language models
+acting as judges. The next three sections build the collection instrument
+carefully, starting with a mistake that is easy to make and hard to notice.
 
 Before fitting the reward model, build the observation instrument. A response
 has a stable candidate ID, exact text, source checkpoint and generation settings.
@@ -417,6 +503,11 @@ questions. Retain raw ratings or ordered tie groups beside the derived pairs
 and record the conversion version.
 
 ## 10.11 Audit the judge before trusting the labels
+
+A judge is a measuring instrument, and like any instrument it can be biased.
+Human and model judges are both known to favor the first answer shown, the
+longer answer, or an answer that tells them it is correct. We can't remove these
+biases by hoping. We test for each one with a controlled change.
 
 An order audit presents the same pair in both directions and compares the
 canonical outcomes. A repeat audit holds the pair and order fixed while
@@ -459,6 +550,11 @@ positive control on this narrow fixture, not a credible general evaluator.
 
 ## 10.12 Source weighting is part of the objective
 
+One long story can produce many comparison pairs: several turns, both display
+orders, and a few perturbed variants. A short question produces only a few.
+If every pair counts equally, the long story quietly dominates training. How
+much each source should count is a decision, and it is better made on purpose.
+
 Group conversational siblings, repeated comparisons, swapped displays and
 perturbations by their original source prompt. Assign the group to a split
 before generating its pairs. Changing a turn's row ID or inventing a new source
@@ -491,6 +587,13 @@ let the number of candidates choose it accidentally. This returns us to
 Chapter 7's contract: evaluation and training metrics must name what is counted.
 
 ## 10.13 Learning a reward from token sequences
+
+The three-feature model was a microscope: we chose the features, so we could
+read every coefficient. A real reward model doesn't get handed "quality" and
+"length" as inputs. It reads tokens and must discover its own features. This
+section replaces the hand-made features with a small transformer, the same
+recipe used at scale: start from a language model, remove its next-token head,
+and attach a head that outputs one number.
 
 The known-feature shortcut experiment made the confound readable. A text reward
 instead learns contextual states and reads one scalar from a chosen endpoint:
@@ -540,6 +643,11 @@ human preference frequencies or an explicit tie model.
 
 ## 10.14 Outcome labels and process labels supervise different questions
 
+Section 10.6 separated outcome rewards from process rewards. The difference
+sounds technical. A teacher grading homework sees it at once: a student can
+reach the right answer by a wrong method, or make a slip at the very end of a
+sound argument. Which mistake does each kind of label catch?
+
 Consider “Compute 2+3.” A trace can write the false equality “2+3=6,” then
 give the correct final answer 5. Another can write the valid equality “2+3=5,”
 then give the wrong final answer 6. A terminal correctness label cannot identify
@@ -582,6 +690,10 @@ not explained away as successful reasoning. The character intervention below tes
 
 ## 10.15 Freeze the reward before optimizing a policy
 
+The next chapters will train a policy against a reward. Before that happens, the
+reward must stop changing. Otherwise a rising score could mean the policy
+improved, or only that the ruler moved.
+
 Freeze the predeclared seed 1601 word-token reward regardless of which seed
 looks best on a nuisance slice. The [saved numeric export](../../fixtures/text-reward/frozen-preference-seed1601.json)
 preserves weights, ordered token meanings, preprocessing, special IDs and the
@@ -596,6 +708,11 @@ records export/identity boundaries. Neither the known-feature nor the text
 microscope establishes pretrained reward quality.
 
 ## 10.16 Preserve information before asking for generalization
+
+The word-level reward in §10.14 failed for a reason that had nothing to do with
+learning: two different numbers became the same unknown token, so the network
+literally could not see the difference. Fixing the input is the obvious next
+step. Will it be enough?
 
 An unknown token can erase a distinction before the neural network has any
 opportunity to learn it. That explains why two differently labeled arithmetic
@@ -660,6 +777,32 @@ Assignment E separates a learned preference score from the task's independent ch
 The [reward-signal audit](../../notebooks/extensions/cs336/04_reward_signal_audit.ipynb) supplies a complementary example. Two instruments can grade the same retained text differently because their answer-extraction contracts differ. That disagreement can be understood without fitting another reward model. Preserve the emitted answer and both reason codes, then state which instrument defines the new task.
 
 Use the current reward-model lab as Assignment E's preference branch and compare its independent task metric with the policy's reward. A rising score can support optimization progress for that frozen scorer while leaving the intended quality claim unresolved. This distinction lets the reader connect preference judgments, verifiable answers and optimization without treating their numerical scores as interchangeable.
+
+## Chapter summary
+
+- A **preference judgment** compares two responses to one prompt. It is cheaper
+  to collect than a demonstration because the judge only needs to recognize a
+  better answer, not write one. It still needs a stated rubric (§10.1).
+- The **Bradley–Terry model** gives each response a score and turns the score
+  difference into a preference probability, $`P(a\succ b)=\sigma(r_a-r_b)`$.
+  Its loss is binary cross-entropy, and its gradient is probability minus
+  target (§10.2–10.3).
+- Disagreement among judges sets a finite target margin. It is information, not
+  noise to delete. One score per answer cannot represent cyclic preferences (§10.4).
+- Rewards have a **gauge**: adding a constant per prompt changes nothing
+  observable, so raw scores from different checkpoints are not comparable (§10.5).
+- A **reward model** maps any prompt and response to a scalar. Ranking accuracy
+  and **calibration** measure different things, and temperature can fix
+  confidence but not a reversed ranking (§10.6–10.7).
+- When quality, length and polish are correlated in training data, a well-fitting
+  reward model can reward the wrong one. Optimizing a policy against it will
+  find that shortcut (§10.8–10.9).
+- Judgments come from instruments: humans, implicit votes or model judges. Map
+  display position back to answer identity, audit order, verbosity and injection
+  separately, and choose source weights on purpose (§10.10–10.12).
+- Outcome labels and process labels supervise different questions. Preserving
+  information in the input is necessary for generalization but not sufficient.
+  Freeze the reward before any policy is trained against it (§10.13–10.16).
 
 ## 10.17 Companion route and exercises
 

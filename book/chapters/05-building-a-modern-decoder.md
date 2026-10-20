@@ -1,12 +1,22 @@
 # Chapter 5 — Building a Modern Decoder
 
-## Part A — From contextual states to a trainable model
+> What I cannot create, I do not understand.
+>
+> — Richard Feynman, written on his blackboard at Caltech
 
-Attention explains how one position can retrieve information from its legal
-context. It does not, by itself, explain an entire language model. We still
-need a representation to carry through the network, transformations that make
-use of retrieved information, and a way to connect the result to next-token
-learning.
+Chapter 4 ended with one attention head that works. Given a prefix such as
+“the pet saw the,” it lets the last position look back over the legal earlier
+positions and pull in a weighted mix of what it finds. That is all it does. A
+single head has no way to compute new features from what it retrieved. It has
+no place to keep the state it already had. It has no vocabulary scores, so it
+can't predict anything. And beyond the mask's different prefixes, nothing yet
+gives it an explicit signal for where each token sits. Attention moves information. It doesn't yet make a
+language model.
+
+Feynman's line is the plan for this chapter. We could describe a decoder from a
+diagram, but we'd understand it only once we've built one ourselves and checked
+every tensor that passes through it. So we build it piece by piece, from parts
+we can each inspect, and we change one part at a time to see what it was doing.
 
 Return once more to “the pet saw the.” The final position needs to gather
 earlier information, compute features from what it gathered, keep useful parts
@@ -16,17 +26,32 @@ moving information and computing with it will guide the assembly. We will then
 trace a complete tiny model, change one branch, and see which parts of that
 reasoning survive in a real configuration's parameter budget.
 
-This chapter builds that connection. Part A
-uses learned absolute positions, ordinary multi-head attention, LayerNorm, and
-a GELU feed-forward network. It is a complete small baseline, not yet the full
-modern architecture. Part B begins at Section 5.11 and develops
-RMSNorm, SwiGLU, RoPE, grouped-query attention, Q/K normalization, cost accounting,
-and recurrent depth as a design axis. Part C, beginning at Section
-5.23, brings these parts together into an architecture defense: trace the actual
-computation, diagnose failures, and design an evidence-bearing comparison.
-The frontier section is optional; no trained recurrence comparison is claimed.
+We take the chapter in nine steps:
 
-Prerequisites are the token/embedding distinction from Chapter 2, next-token
+1. Give every position a starting vector from token and position tables (§5.1–5.2).
+2. Let several attention heads read the context in parallel (§5.3).
+3. Carry a running state forward with residual additions, and normalize what each
+   branch reads (§5.4–5.5).
+4. Compute new features at each position with an MLP (§5.6).
+5. Assemble the block, attach the vocabulary head, and trace the whole model (§5.7).
+6. Train it on one batch and say exactly what that proves (§5.8–5.10).
+7. Swap in the modern parts one at a time: RMSNorm, SwiGLU, RoPE, a position-correct
+   cache, grouped-query attention and Q/K normalization (§5.11–5.17).
+8. Count what each design costs, compose the modern decoder, and look at reusing
+   depth (§5.18–5.22).
+9. Defend the architecture: trace it, diagnose broken variants, and compare
+   designs under a declared budget (§5.23–5.27).
+
+Part A uses learned absolute positions, ordinary multi-head attention, LayerNorm,
+and a GELU feed-forward network. It is a complete small baseline, not yet the
+full modern architecture. Part B begins at Section 5.11 and develops RMSNorm,
+SwiGLU, RoPE, grouped-query attention, Q/K normalization, cost accounting, and
+recurrent depth as a design axis. Part C, beginning at Section 5.23, brings these
+parts together into an architecture defense: trace the actual computation,
+diagnose failures, and design an evidence-bearing comparison. The frontier
+section is optional; no trained recurrence comparison is claimed.
+
+You need the token/embedding distinction from Chapter 2, next-token
 cross-entropy from Chapter 3, and causal attention from Chapter 4. By the end
 of the chapter, you should be able to follow every tensor boundary, explain
 why the block has two different processing branches, distinguish a working
@@ -38,7 +63,18 @@ companion lessons. Read an explanation, predict the effect of its intervention,
 then inspect the runnable solution. The [worked-solution guide](../solutions/05-decoder-notebook-solutions.md)
 also answers the conceptual exercises at the end of this chapter.
 
+## Part A — From contextual states to a trainable model
+
+Part A builds the smallest complete decoder we can fully inspect. Every part is
+an ordinary, well-understood choice, so that when Part B changes a part we know
+exactly what was there before.
+
 ## 5.1 One continuous computation
+
+Before building any part, we need the whole shape in view. Otherwise each piece
+looks like an isolated trick. Think of an assembly line: integer IDs go in at one
+end, vocabulary scores come out at the other, and every station in between hands
+the next one a tensor of an agreed shape.
 
 The baseline has a simple outer structure:
 
@@ -81,8 +117,14 @@ update can be added to the stream.
 
 ## 5.2 Give each position a starting representation
 
-Let $`E\in\mathbb R^{V\times D}`$ be the token embedding table and
-$`P\in\mathbb R^{M\times D}`$ the learned position table, where $`M`$ is the
+Attention mixes vectors, but token IDs are just integers. So the first station
+must turn each ID into a vector, and it must also say where the token sits,
+since Chapter 4's head had no explicit position signal. We'll answer both
+questions with a table lookup, then add the two answers into one vector.
+
+Let $`E\in\mathbb R^{V\times D}`$ be the **token embedding table**, one learned
+row of $`D`$ numbers per vocabulary entry, and
+$`P\in\mathbb R^{M\times D}`$ the learned **position table**, one row per position, where $`M`$ is the
 maximum supported length. For token ID $`i_{b,t}`$ at position $`t`$:
 
 ```math
@@ -129,12 +171,19 @@ causal visibility intact.
 
 ## 5.3 Several contextual views, learned together
 
+Each position now has a vector, and Chapter 4 gave us one way to let it read the
+context. But one head produces one weighting of the past. What if a position
+needs two different things from its prefix at once? Picture several readers
+going over the same page, each with a different question, each highlighting a
+different passage. Afterwards their notes are pooled into one summary.
+
 For one receiving position, one attention head creates one distribution over
 allowed source positions. Its value coordinates all use that distribution to
 form a weighted mixture. A wider value vector can carry more features, but it
 does not create another independently parameterized source-weight pattern.
 
-Multiple heads make several patterns available. In the prefix “The tired animal
+**Multi-head attention** runs several heads side by side, each with its own
+projections, and joins their outputs. Multiple heads make several patterns available. In the prefix “The tired animal
 crossed the river because it”, a useful representation at “it” could need
 information about the entity and its earlier description. Separate heads could
 retrieve those aspects differently. This is a motivation, not a claim that
@@ -214,6 +263,11 @@ semantic role or a quality improvement.
 
 ## 5.4 Carry a state forward and revise it
 
+Attention returns an update, but what should we do with it? If each layer
+replaced its input with its output, every layer would have to rebuild
+everything the later layers still need. A better plan is to keep a running
+state and let each layer add a correction to it.
+
 Without a residual connection, a transformation passes on $`Y=F(X)`$. Everything
 needed downstream must survive through $`F`$. A residual sublayer instead uses:
 
@@ -239,7 +293,16 @@ incoming representation in its entirety.
 
 Second, backward has a direct route. For a flattened column-vector state
 $`y=x+f(x)`$, write $`g=\partial\mathcal L/\partial y`$ and let $`J_f`$ be the
-Jacobian of the branch. Then:
+Jacobian of the branch. The Jacobian of the whole sublayer is the identity plus
+the branch's Jacobian, and backward multiplies the arriving gradient by its
+transpose:
+
+```math
+\frac{\partial y}{\partial x}=I+J_f,\qquad
+\frac{\partial\mathcal L}{\partial x}=\left(I+J_f\right)^\top g.
+```
+
+Distributing the transpose over the sum gives:
 
 ```math
 \frac{\partial\mathcal L}{\partial x}=g+J_f^\top g.
@@ -281,8 +344,16 @@ branch control with the cancellation case.
 
 ## 5.5 Normalize the branch's reading of the stream
 
+The residual stream keeps growing as layers add their updates. A branch that
+reads it deep in the stack may see numbers on a different scale from the same
+kind of branch near the bottom. We'd like each branch to read a view on a
+predictable scale. A teacher who grades on a curve does something similar: a
+raw score becomes "how far above or below the class average, in units of the
+class's spread." Here the "class" is one token's own features, never other
+tokens.
+
 As states are transformed and updated, their numerical scale can change.
-LayerNorm prepares a consistently scaled view of a token's features. Think of
+**LayerNorm** (layer normalization) prepares a consistently scaled view of a token's features. Think of
 adjusting a baseline and contrast: we want the next operation to read relative
 feature differences without being as sensitive to a common offset or scale.
 
@@ -305,8 +376,16 @@ For a token vector $`x\in\mathbb R^D`$:
 
 Use population variance, dividing by $`D`$, not the sample-variance correction
 $`D-1`$. Epsilon prevents division by zero and bounds the denominator away from
-zero. Before the learned affine transform, the variance is
-$`\sigma^2/(\sigma^2+\epsilon)`$: approximately one when the variance is large
+zero. Before the learned affine transform, the normalized values have mean zero,
+so their variance is their mean square:
+
+```math
+\frac1D\sum_i\hat x_i^2
+=\frac{\frac1D\sum_i(x_i-\mu)^2}{\sigma^2+\epsilon}
+=\frac{\sigma^2}{\sigma^2+\epsilon}.
+```
+
+That variance is $`\sigma^2/(\sigma^2+\epsilon)`$: approximately one when the variance is large
 relative to epsilon, not identically one. A constant vector becomes zero before
 the affine transform and $`\beta`$ afterward.
 
@@ -326,7 +405,7 @@ masked. Causality must hold throughout the model, not only inside softmax.
 
 ### Placement changes the identity path
 
-A pre-norm sublayer is:
+A **pre-norm** sublayer normalizes only the branch's input:
 
 ```math
 Y=X+F(\mathrm{LN}(X)).
@@ -336,7 +415,7 @@ Normalize what the branch reads; add its update to the unnormalized stream.
 The bypass has not been replaced by normalized values. With a zero branch,
 $`Y=X`$.
 
-A post-norm sublayer is:
+A **post-norm** sublayer normalizes the sum after the addition:
 
 ```math
 Y=\mathrm{LN}(X+F(X)).
@@ -371,8 +450,15 @@ compare zero-branch behavior under pre-norm and post-norm.
 
 ## 5.6 Compute features from the context already gathered
 
-Attention mixes information between positions. A position-wise feed-forward
-network, or MLP, transforms features within each position. These jobs are
+So far each position can fetch information and keep a running state. But
+attention's output is a weighted average of value vectors, and the values are
+linear projections of the states. Attention decides what to fetch; it does
+little computing on the features it fetched. We need a step that works on them. Think of a researcher who first
+collects notes from the library, then sits alone at a desk to work through them.
+Attention is the trip to the library; the MLP is the desk.
+
+Attention mixes information between positions. A **position-wise feed-forward
+network**, or **MLP**, applies the same small network to each position separately. It transforms features within each position. These jobs are
 complementary: retrieve relevant information, then compute useful features from
 the state now available.
 
@@ -394,7 +480,7 @@ learned combinations of features, not copies of the input and not new token
 positions. GELU acts elementwise; the final projection recombines the resulting
 features into a same-width update.
 
-Here GELU means the Gaussian error linear unit,
+Here **GELU** means the Gaussian error linear unit, a smooth activation function,
 $`\mathrm{GELU}(u)=u\Phi(u)`$, where $`\Phi(u)`$ is the probability that a
 zero-mean, unit-variance Gaussian is at most $`u`$. It smoothly changes how much
 a coordinate passes
@@ -407,7 +493,8 @@ may explicitly choose an approximation.
 
 ![The MLP expands the feature dimension, applies GELU, and projects back without mixing positions.](../../notebooks/figures/chapter-05/day-05-05_positionwise_mlp-architecture-detail.png)
 
-Why introduce nonlinearity? Without it:
+Why introduce nonlinearity? Without it, multiply out the two projections and
+collect the terms that don't depend on $`X`$:
 
 ```math
 (XW_{\rm up}+b_{\rm up})W_{\rm down}+b_{\rm down}
@@ -433,6 +520,11 @@ unchanged. A whole decoder need not have that invariance because it has attentio
 
 ## 5.7 Assemble the block and the vocabulary interface
 
+We now have every part: attention to fetch, an MLP to compute, normalization to
+steady what each branch reads, and residual additions to keep the running state.
+Two questions remain. In what order do they go? And how does the final state
+become a guess about the next token?
+
 We can now write one complete pre-norm block:
 
 ```math
@@ -447,7 +539,8 @@ the state after attention's update. Both additions preserve $`[B,n,D]`$.
 Stacking blocks repeats these roles with separate parameters in each baseline
 block. Parameter sharing across depth is a later, explicitly different design.
 
-After the stack, let $`h_{b,t}`$ be one final normalized state. A vocabulary head
+After the stack, let $`h_{b,t}`$ be one final normalized state. A **vocabulary
+head** is a linear map from that state to one score per vocabulary entry. It
 produces:
 
 ```math
@@ -464,7 +557,8 @@ into a $`D`$-wide stream update. The vocabulary head maps the final $`D`$-wide s
 to $`V`$ candidate scores. Neither the token ID's value nor the feature index
 in a hidden state is itself a probability.
 
-Our default baseline ties input and output weights, so
+Our default baseline uses **weight tying**: input and output share one stored
+weight matrix, so
 $`W_{\mathrm{out}}=E`$. The same stored parameter serves as a lookup table and
 a classifier matrix. Copying equal numbers into a separate parameter is not
 tying: separate copies can subsequently receive different gradients and updates.
@@ -493,7 +587,9 @@ clarity and tiny CPU fixtures are deliberate; it is not a serving system.
 ### Trace the assembled computation before optimizing it
 
 We can now inspect every boundary rather than trusting the name “transformer.”
-The fixed Day 5 batch and baseline configuration give the following CPU
+The table below follows one untrained forward pass: the state's spread changes
+only modestly through the two blocks, the final norm rescales it, and the head
+sets the initial score scale. The fixed Day 5 batch and baseline configuration give the following CPU
 reference, recomputed with seed 505. As in the assembly notebook, weights are
 initialized in FP32 and then converted with `double()`; this differs from
 initializing directly in float64.
@@ -556,6 +652,11 @@ current-token objective would not validate next-token learning.
 
 ## 5.8 Many token losses, one shared parameter update
 
+We have a complete model with random weights. The next question is whether the
+assembled machine can learn at all. Before asking for language, we ask for
+something modest: can it fit one small batch? That needs a loss, a backward
+pass and an optimizer step.
+
 Does the model learn token by token? Supervision is position-wise, but an
 optimizer step normally combines errors from many positions and sequences.
 
@@ -603,7 +704,22 @@ The learning rate $`\eta`$ scales the step, not the quality of the training data
 An illustrative scalar objective makes the distinction tangible. Let
 $`\ell(e)=(e-1)^2`$ at $`e=0.2`$. Its derivative is $`-1.6`$. SGD with $`\eta=0.1`$
 moves to $`0.36`$, toward the minimum. But $`\eta=1.5`$ moves to $`2.6`$, increasing
-the loss from $`0.64`$ to $`2.56`$. A locally helpful direction does not justify an
+the loss from $`0.64`$ to $`2.56`$. Step by step:
+
+```math
+\ell'(0.2)=2(0.2-1)=-1.6,
+```
+
+```math
+0.2-0.1(-1.6)=0.36,\qquad 0.2-1.5(-1.6)=2.6,
+```
+
+```math
+\ell(0.2)=(-0.8)^2=0.64,\qquad \ell(2.6)=(1.6)^2=2.56.
+```
+
+The first step lands closer to the minimum at one. The second overshoots it by
+more than it started away. A locally helpful direction does not justify an
 arbitrarily large step. These numbers describe a quadratic, not a recommended
 LLM learning rate or the geometry of the actual token loss.
 
@@ -639,6 +755,8 @@ cross-entropy helper avoids a separate, less stable probability-then-log step.
 
 ### What the fixed experiment establishes
 
+The recorded run shows that the assembled model and optimizer can drive the loss
+on one fixed batch almost to zero. It shows nothing yet about held-out text.
 The [recorded reference experiment](../../experiments/reports/2026-09-06-decoder-notebooks.md)
 uses seed 505, the declared batch, and 160 AdamW steps at learning rate 0.02.
 It reports mean cross-entropy decreasing from 2.774792432785034 to
@@ -674,6 +792,10 @@ end of model evaluation.
 
 ## 5.9 Exercises: defend the mechanism
 
+Part A's baseline is complete. Before changing any of it, check that you can
+explain why each part is there. These questions ask you to predict what breaks
+when a part is removed or misread.
+
 Use explanations and small controlled changes rather than memorizing layer
 names. [Worked answers](../solutions/05-decoder-notebook-solutions.md#day-5-foundation--worked-conceptual-solutions)
 are provided for every question.
@@ -707,6 +829,10 @@ are provided for every question.
 
 ## 5.10 From a working baseline to modern design choices
 
+Recent decoders, including the Qwen configuration we read in §5.19, keep this
+baseline's overall shape but swap several of its parts. Before we swap anything, it helps to restate what each part is for. Then
+every replacement can be judged by whether it still does that job.
+
 The baseline is now a connected argument: embeddings create states; attention
 retrieves context through several learned views; MLPs transform available
 features; normalization prepares branch inputs; residual paths carry the
@@ -726,6 +852,11 @@ change; the architecture defense will ask whether those changes are justified.
 ## Part B — Modern decoder mechanisms
 
 ## 5.11 Modernize mechanisms, not just names
+
+Part B swaps parts of a working machine. A mechanic replacing a car's carburettor
+with fuel injection doesn't redesign the whole car; the engine still needs fuel
+and air in the right mix. In the same way, each modern part takes over a job an
+old part already did. The table below pairs them up.
 
 The modern-design question is not “Which acronyms should a decoder contain?” It is:
 **Which operation should change, for what reason, and at what cost?** The
@@ -749,8 +880,14 @@ implementation invariant, an arithmetic estimate, and a measured quality claim.
 
 ## 5.12 RMSNorm: rescale without recentering
 
+The first swap is the simplest. LayerNorm does two things: it shifts a token's
+features to mean zero, and it rescales them. Is the shift necessary? An
+automatic volume control brings every recording to a standard loudness without
+first removing any offset in the signal. RMSNorm keeps only that rescaling step.
+
 LayerNorm subtracts a token's feature mean before rescaling. Must normalization
-always remove that common component? RMSNorm instead divides by the
+always remove that common component? **RMSNorm** (root-mean-square
+normalization) instead divides by the
 root-mean-square magnitude, then applies a learned feature scale. This is the
 central change introduced by [Zhang and Sennrich](https://arxiv.org/abs/1910.07467).
 
@@ -782,7 +919,16 @@ its output, whereas LayerNorm removes that common shift.
 
 Before learned scaling, the mean square of the RMS-normalized output is
 $`\mathrm{mean}(x^2)/(\mathrm{mean}(x^2)+\epsilon)`$, approximately
-one when epsilon is negligible. Its mean need not be zero. For positive $`a`$:
+one when epsilon is negligible. Its mean need not be zero. For positive $`a`$,
+scaling the input by $`a`$ multiplies its mean square by $`a^2`$. Pull $`a^2`$
+out of the square root, using $`\sqrt{a^2}=a`$ because $`a>0`$:
+
+```math
+\sqrt{a^2\mathrm{mean}(x^2)+\epsilon}
+=a\sqrt{\mathrm{mean}(x^2)+\epsilon/a^2}.
+```
+
+The factor $`a`$ in the numerator then cancels the one in front of the root:
 
 ```math
 \frac{ax}{\sqrt{a^2\mathrm{mean}(x^2)+\epsilon}}
@@ -806,9 +952,16 @@ Change a common feature offset, then inspect what each normalization preserves.
 
 ## 5.13 SwiGLU: learn how features modulate other features
 
+The second swap is inside the MLP. In §5.6, GELU decided how much of each
+feature passed through, using only that feature's own value. What if a learned
+second view of the token could decide instead? Think of a mixing desk where a
+second hand moves each fader. This "fader" is unusual, though: it can also
+flip a channel's sign or turn it up past its original level.
+
 The baseline MLP has one expanded feature branch. A gated MLP gives the same
 input two learned views and multiplies their results coordinate by coordinate.
-SwiGLU belongs to the GLU family explored by
+**SwiGLU** is a gated MLP whose gate passes through the SiLU (also called Swish)
+activation. SwiGLU belongs to the GLU family explored by
 [Shazeer](https://arxiv.org/abs/2002.05202). We use the bias-free form already
 implemented in the lab:
 
@@ -852,6 +1005,14 @@ inability to learn are different claims.
 ### Match budgets, not just hidden widths
 
 A bias-free GELU MLP stores $`2DF`$ matrix parameters; SwiGLU stores $`3DF`$.
+Set the two counts equal and divide both sides by $`3D`$:
+
+```math
+3DF_{\rm gated}=2DF_{\rm GELU}
+\quad\Longrightarrow\quad
+F_{\rm gated}=\tfrac23F_{\rm GELU}.
+```
+
 Matching their matrix counts approximately gives
 $`F_{\rm gated}\approx(2/3)F_{\rm GELU}`$. Width must still be an integer and
 may be rounded for an implementation's preferred dimensions.
@@ -868,7 +1029,15 @@ Inspect both branches, their product, the zero-gate control, and parameter count
 
 ## 5.14 RoPE: let position change the query–key comparison
 
-The baseline adds a position vector to the token embedding. RoPE takes another
+The third swap concerns position. In §5.2 we added a learned position row once,
+at the input, and hoped attention would make use of it. But attention often
+cares less about "position 7" than about "three tokens back." Picture two clock
+hands. Turn both by the same amount and the angle between them doesn't change.
+If each query and key is turned by an angle set by its position, the angle
+between them depends only on how far apart they are.
+
+The baseline adds a position vector to the token embedding. **RoPE** (rotary
+position embedding) takes another
 route: it rotates coordinates of projected queries and keys according to their
 positions. The [RoFormer paper](https://arxiv.org/abs/2104.09864) introduces
 this connection between absolute-position rotations and relative-position
@@ -898,7 +1067,18 @@ position table. The Q/K projections remain learned.
 ### Why does relative distance appear?
 
 Use fixed unrotated vectors $`q,k`$ and write $`R_m`$ for the block-diagonal rotation
-at position $`m`$. Orthogonality and angle addition give:
+at position $`m`$. Two facts about a single rotation do the work. A rotation's
+transpose is its inverse, which rotates back by the same angle. And two
+rotations in a row add their angles. For one coordinate pair $`j`$:
+
+```math
+R(m\omega_j)^\top R(n\omega_j)
+=R(-m\omega_j)R(n\omega_j)
+=R\big((n-m)\omega_j\big).
+```
+
+Each pair works the same way, so the block-diagonal rotations satisfy
+$`R_m^\top R_n=R_{n-m}`$. Substituting into the score gives:
 
 ```math
 (R_mq)^\top(R_nk)
@@ -941,6 +1121,13 @@ Check pair norms, derivatives, and the relative-position identity before using a
 
 ## 5.15 Correct caching requires consistent positions
 
+When we generate text one token at a time, the prefix keeps growing. Recomputing
+it from scratch at every step is wasteful. Chapter 4 showed that past keys and
+values can be kept instead. A reader taking notes doesn't reread earlier pages;
+but the notes must still carry the right page numbers. RoPE makes those page
+numbers part of every key.
+
+A **KV cache** stores each layer's past keys and values so they can be reused.
 For a fixed causal prefix under unchanged weights, past per-layer keys and
 values need not be recomputed when we append tokens. RoPE adds a precise
 condition: cached keys must retain the rotations for their original positions.
@@ -961,7 +1148,8 @@ meaning. Reusing entries after relevant weights or the prefix change generally
 invalidates them. Prefix sharing across requests requires equivalent prefix
 computation and explicit serving support, not arbitrary sentence reuse.
 
-Prefill computes many positions together and builds the cache. Ordinary decode
+**Prefill** computes many prompt positions together and builds the cache.
+**Decode** is the one-token-at-a-time phase that follows. Ordinary decode
 then projects the new token's states and reads cached source states. It avoids
 redoing old projections and other prefix work, but the new query still attends
 over its retained sources. Caching is an optional inference optimization, not
@@ -1007,7 +1195,9 @@ uses the full vocabulary at temperature one; a separate forced-EOS control
 is explicitly conditional and records both raw-model and behavior likelihoods.
 Its transformed likelihood must not be substituted for a raw-model objective.
 
-The frozen tiny run compares greedy single/batch and cached/full-prefix paths,
+The next run shows that the ragged, cached batch computes the same tokens and
+likelihoods as the simple paths, and that this correctness says nothing about
+whether the model can stop. The frozen tiny run compares greedy single/batch and cached/full-prefix paths,
 then sampled paths with independent request-keyed generators. Selected IDs,
 stops and likelihoods agree under the predeclared $`10^{-10}`$ tolerance. All
 natural greedy rows nevertheless reach the cap. Correct computation does not
@@ -1015,6 +1205,8 @@ teach this randomly initialized model how to finish a response.
 
 ### Less prefix work is not a speed guarantee
 
+These counts and timings show that caching cut the work the model was asked to
+do, yet in this tiny CPU fixture it did not make the batch faster.
 For twelve useful output tokens, the recorded single/full path forwards 66
 input positions; batch/full forwards 90, including 24 padding positions.
 Single/cache forwards 21 and batch/cache 27, including six pads. These count
@@ -1032,6 +1224,9 @@ batching policy and memory/timing boundaries.
 
 ### A saved distribution is not a saved continuation
 
+This experiment shows that stopping and resuming generation exactly needs more
+than the weights: it also needs each request's prefix, cache and random-number
+state.
 Weights determine next-token distributions; they do not determine which row
 has finished or which random number will be drawn next. The extension stops
 after two draws and retains active request IDs, actual prefixes, K/V tensors,
@@ -1061,8 +1256,13 @@ Chapter 6 next develops training-system state.
 
 ## 5.16 GQA: keep several questions, share source representations
 
+The cache from §5.15 stores one key and one value vector per head, per layer,
+per position. For long prompts that adds up fast. Do all heads really need
+their own keys and values? Think of students sharing a textbook: each still
+asks their own question, but they read from one copy.
+
 Ordinary multi-head attention has matching query and K/V head counts.
-Grouped-query attention decouples them. Let $`H_q`$ be the query-head count and
+**Grouped-query attention** (GQA) decouples them. Let $`H_q`$ be the query-head count and
 $`H_{kv}`$ the K/V-head count, with $`H_q`$ divisible by $`H_{kv}`$. Multiple queries
 can ask different questions about the same projected keys and values. This is
 the sharing axis studied by [Ainslie et al.](https://arxiv.org/abs/2305.13245).
@@ -1112,7 +1312,13 @@ mathematical equivalence test with a serving-speed benchmark.
 
 ## 5.17 Q/K normalization is not one universal formula
 
-Recall that multiplying both Q and K by 10 multiplies their raw dot products by
+The last swap guards the attention scores themselves. If the states feeding Q
+and K grow, their dot products grow faster, and softmax can lock onto a single
+source. Normalizing Q and K first is one remedy. But "Q/K normalization" names
+a family of choices, so we have to say exactly which one we mean.
+
+**Q/K normalization** rescales each query and key vector before the score is
+computed. Recall that multiplying both Q and K by 10 multiplies their raw dot products by
 100. The $`1/\sqrt{d_h}`$ factor does not undo input-dependent magnitude growth.
 Normalizing projected Q/K can reduce that sensitivity before softmax.
 
@@ -1135,7 +1341,14 @@ RMS-based implementation.
 
 Even with unit feature scales, RMS normalization is not unit-L2 normalization:
 for negligible epsilon a $`d_h`$-coordinate RMS-normalized vector has L2 length
-$`\sqrt{d_h}`$. With learned coordinate scales, scores are not simply cosine
+$`\sqrt{d_h}`$. Its mean square is one, so its squared length is $`d_h`$ times one:
+
+```math
+\lVert\hat x\rVert_2^2=\sum_{i=1}^{d_h}\hat x_i^2
+=d_h\cdot\frac1{d_h}\sum_{i=1}^{d_h}\hat x_i^2\approx d_h.
+```
+
+With learned coordinate scales, scores are not simply cosine
 similarities. Epsilon makes positive-rescaling invariance approximate. Moreover,
 featurewise scaling and rotation need not commute, so the declared order—Q/K
 normalization before RoPE—is part of the model definition.
@@ -1146,6 +1359,11 @@ verify that the optional normalization parameters receive finite gradients.
 This is not evidence that the variant improves trained stability or quality.
 
 ## 5.18 Count parameters, cache bytes, and arithmetic separately
+
+Several of the swaps above were sold as savings. Savings of what, exactly? A
+house has a purchase price, a heating bill and a commute, and a cheaper house
+can still cost more to heat. A model's costs split the same way, so we count
+each one separately.
 
 “Smaller” could mean fewer parameters, fewer stored activations, less arithmetic,
 or lower latency. These quantities can move differently. Derive each from the
@@ -1190,7 +1408,15 @@ $`H_{kv}`$ by half halves this payload under fixed other factors; it does not
 halve model weights or total runtime memory.
 
 As a hypothetical sizing example, $`L=24,B=1,S=4096,H_{kv}=8,d_h=64,b_e=2`$
-gives 201,326,592 bytes, or 192 MiB. With four KV heads it gives 96 MiB.
+gives 201,326,592 bytes, or 192 MiB. Multiplying the factors in order:
+
+```math
+2\cdot24\cdot1\cdot8\cdot4096\cdot64\cdot2
+=201{,}326{,}592,\qquad
+\frac{201{,}326{,}592}{2^{20}}=192.
+```
+
+With four KV heads it gives 96 MiB.
 Those are calculated payloads, not observed device-memory readings.
 
 Weight payload is separately $`P_{\rm total}b_w`$ for $`b_w`$ bytes per stored
@@ -1222,6 +1448,8 @@ scale as approximately $`4BH_qSd_h`$ per layer: fewer queries, but a growing sou
 length. Neither expression directly predicts latency, which also depends on
 memory traffic, kernel implementation, hardware, and batching.
 
+The table below shows that each halving of KV heads halves the cache payload
+while the parameter and FLOP totals shrink much less.
 The [recorded tiny-model comparison](../../experiments/reports/2026-09-06-decoder-notebooks.md)
 uses $`B=2,n=6,L=2,D=16,H_q=4,d_h=4,F=32`$, tied embeddings, Q/K norm, and
 float64 cache elements:
@@ -1237,6 +1465,10 @@ are analytical estimates. None of the columns is a measured speedup or
 validation-quality result.
 
 ## 5.19 Compose a modern teaching decoder
+
+We have changed each part on its own. Now we put all the changes into one model
+and check that the pieces still fit: same shapes, same causal boundary, and a
+cache that agrees with the full pass.
 
 The block still has two residual updates. Its attention branch now contains
 Q/K normalization when enabled, RoPE, and grouped source sharing. Its MLP is
@@ -1277,6 +1509,8 @@ checkpoint or a completed pretraining system.
 
 ### Read a real configuration without pretending to load its weights
 
+A real configuration shows the same parts at a much larger size, and one shape
+choice our baseline never made.
 The pinned [Qwen3-0.6B configuration at c1899de](https://huggingface.co/Qwen/Qwen3-0.6B/raw/c1899de289a04d12100db370d81485cdf75e47ca/config.json),
 rechecked 2026-09-07, provides a useful shape contrast:
 
@@ -1338,6 +1572,8 @@ three-step smoke's saved-file measurement in Chapter 1 keeps its own identity.
 
 ### Candidate model sizes are designs, not allocated models
 
+The same formula can size models we haven't built. These rows are arithmetic
+on paper; none of the models below was allocated or trained.
 Notebook 3 defines three accounting-only candidates with vocabulary 16,000,
 $`d_h=64`$, $`H_{kv}=2`$, tied embeddings, Q/K norm, and a configured context limit
 of 2,048. It uses the formula above without allocating the larger models:
@@ -1355,6 +1591,11 @@ available memory and compute budget. The table establishes neither trainability
 on a particular machine nor a preferred final design.
 
 ## 5.20 Frontier: reuse depth without pretending compute is free
+
+Every block so far has had its own weights. That's a lot of storage: in the
+Qwen ledger of §5.19, attention and MLP matrices hold most of the parameters. Could one block be
+run several times instead? Reading a hard paragraph twice uses the same brain
+both times, but it still takes twice as long.
 
 Evidence snapshot: 2026-09-07. After understanding a block, we can ask whether
 every depth must own independent weights. A simple fixed recurrence instead
@@ -1413,6 +1654,9 @@ memory, and fixed samples under the declared contract.
 
 ## 5.21 Modern-decoder exercises
 
+Each Part B swap came with a claim about what it changes and a limit on what it
+proves. These questions ask you to state both.
+
 Continue the Part A exercise numbering. [Worked answers](../solutions/05-decoder-notebook-solutions.md#day-6-modern-decoder--worked-conceptual-solutions)
 and the three notebooks support each question.
 
@@ -1442,6 +1686,10 @@ and the three notebooks support each question.
 
 ## 5.22 Bringing the mechanisms together
 
+We now have a modern decoder and a ledger of what each part costs. What we don't
+yet have is a reason to believe any particular combination is right. That's the
+job of Part C.
+
 The modern decoder is not a new collection of unrelated components. Its
 residual path, causal information boundary, and next-token objective still
 connect the whole model. RMSNorm changes the normalized view, SwiGLU changes
@@ -1467,6 +1715,11 @@ do not replace your explanation or execute the proposed training comparison.
 ## Part C — Defend the architecture
 
 ## 5.23 Read the model as a connected argument
+
+A defense starts with knowing what the code actually does. A building inspector
+doesn't sign off from the architect's drawings; they walk through the building.
+We'll do the same: follow one batch through every module of the modern model
+and check each shape against the plan.
 
 An architecture diagram says what should connect. A trace asks whether the
 implementation actually makes those connections. Begin with a small enough
@@ -1526,7 +1779,8 @@ contributions through both input lookup and vocabulary scoring. Attention
 connects an answer loss to legal earlier states; it never requires the target
 token to enter that position's forward representation.
 
-In the recorded untrained fixture, mean loss was about 2.79849 and all 24
+The recorded check shows that gradient reaches every parameter tensor, and
+nothing more. In the recorded untrained fixture, mean loss was about 2.79849 and all 24
 parameter tensors had connected, finite gradients. No optimizer step was taken,
 and the parameter values remained unchanged. This verifies backward connectivity
 on that batch. It does not show that every scalar derivative is nonzero, that
@@ -1535,6 +1789,11 @@ Backward computes a proposed direction of change; the optimizer applies a rule
 for using it.
 
 ## 5.24 Diagnose the contract that failed
+
+The trace in §5.23 shows the model is wired as planned on one input. It doesn't
+show the model computes the right function. A doctor doesn't rely on a single
+test either; fever, blood count and an X-ray each rule different causes in or
+out. We'll run three checks, each sensitive to a different kind of bug.
 
 A program can return plausible numbers while computing the wrong function.
 That is why “the loss is finite” is too weak to be our entire correctness test.
@@ -1550,6 +1809,9 @@ For the last test, weights and tokens are identical, evaluation mode removes
 training-time stochasticity, and the positional convention is held fixed.
 The fixture uses float64 CPU arithmetic and an explicit comparison tolerance;
 other numerical implementations need tolerances appropriate to their precision.
+
+The figure shows that two deliberately broken variants pass some checks and fail
+others, so no single check is enough.
 
 ![Finite outputs do not guarantee causality or cache correctness](../../notebooks/figures/chapter-05/day-07-02_architecture_defense-visual-diagnostics.png)
 
@@ -1585,11 +1847,17 @@ not measurements of language quality or serving performance.
 
 ## 5.25 Defend a choice under a declared budget
 
+A model that passes its checks is correct, not necessarily well designed. To
+defend a design choice we have to say what it saves, what it gives up and what
+we actually measured. "Is it better?" has no answer until we say better under
+which budget.
+
 Now ask a design question: why retain two KV heads rather than four in this
 teaching model? “GQA is modern” is not an explanation. A defensible answer
 identifies what changes, what remains, and what has actually been measured.
 
-At fixed query-head count, two KV heads reduce the K/V projection matrices and
+The notebook's paired configurations show what halving KV heads saves and what
+it leaves alone. At fixed query-head count, two KV heads reduce the K/V projection matrices and
 compact cache payload. They leave four query distributions. In the notebook's
 paired configurations, unique parameters decrease from 5,472 to 4,960 and
 float64 cache payload decreases from 6,144 to 3,072 bytes. Total model parameters
@@ -1648,13 +1916,57 @@ testable structure—not that recurrence has won.
 
 ### A FLOP count needs a movement model
 
-A decoder's operation count describes work; execution also moves values. For matrix multiplication with input shapes $`(m,k)`$ and $`(k,n)`$, the companion counts $`2mkn`$ arithmetic operations. Its simple movement model reads each input once and writes the $`(m,n)`$ output once. With $`b`$ bytes per element, the modeled payload is $`b(mk+kn+mn)`$. Dividing the operation count by that payload gives an arithmetic intensity in FLOPs per byte.
+A kitchen can be slow because the cook is slow or because the ingredients
+arrive slowly. A FLOP count measures only the cook. A decoder's operation count describes work; execution also moves values. For matrix multiplication with input shapes $`(m,k)`$ and $`(k,n)`$, the companion counts $`2mkn`$ arithmetic operations. Its simple movement model reads each input once and writes the $`(m,n)`$ output once. With $`b`$ bytes per element, the modeled payload is $`b(mk+kn+mn)`$. Dividing the operation count by that payload gives an **arithmetic intensity** in FLOPs per byte, the work done for each byte moved:
+
+```math
+\text{intensity}=\frac{2mkn}{b(mk+kn+mn)}.
+```
 
 That quotient is a model, not a measured traffic counter. Cache reuse, kernel launch overhead, temporary storage and fusion can all change what reaches memory. The [resource-accounting notebook](../../notebooks/extensions/cs336/01_resource_accounting.ipynb) varies shapes and plots the modeled intensity beside actual CPU timings. Its roofline demonstration uses explicitly simulated ceilings. A hardware comparison requires compute and bandwidth ceilings for the same device and precision as the measurement.
 
 Prefill and cached decoding expose different movement patterns. Prefill processes many positions together; a cached new token reuses stored keys and values but still invokes projections, attention and the output head. Assignment C asks which phase was timed and which objects were already allocated. Its checkpoint audit reuses the existing story decoder and checks output and parameter-gradient equivalence while counting retained saved tensors. This gives a mechanism-level memory observation without equating saved tensors with total host or CUDA allocator memory. The [online attention reference](../../notebooks/extensions/cs336/02_online_attention.ipynb) then connects the movement model to tiled normalization, while exposing why ordinary autograd is a different backward-storage contract.
 
+## Chapter summary
+
+- One attention head moves information but isn't a model. A decoder turns IDs
+  into vectors, runs them through a stack of blocks that keep the same width,
+  and ends with one score per vocabulary entry (§5.1–5.2).
+- **Multi-head attention** gives each position several learned views of its
+  prefix. The heads share one loss but get different gradients through their
+  own output blocks; nothing guarantees they specialize (§5.3).
+- The **residual stream** keeps a running state that each branch revises by
+  addition. It makes identity easy and gives backward a direct path, but it
+  doesn't guarantee information or gradients survive (§5.4).
+- **LayerNorm** gives each branch a steady view of one token's features.
+  Pre-norm keeps the identity path; post-norm does not. Normalizing over time
+  would leak the future (§5.5).
+- The **MLP** computes new features at each position from what attention
+  gathered. Without its nonlinearity, its two projections collapse into one
+  affine map (§5.6).
+- A block is attention then MLP, each with its own norm and residual add. A
+  tied vocabulary head turns final states into logits, and one batch's many
+  token losses produce one shared update. Fitting that batch tests the
+  mechanism, not language ability (§5.7–5.10).
+- The modern swaps each keep a role: **RMSNorm** rescales without centering,
+  **SwiGLU** lets a learned gate modulate features, and **RoPE** rotates Q and K
+  so scores depend on relative position (§5.11–5.14).
+- A KV cache must keep each key's original rotation; correct visibility and
+  correct positions are separate checks. Ragged batches, stopping and resuming
+  each add state the cache must carry (§5.15).
+- **GQA** shares keys and values across query heads, and Q/K normalization must
+  be defined exactly. Parameters, cache bytes and FLOPs are different costs, and
+  none of them is measured latency (§5.16–5.19).
+- Reusing a block saves stored weights but not computation, and a fair
+  comparison must say which budget it holds fixed (§5.20–5.22).
+- Defend an architecture by tracing it, running checks that catch different
+  failures, and stating what a choice saves, gives up and has actually been
+  measured to do (§5.23–5.25).
+
 ## 5.26 Architecture-defense exercises
+
+These last questions ask you to make the kind of argument Part C modeled: a
+claim, the evidence for it, and what it would take to prove it wrong.
 
 Use the [Day 7 worked answers](../solutions/05-decoder-notebook-solutions.md#day-7-architecture-defense--worked-conceptual-solutions)
 after forming an explanation. These questions ask for reasoning, not memorized
@@ -1689,6 +2001,9 @@ acronyms or lengthy arithmetic.
     Snapshot/loader operations belong to [Appendix D](../appendices/d-reproduction-and-environments.md#policy-reference-and-pending-rollout-identity).
 
 ## 5.27 From architecture to controlled pretraining
+
+We set out to build a decoder we could understand by making it ourselves. Let's
+look back at what we made, and at what building it still hasn't told us.
 
 The chapter began with an incomplete explanation: attention retrieves context.
 We can now follow the complete path. IDs select embedding rows; residual states

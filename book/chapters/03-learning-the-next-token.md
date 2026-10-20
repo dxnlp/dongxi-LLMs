@@ -1,6 +1,25 @@
 # Chapter 3 — Learning the Next Token
 
+> The fundamental problem of communication is that of reproducing at one point
+> either exactly or approximately a message selected at another point.
+>
+> — Claude E. Shannon, "A Mathematical Theory of Communication"
+
 Companion: [guided laboratory route](../labs/03-learning-the-next-token.md).
+
+Chapter 2 ended with a vector. Feed in the prefix “the pet saw the” and the
+model hands back a contextual hidden state $`h`$: a row of real numbers, 1,024 of
+them for the pinned Qwen3-0.6B interface. That row doesn't say `dog`. It doesn't
+say how likely `dog` is. And when the true next piece turns out to be `dog`,
+nothing yet tells the model how wrong it was or which numbers to change. A
+vector is not a prediction, and it is not a learning signal.
+
+Shannon framed communication as reproducing a message "either exactly or
+approximately". A language model faces a version of that problem one token at a
+time. It can't know the next token for certain, so it states a probability for
+every candidate. Shannon's theory also supplies the yardstick for such a guess:
+the negative log probability of what actually happened, which we will call its
+**surprise**. That yardstick becomes our training loss.
 
 A tokenizer can turn text into IDs, and an embedding table can turn those IDs
 into vectors. Neither operation yet answers the question a language model is
@@ -50,9 +69,26 @@ several apparent contradictions:
 
 Chapter 2 established the discrete interface and the distinction between an
 input embedding and a contextual hidden state. We now turn that hidden state
-into a trainable prediction.
+into a trainable prediction, in five steps:
+
+1. Turn $`h`$ into one score per vocabulary entry, then into a probability
+   distribution, and pick a token from it (§3.2–3.4).
+2. Measure how surprised the model was by the observed token, and derive the
+   gradient that corrects it (§3.5–3.6).
+3. Show how one-hot labels still teach an uncertain distribution, and test that
+   claim in a tiny controlled experiment (§3.7–3.8).
+4. Average surprise over a text to get perplexity, and see what that number hides
+   (§3.9).
+5. Line up predictions with the right targets, and keep visibility, grading and
+   gradient flow apart (§3.10–3.11).
+
+The companion notebooks and the most common reasoning errors close the chapter
+(§3.12–3.13).
 
 ## 3.1 Learning outcomes
+
+Here is what the path above should leave you able to do. Use the list as a
+checklist when you finish the chapter.
 
 After completing this chapter, you should be able to:
 
@@ -78,6 +114,13 @@ As in Chapters 1 and 2, equations establish mechanisms, experiments establish
 bounded observations, and neither alone establishes broad language capability.
 
 ## 3.2 One contextual state becomes a vocabulary-wide score vector
+
+The model must eventually name one next token, but first it has to say how well
+*every* candidate fits. So the first job is to turn one hidden state into one
+score per vocabulary entry. Think of a panel of judges, one per candidate token,
+each looking at the same context and calling out a number. A high number means
+"this context suits me". The numbers are not yet shares of anything; they are raw
+scores.
 
 Let:
 
@@ -199,7 +242,13 @@ matters.
 
 ## 3.3 Softmax turns relative evidence into competition
 
-Softmax converts logits into a categorical distribution:
+Logits can be negative and need not add up to anything, so we can't read them as
+probabilities. We need a rule that turns any row of scores into positive numbers
+that sum to one, while keeping the order of the scores. Picture one pie shared
+among all candidates: each candidate's slice is proportional to $`e`$ raised to
+its score. A bigger slice for one candidate leaves less pie for the rest.
+
+**Softmax** converts logits into a categorical distribution:
 
 ```math
 p_i=\frac{e^{z_i}}{\sum_{j=0}^{V-1}e^{z_j}}.
@@ -291,6 +340,10 @@ rounded zero and then taking `log(0)`.
 
 ## 3.4 From a distribution back to one token ID
 
+A probability for every candidate is useful for training, but text generation
+needs one actual token. So we need a rule that picks a coordinate. The choice of
+rule changes the generated text without changing anything the model learned.
+
 Softmax produces a vector, not an emitted word. A decoding rule chooses one
 coordinate:
 
@@ -304,7 +357,7 @@ The selected index is appended to the input, and the process repeats.
 
 ### Greedy decoding and ties
 
-Greedy decoding selects:
+**Greedy decoding** always takes the highest-scoring candidate:
 
 ```math
 \underset{i}{\mathrm{argmax}} z_i
@@ -319,8 +372,9 @@ are different from exact ties and can be sensitive to numerical precision.
 
 ### Sampling, temperature, top-$`k`$, and top-$`p`$
 
-Sampling draws one categorical index instead of always choosing the maximum.
-Temperature rescales logit gaps:
+**Sampling** draws one categorical index instead of always choosing the maximum.
+**Temperature** $`\tau`$ rescales logit gaps before softmax, the way a contrast
+knob stretches or squeezes the differences in a picture:
 
 ```math
 p_i(\tau)=
@@ -374,6 +428,13 @@ the unfiltered model distribution in its cross-entropy objective.
 
 ## 3.5 Likelihood becomes additive surprise
 
+So far the model makes a guess. To learn, it needs a score for how good that guess
+was once the true token is revealed. A weather forecast gives the intuition. If
+the forecaster said 90% rain and it rained, you're hardly surprised. If they said
+1% and it rained, you're very surprised, and you trust them less. We want a loss
+that behaves the same way: small when the observed token got high probability,
+large when it got almost none.
+
 For a causal model, the probability of a token sequence follows the chain rule:
 
 ```math
@@ -393,7 +454,8 @@ into a sum:
 \sum_{t=0}^{n-1}\log P(x_t\mid x_{\lt t}).
 ```
 
-Negative log-likelihood, or NLL, is:
+**Negative log-likelihood**, or NLL, is the total surprise of the observed
+sequence:
 
 ```math
 \mathrm{NLL}(x_{0:n-1})
@@ -422,7 +484,19 @@ probability is $`e^{-0.767528}\approx0.464159`$, different from every one of the
 three token probabilities. The mask and the sum-versus-mean convention determine
 which quantity a reported “loss” represents.
 
-Stable target NLL can be computed directly from logits:
+Stable target NLL can be computed directly from logits. Write
+$`\log p_y`$ using the softmax definition, then pull the maximum $`m`$ out of the
+sum:
+
+```math
+\begin{aligned}
+-\log p_y
+&=-\left(z_y-\log\sum_j e^{z_j}\right)\\%
+&=-z_y+\log\left(e^{m}\sum_j e^{z_j-m}\right).
+\end{aligned}
+```
+
+Splitting the logarithm of the product gives:
 
 ```math
 L=-z_y+m+\log\sum_j e^{z_j-m},
@@ -434,6 +508,13 @@ underflowed target probability.
 
 ## 3.6 Labels, cross-entropy, and the exact logit gradient
 
+We now have a loss for one guess. The next question is how that loss should
+change the model's scores. Think of probability as a budget of one unit of chips
+that the model spreads across candidates as bets. When the answer is revealed, a
+good correction moves chips back to the right answer, and takes them mostly from
+the candidates that held the most. The gradient we derive in this section does
+exactly that.
+
 At one position, the model output is a length-$`V`$ logit vector. The ordinary
 label is one integer ID:
 
@@ -443,7 +524,9 @@ label:  scalar  one observed target ID
 ```
 
 Framework cross-entropy usually accepts integer labels without constructing a
-dense one-hot vector. Conceptually, let $`q`$ be the target distribution:
+dense one-hot vector. Conceptually, let $`q`$ be the target distribution.
+**Cross-entropy** is the average surprise the model $`p`$ would feel at outcomes
+drawn from $`q`$:
 
 ```math
 H(q,p)=-\sum_iq_i\log p_i.
@@ -577,6 +660,9 @@ The row-vector projection gives the familiar logits $`[2,1,-1]`$.
 **Reader prediction.** `cat` wins the score competition, but `dog` is the
 observed target. Which row should move most, and in which direction?
 
+The table below shows one SGD step on these numbers: the observed `dog` gains
+probability and the loss falls.
+
 The one-hot target is $`q=[0,1,0]`$. Its probability is 0.259496, so the loss
 is 1.349012 nats. The complete correction is:
 
@@ -638,6 +724,13 @@ retained in the [calculation receipt](../../experiments/reports/2026-10-10-book-
 
 ## 3.7 How one-hot observations teach a distribution
 
+Every label we have seen so far names exactly one correct token. Yet language is
+uncertain: after the same words, sometimes `dog` follows and sometimes `cat`.
+Can one-hot labels teach a model to say "70% `dog`"? Think of a forecaster for a
+coin that lands heads 70% of the time. Each flip is either heads or tails, never
+"70% heads". Still, the forecaster who does best over many flips is the one who
+always says 70%.
+
 Suppose indistinguishable instances of one context continue with `dog` 70% of
 the time and `cat` 30% of the time. Every training row still provides one
 observed target. Let $`r=[0.7,0.3]`$ be the empirical distribution and $`q`$ be one
@@ -649,7 +742,9 @@ Because:
 \mathbb{E}[q]=r,
 ```
 
-the expected logit gradient is:
+the expected logit gradient follows from linearity of expectation. The
+prediction $`p`$ is fixed for this context, so
+$`\mathbb{E}[p-q]=p-\mathbb{E}[q]`$, and substituting $`\mathbb{E}[q]=r`$ gives:
 
 ```math
 \mathbb{E}[p-q]=p-r.
@@ -731,7 +826,16 @@ the common `dog` outcome less surprising but assigns too little mass to the
 than erase the gain. Confidence and calibration are different properties.
 
 Why is KL nonnegative? For positive probabilities, use
-$`-\log u\geq1-u`$ with $`u=p_i/q_i`$ and sum with weights $`q_i`$:
+$`-\log u\geq1-u`$ with $`u=p_i/q_i`$. Each term of the KL sum then satisfies:
+
+```math
+q_i\log\frac{q_i}{p_i}
+=q_i\left(-\log\frac{p_i}{q_i}\right)
+\geq q_i\left(1-\frac{p_i}{q_i}\right)
+=q_i-p_i.
+```
+
+Sum with weights $`q_i`$, which adds these inequalities over $`i`$:
 
 ```math
 \sum_iq_i\log\frac{q_i}{p_i}
@@ -766,11 +870,19 @@ overfitting under a fixed evaluation contract.
 
 ## 3.8 Controlled experiment: two logits learn 70/30
 
+Section 3.7 made a claim with algebra: one-hot targets should settle at the
+70/30 split, with the loss stuck at the entropy rather than at zero. Algebra can
+hide a slip, so we test the claim on the smallest system that can show it. The
+system has no transformer at all, only two numbers to learn.
+
 **Reader prediction:** every target is one-hot, but the same context has two
 different observed continuations. Should the learned model become deterministic?
 Should its best mean loss be zero? Explain what should balance at the optimum
 before revealing the measured trajectory. This exercise does not replace the
 historical specification's pre-run hypotheses.
+
+In short, the experiment shows two logits converging to probabilities 0.7 and
+0.3, with the mean loss settling at the entropy instead of falling to zero.
 
 We tested the distribution-learning claim with the smallest transparent system:
 
@@ -822,6 +934,13 @@ and [report](../../experiments/reports/2026-09-03-next-token-distribution.md).
 
 ## 3.9 From token surprise to perplexity
 
+Training gives one loss per target, but we usually want one number for a whole
+evaluation text. Averaging the surprise is the natural first step. Turning that
+average back into a "number of choices" gives perplexity. As a worked case, a
+model that spreads probability evenly over four candidates at every step has
+mean loss $`\log 4`$ and perplexity 4: it is as unsure as someone choosing among
+four equally likely options.
+
 For valid aligned targets, a common reduced loss is:
 
 ```math
@@ -834,10 +953,20 @@ L_{mean}
 where $`m_{b,t}=1`$ for included targets and zero otherwise. The denominator is
 the number of valid targets, not padded tensor capacity.
 
-Perplexity is:
+**Perplexity** is the exponential of the mean loss:
 
 ```math
 \mathrm{PPL}=e^{L_{mean}}.
+```
+
+To see what it measures, write the $`N`$ valid targets in order, so that
+$`L_{mean}=-\frac{1}{N}\sum_{t=1}^{N}\log p_t(y_t)`$. Undo the minus sign and
+turn the sum of logs back into a log of a product:
+
+```math
+e^{-L_{mean}}
+=\exp\left(\frac{1}{N}\sum_{t=1}^{N}\log p_t(y_t)\right)
+=\left(\exp\sum_{t=1}^{N}\log p_t(y_t)\right)^{1/N}.
 ```
 
 Equivalently:
@@ -891,6 +1020,13 @@ on one corpus establishes higher geometric-mean probability under that contract,
 not general superiority, truthfulness, or downstream usefulness.
 
 ## 3.10 Causal shifting: predict what is not yet visible
+
+Everything so far assumed that each prediction is compared with the right target.
+In a sequence, "the right target" is the *next* token, not the current one. Think
+of a flashcard drill: the card shows a sentence up to a word, and you guess the
+word that follows. If the card printed the answer on its face, you would score
+perfectly and learn nothing. Getting this alignment wrong is one of the easiest
+ways to obtain a beautiful loss for a useless model.
 
 For tokens:
 
@@ -973,6 +1109,12 @@ and can make systematic errors more deterministic.
 
 ## 3.11 Loss masks grade targets; attention masks control visibility
 
+Once targets are aligned, we still have to decide which of them count. A chat
+example contains a prompt and an answer, and often padding. An exam is a good
+picture. Students may read the passage, which is visibility. Only their answers
+are graded, which is the loss mask. And reading the passage still shapes the
+answers, which is gradient flow. These are three separate decisions.
+
 Three controls answer different questions:
 
 | Mechanism | Question |
@@ -1045,6 +1187,9 @@ scale despite contributing no evidence.
 
 ## 3.12 First-class companion notebooks and evidence
 
+Every mechanism in this chapter can be run, poked and broken. The three notebooks
+below are where you check the derivations against real tensors.
+
 The chapter has three interactive companion lessons. They are course material,
 not disposable scratchpads:
 
@@ -1066,6 +1211,9 @@ experiment's empirical identity. Successful execution alone does not broaden the
 claims beyond the stated controls.
 
 ## 3.13 Common reasoning failures
+
+Each idea in this chapter has a tempting wrong version. Here they are side by
+side, each with the short correction that the earlier sections justify.
 
 ### “The hidden state is already a probability vector”
 
@@ -1133,7 +1281,41 @@ For an illustrative four-byte text with total NLL of four nats, the value is app
 
 The [tokenizer companion](../../notebooks/extensions/cs336/05_tokenizer_contracts.ipynb) exposes summed NLL, valid target count and raw-byte count together. Declare whether EOS contributes to the numerator: a scored EOS has probability cost but adds no raw-text bytes. Likewise, a loss mask may exclude a prefix while the byte denominator still describes the whole document. Such a conditional score is not an unconditional document compression claim. Assignment A requires that boundary to be explicit before interpreting an apparent perplexity improvement.
 
+## Chapter summary
+
+- A contextual state $`h`$ becomes one **logit** per vocabulary entry through the
+  output head. Logits are raw scores, not probabilities, and token IDs are
+  categorical addresses with no arithmetic meaning (§3.2).
+- **Softmax** turns logits into a distribution in which only gaps matter:
+  $`\log(p_i/p_j)=z_i-z_j`$. Subtracting the maximum keeps it numerically stable
+  (§3.3).
+- Greedy decoding, sampling, temperature, top-$`k`$ and top-$`p`$ turn the
+  distribution into one token ID. They change generation, not training (§3.4).
+- Sequence probability factors by the chain rule, and its negative log is
+  additive **surprise**. One-hot cross-entropy equals the observed-token NLL
+  (§3.5–3.6).
+- The logit gradient is $`p-q`$: the target rises, and each wrong candidate falls
+  in proportion to the probability it took. Through the output head that error
+  reaches $`W_{\mathrm{out}}`$, $`b`$ and $`h`$ (§3.6).
+- Repeated one-hot targets have expected gradient $`p-r`$, so the model can learn
+  an uncertain distribution. Cross-entropy splits into irreducible entropy plus
+  reducible KL mismatch, so positive loss at zero expected gradient can mean
+  success (§3.7).
+- The two-logit experiment reached 70/30 with loss at the empirical entropy. It
+  shows the mechanism in a controlled system, not general language learning
+  (§3.8).
+- **Perplexity** is the exponential of mean token loss. It hides where surprise
+  occurred and depends on the tokenizer's counting unit (§3.9).
+- Causal shifting pairs each state with the *next* token. Unshifted labels reward
+  copying, and teacher forcing differs from free generation (§3.10).
+- Attention masks control what a state may read; loss masks control what is
+  graded. Prompt computation can still receive gradient through answer losses
+  (§3.11).
+
 ## 3.14 Exercises
+
+These exercises revisit each step of the chapter in order. Try them before
+opening the worked answers.
 
 1. **The complete tensor bridge.** For $`B=2`$, $`n=5`$, $`D=8`$, and $`V=10{,}000`$,
    state the shapes of input IDs, embeddings, final hidden states, logits,
@@ -1193,6 +1375,10 @@ Worked answers are available in
 companion notebooks provide executable versions of the central mechanisms.
 
 ## 3.15 Summary and what follows
+
+We can now follow one prediction from hidden state to parameter update and back.
+Here is the whole argument in prose, followed by the question that the next
+chapter answers.
 
 A contextual hidden state $`h`$ is mapped through an output head into one logit per
 model-vocabulary row. Softmax turns relative logit gaps into a normalized

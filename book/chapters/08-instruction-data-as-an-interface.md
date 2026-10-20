@@ -1,21 +1,65 @@
 # 8. Instruction Data as an Interface
 
-A user writes “Reply with one color.” The model answers “Here is a short story
-about a red balloon.” The words are plausible, but the model has continued a
-conversation in a way the user did not request. How do we turn “answer briefly”
-from our intention into something a next-token predictor can learn?
+> 'When I use a word,' Humpty Dumpty said, in rather a scornful tone, 'it means
+> just what I choose it to mean—neither more nor less.'
+>
+> — Lewis Carroll, *Through the Looking-Glass*
 
-Supervised fine-tuning, or SFT, supplies demonstrations: a context and the
-response to produce after it. A pretrained base model already models language;
-these demonstrations can teach how to use that language through a particular
-interface. They can also introduce task associations, style and mistakes.
-Learning the interface and acquiring a new ability are separate questions.
+Pretraining taught our model one skill: continue the text in front of it. Give
+it the start of a story and it writes more story. Give it a request and it
+often writes more text, not an answer. A user writes “Reply with one color.” The
+model answers “Here is a short story about a red balloon.” The words are
+plausible, but the model has continued a conversation in a way the user did not
+request. Chapter 9 opens with a real base checkpoint doing the same thing:
+asked for one word, it echoes the request with a different value and keeps
+going until it hits the token cap. How do we turn “answer briefly” from our
+intention into something a next-token predictor can learn?
+
+That question opens the part of the book about **post-training**: everything we
+do to a pretrained model to turn a text continuer into something that answers.
+Post-training is usually described as three techniques, and each has its own
+chapters here:
+
+- **Instruction tuning**, also called supervised fine-tuning: train on
+  demonstrations of a request followed by a good response (Chapters 8–9;
+  Chapter 9 also covers a parameter-efficient variant, LoRA).
+- **Preference alignment**: learn from judgments that one response is better
+  than another (Chapters 10–11).
+- **Reinforcement learning with verifiable rewards**, or RLVR: sample answers,
+  check them automatically, and reinforce the ones that pass (Chapters 12–14).
+
+Chapter 15 then brings the three together through distillation and a final
+defended evaluation. This chapter starts at the beginning, with the data.
+
+**Supervised fine-tuning**, or **SFT**, supplies demonstrations: a context and
+the response to produce after it. A pretrained base model already models
+language; these demonstrations can teach how to use that language through a
+particular interface. They can also introduce task associations, style and
+mistakes. Learning the interface and acquiring a new ability are separate
+questions.
+
+Humpty Dumpty could make a word mean whatever he chose. A data designer can't.
+We may intend a role marker to mean “the assistant speaks now” and an END token
+to mean “stop here”, but the model never reads our intentions. It sees token
+sequences and the targets that receive loss. A marker means what the examples
+teach it to mean, neither more nor less. So the examples have to be built with
+care.
 
 We will follow `copy red` → `red` → END through messages, token IDs and target
 ownership. The important object is the complete training sequence, including
 its boundary. Later chapters ask how comparisons and teacher responses change
 this lesson. This symbolic example connects the ideas; it is separate from the
-real checkpoint ancestry recorded in Chapter 15.
+real checkpoint ancestry recorded in Chapter 15. We'll take five steps:
+
+1. Write down the behavior we want before writing any data (§8.1).
+2. Turn messages into one token sequence, and decide which tokens are trained
+   and which are only context (§8.2–8.4).
+3. Make the boundaries explicit: the ending, the padding, and the seams
+   between packed examples (§8.5–8.7).
+4. Count what the objective actually sees, and record where every example came
+   from (§8.8–8.10).
+5. Treat responses written by a teacher model as attempts to select from, not
+   answers to trust (§8.11–8.14).
 
 An instruction dataset expresses desired behavior through sequences. A wrong
 role marker or shifted mask can change what it teaches without changing the
@@ -34,6 +78,11 @@ and source-group evaluation contracts from Chapter 7.
 
 ## 8.1 Begin with the user's desired behavior
 
+Before any tokens or masks, we need to know what we're teaching. A dataset is a
+pile of examples, and examples teach whatever they have in common, whether we
+meant it or not. So the first step is to write down the behavior we want, and
+the ways we could teach something else by accident.
+
 Consider three examples: copy one word, reverse two words, and return an object with a required key. They all concern instruction following, but they require different output structure. A dataset with only copy tasks cannot establish a general assistant. A dataset with only beautifully formatted answers might teach presentation while leaving factual mistakes untouched.
 
 Write a compact capability table first. Name the input family, answer policy, permitted transformations and regression risk. For a small course dataset, copying and extraction are useful because correctness can be checked exactly. Include held-out values and phrasings when testing transfer. Reusing every value in every training prompt makes a clean-looking score a memorization check.
@@ -42,9 +91,18 @@ The model sees demonstrations, not the data designer's intent. If every response
 
 ## 8.2 Messages become one token sequence
 
-A conversation often has system, user and assistant messages. A system message supplies behavior instructions or application context. A user message supplies the request. An assistant message supplies a demonstrated response. Tool messages are a separate interface and are outside this chapter's executable fixture.
+We know what behavior we want. But a decoder doesn't read conversations. It
+reads one flat list of token IDs, as it did in pretraining. This section shows
+how a conversation between several speakers becomes that list.
 
-Roles are encoded through text and special tokens according to a chat template. A decoder does not receive Python dictionaries; preprocessing converts them to IDs. The model learns the significance of those markers through training. The [Transformers chat-template guide](https://huggingface.co/docs/transformers/chat_templating) documents this serialization boundary.
+A play script solves the same problem. Several voices become one page of text,
+and a speaker's name in capitals before each line tells you who is talking. The
+names aren't dialogue, but without them the page would be one long monologue.
+Role markers do that job for a conversation.
+
+A conversation often has system, user and assistant messages. A **system message** supplies behavior instructions or application context. A user message supplies the request. An assistant message supplies a demonstrated response. Tool messages are a separate interface and are outside this chapter's executable fixture.
+
+Roles are encoded through text and special tokens according to a **chat template**, the fixed recipe that writes role markers and boundaries around each message. A decoder does not receive Python dictionaries; preprocessing converts them to IDs. The model learns the significance of those markers through training. The [Transformers chat-template guide](https://huggingface.co/docs/transformers/chat_templating) documents this serialization boundary.
 
 The symbolic notebook format is intentionally small:
 
@@ -82,9 +140,14 @@ For training a complete assistant demonstration, use the full conversation witho
 
 ## 8.3 Ownership is explicit
 
+A flat sequence still doesn't say what to learn. The same word can appear in
+the user's request and in the assistant's answer, and we usually want to train
+only the second. So every target needs an owner, and the owner has to be
+recorded rather than guessed.
+
 The role header is not the same as its body. A useful supervision policy learns assistant body tokens and the assistant's termination marker, while treating system/user content and role headers as context. Other policies can also learn headers; the choice must be written and tested.
 
-Our encoder produces three aligned lists: token IDs, a boolean supervised flag, and a human-readable owner. The supervised flag is attached to the token being predicted. This detail matters when the model's logit at position $`t`$ predicts token $`t+1`$.
+We call this record **target ownership**: for every token, which message it belongs to and whether predicting it earns loss. Our encoder produces three aligned lists: token IDs, a boolean supervised flag, and a human-readable owner. The supervised flag is attached to the token being predicted. This detail matters when the model's logit at position $`t`$ predicts token $`t+1`$.
 
 **Reader prediction:** `red` occurs once in the user's request and once in the
 assistant's answer. Can the token ID alone tell us which occurrence to train?
@@ -150,13 +213,26 @@ model needs the prompt even when the prompt receives no direct token loss.
 
 ## 8.4 Assistant-only loss still teaches from the prompt
 
+Masking the prompt's labels can sound like hiding the prompt. It doesn't. The
+answer depends on the prompt, so the answer's loss still reaches back into it.
+This section separates three switches that are easy to confuse.
+
+Think of a reading-comprehension exam. Only your answers are graded, but you
+had to read the passage to write them, and a bad grade can teach you to read
+more carefully next time. The passage earns no marks of its own, yet it is far
+from ignored.
+
 Ignoring a user token's direct loss does not remove it from the forward graph. Its embedding and hidden states can influence later assistant positions through causal attention. The answer loss can therefore update shared parameters and prompt embeddings through those paths.
 
-There are three different controls. The loss mask decides which predictions are scored. The attention mask decides which positions can exchange information. The parameter's trainable flag decides whether an optimizer updates that parameter. They solve different problems. A frozen embedding can participate in useful computation without receiving an update. A zero-loss prompt position can receive a gradient through later outputs. An attention-masked position can be excluded as context even if a careless label still asks the model to predict it.
+There are three different controls. The **loss mask** decides which predictions are scored. The **attention mask** decides which positions can exchange information. The parameter's **trainable flag** decides whether an optimizer updates that parameter. They solve different problems. A frozen embedding can participate in useful computation without receiving an update. A zero-loss prompt position can receive a gradient through later outputs. An attention-masked position can be excluded as context even if a careless label still asks the model to predict it.
 
 This distinction links the present chapter to attention's causal boundary. An answer token is permitted to learn from earlier user text, while the earlier user representation cannot use the future answer in that forward pass. Backward information from the answer's loss updates parameters; it does not grant the forward computation access to future tokens.
 
 ## 8.5 Termination is part of the demonstration
+
+Our example ends with END, and so far we've trained END like any other target.
+Why does it get its own section? Because a correct answer that never stops is
+not a correct response, and stopping is easy to lose in preprocessing.
 
 A model that generates the right answer and continues indefinitely has not learned the complete interface. Include the intended assistant termination token as a supervised target. A maximum-token limit is a runtime cap, not the desired learned stopping behavior.
 
@@ -176,7 +252,11 @@ The fixture keeps all sequences within a small bound. The Spark runner rejects e
 
 ## 8.6 Padding is not an instruction
 
-Batches contain different lengths. Padding creates a rectangular tensor $`X\in\mathbb{N}^{B\times n}`$. Padded labels must be ignored and padded context must be masked appropriately. The attention-validity mask is separate from the supervision mask because valid user context is visible even when its labels are ignored.
+Training processes many examples at once, and they rarely have the same length.
+To stack them into one tensor we fill the short rows with extra tokens. That
+filler must never become a lesson.
+
+Batches contain different lengths. **Padding**, filler placed after a short row so every row has the same length, creates a rectangular tensor $`X\in\mathbb{N}^{B\times n}`$. Padded labels must be ignored and padded context must be masked appropriately. The attention-validity mask is separate from the supervision mask because valid user context is visible even when its labels are ignored.
 
 Our right-padded microscope has no future influence on earlier real positions under a causal decoder. Its padding loss is still explicitly ignored. A production model should receive the actual attention mask; left padding changes position handling and generation conventions and requires an independent equivalence check.
 
@@ -186,7 +266,15 @@ A useful audit shows IDs, owners, labels and masks in the same heatmap. The read
 
 ## 8.7 Packing changes the information boundary
 
-Packing several short conversations into one long sequence reduces padding. A naive concatenation with only a triangular causal mask lets a later conversation attend to all earlier ones. An EOS marker supplies a learned clue; it does not mathematically prevent information flow.
+Padding spends computation on filler. An obvious fix is to place several short
+conversations end to end in one long row. That saves compute, but it quietly
+lets one conversation see another.
+
+Picture strangers seated at one long table to save space. They can overhear
+each other unless someone puts up partitions. A shared row is that table, and
+the attention mask is where the partitions go.
+
+**Packing** places several short conversations into one long sequence, which reduces padding. A naive concatenation with only a triangular causal mask lets a later conversation attend to all earlier ones. An EOS marker supplies a learned clue; it does not mathematically prevent information flow.
 
 **Reader prediction:** pack `copy red` and `copy blue` in that order. Would
 changing the first answer be permitted to change the second answer's logits?
@@ -197,7 +285,7 @@ the same available context as in its separate forward pass. The segment mask
 below makes that intended independence a computation we can check, instead of
 asking the model to learn it from an END marker.
 
-For independent conversations, assign a segment identifier $`s_t`$ to each position. An allowed-attention mask is
+For independent conversations, assign a **segment identifier** $`s_t`$ to each position: a label saying which conversation the position belongs to. An allowed-attention mask is
 
 ```math
 M_{t,u}=\mathbf{1}\{u\le t\}\mathbf{1}\{s_u=s_t\}.
@@ -233,15 +321,32 @@ evidence of a production packing backend.
 
 ## 8.8 Mixture weights need a unit
 
+Each example is now correct on its own. Next we decide how many of each kind to
+include, a choice called the **data mixture**. The natural unit is the example.
+But the loss doesn't count examples. It counts supervised tokens, and long
+answers have more of them.
+
 Suppose half the sampled examples belong to short-answer tasks and half to explanation tasks. Short answers average ten supervised tokens; explanations average ninety. Under a global token mean, explanation tokens contribute approximately 90% of the objective, although example sampling is balanced.
 
-If task family $`r`$ has example probability $`w_r`$ and mean supervised length $`\bar n_r`$, its expected token share is
+If task family $`r`$ has example probability $`w_r`$ and mean supervised length $`\bar n_r`$, its **expected token share** (the fraction of scored targets it supplies) is
 
 ```math
 \pi_r=\frac{w_r\bar n_r}{\sum_q w_q\bar n_q}.
 ```
 
-To target equal supervised-token shares, one possible sampling strategy chooses $`w_r`$ proportional to $`1/\bar n_r`$. This changes the example distribution and increases the frequency of short tasks. Another approach averages each example's loss before averaging examples; that changes gradient weighting. Neither should be introduced silently.
+Substitute the example above, with $`w=0.5`$ for both families and lengths 10 and 90:
+
+```math
+\pi_{\mathrm{explain}}=\frac{0.5\times90}{0.5\times10+0.5\times90}=\frac{45}{50}=0.9.
+```
+
+To target equal supervised-token shares, one possible sampling strategy chooses $`w_r`$ proportional to $`1/\bar n_r`$. Write $`w_r=c/\bar n_r`$ for a constant $`c`$. Every numerator becomes the same, so with $`R`$ families each share is equal:
+
+```math
+\pi_r=\frac{(c/\bar n_r)\,\bar n_r}{\sum_q (c/\bar n_q)\,\bar n_q}=\frac{c}{Rc}=\frac{1}{R}.
+```
+
+This changes the example distribution and increases the frequency of short tasks. Another approach averages each example's loss before averaging examples; that changes gradient weighting. Neither should be introduced silently.
 
 Report examples, input tokens, assistant tokens and source proportions separately. A high fraction of explanation tokens is not necessarily bad; it becomes a problem when it contradicts the intended interface. Use an evaluation slice for concise-output instructions to see whether the behavior transfers.
 
@@ -258,6 +363,14 @@ counts do not by themselves equalize loss pressure.
 
 ## 8.9 Provenance survives preprocessing
 
+A dataset can pass every mask check and still be the wrong dataset. It might be
+copied from a source we may not use, or it might overlap the test set. Token
+IDs can't answer those questions. We need a record of where each example came
+from.
+
+That record is **provenance**, the history of an example's origin and every
+change made to it. A **data card** is the document that carries it.
+
 A data card should include creator/source, license, intended use, excluded use, collection or generation procedure, revisions, languages, task families, split rules, filtering, deduplication, template identity, mask policy, truncation counts and known limitations.
 
 Content hashes are useful but do not replace source information. Identical answers to different tasks may be legitimate; identical instruction-answer pairs across train and test are suspicious. Group exact normalized pairs first, then audit near duplicates and shared document origins. Synthetic examples derived from the same template belong in related groups when assessing transfer.
@@ -268,6 +381,9 @@ Do not claim that synthetic authoring eliminates contamination risks. A generato
 
 ## 8.10 From audited data to SFT
 
+We've checked each piece of the interface on its own. Before any training, we
+check them together, on every example, and print a few to read by eye.
+
 A compact acceptance audit checks that every example contains permitted roles, a nonempty assistant response, at least one surviving supervised target, valid vocabulary IDs, a correct termination target, no padded labels, and an understood length policy. Print representative examples selected by rule, including longest, shortest and multi-turn cases.
 
 The automatic audit can verify syntax and alignment; a human or task verifier still needs to check whether the answer obeys the instruction. A well-formed wrong answer is a powerful wrong lesson.
@@ -275,6 +391,11 @@ The automatic audit can verify syntax and alignment; a human or task verifier st
 The accepted dataset is now an explicit interface contract: IDs, visibility, labels, endings and source membership must agree.
 
 ## 8.11 A teacher response is an attempt before it is a demonstration
+
+Our demonstrations so far were written by hand. That doesn't scale. A common
+shortcut is to let another model write candidates and keep the good ones. The
+shortcut adds a new step before training, and the step has failure modes of
+its own.
 
 Who writes the demonstrated answer? A person can supply it, or another model
 can generate candidates. In the latter case the generating system is the
@@ -312,6 +433,10 @@ request disappear merely because a later request succeeded.
 
 ## 8.12 Resumption and filtering preserve the rejected evidence
 
+Teacher calls fail, get retried and get interrupted. If we keep only the
+winners, we can't later explain why they won, or tell a good filter from a
+lucky one. This section keeps the losers too.
+
 An interrupted teacher call may run again without creating an independent
 demonstration. Keep failed and rejected attempts alongside committed results,
 and distinguish unique saved records from exactly-once physical execution.
@@ -325,6 +450,9 @@ Otherwise a top-versus-random comparison could secretly compare two sets already
 made equally correct by the filter. Multiple reasons may apply to one attempt,
 so rejection-reason counts are not a partition of rejected records.
 
+The reference run shows what this looks like in numbers: two thirds of the
+attempts are rejected, and two thirds of the survivors are still wrong.
+
 The original reference retains 108 attempts, including twelve error retries.
 Seventy-two attempts are rejected and 36 unique candidates survive: twelve
 correct and 24 wrong. The fixed task verifier computes correctness from training
@@ -334,6 +462,16 @@ Source-group and actual student-ID collisions are gated before collection; an
 unseen polite prefix does not make a reused underlying task a new source group.
 
 ## 8.13 Selection changes both answers and exposure
+
+Each training prompt now has a pool of accepted candidates. Which one becomes
+the demonstration? “Pick the best” hides two choices: best among what, and
+counted in what units.
+
+A school analogy helps with the first. Choose the six best students in the
+whole school, and they might all come from one class. Choose the best student
+in each class, and every class is represented. The first rule ranks globally;
+the second guarantees coverage. Demonstration selection faces the same choice,
+with prompts in place of classes.
 
 Let $`C_i`$ be the frozen accepted candidate pool for training prompt $`x_i`$, and
 let $`s(x_i,y)`$ be the declared training-task score. A per-prompt selection is
@@ -349,7 +487,7 @@ per prompt, preserving prompt coverage. Neither can query the held-out panel.
 
 A global top-$`K`$ ranking over all pools solves a different problem. It can spend
 several selections on one source or omit an entire difficulty slice. Define
-prompt coverage as the fraction of training prompts represented at least once.
+**prompt coverage** as the fraction of training prompts represented at least once.
 In this fixture global top 6 covers only six of twelve prompts, all two-word
 tasks, because correctness ties favor shorter answers. Global top 12 covers all
 twelve. These are separate coverage audits at different sample budgets, not
@@ -357,11 +495,14 @@ additional matched student results.
 
 Matching examples and prompts does not match supervised tokens. Let $`n_{a,j}`$
 count the final-answer and END targets in example $`j`$ of arm $`a`$. Under $`U`$
-full-batch updates, target exposure is
+full-batch updates, **target exposure**, the total number of scored targets the student is trained on, is
 
 ```math
 E_a=U\sum_j n_{a,j}.
 ```
+
+The fixture shows that equal example and prompt counts can still hide unequal
+exposure.
 
 All three selected datasets contain twelve examples and all twelve prompts.
 Top and length-stratified random each contain 42 targets per batch; unstratified
@@ -378,10 +519,18 @@ in the audit.
 
 ## 8.14 A demonstration score is not student capability
 
+We selected demonstrations by their score. What we care about is whether a
+student trained on them can answer prompts it has never seen. That is a
+separate measurement, and it can disagree with the score that did the
+selecting.
+
 Only selected final answers and their real END markers become student targets.
 Traces and audit labels do not enter the loss. The existing encoder, collator
 and exactly-once shift from this chapter feed an actual tiny causal sequence
 student; the next chapter develops that supervised objective in detail.
+
+The experiment asks whether correct demonstrations produce a student that
+answers held-out prompts correctly. Here is how it was set up.
 
 The experiment pairs initialization across top, random and length-random data
 with three fixed student seeds and eighty updates each. Development, test and
@@ -415,7 +564,36 @@ For a fixed retained corpus, effective exposure can be described as presented va
 
 Assignment E therefore reports unique source groups, rendered examples, valid supervised targets, optimizer updates and generated response tokens separately. It matches targets per update in the coverage comparison, keeping the optimizer clock aligned. Subsequent accepted-response SFT and policy updates use different observations and objectives; their labels and rollout work are disclosed rather than declared equivalent. Before running either arm, predict whether extra coverage will transfer to held-out sources or merely help a familiar rendering.
 
+## Chapter summary
+
+- Post-training has three parts: instruction tuning (Chapters 8–9), preference
+  alignment (Chapters 10–11) and RLVR (Chapters 12–14). Instruction tuning
+  starts from a written statement of the behavior we want, because examples
+  teach whatever they share, intended or not (opening, §8.1).
+- A **chat template** turns system, user and assistant messages into one token
+  sequence. Role markers mean only what the training examples teach (§8.2).
+- **Target ownership** records which tokens are scored. The label shift happens
+  exactly once, so the assistant header's logit predicts the first answer token
+  (§8.3).
+- The loss mask, the attention mask and the trainable flag are three separate
+  controls. A prompt with no direct loss still shapes the answer and still
+  receives gradient through it (§8.4).
+- The END target is part of the demonstration. Truncation, generic EOS IDs and
+  pad-value masking can all remove it quietly (§8.5–8.6).
+- Packing needs a segment-aware mask. An END marker alone doesn't stop one
+  packed conversation from reading another (§8.7).
+- Mixture weights need a unit. Equal example shares can give very unequal
+  token shares, here 10% versus 90% (§8.8).
+- A data card carries provenance, grouping and known limits. Audit every
+  example's syntax and alignment before training, then check answers for
+  correctness separately (§8.9–8.10).
+- A teacher's output is an attempt. Keep rejected and failed attempts, select
+  per prompt to preserve coverage, report target exposure, and evaluate the
+  student independently of the selection score (§8.11–8.14).
+
 ## 8.15 Exercises
+
+These exercises follow the chapter's steps in order.
 
 1. Draw the serialized sequence for a system-user-assistant conversation.
 2. Identify which logit predicts the first assistant body token.

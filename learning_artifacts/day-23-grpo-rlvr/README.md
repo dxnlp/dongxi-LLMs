@@ -10,6 +10,8 @@ claim that the learner has studied or mastered the chapter.
 [worked solutions](../../book/solutions/13-group-relative-policy-optimization.md),
 [notebook route](../../notebooks/day-23/README.md).
 
+Cross-family framing (2026-10-20 discussion): [three post-training families and where RLVR sits](three-post-training-families.md).
+
 ## Learning arc
 
 Trace one TinyDecoder rollout through EOS, strict verification, group statistics and a real backward/update; compare G 4/G 8 with unequal cost recorded.

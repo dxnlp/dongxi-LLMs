@@ -1,6 +1,16 @@
 # Chapter 2 — Text, Tokens, and Embeddings
 
+> You shall know a word by the company it keeps.
+>
+> — J. R. Firth, "A Synopsis of Linguistic Theory, 1930–1955"
+
 Companion: [guided laboratory route](../labs/02-text-tokens-and-embeddings.md).
+
+Chapter 1 ended at a warning it couldn't yet explain. Two tokenizers can both
+have eight IDs, swap the meanings of IDs 2 and 3, and still pass every shape
+check. The checkpoint loads, the code runs, and the model reads the wrong
+symbols. We could name that failure, but we couldn't see inside it, because we
+never asked what a token ID is or how it reaches the network.
 
 A language model does not receive words. It receives integers.
 
@@ -23,10 +33,27 @@ under another tokenizer. Repeated IDs retrieve identical initial vectors, yet
 their later hidden states can represent different meanings. A loss can exclude a
 prompt position while still sending gradients into its embedding.
 
-This chapter develops those mechanisms as one argument. We will first understand
-byte-level BPE, then test multilingual tokenization with a pinned Qwen3 tokenizer,
-follow token IDs into an embedding table, and trace next-token supervision back
-into that table. By the end, “text becomes vectors” will no longer be a hidden
+Firth's line says where those integers get their meaning. An ID by itself is
+just an address. What the model comes to know about a token, it learns from the
+other tokens around it, through the vectors that training attaches to each
+address. We'll follow text from characters to IDs to those vectors, and then
+see how the surrounding context and the loss shape them.
+
+This chapter develops those mechanisms as one argument, in five steps:
+
+1. Name the different units of text that are easy to confuse, and see why the
+   tokenizer belongs to the model's contract (§2.2).
+2. Understand byte-level BPE, then test multilingual tokenization with a pinned
+   Qwen3 tokenizer, where our prediction fails (§2.3–2.4).
+3. Follow token IDs into an embedding table, and see why one row is a starting
+   point rather than a finished meaning (§2.5–2.6).
+4. Trace next-token supervision back into that table, and check the result on
+   Qwen3's real interface (§2.7–2.8).
+5. Separate the masks that decide what a position may see from those that decide
+   what it is graded on, then review the companion experiments and common
+   reasoning failures (§2.9–2.11).
+
+By the end, “text becomes vectors” will no longer be a hidden
 preprocessing step; it will be an inspectable part of the model.
 
 Keep one illustrative sentence in view: **“the pet saw the dog.”** For a tiny
@@ -80,6 +107,11 @@ observations remain separate from interpretations, and a worked example does not
 silently become a language-wide claim.
 
 ## 2.2 Six units that are easy to confuse
+
+Before we can count tokens, we have to agree on what we're counting. "How long
+is this text?" has several right answers, and they disagree. How long is
+"butterfly"? Nine letters, three syllables, one word. Each answer is correct for
+its own ruler. Text inside a computer has even more rulers.
 
 Consider the Chinese character `数`. It is one visible character and one Unicode
 code point, but UTF-8 stores it as three bytes:
@@ -138,10 +170,14 @@ evidence that the interface is correct.
 
 ### Normalization and pre-tokenization change the input
 
-Tokenization begins before BPE merges. Normalization may rewrite one valid Unicode
-sequence into another, while pre-tokenization determines which regions are
-eligible to interact. These steps belong to the tokenizer's identity.
+Tokenization begins before BPE merges. **Normalization** may rewrite one valid
+Unicode sequence into another, so that different spellings of the same text
+become one spelling. **Pre-tokenization** splits text into regions, such as words
+and the spaces before them, and determines which regions are eligible to
+interact. These steps belong to the tokenizer's identity.
 
+The experiment below shows that two spellings that look identical can become the
+same IDs and still fail an exact round trip.
 The local tokenizer-mechanics experiment compared two canonically equivalent
 spellings of `café`:
 
@@ -191,8 +227,17 @@ depth.
 
 ## 2.3 BPE learns compression offline
 
-Byte-pair encoding, or BPE, is easier to understand when we separate two phases
-that are often described as though they were one operation.
+§2.2 showed that the pieces a tokenizer emits are neither characters nor words.
+So where do the pieces come from? Someone has to choose them, and for most modern
+language models the chooser is an algorithm run once, before model training.
+
+Picture someone inventing shorthand. They notice they keep writing the same two
+letters together, so they invent one symbol for that pair. Then they look again,
+find the next most common pair (which may include the new symbol), and repeat.
+Once the shorthand book is printed, they use it but stop adding entries.
+**Byte-pair encoding**, or **BPE**, works the same way: it builds larger pieces
+by repeatedly merging frequent adjacent pairs. It is easier to understand when we
+separate two phases that are often described as though they were one operation.
 
 This chapter focuses on **byte-level BPE**, not every tokenizer family:
 
@@ -335,6 +380,11 @@ overlap, merge ancestry, or neighboring token IDs.
 
 ## 2.4 Multilingual efficiency must be measured
 
+BPE gives frequent patterns their own pieces, so a language with more
+well-learned patterns should need fewer tokens. That sounds like something we
+could reason out from how languages are written. Chapter 1 asked us to predict
+before we measure, so let's do that, and then see what happens.
+
 Before inspecting Qwen3, we predicted token counts for approximately equivalent
 English, Chinese, and Swedish sentences. The initial reasoning was plausible:
 
@@ -364,6 +414,8 @@ The complete protocol and output are preserved in the
 [tokenizer report](../../experiments/reports/2026-08-30-qwen3-multilingual-tokenization.md).
 
 ### Observations
+
+The measurement reversed our predicted ranking.
 
 | Language | Code points | UTF-8 bytes | Tokens | Code points/token | Bytes/token |
 |---|---:|---:|---:|---:|---:|
@@ -447,11 +499,20 @@ vocabulary-wide logit tensor.
 
 ## 2.5 Embeddings turn addresses into vectors
 
-A token ID is an address, not a learned semantic vector. Let:
+The tokenizer's job ends with a list of integers. A neural network can't do much
+with a bare integer, though: it computes with vectors of real numbers. So the
+model's first step is to swap each ID for a vector it can learn.
+
+Think of a wall of numbered lockers. The number on a door tells you which locker
+to open. It says nothing about what's inside, and the contents can change while
+the number stays the same. A token ID is the locker number. An **embedding** is
+what's inside: a vector of numbers stored at that address, which training is
+free to change. A token ID is an address, not a learned semantic vector. Let:
 
 - $`V_m`$ be the model's embedding-row count;
 - $`D`$ be the embedding width;
-- $`E \in \mathbb{R}^{V_m \times D}`$ be the trainable embedding table.
+- $`E \in \mathbb{R}^{V_m \times D}`$ be the trainable **embedding table**, one
+  row of length $`D`$ per ID.
 
 For token IDs $`I \in \{0,\ldots,V_m-1\}^{B \times n}`$, lookup produces:
 
@@ -552,7 +613,14 @@ The row gradients are therefore $`[2,2]`$ at row 2 and $`[1,1]`$ at rows 3 and 5
 other rows receive zero. Plain stochastic gradient descent (SGD) subtracts a
 learning-rate-scaled gradient from each parameter. One step here,
 $`E\leftarrow E-0.1\nabla_E L_{\mathrm{sum}}`$,
-changes the selected rows to:
+changes the selected rows. For row 2, the arithmetic is:
+
+```math
+E[2]\leftarrow[1,0]-0.1\,[2,2]=[1-0.2,\;0-0.2]=[0.8,-0.2].
+```
+
+Rows 5 and 3 follow the same pattern with gradient $`[1,1]`$, so each coordinate
+drops by $`0.1`$. All three updates are:
 
 | Shared row | Before | Gradient | After |
 |---|---|---|---|
@@ -569,6 +637,11 @@ of the printed ID. The same indexed sum and backward operation is runnable in
 Chapter 3 replaces this artificial objective with next-token prediction.
 
 ## 2.6 An embedding is a starting point, not a finished meaning
+
+§2.5 left a puzzle from the chapter's opening. The two occurrences of `the` in
+"the pet saw the" retrieve the identical row. Yet a useful model must treat a
+word differently depending on where it appears. This is where Firth's "company it
+keeps" enters: the context, not the row alone, has to finish the job.
 
 Consider two occurrences of `bank`:
 
@@ -619,7 +692,7 @@ This suggests a more useful mental model than “the model looks up meaning”:
 `dog bites man` and `man bites dog` retrieve the same set of token-type rows but
 describe different events. Token identity alone is insufficient.
 
-Qwen3 uses rotary positional embeddings, or RoPE, inside attention. At a high
+Qwen3 uses **rotary positional embeddings**, or **RoPE**, inside attention. At a high
 level, RoPE rotates queries and keys according to position:
 
 ```math
@@ -638,6 +711,11 @@ the representation space and downstream weights can preserve the network's
 function, so “dimension 347 means animalness” is not a sound default claim.
 
 ## 2.7 Next-token loss trains the embedding table
+
+We've said that training changes what's stored in each row. But in §2.5 we used
+an artificial sum loss, and nobody hands the model a "correct" vector for `cat`.
+So what tells a row which way to move? The answer is the same loss that teaches
+the model to predict the next token.
 
 Embedding training normally has no separate target vector for `cat`, `sat`, or
 `dog`. Supervision comes from the language-model objective:
@@ -668,14 +746,15 @@ $`z=hW_{\mathrm{out}}^\top`$. With tying, that stored parameter is the embedding
 table $`E`$. Legacy notebook variables retain their names; an API's sequence-length
 `T` means $`n`$ in the mathematical notation here.
 
-An untied language model has a separate output matrix $`W_{\mathrm{out}}`$. A tied model
-reuses $`E`$:
+An untied language model has a separate output matrix $`W_{\mathrm{out}}`$.
+**Weight tying** means using one matrix for both jobs: reading tokens in and
+scoring tokens out. A tied model reuses $`E`$:
 
 ```math
 z = hE^\top, \qquad z_i = h \cdot E[i].
 ```
 
-Here $`z_i`$ is the logit for candidate token $`i`$: a raw compatibility score,
+Here $`z_i`$ is the **logit** for candidate token $`i`$: a raw compatibility score,
 not yet a probability. Softmax converts all logits into a shared probability
 distribution. Chapter 3 derives that conversion and the next-token loss in full.
 
@@ -699,6 +778,8 @@ through the tied output path.
 
 ### Equal forward values can create different learning trajectories
 
+The lab below shows that tying changes which rows learn, even when the forward
+loss is identical.
 Our lab initialized an untied output matrix with exactly the same numeric values
 as the input table. The tied and untied models therefore produced the same
 forward loss, `0.699771`. Their embedding gradients differed:
@@ -737,6 +818,11 @@ gradient produced by these paths.
 <!-- /chapter-gif: embedding-gradient -->
 
 ## 2.8 Qwen3's concrete interface
+
+So far our tables had six rows and widths of two or eight. Do the same ideas hold
+in a real model, and are there surprises a toy can't show? We checked by opening
+the actual tokenizer and model. The main finding is that the tokenizer and the
+model don't agree on how many rows there are.
 
 We inspected the exact Qwen3-0.6B revision used in the tokenizer experiment. The
 runtime measurements were:
@@ -779,6 +865,8 @@ This example also sharpens our notation: tokenizer entry count $`V_t`$ and model
 row count $`V_m`$ can differ. Treating both casually as “the vocabulary size” can
 hide a real interface boundary.
 
+The next passage records a case where sampling actually picked one of the rows
+the tokenizer can't decode.
 The [measured decoder-coverage failure](../../learning_artifacts/day-02-text-tokens-and-embeddings/output-vocabulary-and-decoder-coverage.md)
 turns this into an output-interface case: full-support sampling from the pinned
 Base checkpoint chooses unmapped ID 151768 as its 24th action. It is a valid
@@ -792,8 +880,18 @@ links the retained failure protocol.
 
 ## 2.9 Masks define different learning boundaries
 
-Sequences in one batch usually have different lengths. Padding creates a
-rectangular tensor:
+We now know how a loss reaches the embedding table. In real training, though, we
+rarely want every position to count. Some positions are filler, and some are
+context we don't want to grade. This section separates those two decisions.
+
+An exam paper helps. It may print a reading passage followed by questions. You
+are allowed to read the passage, but only your answers are graded. Blank space
+at the bottom of the page is neither read nor graded. Still, a wrong answer can
+teach you to read the passage more carefully next time. Keep those three roles in
+mind: visible, graded, and filler.
+
+Sequences in one batch usually have different lengths. **Padding** adds filler
+tokens so that every row has the same length, which creates a rectangular tensor:
 
 ```text
 tokens:
@@ -813,6 +911,9 @@ Two masks answer two different questions:
 |---|---|
 | Attention or visibility mask | May this position influence another representation? |
 | Loss or supervision mask | Should prediction error at this position contribute to the objective? |
+
+In exam terms, the **attention mask** says what you may read, and the **loss
+mask** says which answers are graded.
 
 A common representation is:
 
@@ -876,6 +977,8 @@ response loss
 A loss mask determines where scalar loss terms originate. It does not detach
 earlier visible positions from the graph, and it does not freeze their parameters.
 
+The lab shows that prompt rows receive gradient even though their positions
+carry no loss.
 The transparent lab used loss mask `[0, 0, 1]`: only the final response position
 contributed direct loss. That response assigned positive attention to both prompt
 positions, whose embedding rows received gradient norms `0.303322` and
@@ -899,6 +1002,10 @@ made it possible.
 
 ## 2.10 Transparent companion experiments
 
+We've cited several small experiments along the way. Before moving on, it helps
+to see them side by side, with what each one can and can't support. This is
+Chapter 1's habit of bounding a claim, applied to this chapter's evidence.
+
 The chapter's empirical claims come from four small, inspectable artifacts:
 
 | Experiment | What it establishes | What it does not establish |
@@ -920,6 +1027,10 @@ mechanisms being claimed. The Qwen3 inspection then verifies that those concepts
 connect to a real model interface.
 
 ## 2.11 Common reasoning failures
+
+Most mistakes about tokens and embeddings come from a handful of plausible
+shortcuts. Each one below sounds right, and each one fails somewhere in this
+chapter. Read the heading, try to say why it's wrong, then check the answer.
 
 ### “One character equals one token”
 
@@ -1042,6 +1153,31 @@ Worked solutions are provided in
 [the Chapter 2 solutions](../solutions/02-text-tokens-and-embeddings.md).
 
 ## 2.13 Summary and what follows
+
+The main points, with the sections that develop them:
+
+- Words, grapheme clusters, code points, UTF-8 bytes, tokenizer pieces and token
+  IDs are different units. The tokenizer, including normalization,
+  pre-tokenization and chat templates, is part of the model's contract (§2.2).
+- **BPE** learns merges once, offline, and replays them frozen at runtime. Byte
+  coverage, compression and understanding are three different claims (§2.3).
+- Token efficiency must be measured with a stated denominator. Our
+  Swedish-first prediction failed on three fixed strings, which supports a
+  mechanism, not a language-wide ranking (§2.4).
+- An **embedding table** turns $`[B,n]`$ IDs into $`[B,n,D]`$ vectors. IDs are
+  categorical addresses, and repeated IDs accumulate gradient into one shared
+  row (§2.5).
+- An embedding is a context-independent starting point. Contextual hidden states
+  build meaning under causal and positional constraints (§2.6).
+- Next-token loss trains the table. **Weight tying** adds a dense output path
+  that can reach rows never used as input (§2.7).
+- In the pinned Qwen3 snapshot, the tokenizer has 151,669 entries and the model
+  has 151,936 rows. Why the extra rows exist is not established (§2.8).
+- Attention masks and loss masks answer different questions. A position with no
+  local loss can still receive gradient. PAD is formatting; EOS is an event to
+  learn (§2.9).
+- Each companion experiment supports a bounded claim (§2.10), and the common
+  shortcuts in §2.11 each fail somewhere in this chapter.
 
 Text reaches a transformer through a learned discrete interface. Byte-level BPE
 separates universal byte coverage from corpus-dependent compression. Runtime

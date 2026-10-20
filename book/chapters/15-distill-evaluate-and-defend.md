@@ -1,5 +1,23 @@
 # 15. Distill, Evaluate, and Defend
 
+> Extraordinary claims require extraordinary evidence.
+>
+> — Carl Sagan, *Cosmos*
+
+Chapter 14 ended with an uncomfortable lesson. A reward can rise while answers
+get worse, an alert can point at the wrong cause, and a saved checkpoint can
+hide a failed job. Every training method in this book changes weights, and
+every one of them can produce a number that looks like progress without being
+progress. Chapter 14 told us how to diagnose that. It didn't tell us how to
+build a final claim that survives it.
+
+Sagan's rule is the standard for this moment. "Our model got better" sounds
+like an ordinary claim, but after fourteen chapters we know how many ways it can
+be false. We chose the data, the grader and the checkpoints, and we want the
+result to be good. So the evidence for the final claim has to be stronger than
+a rising score: it must say where the improvement came from, what it cost, and
+which alternative explanations it rules out.
+
 We now have several ways to change model behavior: next-token training,
 demonstrations, preferences and sampled rewards. There is another way to improve
 the answer delivered to a user: spend more computation after training, then
@@ -16,19 +34,42 @@ candidates and choose one, or train a student on the selected answers. All
 three can change what a user receives, but only the last changes the student's
 weights. Even then, the lesson depends on what we keep: a complete answer and
 ending, a single final token, or a teacher distribution at each prefix. This
-chapter follows those choices from selection to the student's actual objective.
+chapter follows those choices from selection to the student's actual objective,
+in six steps:
+
+1. Spend computation at inference: sample several candidates and select one,
+   and see why an oracle ceiling is not a selector's accuracy (§15.1–15.3).
+2. Turn selected answers into a training set by rejection sampling (§15.4).
+3. Distill a teacher into a student, with hard responses or soft distributions,
+   and derive the temperature-scaled gradient (§15.5–15.7).
+4. Revise a draft in a loop, and count both helpful and harmful changes (§15.8).
+5. Ask which histories the teacher teaches on, and what a top-$`k`$ tail hides
+   (§15.9).
+6. Defend a final claim: record the checkpoint's ancestry, then argue from
+   target capability to failures and the next test (§15.10–15.11).
+
+You need Chapter 3's cross-entropy, Chapter 7's evaluation contract, Chapter 9's
+SFT objective and Chapter 14's lesson that a scorer can be exploited. By the end
+you should be able to separate a model from the system that delivers its
+answers, derive the distillation gradient, and write a technical defense whose
+claims stop where its evidence stops.
 
 ## 15.1 One model, several answer-producing systems
+
+Before comparing any two results, we need to know what was compared. A recipe
+doesn't decide a cake by itself; the oven, the timer and the cook who picks
+the best of three batches matter too. A model is the same.
 
 A checkpoint does not uniquely specify an answer. The prompt template, sampling
 temperature, output cap, candidate count, tool use and selection rule also affect
 the result. An evaluation comparing a greedy baseline with a sixteen-candidate
-system is comparing complete answer-producing systems. That can be a useful
+system is comparing complete **answer-producing systems**: a checkpoint plus
+every rule that turns it into a delivered answer. That can be a useful
 product comparison, but it does not isolate a weight improvement.
 
-Begin with three distinct rules. Single sampling emits one candidate. Majority
-voting extracts a canonical answer from several candidates and selects the most
-frequent answer. Best-of-$`N`$ ranks candidates using a verifier or scorer and
+Begin with three distinct rules. **Single sampling** emits one candidate. **Majority
+voting** extracts a canonical answer from several candidates and selects the most
+frequent answer. **Best-of-$`N`$** ranks candidates using a verifier or scorer and
 returns the highest-ranked one. Record tie rules, invalid-output handling and
 candidate token costs for each. Candidate generation may be parallel, so total
 compute, latency and peak memory are related but different costs.
@@ -42,14 +83,21 @@ aggregation rule can identify them.
 
 ## 15.2 An oracle ceiling and a real selection rule
 
-If independent candidates are correct with probability $`p`$, the probability
-that at least one is correct is
+More candidates sound like more chances. But a chance only counts if the selector
+can recognize the right answer. Picture a lottery where you may buy many tickets,
+but someone else picks which ticket you cash. Buying more tickets raises the
+chance that you *own* a winner. Whether you *cash* one depends on who picks.
+
+If independent candidates are correct with probability $`p`$, each one is wrong
+with probability $`1-p`$, so all $`N`$ are wrong with probability $`(1-p)^N`$.
+The probability that at least one is correct is the complement:
 
 ```math
 P(\text{some correct among }N)=1-(1-p)^N.
 ```
 
-This is an availability ceiling for an ideal selector. It is not the accuracy
+This is an availability ceiling for an ideal selector, the **oracle ceiling**:
+the accuracy of a selector that always finds a correct candidate when one exists. It is not the accuracy
 of a deployed ranker. Correlated errors invalidate the independent approximation;
 a model that repeats the same wrong answer sixteen times does not gain sixteen
 independent opportunities. Retain candidate-level responses so correlation,
@@ -83,6 +131,11 @@ results explain why an oracle ceiling must not be presented as a deployed
 selector's performance, especially when the scorer rewards the wrong property.
 
 ### Actual candidates make the distinction testable
+
+The simulator draws answer classes from fixed probabilities. The next experiment
+asks whether the same gap appears when real, if tiny, decoders write the
+candidates. It matters because real candidates can be correlated, malformed or
+cut off in ways a class draw can't be.
 
 Chapter 7's [actual-candidate experiment](../../experiments/reports/2026-10-04-inference-selection.md)
 keeps this simulator as a reference, then replaces its class draws with 864
@@ -129,6 +182,11 @@ to inspect available answers, actual decisions and measured work separately.
 
 ## 15.3 Selection amplifies scorer errors
 
+Section 15.2's ranker failed on one built-in mistake. Why do scorer mistakes get
+worse, not better, as the pool grows? Think of hiring by interview. If interviews
+reward confidence a little too much, the candidate who wins out of a hundred is
+more likely to be someone unusually confident than someone unusually able.
+
 Let a scorer return $`S(y)=Q(y)+e(y)`$, where $`Q`$ denotes the desired quality and $`e`$
 denotes scoring error. Selecting the maximum $`S`$ favors candidates that combine
 good quality with favorable error. Increasing the candidate pool gives the
@@ -151,12 +209,22 @@ answer and counting it as verified changes the system contract.
 
 ## 15.4 Rejection sampling creates a new dataset
 
-Rejection sampling generates candidates, applies a criterion and keeps accepted
+Selection improves one answer at a time, and the extra candidates are paid for
+on every request. A cheaper idea is to select once, keep the winners, and train
+on them. The question is what that kept set actually teaches.
+
+**Rejection sampling** generates candidates, applies a criterion and keeps accepted
 responses for training. The conditional accepted distribution generally differs
 from the original teacher's distribution. Easy prompts with frequent success
 can contribute many examples; difficult prompts can disappear. If acceptance
-rate is $`a`$ and one candidate costs $`c`$ tokens on average, the simple expected
-generation cost per accepted example is $`c/a`$. This estimate assumes stable
+rate is $`a`$ and one candidate costs $`c`$ tokens on average, independent
+attempts need $`1/a`$ tries per acceptance on average, so
+
+```math
+\text{expected cost per accepted example}=c\cdot\frac{1}{a}=\frac{c}{a}.
+```
+
+This is the simple expected generation cost $`c/a`$. This estimate assumes stable
 independent attempts and omits variable lengths and batch overhead.
 
 Record teacher revision, exact prompt, sampling settings, candidate index,
@@ -228,8 +296,15 @@ specified real-model adapter later.
 
 ## 15.5 Hard responses and soft distributions
 
-Sequence distillation uses teacher-generated token sequences as targets. At each
-selected position, the observed target is one-hot. Distribution distillation
+Rejection sampling keeps only the teacher's chosen text. A teacher knows more
+than that: at every step it also had opinions about the tokens it didn't pick.
+Think of an answer key versus a tutor. The key says "the answer is B". The tutor
+says "B, though C was a reasonable guess and D was never close". **Distillation**
+trains a student model to imitate a teacher model, and it can learn from either
+kind of feedback.
+
+**Sequence distillation** uses teacher-generated token sequences as targets. At each
+selected position, the observed target is one-hot. **Distribution distillation**
 instead provides probabilities for several vocabulary outcomes at the same
 prefix. These alternatives communicate different information.
 
@@ -253,7 +328,14 @@ not ground truth.
 Use the [existing three-logit teacher](../../src/dongxi_llms/distillation_lab.py)
 $`u=(2,0.5,-1)`$ at temperature one. Its probabilities are approximately
 $`q=(0.785597,0.175290,0.039113)`$. Compare two forms of supervision at the same
-prefix for a student starting uniformly:
+prefix for a student starting uniformly. For softmax cross-entropy against any
+target vector $`y`$, the student-logit gradient is probability minus target,
+so with $`p=(1/3,1/3,1/3)`$ each row below is
+
+```math
+\frac{\partial L}{\partial z_i}=p_i-y_i=\frac13-y_i.
+```
+
 
 | Teaching signal | Target used by the student | Student-logit loss gradient |
 |---|---|---|
@@ -292,6 +374,10 @@ states: teacher-forced training on teacher responses and on-policy training on
 student prefixes expose different state distributions.
 
 ### From three logits to an actual generating student
+
+Three logits show the geometry of the update. They can't show whether a student
+that really generates text learns the teacher's behavior. The next experiment
+trains a tiny teacher and student, then grades what each one actually writes.
 
 The [response-distillation experiment](../../experiments/reports/2026-10-04-response-distillation.md)
 keeps the exact soft-target lesson below, but asks a different empirical
@@ -338,6 +424,12 @@ remains prepared, not executed.
 
 ## 15.6 Distillation loss and its derivative
 
+Section 15.5 used temperature one. Distillation usually adds a dial: a
+temperature that softens the teacher before the student copies it. We need to
+know what that dial does to the targets and to the gradient. Turning up the
+temperature is like asking the tutor to say more about the runner-up answers
+instead of only the winner.
+
 Let student logits be $`z`$, frozen teacher logits $`u`$, temperature $`\tau>0`$ and
 
 ```math
@@ -378,7 +470,15 @@ log-softmax coordinate:
 
 Only the $`-\tau^2\sum_jq_j^{(\tau)}\log p_j^{(\tau)}`$ part depends on the
 student. Weighting the derivative above by the detached teacher probabilities
-and using $`\sum_jq_j^{(\tau)}=1`$ produces
+gives
+
+```math
+\frac{\partial L_{\mathrm{KD}}}{\partial z_i}
+=-\tau^2\sum_j q_j^{(\tau)}\,\frac{\mathbf{1}\{i=j\}-p_i^{(\tau)}}{\tau}
+=-\tau\left(q_i^{(\tau)}-p_i^{(\tau)}\sum_j q_j^{(\tau)}\right).
+```
+
+Using $`\sum_jq_j^{(\tau)}=1`$ then produces
 
 ```math
 \frac{\partial L_{\mathrm{KD}}}{\partial z_i}
@@ -437,6 +537,9 @@ $`\lvert y\rvert`$ denotes sequence length.
 
 ## 15.7 A bounded distillation experiment
 
+We have derived the gradient. Now we check that an actual optimizer following
+it really reaches the teacher, and we say exactly how little that check proves.
+
 The executable microscope fits three student logits to a fixed teacher with
 logits 2, 0.5, −1. It runs 80 SGD updates and records temperature-scaled loss,
 student probabilities and teacher probabilities. Autograd is compared with the
@@ -472,6 +575,11 @@ The course's Qwen distillation pathway should inherit the frozen evaluation
 and source identity conventions already established for SFT and RL.
 
 ## 15.8 Refinement is a state machine, not a guarantee
+
+Sections 15.1–15.3 drew independent alternatives. A writer works differently:
+write a draft, get feedback, revise. An editor's notes can improve a draft, but
+they can also make it worse, and someone still decides whether to keep the
+change. **Refinement** is this loop for a model, and each of its parts can fail.
 
 Instead of drawing independent alternatives, we can revisit a current draft.
 Separate critique, proposed revision and acceptance. For question $`x`$, draft
@@ -529,6 +637,11 @@ answer count rise.
 
 ## 15.9 What histories does the teacher teach on?
 
+A driving student who only rides along while the instructor drives never learns
+how to recover from their own drift toward the curb. Distillation has the same
+gap. The teacher's targets are only as useful as the situations in which they
+are given.
+
 So far we held the prefix fixed. In a sequence model, it is part of the lesson.
 Teacher-produced text supplies teacher-produced histories. During deployment,
 the student also visits histories created by its own errors. A perfect fit to
@@ -545,7 +658,7 @@ L_F(s)=\sum_i q_i(s)\log\frac{q_i(s)}{p_i(s)},\qquad
 L_R(s)=\sum_i p_i(s)\log\frac{p_i(s)}{q_i(s)}.
 ```
 
-Forward KL weights the discrepancy by teacher probability. Reverse KL weights
+**Forward KL** $`L_F`$ weights the discrepancy by teacher probability. **Reverse KL** $`L_R`$ weights
 it by the student's probability, so its correction is not the same $`p-q`$
 residual. If the student can freely represent the complete teacher vector at
 this fixed state, both objectives minimize at $`p=q`$. Different compromises
@@ -559,6 +672,18 @@ $`\ell_i=\log(p_i/q_i)`$, the student-logit derivatives are
 \frac{\partial L_R}{\partial z_i}
 =p_i\left(\ell_i-\sum_jp_j\ell_j\right).
 ```
+
+The reverse-KL line takes one more step. Write $`L_R=\sum_jp_j\ell_j`$ and use
+$`\partial p_j/\partial z_i=p_j(\mathbf{1}\{i=j\}-p_i)`$ and
+$`\partial\ell_j/\partial z_i=\mathbf{1}\{i=j\}-p_i`$:
+
+```math
+\frac{\partial L_R}{\partial z_i}
+=\sum_jp_j(\mathbf{1}\{i=j\}-p_i)\ell_j+\sum_jp_j(\mathbf{1}\{i=j\}-p_i)
+=p_i\ell_i-p_i\sum_jp_j\ell_j+(p_i-p_i).
+```
+
+The last bracket is zero, which leaves the expression above.
 
 Teacher targets are detached and coordinates must denote the same vocabulary
 outcomes. Zero teacher support can make reverse KL infinite. Adding an arbitrary
@@ -588,6 +713,12 @@ This example is an authored conditional rule checked by `teacher_distribution`,
 not a claim that a real teacher reliably recovers from arbitrary mistakes.
 
 ### Sampling student states is not differentiating their occupancy
+
+The finite example fixed one wrong prefix by hand. The next experiment lets
+students produce their own prefixes and trains on them. It tests whether
+visiting the student's own states, changing KL direction or giving the teacher a
+private hint changes held-out results, which is the practical question behind
+the driving-lesson picture.
 
 Our [student-prefix experiment](../../experiments/reports/2026-10-04-student-prefix-distillation.md)
 actually trains 24 tiny neural students across three fixed seeds. Its teacher is
@@ -638,8 +769,15 @@ p_{\mathrm{bucket}})+q_TD_{\mathrm{KL}}(q(\cdot\mid T)\Vert p(\cdot\mid T)).
 ```
 
 To see the missing detail, write $`q_i=q_T\bar q_i`$ and $`p_i=p_T\bar p_i`$
-for $`i\in T`$, with $`\bar q`$ and $`\bar p`$ normalized inside the tail. Its
-contribution splits into
+for $`i\in T`$, with $`\bar q`$ and $`\bar p`$ normalized inside the tail.
+Substituting and splitting the logarithm gives
+
+```math
+\sum_{i\in T}q_i\log\frac{q_i}{p_i}
+=\sum_{i\in T}q_T\bar q_i\left(\log\frac{q_T}{p_T}+\log\frac{\bar q_i}{\bar p_i}\right).
+```
+
+Because $`\sum_{i\in T}\bar q_i=1`$, the tail contribution splits into
 
 ```math
 \sum_{i\in T}q_i\log\frac{q_i}{p_i}
@@ -672,6 +810,19 @@ This separates target geometry, state coverage and free-generation behavior—
 three questions that one decreasing training loss cannot answer.
 
 ## 15.10 The checkpoint genealogy is part of the claim
+
+We now have many kinds of evidence from many chapters. Before defending any
+claim, we must know which checkpoint each score belongs to and where that
+checkpoint came from. A court treats evidence the same way: it needs the **chain
+of custody**, the record of who held an item and when, before the item counts.
+For a model, that record is its **checkpoint genealogy**: each checkpoint's
+parent, data and recipe.
+
+The diagram and table below don't report new performance. They map the course's
+real checkpoints to their parents and to the report that holds each result. What
+they let you check is simple and important: which comparisons share a parent
+and are therefore controlled, and which are separate experiments that must
+never be read as one continuous improvement.
 
 A score is ambiguous without the ancestry of its weights. Record checkpoint,
 parent, tokenizer/template, training data, objective, precision and evidence
@@ -720,6 +871,11 @@ real model files. This diagram links real evidence but does not turn metadata
 consistency into portable weights, broad quality or external provenance.
 
 ## 15.11 Defending the final system
+
+The genealogy says where a checkpoint came from. It doesn't say whether the
+checkpoint is good, or at what. This last section assembles the whole case. A
+**technical defense** is an argument that connects a target capability to the
+evidence for it, and states plainly where that evidence stops.
 
 A technical defense follows a continuous argument:
 
@@ -812,6 +968,40 @@ Assignment F asks the reader to build one argument from the previous comparisons
 Include one retained negative result. The curated fixture's worse held-out loss, the symbolic policy's sub-baseline complete-path probability or an unidentifiable scaling optimum gives the defense a concrete limit. State whether the next experiment would change data, objective, measurement or implementation. That choice should follow the observed failure rather than the attractiveness of a new algorithm.
 
 The [six assignment briefs](../../docs/COURSE_ASSIGNMENTS.md) specify artifacts and reference reasoning, while the [extension notebooks](../../notebooks/extensions/cs336/README.md) expose the computations. Their prepared and executed references are course evidence. A learner's mastery still requires the reader's own prediction, modification and explanation. Keep that distinction when using this chapter to prepare a final report or a public argument.
+
+## Chapter summary
+
+- A checkpoint is not an answer. Prompt template, sampling settings, candidate
+  count and selection rule together make an **answer-producing system**, and a
+  comparison must say which parts changed (§15.1).
+- The **oracle ceiling** $`1-(1-p)^N`$ says whether a correct candidate is
+  available. It is not the accuracy of majority voting or a ranker. In the
+  controlled simulation, a flawed ranker falls to zero while availability
+  rises (§15.2).
+- Selecting the maximum score favors favorable scoring error. A larger pool gives
+  that error more room, so a selected score can't validate its own scorer (§15.3).
+- **Rejection sampling** builds a new dataset with its own population. Keep
+  rejected outputs, source coverage and target exposure, because equal example
+  counts aren't equal supervision (§15.4).
+- **Sequence distillation** teaches selected text; **distribution distillation**
+  teaches the teacher's probabilities. The temperature-scaled KD gradient is
+  $`\tau(p-q)`$, and the $`\tau^2`$ factor offsets gradient shrinkage at high
+  temperature (§15.5–15.7).
+- **Refinement** is a critique, revise and accept loop. Count helpful and
+  harmful changes and every rejected round, not just the final score (§15.8).
+- Prefix source, KL direction and teacher context are separate choices.
+  Training at sampled student states doesn't differentiate how often they are
+  visited, and a top-$`k`$ tail bucket can hide a positive full KL (§15.9).
+- A score needs its **checkpoint genealogy**, and a **technical defense** runs
+  from target capability through data, recipe, measured change, cost and
+  failures to the next test (§15.10–15.11).
+
+Looking back over the book, the same argument recurs at every stage. A
+next-token loss, a demonstration, a preference, a verifier reward and a teacher
+distribution are all measurements of something we care about. Each can be
+optimized past the point where it still measures that thing. Every chapter has
+asked the question this chapter makes final: what exactly did we measure, on
+which population, and what does it fail to show?
 
 ## 15.12 Deep questions
 

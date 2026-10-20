@@ -1,6 +1,34 @@
 # 9. Supervised Fine-Tuning
 
-A pretrained decoder can continue text without reliably answering a request. Supervised fine-tuning supplies demonstrations of the conditional behavior we want: given this conversation, produce this response and stop at this boundary. The model remains a next-token predictor. We change the distribution of contexts, the targets receiving loss, and often which parameters can move.
+> 'Begin at the beginning,' the King said, very gravely, 'and go on till you
+> come to the end: then stop.'
+>
+> — Lewis Carroll, *Alice's Adventures in Wonderland*
+
+Chapter 8 ended with an audited dataset. Every token has an owner, every answer
+has an END target, and every example has a recorded source. But nothing has
+been trained yet. A dataset is a contract about what should be learned. It
+can't tell us whether an optimizer will learn it, or what the resulting model
+will do once it writes on its own.
+
+A pretrained decoder can continue text without reliably answering a request. **Supervised fine-tuning** (SFT) supplies demonstrations of the conditional behavior we want: given this conversation, produce this response and stop at this boundary. The model remains a next-token predictor. We change the distribution of contexts, the targets receiving loss, and often which parameters can move.
+
+The King's advice sounds too obvious to need saying. Our
+measured models show that it isn't. One of them begins at the beginning, writes
+the right word, and then doesn't stop. A response has to get both halves right:
+the content and the ending. This chapter follows both through training in five
+steps:
+
+1. Read one real response from three models, and see why a correct first word
+   isn't enough (the opening example and §9.1).
+2. Derive the supervised loss and follow its gradient into the decoder
+   (§9.2–9.3).
+3. Turn that gradient into correct updates, including accumulation across
+   microbatches and restarts (§9.4–9.6).
+4. Compare tuning every weight with a constrained low-rank update, LoRA
+   (§9.7–9.9).
+5. Read the result at its real boundary, and connect SFT to teacher-written
+   data (§9.10–9.13).
 
 This chapter spans Days 12–14. It combines the [objective and gradient notebook](../../notebooks/day-12/01_sft_objective_and_gradient_paths.ipynb), [accumulation and restart notebook](../../notebooks/day-12/02_accumulation_and_checkpoint_identity.ipynb), [bounded training notebook](../../notebooks/day-13/01_tiny_assistant_training.ipynb), and [full versus low-rank adaptation (LoRA) notebook](../../notebooks/day-14/01_full_sft_lora_and_recipe_defense.ipynb). The [lab guide](../labs/09-supervised-fine-tuning.md) provides the run order; [worked solutions](../solutions/09-supervised-fine-tuning.md) explain the deep questions.
 
@@ -71,6 +99,16 @@ this first item was selected by its fixed order, not because it looked striking.
 
 ## 9.1 What transfers from pretraining?
 
+The opening example showed one trained model succeeding where another failed.
+Before we look at how training works, we should ask what it can plausibly add.
+A pretrained model already knows a lot. SFT might teach it new things, or it
+might only teach it how to show what it already knows.
+
+A new employee is a useful picture. Someone who already knows the work may
+only need to learn the company's forms. Someone else may need to learn the
+work itself. From the outside, both start filling in the forms correctly, so
+watching the forms alone can't tell you which one happened.
+
 Pretraining establishes representations and continuation patterns across a broad corpus. SFT supplies a narrower distribution of demonstrations. It can make an existing ability accessible through an interface, strengthen a task behavior, teach format compliance or introduce new factual associations. These are distinct outcomes and require distinct evaluation slices.
 
 A model that already knows a fact may answer it correctly after learning when to give a direct response. That does not prove SFT created the fact. Conversely, a model can memorize a new answer without learning a transferable instruction. Compare held-out values, unseen phrasings and unrelated regression tasks.
@@ -112,6 +150,11 @@ remain in [Chapter 15's genealogy](15-distill-evaluate-and-defend.md#1510-the-ch
 
 ## 9.2 Derive the supervised objective
 
+We have demonstrations. Now we need one number that says how well the model
+reproduces them. The natural choice is the probability the model gives to the
+demonstrated answer. Taking logs turns that probability into the next-token
+loss of Chapter 3, restricted to the tokens the assistant owns.
+
 For demonstration $`j`$, let $`x_j`$ be its conversation context and $`y_j=(y_{j,1},\ldots,y_{j,n_j})`$ its assistant sequence, including the intended ending. The causal model gives
 
 ```math
@@ -119,20 +162,28 @@ p_\theta(y_j\mid x_j)=\prod_{t=1}^{n_j}
 p_\theta(y_{j,t}\mid x_j,y_{j,\lt t}).
 ```
 
-Taking negative natural logs turns products into sums:
+Taking negative natural logs turns products into sums, because the log of a product is the sum of the logs:
+
+```math
+-\log p_\theta(y_j\mid x_j)
+=-\log\prod_{t=1}^{n_j}p_\theta(y_{j,t}\mid x_j,y_{j,\lt t})
+=-\sum_{t=1}^{n_j}\log p_\theta(y_{j,t}\mid x_j,y_{j,\lt t}).
+```
+
+We call this the example's loss:
 
 ```math
 L_j(\theta)=-\sum_{t=1}^{n_j}
 \log p_\theta(y_{j,t}\mid x_j,y_{j,\lt t}).
 ```
 
-The common token-mean objective divides the total sum by the number of supervised targets, $`N=\sum_jn_j`$:
+The common **token-mean objective** divides the total sum by the number of supervised targets, $`N=\sum_jn_j`$:
 
 ```math
 L(\theta)=\frac{1}{N}\sum_jL_j(\theta).
 ```
 
-For a padded full transcript, use ownership mask $`m_{b,t}`$ and validity mask $`v_{b,t}`$. Logits $`Z`$ have shape $`[B,n,V]`$ and labels have shape $`[B,n]`$. After one causal shift, the logit gradient is
+For a padded full transcript, use ownership mask $`m_{b,t}`$ and validity mask $`v_{b,t}`$. Logits $`Z`$ have shape $`[B,n,V]`$ and labels have shape $`[B,n]`$. Chapter 3 derived the derivative of one row's softmax cross-entropy, $`\partial L/\partial z_i=p_i-q_i`$. Here the target $`q`$ is one-hot at the next token $`x_{b,t+1}`$. Each scored row enters the token mean with weight $`1/N`$, and an ignored row enters with weight zero; the product $`m_{b,t+1}v_{b,t+1}`$ is exactly that on/off switch. After one causal shift, the logit gradient is
 
 ```math
 \frac{\partial L}{\partial z_{b,t,i}}=
@@ -155,7 +206,8 @@ the retained Qwen outputs. Suppose the two relevant prediction rows are:
 | After demonstrated `red` |(0.2, 0.3, 0.5)|END|0.693147|
 
 The complete demonstrated answer has probability $`0.6\times0.5=0.3`$.
-Its summed NLL is $`-\log(0.3)=1.203973`$; the two-target mean is $`0.601986`$.
+Its summed NLL is $`-\log(0.3)=1.203973`$, the same as adding the two rows,
+$`0.510826+0.693147`$; the two-target mean is $`0.601986`$.
 These are different units: a sequence loss and nats per supervised target.
 The prompt supplies the first state but contributes no direct target here.
 
@@ -166,6 +218,14 @@ mean NLL now mean that stopping improved?
 lower because we removed the harder target. No update or generation occurred.
 The direct logit gradients under the original two-target mean are
 $`(-0.2,0.15,0.05)`$ at the first row and $`(0.1,0.15,-0.25)`$ at the second.
+Each is probability minus one-hot target, divided by the two targets:
+
+```math
+\tfrac{1}{2}\left[(0.6,0.3,0.1)-(1,0,0)\right]=(-0.2,0.15,0.05),
+\qquad
+\tfrac{1}{2}\left[(0.2,0.3,0.5)-(0,0,1)\right]=(0.1,0.15,-0.25).
+```
+
 Gradient descent favors `red` at the header and END after `red`. Removing END
 makes the second row's direct gradient zero; the first row's gradient doubles
 because its denominator changes from two targets to one. Loss masking changes
@@ -192,7 +252,7 @@ deliberate broken variant explains why learning a correct prefix is weaker
 than learning the complete response. It does not attribute the measured LoRA
 failure to missing END labels: that real recipe included its ending targets.
 
-An example-mean objective instead averages $`L_j/n_j`$ across examples. This weights each conversation equally even when answer lengths differ. Choose intentionally and retain the denominator in logs; the two objectives need not prefer the same parameters.
+An **example-mean objective** instead averages $`L_j/n_j`$ across examples. This weights each conversation equally even when answer lengths differ. Choose intentionally and retain the denominator in logs; the two objectives need not prefer the same parameters.
 
 For answers with two and eight scored targets, a global token mean gives the
 long answer eight of ten target positions; an example mean gives each answer
@@ -213,7 +273,22 @@ shows the same weighting mechanism at the data-mixture level.
 
 ## 9.3 Gradients reach the shared decoder
 
-Let the final hidden state be $`h_t\in\mathbb{R}^D`$ and output matrix $`W_{\mathrm{out}}\in\mathbb{R}^{V\times D}`$. With row-vector batch notation, $`z_t=h_tW_{\mathrm{out}}^\top`$. The loss derivative sends pressure to both sides:
+So far the gradient stops at the logits. But the logits are computed by the
+whole decoder, and the parameters we update live inside it. This section
+follows the pressure backward, from the output head to the prompt's
+embeddings.
+
+Let the final hidden state be $`h_t\in\mathbb{R}^D`$ and output matrix $`W_{\mathrm{out}}\in\mathbb{R}^{V\times D}`$. With row-vector batch notation, $`z_t=h_tW_{\mathrm{out}}^\top`$. Write one logit out in components to see which numbers it touches:
+
+```math
+z_{t,i}=\sum_{d=1}^{D}h_{t,d}\,(W_{\mathrm{out}})_{i,d},
+\qquad
+\frac{\partial z_{t,i}}{\partial h_{t,d}}=(W_{\mathrm{out}})_{i,d},
+\qquad
+\frac{\partial z_{t,i}}{\partial (W_{\mathrm{out}})_{i,d}}=h_{t,d}.
+```
+
+Apply the chain rule, summing over the logits $`i`$ for $`h_t`$. The loss derivative sends pressure to both sides:
 
 ```math
 \frac{\partial L}{\partial h_t}
@@ -231,13 +306,18 @@ Tied input/output embeddings deserve care. A row unused as an input can still re
 
 ## 9.4 A readable update loop
 
+Knowing the gradient isn't the same as making a correct update. The order of
+operations matters, and some mistakes, like a wrong denominator, raise no
+error at all. This section writes the loop out in full so each step can be
+checked.
+
 The transparent implementation separates loss sum from target count. Its main loop performs: clear old gradients, run the model, align labels once, compute summed answer NLL, divide by the correct denominator, backpropagate, check finiteness, clip, and step the optimizer.
 
 For a small experiment, AdamW is a reasonable declared choice. Learning rate controls the scale of updates; clipping bounds the accumulated gradient norm before the step. Clipping is not a substitute for finite-value checks. Weight decay acts through the optimizer and should be reported separately from loss terms.
 
 For a production BF16 path, autocast changes eligible forward operations. It does not imply every parameter, optimizer state or reduction uses two bytes. The runner loads BF16 weights explicitly, uses SDPA, checks the hardware, and records the actual choices. It does not claim a throughput estimate before profiling.
 
-Teacher forcing supplies the demonstrated answer prefix during training. During free generation, the model consumes its own previous outputs. Low answer NLL can coexist with drifting generations, as Chapter 6 showed. Evaluation therefore needs both teacher-forced likelihood and free-response task behavior.
+**Teacher forcing** supplies the demonstrated answer prefix during training, rather than the model's own earlier outputs. During free generation, the model consumes its own previous outputs. Low answer NLL can coexist with drifting generations, as Chapter 6 showed. Evaluation therefore needs both teacher-forced likelihood and free-response task behavior.
 
 
 ### From the objective to one update
@@ -265,13 +345,26 @@ precision and checkpointing controls.
 
 ## 9.5 Accumulation must preserve weighting
 
-A logical batch can be split into microbatches when memory is limited. Suppose microbatch $`r`$ has summed loss $`S_r`$ and supervised count $`N_r`$. The desired accumulated objective is
+Real models often can't fit a whole batch in memory at once. We then split the
+batch, add up the gradients from each piece, and take one step. Splitting is
+safe only if every target keeps the weight it would have had in the unsplit
+batch.
+
+A logical batch can be split into **microbatches** when memory is limited; summing their gradients before one step is called **gradient accumulation**. Suppose microbatch $`r`$ has summed loss $`S_r`$ and supervised count $`N_r`$. The desired accumulated objective is
 
 ```math
 L=\frac{\sum_rS_r}{\sum_rN_r}.
 ```
 
-Backward each $`S_r/\sum_qN_q`$, then perform one optimizer step. Averaging microbatch means instead gives $`\frac{1}{R}\sum_rS_r/N_r`$, which overweights short-answer microbatches when counts differ.
+Backward each $`S_r/\sum_qN_q`$, then perform one optimizer step. Gradients add, so the accumulated gradient is the gradient of the sum, and the sum is the desired objective:
+
+```math
+\sum_r\frac{S_r}{\sum_qN_q}=\frac{\sum_rS_r}{\sum_qN_q}=L.
+```
+
+Averaging microbatch means instead gives $`\frac{1}{R}\sum_rS_r/N_r`$, which overweights short-answer microbatches when counts differ.
+
+A small case shows the size of the error. Let microbatch one hold 2 targets and microbatch two hold 8. In the joint batch every target has weight $`1/10`$. Averaging the two microbatch means gives each short-answer target weight $`\tfrac12\cdot\tfrac12=\tfrac14`$ and each long-answer target weight $`\tfrac12\cdot\tfrac18=\tfrac1{16}`$, a fourfold difference that the joint batch never had.
 
 The accumulation notebook compares gradients from a joint batch with token-weighted split batches. It also deliberately averages means to expose the failure. Use a shared initialization, no stochastic dropout and identical context masks so the only difference is weighting. Floating-point reduction order may introduce tiny numerical differences; define a justified tolerance rather than demanding impossible bitwise equality.
 
@@ -299,6 +392,9 @@ the weighting change; numerical equality uses the declared floating-point tolera
 
 ### Count labels before setting a budget
 
+A real tokenizer measurement shows how far input positions and training
+targets can differ.
+
 The [pinned tokenizer measurement](../../experiments/reports/2026-10-05-base-tokenizer-sizing.md)
 makes this distinction concrete without loading a model. The proposed 20-update
 profile selects 80 original examples. Their full transcripts contain 3,154 input
@@ -316,6 +412,9 @@ These are measured token encodings and schedule requirements, not executed
 updates, sampled completions, memory-fit evidence or a learned assistant.
 
 ### A real profile can improve NLL without producing a correct answer
+
+The next run shows the gap between likelihood and behavior on a real model:
+the loss fell a lot, and no generated answer was correct.
 
 The subsequent [native Spark profile](../../experiments/reports/2026-10-05-native-base-profile.md)
 executed this exact schedule. All 20 updates had finite loss and gradient norms;
@@ -341,6 +440,15 @@ weights do not replace a fresh initialization in the predeclared full/LoRA
 comparison. No publication-test result or broad assistant improvement follows.
 
 ## 9.6 Checkpoint identity is wider than weights
+
+Long runs get interrupted. When one restarts, it should continue the same
+experiment, not quietly begin a slightly different one. That takes more than
+the weights.
+
+Saving only the weights is like saving a chess position without noting whose
+move it is or which castling rights remain. The board looks right, but the game
+can't continue exactly as it would have. An optimizer's moment estimates and
+the data cursor play that role here.
 
 Saving weights permits a forward reconstruction. Resuming optimization also needs optimizer state, scheduler state if present, update index, data order, random states, template, tokenizer, mask policy and configuration. A correct restart should reproduce the next update under the same deterministic assumptions.
 
@@ -369,6 +477,10 @@ the schedule horizon, tokenizer or loss denominator is. It requires a declared
 new experiment or migration, not a relaxed equality check. Cumulative targets
 also must not reset merely because the resumed process has a new directory.
 
+A replay on the real pretrained model shows that restarting from a committed
+boundary can reproduce the same updates, and that physical work and numerical
+progress must be counted separately.
+
 The [actual native full/LoRA replay](../../experiments/reports/2026-10-05-native-sft-replay.md)
 now tests this on the pinned pretrained model. Both fresh update 10→20 processes
 match all ten numerical updates, serialized tensor entries and final generated
@@ -386,13 +498,26 @@ Checkpoint selection uses development criteria declared in advance. “Choose wh
 
 ## 9.7 Full tuning changes all allowed parameters
 
-Full SFT allows the optimizer to update every trainable parameter. It offers flexible adaptation, but its optimizer state and gradients can dominate memory. A rough AdamW accounting for $`P`$ parameters distinguishes weights, gradients and two moment tensors. Additional master weights, activations, temporary buffers and allocator overhead depend on the implementation. Do not promise memory sufficiency from a parameter-only estimate.
+We can now train correctly and restart safely. The next question is which
+parameters to train. The simplest answer is all of them.
+
+**Full fine-tuning**, or full SFT, allows the optimizer to update every trainable parameter. It offers flexible adaptation, but its optimizer state and gradients can dominate memory. A rough AdamW accounting for $`P`$ parameters distinguishes weights, gradients and two moment tensors. Additional master weights, activations, temporary buffers and allocator overhead depend on the implementation. Do not promise memory sufficiency from a parameter-only estimate.
 
 Full tuning can alter useful broad behavior while improving the target interface. Evaluate general continuation, arithmetic, format compliance and concise-answer behavior with the same contract before and after. A narrowly successful recipe may be appropriate for a specialized system; its limitations should remain visible.
 
 The microscopic full run uses fixed seed, a bounded update budget and four known requests. It learns the fixture if the observed report supports that conclusion. There is no unseen-language generalization claim, and no best-seed selection.
 
 ## 9.8 LoRA constrains an update
+
+Updating every weight is expensive: each one needs a gradient and two Adam
+moments. **Low-rank adaptation**, or **LoRA**, asks whether the change we need
+could be described with far fewer numbers.
+
+A tailor altering a suit is a fair picture. The original fabric stays as it
+is, and only a few seams change. LoRA leaves each chosen weight matrix frozen
+and adds a small correction built from two thin matrices. The **rank** $`r`$
+is the width of those thin matrices; it caps how many independent directions
+the correction can use.
 
 For a linear weight $`W_0\in\mathbb{R}^{d_{\mathrm{out}}\times d_{\mathrm{in}}}`$, LoRA freezes $`W_0`$ and learns
 
@@ -401,6 +526,12 @@ W=W_0+\frac{\alpha_{\mathrm{LoRA}}}{r}BA,
 \qquad
 A\in\mathbb{R}^{r\times d_{\mathrm{in}}},
 \quad B\in\mathbb{R}^{d_{\mathrm{out}}\times r}.
+```
+
+Count the entries of the two factors:
+
+```math
+\underbrace{r\,d_{\mathrm{in}}}_{A}+\underbrace{d_{\mathrm{out}}\,r}_{B}=r(d_{\mathrm{in}}+d_{\mathrm{out}}).
 ```
 
 The trainable adapter count is $`r(d_{\mathrm{in}}+d_{\mathrm{out}})`$ rather than $`d_{\mathrm{in}}d_{\mathrm{out}}`$. The rank of the update is at most $`r`$. The base matrix remains present, so small trainable state does not mean the whole base model occupies little memory. Activations also remain necessary for adapter training.
@@ -424,7 +555,15 @@ the matrix rank bound is not a rank bound on the network's behavior.
 Does that make a safer unchanged starting policy?
 
 **Reference reasoning:** it makes the first-order adapter unable to start.
-For gradient $`G_W=\partial L/\partial W`$, the two paths are
+For gradient $`G_W=\partial L/\partial W`$, perturb each factor and use the Frobenius inner product $`\langle X,Y\rangle=\mathrm{tr}(X^\top Y)`$. Since $`dW=\frac{\alpha_{\mathrm{LoRA}}}{r}(dB\,A+B\,dA)`$, the change in loss is
+
+```math
+dL=\langle G_W,dW\rangle
+=\frac{\alpha_{\mathrm{LoRA}}}{r}\left(\langle G_W,dB\,A\rangle+\langle G_W,B\,dA\rangle\right)
+=\frac{\alpha_{\mathrm{LoRA}}}{r}\left(\langle G_WA^\top,dB\rangle+\langle B^\top G_W,dA\rangle\right).
+```
+
+Reading off the coefficient of each perturbation gives the two paths:
 
 ```math
 \frac{\partial L}{\partial A}=\frac{\alpha_{\mathrm{LoRA}}}{r}B^\top G_W,
@@ -461,11 +600,18 @@ cause. The next section puts the same outputs in their complete denominator.
 
 ## 9.9 Compare recipes under named constraints
 
+We now have two ways to fine-tune. Comparing them fairly is harder than it
+sounds, because the methods differ in more than one way at once. A fair
+comparison has to say which differences it holds fixed and which it lets vary.
+
 A full-versus-LoRA comparison changes capacity, optimizer state and often preferred learning rate. Using the same learning rate is a useful mechanism control, but may not give each method its best recipe. Conversely, tuning LoRA extensively while giving full tuning one attempt is an unequal selection budget.
 
 Report two comparisons when feasible: a fixed-recipe intervention and a separately declared tuned-recipe comparison. Match training data, token exposure, seed policy and evaluation contract. State whether compute, wall time, updates or supervised tokens define the budget; all four cannot usually be equal at once.
 
 The Day 14 notebook runs both microscopic modes from the same base initialization and plots observed loss against optimizer updates. Its evidence concerns the four symbolic examples, not the general usefulness of LoRA. The Spark plan proposes full SFT versus LoRA at a frozen data/token budget, followed by a Qwen3-1.7B-Base transfer check only after the smaller recipe is healthy. The smaller fixed-recipe runs are now measured below; the larger transfer check remains unexecuted.
+
+The short runs show that both methods run and recover on the real model, and
+that neither answers correctly yet.
 
 The short native acceptance runs now supply a narrower observation: full and
 rank-8 Q/V LoRA both recover exactly, but neither answers the eight fixed
@@ -473,6 +619,9 @@ development prompts correctly after 20 updates. Full tuning has 596,049,920
 trainable parameters versus LoRA's 1,146,880; observed CUDA peaks are 6.03GB and
 2.06GB respectively. These are specific allocated-byte peaks, not total unified
 memory or a universal ratio. The 400-update comparison is a separate fresh run.
+
+The 400-update comparison is the main result: the same labels, very different
+behavior.
 
 That [fixed-recipe comparison](../../experiments/reports/2026-10-05-native-sft400-comparison.md)
 has now completed. Both arms see 9,321 successful training labels and 63,378
@@ -501,6 +650,9 @@ prediction of the measured winner.
 
 ### Test held-out values without changing the answer rule
 
+The held-out panel asks the same question on 120 new values, under a strict
+rule: a correct prefix followed by extra text counts as wrong.
+
 The subsequent [original publication comparison](../../experiments/reports/native-assistant-comparison-20261005-run-02/README.md)
 contains 120 items: copy, reverse and extract for each of 40 held-out lexical-value
 source groups. All three policies use identical actual prompt token IDs,
@@ -528,6 +680,9 @@ different scoring rule. Its unconstrained format check passes all 120 outputs
 in every arm, including the capped wrong answers. Neither execution success
 nor format validity establishes answer correctness.
 
+The uncertainty estimate below is narrow, but it is narrow about a small,
+synthetic population.
+
 Source-group resampling of the aligned 120 greedy IDs uses 2,000 draws and
 seed 1010. The observed full-minus-Base strict gain is 100 percentage points;
 all group draws return the same gain. A degenerate interval is not a promise
@@ -553,6 +708,10 @@ retains the failed BF16 check, distinct later FP32 checks and their evidence.
 
 ## 9.10 Interpret gains and regressions
 
+A finished run invites stories about why it went the way it did. Several
+stories usually fit the same numbers. This section lists the common ones and
+the checks that tell them apart.
+
 ![Measured full/LoRA training NLL and gradient norm against successful training-label exposure](../../experiments/reports/native-sft400-comparison-figures/learning-curves.png)
 
 Both lines come from the actual fixed 400-update runs. They share label exposure,
@@ -566,6 +725,9 @@ Training should stop on nonfinite states, exhausted declared runtime, violated m
 
 ## 9.11 Read the experiment at its actual boundary
 
+Every experiment has a boundary between what was run and what was only planned.
+Before we leave SFT, we mark that boundary for this chapter's evidence.
+
 The [original contract](../../experiments/specs/2026-10-04-evaluation-and-sft-course.md)
 separates the tiny CPU mechanisms from the real-model comparison. The actual
 0.6B runs and held-out-value evaluation above are measured; the proposed
@@ -574,6 +736,10 @@ does not establish the outcome of an unrun stage. [Appendix D](../appendices/d-r
 and the [lab](../labs/09-supervised-fine-tuning.md) provide the operational route.
 
 ## 9.12 Teacher text uses the same supervised objective
+
+Our demonstrations so far were written for the course. They could also come
+from a stronger model, as in Chapter 8's teacher laboratory. The loss doesn't
+change, but what the loss can tell us does.
 
 A teacher's emitted sequence can supply SFT targets. Response NLL still scores
 those observed targets; it does not reveal the teacher's probability vector or
@@ -589,7 +755,45 @@ The original task asks about parity on balanced source pairs. The rollout gramma
 
 In the three-seed reference, broader coverage has higher held-out complete-path probability than repetition for each seed, but the difference is small for one seed. After policy updates, complete-path probability remains below the always-terminated constant baseline's 0.5. Usable gradients and improved termination therefore coexist with weak relational generalization. Read the source-level paired results before proposing a larger recipe. The existing full/LoRA native result remains a separate checkpoint family and a separate empirical comparison.
 
+## Chapter summary
+
+- A response must get both the content and the ending right. In the opening
+  example, Full400 answers `item100` and stops, while LoRA writes the right
+  word and keeps going (opening example).
+- SFT can expose an existing ability, teach a format or add new associations.
+  These are different outcomes and need different evaluation slices. A
+  post-trained starting checkpoint can't test a base-to-assistant transition
+  (§9.1).
+- The SFT loss is the negative log probability of the assistant's tokens,
+  including END. Its logit gradient is probability minus target, scaled by
+  the mask and the $`1/N`$ denominator. Removing a target changes both which
+  corrections exist and how the rest are weighted (§9.2).
+- The gradient reaches the output head, every decoder block and the prompt's
+  embeddings through the chain rule, even though the prompt has no direct
+  loss (§9.3).
+- A correct update divides by the number of supervised targets, checks for
+  non-finite values, clips, then steps. Gradient accumulation must divide
+  every microbatch by the whole window's target count (§9.4–9.5).
+- Lower NLL doesn't guarantee correct generation. A real 20-update profile
+  improved NLL a lot and produced no exact answers (§9.5).
+- A restartable checkpoint includes optimizer state, data order, random state
+  and the training contract, not only weights. Physical work and numerical
+  progress are counted separately (§9.6).
+- Full fine-tuning updates every allowed parameter. **LoRA** freezes each
+  chosen matrix and learns a rank-$`r`$ correction $`BA`$ with
+  $`r(d_{\mathrm{in}}+d_{\mathrm{out}})`$ parameters. Zero $`B`$ and random
+  $`A`$ start the model unchanged but still let $`B`$ learn (§9.7–9.8).
+- In the measured fixed-recipe comparison, both arms saw the same labels.
+  Full400 answered 120/120 held-out-value items and LoRA400 answered 0/120.
+  That result holds for this recipe, not for every LoRA recipe (§9.9).
+- Diagnose regressions with item-level evaluation, keep unexecuted stages
+  labeled as unexecuted, and remember that teacher-written text uses the same
+  objective without revealing the teacher's probabilities (§9.10–9.12).
+
 ## 9.13 Follow the distillation extension before exercises 13–16
+
+Exercises 13–16 build on material that Chapter 15 develops in full. This
+section says where to find it.
 
 Use Chapter 15 and [the Day 26 response notebook](../../notebooks/day-26/03_response_level_distillation.ipynb)
 for the selection rule, missing-source coverage, printed-step versus final-answer
@@ -598,6 +802,8 @@ extension of the present SFT mechanism. The numbered exercises and their worked
 solutions remain stable.
 
 ## 9.14 Exercises and the next question
+
+The exercises follow the chapter in order; 17–19 return to the measured runs.
 
 1. Derive answer-only NLL from the conditional sequence probability.
 2. State the shapes of logits, labels, ownership masks and output projection.

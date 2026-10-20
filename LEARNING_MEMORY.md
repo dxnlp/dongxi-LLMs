@@ -1,5 +1,13 @@
 # Learning Memory and Production Queue
 
+Post-training companion reading, 2026-10-20: the learner is reading
+[Jurafsky & Martin, SLP3 Chapter 8](https://web.stanford.edu/~jurafsky/slp3/8.pdf)
+and asked to study post-training from it together with the course. Pair it with
+Chapters 8–13 (instruction data, SFT, preferences/reward models, DPO, generation
+as a policy, GRPO) and the Day 18 DPO and Day 23 GRPO/RLVR artifacts. This is a
+reference only so far: the chapter's contents haven't been mapped to sections yet,
+nothing is assessed, and Day 9 is unchanged.
+
 Chapter GIF production, 2026-10-11: the learner explicitly requested a goal to
 finish the reviewed plan and put every GIF in its corresponding chapter.
 `ANIM-CHAPTER-GIFS-001` is approved for 28 placements over all fifteen chapters:

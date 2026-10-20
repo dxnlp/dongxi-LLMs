@@ -1,12 +1,37 @@
 # 11. Direct Preference Optimization
 
-A preference tells us that one answer is better than another. The previous
-chapter turned this judgment into a scalar reward model, then warned that
-optimizing the scalar can discover its mistakes. Can we use the comparison to
-train the language policy directly? Direct Preference Optimization, or DPO,
-answers that question through a change of variables. Its simplicity becomes
-useful only when we understand what is being compared, which reference is held
-fixed, and what the loss does not guarantee.
+> Our life is frittered away by detail. … Simplicity, simplicity, simplicity!
+>
+> — Henry David Thoreau, *Walden*
+
+Chapter 10 ended with a frozen reward model and a warning. The obvious next
+step is to train a policy against that reward. But that route has many moving
+parts. We need the reward model itself, a loop that samples fresh answers from
+the policy, scoring for every sample, and a penalty that keeps the policy from
+drifting too far. Every one of those parts can fail. And Chapter 10 showed that
+a policy pushing hard on a fitted reward will find the places where the reward
+is wrong.
+
+Thoreau's advice is to cut away detail until only what matters is left. That is
+the spirit of **Direct Preference Optimization (DPO)**: a way to train the
+language policy straight from recorded preference pairs, with no separately
+fitted reward model and no sampling loop. DPO gets there through a change of
+variables. Its simplicity is useful only when we understand what is being
+compared, which reference is held fixed, and what the loss does not guarantee.
+So the chapter also asks what the simpler recipe hides. We take it in six steps:
+
+1. Write down what we want: high reward, with a penalty for moving away from a
+   fixed reference policy (§11.1).
+2. Solve that problem exactly when there are only a few possible answers. The
+   best policy turns out to be the reference, tilted toward reward (§11.2).
+3. Turn the solution around so that reward is written in terms of the policy.
+   An awkward normalizing constant cancels, and the DPO loss appears (§11.3).
+4. Read the gradient, see what $`\beta`$ means, and meet a counterexample where
+   the loss improves while the preferred answer gets less likely (§11.4).
+5. Implement it carefully: sequence sums, length and a truly frozen
+   reference (§11.5–11.7).
+6. Test it in controlled experiments, including one where DPO wins its pairs
+   but loses at generation (§11.8).
 
 This chapter builds on sequence likelihood, Bradley–Terry modeling, and
 supervised fine-tuning. Days 17 and 18 form one route: derive the objective,
@@ -14,6 +39,10 @@ audit its implementation, then compare policies using a frozen evaluation
 contract. The complete derivation below is an independently worked finite-space
 example of the construction introduced in
 [Rafailov and colleagues' DPO paper](https://arxiv.org/abs/2305.18290).
+In this course's map of post-training, the chapter completes **preference
+alignment**, the second technique after instruction tuning: Chapter 10
+learned from judgments through a reward model, and DPO learns from the same
+judgments directly.
 
 The interesting puzzle is stronger than “does the chosen answer beat the
 rejected one?” Suppose both become less likely and a third answer gains their
@@ -22,6 +51,17 @@ view while deriving the objective: the answer will tell us what DPO measures
 and why free-generation evaluation remains necessary.
 
 ## 11.1 The reference is a distribution over possible continuations
+
+Before we can skip the reward model, we need to say what a good policy would do
+if we had one. "Maximize reward" alone is a bad goal. Chapter 10 showed that a
+policy chasing a fitted reward finds its loopholes. So we add a second wish:
+don't stray too far from a policy we already trust.
+
+Think of a dog on an elastic leash. It can wander toward something interesting,
+but the further it goes, the harder the leash pulls back. The **reference
+policy** is the person holding the leash: a fixed model, usually the SFT
+checkpoint, that says what "normal behavior" looks like. The number $`\beta`$
+sets how stiff the leash is.
 
 Fix prompt $`x`$ and let $`\pi_{\mathrm{ref}}(y\mid x)`$ be a reference policy over
 complete responses. It is commonly a supervised checkpoint at the start of
@@ -35,8 +75,9 @@ J(\pi)=\sum_y\pi(y\mid x)r(x,y)
 \qquad \beta>0.
 ```
 
-The second term is $`\beta\,\mathrm{KL}(\pi\Vert\pi_{\mathrm{ref}})`$. Its
-direction matters: samples would come from the current policy, and their log
+The second term is $`\beta\,\mathrm{KL}(\pi\Vert\pi_{\mathrm{ref}})`$, the
+**KL penalty**: a charge for how far the policy's answer distribution has moved
+from the reference's. Its direction matters: samples would come from the current policy, and their log
 ratio is measured against the reference. The finite derivation assumes the
 reference is positive on every candidate under discussion and rewards are
 finite. A policy placing mass outside the reference support incurs infinite
@@ -65,7 +106,14 @@ remains fixed throughout the declared preference-training objective.
 
 ## 11.2 Solve the finite optimization problem
 
-Use a Lagrange multiplier $`\lambda`$ for $`\sum_y\pi_y=1`$:
+We have an objective. Which policy maximizes it? For a real language model we
+can't search every possible response. But if we pretend there are only a
+handful of possible answers, the problem has an exact solution, and its shape
+is what makes DPO possible.
+
+The only catch is that probabilities must add up to one. A **Lagrange
+multiplier** is the standard tool for that: an extra variable that enforces a
+constraint while we take ordinary derivatives. Use a Lagrange multiplier $`\lambda`$ for $`\sum_y\pi_y=1`$:
 
 ```math
 \mathcal{F}=\sum_y\pi_y r_y
@@ -91,7 +139,8 @@ $`\pi_y=C\,\pi_{\mathrm{ref},y}\exp(r_y/\beta)`$, where
 $`C=\exp(\lambda/\beta-1)`$ is shared by all responses to this prompt.
 The sum-to-one constraint now determines that constant:
 $`1=C\sum_y\pi_{\mathrm{ref},y}\exp(r_y/\beta)`$.
-Call that sum the **partition function** $`Z(x)`$; then $`C=1/Z(x)`$.
+Call that sum the **partition function** $`Z(x)`$, the total that turns
+unnormalized weights into probabilities; then $`C=1/Z(x)`$.
 The multiplier enforces the competition for one unit of probability mass:
 
 ```math
@@ -99,11 +148,21 @@ The multiplier enforces the competition for one unit of probability mass:
 \qquad Z(x)=\sum_y\pi_{\mathrm{ref}}(y\mid x)\exp(r(x,y)/\beta).
 ```
 
-The optimum exponentially tilts the reference toward reward. Compute it as
+In words: start from the reference's probabilities, multiply each one by
+$`\exp(r/\beta)`$, and rescale so they add to one. An **exponential tilt** is
+exactly this reweighting. The optimum exponentially tilts the reference toward reward. Compute it as
 $`\mathrm{softmax}(\log\pi_{\mathrm{ref}}+r/\beta)`$ for stability. With fixed
 reward, large $`\beta`$ resists movement; small $`\beta`$ concentrates mass more
 strongly. Adding a prompt-dependent constant to rewards multiplies numerator
-and partition function by the same factor, so the policy is unchanged. This
+and partition function by the same factor, so the policy is unchanged:
+
+```math
+\frac{\pi_{\mathrm{ref}}(y\mid x)\,e^{c(x)/\beta}\exp(r(x,y)/\beta)}
+{\sum_{y'}\pi_{\mathrm{ref}}(y'\mid x)\,e^{c(x)/\beta}\exp(r(x,y')/\beta)}
+=\frac{\pi_{\mathrm{ref}}(y\mid x)\exp(r(x,y)/\beta)}{Z(x)}.
+```
+
+This
 is Chapter 10's reward gauge appearing inside an optimization problem.
 
 ### Three answers make the anchor visible
@@ -151,15 +210,41 @@ not a certificate that a short neural training run reaches the ideal policy.
 
 ## 11.3 Replace the latent reward with policy log ratios
 
+Section 11.2 went from a reward to a policy. Now run that arrow backwards. If
+we know how the best policy differs from the reference, we can read off the
+reward that must have caused the difference. It's like a cook who started
+from an old recipe book: compare what the cook now makes with what the book
+suggested, and the dishes made more often than before tell you what the diners
+liked. The one obstacle is $`Z(x)`$, a sum over every possible response,
+which we could never compute for real text. The trick is that we never need it.
+
 Take logarithms of the optimum:
+
+```math
+\log\pi^*(y\mid x)=\log\pi_{\mathrm{ref}}(y\mid x)+\frac{r(x,y)}{\beta}-\log Z(x).
+```
+
+Multiply by $`\beta`$ and solve for the reward:
 
 ```math
 r(x,y)=\beta\log\frac{\pi^*(y\mid x)}{\pi_{\mathrm{ref}}(y\mid x)}
 +\beta\log Z(x).
 ```
 
-For two responses to the same prompt, the $`\log Z(x)`$ terms cancel. Define
-the policy's reference-relative pair margin
+For two responses to the same prompt, the $`\log Z(x)`$ terms cancel. Subtract
+the loser's reward from the winner's:
+
+```math
+r(x,y_w)-r(x,y_l)
+=\beta\log\frac{\pi^*(y_w\mid x)}{\pi_{\mathrm{ref}}(y_w\mid x)}
+-\beta\log\frac{\pi^*(y_l\mid x)}{\pi_{\mathrm{ref}}(y_l\mid x)}.
+```
+
+Bradley–Terry only ever uses this difference, so the unknowable $`Z(x)`$ is gone.
+Now put the trainable policy $`\pi_\theta`$ where $`\pi^*`$ was. Each term
+$`\beta\log(\pi_\theta/\pi_{\mathrm{ref}})`$ plays the role of a reward; call it
+the **implicit reward**, the reward that the policy's own movement implies.
+Define the policy's reference-relative pair margin
 
 ```math
 m_\theta=\beta\left[
@@ -168,8 +253,15 @@ m_\theta=\beta\left[
 \right].
 ```
 
-Substitute this into the Bradley–Terry preference likelihood. For an ordered
-winning pair,
+Substitute this into the Bradley–Terry preference likelihood. The model's
+probability that the recorded winner wins, and its negative log, are
+
+```math
+P_\theta(y_w\succ y_l\mid x)=\sigma(m_\theta),\qquad
+-\log\sigma(m_\theta)=\log\left(1+e^{-m_\theta}\right).
+```
+
+For an ordered winning pair, that negative log-likelihood is the DPO loss:
 
 ```math
 L_{\text{DPO}}=\mathrm{softplus}(-m_\theta).
@@ -210,8 +302,23 @@ responses, but adds the problem of reward extrapolation developed in Chapter 10.
 
 ## 11.4 The gradient and the meaning of beta
 
+We have a loss. What does it push the policy to do, and how hard? As in
+Chapter 10, the gradient is short enough to read by eye. It also clears up a
+puzzle about $`\beta`$, which seems to mean "move less" in one place and "move
+more" in another.
+
 Write $`c=\log\pi_\theta(y_w\mid x)`$ and
-$`l=\log\pi_\theta(y_l\mid x)`$. With a frozen reference,
+$`l=\log\pi_\theta(y_l\mid x)`$. With the soft-target loss
+$`L=\mathrm{softplus}(m_\theta)-q m_\theta`$ from §11.3, the chain rule needs
+three pieces. The reference terms in $`m_\theta`$ are constants:
+
+```math
+\frac{\partial L}{\partial m_\theta}=\sigma(m_\theta)-q,\qquad
+\frac{\partial m_\theta}{\partial c}=\beta,\qquad
+\frac{\partial m_\theta}{\partial l}=-\beta.
+```
+
+Multiply them together. With a frozen reference,
 
 ```math
 \frac{\partial L}{\partial c}=\beta(\sigma(m_\theta)-q),\qquad
@@ -284,6 +391,11 @@ pair data is not a per-step guarantee of that optimum's restraint.
 
 ## 11.5 Sequence likelihood is a sum with a boundary
 
+The derivation so far treated each response as one indivisible answer with one
+probability. A language model doesn't hand us that number. It gives one
+probability per token, and we must add up the right tokens. Which tokens count
+as "the response" turns out to be an easy place to make a silent mistake.
+
 An autoregressive completion has
 
 ```math
@@ -318,9 +430,13 @@ precision policy, and response boundary for policy and reference.
 
 ## 11.6 Length normalization changes the model
 
+A sum over tokens has an obvious side effect: longer answers collect more
+negative terms. It's tempting to "fix" this by dividing by length. Before doing
+that, ask what the division does to the objective we derived.
+
 Long sequences often have more negative log-probability because they contain
 more terms. Summing is nevertheless the log-likelihood of the full response.
-Dividing by response length gives average token log-probability, which describes
+Dividing by response length is called **length normalization**. It gives average token log-probability, which describes
 a different comparison. Replacing sums by averages in the standard derivation
 does not preserve its response distribution interpretation.
 
@@ -333,6 +449,11 @@ well as ordinary prompts. Do not declare a loss-mask or sequence-sum bug to be
 positions so that this boundary is visible.
 
 ## 11.7 A frozen reference is an implementation contract
+
+Every DPO margin is measured against the reference, so the reference is the
+ruler. If the ruler shifts during training, the margins stop meaning what the
+derivation says. "Frozen" sounds simple, but there are several ways to freeze a
+model only partly.
 
 Put the reference in evaluation mode, disable gradients, and score it under
 `no_grad`. Do not update it with the policy optimizer. Disabling dropout matters:
@@ -362,6 +483,11 @@ separates this principle from snapshot, journal and supervision mechanics.
 
 ## 11.8 Controlled experiments and an instructive negative result
 
+We now have a derived loss and a careful implementation. Does lowering the
+loss actually give a better policy? The counterexample in §11.4 says it need
+not, at least in principle. This section tests that worry with real training
+runs, from tiny CPU models up to a pretrained pilot.
+
 Two CPU experiments answer different questions. The categorical experiment has
 two contexts and three possible complete answers. It uses known soft preferences
 and compares DPO, flipped-label DPO, and chosen-only SFT from the same reference.
@@ -375,6 +501,8 @@ EOS. A held-out prompt measures $`P(A\mid x_{\text{heldout}})`$ independently of
 the pair loss. It is intentionally a severe simplification: answers are symbolic,
 the prompt set is tiny, and no English capability is being tested.
 
+The point to take from these runs: a lower pair loss is not, by itself,
+evidence of a better answer.
 The [report](../../experiments/reports/2026-10-04-preference-policy-cpu.md)
 retains the resulting curves, including failures. A favorable pair margin can
 coexist with worse absolute probability of the desired answer. That is a concrete
@@ -392,9 +520,18 @@ lets you inspect both without treating a larger pair margin as the final verdict
 
 ### 11.8.1 Chosen likelihood and rehearsal: extra objectives, not free repairs
 
+If DPO can make the preferred answer less likely, why not add a term that
+pushes it up directly? And if training on preferences can erode other skills,
+why not keep practicing those skills on the side? Both ideas are common. Both
+also change what is being optimized, so we should look at them as new
+objectives, not as bug fixes.
+
 A preference comparison says which of two recorded responses should win. It
 does not supervise every other response or every other task. To give an absolute
-chosen-likelihood objective a voice, augment the pair loss explicitly:
+chosen-likelihood objective a voice, augment the pair loss explicitly. The
+**chosen NLL** term is ordinary next-token loss on the preferred answer, and
+**rehearsal** is supervised practice on retained demonstrations, such as
+examples of a skill we want to keep:
 
 ```math
 L_{\lambda_{\mathrm{SFT}},\gamma}=L_{\text{DPO}}
@@ -435,6 +572,8 @@ distribution under its weight and budget; it neither bounds every forgotten
 capability nor ensures transfer to new inputs. These terms change supervision,
 not just numerical stability.
 
+The next experiment asks whether these extra terms protect a second skill
+while DPO trains on the first.
 The [retention and preference-control notebook](../../notebooks/day-18/02_dpo_retention_and_preference_controls.ipynb)
 uses the actual shared decoder and supervised stack, rather than another
 independent logit table. A frozen recipe jointly warms the model on symbolic
@@ -466,6 +605,8 @@ Equal update counts are consequently neither equal information nor equal
 processing budgets. This new comparison does not replace or relabel the
 earlier negative DPO result and establishes no universal repair or Qwen claim.
 
+In brief: rehearsal helped the parity skill, chosen NLL did not, and nothing
+fixed held-out copying.
 The fixed experiment also retains failures in the warm control: all three
 warm states solve their four training copying prompts, none solves an unseen
 copying pair, and parity succeeds on only 3/4, 2/4 and 2/4 trained rows.
@@ -507,6 +648,8 @@ rejected supervision, policy input geometry, reference calls, reduction and
 compute. Equal chosen exposure is a useful control for demonstration repetition;
 it is not an equal-information or equal-FLOP experiment.
 
+The small run below checks that the matching machinery works. It is not a
+test of answer quality, and no arm answers correctly.
 The [two-seed CPU report](../../experiments/reports/2026-10-05-matched-chosen-sft-control.md)
 uses saved and reloaded random 6,592-parameter parents, not pretrained weights.
 Each trained arm makes 12 identical pair draws and sees 48 chosen targets.
@@ -533,6 +676,11 @@ comparison in section 11.8.4; random-model correctness checks do not substitute
 for those actual outputs.
 
 ### 11.8.3 Recovery must preserve what the comparison matched
+
+Long runs crash, and we restart them from saved state. Section 11.7 showed that
+restoring only the weights can quietly change a DPO experiment. A matched
+comparison adds another risk: the two arms may need different things restored
+to stay matched.
 
 A chosen-only control and DPO can share draws while requiring different
 restart checks. Chosen-only needs its chosen-token objective and replacement
@@ -575,6 +723,8 @@ the historical pre-run hypothesis.
 | Common generation | Saved template, greedy decoding, 64-token cap; BF16-loaded policies |
 | Pair scoring | FP32 weights with BF16 autocast; four separate validation pairs |
 
+Here is what the pilots show, in one sentence: DPO opens a far larger
+preference margin, yet chosen-only SFT gives more exact location answers.
 The [actual Spark pilots](../../experiments/reports/2026-10-05-native-preference-comparison.md)
 make this distinction concrete. Both begin afresh from the original full400 SFT
 export after their separate native recovery gates pass. Both make 100 updates
@@ -642,6 +792,8 @@ items and 20 annotated reasoning items. Pair scoring uses FP32 weights/BF16 auto
 generation uses BF16-loaded policies and the same saved-template greedy 64
 contract. These code-path labels are not instrumented kernel traces.
 
+The likelihood numbers show both methods raising the preferred answer's
+probability, with DPO also pushing the rejected answers down much harder.
 In the four-pair likelihood panel, mean chosen logp changes from −11.486888
 to −0.003524 for chosen-only and −6.642914 for DPO. Both improve absolute
 chosen likelihood here; this native case is not the earlier CPU example of
@@ -650,6 +802,9 @@ its mean unscaled reference-relative margin is 71.370116 nats versus 13.488587
 for chosen-only. Multiplication by beta 0.1 gives the loss's scaled margin.
 
 ![Absolute answer likelihood and unscaled relative margin](../../experiments/reports/native-preference-figures-20261005-run-01/likelihood-and-margin.png)
+
+The generation table shows the same split in delivered text. Neither method
+loses ground on the instruction or reasoning panel.
 
 | Independent common generation | Unchanged full400 | Chosen-only 100 | DPO100 |
 | --- | ---: | ---: | ---: |
@@ -687,6 +842,33 @@ The common post-training comparison retains the chapter's chosen-SFT control. A 
 A compatible interface is necessary before comparing checkpoints, but it does not match every budget. Count labeled response targets, optimizer updates and generation work separately. For a policy arm, include unsuccessful collected responses and discarded groups. For a chosen-SFT arm, include the supervision used to choose and train on an accepted answer. Neither an equal update count nor an equal retained-token count implies equal collection cost.
 
 The [integration notebook](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb) adds a supervised-parent genealogy and two explicitly named sibling interventions. Its reward branch is a symbolic control; it does not replace the chapter's DPO experiment. Combine their lessons by defending the claim with delivered behavior and independent evaluation, rather than a margin alone.
+
+## Chapter summary
+
+- DPO trains the policy directly from recorded preference pairs. It needs no
+  separately fitted reward model and no fresh sampling for each update, but it
+  still inherits the rubric, noise and coverage of the recorded comparisons
+  (§11.1, §11.3).
+- The starting objective is expected reward minus a **KL penalty** that keeps
+  the policy near a fixed **reference policy**. Reference and old policy play
+  different roles (§11.1).
+- In a finite space the optimum is an **exponential tilt** of the reference,
+  $`\pi^*\propto\pi_{\mathrm{ref}}\exp(r/\beta)`$. Adding a per-prompt constant
+  to rewards changes nothing, which is Chapter 10's gauge again (§11.2).
+- Inverting the optimum writes reward as $`\beta`$ times a policy log ratio plus
+  $`\beta\log Z(x)`$. The partition function cancels in a within-prompt pair,
+  and Bradley–Terry turns the remaining margin into the DPO loss (§11.3).
+- The gradient is $`\beta`$ times probability minus target. Larger $`\beta`$
+  means a larger initial gradient but a smaller policy move to fit the same
+  preference. The pair loss can improve while both compared answers lose
+  probability to a third (§11.4).
+- Score complete responses as masked token sums with EOS and one causal shift.
+  Averaging over length defines a different objective. The reference must stay
+  frozen, in evaluation mode and unchanged across restarts (§11.5–11.7).
+- In the controlled and pretrained comparisons, a larger margin did not mean
+  more exact answers. Extra objectives such as chosen NLL and rehearsal change
+  the supervision and are not free repairs. Judge DPO by delivered behavior on
+  an independent evaluation (§11.8).
 
 ## 11.9 Companion route and exercises
 

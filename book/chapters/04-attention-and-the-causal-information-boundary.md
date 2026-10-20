@@ -1,9 +1,21 @@
 # Chapter 4 — Attention and the Causal Information Boundary
 
+> Every one knows what attention is. It is the taking possession by the mind, in
+> clear and vivid form, of one out of what seem several simultaneously possible
+> objects or trains of thought.
+>
+> — William James, *The Principles of Psychology*
+
 Companion: [guided laboratory route](../labs/04-attention-and-the-causal-information-boundary.md).
 
+Chapter 3 took the contextual hidden state $`h`$ as given. It showed how $`h`$
+becomes logits, probabilities and a loss, and how the gradient flows back into
+$`h`$. But it never said where $`h`$ comes from. That gap matters. A state that
+only sees its own token can't tell one `the` from another, and then every
+occurrence of `the` must make the same prediction, whatever came before it.
+
 Chapter 3 began with a contextual hidden state and asked how it becomes a
-next-token prediction. We now examine how a position obtains information from
+next-token prediction. So we now examine how a position obtains information from
 other positions in the first place.
 
 Return to the illustrative prefix **“the pet saw the”**, whose observed next
@@ -25,7 +37,32 @@ position look for, what should each source offer, how should they be combined,
 and which sources are legal? Answering them precisely also explains why
 inference systems can reuse keys and values while generating a continuation.
 
+James described attention as taking possession of "one out of" several possible
+objects. Transformer **attention** is softer than that. A position spreads a
+budget of weight across many earlier positions and takes a blend of what they
+offer; §4.3 shows that even a perfectly matching source gets less than all of it
+at any finite score scale.
+And before any choosing happens, a rule decides which objects are possible at
+all. For a language model, the future is never among them. We will build this in
+five steps:
+
+1. Give each position three learned roles, and score how well a receiver matches
+   each source (§4.2–4.3).
+2. Keep those scores in a healthy range, and forbid the future inside the
+   normalization (§4.4–4.5).
+3. Mix the allowed messages, implement the whole operation, and trace how one
+   loss trains both where to read and what to send (§4.6–4.8).
+4. Ask what an attention map can and can't explain (§4.9).
+5. Use the causal rule to reuse past keys and values during generation, and
+   account for what that costs (§4.10–4.11).
+
+Controlled evidence from the companion notebooks follows (§4.12), and the
+chapter closes with exercises and the transition to a complete decoder.
+
 ## 4.1 Learning outcomes and chapter route
+
+Here is what the chapter should leave you able to do, and the order in which it
+gets there. Return to this list when you finish.
 
 After studying this chapter, you should be able to:
 
@@ -41,10 +78,11 @@ After studying this chapter, you should be able to:
 - distinguish cache correctness, memory accounting, and measured speed;
 - reproduce the small experiments and state their evidence boundaries.
 
-The route is retrieval (§4.2), compatibility (§4.3), scaling (§4.4), masking
-(§4.5), value mixtures (§4.6), implementation (§4.7), gradients (§4.8),
-interpretation (§4.9), caching (§§4.10–4.11), and controlled evidence (§4.12).
-The chapter closes with exercises and the transition to a complete decoder.
+The route, section by section, is retrieval (§4.2), compatibility (§4.3),
+scaling (§4.4), masking (§4.5), value mixtures (§4.6), implementation (§4.7),
+gradients (§4.8), interpretation (§4.9), caching (§§4.10–4.11), and controlled
+evidence (§4.12). The chapter closes with exercises and the transition to a
+complete decoder.
 
 Prerequisites are matrix multiplication, the chain rule, softmax, and the
 next-token objective from Chapters 2–3. We use row vectors and zero-based
@@ -54,6 +92,12 @@ normalization, positional encodings, and feed-forward layers receive their
 complete treatment in Chapter 5.
 
 ## 4.2 One position has three roles
+
+A position that wants information from its history has to decide two things:
+which earlier positions are worth reading, and what to take from them. A search
+engine is a useful picture. You type a request, every page carries a title that
+the engine matches against, and what you finally read is the page's content, not
+its title. Attention gives every position all three parts at once.
 
 Let X contain the incoming representations at n positions, each with D features:
 
@@ -71,8 +115,8 @@ Each position has three learned projections:
 Q=XW_Q,\qquad K=XW_K,\qquad V_{\mathrm{val}}=XW_V.
 ```
 
-The query $`q_i`$ represents the receiving position's matching criteria. A source's
-key $`k_j`$ represents what that receiver can match against. Its value $`v_j`$ is the
+The **query** $`q_i`$ represents the receiving position's matching criteria. A source's
+**key** $`k_j`$ represents what that receiver can match against. Its **value** $`v_j`$ is the
 message returned when that source receives weight.
 
 The retrieval analogy helps explain the roles, but a query need not encode a
@@ -106,6 +150,11 @@ in Chapter 3. The implementation uses `v` for these value activations and
 `d_k` for the query/key width denoted $`d_h`$ here.
 
 ## 4.3 Dot products are learned compatibility scores
+
+We now have a query for each receiver and a key for each source. The next step is
+one number per pair that says how well they match. The simplest such number is a
+dot product: it is large when the two vectors point the same way and are long.
+Training then decides what "pointing the same way" should mean.
 
 The raw score between receiver i and source j is
 
@@ -164,9 +213,26 @@ current position may need information from several sources.
 
 ## 4.4 Why divide by the square root of the head width?
 
+Section 4.3 showed that score size controls how sharp the softmax mixture is.
+That makes the typical size of a dot product important. Here is a worked case in
+words. Toss 64 fair coins and score each as $`+1`$ or $`-1`$. The total is
+usually not 64, because heads and tails cancel. Its typical distance from zero,
+the standard deviation, is $`\sqrt{64}=8`$. A dot product of random coordinates
+behaves the same way: its spread grows with the square root of the width.
+
 Suppose the query and key coordinates are independent, have mean zero and
 variance one, and their coordinate products are independent across dimensions.
-For one product,
+For one product, independence lets expectations of products split into
+products of expectations. The mean is $`\mathbb{E}[q_m]\,\mathbb{E}[k_m]=0`$, and
+the variance is the mean square minus the squared mean:
+
+```math
+\mathrm{Var}(q_mk_m)
+=\mathbb{E}[q_m^2k_m^2]-\left(\mathbb{E}[q_mk_m]\right)^2
+=\mathbb{E}[q_m^2]\mathbb{E}[k_m^2]-0.
+```
+
+Each mean square equals the variance plus the squared mean, $`1+0=1`$. So:
 
 ```math
 \mathbb{E}[q_mk_m]=0,\qquad
@@ -174,7 +240,8 @@ For one product,
 =\mathbb{E}[q_m^2]\mathbb{E}[k_m^2]=1.
 ```
 
-The score sums $`d_h`$ such products:
+The score sums $`d_h`$ such products. Variances of independent terms add, so
+$`d_h`$ terms of variance one give:
 
 ```math
 s=\sum_{m=1}^{d_h}q_mk_m,\qquad
@@ -183,7 +250,9 @@ s=\sum_{m=1}^{d_h}q_mk_m,\qquad
 ```
 
 Positive and negative contributions partly cancel; the standard deviation grows
-as the square root, not linearly with width. Thus
+as the square root, not linearly with width. Dividing a random quantity by a
+constant divides its variance by that constant squared, so
+$`\mathrm{Var}(s/\sqrt{d_h})=\mathrm{Var}(s)/d_h`$. Thus
 
 ```math
 \mathrm{Var}\left(\frac{s}{\sqrt{d_h}}\right)=1.
@@ -202,8 +271,10 @@ J=\mathrm{diag}(a)-aa^\top,\qquad
 J_{ij}=a_i(\mathbf{1}[i=j]-a_j).
 ```
 
-As a approaches a one-hot vector, these entries approach zero. Its trace,
-$`1-\sum_i a_i^2`$, offers a simple measure of local softmax sensitivity. It is not
+As a approaches a one-hot vector, these entries approach zero. Its trace sums
+the diagonal entries $`a_i(1-a_i)`$, giving
+$`\sum_i a_i-\sum_i a_i^2`$, which is $`1-\sum_i a_i^2`$ because the weights sum to
+one. That trace offers a simple measure of local softmax sensitivity. It is not
 itself a downstream loss gradient.
 
 This does not contradict Chapter 3's strong p−q gradient for a confidently wrong
@@ -217,7 +288,8 @@ distribution. Learned magnitudes, correlations, normalization, and positional
 transformations affect actual score statistics. Dividing by $`\sqrt{d_h}`$ does not
 guarantee unit variance or prevent every saturated row.
 
-An authored two-source score row makes the size of the effect tangible. At
+The next example shows, with two assigned scores, how much the division changes
+a softmax row. An authored two-source score row makes the size of the effect tangible. At
 $`d_h=64`$, dividing scores $`[8,-8]`$ by $`\sqrt{64}=8`$ changes the weights from
 approximately $`[0.999999887,0.000000113]`$ to $`[0.880797,0.119203]`$. The
 unscaled row has almost committed before it mixes the values. These assigned
@@ -228,10 +300,18 @@ than confusing a standard deviation with an individual score.
 
 ## 4.5 Causality belongs inside normalization
 
+We have scores for every receiver–source pair, including pairs where the source
+lies in the future. The opening example showed why the future must be invisible.
+The subtle part is *where* to remove it. Picture an election count. If a
+disqualified candidate's votes are left in the total, the remaining candidates'
+shares are wrong even after you strike that candidate from the results. The
+future must be removed before the shares are computed.
+
 At position i, allowed source positions satisfy j≤i. The diagonal is included:
 the current input token is known, and its output predicts the following token.
 
-Define the additive mask
+Define the additive **causal mask**, which leaves allowed scores unchanged and
+sends forbidden ones to $`-\infty`$:
 
 ```math
 M_{ij}=
@@ -351,6 +431,12 @@ discard their outputs. Do not treat NaNs as masked information.
 
 ## 4.6 Attention constructs a value mixture
 
+The weights say how much to read from each allowed source. Now we actually read.
+Picture three towns on a map and place weights of 0.2, 0.7 and 0.1 on them. Their
+balance point, the weighted average of the three locations, lies inside the
+triangle the towns form, close to the heavy one but not on any town. Attention's
+output is the same kind of weighted average, taken over value vectors.
+
 The output for receiver i is
 
 ```math
@@ -358,7 +444,8 @@ o_i=\sum_{j\le i}a_{ij}v_j,\qquad O=AV_{\mathrm{val}}.
 ```
 
 With nonnegative weights summing to one, a single head's output lies in the
-convex hull of its allowed value vectors. For weights [0.2,0.7,0.1], it is
+**convex hull** of its allowed value vectors: the set of all such weighted
+averages, like the triangle of possible balance points between three towns. For weights [0.2,0.7,0.1], it is
 
 ```math
 o_i=0.2v_1+0.7v_2+0.1v_3.
@@ -398,6 +485,10 @@ candidate output tokens. These are different competitions with different axes.
 
 ## 4.7 A transparent implementation
 
+We now have every piece: projections, scaled scores, a mask and a value mixture.
+Putting them in code takes six lines. A small worked example then lets you check
+each number by hand.
+
 The implementation below handles one unpadded sequence and one head. Finite
 inputs and at least one allowed source per row are assumed.
 
@@ -419,7 +510,8 @@ output = weights @ v
 Will its output be the average of their two values, or can its own value dominate?
 Which rows would change if only the final value were perturbed?
 
-This is a newly calculated teaching fixture, not a model measurement. Set
+The fixture below shows a receiver that matches two earlier keys equally yet
+still weights itself most. This is a newly calculated teaching fixture, not a model measurement. Set
 $`d_h=d_v=2`$ and use the already projected rows
 
 ```math
@@ -491,6 +583,12 @@ implementation intentionally retains it for inspection.
 
 ## 4.8 How one loss teaches routing and content
 
+Nothing so far says how $`W_Q`$, $`W_K`$ and $`W_V`$ get good values. No one labels which
+source a position *should* read. The only signal is the next-token loss from
+Chapter 3. This section follows that loss back through attention and finds that
+it splits into two lessons: change **where to read**, and change **what to
+send**.
+
 Let a downstream next-token loss $`L`$ send derivative $`G_O=\partial L/\partial O`$ into attention.
 Because $`O=AV_{\mathrm{val}}`$,
 
@@ -526,8 +624,18 @@ where the $`[n,1]`$ row sum broadcasts across sources. Forbidden entries have ze
 weight and zero score gradient. M is fixed, so it has no learned update.
 
 For one receiver, this has a useful interpretation. Let g be its output
-gradient and s_j an allowed scaled score. Substituting the value-path expression
-for the incoming weight derivative yields
+gradient and s_j an allowed scaled score. The value-path expression
+$`G_A=G_OV_{\mathrm{val}}^\top`$ says that the incoming weight derivative for
+source $`m`$ is $`g\cdot v_m`$. Substitute it into the softmax-row formula, and use
+$`o=\sum_m a_mv_m`$:
+
+```math
+\frac{\partial L}{\partial s_j}
+=a_j\left(g\cdot v_j-\sum_m a_m\,g\cdot v_m\right)
+=a_j\left(g\cdot v_j-g\cdot o\right).
+```
+
+Factoring out $`g`$ yields
 
 ```math
 \frac{\partial L}{\partial s_j}=a_j\,g\cdot(v_j-o).
@@ -538,7 +646,8 @@ current mixture. The loss evaluates that change through g. If all allowed
 values are identical, every v_j-o is zero: routing cannot change the output,
 so this local routing gradient vanishes. The value projections can still learn.
 
-Put numbers on that statement using receiving row 1 of the three-position
+The numbers below show the routing gradient pushing toward one source, then
+vanishing when the two values are made equal. Put numbers on that statement using receiving row 1 of the three-position
 fixture in §4.7. Its two legal values are $`[1,2]`$ and $`[3,0]`$, its weights
 are $`[0.330238,0.669762]`$, and its output is $`[2.339523,0.660477]`$.
 For the diagnostic objective $`L=o_0`$—the first output coordinate—the incoming
@@ -606,6 +715,12 @@ one cross-entropy target, and finite differences of the projection weights.
 
 ## 4.9 What an attention map does and does not explain
 
+Attention weights are easy to draw as a heat map, and it is tempting to read the
+map as "what the model was thinking about". Recall the balance points of §4.6,
+though: two quite different ways of spreading weight over the same towns can
+share one balance point. In the same way, two different weight rows can
+produce the same output. So a map, by itself, can't tell us which source mattered.
+
 A shows routing coefficients inside a computation. To determine even the head's
 output, one also needs $`V_{\mathrm{val}}`$. Different weight patterns may produce the same result.
 
@@ -632,6 +747,13 @@ downstream measurements, with their own assumptions. Gradient magnitude alone
 also does not settle causal importance.
 
 ## 4.10 Causal invariance explains the KV cache
+
+The causal mask was introduced to keep training honest. It has a second payoff
+during generation. Think of minutes kept during a meeting: when a new speaker
+talks, the notes already written about earlier speakers don't change, so nobody
+rewrites them. Because earlier states can't see later tokens, their keys and
+values stay fixed as the text grows, and we can store them instead of recomputing
+them. That store is the **KV cache**.
 
 Generation extends a prefix one position at a time. At new position t,
 
@@ -698,6 +820,11 @@ backward, which is a different purpose. The cache does not add learned knowledge
 
 ## 4.11 Cache cost, lifecycle, and inference systems
 
+A cache saves repeated work, but it isn't free. It occupies memory that grows
+with every retained position, and it must be released or reused when a request
+ends. This section counts its size and separates what a cache saves from what it
+doesn't.
+
 For equal-width keys and values, a simple logical-storage model is
 
 ```math
@@ -732,6 +859,10 @@ version being used before treating a particular setting as universal.
 
 ## 4.12 Three companion notebooks and their evidence
 
+Every claim in this chapter so far came from algebra or hand calculation. The
+notebooks check the same claims numerically, and each one also breaks something
+on purpose to show the failure.
+
 These are executable sections of the chapter. Each includes prediction prompts,
 optional practice cells, adjacent runnable reference solutions, and explanations.
 They can also be read as worked lessons before returning to hands-on study.
@@ -742,7 +873,9 @@ They can also be read as worked lessons before returning to hands-on study.
 | [2. Gradients and failures](../../notebooks/day-04/02_attention_gradients_and_failures.ipynb) | How does loss train routing and content? | Autograd, finite differences, detach interventions, scaling simulation |
 | [3. KV-cache equivalence](../../notebooks/day-04/03_kv_cache_equivalence.ipynb) | What can be reused without changing outputs? | Full-prefix versus cached replay, stale-prefix failure, logical memory accounting |
 
-The [forward report](../../experiments/reports/2026-09-05-causal-attention-forward.md)
+The reports show that the correct mask, the derivatives and the cache all agree
+with their references, and that the deliberately broken variants fail. The
+[forward report](../../experiments/reports/2026-09-05-causal-attention-forward.md)
 records exact agreement with SDPA on the fixed teaching fixture, unchanged
 earlier outputs under the correct mask, and changed earlier outputs under both
 broken masking variants.
@@ -757,7 +890,8 @@ records the following CPU float64 observations:
 - agreement of cached and full-prefix logits within 10⁻¹²;
 - a stale-prefix cache causing a maximum logit difference of about 1.80691.
 
-In the IID scaling simulation, head widths 8, 64, and 512 produced:
+The scaling simulation shows raw score spread growing with width while scaled
+spread stays near one. In the IID scaling simulation, head widths 8, 64, and 512 produced:
 
 | d_h | Raw score std. | Scaled score std. | Raw entropy (nats) | Scaled entropy (nats) |
 |---:|---:|---:|---:|---:|
@@ -768,7 +902,8 @@ In the IID scaling simulation, head widths 8, 64, and 512 produced:
 These are paired finite-sample results under the declared random-coordinate
 model, not measurements of a pretrained model.
 
-The cache fixture uses two single-head residual attention layers with width
+The cache fixture shows that caching saves projections without changing outputs;
+it does not measure time. The cache fixture uses two single-head residual attention layers with width
 four and an arbitrary five-class head. It omits a full decoder's normalization,
 MLP, and positional encoding. Replaying six fixed input rows with a two-row
 prefill requires 12 cached versus 40 uncached layer-position projections for
@@ -776,6 +911,10 @@ each of K and $`V_{\mathrm{val}}`$. Final logical cache storage is 768 bytes. Th
 measured speedup nor a model-quality result.
 
 ### A row can be normalized without keeping every score
+
+Long rows are expensive to store in full. The question here is whether we can
+compute a softmax-weighted sum while visiting keys in blocks, keeping only a
+running summary.
 
 Softmax needs a row's global normalization, but the row need not remain materialized. After visiting one key block, retain a maximum $`m`$, a scaled denominator $`\ell`$ and a scaled value numerator $`u`$. If the next block has scores $`s_j`$ and a larger maximum, set $`m'=\max(m,\max_j s_j)`$ and update
 
@@ -790,7 +929,36 @@ Here $`s_j`$ is a scaled query–key dot product, $`v_j`$ is a value vector, and
 
 Apply the causal and padding masks before each block's reduction. An entirely masked row has zero output under the companion's declared convention, with log-sum-exp equal to negative infinity. The tests also compare gradients and exercise uneven tiles. These checks establish a transparent implementation's mathematical behavior. Python tiling with ordinary autograd can still retain intermediate graphs; its smaller forward workspace is not evidence of FlashAttention's fused backward memory or GPU speed. Assignment C asks the reader to defend both the recurrence and that boundary.
 
+## Chapter summary
+
+- Each position plays three roles. Its **query** says what it looks for, each
+  source's **key** says what it can be matched on, and its **value** is the
+  message it sends (§4.2).
+- A score $`q_ik_j^\top`$ is a learned, directed compatibility, not semantic
+  similarity. Softmax keeps a mixture even when one key matches exactly (§4.3).
+- Under IID unit-variance assumptions a dot product has standard deviation
+  $`\sqrt{d_h}`$, so dividing by $`\sqrt{d_h}`$ keeps initial scores from saturating
+  softmax. Trained scores need not obey those assumptions (§4.4).
+- The **causal mask** must act before normalization. Zeroing after softmax or
+  filling forbidden scores with zero lets the future change allowed weights.
+  Perturbing the future is the stronger test (§4.5).
+- The output is a convex mixture of allowed values: a new feature vector, not a
+  token ID (§4.6). A transparent implementation can be checked by hand (§4.7).
+- One loss sends credit along two paths: routing through $`A`$ (where to read)
+  and content through $`V_{\mathrm{val}}`$ (what to send). Equal values make the
+  routing gradient vanish (§4.8).
+- Different attention rows can give the same output, so a map alone does not
+  establish causal importance (§4.9).
+- Causal prefix invariance lets each layer keep past keys and values: the **KV
+  cache**. It saves repeated projections, but a new query still reads every
+  retained key, and memory grows with length (§4.10–4.11).
+- The notebooks confirm these properties on small fixtures. They are not
+  measurements of pretrained models or of speed (§4.12).
+
 ## 4.13 Exercises
+
+These exercises follow the chapter's order, from shapes to caching. Try each one
+before reading the worked solutions.
 
 1. **Shapes and meaning.** For $`n=5,D=8,d_h=4,d_v=3`$, give every shape
    from X through O. Which axis indexes vocabulary candidates?
@@ -823,6 +991,9 @@ Apply the causal and padding masks before each block's reduction. An entirely ma
 provide explanations and links to executable checks.
 
 ## 4.14 From one head to a decoder
+
+One head can now read the past safely and learn from the loss. A language model
+needs more than one head, though, and more than attention.
 
 We can now follow attention in both directions: incoming states produce
 matching requests, source keys, and messages; a causal distribution mixes those

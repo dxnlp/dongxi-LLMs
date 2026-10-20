@@ -1,10 +1,25 @@
 # Chapter 6 — Pretraining as a Controlled System
 
-Chapter 5 assembled a decoder. Token IDs became embeddings; attention mixed
-information across allowed positions; residual blocks transformed the states;
-the output projection produced vocabulary-sized logits. Cross-entropy supplied
-gradients to the trainable parameters. That describes how learning is possible.
-It does not yet describe a trustworthy training run.
+> To consult the statistician after an experiment is finished is often merely to
+> ask him to conduct a post mortem examination. He can perhaps say what the
+> experiment died of.
+>
+> — R. A. Fisher
+
+Chapter 5 ended with a decoder that works, but only in a narrow sense. Token IDs
+became embeddings; attention mixed information across allowed positions; residual
+blocks transformed the states; the output projection produced vocabulary-sized
+logits. Cross-entropy supplied gradients to the trainable parameters. The decoder
+could memorize one small batch, and its architecture passed a set of audits. That
+tells us learning is possible. It doesn't tell us whether a real training run on
+a real corpus will learn anything useful, or whether we could trust its report if
+it said so.
+
+Fisher's warning is about timing. If you decide what to record only after a run
+has finished, you can usually say how it failed but not why. A training run is an
+experiment in exactly this sense. The data, the counters, the update rule and the
+saved state all have to be fixed in advance, or the final loss curve can't be
+interpreted.
 
 Imagine two researchers starting with identical weights. They report the same
 batch size, learning rate, and number of steps, yet obtain different results.
@@ -25,6 +40,20 @@ must survive interruption**. It combines the Day 8 mechanisms with the completed
 run. The case study tests the difference between a finished process, improved
 next-token prediction, and reliable story generation.
 
+We will take it in six steps:
+
+1. Fix what the data is, how it becomes tokens, and how tokens become training
+   windows (§6.1–6.4).
+2. Count the run with several separate clocks, and enforce a target budget at
+   update boundaries (§6.5).
+3. Make each update faithful to the objective: accumulation, AdamW, the learning-rate
+   schedule, regularization, clipping and precision (§6.6–6.9).
+4. Measure memory, throughput and development loss under fixed rules (§6.10–6.11).
+5. Save and restore the whole process, not just the weights, and write the
+   bounded experiment down (§6.12–6.13).
+6. Read one real TinyStories run: what the budget bought, what the loss says, what
+   the stories say, and what a paired follow-up shows (§6.14–6.21).
+
 ## What you should be able to explain
 
 - Define a valid-target objective and preserve it through accumulation and updates.
@@ -36,6 +65,13 @@ Python/PyTorch tensors and the difference between forward computation and gradie
 
 ## 6.1 The questions a recipe must answer
 
+The two researchers above disagreed because their recipes left things unsaid.
+So we start by asking what a recipe has to say. Think of a cooking recipe that
+lists "flour, sugar, heat" but not amounts, oven temperature or time. Two cooks
+can follow it faithfully and bake different cakes.
+
+A **training recipe** is the written specification of a run: enough detail that
+someone else could repeat the computation and read its results the same way.
 A recipe is not merely a list of hyperparameters. It should let another person
 reconstruct both the computation and its interpretation. What does one token
 count mean? Which predictions contribute to the loss? When does the optimizer
@@ -61,6 +97,11 @@ around it rather than hiding the mechanism behind a large training framework.
 
 ## 6.2 Data identity is part of the experiment
 
+The first link in the chain is the data. If we can't say exactly which documents
+went in, and which were held back, no later number means much. A teacher who
+writes an exam from the homework problems will see high scores, but the scores
+measure recall of the homework, not understanding.
+
 “English text” is not a reproducible dataset specification. A corpus description
 needs its source, revision, permitted use, selection rules, transformations,
 deduplication policy, and split membership. A fingerprint identifies particular
@@ -68,7 +109,8 @@ content; it does not establish that content's quality or legal suitability.
 Filtering changes the distribution being learned, so it belongs in the recipe,
 not merely in a preprocessing script nobody records.
 
-Split documents before constructing overlapping examples. If neighboring
+**Document-level splitting** assigns each whole document to one split before
+any examples are cut from it. Split documents before constructing overlapping examples. If neighboring
 windows from the same document enter both training and development, a development
 score may partly measure recognition of previously exposed text. Document-level
 splitting closes that route but does not eliminate duplicated documents,
@@ -87,6 +129,12 @@ in human language. The corpus defines the empirical evidence from which the
 model estimates a distribution.
 
 ## 6.3 Tokenization fixes the units of the budget
+
+Once the documents are fixed, we have to turn them into numbers. That choice
+also fixes what "one token" means, so it decides the unit in which every budget
+and every loss is counted. It is like choosing between counting a journey in
+miles or in kilometers: neither is wrong, but you can't compare two trips until
+you know which one each report used.
 
 A tokenizer determines both the ID meanings and the number of sequence
 positions used to represent text. Vocabulary size and sequence length therefore
@@ -115,7 +163,13 @@ dimensions.
 
 ## 6.4 Windows, padding, and document boundaries
 
-The fixture divides the already shifted pairs into windows of length 16. A
+Documents have different lengths, but a batch is a rectangle. Something has to
+fill the gaps, and something has to decide where one document's context ends.
+These choices look like plumbing. They actually decide which predictions the
+model is asked to make, and from which context.
+
+**Padding** fills unused positions so that every row has the same length; the
+padded positions should never count as training targets. The fixture divides the already shifted pairs into windows of length 16. A
 document tail is right-padded: unused input positions contain EOS, while unused
 labels contain the loss function's ignore value, -100. A genuine ending EOS
 still contributes to loss. Ignoring every occurrence of EOS would silently
@@ -128,7 +182,7 @@ policy. Reducing window length preserves the fixture's total target count while
 changing which context some targets can use. Equal token counts can describe
 different conditional prediction problems.
 
-Dense packing instead joins short examples into fuller sequences. That can
+**Dense packing** instead joins short examples into fuller sequences. That can
 reduce wasted padding, but requires a declared boundary policy. An EOS token is
 a learned symbol, not automatically an attention barrier. If documents must be
 independent within a packed sequence, causal attention needs additional
@@ -144,7 +198,16 @@ into it. A zero loss mask alone would not make arbitrary padding invisible.
 
 ## 6.5 A run has several clocks
 
-Let a microbatch contain $`b`$ windows of length $`n`$. Accumulate gradients over
+With windows defined, we can ask how much training a run actually did. "How much"
+has more than one answer. A bus company can count trips, seats driven past each
+stop, and passengers actually carried. A half-empty bus counts the same as a full
+one for trips and seats, but not for passengers. A training run is similar:
+optimizer updates are the trips, processed positions are the seats, and valid
+targets are the passengers.
+
+A **microbatch** is the group of windows passed through one forward and backward
+call; **gradient accumulation** adds the gradients of several microbatches before
+one optimizer update. Let a microbatch contain $`b`$ windows of length $`n`$. Accumulate gradients over
 $`A`$ microbatches before an optimizer update, using $`R`$ data-parallel ranks. If
 every position is a valid target, one update accounts for
 
@@ -179,6 +242,10 @@ and evidence-lab 6 make that distinction measurable without the full corpus.
 
 ### A target budget is an update-boundary contract
 
+Counting is one job; stopping at a limit is another. A **valid-target cap** is a
+ceiling on the total number of supervised targets the run may learn from. The
+question is what to do when the next update would cross it.
+
 A configured ceiling does not enforce itself. Let $`C`$ be a cumulative valid-
 target cap, $`c`$ the targets already learned from, and $`n`$ the valid labels in the
 entire next accumulation group. Accept that optimizer update only when
@@ -194,7 +261,8 @@ refusal must also restore its permutation, cursor, epoch and RNG. Our determinis
 single-process document loader can reconstruct the unconsumed group; this is not
 a guarantee for prefetched or randomly transformed examples.
 
-The [actual tiny CPU control](../../experiments/reports/2026-10-05-story-valid-target-budget.md)
+The next run shows that the cap refuses a whole update cleanly instead of trimming
+it. The [actual tiny CPU control](../../experiments/reports/2026-10-05-story-valid-target-budget.md)
 uses groups with 9 and 8 valid targets but 16 physical positions each. At cap 16,
 the first update completes and the second is refused, leaving 7 targets unused.
 That remainder is not an error: the declared next update cannot fit. Refusal
@@ -218,6 +286,16 @@ workers, prefetch queues, or rank-specific state.
 
 ## 6.6 Gradient accumulation must preserve the objective
 
+We now know what one update consumes. Next we need each update to compute the
+right thing. Accumulation splits one large batch into several small ones, and the
+danger is in how their losses are combined.
+
+Here is the intuition. Suppose one classroom has one student and another has
+sixteen. If you average the two class averages, the lone student counts as much as
+all sixteen others together. If you want the average over all seventeen students,
+you have to add up every score and divide by seventeen. Token losses work the
+same way.
+
 Gradient accumulation is often described as “simulating a larger batch.” The
 essential condition is more precise: it must differentiate the same objective
 at the same parameters. Let microbatch $`j`$ contain $`n_j`$ valid targets, each
@@ -227,7 +305,13 @@ with negative log-likelihood $`\ell_{jk}`$. The desired mean loss is
 L=\frac{\sum_j\sum_{k=1}^{n_j}\ell_{jk}}{N},\qquad N=\sum_j n_j.
 ```
 
-By linearity of differentiation,
+First split the double sum by microbatch, keeping the shared denominator:
+
+```math
+L=\sum_j\frac{1}{N}\sum_{k=1}^{n_j}\ell_{jk}.
+```
+
+The gradient of a sum is the sum of the gradients, so by linearity of differentiation,
 
 ```math
 \nabla_\theta L=\sum_j\frac{1}{N}\nabla_\theta\left(\sum_{k=1}^{n_j}\ell_{jk}\right).
@@ -243,7 +327,20 @@ tail should not receive the same aggregate influence as a sixteen-target
 window. If there are 17 targets total, their correct weights are $`1/17`$ and
 $`16/17`$, not one half each.
 
-Notebook 1 compares these two implementations against a single full-batch
+To see it, let the two microbatches have summed losses $`S_1`$ (one target) and
+$`S_2`$ (sixteen targets). The correct mean regroups as a weighted average of the
+two microbatch means:
+
+```math
+\frac{S_1+S_2}{17}=\frac{1}{17}\cdot\frac{S_1}{1}+\frac{16}{17}\cdot\frac{S_2}{16},
+\qquad\text{whereas}\qquad
+\frac{1}{2}\left(\frac{S_1}{1}+\frac{S_2}{16}\right)
+```
+
+gives each microbatch mean weight one half.
+
+The notebook check shows that only the shared-denominator form matches a real
+full batch. Notebook 1 compares these two implementations against a single full-batch
 backward pass through the actual decoder. The correct form agrees to floating
 point tolerance; the wrong form does not. No optimization step is needed to
 expose the bug. This is a stronger check than hoping training loss will reveal
@@ -276,6 +373,15 @@ distributed accumulation implementation.
 
 ## 6.7 AdamW: the gradient is not the update
 
+With a correct gradient in hand, it's natural to assume the parameters simply
+move against it. With plain SGD they do. With AdamW, the optimizer this book uses,
+the update also depends on the gradients that came before.
+
+An everyday comparison helps. A weekly average temperature doesn't turn cold the
+first day of a cold snap; it drifts down as cold days accumulate. AdamW keeps
+running averages of this kind, so one new gradient nudges the update rather than
+replacing it.
+
 The loss gradient describes local sensitivity: how an infinitesimal parameter
 change would affect this objective. SGD turns it directly into an update,
 $`\Delta\theta=-\eta g`$. AdamW uses history as well. With elementwise operations,
@@ -286,7 +392,10 @@ m_t=\beta_1m_{t-1}+(1-\beta_1)g_t,\qquad
 v_t=\beta_2v_{t-1}+(1-\beta_2)g_t^2.
 ```
 
-The first moment remembers signed gradients. The second remembers squared
+These are **exponential moving averages**: each new value keeps a fraction
+$`\beta`$ of the old average and mixes in a fraction $`1-\beta`$ of the newest
+observation. The **first moment** $`m_t`$ remembers signed gradients. The
+**second moment** $`v_t`$ remembers squared
 magnitudes; it is not a mean-subtracted variance estimate. Starting both at zero
 introduces an initial bias, addressed by
 
@@ -296,7 +405,15 @@ introduces an initial bias, addressed by
 ```
 
 Why those divisors? If every gradient equals a constant $`g`$ and $`m_0=0`$,
-the geometric series gives $`m_t=(1-\beta_1^t)g`$. The uncorrected moment
+the geometric series gives $`m_t=(1-\beta_1^t)g`$. Unrolled, the recurrence reads
+
+```math
+m_t=(1-\beta_1)g\sum_{i=0}^{t-1}\beta_1^i
+=(1-\beta_1)g\cdot\frac{1-\beta_1^t}{1-\beta_1}
+=(1-\beta_1^t)g.
+```
+
+The uncorrected moment
 underestimates even this constant input. Dividing by $`1-\beta_1^t`$ restores
 $`g`$; the same argument restores $`g^2`$ from $`v_t`$. Bias correction addresses
 zero initialization, not every source of error in a changing gradient history.
@@ -339,7 +456,8 @@ $`\eta=0.01`$, zero initial moments and no decay:
 | 2 | +1 | 0.190 | 1.000000 | −0.010000 |
 | 3 | −0.1 | 0.161 | 0.594096 | −0.007260 |
 
-The third first moment is $`0.9(0.19)+0.1(-0.1)=0.161`$. Its corrected
+The third first moment is $`0.9(0.19)+0.1(-0.1)=0.161`$. Bias correction divides
+it by $`1-0.9^3=0.271`$, giving $`0.161/0.271\approx0.594096`$. Its corrected
 second moment is approximately 0.669670, so the remembered direction remains
 positive and the minimized-loss update remains negative. SGD would instead
 add 0.001 on that third gradient. The
@@ -349,7 +467,8 @@ gradients and predict when the first moment crosses zero.
 
 ![Measured embedding gradient and SGD versus AdamW coordinate changes](../../notebooks/figures/chapter-06/02-optimizer.png)
 
-The [saved optimizer plot](../../src/dongxi_llms/pretraining_visuals.py)
+The figure shows that, on a real gradient, the parameter change and the raw
+gradient are visibly different quantities. The [saved optimizer plot](../../src/dongxi_llms/pretraining_visuals.py)
 uses the companion's actual small-decoder embedding gradient, not our scalar
 table. Match each coordinate across the panels: the raw gradient and parameter
 change are different quantities. The source fixture includes declared decay;
@@ -367,6 +486,12 @@ Those choices, along with betas and epsilon, must be recorded rather than
 inferred from the name “AdamW.”
 
 ## 6.8 Learning rate, warmup, and decay
+
+AdamW decides the direction and relative size of each step. The learning rate
+decides the overall scale, and in most recipes that scale changes during the run.
+Think of driving onto a highway: you accelerate gradually, cruise, then slow
+down as you approach the exit. A **warmup** is the gradual acceleration; **decay**
+is the slowing down.
 
 Learning rate controls update scale, but its meaning depends on the optimizer.
 A large rate can overshoot a locally useful direction; a small rate can make
@@ -411,8 +536,13 @@ trade-offs.
 
 ### Regularization changes the problem we optimize
 
-Generalization asks how learned predictions or behavior transfer to declared
-unseen inputs. Overfitting is the pattern in which fitting the training data
+So far we have made the training loss fall faithfully. But the training set is
+not what we care about in the end. We care about inputs the model hasn't seen.
+Regularization covers the choices made in the hope of improving that transfer,
+and each one changes the problem being optimized.
+
+**Generalization** asks how learned predictions or behavior transfer to declared
+unseen inputs. **Overfitting** is the pattern in which fitting the training data
 continues while performance on an appropriate held-out population deteriorates.
 A large train/development gap can also reflect different populations or
 measurement conventions, so compare a fixed checkpoint under matched scoring
@@ -420,14 +550,15 @@ before attributing it to training duration.
 
 Weight decay discourages large stored parameters through the shrinkage already
 shown. With $`\theta=2`$, $`\eta=0.01`$, $`\lambda=0.1`$ and an explicit zero
-gradient and fresh moments, decoupled decay gives $`\theta'=1.998`$.
+gradient and fresh moments, decoupled decay gives $`\theta'=1.998`$,
+because $`(1-\eta\lambda)\theta=(1-0.001)\cdot2`$.
 Adding an L2 gradient $`\lambda\theta=0.2`$ to a fresh Adam step instead gives
 approximately 1.99: the adaptive denominator transforms the penalty too.
 These are different updates, even though both can be described as penalties
 on parameter magnitude. This fixture decays all trainable parameters; excluding
 norm scales, biases or embeddings is a separately declared grouping choice.
 
-Dropout randomly suppresses selected activations during training and rescales
+**Dropout** randomly suppresses selected activations during training and rescales
 the survivors under its chosen convention. It changes the computation seen
 by each training example; affected layers use their evaluation behavior at
 measurement time. Our transparent decoder omits dropout. Adding it would be
@@ -445,7 +576,13 @@ and story case later in this chapter remain separate.
 
 ## 6.9 Clipping and precision: safeguards with boundaries
 
-Global gradient-norm clipping applies one scale to the concatenated gradient:
+Even a correct recipe can meet a bad batch: one gradient far larger than the rest,
+or a number too big for its storage format. Clipping and precision choices are the
+safeguards. Like a circuit breaker, each one protects against a specific failure
+and does nothing about the others.
+
+**Global gradient-norm clipping** rescales the whole gradient when its length
+exceeds a threshold $`c`$. It applies one scale to the concatenated gradient:
 
 ```math
 g'=g\min\left(1,\frac{c}{\lVert g\rVert_2}\right),
@@ -462,7 +599,10 @@ gradients and specify whether a failed step aborts, retries, or is skipped. Nor
 does clipping directly bound AdamW's final parameter-update norm: its adaptive
 transformation and decay happen afterward.
 
-Precision introduces another distinction: numerical range versus resolution.
+Precision introduces another distinction: numerical **range**, how large or small a
+number can be stored, versus **resolution**, how close two stored numbers can be.
+Give two rulers the same number of marks. One spaced a meter apart reaches far but
+can't tell 1.0 from 1.01; one spaced a millimeter apart is fine-grained but short.
 BF16 uses eight exponent bits like FP32 but only seven stored fraction bits;
 FP16 has five exponent bits and ten stored fraction bits. BF16 therefore offers
 a much wider exponent range than FP16, while resolving fewer nearby values
@@ -479,6 +619,11 @@ CUDA BF16 training recipe.
 
 ## 6.10 Memory and throughput are measured quantities
 
+The recipe now computes the right updates. Before scaling it up, we need to know
+whether it fits on the machine and how fast it runs. Both have tempting shortcuts:
+a memory estimate from the parameter count, a speed from one timer. Each shortcut
+answers a narrower question than it seems to.
+
 For $`P`$ unique parameters with FP32 weights, gradients and two FP32 Adam moments,
 a simple persistent tensor ledger is
 
@@ -486,7 +631,8 @@ a simple persistent tensor ledger is
 M_{\mathrm{persistent}}\approx(4+4+8)P=16P\ \text{bytes}.
 ```
 
-That estimate excludes activations, attention intermediates, temporary optimizer
+The 16 comes from four bytes for each FP32 weight, four for its gradient, and eight
+for the two Adam moments. That estimate excludes activations, attention intermediates, temporary optimizer
 buffers, allocator overhead, framework state and other processes. It is not
 peak memory. Tied weights count once as parameters; do not double-count an
 embedding matrix merely because it also serves the output projection.
@@ -509,7 +655,13 @@ GPU throughput benchmark; section 6.15 separately reports actual Spark timings.
 
 ## 6.11 Development measures a fixed prediction problem
 
-Historical code and reports sometimes call this split `validation`. In this
+Training loss tells us how the model does on what it is learning from. To judge
+progress we need a second measurement on text it isn't trained on, taken the same
+way every time. A bathroom scale is only useful for tracking weight if you use the
+same scale, at the same time of day, with the same clothes on.
+
+A **development set** is held-out data used repeatedly to inspect and choose
+recipes. Historical code and reports sometimes call this split `validation`. In this
 book it is a development set when repeatedly used to inspect or select recipes;
 the original field names and measured values retain their historical identity.
 
@@ -524,6 +676,7 @@ behavior for affected layers; `no_grad()` suppresses autograd recording. Neither
 is a substitute for the other. Our helper restores the model's prior mode after
 evaluation so a measurement does not silently alter subsequent training.
 
+The next plot shows why two loss curves on one chart can't simply be subtracted.
 Notebook 3 plots each current training batch's pre-update loss against the
 fixed held-out fixture's post-update loss. These are different populations and
 measurement times, so their gap is not a pure estimate of generalization error.
@@ -548,13 +701,20 @@ evaluation or justify selecting only favorable generations.
 
 ## 6.12 Recovery restores a process, not just a matrix
 
-A resumable state includes model parameters and optimizer history, plus the
+Long runs get interrupted. When that happens we want to continue as if nothing
+had happened, and that needs more than the weights. Picking a long novel back up
+needs the book, your bookmark, and perhaps the notes you made about who is who.
+For a training run, the weights are the book, the data cursor is the bookmark,
+and the optimizer moments are the notes.
+
+A **checkpoint** is a saved copy of that state. A resumable state includes model parameters and optimizer history, plus the
 clocks and data position that determine the next update. The fixture stores the
 completed-update count, valid-target counter, shuffle state, CPU random state,
 configuration, tokenizer identity, and data fingerprints. Its learning-rate
 schedule is a pure function of the saved count and recipe.
 
-Notebook 3 saves a trusted local checkpoint after update 12, then compares
+The following test shows that only a complete restore reproduces the uninterrupted
+run, while each incomplete restore still runs without error. Notebook 3 saves a trusted local checkpoint after update 12, then compares
 continuations to update 24. Complete restoration reproduces the uninterrupted
 parameter state and update history in the tested CPU environment. Omitting AdamW
 state keeps the next batches but changes the updates. Omitting the data cursor
@@ -583,6 +743,10 @@ of silently extending this lab's exact-equality claim.
 
 ### Restoring weights does not restore unused capacity
 
+Restoring state answers "where were we?" It doesn't answer "how much have we
+spent?" A refund policy is a good comparison: returning to an earlier save point
+gives you back the weights, but not the work burned by the attempt that failed.
+
 Imagine completing a nine-target update and saving it. The next eight-target
 update fails after entering computation. Restoring the saved weights makes the
 eight targets available for another attempt, but does not erase the failed
@@ -590,6 +754,8 @@ attempt's cost. If the retry succeeds, completed training exposure is 17 targets
 the three admitted groups reserved 25 target places. These are different answers
 to different questions, not inconsistent measurements.
 
+In the example, the three admitted attempts reserved $`9+8+8=25`$ target places,
+while only the first and the retried update completed, giving $`9+8=17`$.
 For a vector of declared logical-work units, let $`\mathbf{c}_j`$ be the whole
 reservation for attempt $`j`$. A cumulative allowance uses
 
@@ -627,6 +793,11 @@ evidence does not extend the historical GPU replay to another backend.
 
 ## 6.13 From understanding to a bounded experiment
 
+We now have every piece of the controlled system. Before running anything large,
+we write them down in one place, in advance. This is Fisher's point from the
+epigraph put into practice: a specification decides what will count as success
+or failure before the run can influence that decision.
+
 The [Day 8 specification](../../experiments/specs/2026-09-09-day8-bounded-pretraining.md)
 fixed an executable CPU control and separated it from a later Spark candidate.
 It names the data, model, token budget, optimizer, schedule, clipping, precision,
@@ -642,6 +813,10 @@ control that exposes an incorrect recipe is a successful teaching experiment,
 not a result to hide.
 
 ## 6.14 Case study: a decoder learns short English stories
+
+Everything so far was checked on ten tiny sentences. That shows the mechanics
+work. It can't show whether a model learns real language. For that we need a real
+corpus, a real budget, and a run that actually happened.
 
 The earlier sections described a controlled process. We can now examine one
 that actually ran. The question is deliberately narrower than “can we build a
@@ -659,6 +834,7 @@ results from one learning run, not a benchmark ranking or an architecture sweep.
 
 ### Reuse the alphabet, not the knowledge
 
+The run borrowed a tokenizer but nothing the tokenizer's original model had learned.
 We reused GPT-2's byte-BPE tokenizer: 50,257 token IDs and its existing
 text-to-ID mapping. We did **not** load GPT-2's neural weights. Our own decoder
 started with random parameters. Its embedding lookup, contextual representations
@@ -668,7 +844,8 @@ This connects Chapters 2, 3 and 5. A familiar tokenizer supplies categorical
 addresses; it does not supply the vector stored at each address, the ability to
 track a character, or a learned next-token distribution.
 
-The decoder has 12 blocks, width 512, eight query/key/value heads, a 1536-wide
+The next two paragraphs list the model and the frozen recipe; every value was fixed
+before the learning run began. The decoder has 12 blocks, width 512, eight query/key/value heads, a 1536-wide
 SwiGLU layer, pre-RMSNorm, RoPE, and a maximum context of 1024. Tied input/output
 embeddings give 66,638,848 unique parameters. Training used causal SDPA,
 activation checkpointing, BF16 autocast with FP32 parameters and AdamW state.
@@ -681,6 +858,8 @@ weights, not the weights used during throughput profiling.
 
 ### Data preparation is part of the result
 
+The preparation record shows how much data survived exact-duplicate and
+cross-split filtering, and what that filtering does not rule out.
 The prepared training split contained 1,792,647 stories and 390,708,926 valid
 targets. The held-out split contained 21,990 stories. Preparation removed
 320,241 normalized-exact duplicate training documents and excluded 6,601
@@ -700,6 +879,10 @@ development split. Repeated inspection makes this a development measurement, not
 an untouched final test.
 
 ## 6.15 What did the budget actually buy?
+
+Section 6.5 said a run has several clocks. Here we read all of them for a real
+run. The headline is that most of the computed positions carried no training
+signal: about four in five seats on the bus were empty.
 
 The run completed all 14,000 updates in 12,102.9 seconds, approximately 3 hours
 22 minutes, within its four-hour cap. The actual child process exited with code
@@ -738,13 +921,18 @@ comparison, not a measurement of unique linguistic knowledge acquired or an
 automatic proof against overfitting. Do not describe this run as “training on
 390 million tokens” merely because that many were prepared.
 
-The minimum *sampled* host available memory was 104.70 GiB against a 25 GiB
+The memory record shows the run stayed well inside its host reserve at the
+moments it was sampled. The minimum *sampled* host available memory was 104.70 GiB against a 25 GiB
 reserve, with sampling every 0.2 seconds and no recorded guard abort. CUDA peak
 allocated memory was 11,293,046,784 bytes. Host availability and CUDA allocations
 are different measurements and should not be added together. Sampled safety
 evidence also cannot rule out every transient between samples.
 
 ## 6.16 Reading a learning curve beside actual stories
+
+A falling loss curve is the usual sign that training worked. But we built this
+model to tell stories, so we should also read what it writes. The two kinds of
+evidence turn out to tell different stories of their own.
 
 The fixed-development loss decreased at every recorded observation. Selected
 points make the trajectory readable:
@@ -803,6 +991,9 @@ or repeated training-seed comparison in this run.
 
 ### Follow the evidence to a training decision
 
+Evidence is only useful if it changes what we do next. The table below sorts what
+this run answers from what it leaves open.
+
 **Reader prediction.** Which intervention is justified by these samples alone:
 more dropout, a repetition penalty, a larger model, or another measured
 comparison? Follow the responses rather than treating the loss as a verdict.
@@ -823,7 +1014,16 @@ address different hypotheses and should not be bundled into one alleged cure.
 
 ## 6.17 Why lower loss does not guarantee a coherent plot
 
-Recall what the next-token objective conditions on. In teacher-forced
+Section 6.16 found a gap: the loss improved a lot, yet the bear ended up protecting
+the rabbit from a bear. How can both be true? The answer lies in the history each
+prediction is conditioned on.
+
+A driving lesson makes the difference concrete. With an instructor who steers you
+back into the lane after every small drift, you only ever practice from a good
+position. Driving alone, your own small drifts add up, and you must recover from
+positions you never practiced.
+
+Recall what the next-token objective conditions on. In **teacher-forced**
 evaluation, the prefix is the recorded text. During generation, the prefix
 contains the model's previous choices. A model that handles recorded prefixes
 reasonably well can still struggle with the unusual or contradictory histories
@@ -852,6 +1052,11 @@ reliable behavior, not whether a locally computed loss forbids coherence.
 
 ## 6.18 Diagnosis: does repetition mean overfitting?
 
+The stories repeat themselves. The obvious label for that is overfitting, and it
+would point to obvious repairs. But a symptom isn't a diagnosis. A fever can come
+from many illnesses, and a doctor orders tests that tell them apart before
+prescribing.
+
 During interactive use, interactive inspection revealed repeated “big and scary”
 descriptions and suspected overfitting. This is a valuable diagnostic question
 because several mechanisms can produce the same surface symptom.
@@ -864,7 +1069,8 @@ because several mechanisms can produce the same surface symptom.
 | Memorized passages | Exact and near-duplicate searches against training text | One narrow literal search is insufficient |
 | Weak narrative consistency after limited learning | Frozen probes for entity tracking and event continuity | Qualitative symptoms present; causal attribution remains unresolved |
 
-Four backend requests with the same assumed opening and different
+The probes below show that the decoding controls do reach the model, but not what
+the original browser session sent. Four backend requests with the same assumed opening and different
 temperature/seed combinations produced four different continuations. This
 establishes that those controls affected the backend in those probes. It does
 not reproduce the unknown exact browser inputs or prove the browser
@@ -890,6 +1096,10 @@ each intervention is supposed to address. The
 separates the initial observation, actual probes and unresolved questions.
 
 ## 6.19 Sampling controls are experimental controls
+
+Section 6.18 found that decoding settings change the stories. That makes them part
+of every comparison. If two photos of a room were taken under different lighting,
+you can't tell whether the room changed or just the light.
 
 Chapter 3 explained the conversion from logits to probabilities. Here the
 distinction becomes operational: changing the rule used to choose a token is
@@ -920,6 +1130,9 @@ comparisons unless that difference is accounted for.
 
 ## 6.20 From a finished process to a defensible conclusion
 
+We have read the run from several angles. Now we gather what it does and doesn't
+support, one claim at a time, so that no claim borrows strength from another.
+
 The historical September run completed 14,000 updates with finite measurements
 and the recorded memory safeguards. Fixed-development NLL fell from 10.9049 to
 1.6743. Its inspected generations still contain repetition and inconsistent
@@ -939,11 +1152,17 @@ weights, rather than treating the September final model as its control.
 
 ## 6.21 The same exposure can produce different early trajectories
 
+One run can't tell us which recipe choice mattered. The cleanest next step is to
+change exactly one thing and hold everything else fixed. Here that one thing is
+the learning rate, and the comparison stops early, at update 400.
+
 **Reader prediction:** halve both peak and floor learning rates while preserving
 the seed, data order, batch, windows, masks and schedule horizon. At update 400,
 must a lower fixed-target NLL imply more coherent stories or more natural EOS?
 Separate those predictions before reading the observations.
 
+The comparison shows that equal exposure can still leave one arm predicting
+better and stopping naturally more often, while neither yet writes coherent stories.
 The [retained first-400 report](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
 compares fresh control and half-rate weights, not continuations of the historical
 September baseline. Both use seed 909, context 1,024 and effective batch 16.
@@ -996,6 +1215,7 @@ excerpts already show repeated fragments and unstable events. Chapter 7's
 is the single home for the supplied rubric results. It keeps meaningful endings
 separate from EOS and preserves two AI readers' disagreements.
 
+The remaining details bound how far this comparison reaches.
 Twelve openings and four decoding settings at initialization/update 400 produce
 192 actual continuations. Later checkpoints account for 288 missing cells of
 the planned 480; missing quality is not zero or a forecast. The publication
@@ -1008,11 +1228,45 @@ links the execution, corpus audit and retained measurement boundaries.
 
 ### Cleaning data changes more than its size
 
+Section 6.2 said filtering belongs in the recipe. Two extension notebooks now test
+data choices directly, one on curation and one on scaling.
+
 A document filter changes the empirical training distribution. Removing navigation, near copies or low-information text may reduce wasted exposure, but it can also remove a useful style or domain. The [corpus curation notebook](../../notebooks/extensions/cs336/06_corpus_curation.ipynb) makes that tradeoff visible on an original HTML fixture containing stories, code and multilingual text. Extraction, filtering, matching normalization and duplicate grouping have separate outputs; the text used for matching never silently replaces the text used for training.
 
-The reference compares raw, exact-deduplicated and curated data at 768 valid targets per arm and 32 targets per update. It retains 10, 9 and 5 documents respectively. Across all three declared seeds, curated final held-out NLL is worse than exact deduplication. Generated text remains limited. This result does not establish that curation is harmful in general; it shows that this filter and this finite training budget did not improve this held-out measurement. A prettier corpus is not empirical validation of a cleaning recipe.
+The curation comparison shows that, here, a cleaner-looking corpus did not give a
+better held-out score. The reference compares raw, exact-deduplicated and curated data at 768 valid targets per arm and 32 targets per update. It retains 10, 9 and 5 documents respectively. Across all three declared seeds, curated final held-out NLL is worse than exact deduplication. Generated text remains limited. This result does not establish that curation is harmful in general; it shows that this filter and this finite training budget did not improve this held-out measurement. A prettier corpus is not empirical validation of a cleaning recipe.
 
 The [scaling notebook](../../notebooks/extensions/cs336/03_scaling_prediction.ipynb) asks a related question: can several budget slices identify an allocation optimum? Its authored simulation is separate from the measured tiny-model matrix. Freeze the fit or refusal using calibration budgets before revealing the entire held-out budget. An optimum on the edge of the tested size range does not identify an interior optimum, and a repeated finite corpus does not satisfy an assumption of continually new training tokens. Assignment D requires those diagnostics alongside any prediction error.
+
+## Chapter summary
+
+- A **training recipe** must let someone else rebuild both the computation and its
+  interpretation. Data identity, splits and filtering are part of it (§6.1–6.2).
+- The tokenizer fixes the unit of every budget. Windows, padding and packing decide
+  which predictions are made and from which context; causal, attention and loss
+  masks do different jobs (§6.3–6.4).
+- A run has several clocks: updates, processed positions, valid targets, unique
+  content and reserved attempts. A target cap is enforced by refusing a whole
+  update, not by trimming it (§6.5).
+- Gradient accumulation must divide summed losses by the total valid-target count,
+  not average microbatch means (§6.6).
+- AdamW's update depends on moving averages of past gradients, so it can keep
+  moving against the newest gradient. Bias correction fixes zero initialization;
+  warmup and decay are separate recipe choices on an update clock (§6.7–6.8).
+- Regularization, clipping and precision each change or protect the computation in
+  a specific way; none is a general repair (§6.8–6.9).
+- Memory estimates from parameter counts are not peak memory, and throughput needs
+  a named denominator. Development loss must use a fixed population and reduction
+  (§6.10–6.11).
+- Recovery restores weights, optimizer state, data position and RNG together.
+  Restoring state does not refund spent work. Write the bounded experiment down
+  before running it (§6.12–6.13).
+- In the TinyStories run, development NLL fell from 10.9049 to 1.6743, yet the
+  stories still repeat and contradict themselves. Completion, better likelihood
+  and coherent stories are three separate claims (§6.14–6.17, §6.20).
+- Repetition has several possible causes, and decoding settings are experimental
+  controls. A paired half-learning-rate run at update 400 shows equal exposure can
+  give different trajectories without settling coherence (§6.18–6.21).
 
 ## Exercises
 

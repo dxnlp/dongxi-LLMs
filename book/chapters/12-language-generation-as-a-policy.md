@@ -1,5 +1,27 @@
 # 12. Language Generation as a Policy
 
+> For the things we have to learn before we can do them, we learn by doing them,
+> e.g. men become builders by building and lyre-players by playing the lyre.
+>
+> — Aristotle, *Nicomachean Ethics*, Book II, translated by W. D. Ross
+
+Every method so far has learned from responses that were written before
+training began. SFT copied demonstrations. The reward model and DPO learned
+from recorded pairs, and DPO never scored an answer the policy itself produced
+during training. Chapter 11 showed where that leaves a gap: DPO could open a
+large margin on its recorded pairs while its own generated answers still
+missed the required words. A fixed dataset can't tell the model about the
+mistakes it would make on its own.
+
+Aristotle's point is that some skills are learned only by practicing them.
+This chapter makes that turn. Instead of studying fixed, pre-collected
+responses, the model writes its own answers, a judge or checker scores them,
+and the score tells it which of its own habits to strengthen. This is the
+**reinforcement learning (RL)** view of generation. It finishes the
+preference-alignment story of Chapters 10–11 and sets up Chapter 13, where the
+score comes from an executable checker: **reinforcement learning with
+verifiable rewards (RLVR)**.
+
 The model answers `2 + 3 =` with `4`, `The answer is 5`, or `5`. A judge can
 distinguish these complete responses without supplying the desired token at
 every position. How does that final judgment reach the earlier choices that
@@ -12,6 +34,19 @@ Here the policy supplies its own candidates. We will first make their reward
 and probability completely inspectable, then introduce the uncertainty hidden
 by that small example. A story-continuity judgment or a program test changes
 the source of reward; the reward-to-gradient mechanism remains the question.
+We take it in six steps:
+
+1. Name the pieces: prefixes are states, tokens are actions, and the model is a
+   **policy** (§12.1).
+2. Derive the basic learning rule, REINFORCE, and compute it exactly on three
+   possible answers (§12.2–12.3).
+3. Make the noisy rule less noisy with baselines and leave-one-out comparisons
+   (§12.4–12.5).
+4. Reuse old samples safely: importance ratios, PPO clipping and KL estimates
+   (§12.6–12.8).
+5. Compare the estimators under declared sampling and update budgets (§12.9).
+6. Add a learned critic and generalized advantage estimation, then watch a
+   fitted text reward and its critic fail in a measured run (§12.10–12.14).
 
 Days 19–21 derive and test that mechanism before adding a large rollout system.
 The prerequisites are autoregressive likelihood, the softmax gradient, and
@@ -22,9 +57,18 @@ compare estimators under explicit sampling and update budgets.
 
 ## 12.1 Tokens are actions; prefixes are states
 
-For a fixed prompt $`x`$, define state $`s_t=(x,y_{<t})`$, action $`a_t=y_t`$, and
+To learn from its own attempts, the model needs a vocabulary for "attempt",
+"situation" and "outcome". Reinforcement learning supplies one. A game of chess
+is a good picture. The board is the situation, a move changes it, and only at
+the end do we learn whether we won. Writing an answer works the same way. The
+text so far is the board, each new token is a move, and a judge scores the
+finished answer.
+
+In RL terms, a **state** is the situation the decision-maker sees, an
+**action** is one choice it makes, and a **policy** is its rule for choosing
+actions, here a probability for each next token. For a fixed prompt $`x`$, define state $`s_t=(x,y_{<t})`$, action $`a_t=y_t`$, and
 policy $`\pi_\theta(a_t\mid s_t)`$. Appending a token determines the next state.
-A trajectory is the complete sequence $`y`$, including termination under the
+A **trajectory** is the complete sequence $`y`$, including termination under the
 chosen convention. Its probability factorizes:
 
 ```math
@@ -38,7 +82,8 @@ problem disappear. Different prefixes lead to different states, and a mistake
 can change all subsequent predictions. A terminal reward gives credit to many
 actions at once; it does not identify which intermediate step was responsible.
 
-Let $`R(x,y)`$ be a fixed reward and define
+Let $`R(x,y)`$ be a fixed **reward**, the number the judge gives a finished
+response, and define
 $`J(\theta)=\mathbb{E}_{y\sim\pi_\theta}[R(x,y)]`$. For now reward has no
 direct parameter dependence. Chapter 11's positive $`\beta`$ weights the
 reference penalty in $`J_\beta=\mathbb E[R]-\beta\,\mathrm{KL}(\pi_\theta\Vert\pi_{\mathrm{ref}})`$;
@@ -47,6 +92,13 @@ we must account for that dependence explicitly rather than reuse this assumption
 without checking it.
 
 ## 12.2 Derive REINFORCE from the probability distribution
+
+We want to raise expected reward, so we want its gradient. The difficulty is
+that the model doesn't output a reward. It outputs a random sample, and you
+can't differentiate through a coin flip. The way around this is a short identity
+that leads to a very plain rule: after sampling an answer, make that answer
+more likely in proportion to the reward it earned. That rule is
+**REINFORCE**.
 
 For a finite response space, differentiate the expectation:
 
@@ -60,7 +112,15 @@ The identity $`\nabla\pi=\pi\nabla\log\pi`$ replaces a derivative through
 discrete sampling with a derivative of the sampled sequence's log-probability.
 This score-function family originates in
 [Williams' REINFORCE paper](https://doi.org/10.1007/BF00992696).
-For terminal reward and autoregressive text,
+For autoregressive text, §12.1's factorization turns the sequence score into a
+sum of token scores:
+
+```math
+\nabla_\theta\log\pi_\theta(y\mid x)
+=\sum_t\nabla_\theta\log\pi_\theta(y_t\mid x,y_{\lt t}).
+```
+
+Substituting this into the expectation, for terminal reward,
 
 ```math
 \nabla_\theta J=\mathbb{E}\left[R(y)\sum_t
@@ -81,6 +141,10 @@ instead scores externally selected targets. Both use log-probabilities, but the
 distribution of sequences and their weights differ.
 
 ## 12.3 A categorical microscope with an exact answer
+
+REINFORCE is an average over samples, and a single sample can mislead. To see
+what the rule is aiming at, we need a case small enough to compute the average
+exactly. Three possible answers to `2 + 3 =` are enough.
 
 Temporarily collapse each complete response into one action. This is a
 single-decision, or bandit, version of the problem; no claim about a model's
@@ -104,7 +168,16 @@ two to four while all probabilities stay fixed?
 
 Use three complete answers with logits $`z_i`$, probabilities $`p_i`$, and fixed
 rewards $`R_i`$. Then $`J=\sum_i p_i R_i`$. Since
-$`\partial\log p_a/\partial z_i=\mathbf{1}[a=i]-p_i`$,
+$`\partial\log p_a/\partial z_i=\mathbf{1}[a=i]-p_i`$, write
+$`\partial p_a/\partial z_i=p_a\,\partial\log p_a/\partial z_i`$ and sum over
+answers:
+
+```math
+\frac{\partial J}{\partial z_i}=\sum_a R_a\,p_a(\mathbf{1}[a=i]-p_i)
+=p_iR_i-p_i\sum_a p_aR_a=p_iR_i-p_iJ.
+```
+
+Factoring out $`p_i`$ gives
 
 ```math
 \frac{\partial J}{\partial z_i}=p_i(R_i-J).
@@ -164,9 +237,25 @@ learning rate: does the expected direction change as you predicted?
 
 ## 12.4 A baseline changes variance, not the expected gradient
 
+Section 12.3 ended with a problem: single samples point in noisy directions.
+Part of the noise comes from raw reward having no sense of "expected". A
+reward of one might be good news or bad news, depending on what this prompt
+usually earns. A good teacher reasons the same way. A B from a student who
+usually gets Cs deserves praise. The same B from a student who usually gets As
+is a warning sign. Comparing with what was expected is the idea of a
+**baseline**.
+
 Subtract a value $`b(x)`$ independent of the sampled action. The return-minus-
-baseline difference is an advantage estimate: here it is $`R-b`$, a comparison
-with what this prompt was expected to achieve. Then
+baseline difference is an **advantage** estimate: here it is $`R-b`$, a comparison
+with what this prompt was expected to achieve. The baseline part contributes
+nothing on average, because
+
+```math
+b\sum_y\pi(y)\nabla\log\pi(y)=b\sum_y\nabla\pi(y)
+=b\,\nabla\sum_y\pi(y)=b\,\nabla1=0.
+```
+
+Then
 
 ```math
 \mathbb{E}[(R-b)\nabla\log\pi]
@@ -253,7 +342,14 @@ or otherwise justified.
 
 ## 12.5 RLOO and the self-inclusion factor
 
-For one prompt sample $`G\ge2`$ independent completions. An advantage estimate
+A baseline needs an estimate of what the prompt usually earns, and we rarely
+know it. A cheap idea is to sample several answers to the same prompt and
+compare each one with the others. Think of judging a runner by the average time
+of the *other* runners in the same heat. If you include the runner's own time
+in that average, you partly compare the runner with themselves. That small
+self-comparison has a measurable cost.
+
+The estimator below is **REINFORCE leave-one-out (RLOO)**. For one prompt sample $`G\ge2`$ independent completions. An advantage estimate
 compares a realized return with a pre-action baseline: return minus baseline.
 For these complete responses, return is the fixed terminal reward, and the
 other responses provide the baseline. Define
@@ -276,7 +372,15 @@ studied in [the RLOO paper](https://aclanthology.org/2024.acl-long.662/).
 It saves a separate value model but requires multiple sampled completions and
 can still have high variance.
 
-Compare against subtracting the inclusive group mean $`\bar R`$:
+Compare against subtracting the inclusive group mean $`\bar R`$. The group sum
+is $`R_i+(G-1)b_{-i}`$, so
+
+```math
+R_i-\bar R=R_i-\frac{R_i+(G-1)b_{-i}}{G}
+=\frac{(G-1)R_i-(G-1)b_{-i}}{G}.
+```
+
+Factoring out $`G-1`$ gives
 
 ```math
 R_i-\bar R=\frac{G-1}{G}(R_i-b_{-i}).
@@ -291,7 +395,15 @@ not call it unbiased merely because the centered group sums to zero.
 To see where the factor comes from, let $`s_i=\nabla\log\pi(y_i)`$.
 In $`\mathbb E[\bar R s_i]`$, the own-reward term contributes
 $`\nabla J/G`$. Each other-reward term contributes zero because it is independent
-of $`s_i`$ and $`\mathbb E[s_i]=0`$. Thus
+of $`s_i`$ and $`\mathbb E[s_i]=0`$:
+
+```math
+\mathbb E[\bar R s_i]=\frac1G\mathbb E[R_is_i]
++\frac1G\sum_{j\ne i}\mathbb E[R_j]\,\mathbb E[s_i]
+=\frac1G\nabla J+0.
+```
+
+Thus
 $`\mathbb E[(R_i-\bar R)s_i]=(1-1/G)\nabla J`$.
 For $`G=4`$ our running example's inclusive-centered mean gradient is
 $`[-0.2625,0.0675,0.195]`$; RLOO restores $`[-0.35,0.09,0.26]`$ in expectation.
@@ -306,7 +418,14 @@ keeping these distinctions visible.
 
 ## 12.6 Old policies, references, and importance ratios
 
-An old policy $`\pi_{\mathrm{old}}`$ generated a rollout batch. A reference policy
+Sampling is expensive, so we'd like to use each batch of answers for more than
+one update. But after the first update, the answers came from a policy that no
+longer exists. Pollsters face the same problem. If a survey reached too many
+older voters, they don't throw it away. They give each older respondent less
+weight and each younger one more, so the sample stands in for the population
+they care about. **Importance weighting** does this for policies.
+
+An **old policy** $`\pi_{\mathrm{old}}`$ generated a rollout batch. A reference policy
 $`\pi_{\mathrm{ref}}`$ anchors long-term behavioral movement. These may start at
 the same checkpoint but play different roles. The old policy usually updates
 when a new batch is collected; the reference often remains fixed.
@@ -320,7 +439,16 @@ ratio is
 ```
 
 With support coverage, weighting an old-policy expectation by this ratio
-recovers a current-policy expectation. Long sequence ratios can have enormous
+recovers a current-policy expectation:
+
+```math
+\mathbb E_{y\sim\pi_{\mathrm{old}}}[\rho(y)f(y)]
+=\sum_y\pi_{\mathrm{old}}(y\mid x)\frac{\pi_\theta(y\mid x)}{\pi_{\mathrm{old}}(y\mid x)}f(y)
+=\mathbb E_{y\sim\pi_\theta}[f(y)].
+```
+
+The cancellation needs $`\pi_{\mathrm{old}}(y\mid x)>0`$ wherever
+$`\pi_\theta(y\mid x)>0`$; that is what support coverage means here. Long sequence ratios can have enormous
 variance because many small token changes multiply. Token-level ratios
 $`\rho_t`$ used in PPO provide a local surrogate at states visited by the old
 policy. They are not the same as exact full-sequence importance correction when
@@ -364,6 +492,13 @@ different objective, not a universal fix for a full-support target. Chapter 14
 §14.3 develops the measured example and its boundary masks.
 
 ## 12.7 What PPO clipping actually clips
+
+Section 12.6 ended with ratios that can grow large when we reuse samples. A
+large ratio means the policy has already moved far from the one that collected
+the data, so the old samples are a poor guide. **Proximal policy optimization
+(PPO)** responds with a simple rule. Credit for moving in a good direction
+stops growing once the policy has moved far enough. Moving in a bad direction
+still counts against it. The clipping below makes that rule exact.
 
 For one response, write $`\hat A_t=\hat A_{i,t}`$ and suppress its index $`i`$.
 The clipped per-token surrogate is
@@ -439,6 +574,11 @@ cannot establish stable learning.
 
 ## 12.8 KL estimates depend on direction and support
 
+Chapter 11's objective included a KL penalty, and §12.7 said we should monitor
+KL because clipping doesn't bound it. For a language model we can't sum over
+every response to get KL exactly. We estimate it from the samples we drew.
+There are several ways to do this, and they behave differently.
+
 Let $`p`$ be the distribution generating actions and $`q`$ a positive reference on
 the same finite support. For $`a\sim p`$, define $`d(a)=\log p(a)-\log q(a)`$.
 Then
@@ -452,7 +592,15 @@ $`\mathbb{E}_p[k_1]=\mathrm{KL}(p\Vert q)`$. Individual samples of $`k_1`$ can
 be negative although the expectation is nonnegative. $`k_2`$ is nonnegative but
 generally biased for KL; its usefulness comes from a local quadratic
 approximation near equal distributions. For common full support,
-$`\mathbb{E}_p[\exp(-d)]=\sum_a q(a)=1`$, so $`k_3`$ has the same expectation
+$`\mathbb{E}_p[\exp(-d)]=\sum_a q(a)=1`$. Taking the expectation of each term
+of $`k_3`$,
+
+```math
+\mathbb{E}_p[k_3]=\sum_a p(a)\frac{q(a)}{p(a)}-1+\mathbb{E}_p[d]
+=1-1+\mathrm{KL}(p\Vert q)=\mathrm{KL}(p\Vert q),
+```
+
+so $`k_3`$ has the same expectation
 as $`k_1`$ and nonnegative individual values because $`u-1-\log u\ge0`$.
 
 This control-variate identity does not guarantee lower variance everywhere.
@@ -472,6 +620,11 @@ use sampled estimators to study measurement variance.
 
 ## 12.9 A comparison with declared budgets
 
+We now have four ways to turn sampled rewards into updates: plain REINFORCE, a
+baseline, RLOO and PPO. Which works best? That question has no answer until we
+say what "equal effort" means. PPO reuses each batch, so it can match the others
+in samples drawn while doing more optimizer work.
+
 The CPU task has six arithmetic prompts $`(a,b)`$ and three answer actions;
 the correct action is $`(a+b)\bmod3`$. Independent logits per prompt intentionally
 remove representation learning. We compare REINFORCE, an exact-value baseline,
@@ -485,6 +638,8 @@ test gradient-work efficiency before revealing the results. PPO uses three gradi
 per rollout, so it consumes more optimizer work despite equal sampled tokens.
 The report exposes both clocks rather than calling the run compute-matched.
 
+The result in one line: all four methods learn this small task, and PPO ends
+highest while using three times the gradient passes.
 The [retained CPU report](../../experiments/reports/2026-10-04-preference-policy-cpu.md)
 records 160 rollout updates, six contexts and four sampled actions per context:
 3,840 sampled completions per arm, with learning rate 1.5 and fixed seeds.
@@ -547,6 +702,14 @@ capabilities. These operational questions lead into Chapters 13 and 14.
 
 ## 12.10 A critic predicts the return before an action
 
+So far the baseline was either known exactly or built from other samples of
+the same prompt. Real tasks offer neither luxury at every token. A sports
+broadcast shows the idea we need. Before each play, a win-probability display
+estimates how likely each team is to win from the current position. After the
+play, the change in that estimate tells you how much the play helped. A
+**critic** is a model that makes this kind of estimate for a partly written
+answer.
+
 The exact-value comparison above deliberately removed representation error.
 Now put that difficulty back. A neural critic reads the same pre-action prefix
 $`s_t`$ as the actor and predicts $`V_\psi(s_t)`$: the expected discounted future
@@ -568,6 +731,11 @@ learned score $`r_\phi(x,y)`$ can supply a terminal $`R_t`$, while a verifier ca
 supply it directly; the return calculation treats either as fixed observed data.
 The companion's local per-step reward variables map to $`R_t`$ here.
 
+The **return** is the reward still to come from a state onward. A **discount**
+$`\gamma`$, at most one, can make later rewards count a little less; with
+$`\gamma=1`$ every future reward counts fully. When
+the episode is cut off before it ends, we **bootstrap**: we fill in the
+unobserved remainder with the critic's own estimate.
 For discount $`\gamma`$ and $`n`$ observed
 actions, the bootstrapped return is
 
@@ -589,14 +757,20 @@ return. These checks catch a bug that a finite loss curve can hide.
 
 ## 12.11 TD residuals and generalized advantage estimation
 
-A temporal-difference residual compares the present prediction with one
+The win-probability display gives a natural measure of one play's value: the
+estimate after the play, minus the estimate before it. That one-step surprise
+is cheap but leans entirely on the critic. Waiting for the final score leans
+on no critic but is noisy. Generalized advantage estimation blends the two.
+
+A **temporal-difference (TD) residual** compares the present prediction with one
 observed transition and its continuation estimate:
 
 ```math
 \delta_t=R_t+\gamma c_tV_\psi(s_{t+1})-V_\psi(s_t).
 ```
 
-Generalized advantage estimation combines those residuals. Let $`m_t`$ indicate
+**Generalized advantage estimation (GAE)** combines those residuals, giving
+nearer ones more weight through a second factor $`\lambda`$. Let $`m_t`$ indicate
 a valid action and $`m_n=0`$ immediately beyond observation:
 
 ```math
@@ -652,6 +826,12 @@ provides runnable return/GAE and EOS/cap controls for that distinction.
 
 ## 12.12 Three separate gradient contracts
 
+We now have three models in play: the actor that writes, the critic that
+predicts, and the frozen reward that scores. Each should learn only from its own
+objective. If gradients leak between them, the actor can game its own
+yardstick. This section writes the two losses so that the boundaries are
+explicit.
+
 For $`N`$ sampled responses, the actor minimizes a negative clipped token sum per
 response; the critic minimizes valid-state mean-square error:
 
@@ -684,6 +864,10 @@ or exact correction of changing state distributions.
 
 ## 12.13 Actual fitted rewards and generated text
 
+Every reward so far was a rule we wrote down. Now we replace it with the kind
+of reward Chapter 10 warned about: a model fitted to preference pairs. This
+section sets up the test. The next one reports what happened.
+
 Chapter 10 fitted a reward from text pairs. Can a policy exploit what those
 pairs did not constrain? Our original task asks for a color. The actor reads
 actual prompt word tokens and emits color/style tokens and EOS. The reward
@@ -706,6 +890,11 @@ allows only EOS. Main delivery caps at three, so continuation values belong
 to this declared environment, not open language.
 
 ## 12.14 The measured experiment retains critic and reward failures
+
+Section 12.13 built a task with a fitted reward and a learned critic. Does the
+policy learn the color task? Mostly it doesn't, and the failures are the
+lesson: a reward that fits its training pairs almost perfectly can still fail
+to teach the policy what the pairs were meant to teach.
 
 Three fixed seeds compare oracle, learned and noisy critics under balanced
 reward; confounded reward uses the same learned-critic recipe. Every row
@@ -740,6 +929,35 @@ A policy loss can contain task reward, KL pressure and entropy terms. A nonzero 
 The [compatible decoder reference](../../notebooks/extensions/cs336/07_posttraining_integration.ipynb) samples answers and the ending action, then reevaluates their likelihood under the declared conditional grammar. Its support and masks therefore remain part of the probability contract. Compare its frozen parent with accepted-response SFT and the reward-based sibling using the same held-out source pairs. Their different losses need not imply different task success.
 
 Reuse this chapter's likelihood-ratio, baseline and support derivations to explain the observed update. The small reference has genuine sampled successes, failures and mixed groups, so it clears a mechanism gate that the earlier all-zero native run did not. Clearing that gate establishes an opportunity for task-directed learning; the independent constant baseline still tests whether the policy acquired the underlying relation.
+
+## Chapter summary
+
+- Earlier chapters learned from fixed, pre-collected responses. Here the model
+  learns from its own samples: prefixes are **states**, tokens are **actions**,
+  and the model is a **policy** whose complete outputs a judge scores (§12.1).
+- **REINFORCE** turns expected reward into a usable gradient: weight the sampled
+  response's log-probability gradient by its detached reward. It is unbiased but
+  noisy, and it is not backpropagation through sampling (§12.2).
+- On three answers the exact logit gradient is $`p_i(R_i-J)`$. What matters is
+  reward relative to the policy's average, not whether reward is positive. One
+  sample can point the wrong way (§12.3).
+- An action-independent **baseline** leaves the expected gradient unchanged and
+  changes only its variance, which can go down or up. RLOO builds the baseline
+  from the other samples; an inclusive group mean shrinks the expected gradient
+  by $`(G-1)/G`$ (§12.4–12.5).
+- Reusing samples needs **importance ratios** against the old policy, which is
+  different from the fixed reference. PPO clipping removes extra credit for
+  beneficial movement but keeps harmful movement penalized, and it is not a hard
+  KL bound. Sampled KL estimators differ in sign, bias and tails, and depend on
+  support (§12.6–12.8).
+- In the CPU comparison, matched sampling did not mean matched optimizer work.
+  Report both clocks before ranking methods (§12.9).
+- A **critic** predicts the return before an action. TD residuals and GAE turn
+  its predictions into advantages, and EOS, caps and padding need different
+  masks. Actor, critic and reward each keep separate gradient paths (§12.10–12.12).
+- With a fitted text reward, the measured runs kept severe failures despite
+  near-zero pair loss. A trained reward is still not a trustworthy definition of
+  success, which motivates Chapter 13's verifiable rewards (§12.13–12.14).
 
 ## 12.15 Companion route and exercises
 

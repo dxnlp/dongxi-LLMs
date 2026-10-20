@@ -1,8 +1,45 @@
 # 7. Evaluation Is a Contract
 
+> Not everything that can be counted counts, and not everything that counts can be
+> counted.
+>
+> — William Bruce Cameron, *Informal Sociology*
+
+Chapter 6 ended with a measurement that went the right way and stories that
+didn't. Fixed-development NLL fell from 10.9049 to 1.6743. Yet the final story
+had a bear promising to protect the rabbit from a bear, and the samples repeated
+themselves. The run had no scored, blinded story-quality evaluation, so we
+couldn't say how often such failures happen, or whether the next recipe change
+fixed them.
+
+Cameron's line names that gap. NLL was easy to count, and it improved. Whether
+the characters kept their roles was what we cared about, and nobody counted it. A metric
+counts only what its contract declares: these inputs, this behavior, this rule
+for turning an output into a score. The qualities we care about may not be on
+that list. So before looking at any outputs, we have to say what will be counted
+and how, and then say plainly what was left uncounted.
+
 A model continues a story without spelling errors, yet changes the main character's name halfway through. Another model has lower development loss but repeatedly returns a paragraph when the user asks for one word. Which is better? The question has no answer until we name the work we want the model to do, the population of inputs, and the rules for judging its outputs.
 
-Chapter 6 established evidence about prediction on TinyStories. Its completed run improved fixed-development NLL, while inspected generations still contained repetition and inconsistencies. This chapter makes the next decision possible: define behavior precisely enough to compare before choosing another training intervention. Day 10 begins with four executable companions: [metrics](../../notebooks/day-10/01_metrics_and_contracts.ipynb), [uncertainty](../../notebooks/day-10/02_paired_uncertainty.ipynb), [slices and leakage](../../notebooks/day-10/03_slices_and_contamination.ipynb), and [mathematical grading and response replay](../../notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb). The [lab guide](../labs/07-evaluation-is-a-contract.md) and [worked answers](../solutions/07-evaluation-is-a-contract.md) extend the argument.
+Those three things together form an **evaluation contract**: a written agreement,
+fixed in advance, about which inputs are tested, what the model must do, and how
+each output becomes a score. A driving test works the same way. The route, the
+rules and the examiner's checklist are set before you get in the car, not chosen
+afterwards to suit how you drove.
+
+Chapter 6 established evidence about prediction on TinyStories. Its completed run improved fixed-development NLL, while inspected generations still contained repetition and inconsistencies. This chapter makes the next decision possible: define behavior precisely enough to compare before choosing another training intervention. We will take it in six steps:
+
+1. Name a capability that can fail, and freeze the whole path from item to score (§7.1–7.2).
+2. Learn what three common metrics measure: exact match, pass@k and confidence (§7.3–7.5).
+3. Compare two models fairly: pair the items, split by slice, and check for
+   contamination (§7.6–7.8).
+4. Build a mathematical grader and a replay path that keeps every model event (§7.9–7.12).
+5. Separate a correct candidate from a correct decision, and charge failed attempts
+   to the budget (§7.13–7.14).
+6. Report honestly: evaluation cards, a real response that passes a weak rubric,
+   and a separate story-rating instrument (§7.15–7.17).
+
+Day 10 begins with four executable companions: [metrics](../../notebooks/day-10/01_metrics_and_contracts.ipynb), [uncertainty](../../notebooks/day-10/02_paired_uncertainty.ipynb), [slices and leakage](../../notebooks/day-10/03_slices_and_contamination.ipynb), and [mathematical grading and response replay](../../notebooks/day-10/04_mathematical_grading_and_response_replay.ipynb). The [lab guide](../labs/07-evaluation-is-a-contract.md) and [worked answers](../solutions/07-evaluation-is-a-contract.md) extend the argument.
 
 ## What you should be able to explain
 
@@ -16,13 +53,23 @@ and held-out measurement boundaries from Chapter 6.
 
 ## 7.1 Name a capability that can fail
 
+Before we can measure anything, we need a claim narrow enough to be wrong. "The
+stories got better" can't fail a test, because it never says what would count as
+worse. So the first job is to name a capability precisely.
+
 “Good at reasoning” is too broad to evaluate directly. “Given an original two-step integer arithmetic problem, return the correct integer within 64 generated tokens” is narrower and testable. It specifies an input family, a behavior, a correctness rule and a generation budget. It still leaves choices: must the model explain? Can it use a calculator? How is an answer extracted? Those belong in the contract too.
 
 For our storyteller, define five separate properties. Grammar concerns sentence structure. Character consistency asks whether entities and attributes remain stable. Causal continuity asks whether events follow from what came before. Repetition asks whether language cycles without advancing the story. Ending quality asks whether the narrative resolves within the permitted budget. These properties can disagree, so a single “story score” obscures useful evidence unless its aggregation is defended.
 
-Write a rubric before looking at candidate outputs. For character consistency, a three-level scale could mean: 0, contradictory identities; 1, an unresolved reference; 2, stable identities throughout. Include examples created independently of candidate models. A second reader should be able to apply the rubric with similar judgments. Disagreement is evidence about the instrument, and should be preserved instead of silently averaged away.
+A **rubric** is the scoring guide: for each property, the levels a judge may assign
+and what each level means. Write a rubric before looking at candidate outputs. For character consistency, a three-level scale could mean: 0, contradictory identities; 1, an unresolved reference; 2, stable identities throughout. Include examples created independently of candidate models. A second reader should be able to apply the rubric with similar judgments. Disagreement is evidence about the instrument, and should be preserved instead of silently averaged away.
 
 ## 7.2 Freeze the complete input-to-score path
+
+A precise capability is not enough if the steps between the question and the
+score can drift. Change the chat template, the tokenizer or the answer parser, and
+the same model can get a different score. So we fix every step of that path, the
+way a lab fixes its thermometer before comparing two days' readings.
 
 An evaluation item is more than a question. It includes an identifier, provenance, expected answers or verifier, slice labels and split membership. A model identity is more than its public name: record the exact checkpoint revision, tokenizer revision, adapter revision if any, and inference mode.
 
@@ -32,13 +79,20 @@ The full path is:
 
 Changes anywhere in this path can change the result. A chat template can add a reasoning prefix; truncation can remove a decisive condition; a parser can accept an answer buried in an otherwise incorrect response. Version all of them. In the notebook, an immutable contract produces a SHA-256 identity from canonical JSON. The hash proves that two records refer to identical serialized settings; it does not prove that those settings are appropriate.
 
-Training, development and publication test splits serve different purposes. Training examples update parameters. Development examples support recipe selection. Publication test examples support a final claim after the selection process is complete. Once repeatedly consulted, a nominal test split becomes development evidence. Renaming it does not restore independence.
+A **publication test split** is held out until every choice has been made, so it
+can support one final claim. Training, development and publication test splits serve different purposes. Training examples update parameters. Development examples support recipe selection. Publication test examples support a final claim after the selection process is complete. Once repeatedly consulted, a nominal test split becomes development evidence. Renaming it does not restore independence.
 
 Keep a small development suite for rapid feedback and a larger final suite with a stronger source audit. The same examples should not quietly migrate between roles. When data is scarce, use grouped cross-validation and explain exactly which decisions each fold informed.
 
 ## 7.3 Exact match measures a particular agreement
 
-For item $`j`$, let the model prediction be $`\hat a_j`$, the set of accepted references be $`R_j`$, and a fixed normalization function be $`f`$. Exact match is
+With the path frozen, the simplest score is to check whether the answer equals
+the reference. That sounds obvious, but "equals" hides a choice. Is "Red" the same
+as "red"? Is "1.0" the same as "1"? A spelling bee and a math quiz would answer
+differently, and both would be right for their purpose.
+
+**Exact match** scores an item 1 when the normalized prediction is one of the
+normalized accepted answers, and 0 otherwise. For item $`j`$, let the model prediction be $`\hat a_j`$, the set of accepted references be $`R_j`$, and a fixed normalization function be $`f`$. Exact match is
 
 ```math
 e_j=\mathbf{1}\{f(\hat a_j)\in f(R_j)\},\qquad
@@ -53,11 +107,21 @@ An output such as “The answer is red” can be correct in ordinary conversatio
 
 ## 7.4 pass@k includes an attempt budget
 
-Suppose a code task permits $`k`$ independently sampled attempts and an executable verifier accepts a candidate. The event of interest is “at least one passes.” If the success probability for one independent sample is $`p`$, its probability is
+Exact match grades one answer. Some tasks allow several tries, and then the score
+depends on how many tries we allow. A basketball player who makes 30% of free
+throws will usually miss one shot, but given three shots will often make at least
+one. The number of attempts is part of what the score means.
+
+**pass@k** is the probability that at least one of $`k`$ attempts passes the
+verifier. Suppose a code task permits $`k`$ independently sampled attempts and an executable verifier accepts a candidate. The event of interest is “at least one passes.” If the success probability for one independent sample is $`p`$, each attempt fails with probability $`1-p`$, so all $`k`$ independent attempts fail
+with probability $`(1-p)^k`$. "At least one passes" is the complement of that event,
+so its probability is
 
 ```math
 \mathrm{pass@}k=1-(1-p)^k.
 ```
+
+For the free-throw shooter, $`1-(1-0.3)^3=1-0.343=0.657`$.
 
 The evaluation usually samples $`n`$ candidates, counts $`c`$ correct candidates, and estimates the chance that a uniformly chosen subset of $`k`$ candidates contains a success:
 
@@ -67,7 +131,14 @@ The evaluation usually samples $`n`$ candidates, counts $`c`$ correct candidates
 \qquad n\ge k.
 ```
 
-The fraction counts all-incorrect subsets divided by all subsets. If fewer than $`k`$ incorrect candidates exist, every subset contains a success and the estimate is one. For $`n=10,c=2,k=3`$, the estimate is $`1-56/120=0.5333\ldots`$. The notebook verifies the product implementation against exact combinatorial counts. The estimator is established in the [original code-evaluation paper](https://arxiv.org/abs/2107.03374).
+The fraction counts all-incorrect subsets divided by all subsets. If fewer than $`k`$ incorrect candidates exist, every subset contains a success and the estimate is one. For $`n=10,c=2,k=3`$, there are eight incorrect candidates, so
+
+```math
+\widehat{\mathrm{pass@}3}=1-\frac{\binom{8}{3}}{\binom{10}{3}}
+=1-\frac{56}{120}.
+```
+
+The estimate is $`1-56/120=0.5333\ldots`$. The notebook verifies the product implementation against exact combinatorial counts. The estimator is established in the [original code-evaluation paper](https://arxiv.org/abs/2107.03374).
 
 The procedure assumes candidates come from the stated sampling process. Copying one completion ten times supplies no new independent attempts. Picking the best answer with an oracle after generation measures an oracle budget, not single-response deployment quality. If a user must receive one answer without access to the verifier, pass@10 does not describe that experience. Record temperature, top-p, seeds, maximum output length, execution limits and verifier version.
 
@@ -75,11 +146,18 @@ A verifier itself can be incomplete. Passing three tests does not prove a progra
 
 ## 7.5 Confidence has several meanings
 
+A score alone doesn't say how much to trust it. "Confidence" is the word people
+reach for, but it names at least three different things: a model's probability
+for its own tokens, whether its stated confidence matches how often it's right,
+and how uncertain our estimate of a score is. This section keeps them apart.
+
 The probability of a token is not confidence that the entire answer is true. A model can assign high probability to a common misconception, a boilerplate sentence or a copied phrase. Sequence probabilities also shrink with length, so comparing raw probabilities of answers with different lengths is misleading.
 
-Calibration instead asks whether cases assigned a stated confidence succeed at the corresponding frequency. For example, among cases rated 0.8, roughly 80% should be correct under the same population and grading rule. A reliability diagram groups predicted confidence and compares it with observed correctness. Its bins, sample counts and uncertainty must remain visible. Verbal confidence elicited by a prompt is another model output, not a guarantee.
+A weather forecaster gives the everyday picture. If she says "70% chance of rain"
+on many days, it should rain on about 70% of them. **Calibration** asks the same of
+a model: whether cases assigned a stated confidence succeed at the corresponding frequency. For example, among cases rated 0.8, roughly 80% should be correct under the same population and grading rule. A reliability diagram groups predicted confidence and compares it with observed correctness. Its bins, sample counts and uncertainty must remain visible. Verbal confidence elicited by a prompt is another model output, not a guarantee.
 
-Statistical confidence intervals describe uncertainty in a score estimate under a sampling model. They do not describe an individual model's internal certainty. For $`x`$ successes in $`N`$ independent Bernoulli items, $`\hat p=x/N`$. The Wilson interval uses
+Statistical **confidence intervals** describe uncertainty in a score estimate under a sampling model. They do not describe an individual model's internal certainty. For $`x`$ successes in $`N`$ independent Bernoulli items, $`\hat p=x/N`$. The Wilson interval uses
 
 ```math
 \mathrm{center}=\frac{\hat p+z^2/(2N)}{1+z^2/N},\qquad
@@ -89,6 +167,16 @@ Statistical confidence intervals describe uncertainty in a score estimate under 
 
 For a nominal 95% interval, $`z`$ is approximately 1.96. Unlike the simplest normal approximation, this interval does not pretend zero observed failures establishes a zero failure rate. Ten successes out of ten still leave uncertainty about the underlying population. The confidence level refers to repeated interval construction; it is not a posterior probability that a fixed parameter lies in a particular computed interval.
 
+For ten successes out of ten, put $`\hat p=1`$, $`N=10`$ and $`z^2\approx3.8416`$
+into the two formulas. The $`\hat p(1-\hat p)`$ term vanishes, leaving
+
+```math
+\mathrm{center}=\frac{1+3.8416/20}{1+3.8416/10}=\frac{1.19208}{1.38416}\approx0.86123,
+\qquad
+\mathrm{halfwidth}=\frac{1.96\sqrt{3.8416/400}}{1.38416}=\frac{0.19208}{1.38416}\approx0.13877.
+```
+
+Subtracting and adding the halfwidth gives approximately $`0.72246`$ and $`1.00000`$.
 For ten successes out of ten, the interval is approximately $`[0.7225,1]`$.
 The lower endpoint is wide because only ten independent opportunities were
 observed. Copying those ten records repeatedly does not create more evidence.
@@ -98,6 +186,11 @@ shows both the sample-size calculation and that duplication failure.
 If many items share a document, author or problem template, independence at the item level is doubtful. Resample the independent groups, or explicitly narrow the interpretation to the fixed evaluated set. A hundred paraphrases of one question are not a hundred independent subject areas.
 
 ## 7.6 Compare models on aligned items
+
+Single scores are only half the job; usually we want to know whether model B is
+better than model A. Comparing their two totals throws information away. Think of
+two students who sat the same exam. You learn far more by going question by
+question, which ones each got right, than by comparing their final grades alone.
 
 The [existing forty-item fixture](../../src/dongxi_llms/evaluation_lab.py)
 gives A 25 successes and B 28: 62.5% versus 70%. These are authored binary
@@ -111,7 +204,8 @@ For per-item scores $`a_j`$ and $`b_j`$, define
 d_j=b_j-a_j,\qquad \hat\Delta=\frac{1}{N}\sum_j d_j.
 ```
 
-The paired bootstrap samples item indices with replacement and recalculates $`\hat\Delta`$ for each resampled set. Percentile endpoints summarize the resampling distribution. Pairing retains shared item difficulty. Our implementation fixes the seed and number of draws; the notebook shows the full resampling distribution and its interval.
+The **paired bootstrap** estimates how much $`\hat\Delta`$ could vary by pretending
+the evaluated items are the population and redrawing from them. It samples item indices with replacement and recalculates $`\hat\Delta`$ for each resampled set. Percentile endpoints summarize the resampling distribution. Pairing retains shared item difficulty. Our implementation fixes the seed and number of draws; the notebook shows the full resampling distribution and its interval.
 
 ### Account for the improvement before naming a winner
 
@@ -138,7 +232,8 @@ To reproduce the resampling rather than treating “bootstrap” as a magic word
 4. Repeat with a declared seed and draw count.
 5. Sort those means and read the declared percentile endpoints.
 
-The canonical `paired_bootstrap` uses Python's seeded sampler, 2,000 draws
+On this fixture the interval straddles zero, so the evidence doesn't settle which
+model is better. The canonical `paired_bootstrap` uses Python's seeded sampler, 2,000 draws
 and seed 1010. It gives $`\hat\Delta=0.075`$ and interval $`[-0.125,0.275]`$
 for this fixture. The notebook additionally draws its histogram with a
 separately seeded NumPy sampler; finite-draw endpoints need not be identical.
@@ -162,9 +257,15 @@ This interval has limits. Few rare events, strong grouping or a selected evaluat
 
 ## 7.7 Aggregate scores can hide regressions
 
-A benchmark contains frequent easy tasks and rare structured outputs. A recipe improves frequent tasks but harms JSON validity. Its average rises because common tasks dominate. The rare failure is still consequential.
+Pairing showed that B lost seven items while gaining ten. The next question is
+*which* items. A hospital's overall recovery rate can rise while one ward gets
+worse, simply because the other wards are larger. Evaluation averages behave the
+same way.
 
-Report the item count, denominator and uncertainty for each predeclared slice: task family, input length, language, reasoning depth, format constraint and source. Distinguish a micro-average over all items from a macro-average giving each slice equal weight. Neither is automatically right; the deployment distribution should inform the choice.
+A **slice** is a predeclared subset of items, such as one task family or one input
+length, scored on its own. A benchmark contains frequent easy tasks and rare structured outputs. A recipe improves frequent tasks but harms JSON validity. Its average rises because common tasks dominate. The rare failure is still consequential.
+
+Report the item count, denominator and uncertainty for each predeclared slice: task family, input length, language, reasoning depth, format constraint and source. Distinguish a **micro-average** over all items from a **macro-average** giving each slice equal weight. Neither is automatically right; the deployment distribution should inform the choice.
 
 Our fixture assigns two models to forty items and deliberately creates a rare-format regression. It demonstrates the accounting. It does not measure Qwen or DongxiGPT. Inspect the paired disagreement table, then a fixed sample of failures from each category. Select that sample by a documented rule, such as the first five identifiers per category. Attractive examples should not control the evaluation population.
 
@@ -176,7 +277,15 @@ Here is the same comparison split by its declared task family:
 | Rare format | 10 | 5 | 2 | −30 percentage points |
 | All items, micro-average | 40 | 25 | 28 | +7.5 percentage points |
 
-Giving the two slice accuracies equal weight instead gives A approximately
+Giving the two slice accuracies equal weight instead gives
+
+```math
+\text{A: }\tfrac{1}{2}\left(\tfrac{20}{30}+\tfrac{5}{10}\right)\approx0.5833,
+\qquad
+\text{B: }\tfrac{1}{2}\left(\tfrac{26}{30}+\tfrac{2}{10}\right)\approx0.5333,
+```
+
+so A is approximately
 58.33% and B 53.33%, a five-point decrease. That macro-average is not a
 correction of the micro-average; it answers a different weighting question.
 If valid structured output is essential to the intended use, its decline
@@ -188,6 +297,12 @@ For stories, a fixed prompt grid should cover different characters, event struct
 
 ## 7.8 Contamination is a provenance problem
 
+Every comparison so far assumed the test items were new to the model. If the
+model saw them, or close copies, during training, a high score measures memory,
+not skill, like a student who saw the exam paper the night before.
+**Contamination** is that overlap between what a model was trained on and what it
+is tested on, and finding it means tracing where the data came from.
+
 An exact overlap between training and test text is easy to detect with normalized hashes. Semantic paraphrases, shared source documents and solutions copied into explanations are harder. Deduplicate before splitting and group related records by their source or generation template.
 
 The leakage notebook creates a deliberate normalized duplicate across train and test, finds it, and demonstrates how a fictional lookup baseline obtains misleading success. Exact matching catches that constructed failure. Its absence cannot prove a clean benchmark. Search near duplicates, inspect source genealogy and audit synthetic-data prompts that may have included evaluation questions.
@@ -196,13 +311,23 @@ Leakage can enter through evaluation infrastructure too. A retrieved document ma
 
 ## 7.9 A runnable evidence workflow
 
+We now have the pieces of a contract: a named capability, a frozen path, metrics,
+paired comparison, slices and a contamination check. This section shows the order
+in which to run them, first on CPU fixtures and then on the larger campaign.
+
 The CPU route has four stages. First inspect accepted strings and verify metric edge cases. Then compare aligned fixture panels with paired uncertainty. Inspect slices and contamination, then replay complete responses through a frozen mathematical grader. Each notebook puts an explanation and runnable reference answer immediately after the prediction.
 
-For the campaign route, the [experiment specification](../../experiments/specs/2026-10-04-evaluation-and-sft-course.md) declares a fixed development suite and a separately frozen publication suite. The later [actual 120-item publication comparison](../../experiments/reports/2026-10-05-native-sft400-comparison.md) measures unchanged Base, fresh full400 and merged LoRA400 under the same prompts and decoding. Those held-out values still use three shared training task templates; they do not establish transfer to arbitrary instructions. A distinct actual Base/short-SFT development replay supplies model events for the smaller mathematical/behavioral instrument in section 7.16. Keep its 15-item results separate from the 120-item publication test. The original CPU report supplies evidence only for the metric, masking and optimization mechanisms.
+The campaign records below keep two populations apart: a 120-item publication
+test and a smaller 15-item development instrument. For the campaign route, the [experiment specification](../../experiments/specs/2026-10-04-evaluation-and-sft-course.md) declares a fixed development suite and a separately frozen publication suite. The later [actual 120-item publication comparison](../../experiments/reports/2026-10-05-native-sft400-comparison.md) measures unchanged Base, fresh full400 and merged LoRA400 under the same prompts and decoding. Those held-out values still use three shared training task templates; they do not establish transfer to arbitrary instructions. A distinct actual Base/short-SFT development replay supplies model events for the smaller mathematical/behavioral instrument in section 7.16. Keep its 15-item results separate from the 120-item publication test. The original CPU report supplies evidence only for the metric, masking and optimization mechanisms.
 
 Before training, answer: what observation would cause us to reject the recipe? A decline in held-out format validity might be unacceptable even if response NLL improves. A confidence interval that is too broad might justify collecting more evaluation items. A parser disagreement might justify improving the instrument before changing model weights.
 
 ## 7.10 Mathematical equivalence has a boundary
+
+Section 7.3 showed that exact match can reject harmless differences. For math
+answers this problem is sharp, because many different strings name the same
+number. We want a grader that accepts real equivalence without accepting
+everything.
 
 The strings `1/2`, `0.5` and a boxed fraction can express the same answer. A
 strict string matcher would reject some of them. A parser that accepts any
@@ -212,6 +337,10 @@ questions: where is the claimed answer, is its expression supported, does it
 equal the reference, and does the response obey the required interface?
 
 ### Supported equivalence and instrument coverage
+
+A grader is a measuring instrument with a limited range, like a kitchen scale that
+reads up to five kilograms. Its **coverage** is the set of answers it can actually
+judge; outside that set it should say so rather than guess.
 
 Our independent [bounded grader](../../src/dongxi_llms/reasoning_evaluation.py)
 extracts one balanced box or one explicit `Final answer:` line; without either,
@@ -257,6 +386,11 @@ Accepting boxed fractions here does not automatically loosen that other task.
 
 ## 7.11 Replay complete responses before interpreting a gain
 
+A grader is only trustworthy if someone else can rerun it on the same responses
+and get the same score. That means saving each complete response, not just its
+score. A referee's decision can be reviewed only if the match was recorded.
+
+**Replay** means rescoring saved responses offline, with no model running.
 A score should be reproducible without rerunning generation. Freeze item and
 source-group IDs, split membership, prompt, reference, task/rubric, parser
 version, serialization, thinking mode, decoding and stopping budget. Hash the
@@ -272,6 +406,8 @@ termination is reported separately. A correct string stopped by its maximum
 token cap is not evidence of an emitted EOS. If a deployment requires natural
 termination as part of success, define a new metric before the comparison.
 
+The authored panel below shows that replay keeps the regressions and failures a
+favorable aggregate would hide; its responses are written by hand, not generated.
 The [authored replay panel](../../fixtures/reasoning-evaluation/) has fifteen
 development items from fourteen source groups. Its two response panels are
 named `authored-baseline` and `authored-candidate`, not Qwen checkpoints. The
@@ -282,6 +418,11 @@ preserves those failures, an ambiguous answer, unsupported grammar and a
 simulated execution error. No model generation or token-cost measurement occurs.
 
 ### Preserve the estimand when resampling groups
+
+Section 7.5 warned that items sharing a source aren't independent. The bootstrap
+has to respect that. The **estimand** is the quantity we're trying to estimate,
+here the mean difference over all items, and resampling should change our
+uncertainty about it, not change what it is.
 
 Related items must remain paired and grouped. If source group $`g`$ contains
 $`n_g`$ aligned item/sample differences $`d_{gj}`$, a cluster-bootstrap draw
@@ -314,6 +455,11 @@ pretrained Base/short-SFT comparison is recorded separately in section 7.16;
 authored response panels never become pretrained evidence retrospectively.
 
 ## 7.12 A model event must survive the trip to a score
+
+Replay assumes the saved records faithfully describe what the model did. That
+assumption is earned in the step that generates them. Like a parcel shipped across
+the world, a model event passes through several handlers (template, tokenizer,
+sampler, stop rule), and each must hand it on without losing a piece.
 
 Generation and grading are different jobs. The
 [local adapter](../../src/dongxi_llms/reasoning_generation.py) consumes an existing
@@ -366,7 +512,8 @@ The adapter separates attempted from completed forwards and records wall time;
 offline grading consumes zero additional model scoring tokens. This is an
 evidence microscope, not an optimized KV-cache inference benchmark.
 
-An interrupted run can leave useful partial evidence without establishing
+The adapter report shows the recording path works on random-model forwards and on
+scripted failures; it does not test a trained model. An interrupted run can leave useful partial evidence without establishing
 exact resume. The [bounded adapter report](../../experiments/reports/2026-10-04-reasoning-generation-adapter.md)
 tests original random-model CPU forwards and scripted failure cases;
 [Appendix D](../appendices/d-reproduction-and-environments.md#supervision-and-durable-evidence)
@@ -386,6 +533,11 @@ not pretrained reasoning or independent human agreement.
 
 ## 7.13 A correct candidate is not yet a correct decision
 
+Section 7.4 asked whether *any* of $`k`$ attempts passes. A user, though, receives
+one answer. Imagine a quiz show where a crowd shouts eight guesses, three of them
+right. The right answer was in the room, but you still have to pick one guess
+without seeing the answer card, and the loudest guess may be wrong.
+
 Suppose eight sampled solutions include three correct answers and five copies
 of the same wrong answer. An evaluator can report that a correct answer exists.
 A majority selector can still return the wrong one. These are different events:
@@ -401,14 +553,16 @@ o_N=\mathbf{1}\{\exists c\in C_N:v(c)=1\},\qquad
 d_N=\mathbf{1}\{s(C_N)\ne\varnothing\ \mathrm{and}\ v(s(C_N))=1\}.
 ```
 
-The diagnostic $`o_N`$ is any-correct oracle availability. A deployable selector
+The diagnostic $`o_N`$ is any-correct **oracle availability**: "oracle" because
+computing it needs the verifier, which a deployed system doesn't have. A deployable selector
 does not receive $`v(c)`$ or the reference answer. Always $`d_N\le o_N`$. Nested
 prefixes make $`o_N`$ nondecreasing: adding candidates cannot remove an available
 correct answer. There is no corresponding monotonic guarantee for $`d_N`$.
 New wrong votes can overturn the decision, and a confident wrong candidate can
 outrank a correct one.
 
-The [actual candidate lesson](../../notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb)
+The lesson below shows the two quantities coming apart on real samples from a tiny
+symbolic model. The [actual candidate lesson](../../notebooks/day-10/05_actual_candidates_and_answer_selection.ipynb)
 connects this distinction to real causal forwards from the original tiny
 symbolic decoder. Three fixed seeds each supply an initial policy and a
 train-only fixed 80-update policy. Eighteen original items cover training,
@@ -418,6 +572,10 @@ repeated numerals and caps allowed. Its English strings are descriptions, not
 model-parsed language; success here is not natural-language reasoning evidence.
 
 ### Candidate supply and selector behavior
+
+A **selector** is the rule that picks one candidate without seeing the answer.
+Several selectors are compared on the same candidates, so differences come from
+the rule alone.
 
 First-attempt, majority, unique-answer-support and likelihood selectors reuse
 the same prefixes 1,2,4,8. Unsupported or malformed outputs cannot vote, but
@@ -431,6 +589,9 @@ eligible answer has one numeral and EOS, so length cannot distinguish them.
 It supplies no measured evidence of verbosity-ranking damage.
 
 ### Likelihood is a ranker, not a truth label
+
+A model's own probability for an answer is a natural tiebreaker. But a model can
+be confident and wrong, just as a person can.
 
 The likelihood ranker uses the mean conditional action log probability,
 including EOS:
@@ -446,6 +607,8 @@ likelihood into truth. The strict candidate view removes gold fields even when
 the evaluator keeps them in a separate ledger. The selector's code and input
 contract, not a reassuring name, enforce that separation.
 
+The measured panel shows a correct answer available but outvoted, and fitting
+that increases repetition within candidate pools.
 In the [measured CPU panel](../../experiments/reports/2026-10-04-inference-selection.md),
 seed 10052's training item `train-11` produces answers 1,0,0,1,1,1,1,0, while the
 reference is 0. Availability is 1 and majority success is 0. Fitting also increases
@@ -456,12 +619,16 @@ reasoning or general inference-scaling benefit follows from these results.
 
 ## 7.14 Failed attempts belong in the compute budget
 
+If extra attempts can help, they also cost something, and the bill has to include
+the attempts that produced nothing usable. A restaurant pays for every dish it
+cooks, including the ones sent back.
+
 Equal candidate counts need not imply equal work. Immediate EOS consumes one
 action; a repeated-numeral cap can consume three and still supply no usable
 answer. Prompt processing and path scoring consume additional model work.
 Keep generated actions, rescored actions and forward input positions distinct.
 With an uncached loop, three actions after a four-token prompt require forwards
-over 4,5,6 positions. Their sum 15 is not the output-token count 3, and neither is
+over 4,5,6 positions. Their sum $`4+5+6=15`$ is not the output-token count 3, and neither is
 a FLOP estimate.
 
 The lesson records all 864 candidates and 1736 generated actions. Its token-cap
@@ -472,7 +639,8 @@ candidate. The resulting whole-attempt overshoot is explicit; this is not an
 exact token-level interruption policy. Equal caps can yield unequal accepted
 attempts, actual actions, prompt positions and time.
 
-For one final policy, majority success on the fixed full panel declines from
+The cap comparison shows that a larger budget can lower majority success even
+while oracle availability holds steady. For one final policy, majority success on the fixed full panel declines from
 0.388889 at cap 6 to 0.333333 at cap 12, while oracle availability stays 0.388889.
 Extra budget changes votes rather than guaranteeing a better decision. These
 descriptive scores include training items and grouped siblings; a population
@@ -494,7 +662,13 @@ selector uses extra attempted work well on the specified population.
 
 ## 7.15 A card is an index into evidence, not a certificate
 
-A model card can make a weak experiment look finished if its polished summary
+At the end of an evaluation, someone writes a summary. That summary is where
+overclaiming is easiest, because readers see the summary and not the records.
+A good summary works like a book's index: it tells you where to look, and you can
+always check the page.
+
+An **evaluation card** is a short, readable summary of a result that links back to
+the raw records it came from. A model card can make a weak experiment look finished if its polished summary
 quietly fills missing fields. An evaluation card should do the opposite: make
 the claim easy to inspect and the missing evidence hard to overlook. Preserve
 the frozen contract, raw responses and replay alongside the readable card.
@@ -527,11 +701,17 @@ experiment records, rather than the export alone.
 
 ## 7.16 A real response can pass a weak rubric and still fail the user
 
+So far the panels were authored or came from tiny random models. Now we run the
+instrument on a real pretrained model and a short fine-tune. The real outputs show
+something the fixtures couldn't: a response can satisfy the rubric's letter while
+failing its purpose.
+
 **Reader prediction:** a response contains both phrases required by an
 automatic rubric, repeats corrupted text and ends mid-sentence. Should the
 phrase score, whole-response usefulness and natural termination agree?
 
-The [actual development replay](../../experiments/reports/2026-10-05-pretrained-evaluation-replay.md)
+The replay shows that both checkpoints almost never pass, and that every response
+hits the token cap. The [actual development replay](../../experiments/reports/2026-10-05-pretrained-evaluation-replay.md)
 uses the unchanged fifteen-item, fourteen-source-group instrument with two
 identified local checkpoints: acquired Qwen3-0.6B-Base and the disposable
 twenty-update full-SFT profile. One fixed template, greedy decoding and a
@@ -554,6 +734,9 @@ Most instrument items have an unconstrained `any` format policy, so 12/15
 format-valid records are not twelve clean or helpful answers.
 
 ### Read the proxy-success case
+
+A **proxy** is a measurable stand-in for what we really want. A phrase check is a
+proxy for a helpful answer, the way a word count is a proxy for a thorough essay.
 
 Inspect the SFT `benign-a` answer. It includes the rubric's `terminate` and
 `task manager` phrases, but repeats `.nasa` fragments and ends mid-sentence.
@@ -579,6 +762,11 @@ measurement choices to the next training decision without inventing a quality
 gain, using the publication test or claiming broader capability.
 
 ## 7.17 Story coherence needs a separate rating instrument
+
+We finally return to the question Chapter 6 left open: are the stories coherent?
+None of the instruments above can answer it. Coherence needs readers, a rubric
+with several dimensions, and a design that keeps readers from knowing which model
+wrote what, much as a wine tasting hides the labels.
 
 A copy/extraction score cannot answer whether a story preserves its characters,
 causal links and ending. The original campaign therefore freezes twelve story
@@ -636,7 +824,8 @@ than binary flags. Would fewer loops justify weaker grammar or less continuity?
 Keep that question open until the dimensions, paired units and stopping
 coverage have been read together.
 
-The [actual first 400 comparison](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
+The ratings below show both arms scoring poorly on every coherence axis at update
+400, with no single winner. The [actual first 400 comparison](../../experiments/reports/2026-10-05-native-story-first400-comparison.md)
 now supplies that separate evidence. Two fresh anonymous AI instances each read
 all 192 continuations from the four available checkpoints. They received only
 the public packet and rubric, not the arm codebook or one another's judgments.
@@ -671,11 +860,43 @@ complete the original 14,000-update training schedule.
 
 ### Related sources can cross a boundary without exact equality
 
+Section 7.8 left near copies as the hard case. A lightly edited story is still the
+same story to a reader, but not to a hash. This last part shows how to find such
+near copies and how grouping them changes the split.
+
 Exact hashes detect identical text, but independently edited copies can still contaminate an evaluation. In Assignment B, MinHash and locality-sensitive hashing propose candidate pairs; exact shingle Jaccard checks whether each candidate meets the declared threshold. Candidate retrieval and duplicate confirmation are different operations. The [curation companion](../../notebooks/extensions/cs336/06_corpus_curation.ipynb) compares candidates with an all-pairs reference on the small fixture, so a missed edge remains visible.
 
 Grouping introduces a further decision. If A resembles B and B resembles C, a connected-component policy puts all three in one source group even when A does not meet the threshold with C. The policy is deliberately transitive; pairwise similarity is not. A source-group split prevents that component from appearing on both sides of the evaluation boundary. It can also create larger groups than a reader expects from looking at one pair.
 
 Record normalization and extraction before interpreting an overlap. Case folding and accent removal may help identify a copied source while erasing distinctions that matter to the task. Keep raw text, matched text, candidate edges, verified edges and component membership separately. The resulting audit supports a claim about the declared matching procedure and available sources. It cannot establish that a large pretrained model has never encountered semantically similar material.
+
+## Chapter summary
+
+- An **evaluation contract** names the inputs, the required behavior and the scoring
+  rule before any output is seen. Separate properties, such as grammar and ending
+  quality, get separate scores and a rubric written in advance (§7.1).
+- Freeze the whole path from item to score, and keep training, development and
+  publication test splits in their roles (§7.2).
+- **Exact match** depends on its normalizer. **pass@k** includes an attempt budget and
+  assumes independent samples. Token probability, **calibration** and confidence
+  intervals are three different meanings of confidence (§7.3–7.5).
+- Compare models on aligned items. In the forty-item fixture, a 7.5-point net gain
+  hides seven regressions, and the paired interval includes zero. Slices can expose
+  a rare-format regression the micro-average hides (§7.6–7.7).
+- Contamination is a provenance problem; exact matching catches only exact copies
+  (§7.8, §7.17).
+- A bounded math grader separates extraction, supported equivalence, format and
+  termination, and reports `UNSUPPORTED`, `INVALID` and `AMBIGUOUS` as their own
+  outcomes. Replay rescores saved responses; grouped resampling keeps related items
+  together (§7.9–7.11).
+- Every model action, including EOS and failures, must survive generation into the
+  record (§7.12).
+- **Oracle availability** of a correct candidate is not a correct decision, and extra
+  attempts cost work even when they fail (§7.13–7.14).
+- An evaluation card indexes evidence; it doesn't certify. A real response can pass
+  a phrase rubric and still be unhelpful. Story coherence needs its own blinded,
+  multi-axis rating instrument, and both update-400 arms remain poor on it
+  (§7.15–7.17).
 
 ## 7.18 Exercises and transition
 
