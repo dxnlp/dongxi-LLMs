@@ -1,12 +1,11 @@
 # Learning Memory and Production Queue
 
-Machine policy, 2026-10-22: at the learner's request the **DGX Spark is the single
-working machine** for learning, notebooks, experiments, writing and animation production.
-The Mac Studio / Spark split, its `Switch to …` / `Continue on …` phrases and Mac
-portability verification are retired. Dated entries below that mention Mac rendering,
-Mac verification or a "Mac" preferred machine are historical; they're not open work.
-Manim's system dependencies (Cairo/Pango, FFmpeg) aren't yet installed on the Spark, and
-the `x-article-drafter` Codex helper used for earlier X drafts was installed on the Mac.
+Machine policy, 2026-10-22 (learner decision): the **DGX Spark** is for learning, notebooks
+and experiments; the **Mac Studio** is for animation production and X article production
+(Manim and the `x-article-drafter` Codex helper live there). The formal `Switch to …` /
+`Continue on …` phrases and Mac portability verification of the notebooks are retired;
+Git carries work between the machines. Dated entries below that mention Mac verification
+or machine-switch phrases are historical, not open work.
 
 Post-training companion reading, 2026-10-20: the learner is reading
 [Jurafsky & Martin, SLP3 Chapter 8](https://web.stanford.edu/~jurafsky/slp3/8.pdf)
@@ -579,9 +578,9 @@ dependencies, preferred machine, and current status.
   paired runs, deliberate failures, and question-driven exploration. Keep the
   coherent chapter and worked notebooks as companions. First proposed pilot is
   the Day 8 Optimizer Playground; it has not been built or verified on Mac.
-- Since 2026-10-22 the DGX Spark is the single working machine; the earlier Mac
-  Studio / Spark split and its switch phrases are retired. Standing contract:
-  `docs/LEARNING_WORKFLOW.md`; current packet: `docs/handoffs/CURRENT.md`.
+- Since 2026-10-22: DGX Spark for learning, notebooks and experiments; Mac Studio for
+  animation and X article production. The formal switch phrases are retired. Standing
+  contract: `docs/LEARNING_WORKFLOW.md`; current packet: `docs/handoffs/CURRENT.md`.
 
 - On 2026-09-08 reported mathematical rendering errors on GitHub, explicitly
   including Chapters 4 and 5. Check all book chapters and solutions, not just
@@ -648,9 +647,9 @@ dependencies, preferred machine, and current status.
   optimization updates, and multi-step derivations trigger candidate capture;
   related equations should be consolidated into coherent concepts rather than
   generating duplicate proposals. Automatic marking never authorizes production.
-- Uses the DGX Spark for all work, including GPU-first notebooks, experiments,
-  writing and animation production (decision of 2026-10-22, replacing the earlier
-  Mac Studio production lane).
+- Uses the DGX Spark for learning, GPU-first notebooks and experiments. All animation
+  production/rendering and X article production belong on the Mac Studio; Spark
+  sessions identify, record, specify and review animation and article concepts.
 - Before every new or resumed learning session, inspect the branch and working
   tree, fast-forward pull the remote branch when clean, and reread the durable
   project state before starting work. Never discard dirty local work merely to
@@ -770,8 +769,6 @@ taught; keep model-vendor rumors out of the factual architecture narrative until
 they are corroborated.
 
 ## Public-content production queue
-
-The "Preferred machine" column is historical: since 2026-10-22 all production happens on the DGX Spark.
 
 | ID | Type | Topic | Status | Preferred machine | Dependency |
 |---|---|---|---|---|---|
@@ -2081,19 +2078,22 @@ to verified numbers during production.
 
 ### Machine
 
-The **DGX Spark** is the single working machine (2026-10-22): CUDA/model experiments,
-GPU-first notebooks, checkpoint inspection, empirical reports, course integration,
-writing, and Manim/media production once its system dependencies are installed. The
-earlier Mac Studio production lane is retired.
+- **DGX Spark:** learning sessions, CUDA/model experiments, GPU-first notebooks,
+  checkpoint inspection, empirical reports and canonical course integration.
+- **Mac Studio:** all Manim and media production/rendering, typography and layout review,
+  and X article production.
+
+Work moves between the machines through Git (2026-10-22: the formal switch phrases are
+retired).
 
 ### Git handoff rules (between sessions)
 
-1. Uncommitted files are invisible to another session or checkout. Commit and push
-   the required inputs before handing a task off.
+1. Uncommitted files are invisible to another session, checkout or machine. Commit and
+   push the required inputs before handing a task off.
 2. Use one bounded branch per portable task, such as `visuals/manim-bpe` or
    `content/x-bpe-byte-fallback`.
 3. State the base commit in the task handoff and avoid editing the same files in
-   two sessions concurrently.
+   two sessions or on both machines concurrently.
 4. The producing machine returns a commit hash, changed-file list, exact render or
    validation command, outputs, and known limitations.
 5. Review content correctness before merging aesthetic work into the canonical
@@ -2105,6 +2105,7 @@ earlier Mac Studio production lane is retired.
 ```markdown
 Task ID:
 Owner/session:
+Machine:
 Status: queued | in progress | review | complete | blocked
 Base commit:
 Branch:

@@ -1,6 +1,7 @@
 # Appendix D — Reproduction Commands and Environments
 
-The course runs on the NVIDIA DGX Spark (since 2026-10-22, its single working machine).
+Lessons, notebooks and experiments run on the NVIDIA DGX Spark; animations and articles
+are produced separately on a Mac Studio.
 Notebooks declare an `execution` type: `cpu-offline` and `local-model-cache` lessons run on
 any kernel, and `spark-gpu` lessons need the Spark's CUDA kernel. The
 verified environment for the 2026-10-04 material build is recorded in its

@@ -76,7 +76,7 @@ execution alone. Native full/LoRA
 recovery, explicit FP32 merge/reload and raw-response evaluation retain separate
 independent review.
 The [independent original-text platform review](experiments/reports/2026-10-05-platform-scope-reading.md)
-recorded Mac execution as unverified; since 2026-10-22 the course runs on the Spark only and Mac verification is retired.
+recorded Mac execution as unverified; since 2026-10-22 notebooks run on the Spark and Mac verification is retired.
 The [actual full/LoRA400 comparison](experiments/reports/2026-10-05-native-sft400-comparison.md)
 is integrated into Chapter9; development and publication results remain distinct.
 The [acceptance review](docs/UPGRADE_ACCEPTANCE_REVIEW.md) identifies
@@ -202,8 +202,8 @@ reuse an adequate existing solution; resolved memory-hang monitoring is retired.
 
 The interactive reader experience combines the canonical chapter, real-time
 visual interventions, and executable notebook companions. Learning, notebooks
-and model-scale GPU evidence all happen on the DGX Spark. Keep machine
-operations outside conceptual chapters, in
+and model-scale GPU evidence happen on the DGX Spark; animations and articles
+are produced on the Mac Studio. Keep machine operations outside conceptual chapters, in
 [the learning workflow](docs/LEARNING_WORKFLOW.md), and preserve live progress
 through the handoff ledger. Proposed interactive interfaces do not count as
 implemented book assets or completed learner exercises.
@@ -272,7 +272,7 @@ Day 3 contributes to:
 - refinements in Chapter 2 on categorical token IDs, BPE atoms, and the
   vocabulary-versus-sequence-length trade-off;
 - approved probability, cross-entropy, and next-token animation packets in
-  `LEARNING_MEMORY.md`; production requires an approved packet.
+  `LEARNING_MEMORY.md`, with production on the Mac Studio.
 
 ## Day 4 placement
 

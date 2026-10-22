@@ -32,8 +32,9 @@ from measured decoder training. No UI/library is selected or implemented yet.
 
 ## Progress and portable continuation
 
-[Current handoff](../../docs/handoffs/CURRENT.md). Since 2026-10-22 the course runs on
-the DGX Spark only; the Mac/Spark switch phrases below are historical. Synchronize
+[Current handoff](../../docs/handoffs/CURRENT.md). Since 2026-10-22 learning and notebooks
+run on the DGX Spark (media production on the Mac Studio); the switch phrases below are
+historical. Synchronize
 durable course Git state at session start; runtime state and credentials are not
 transferred by Git.
 

@@ -27,13 +27,14 @@ evidence and learner cells. Run bounded CPU references and label new model-scale
 protocols as unexecuted until their own evidence exists. Course readiness does
 not move the learner's Day9 position or authorize external publication.
 
-Machine policy, 2026-10-22: the **DGX Spark is the single working machine** for
-live learning, notebooks, experiments, writing and animation production. The
-earlier Mac Studio / Spark split and its `Switch to …` / `Continue on …` phrases
-are retired; follow `docs/LEARNING_WORKFLOW.md` for session start and end. Mac
-portability evidence (including DXI-17's Mac portion) is no longer pursued.
-Dated records below that mention Mac work keep their historical wording but are
-not open tasks. Never silently discard dirty changes or migrate/terminate running
+Machine policy, 2026-10-22: the **DGX Spark** is the working machine for live
+learning, notebooks and experiments. The **Mac Studio** is for animation
+production and X article production. The formal `Switch to …` / `Continue on …`
+handoff phrases are retired; Git carries work between the machines (commit and
+push before moving, pull on arrival), and `docs/LEARNING_WORKFLOW.md` covers
+session start and end. Mac portability verification of the notebooks (including
+DXI-17's Mac portion) is no longer pursued. Dated records below that mention it
+keep their historical wording but are not open tasks. Never silently discard dirty changes or migrate/terminate running
 jobs, and don't launch expensive work without the learner's instruction.
 The learner's latest requested lesson takes precedence over older "next action"
 entries. Unfinished earlier practice is a review backlog, not an automatic
@@ -161,9 +162,8 @@ For each learning day:
    evidence state, and production dependency. Candidate capture does not
    authorize production: actively surface strong candidates to the learner, wait
    for explicit approval, then promote approved concepts to complete `ANIM-*`
-   task packets in `LEARNING_MEMORY.md`. Animation production also happens on the
-   Spark; Manim's system dependencies (Cairo/Pango, FFmpeg) must be installed there
-   before the first render.
+   task packets in `LEARNING_MEMORY.md`. Animation production happens on the Mac
+   Studio; the Spark identifies, specifies and reviews animation concepts.
 10. Create or update the book-facing material to which the day's learning belongs.
 11. Update `PROGRESS.md` with evidence and an exact next action.
 12. Update `LEARNING_MEMORY.md` when a new topic must be indexed or the session produces a reusable public-content idea or portable task.

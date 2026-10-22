@@ -148,9 +148,10 @@ CPU teaching environment; it does not replace the Spark GPU environment or
 download pretrained weights. [Appendix D](book/appendices/d-reproduction-and-environments.md)
 documents environment choices, focused notebook execution, and local verification.
 
-**The NVIDIA DGX Spark is the course's single working machine** for learning,
-notebooks, experiments and content production. Each notebook declares its
-minimum runtime in the [course manifest](docs/course_manifest.json):
+**The NVIDIA DGX Spark is where the course is learned and run**: lessons, notebooks
+and experiments. **Animations and X articles are produced on the Mac Studio.** Git
+carries work between the two. Each notebook declares its minimum runtime in the
+[course manifest](docs/course_manifest.json):
 
 | `execution` | Runs on |
 |---|---|

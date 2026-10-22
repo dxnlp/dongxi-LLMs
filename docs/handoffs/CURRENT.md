@@ -1,9 +1,9 @@
 # Current learning and course-build handoff
 
-**Machine policy, 2026-10-22:** the DGX Spark is the single working machine for learning,
-notebooks, experiments and content production. The Mac Studio / Spark split is retired, so
-references below to Mac verification, Mac rendering or machine switches are historical and
-no longer open work. See `docs/LEARNING_WORKFLOW.md`.
+**Machine policy, 2026-10-22:** the DGX Spark is for learning, notebooks and experiments;
+the Mac Studio is for animation and X article production. Mac portability verification of
+the notebooks and the formal machine-switch phrases are retired; passages below that mention
+them are historical, not open work. See `docs/LEARNING_WORKFLOW.md`.
 
 Final measured handoff,2026-10-05: scoped native comparisons,
 final Linux verification and model-free evidence archival have completed.

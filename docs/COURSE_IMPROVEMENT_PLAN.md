@@ -1,8 +1,9 @@
 # Course Improvement Plan
 
-**Machine policy, 2026-10-22:** the DGX Spark is the course's single working machine. The
-Mac Studio / Spark split and Mac portability verification are retired; passages below that
-mention Mac evidence, Mac rendering or machine switches are historical, not open work.
+**Machine policy, 2026-10-22:** the DGX Spark is for learning, notebooks and experiments;
+the Mac Studio is for animation and X article production. Mac portability verification of
+the notebooks and the formal machine-switch phrases are retired; passages below that mention
+them are historical, not open work.
 
 Current applicability rule,2026-10-05: verify that each proposed gap still
 exists, is relevant locally and is not already solved upstream before building.

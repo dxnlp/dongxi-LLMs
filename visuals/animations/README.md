@@ -61,16 +61,12 @@ to select another destination.
 The Manim scene uses a minimal, motion-first layout: token objects split and
 fuse while a three-stage scale anchors byte, character, and phrase
 representations. Text is limited to structural labels and the final conceptual
-distinction. Animations are produced on the DGX Spark (Ubuntu-based DGX OS). Install
-Manim's system prerequisites once:
+distinction. Animations are produced on the Mac Studio. On macOS, install Manim's
+system prerequisites once:
 
 ```bash
-sudo apt install pkg-config libcairo2-dev libpango1.0-dev ffmpeg libx11-dev libgl-dev
+brew install cairo pkg-config
 ```
-
-The X11/GL headers are for `glcontext`, a Manim dependency whose build failed on the
-Spark without them (2026-10-20). This package list follows Manim's Linux instructions
-and hasn't yet been verified on the Spark; record the first successful render here.
 
 Render the editable source to a temporary Manim media directory, then preserve
 the deliverables under `visuals/animations/rendered/`:
@@ -144,7 +140,6 @@ ffmpeg -version | head -n 1
   learned merges during encoding. Includes a local video-review page.
 
 The first Manim attempt failed on an earlier ARM host because required Cairo/X11
-development components were absent. Existing films were rendered on a Mac with the
-Cairo renderer and pinned Manim Community Edition dependencies. Since 2026-10-22
-production moves to the DGX Spark (install the prerequisites above first). The
-Matplotlib versions remain the lower-dependency baseline and are not overwritten.
+development components were absent. The Mac Studio workflow uses the Cairo renderer
+with pinned Manim Community Edition dependencies; the Matplotlib versions remain the
+lower-dependency baseline and are not overwritten.

@@ -1,7 +1,8 @@
 # Mac CPU verification
 
-**Retired 2026-10-22.** The course now runs on the DGX Spark only, and Mac portability
-verification is no longer pursued. This packet is kept as a historical record; nothing in it
+**Retired 2026-10-22.** Notebooks and experiments run on the DGX Spark, and Mac
+portability verification of the notebooks is no longer pursued (the Mac Studio remains
+the animation and article production machine). This packet is kept as a historical record; nothing in it
 is open work.
 
 This packet addresses parallel, still-unexecuted Mac portability verification.

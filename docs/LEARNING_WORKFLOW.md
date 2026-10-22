@@ -1,11 +1,16 @@
-# One learning journey on the DGX Spark
+# One learning journey: Spark for learning, Mac Studio for media
 
-Established at the learner's request on 2026-09-09 and simplified on 2026-10-22: the
-**DGX Spark is the single working machine** for live discussion, interactive lessons,
-notebooks, experiments, chapter and article writing, and animation production. The
-earlier Mac Studio / Spark split, with its `Switch to Mac` / `Continue on Mac` /
-`Switch to Spark` / `Continue on Spark` handoff phrases, is retired. Historical
-records that mention it keep their original wording.
+Established at the learner's request on 2026-09-09 and simplified on 2026-10-22:
+
+| Machine | Work |
+|---|---|
+| **DGX Spark** | live discussion, interactive lessons, notebooks (GPU first), experiments, chapter writing |
+| **Mac Studio** | animation production (Manim rendering) and X article production |
+
+The formal `Switch to Mac` / `Continue on Mac` / `Switch to Spark` / `Continue on Spark`
+handoff phrases and Mac portability verification of the notebooks are retired. Moving
+between machines uses Git: commit and push the inputs before leaving, and pull on arrival.
+Historical records that mention the old protocol keep their original wording.
 
 Rich visuals should appear directly in the conversation; browser-side toy
 interactions don't need a notebook kernel. New notebooks are GPU first (see the
@@ -22,8 +27,9 @@ interventions over generic controls.
 3. Reread `AGENTS.md` and its required files, `PROGRESS.md`, `LEARNING_MEMORY.md`, the
    active topic, and `docs/handoffs/CURRENT.md` when resuming an unfinished task.
    Reconcile an old handoff that disagrees with newer progress; don't silently follow it.
-4. Check the runtime the lesson needs: the `Python (DGX Spark Native)` kernel, CUDA,
-   and any locally cached models. Keep environments separate; never copy a virtual
+4. Check the runtime the work needs: on the Spark, the `Python (DGX Spark Native)`
+   kernel, CUDA and any locally cached models; on the Mac Studio, the Manim and article
+   toolchain. Keep environments separate; never copy a virtual
    environment or credentials.
 5. Give a short recap of the current lesson, what is complete, open questions and
    running jobs, then resume the recorded next action.
