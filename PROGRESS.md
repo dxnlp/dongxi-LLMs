@@ -1,5 +1,14 @@
 # Progress and Handoff Ledger
 
+**Learning session, 2026-10-22 (Spark, instruction tuning and LoRA):** worked through
+`notebooks/day-12/03_instruction_tuning_end_to_end.ipynb` (Predicts 1–13 discussed; Predict 14
+open) and built the hands-on companion `notebooks/day-12/04_instruction_tuning_workbook.ipynb`
+(14 exercises; checks in `src/dongxi_llms/sft_workbook.py`). Exercises 1–4 (Part A) finished.
+The discussion is recorded in
+`learning_artifacts/day-11-instruction-data-engineering/learning-instruction-tuning.md`, including
+Key rules 1–2, the "patterns" key idea and the 4-bit quantization explanation. Personal notebook copies
+live in the git-ignored `learner_work/`. **Next action:** resume the workbook at Exercise 5.
+
 **Machine policy, 2026-10-22:** at the learner's request the DGX Spark is for learning,
 notebooks and experiments, and the Mac Studio is for animation and X article production. The
 formal switch phrases and Mac verification of the notebooks are retired

@@ -20046,11 +20046,872 @@
     }
    ],
    "review_scope": "Introduced 2026-10-22, the first spark-gpu notebook. Fourteen prediction prompts, each followed directly by its reference marker, runnable reference and explanation. Executed on the dgx-spark-native kernel (CUDA, torch 2.13, transformers 5.16.1, peft 0.20) with cached Qwen3-0.6B; all assertions passed."
+  },
+  {
+   "path": "notebooks/day-12/04_instruction_tuning_workbook.ipynb",
+   "baseline_code_sha256": "1f1f3a480033f59559bb55946e20df3dce29483ac2fa3388985abe91427eb247",
+   "baseline_full_code_sha256": "1f1f3a480033f59559bb55946e20df3dce29483ac2fa3388985abe91427eb247",
+   "baseline_metadata_sha256": "6fe5fd492b6d98c56f1ca57b7c46936a2d789e257f2d01486d5fbb0c66f7790e",
+   "reviewed_prompt_cell_ids": [
+    "d12wb-004",
+    "d12wb-010",
+    "d12wb-016",
+    "d12wb-022",
+    "d12wb-029",
+    "d12wb-035",
+    "d12wb-042",
+    "d12wb-048",
+    "d12wb-055",
+    "d12wb-063",
+    "d12wb-069",
+    "d12wb-078",
+    "d12wb-084",
+    "d12wb-090"
+   ],
+   "heading_exemptions": [],
+   "original_markdown": [
+    {
+     "original_cell_index": 0,
+     "original_cell_id": "d12wb-001",
+     "source_sha256": "8e5eedd76f006ee1f975d755af20a4861810bd9fa527bb661f262226c1c60800",
+     "reviewed_role": "narrative/mechanism-context",
+     "review_note": "Introduction, data description or closing evidence-boundary prose; no exercise."
+    },
+    {
+     "original_cell_index": 2,
+     "original_cell_id": "d12wb-003",
+     "source_sha256": "9ed7aa820240d62bdbd4b1dbd6c59c02f08318b2c867d795d2f12e4479f08d8f",
+     "reviewed_role": "narrative/mechanism-context",
+     "review_note": "Introduction, data description or closing evidence-boundary prose; no exercise."
+    },
+    {
+     "original_cell_index": 3,
+     "original_cell_id": "d12wb-004",
+     "source_sha256": "8080130a3681be749c5940f399462119d2abf97e0e4d54de0ef57245e7533f24",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 6,
+     "original_cell_id": "d12wb-007",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 8,
+     "original_cell_id": "d12wb-009",
+     "source_sha256": "c593792ffeeabb1e973a82c8bb3ed7271b01cddd341b4215c87538f8aee03d23",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 9,
+     "original_cell_id": "d12wb-010",
+     "source_sha256": "c7628b243820b26e77c8be74bb24edbe45de7e7dbdab6fc5b05a2d6e9666459b",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 12,
+     "original_cell_id": "d12wb-013",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 14,
+     "original_cell_id": "d12wb-015",
+     "source_sha256": "adfd94955ccf24c7d068a4b0ce2478e96ffc8b047f587c8f5f1c90598cac4bdf",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 15,
+     "original_cell_id": "d12wb-016",
+     "source_sha256": "3bc4985cf96cb3f3beeeebdce9b5292a8e1b44764f6d03160b89339e9979a21d",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 18,
+     "original_cell_id": "d12wb-019",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 20,
+     "original_cell_id": "d12wb-021",
+     "source_sha256": "842d477807fd9d11dd2b1177c47b2463ee0f6b1477b2aa37f7cc23eda669930f",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 21,
+     "original_cell_id": "d12wb-022",
+     "source_sha256": "5a6f18116540daa12ec8968c5f0113093dcef9e4f875bc888ae05eac56f5db4d",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 24,
+     "original_cell_id": "d12wb-025",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 26,
+     "original_cell_id": "d12wb-027",
+     "source_sha256": "290f0015f78d8507c182fa9d214ea966d980e3046eca93e1a1381524accc4564",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 27,
+     "original_cell_id": "d12wb-028",
+     "source_sha256": "e791e6028f6b33884f9d8a55c5b01a5840bbcbc8c7bba2aaa8fff38523bef6b6",
+     "reviewed_role": "narrative/mechanism-context",
+     "review_note": "Introduction, data description or closing evidence-boundary prose; no exercise."
+    },
+    {
+     "original_cell_index": 28,
+     "original_cell_id": "d12wb-029",
+     "source_sha256": "d445dc4fdaedb14ca79138f81c07b38ee9d7c180215b9ef9929cc373ccac82ac",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 31,
+     "original_cell_id": "d12wb-032",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 33,
+     "original_cell_id": "d12wb-034",
+     "source_sha256": "5482f6a84c493ad79e8c85e4c2497b3357bd4555739cf108b53fc9e72851cd41",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 34,
+     "original_cell_id": "d12wb-035",
+     "source_sha256": "5d80d082f506ebceb91c359062fb7c19e4eb9ee25c84f5dbb151fda10c7befe5",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 37,
+     "original_cell_id": "d12wb-038",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 39,
+     "original_cell_id": "d12wb-040",
+     "source_sha256": "bffe168208469793797391406d33d92d6cb0243a87af39b1c47b67d212fc5f7b",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 40,
+     "original_cell_id": "d12wb-041",
+     "source_sha256": "adcf201048b82347875666af7a15358645e2e5268862193b8076843fa7495116",
+     "reviewed_role": "saved-preview",
+     "review_note": "Figure exported by verify_course_notebooks.py --export-figures from the Spark GPU reference run."
+    },
+    {
+     "original_cell_index": 41,
+     "original_cell_id": "d12wb-042",
+     "source_sha256": "7ae39a63de86775d071ca76a27dfe199aebd65886014084d9332e8c650bfe0cf",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 44,
+     "original_cell_id": "d12wb-045",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 46,
+     "original_cell_id": "d12wb-047",
+     "source_sha256": "bff145cf158e25df9630a94b8812496b7ebff71d7d9f6b3b89fadb82658f6fb5",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 47,
+     "original_cell_id": "d12wb-048",
+     "source_sha256": "b92299db696ffe4f57b3d455f5e7baea34f9f7baf314a059835a91076db04c50",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 50,
+     "original_cell_id": "d12wb-051",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 52,
+     "original_cell_id": "d12wb-053",
+     "source_sha256": "11999d5e9d360271f72a11533ea3cd395561e54cc709110e064cf9d058e9c42f",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 53,
+     "original_cell_id": "d12wb-054",
+     "source_sha256": "2ada5726fa855d7768d37e54b7b1224ee5c1c4b66f084828749880007f5727c0",
+     "reviewed_role": "narrative/mechanism-context",
+     "review_note": "Introduction, data description or closing evidence-boundary prose; no exercise."
+    },
+    {
+     "original_cell_index": 54,
+     "original_cell_id": "d12wb-055",
+     "source_sha256": "1ce0603e1c037a1c147aa0e7e2a1094180d4b311c8af8210c5bbd909c0088373",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 57,
+     "original_cell_id": "d12wb-058",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 59,
+     "original_cell_id": "d12wb-060",
+     "source_sha256": "01ddb4ce4ac10a84fe909c2893d13aa3d2597f3d6d403a12fdb0d9a51364fc52",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 60,
+     "original_cell_id": "d12wb-061",
+     "source_sha256": "218c65ab0aba6ea7dd8d4296e9e706d868a43d4d0f07d246503308d8462701aa",
+     "reviewed_role": "narrative/mechanism-context",
+     "review_note": "Introduction, data description or closing evidence-boundary prose; no exercise."
+    },
+    {
+     "original_cell_index": 62,
+     "original_cell_id": "d12wb-063",
+     "source_sha256": "a93edd9f5f2805fce6dc94f6a59bfb20daf5f78bddd742cce16aaf1d59653180",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 65,
+     "original_cell_id": "d12wb-066",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 67,
+     "original_cell_id": "d12wb-068",
+     "source_sha256": "44cad4888d7a35e2954079ba2d3030f74edcf986988ddcbbd734f44aa3e246cd",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 68,
+     "original_cell_id": "d12wb-069",
+     "source_sha256": "65fedf2ef0aecfd85111991d646253e4c23a74438c9fdf02670464648f7b1631",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 71,
+     "original_cell_id": "d12wb-072",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 73,
+     "original_cell_id": "d12wb-074",
+     "source_sha256": "e76bee3a72ff37a13608111dc69c63416e17ae76e0a46483d7d337b379040028",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 74,
+     "original_cell_id": "d12wb-075",
+     "source_sha256": "dac615de3d9dcbffcdebd2d3b99849c13f41668e876a97417c40d66363093870",
+     "reviewed_role": "saved-preview",
+     "review_note": "Figure exported by verify_course_notebooks.py --export-figures from the Spark GPU reference run."
+    },
+    {
+     "original_cell_index": 75,
+     "original_cell_id": "d12wb-076",
+     "source_sha256": "6744f88dac9af7ec165dfa3db1acf384e5ae0c4fcd6152097635a874ed058cd7",
+     "reviewed_role": "narrative/mechanism-context",
+     "review_note": "Introduction, data description or closing evidence-boundary prose; no exercise."
+    },
+    {
+     "original_cell_index": 77,
+     "original_cell_id": "d12wb-078",
+     "source_sha256": "314551f44d18d07e9279a96b469d790c2aeabb5255f0f0d80c45bd4d2b7e9b71",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 80,
+     "original_cell_id": "d12wb-081",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 82,
+     "original_cell_id": "d12wb-083",
+     "source_sha256": "6a223d801a9bc530a289eab2a69b176c31fb00ea74e75dc9c98c311d4ae53abf",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 83,
+     "original_cell_id": "d12wb-084",
+     "source_sha256": "82c97db30f6f898247b732311aeb4662533e42fa17052dc4d2f36cc96fd5bbf3",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 86,
+     "original_cell_id": "d12wb-087",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 88,
+     "original_cell_id": "d12wb-089",
+     "source_sha256": "99c6052ce4d54ec57e24ea5a7d0d9852217e59ed5239b518046d144f6716bd81",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 89,
+     "original_cell_id": "d12wb-090",
+     "source_sha256": "d8b5a9967269a8d9394795b823e62aaf948166be327fe79d9c1b470b575df6e0",
+     "reviewed_role": "exercise/checkpoint",
+     "review_note": "Exercise prompt with Prediction and Checkpoint headings; followed by the learner cell, its check cell, then the reference marker, code and explanation."
+    },
+    {
+     "original_cell_index": 92,
+     "original_cell_id": "d12wb-093",
+     "source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Reference marker immediately before its runnable reference code."
+    },
+    {
+     "original_cell_index": 94,
+     "original_cell_id": "d12wb-095",
+     "source_sha256": "a41e47359641eca43bb4abed8b92185382d5849d47bef3e2289eddff2cf13098",
+     "reviewed_role": "reference-explanation",
+     "review_note": "Mechanism explanation immediately after its reference code."
+    },
+    {
+     "original_cell_index": 95,
+     "original_cell_id": "d12wb-096",
+     "source_sha256": "702ab4f5930c4b44617d13c0d18fed7542b52761c752ebc8af2e55f76a96806a",
+     "reviewed_role": "narrative/mechanism-context",
+     "review_note": "Introduction, data description or closing evidence-boundary prose; no exercise."
+    }
+   ],
+   "pairs": [
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e1",
+     "original_cell_index": 3,
+     "original_cell_id": "d12wb-004",
+     "prompt_cell_id": "d12wb-004",
+     "reference_heading_cell_id": "d12wb-007",
+     "reference_code_ordinal": 3,
+     "reference_code_cell_id": "d12wb-008",
+     "reference_code_sha256": "08404cddaf01e2324226d5606af133dad458082eb8f4a21c7c60b08dfb76c12e",
+     "explanation_cell_id": "d12wb-009",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 1 · token IDs from the chat template",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-005",
+      "d12wb-006"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-005": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-006": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 7,
+     "prompt_source_sha256": "8080130a3681be749c5940f399462119d2abf97e0e4d54de0ef57245e7533f24",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "c593792ffeeabb1e973a82c8bb3ed7271b01cddd341b4215c87538f8aee03d23",
+     "allowed_intervening_cell_indices": [
+      4,
+      5
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\nNever write the role markers by hand. The template adds `<|im_start|>`, role names,\n`<|im_end|>` and, for Qwen3, an empty think block in the last assistant turn. Only the model's own\ntemplate shows exactly what training will see (learning note, topic 1)."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e2",
+     "original_cell_index": 9,
+     "original_cell_id": "d12wb-010",
+     "prompt_cell_id": "d12wb-010",
+     "reference_heading_cell_id": "d12wb-013",
+     "reference_code_ordinal": 6,
+     "reference_code_cell_id": "d12wb-014",
+     "reference_code_sha256": "436225be4e72087ec8843b9518b9d50cde787398c3b4d6fa986c9baba02d38d2",
+     "explanation_cell_id": "d12wb-015",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 2 · find one answer span",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-011",
+      "d12wb-012"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-011": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-012": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 13,
+     "prompt_source_sha256": "c7628b243820b26e77c8be74bb24edbe45de7e7dbdab6fc5b05a2d6e9666459b",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "adfd94955ccf24c7d068a4b0ce2478e96ffc8b047f587c8f5f1c90598cac4bdf",
+     "allowed_intervening_cell_indices": [
+      10,
+      11
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\n`list.index(value, start)` finds the next `<|im_end|>` at or after `start`. The empty think block\nis skipped because, with thinking off, the inference prompt already contains it: the model never\nhas to generate it. Grade exactly what the model must produce."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e3",
+     "original_cell_index": 15,
+     "original_cell_id": "d12wb-016",
+     "prompt_cell_id": "d12wb-016",
+     "reference_heading_cell_id": "d12wb-019",
+     "reference_code_ordinal": 9,
+     "reference_code_cell_id": "d12wb-020",
+     "reference_code_sha256": "7f0f63083357aa165e8ebbfdda4976f32be3abaa4f954c81e696d28fcb93ea44",
+     "explanation_cell_id": "d12wb-021",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 3 · build the labels",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-017",
+      "d12wb-018"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-017": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-018": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 19,
+     "prompt_source_sha256": "3bc4985cf96cb3f3beeeebdce9b5292a8e1b44764f6d03160b89339e9979a21d",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "842d477807fd9d11dd2b1177c47b2463ee0f6b1477b2aa37f7cc23eda669930f",
+     "allowed_intervening_cell_indices": [
+      16,
+      17
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\n`end + 1` because Python slices exclude their end, and `<|im_end|>` must be graded. Labels are\nthe token IDs themselves, **unshifted**: the shift happens in the loss (Exercise 4)."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e4",
+     "original_cell_index": 21,
+     "original_cell_id": "d12wb-022",
+     "prompt_cell_id": "d12wb-022",
+     "reference_heading_cell_id": "d12wb-025",
+     "reference_code_ordinal": 12,
+     "reference_code_cell_id": "d12wb-026",
+     "reference_code_sha256": "f148ae04567ceae53016fea3885c6de5f8d3af80314bc2757a11cffb2b33670f",
+     "explanation_cell_id": "d12wb-027",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 4 · the shifted loss",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-023",
+      "d12wb-024"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-023": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-024": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 25,
+     "prompt_source_sha256": "5a6f18116540daa12ec8968c5f0113093dcef9e4f875bc888ae05eac56f5db4d",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "290f0015f78d8507c182fa9d214ea966d980e3046eca93e1a1381524accc4564",
+     "allowed_intervening_cell_indices": [
+      22,
+      23
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\n`logits[:-1]` drops the last prediction (nothing follows the end) and `labels[1:]` drops the\nfirst label (nothing predicts it). `ignore_index=-100` removes ungraded positions from both the\nsum and the count. Without the shift the shapes still match and you'd silently train a copying\ntask."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e5",
+     "original_cell_index": 28,
+     "original_cell_id": "d12wb-029",
+     "prompt_cell_id": "d12wb-029",
+     "reference_heading_cell_id": "d12wb-032",
+     "reference_code_ordinal": 15,
+     "reference_code_cell_id": "d12wb-033",
+     "reference_code_sha256": "1523f787eb366fb410580a89875ee18b828e825343b1808d368e37cbf0b6f78c",
+     "explanation_cell_id": "d12wb-034",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 5 · one pattern",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-030",
+      "d12wb-031"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-030": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-031": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 32,
+     "prompt_source_sha256": "d445dc4fdaedb14ca79138f81c07b38ee9d7c180215b9ef9929cc373ccac82ac",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "5482f6a84c493ad79e8c85e4c2497b3357bd4555739cf108b53fc9e72851cd41",
+     "allowed_intervening_cell_indices": [
+      29,
+      30
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\nEach entry is `u[i] · v[j]`, so every row is the same shape scaled differently: one pattern,\nrank 1. Adding a second, independent column × row pattern makes rank 2, like adding the promotion\nto the sales table in our discussion."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e6",
+     "original_cell_index": 34,
+     "original_cell_id": "d12wb-035",
+     "prompt_cell_id": "d12wb-035",
+     "reference_heading_cell_id": "d12wb-038",
+     "reference_code_ordinal": 18,
+     "reference_code_cell_id": "d12wb-039",
+     "reference_code_sha256": "ba092f619535ad483fa7b4296f6e9b957475fe19fa1047a15395c4646abf00c0",
+     "explanation_cell_id": "d12wb-040",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 6 · keep the r strongest patterns",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-036",
+      "d12wb-037"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-036": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-037": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 38,
+     "prompt_source_sha256": "5d80d082f506ebceb91c359062fb7c19e4eb9ee25c84f5dbb151fda10c7befe5",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "bffe168208469793797391406d33d92d6cb0243a87af39b1c47b67d212fc5f7b",
+     "allowed_intervening_cell_indices": [
+      35,
+      36
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\n`U[:, :r] * S[:r]` scales each kept column by its strength, then `@ Vh[:r]` adds up the `r`\ncolumn × row patterns. By the Eckart–Young theorem this is the best rank-*r* approximation. The\nphoto becomes recognizable around r = 20."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e7",
+     "original_cell_index": 41,
+     "original_cell_id": "d12wb-042",
+     "prompt_cell_id": "d12wb-042",
+     "reference_heading_cell_id": "d12wb-045",
+     "reference_code_ordinal": 21,
+     "reference_code_cell_id": "d12wb-046",
+     "reference_code_sha256": "0f35f7a58cb09c5719a8a3ad6f090bd001730bd1a744e3eb8941c887b075e31e",
+     "explanation_cell_id": "d12wb-047",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 7 · how much of the strength is in the top r?",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-043",
+      "d12wb-044"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-043": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-044": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 45,
+     "prompt_source_sha256": "7ae39a63de86775d071ca76a27dfe199aebd65886014084d9332e8c650bfe0cf",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "bff145cf158e25df9630a94b8812496b7ebff71d7d9f6b3b89fadb82658f6fb5",
+     "allowed_intervening_cell_indices": [
+      42,
+      43
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\nSquared because energy adds up the squared sizes of the patterns, the same way the error of a\nrank-*r* approximation is measured. The photo concentrates its energy; the pretrained weight\nspreads it out much like a random matrix. That's why LoRA leaves `W` complete and only makes the\n**update** low-rank."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e8",
+     "original_cell_index": 47,
+     "original_cell_id": "d12wb-048",
+     "prompt_cell_id": "d12wb-048",
+     "reference_heading_cell_id": "d12wb-051",
+     "reference_code_ordinal": 24,
+     "reference_code_cell_id": "d12wb-052",
+     "reference_code_sha256": "310774e4b0cbeaed417f347125c601f385af376ddc9b91a823387bed05240261",
+     "explanation_cell_id": "d12wb-053",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 8 · LoRA's parameter budget",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-049",
+      "d12wb-050"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-049": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-050": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 51,
+     "prompt_source_sha256": "b92299db696ffe4f57b3d455f5e7baea34f9f7baf314a059835a91076db04c50",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "11999d5e9d360271f72a11533ea3cd395561e54cc709110e064cf9d058e9c42f",
+     "allowed_intervening_cell_indices": [
+      48,
+      49
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\n`r · (d_in + d_out)` instead of `d_in · d_out`. For Qwen3's `q_proj` (2048 × 1024) at rank 8,\nthat's 24,576 numbers instead of 2,097,152, about 1.2%."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e9",
+     "original_cell_index": 54,
+     "original_cell_id": "d12wb-055",
+     "prompt_cell_id": "d12wb-055",
+     "reference_heading_cell_id": "d12wb-058",
+     "reference_code_ordinal": 27,
+     "reference_code_cell_id": "d12wb-059",
+     "reference_code_sha256": "3851b2750cf440e93e6b966b1d41f979cfea4e8e75a6ead4b3d80ab64c83605b",
+     "explanation_cell_id": "d12wb-060",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 9 · the LoRA layer",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-056",
+      "d12wb-057"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-056": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-057": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 58,
+     "prompt_source_sha256": "1ce0603e1c037a1c147aa0e7e2a1094180d4b311c8af8210c5bbd909c0088373",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "01ddb4ce4ac10a84fe909c2893d13aa3d2597f3d6d403a12fdb0d9a51364fc52",
+     "allowed_intervening_cell_indices": [
+      55,
+      56
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\n`B = 0` makes the update exactly zero at step 0, so the wrapped model starts as the pretrained\none. `A` is random so that `B` receives a nonzero gradient straight away; if both were zero,\nneither would ever move. `x @ A.T @ B.T` applies the `r` read → write patterns."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e10",
+     "original_cell_index": 62,
+     "original_cell_id": "d12wb-063",
+     "prompt_cell_id": "d12wb-063",
+     "reference_heading_cell_id": "d12wb-066",
+     "reference_code_ordinal": 31,
+     "reference_code_cell_id": "d12wb-067",
+     "reference_code_sha256": "395dbbff1fbd8a259aaa29bd93a4b16f5576520971bc5cf97e2a2ef0554cd111",
+     "explanation_cell_id": "d12wb-068",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 10 · freeze Qwen3 and wrap q_proj and v_proj",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-064",
+      "d12wb-065"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-064": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-065": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 66,
+     "prompt_source_sha256": "a93edd9f5f2805fce6dc94f6a59bfb20daf5f78bddd742cce16aaf1d59653180",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "44cad4888d7a35e2954079ba2d3030f74edcf986988ddcbbd734f44aa3e246cd",
+     "allowed_intervening_cell_indices": [
+      63,
+      64
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\nFreeze **first**, then wrap: the new `A` and `B` are created after the freeze, so they're the\nonly parameters left trainable. Freezing after wrapping would freeze the adapters too."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e11",
+     "original_cell_index": 68,
+     "original_cell_id": "d12wb-069",
+     "prompt_cell_id": "d12wb-069",
+     "reference_heading_cell_id": "d12wb-072",
+     "reference_code_ordinal": 34,
+     "reference_code_cell_id": "d12wb-073",
+     "reference_code_sha256": "83c7a2d6d0d799684f0c4179380bc36f587f4d2f6df85d11d6a2b7212e63833f",
+     "explanation_cell_id": "d12wb-074",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 11 · one training step",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-070",
+      "d12wb-071"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-070": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-071": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 72,
+     "prompt_source_sha256": "65fedf2ef0aecfd85111991d646253e4c23a74438c9fdf02670464648f7b1631",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "e76bee3a72ff37a13608111dc69c63416e17ae76e0a46483d7d337b379040028",
+     "allowed_intervening_cell_indices": [
+      69,
+      70
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\nOrder matters: backward computes gradients, `step` uses them, `zero_grad` clears them so they\ndon't pile up into the next step. Only `A` and `B` move; the pretrained weights are bit-for-bit\nunchanged."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e12",
+     "original_cell_index": 77,
+     "original_cell_id": "d12wb-078",
+     "prompt_cell_id": "d12wb-078",
+     "reference_heading_cell_id": "d12wb-081",
+     "reference_code_ordinal": 38,
+     "reference_code_cell_id": "d12wb-082",
+     "reference_code_sha256": "0fc3631027a2866df509493ede5995544cceace4f52262469a9b9c37c71f0fe6",
+     "explanation_cell_id": "d12wb-083",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 12 · block-wise quantize and dequantize",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-079",
+      "d12wb-080"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-079": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-080": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 81,
+     "prompt_source_sha256": "314551f44d18d07e9279a96b469d790c2aeabb5255f0f0d80c45bd4d2b7e9b71",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "6a223d801a9bc530a289eab2a69b176c31fb00ea74e75dc9c98c311d4ae53abf",
+     "allowed_intervening_cell_indices": [
+      78,
+      79
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\n`unsqueeze(-1).sub(levels)` compares every weight with all 16 levels at once, and `argmin` picks\nthe nearest. On the real Qwen weight, blocks of 64 beat one global scale by a wide margin, and NF4\nbeats evenly spaced levels by a smaller one, matching Predicts 11–12 of notebook 03."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e13",
+     "original_cell_index": 83,
+     "original_cell_id": "d12wb-084",
+     "prompt_cell_id": "d12wb-084",
+     "reference_heading_cell_id": "d12wb-087",
+     "reference_code_ordinal": 41,
+     "reference_code_cell_id": "d12wb-088",
+     "reference_code_sha256": "273f7ce2a276a269e5f4412d86faf55d50515244eec2179081994c4f1ab66361",
+     "explanation_cell_id": "d12wb-089",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 13 · pack two 4-bit codes into one byte",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-085",
+      "d12wb-086"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-085": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-086": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 87,
+     "prompt_source_sha256": "82c97db30f6f898247b732311aeb4662533e42fa17052dc4d2f36cc96fd5bbf3",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "99c6052ce4d54ec57e24ea5a7d0d9852217e59ed5239b518046d144f6716bd81",
+     "allowed_intervening_cell_indices": [
+      84,
+      85
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\n`<< 4` shifts a code into the top half of the byte and `|` merges in the low half. `>> 4` and\n`& 15` (binary `00001111`) take them apart again. That's the factor of 4 over bf16 for storage."
+    },
+    {
+     "modification_reference": null,
+     "reference_role": "existing-runnable-reference",
+     "additional_prompt_sources": [],
+     "exercise_id": "day-12-04-e14",
+     "original_cell_index": 89,
+     "original_cell_id": "d12wb-090",
+     "prompt_cell_id": "d12wb-090",
+     "reference_heading_cell_id": "d12wb-093",
+     "reference_code_ordinal": 44,
+     "reference_code_cell_id": "d12wb-094",
+     "reference_code_sha256": "65005eb1354ffc65d69eecd9354aacfa951d8e2d421f29760156245094f90aac",
+     "explanation_cell_id": "d12wb-095",
+     "kind": "computation",
+     "source_prompt_excerpt": "## Exercise 14 · memory accounting",
+     "audited_basis": "Learner writes 1-4 key lines; a dongxi_llms.sft_workbook check (unit-tested) reports pass/fail without raising; the reference runs the same check with strict=True and then a real Qwen3-0.6B experiment on the Spark GPU. Executed 2026-10-22 blank (14 not attempted, references pass), with solutions filled (all checks pass), and from a learner_work copy without PYTHONPATH.",
+     "allowed_intervening_cell_ids": [
+      "d12wb-091",
+      "d12wb-092"
+     ],
+     "allowed_intervening_reasons": {
+      "d12wb-091": "Learner exercise cell (tag learner-exercise) holding the key lines to write; unfinished placeholders are skipped by the verifier.",
+      "d12wb-092": "Non-raising check of the learner attempt before the reference is revealed; prints not-attempted, pass or fail with a hint."
+     },
+     "original_reference_cell_index": 93,
+     "prompt_source_sha256": "d8b5a9967269a8d9394795b823e62aaf948166be327fe79d9c1b470b575df6e0",
+     "reference_heading_source_sha256": "df3c1b053dc755c47118f36123d5d8e7d5294cd21ded5890c3582ef56025e219",
+     "explanation_source_sha256": "a41e47359641eca43bb4abed8b92185382d5849d47bef3e2289eddff2cf13098",
+     "allowed_intervening_cell_indices": [
+      90,
+      91
+     ],
+     "reference_explanation_excerpt": "### Reference explanation\n\n### Reference answer and mechanism\n\n16 bytes = 4 (fp32 weight) + 4 (gradient) + 8 (two AdamW moments). LoRA keeps only the frozen\nbf16 weight (2 bytes), QLoRA only 4 bits (0.5 bytes), plus small block scales in practice. Activations\ncome on top of all three."
+    }
+   ],
+   "review_scope": "Introduced 2026-10-22: hands-on spark-gpu workbook companion to day-12/03. Fourteen exercises, each with a learner cell and a non-raising check cell before the reference solution and explanation."
   }
  ],
  "reviewed_utc": "2026-10-22",
  "independent_semantic_review": "Late pairing/API review in independent scoped receipt; standalone checker audits exact hashes and declared adjacency, with explicit semantic limits.",
- "current_scope": "Historical76 reviews are carried unchanged;38 introduced pairs have source-bound semantic review and separate fresh execution. Production preservation also compares all76 with the current7864095 baseline. 2026-10-22: carries all 83 earlier reviews unchanged and adds day-11/05 with 5 reviewed pairs. 2026-10-22 (spark-gpu-notebook-fixes): three declared revisions for GPU-first execution and cross-version float64 tolerance; all other reviews unchanged. 2026-10-22: adds day-12/03 (spark-gpu) with 14 reviewed pairs.",
+ "current_scope": "Historical76 reviews are carried unchanged;38 introduced pairs have source-bound semantic review and separate fresh execution. Production preservation also compares all76 with the current7864095 baseline. 2026-10-22: carries all 83 earlier reviews unchanged and adds day-11/05 with 5 reviewed pairs. 2026-10-22 (spark-gpu-notebook-fixes): three declared revisions for GPU-first execution and cross-version float64 tolerance; all other reviews unchanged. 2026-10-22: adds day-12/03 (spark-gpu) with 14 reviewed pairs. 2026-10-22: adds day-12/04 (spark-gpu workbook) with 14 reviewed exercise pairs.",
  "review_sources": [
   "Root scientific/unit review and existing historical ledger",
   "data independent compatibility checks and notebook execution",
