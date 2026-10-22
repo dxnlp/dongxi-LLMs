@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Execute course notebooks in fresh CPU kernels without overwriting sources.
+"""Execute course notebooks in fresh kernels without overwriting sources.
+
+The DGX Spark GPU kernel is the priority environment, so CUDA stays visible by
+default. Each notebook is checked against its declared execution type: spark-gpu
+notebooks must see CUDA, and cpu-offline/local-model-cache notebooks must run with
+or without it. Use --cuda hide to reproduce the older CPU-only verification runs.
 
 Outputs, environment identity, source hashes and failures are retained in a
 new run directory. --export-figures writes only generated reference PNG assets.
@@ -24,7 +29,7 @@ import nbformat
 from nbclient import NotebookClient
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-from dongxi_llms.course_manifest import load_manifest, select_notebooks
+from dongxi_llms.course_manifest import EXECUTION_TYPES, load_manifest, select_notebooks
 
 KERNEL_IDENTITY_PREFIX = '__DONGXI_KERNEL_IDENTITY__:'
 
@@ -39,11 +44,15 @@ def kernel_identity(notebook):
     raise RuntimeError('Fresh kernel did not return an execution identity')
 
 
-def execution_preamble():
+def execution_preamble(execution):
+    if execution not in EXECUTION_TYPES:
+        raise ValueError(f'Unknown execution type: {execution!r}')
+    requirement = ("assert torch.cuda.is_available(), 'spark-gpu notebook needs CUDA on the DGX Spark kernel'"
+                   if execution == 'spark-gpu' else "pass  # runs with or without CUDA")
     return "\n".join([
         "get_ipython().run_line_magic('matplotlib', 'inline')",
         "import sys, platform, json, importlib.metadata, torch",
-        "assert not torch.cuda.is_available(), 'CPU teaching lane unexpectedly sees CUDA'",
+        requirement,
         "identity = dict(executable=sys.executable, prefix=sys.prefix, python=platform.python_version(), platform=platform.platform(), cuda_available=torch.cuda.is_available(), torch_cuda_build=torch.version.cuda, packages={name:importlib.metadata.version(name) for name in ['torch','numpy','matplotlib','nbformat','nbclient','ipykernel','transformers','tokenizers','peft']})",
         f"print({KERNEL_IDENTITY_PREFIX!r} + json.dumps(identity, sort_keys=True))",
     ])
@@ -100,6 +109,9 @@ def main():
     parser.add_argument('--days', nargs='*', type=int)
     parser.add_argument('--notebooks', nargs='+', help='Explicit registered repository-relative paths')
     parser.add_argument('--lane', choices=['core', 'optional', 'extension'])
+    parser.add_argument('--execution', choices=sorted(EXECUTION_TYPES))
+    parser.add_argument('--cuda', choices=['show', 'hide'], default='show',
+                        help='GPU visibility for the kernels; default show (Spark GPU first)')
     parser.add_argument('--kernel', default='dgx-spark-native')
     parser.add_argument('--expected-prefix', type=Path, help='Require actual kernel sys.prefix to match this environment')
     parser.add_argument('--timeout', type=int, default=240)
@@ -112,7 +124,10 @@ def main():
         parser.error('--host-reserve-gib must be finite and positive')
     root = Path(__file__).resolve().parents[1]
     registry = load_manifest(root, check_files=False)
-    selected = select_notebooks(registry, days=args.days, paths=args.notebooks, lane=args.lane)
+    selected = select_notebooks(registry, days=args.days, paths=args.notebooks, lane=args.lane,
+                                execution=args.execution)
+    if args.cuda == 'hide' and any(row['execution'] == 'spark-gpu' for row in selected):
+        parser.error('spark-gpu notebooks cannot run with --cuda hide')
     sources = [root / row['path'] for row in selected]
     entries = {row['path']:row for row in selected}
     output = prepare_output(args.output or Path(tempfile.mkdtemp(prefix='dongxi-course-check-')))
@@ -121,7 +136,8 @@ def main():
         'date_utc': datetime.now(timezone.utc).isoformat(),
         'base_commit': subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),
         'python': platform.python_version(), 'platform': platform.platform(),
-        'kernel': args.kernel, 'scope': 'CPU teaching references and stored evidence',
+        'kernel': args.kernel, 'cuda_visibility': args.cuda,
+        'scope': 'Course notebooks checked against their declared execution types',
         'expected_kernel_prefix':str(args.expected_prefix) if args.expected_prefix is not None else None,
         'course_manifest_sha256':hashlib.sha256((root/'docs/course_manifest.json').read_bytes()).hexdigest(),
         'lock_sha256':hashlib.sha256((root/'uv.lock').read_bytes()).hexdigest() if (root/'uv.lock').exists() else None,
@@ -130,9 +146,11 @@ def main():
         'required_host_reserve_gib':args.host_reserve_gib,
     }
     env = dict(os.environ, OMP_NUM_THREADS='1', OPENBLAS_NUM_THREADS='1',
-               MKL_NUM_THREADS='1', CUDA_VISIBLE_DEVICES='',
-               HF_HUB_OFFLINE='1', TRANSFORMERS_OFFLINE='1',
+               MKL_NUM_THREADS='1', HF_HUB_OFFLINE='1', TRANSFORMERS_OFFLINE='1',
                PYTHONPATH=str(root/'src'))
+    if args.cuda == 'hide':
+        env['CUDA_VISIBLE_DEVICES'] = ''
+
     (output/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
     for source in sources:
         record = {'path':str(source.relative_to(root))}
@@ -153,7 +171,7 @@ def main():
             source_cells = list(nb.cells)
             # Completed attempts and every complete reference still execute.
             skipped_scaffolds = mark_unfinished_scaffolds(source_cells)
-            nb.cells.insert(0, nbformat.v4.new_code_cell(execution_preamble()))
+            nb.cells.insert(0, nbformat.v4.new_code_cell(execution_preamble(entries[record['path']]['execution'])))
             began = time.perf_counter()
             NotebookClient(nb, timeout=args.timeout, kernel_name=args.kernel,
                            skip_cells_with_tag='skip-verification',
@@ -166,7 +184,8 @@ def main():
             images = [(i-1,o.data['image/png']) for i,c in enumerate(nb.cells) if c.cell_type=='code'
                       for o in c.outputs if o.output_type in ('display_data','execute_result')
                       and 'image/png' in o.data]
-            record.update(code_cells=sum(c.cell_type=='code' for c in source_cells),
+            record.update(execution=entries[record['path']]['execution'],
+                          code_cells=sum(c.cell_type=='code' for c in source_cells),
                           kernel_identity=actual_kernel,
                           executed_code_cells=sum(c.cell_type=='code' for c in source_cells)-len(skipped_scaffolds),
                           skipped_unfinished_exercise_cells=skipped_scaffolds,

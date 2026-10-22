@@ -20,7 +20,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 RUN = 'experiments/reports/2026-10-10-book-editorial-pass/run-01'
-CURRENT_RUN = 'experiments/reports/2026-10-11-cs336-upgrade/run-01'
+CURRENT_RUN = 'experiments/reports/2026-10-22-spark-gpu-notebook-fixes/run-01'
 HASH_RECIPE = 'sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode())'
 KINDS = {'computation', 'interpretation', 'perturbation', 'written-reflection'}
 MARKDOWN_ROLES = {'exercise/checkpoint', 'reference-explanation', 'narrative/mechanism-context',
@@ -114,6 +114,42 @@ def safe_notebook_path(path):
             and '..' not in PurePosixPath(path).parts and str(PurePosixPath(path)) == path)
 
 
+def load_declared_revision(root, path, revision):
+    """Read a frozen revised notebook declared for a tracked Git original."""
+    if not isinstance(revision, dict) or set(revision) != {'source', 'sha256', 'reason', 'date'}:
+        raise ValueError(f'Declared revision needs exactly source, sha256, reason and date: {path}')
+    if not isinstance(revision['reason'], str) or not revision['reason'].strip():
+        raise ValueError(f'Declared revision needs an explicit reason: {path}')
+    source = revision['source']
+    if (not isinstance(source, str) or PurePosixPath(source).is_absolute()
+            or '..' in PurePosixPath(source).parts or '\\' in source):
+        raise ValueError(f'Unsafe declared revision source: {source!r}')
+    actual = (Path(root)/source).resolve()
+    if not actual.is_relative_to(Path(root).resolve()):
+        raise ValueError('Declared revision escapes repository')
+    raw = actual.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != revision['sha256']:
+        raise ValueError(f'Frozen declared revision identity disagrees: {path}')
+    return json.loads(raw)
+
+
+def load_declared_revisions(root, baseline):
+    """Frozen revised code references for tracked Git originals.
+
+    The Git original stays the authority for Markdown inventory and prompt indices;
+    a declared revision only replaces the frozen *code* reference, with a reason.
+    """
+    revisions = {}
+    for path, captured in baseline['notebooks'].items():
+        revision = captured.get('declared_revision')
+        if revision is None:
+            continue
+        if captured.get('introduced_source') is not None:
+            raise ValueError(f'Introduced sources are revised by replacing their frozen file: {path}')
+        revisions[path] = load_declared_revision(root, path, revision)
+    return revisions
+
+
 def load_git_originals(root, baseline):
     """Read Git originals or explicitly frozen sources for newly added lessons.
 
@@ -152,8 +188,13 @@ def load_git_originals(root, baseline):
     return originals
 
 
-def check_contracts(root, manifest, baseline, review, originals):
-    """Return a bounded static audit; originals contains independent Git objects."""
+def check_contracts(root, manifest, baseline, review, originals, revisions=None):
+    """Return a bounded static audit; originals contains independent Git objects.
+
+    revisions maps a path to a frozen declared revision whose code (and notebook header)
+    replaces the Git original's as the preservation reference.
+    """
+    revisions = revisions or {}
     root = Path(root)
     problems, records, preservation = [], [], []
 
@@ -213,13 +254,17 @@ def check_contracts(root, manifest, baseline, review, originals):
             if metadata_hash != captured.get('notebook_metadata_sha256'):
                 problem(path, 'preservation', 'Notebook metadata changed')
             original = originals.get(path)
+            code_reference = revisions.get(path, original)
+            if path in revisions and original is None:
+                problem(path, 'preservation', 'Declared revision has no verified Git original')
             authority = ('frozen-introduced-source' if captured.get('introduced_source') is not None
+                         else 'declared-revision' if captured.get('declared_revision') is not None
                          else 'independent-git-objects' if original is not None
                          else 'immutable-full-file-sha256')
             if original is not None:
-                if codes != code_cells(original):
+                if codes != code_cells(code_reference):
                     problem(path, 'preservation', 'Complete code objects differ from Git original (missing keys remain significant)')
-                if {k:v for k,v in notebook.items() if k != 'cells'} != {k:v for k,v in original.items() if k != 'cells'}:
+                if {k:v for k,v in notebook.items() if k != 'cells'} != {k:v for k,v in code_reference.items() if k != 'cells'}:
                     problem(path, 'preservation', 'Notebook metadata/format/header differs from Git original')
             elif path in routes:
                 problem(path, 'preservation', 'Registered notebook lacks an independent original Git object')
@@ -241,7 +286,7 @@ def check_contracts(root, manifest, baseline, review, originals):
         captured = original_inventory[path]
         for key, expected in [('baseline_code_sha256', captured['preserved_code_sha256']),
                               ('baseline_metadata_sha256', captured['notebook_metadata_sha256']),
-                              ('baseline_full_code_sha256', object_sha256(code_cells(original)))]:
+                              ('baseline_full_code_sha256', object_sha256(code_cells(revisions.get(path, original))))]:
             if row.get(key) != expected:
                 problem(path, 'review', f'Review {key} disagrees with original identity')
         expected_markdown = [dict(original_cell_index=i, original_cell_id=cell.get('id'),
@@ -385,7 +430,7 @@ def check_contracts(root, manifest, baseline, review, originals):
                 preserved_code_cells=sum(row['code_cells'] for row in preservation),
                 preservation_authorities={authority:sum(row['authority'] == authority for row in preservation)
                                           for authority in ['independent-git-objects', 'immutable-full-file-sha256',
-                                                            'frozen-introduced-source']},
+                                                            'frozen-introduced-source', 'declared-revision']},
                 reviewed_prompts=sum(row['reviewed_prompts'] for row in records),
                 reference_pairs=sum(row['reference_pairs'] for row in records),
                 reference_groups=sum(row['reference_groups'] for row in records),
@@ -418,7 +463,8 @@ def main():
         from dongxi_llms.course_manifest import load_manifest
         manifest = load_manifest(root, check_files=False)
         originals = load_git_originals(root, baseline)
-        result = check_contracts(root, manifest, baseline, review, originals)
+        revisions = load_declared_revisions(root, baseline)
+        result = check_contracts(root, manifest, baseline, review, originals, revisions)
         result['review_sha256'] = hashlib.sha256((args.review if args.review.is_absolute() else root/args.review).read_bytes()).hexdigest()
         result['baseline_sha256'] = hashlib.sha256(expected_baseline.read_bytes()).hexdigest()
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as error:

@@ -5,7 +5,7 @@ import tempfile
 import nbformat
 from scripts.verify_course_notebooks import (KERNEL_IDENTITY_PREFIX, kernel_identity,
                                              mark_unfinished_scaffolds, prepare_output,
-                                             check_kernel_prefix)
+                                             check_kernel_prefix, execution_preamble)
 
 
 class ScaffoldVerificationTests(unittest.TestCase):
@@ -29,6 +29,13 @@ class ScaffoldVerificationTests(unittest.TestCase):
             nbformat.v4.new_code_cell("message = '...'", metadata={"tags": ["learner-exercise"]}),
         ]
         self.assertEqual(mark_unfinished_scaffolds(cells), [])
+
+    def test_preamble_follows_declared_execution_type(self):
+        self.assertIn("assert torch.cuda.is_available()", execution_preamble('spark-gpu'))
+        for execution in ('cpu-offline', 'local-model-cache'):
+            self.assertNotIn('assert', execution_preamble(execution))
+        with self.assertRaises(ValueError):
+            execution_preamble('gpu')
 
     def test_identity_is_from_execution_preamble_only(self):
         notebook = nbformat.v4.new_notebook(cells=[nbformat.v4.new_code_cell('pass')])

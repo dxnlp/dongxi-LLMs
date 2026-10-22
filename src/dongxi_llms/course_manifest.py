@@ -15,6 +15,16 @@ class CourseManifestError(ValueError):
     """A routing contract is malformed or disagrees with the repository."""
 
 
+# Each value declares a notebook's minimum runtime requirement. The DGX Spark GPU
+# kernel is the priority environment and satisfies all three; a CPU-only kernel
+# satisfies the first two (the second also needs the declared local model cache).
+EXECUTION_TYPES = {
+    "cpu-offline": "Any kernel, CPU or GPU; no network access and no model caches.",
+    "local-model-cache": "Any kernel; no network access, but needs locally cached Hugging Face files.",
+    "spark-gpu": "Needs CUDA on the DGX Spark GPU kernel.",
+}
+
+
 def _integer(value: Any) -> bool:
     return isinstance(value, int) and not isinstance(value, bool)
 
@@ -106,7 +116,7 @@ def validate_manifest(document: Any, root: Path | None = None) -> list[str]:
                 or not (matches_path or cs336_path)):
             problems.append(f"Notebook day/chapter/path mismatch: {path}")
         lane = row.get("lane")
-        if lane not in ("core", "optional", "extension") or row.get("execution") != "cpu-offline":
+        if lane not in ("core", "optional", "extension") or row.get("execution") not in EXECUTION_TYPES:
             problems.append(f"Unknown lane/execution: {path}")
         improvement = row.get("improvement")
         if lane == "extension":
@@ -211,7 +221,7 @@ def load_manifest(root: Path, *, check_files: bool = True) -> dict:
     return document
 
 
-def select_notebooks(document: dict, *, days=None, paths=None, lane=None) -> list[dict]:
+def select_notebooks(document: dict, *, days=None, paths=None, lane=None, execution=None) -> list[dict]:
     """Select registered routes; unknown/empty selectors fail, never disappear."""
     problems = validate_manifest(document)
     if problems:
@@ -232,6 +242,10 @@ def select_notebooks(document: dict, *, days=None, paths=None, lane=None) -> lis
         if lane not in ("core", "optional", "extension"):
             raise CourseManifestError("Unknown notebook lane")
         entries = [row for row in entries if row["lane"] == lane]
+    if execution is not None:
+        if execution not in EXECUTION_TYPES:
+            raise CourseManifestError("Unknown notebook execution type")
+        entries = [row for row in entries if row["execution"] == execution]
     if not entries:
         raise CourseManifestError("No matching registered notebooks")
     return sorted(entries, key=lambda row: row["path"])

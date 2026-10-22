@@ -6,6 +6,11 @@ Study focus: roles, templates, loss ownership, packing and mixtures.
 
 The canonical material is [Chapter 8](../../book/chapters/08-instruction-data-as-an-interface.md), with [worked answers](../../book/solutions/08-instruction-data-as-an-interface.md) and the [notebook route](../../notebooks/day-11/README.md). The [CPU evidence report](../../experiments/reports/2026-10-04-evaluation-and-sft-course.md) distinguishes verified implementation mechanics from capability claims.
 
+[Learning instruction tuning](learning-instruction-tuning.md) (opened 2026-10-22)
+is a running record of the learner's instruction-tuning discussions, each topic
+saved at the learner's request for reuse in later material. Topic 1 traces one
+example from stored messages, through the chat template, to the loss mask.
+
 A durable discussion should record the learner's initial explanation, corrected mechanism, prediction, tested intervention and remaining gap. No new learner answers have been inferred from authored course text.
 
 Animation candidates (not production): assistant ownership through causal shift; loss versus visibility masks; token exposure. Render only after approval on Mac Studio; these mechanisms are canonical mathematics for the queue.

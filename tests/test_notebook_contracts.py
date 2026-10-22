@@ -237,5 +237,51 @@ class NotebookContractTests(unittest.TestCase):
             contracts.load_git_originals(self.root, self.baseline)
 
 
+    def declare_revision(self, new_source):
+        """Revise the reference code cell in both the current notebook and a frozen copy."""
+        revised = copy.deepcopy(self.original)
+        revised['cells'][2]['source'] = new_source
+        self.notebook['cells'][3]['source'] = new_source
+        snapshot = 'captures/revised.ipynb'
+        self.write(snapshot, revised)
+        captured = self.baseline['notebooks'][self.path]
+        captured['preserved_code_sha256'] = contracts.object_sha256(contracts.normalized_baseline_code(revised))
+        captured['declared_revision'] = dict(
+            source=snapshot, date='2026-10-22', reason='Explicit device choice for the GPU-first kernel.',
+            sha256=contracts.hashlib.sha256((self.root/snapshot).read_bytes()).hexdigest())
+        row = self.review['notebooks'][0]
+        row['baseline_code_sha256'] = captured['preserved_code_sha256']
+        row['baseline_full_code_sha256'] = contracts.object_sha256(contracts.code_cells(revised))
+        row['pairs'][0]['reference_code_sha256'] = contracts.object_sha256(revised['cells'][2])
+        return snapshot
+
+    def test_revised_code_without_declaration_fails_preservation(self):
+        self.notebook['cells'][3]['source'] = ['x = 1\n', 'print(x + 2)\n']
+        self.assertIn('Complete code objects differ', self.messages(self.check()))
+
+    def test_declared_revision_replaces_only_the_code_reference(self):
+        self.declare_revision(['x = 1\n', 'print(x + 2)\n'])
+        revisions = contracts.load_declared_revisions(self.root, self.baseline)
+        self.write(self.path, self.notebook)
+        result = contracts.check_contracts(self.root, self.manifest, self.baseline, self.review,
+                                           self.originals, revisions)
+        self.assertEqual(result['problems'], [])
+        self.assertEqual(result['preservation_authorities']['declared-revision'], 1)
+        # Markdown inventory and prompt indices remain bound to the Git original.
+        self.assertEqual(self.originals[self.path]['cells'][2]['source'], self.reference['source'])
+
+    def test_declared_revision_must_match_its_frozen_file_and_give_a_reason(self):
+        snapshot = self.declare_revision(['x = 1\n', 'print(x + 2)\n'])
+        tampered = copy.deepcopy(self.original)
+        tampered['cells'][2]['source'] = ['print(999)\n']
+        self.write(snapshot, tampered)
+        with self.assertRaisesRegex(ValueError, 'identity disagrees'):
+            contracts.load_declared_revisions(self.root, self.baseline)
+        self.declare_revision(['x = 1\n', 'print(x + 2)\n'])
+        self.baseline['notebooks'][self.path]['declared_revision']['reason'] = ' '
+        with self.assertRaisesRegex(ValueError, 'explicit reason'):
+            contracts.load_declared_revisions(self.root, self.baseline)
+
+
 if __name__ == '__main__':
     unittest.main()

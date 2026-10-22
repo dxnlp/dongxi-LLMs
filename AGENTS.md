@@ -120,6 +120,12 @@ an unavailable machine's execution.
 - Experiment specifications define intended runs.
 - `docs/course_manifest.json` defines chapter/day/notebook routing and optional
   extension dependencies; registration is not a readiness or mastery claim.
+  Each notebook declares its minimum runtime as `execution`: `cpu-offline` (any
+  kernel, no network or model caches), `local-model-cache` (any kernel, needs cached
+  Hugging Face files) or `spark-gpu` (needs CUDA on the DGX Spark). The DGX Spark GPU
+  kernel is the priority environment for new notebooks (learner decision, 2026-10-22).
+  `scripts/verify_course_notebooks.py` keeps CUDA visible by default and checks each
+  notebook against its declared type.
 - `pyproject.toml` plus `uv.lock` define the isolated CPU teaching environment.
   Never synchronize that lock into the shared Spark GPU environment. Use a new
   task/project-local environment and temporary-prefix kernel, retain actual

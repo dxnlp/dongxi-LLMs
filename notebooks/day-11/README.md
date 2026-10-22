@@ -6,6 +6,7 @@ These are complete CPU lessons for Chapter 8. Material readiness is separate fro
 - [Where can information flow in a packed sequence?](02_padding_packing_boundaries.ipynb).
 - [What distribution does the objective actually emphasize?](03_mixtures_and_data_cards.ipynb).
 - [What survives teacher filtering and matched selection?](04_teacher_attempts_and_matched_rejection_sft.ipynb).
+- [What does Qwen's real chat template ask the model to write?](05_qwen_chat_template_and_labels.ipynb) Optional: builds `-100` labels from the actual Qwen3-0.6B template. Needs the tokenizer in the local Hugging Face cache; nothing is downloaded.
 
 Each notebook contains predictions, adjacent explanations and runnable solutions, and plots from the actual lesson tensors or declared illustrative fixtures. Use the course kernel with PyTorch and Matplotlib. No downloads or GPU work are required.
 

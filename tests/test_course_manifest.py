@@ -73,6 +73,23 @@ class ManifestTests(unittest.TestCase):
         row['improvement'] = 'DXI-99'
         self.assertTrue(any('known improvement' in p for p in validate_manifest(self.document)))
 
+    def test_execution_types_are_declared(self):
+        row = self.document['notebooks'][0]
+        for execution in ('cpu-offline', 'local-model-cache', 'spark-gpu'):
+            row['execution'] = execution
+            self.assertEqual(validate_manifest(self.document), [])
+        row['execution'] = 'gpu'
+        self.assertTrue(any('lane/execution' in p for p in validate_manifest(self.document)))
+
+    def test_execution_selector(self):
+        self.document['notebooks'][0]['execution'] = 'spark-gpu'
+        expected = sorted(row['path'] for row in self.document['notebooks'] if row['execution'] == 'spark-gpu')
+        selected = select_notebooks(self.document, execution='spark-gpu')
+        self.assertEqual([row['path'] for row in selected], expected)
+        self.assertIn(self.document['notebooks'][0]['path'], expected)
+        with self.assertRaises(CourseManifestError):
+            select_notebooks(self.document, execution='gpu')
+
     def test_assignment_extension_preserves_day_chapter_and_namespace(self):
         row = dict(path='notebooks/extensions/cs336/fixture.ipynb', day=8,
                    chapter=6, lane='extension', execution='cpu-offline',

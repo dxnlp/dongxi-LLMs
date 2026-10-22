@@ -74,6 +74,12 @@ The current inventory is 83 notebooks. The seven [assignment companions](../note
 - [Day11 teacher attempts and rejection SFT](../notebooks/day-11/04_teacher_attempts_and_matched_rejection_sft.ipynb):
   eight cells/six figures; original programmatic teacher journal, actual sequence
   students and coverage/exposure controls with held-out failures.
+- [Day11 real Qwen chat template and labels](../notebooks/day-11/05_qwen_chat_template_and_labels.ipynb):
+  five predictions on the actual Qwen3-0.6B template: per-turn think blocks, a silently empty
+  built-in assistant mask, hand-built `-100` labels, train/inference prefix alignment and the shift.
+- [Day12 instruction tuning end to end](../notebooks/day-12/03_instruction_tuning_end_to_end.ipynb):
+  the first `spark-gpu` notebook. Fourteen predictions on real Qwen3-0.6B: template and loss mask,
+  rank and low-rank approximation, full vs. LoRA vs. hand-built NF4 QLoRA on the same masked data.
 - [Day25 ragged KV and exact recovery](../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb):
   seven cells/five figures; actual compact KV/positions/stops, tiny DPO/RLVR
   pending/completed resume and explicit typed-state identity migration.
@@ -86,6 +92,12 @@ The current inventory is 83 notebooks. The seven [assignment companions](../note
 - [Day26 student prefix/context](../notebooks/day-26/05_student_prefix_and_teacher_context.ipynb):
   nine cells/seven figures; actual neural students, finite authored teacher,
   independent prefix/KL/context factors, strict-positive tail detail and cohort gates.
+
+**Execution types (2026-10-22).** Every registered notebook declares its minimum
+runtime: `cpu-offline` runs on any kernel with no network or model caches,
+`local-model-cache` runs on any kernel but needs locally cached Hugging Face files, and
+`spark-gpu` needs CUDA on the DGX Spark. The Spark GPU kernel is the priority
+environment for new notebooks and satisfies all three types.
 
 The [manifest](course_manifest.json) is authoritative for machine-readable
 routes and dependencies:60core, one optional recurrence and fifteen accepted
