@@ -48,12 +48,12 @@ budgets are projections. No Qwen/CUDA result is inferred.
 
 ## Article and animation opportunities
 
-teacher/student bars plus T² derivative; oracle availability versus imperfect winner selection, deferred Mac candidates.
+teacher/student bars plus T² derivative; oracle availability versus imperfect winner selection, deferred candidates.
 
 Potential article: selection and distillation explained through the chapter's concrete
 failure and evidence. Source: roadmap/agent synthesis. Both are proposed content,
 not approved production; link the canonical derivation and report before wording
-or rendering. Mac handles any later animation production.
+or rendering. Any later animation production needs explicit approval.
 
 ## Next live-learning action
 

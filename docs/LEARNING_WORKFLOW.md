@@ -1,118 +1,48 @@
-# One learning journey, two execution environments
+# One learning journey on the DGX Spark
 
-Established at the learner's request on 2026-09-09. This is the course's
-standing interaction and machine-switching workflow, not a new chapter or an
-assertion that a software interface has already been built.
+Established at the learner's request on 2026-09-09 and simplified on 2026-10-22: the
+**DGX Spark is the single working machine** for live discussion, interactive lessons,
+notebooks, experiments, chapter and article writing, and animation production. The
+earlier Mac Studio / Spark split, with its `Switch to Mac` / `Continue on Mac` /
+`Switch to Spark` / `Continue on Spark` handoff phrases, is retired. Historical
+records that mention it keep their original wording.
 
-## Machine responsibilities and reminders
+Rich visuals should appear directly in the conversation; browser-side toy
+interactions don't need a notebook kernel. New notebooks are GPU first (see the
+`execution` types in `docs/course_manifest.json`). Prefer concrete LLM-system
+interventions over generic controls.
 
-Mac Studio is the default home for live discussion, interactive visual lessons,
-small CPU mathematics, chapter/solution editing, articles, and approved animation
-production. DGX Spark is the execution home for CUDA-dependent mechanisms,
-substantial model training/inference, GPU profiling, and large checkpoints.
+## Starting a session
 
-Current learner override, 2026-09-09: remain on Spark after Mac dependency
-friction. Rich visuals should appear directly inside the app conversation.
-Browser-side toy interactions need not depend on a notebook kernel or local
-PyTorch. Machine preferences do not prevent this learning mode on Spark.
+1. Confirm the repository, branch and worktree state (`git status --short --branch`).
+2. With a clean checkout, run `git pull --ff-only`. Work may have been pushed from
+   another session. If the tree is dirty, history has diverged or the pull fails,
+   preserve the local work and explain the blocker; never reset, stash or discard
+   it to synchronize.
+3. Reread `AGENTS.md` and its required files, `PROGRESS.md`, `LEARNING_MEMORY.md`, the
+   active topic, and `docs/handoffs/CURRENT.md` when resuming an unfinished task.
+   Reconcile an old handoff that disagrees with newer progress; don't silently follow it.
+4. Check the runtime the lesson needs: the `Python (DGX Spark Native)` kernel, CUDA,
+   and any locally cached models. Keep environments separate; never copy a virtual
+   environment or credentials.
+5. Give a short recap of the current lesson, what is complete, open questions and
+   running jobs, then resume the recorded next action.
 
-Latest teaching feedback: the learner found the isolated quadratic SGD slider
-boring and asked for complete Day 8 notebooks and a coherent chapter. Those
-companions are now prepared. Prefer concrete LLM-system interventions over
-generic controls; this does not revoke the preference for direct live visuals.
+## Ending a session or handing off a task
 
-Choose by workload, not simply by day number. The same chapter may involve both:
+1. Update `PROGRESS.md` and the active topic artifact, and, for unfinished work,
+   [the current handoff](handoffs/CURRENT.md): what was discussed, prepared and
+   still open, the exact next action, and pending article/animation approvals.
+2. Record any running job's run ID, status, configuration/commit, logs and
+   checkpoint location using read-only checks. Don't kill or restart jobs
+   automatically.
+3. Commit and push when the learner asks. Stage exact scoped files and keep
+   credentials, large datasets/checkpoints and temporary runtimes out of Git. On
+   divergence or rejection, stop for safe reconciliation; never force-push.
 
-| Course stage | Mac Studio: understand, design, interpret | Spark: measure or execute |
-|---|---|---|
-| Days 4–7 architecture review | Attention/normalization/gradient interventions, shape maps, design defense | CUDA-specific checks or an explicitly specified larger comparison |
-| Day 8 pretraining recipe | Token/batch accounting, optimizer playground, schedule/clipping controls, experiment specification | Bounded hardware-fit/profile check only when separately specified |
-| Day 9 pretraining | Predict outcomes, inspect curves/samples, discuss failure evidence | Approved pretraining, checkpointing, throughput/memory measurement |
-| Day 10 evaluation | Metric microscopes, frozen evaluation design, error analysis | Model-dependent generation/evaluation batches |
-| Days 11–14 instruction data/SFT | Data/label-mask inspection, small gradient examples, recipe defense | Approved model-scale SFT and checkpoint evaluation |
-| Days 15–18 preferences/DPO | Probability/loss visualizations, controlled toy objectives | Approved reward-model/DPO training and evaluation |
-| Days 19–25 policy optimization | Policy-gradient toys, reward/advantage controls, diagnosis | Approved rollouts, RL training, GPU-system measurements |
-| Days 26–28 synthesis | Compare evidence, write/defend chapters, prepare approved media | Remaining explicitly budgeted model comparisons |
-
-Remind the learner at a workload boundary, not every turn. Before a lesson
-needs CUDA, heavy inference, or a long run, explain why Spark is needed and
-offer `Switch to Spark`. Before returning to responsive visual exploration,
-writing, or animation production, offer `Switch to Mac`. Do not initiate a
-machine transfer or an expensive job merely because a reminder is appropriate.
-
-## Four trigger phrases
-
-These are course conversation conventions, not built-in application commands.
-Recognize capitalization and clear natural-language equivalents; the word
-"Mac" or "Spark" by itself is not authorization to switch.
-
-| Learner says | Meaning | Required response |
-|---|---|---|
-| **Switch to Mac** | Prepare departure to Mac Studio | Save progress/handoff, validate and commit/push scoped course work, then give `Continue on Mac` |
-| **Continue on Mac** | Arrived at Mac Studio | Verify local execution, safely sync repo, reread memory/handoff, resume the recorded next action |
-| **Switch to Spark** | Prepare departure to DGX Spark | Save progress/handoff, validate and commit/push scoped course work, then give `Continue on Spark` |
-| **Continue on Spark** | Arrived at DGX Spark | Verify Spark execution, safely sync repo, reread memory/handoff, resume the recorded next action |
-
-The learner explicitly requested commit and push **before switching**. The
-departure phrases authorize those operations for the scoped course work and
-handoff record. They do not authorize staging unrelated files, publishing an
-article, rendering a film, starting training, or force-pushing. A planning or
-memory-only request is not itself a departure trigger.
-
-## Departure checklist
-
-1. Verify actual execution host, repository, branch, remote, and worktree state.
-   A Mac application displaying an SSH task can still execute entirely on Spark.
-2. Update `PROGRESS.md`, the active topic artifact, and
-   [the current handoff](handoffs/CURRENT.md): what was discussed, demonstrated,
-   prepared, and still open; exact next action; destination and return phrase.
-   Preserve pending article/animation candidates and their approval states.
-3. Record any relevant running job's host, run ID, status, configuration/commit,
-   logs, and checkpoint location using safe read-only checks. Never assume
-   terminal processes migrate or stop; do not kill or restart them automatically.
-   Save actual lesson controls/seed/state if an interactive tool provides them.
-4. Review the diff and validate proportionately. Keep credentials, large
-   datasets/checkpoints, temporary runtimes, and unrelated edits out of Git.
-   Stage exact scoped files and commit. If scope is unclear, ask before staging.
-5. Push normally to the intended remote branch. If divergence or rejection
-   occurs, stop for safe reconciliation; do not force-push, blindly merge, stash,
-   reset, or discard local work. Do not call the transfer ready if push failed.
-6. Verify the pushed commit and local/remote relationship. Report any remaining
-   local-only work explicitly. Give the destination, branch, pushed commit, and
-   exact arrival phrase. If there is nothing new, verify synchronization instead
-   of creating an empty commit. The handoff's own introducing commit can be
-   recovered with Git history; do not create endless self-referential commits.
-
-## Arrival checklist
-
-1. Confirm actual execution host and course checkout before any computation.
-   On `Continue on Mac`, a shell still reporting Spark/Linux is a mismatch:
-   tell the learner to open or select a local Mac project/task, then repeat the
-   phrase. On `Continue on Spark`, verify the intended Spark host. Do not infer
-   execution location from the browser URL or where the application window sits.
-2. Inspect branch, upstream, and dirty state. With a clean checkout on the
-   intended branch, run `git pull --ff-only`. If dirty, diverged, on the wrong
-   branch, or unable to reach the remote, preserve state and explain the blocker.
-   Do not continue using potentially stale instructions as if synchronization
-   succeeded. Missing local checkout: ask for its location or arrange initial
-   setup explicitly; never assume the Spark absolute path exists on the Mac.
-3. After successful sync, reread `AGENTS.md` and its required project files,
-   `PROGRESS.md`, `LEARNING_MEMORY.md`, `docs/handoffs/CURRENT.md`, and the active
-   topic. Confirm the expected handoff/commit is present. An old handoff that
-   disagrees with newer progress must be reconciled, not silently followed.
-4. Confirm the local runtime and relevant assets. Keep platform environments
-   separate: portable CPU teaching code is not a claim that CUDA, Triton,
-   kernels, dependency locks, or bitwise results transfer to macOS. Recreate
-   needed environments from platform-appropriate specifications; never copy a
-   virtual environment or credentials between machines.
-5. Give a short recap: current lesson, what is actually complete, open question,
-   relevant jobs, and the next interaction. Resume that action; do not restart
-   the course or silently mark deferred practice complete.
-
-Git transfers the course's durable files, not live Python variables, browser
-tabs, local-only credentials, or a shared running process. A conversation can
-be continued or handed off through available application features, but this
-protocol must also work in a fresh conversation reading the repository.
+Git carries the durable files, not live Python state, browser tabs or running
+processes. This protocol must also work in a fresh conversation that only reads
+the repository.
 
 ## Interactive lesson contract
 
@@ -131,9 +61,9 @@ durable record**. Favor profound conceptual questions over arithmetic quizzes.
 - Let the learner's question choose the next intervention. Provide worked
   explanations adjacent to exercises; retain notebooks as implementation access
   and the chapter as the coherent narrative.
-- Keep small interventions local and usable while Spark is disconnected. A
-  future Spark dashboard starts read-only; job launch/stop controls require
-  explicit authority and safety checks, not a slider side effect.
+- Keep small interventions lightweight and responsive. A future Spark dashboard
+  starts read-only; job launch/stop controls require explicit authority and
+  safety checks, not a slider side effect.
 
 For implemented tools, persist only meaningful small state: lesson/component ID,
 seed, initial conditions, control values, optimizer settings/state or replay
@@ -143,14 +73,14 @@ state in the present session.
 
 ## First proposed interactive tool
 
-**Optimizer Playground — Mac Studio, Day 8 / Chapter 6.** Compare SGD, momentum,
+**Optimizer Playground — Day 8 / Chapter 6.** Compare SGD, momentum,
 and AdamW using a clearly labeled small loss landscape. Connect the gradient
 arrow to the actual update arrow, adjustable learning rate, trajectory, and loss.
 Allow single steps, reset, and paired initial conditions; later connect the
 mechanism to a tiny decoder. Explain when apparent divergence or oscillation
 comes from the objective, step size, or accumulated optimizer state.
 
-Status: design proposed and remembered; not implemented or validated on the Mac.
+Status: design proposed and remembered; not implemented or validated.
 Begin with one complete pilot, not a simultaneous rewrite of every notebook.
 Library/UI selection and implementation remain the next explicitly requested
 build task. Animation candidates reuse existing optimizer/gradient topics;
@@ -158,6 +88,5 @@ interactive controls do not automatically approve produced animation media.
 
 The intended continuation is **Day 8**, explicitly confirmed by the learner.
 The earlier Day 6 default was an agent handoff mistake. Keep Day 4–7 gaps as
-review items; return only when needed or requested, not automatically on a
-machine switch. Current user intent overrides stale resume instructions.
-See the live handoff for the current execution environment and next step.
+review items; return only when needed or requested. Current user intent
+overrides stale resume instructions. See the live handoff for the next step.

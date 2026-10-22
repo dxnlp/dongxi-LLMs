@@ -62,7 +62,7 @@ policy-version timeline and queue bottleneck; illustrative timing must stay labe
 Potential article: policy identity and the system budget explained through the chapter's concrete
 failure and evidence. Source: roadmap/agent synthesis. Both are proposed content,
 not approved production; link the canonical derivation and report before wording
-or rendering. Mac handles any later animation production.
+or rendering. Any later animation production needs explicit approval.
 
 ## Next live-learning action
 

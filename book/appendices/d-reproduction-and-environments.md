@@ -1,6 +1,8 @@
 # Appendix D — Reproduction Commands and Environments
 
-The book has a portable CPU route and a platform-specific Spark route. The
+The course runs on the NVIDIA DGX Spark (since 2026-10-22, its single working machine).
+Notebooks declare an `execution` type: `cpu-offline` and `local-model-cache` lessons run on
+any kernel, and `spark-gpu` lessons need the Spark's CUDA kernel. The
 verified environment for the 2026-10-04 material build is recorded in its
 verification report. A future installation should capture its own versions;
 do not infer Mac binary compatibility from a Linux execution result.
@@ -157,7 +159,7 @@ it does not convert portable source checks into another platform's pass.
 | Platform or workflow | Actual evidence | Unobserved boundary |
 | --- | --- | --- |
 | Spark/Linux ARM64 | Earlier 2026-10-05 closure: 1,533 tests; all 76 fresh references, 539 code cells/535 executed/210 images/four preserved unfinished skips | CPU/Linux evidence is not a Mac, hosted, inline-host learner or model-quality pass |
-| Mac | Portable route and return-evidence packet | Not executed/unverified in this task |
+| Mac | Retired 2026-10-22 (historical packet kept) | Never executed or verified |
 | Hosted CI | Workflow removed at the learner's request; earlier source evidence is historical | Not required; do not recreate without an explicit request |
 
 The final [current-source verification report](../../experiments/reports/2026-10-05-final-course-verification.md),
@@ -221,7 +223,7 @@ not cross-machine budget verification. Read the exact CLI/lab inputs before
 running: incomplete caps are not inferred, and source readiness does not
 authorize pretrained loading, GPU work or private physical-resource changes.
 
-## D.5 Return evidence and machine switches
+## D.5 Return evidence and session handoff
 
 For every run, return a concise manifest: source identity, execution host,
 interpreter/packages, configuration, data/model identities, actual exit status,
@@ -229,19 +231,15 @@ runtime, target/update counts, resource measurements and report path. Avoid
 environment dumps that include credentials. Commit small evidence and source;
 keep weights and raw dataset caches under ignored output paths.
 
-The machine-switch phrases and [handoff](../../docs/handoffs/CURRENT.md) preserve
-the learning position. Repository synchronization does not synchronize a live
+The [handoff](../../docs/handoffs/CURRENT.md) and [learning workflow](../../docs/LEARNING_WORKFLOW.md)
+preserve the learning position between sessions. Repository synchronization does not synchronize a live
 kernel, running process, credential or local checkpoint directory. A final
 release additionally needs a scoped publication decision and its own review.
 
-For the parallel, still-unexecuted Mac verification, use the
-[return-evidence packet](../../docs/handoffs/MAC_CPU_VERIFICATION.md). A listed
-Mac checkout is not command access or a platform pass. Earlier guidance treated
-actual supported Mac execution as mandatory; that stronger interpretation is
-historical and superseded by the original criterion 3 evidence-separation rule
-above. Mac remains not executed/unverified and hosted CI remains not executed.
-Neither is an added successful-run prerequisite for the authorized Spark
-campaign or original upgrade signoff. Independent in-scope work can continue
+Mac portability verification was retired on 2026-10-22; its
+[packet](../../docs/handoffs/MAC_CPU_VERIFICATION.md) is kept as a historical record. Mac
+execution was never verified and hosted CI was never executed; neither is a prerequisite
+for Spark work or the original upgrade signoff. Independent in-scope work can continue
 without another routine approval question; final current-source Linux
 verification and the dependent campaign defense still require actual evidence.
 

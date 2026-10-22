@@ -22,9 +22,8 @@ explanations, and mastery have not yet been assessed in a live lesson.
 Begin with a deep prediction, run the adjacent complete reference, perturb one
 specified control, and explain which measurement changed. Static saved PNGs
 are labeled reference outputs and regenerate from notebook code. Python needs
-PyTorch and Matplotlib; an existing Jupyter kernel is optional. Default machine:
-Mac Studio. The same bounded reference computations were executed on Spark CPU;
-that does not verify a Mac environment or install dependencies there.
+PyTorch and Matplotlib; an existing Jupyter kernel is optional. Machine: DGX
+Spark. The bounded reference computations were executed on Spark CPU.
 
 ## Recorded evidence
 
@@ -78,7 +77,7 @@ mechanism: Pair-ratio improvement while both answers lose mass to a third contin
 A useful article can build on this mechanism after chapter review. It must keep
 synthetic results separate from language-model and human evidence. No article
 publication or animation rendering is authorized by material preparation;
-production belongs on Mac Studio after approval.
+production needs explicit approval.
 
 Reuse **CAND-ANIM-025** for the actual matched-exposure lesson: separate absolute
 chosen/rejected logp, unscaled reference-relative margin, strict generated

@@ -49,7 +49,7 @@ X-LOOP-001 and CAND-ANIM-011 retain their existing production dependencies.
 The new conceptual introduction is available, but the optional trained,
 budget-controlled comparison and architecture defense remain Day 7 work.
 Candidate capture does not approve animation production, public drafting, or
-publication. Keep rendering on Mac Studio.
+publication. Rendering needs explicit approval.
 
 ## Verification record
 

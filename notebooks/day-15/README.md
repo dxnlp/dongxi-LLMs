@@ -28,8 +28,7 @@ plots. Change a declared variable and rerun the plot; saved PNG previews are
 fixed reference outputs, not live controls. No model/data download is required.
 
 Use an existing Python environment with PyTorch and Matplotlib, and a selected
-Jupyter kernel when working interactively. Spark reference execution does not
-prove Mac dependencies are configured. Verify fresh temporary copies with:
+Jupyter kernel when working interactively. Verify fresh temporary copies with:
 
 ```bash
 python scripts/verify_course_notebooks.py --days 15 --kernel dgx-spark-native --export-figures

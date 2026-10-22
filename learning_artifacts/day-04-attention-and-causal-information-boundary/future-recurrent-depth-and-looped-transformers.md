@@ -156,7 +156,7 @@ recurrent depth is generally superior.
 state loops through it repeatedly. Counters for stored parameters, effective
 depth, and compute move independently. A second act can contrast fixed recurrence
 with token-level adaptive exit. This is captured now but remains unapproved and
-all production remains on the Mac Studio.
+all production needs explicit approval.
 
 ## Public-content reminders
 

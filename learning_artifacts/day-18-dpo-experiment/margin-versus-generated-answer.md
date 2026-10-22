@@ -184,7 +184,7 @@ and the distinction between diagnostics and the task. Preserve validation
 versus generation populations and precision paths, unchanged strict scoring,
 known reasoning overlap and the one-recipe limit. This is a suggestion only,
 not a drafted/commissioned article, publication or rendering approval.
-All later media production remains on Mac Studio after explicit approval.
+All later media production needs explicit approval.
 
 Canonical sources are the [native synthesis report](../../experiments/reports/2026-10-05-native-preference-comparison.md),
 [common acceptance](../../experiments/reports/native-preference-evaluation-20261005-run-01/acceptance.json),

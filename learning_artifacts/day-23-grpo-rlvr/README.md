@@ -71,12 +71,12 @@ in Chapter14 rather than being inferred from that manual one-boundary trace.
 
 ## Article and animation opportunities
 
-prompt → rollout group → rewards → advantages → masked gradients, linked to real tensor shapes; Mac production deferred.
+prompt → rollout group → rewards → advantages → masked gradients, linked to real tensor shapes; production deferred.
 
 Potential article: a full autoregressive rlvr update explained through the chapter's concrete
 failure and evidence. Source: roadmap/agent synthesis. Both are proposed content,
 not approved production; link the canonical derivation and report before wording
-or rendering. Mac handles any later animation production.
+or rendering. Any later animation production needs explicit approval.
 
 The October5 focused artifact also suggests “What did your reasoning benchmark
 actually grade?” and extends existing CAND-ANIM-022 with separate response,

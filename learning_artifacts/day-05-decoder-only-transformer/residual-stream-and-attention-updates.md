@@ -42,10 +42,10 @@ independent mastery claim follows from acknowledgement.
 
 Canonical treatment: Chapter 5 sections 5.4–5.5 and worked answers 5–7. The
 existing notebooks and 2026-09-06 report verify zero-branch and cancellation
-controls; the production candidate remains approval-gated on Mac Studio.
+controls; the production candidate remains approval-gated.
 
 `CAND-ANIM-013` shows X traveling along a persistent path, a branch computing
 an update of the same width, and coordinatewise addition. A zero-update control
 leaves X unchanged; backward splits into a direct and a learned path. Preserve
 the distinction from head concatenation and from vocabulary output. Numerical
-controls are now available in notebooks 03–04; production requires approval on Mac.
+controls are now available in notebooks 03–04; production requires approval.

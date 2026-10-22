@@ -47,7 +47,7 @@ proxy/true curves diverge; identical-entropy policies have different accuracy; a
 Potential article: objective failure, entropy and length explained through the chapter's concrete
 failure and evidence. Source: roadmap/agent synthesis. Both are proposed content,
 not approved production; link the canonical derivation and report before wording
-or rendering. Mac handles any later animation production.
+or rendering. Any later animation production needs explicit approval.
 
 ## Next live-learning action
 

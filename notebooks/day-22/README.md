@@ -18,6 +18,6 @@ Learning outcome: Predict what constant groups can teach; derive population-stan
 
 Acceptance: Explain a zero-value/nonzero-gradient first update and why a sampled KL value identity does not specify its complete gradient.
 
-Machine: Mac or Spark CPU. Model-scale execution requires its own frozen config,
-resource guard and measured report. Animation production remains Mac-only and
+Machine: DGX Spark (these references run on CPU). Model-scale execution requires
+its own frozen config, resource guard and measured report. Animation production
 requires its own instruction.

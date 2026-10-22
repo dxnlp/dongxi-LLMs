@@ -11,9 +11,8 @@ change it.
 
 Since 2026-09-09 the learner also requests real-time visual tools outside
 notebooks. This file still defines the executable notebook pathway; pair it
-with [the live-learning and machine workflow](LEARNING_WORKFLOW.md). Mac Studio
-hosts low-latency conceptual interaction, while Spark supplies separately
-approved GPU evidence. The proposed first pilot is the Day 8 Optimizer
+with [the live-learning workflow](LEARNING_WORKFLOW.md). The DGX Spark hosts
+both conceptual interaction and separately approved GPU evidence. The proposed first pilot is the Day 8 Optimizer
 Playground, not yet implemented. Do not replace existing worked notebooks or
 equate a proposed visualization with demonstrated understanding.
 

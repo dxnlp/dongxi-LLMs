@@ -51,4 +51,4 @@ Canonical refinements and source decisions:
 [modern-decoder-precision-and-evidence.md](modern-decoder-precision-and-evidence.md).
 Reuse CAND-ANIM-014–017 for norm/gates/RoPE/GQA and CAND-ANIM-011 for recurrence;
 the existing X-LOOP-001 article reminder remains active. All animation production
-is approval-gated on Mac Studio; chapter creation is not rendering approval.
+is approval-gated; chapter creation is not rendering approval.

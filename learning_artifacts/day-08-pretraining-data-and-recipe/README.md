@@ -32,11 +32,10 @@ from measured decoder training. No UI/library is selected or implemented yet.
 
 ## Progress and portable continuation
 
-[Current Mac handoff](../../docs/handoffs/CURRENT.md): `LEARN-MAC-001`.
-Use `Switch to Mac` on departure and `Continue on Mac` after arriving. Reverse
-with `Switch to Spark` / `Continue on Spark`. Synchronize durable course Git
-state at the departure/arrival gates; runtime state and credentials are not
-implicitly transferred.
+[Current handoff](../../docs/handoffs/CURRENT.md). Since 2026-10-22 the course runs on
+the DGX Spark only; the Mac/Spark switch phrases below are historical. Synchronize
+durable course Git state at session start; runtime state and credentials are not
+transferred by Git.
 
 The learner's intended continuation is Day 8. The prior Day 6 resume instruction
 was an agent mistake: unfinished earlier practice must not override current

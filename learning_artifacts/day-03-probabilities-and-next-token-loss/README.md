@@ -74,14 +74,14 @@ positions. Its state remains `discuss`.
 The learner approved `CAND-ANIM-002`, an LLM-context animation showing target
 probability → per-token NLL → one-hot cross-entropy identity → masked aggregation
 across valid positions. It has been promoted into the expanded `ANIM-CE-001`
-packet. Production and rendering belong exclusively on the Mac Studio after the
-Day 3 derivation and PyTorch verification are committed. Those dependencies are
-now satisfied; production remains on the Mac Studio.
+packet. Production and rendering follow the Day 3 derivation and PyTorch
+verification being committed. Those dependencies are
+now satisfied; production needs explicit approval.
 
 The learner also approved `CAND-ANIM-003`, showing standard next-token training
 from `p` and one-hot `q` through `p-q`, the corresponding gradient-descent logit
 directions, and the emergence of a distribution across repeated diverse
-examples. It is promoted into `ANIM-NTP-001`; Mac Studio production waits for the
+examples. It is promoted into `ANIM-NTP-001`; production waits for the
 verified Day 3 gradient and target-frequency experiment, which are now committed
 for production review.
 
@@ -90,4 +90,4 @@ animation package: sequence products become additive token surprise; confident
 softmax errors retain a strong correction; and expected log loss rewards matching
 the full data distribution. `CAND-ANIM-004` is promoted into
 `ANIM-LOGLOSS-001`; its canonical Day 3 treatment is now synthesized, while all
-production remains on the Mac Studio.
+production needs explicit approval.

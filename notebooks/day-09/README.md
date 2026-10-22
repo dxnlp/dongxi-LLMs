@@ -2,7 +2,7 @@
 
 These three sessions form a mechanism → failure → evidence route for
 [Chapter 6](../../book/chapters/06-pretraining-as-a-controlled-system.md).
-Run on CPU on Mac or Spark. No model download or dashboard server is required.
+Run on CPU on the DGX Spark (any kernel). No model download or dashboard server is required.
 Each reference is adjacent to its explanation; record a prediction first.
 
 1. [What our TinyStories budget actually purchased](01_read_training_clocks.ipynb) — The model consumed 48.84M valid targets while processing 229.38M padded positions. Its native CPU recovery companion distinguishes17 successful labels from25 reserved target places; changing cap25→24 refuses the retry without altering the objective.

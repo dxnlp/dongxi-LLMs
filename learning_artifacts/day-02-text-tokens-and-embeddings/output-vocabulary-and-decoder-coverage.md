@@ -181,7 +181,7 @@ encoder lane, then all output rows, full-support sampling and the selected
 ID151768 branching to the missing-mapping ERROR. Keep the24 actions, their
 likelihoods and costs visible instead of erasing the failure. The alternative
 support constraint belongs in a visibly separate, hypothetical contract lane.
-Any animation production remains separately approved on Mac Studio.
+Any animation production remains separately approved.
 
 Suggested extension to `X-EVAL-001`, not a drafted or approved article:
 “How a valid model output index can still fail to become text.” Link this

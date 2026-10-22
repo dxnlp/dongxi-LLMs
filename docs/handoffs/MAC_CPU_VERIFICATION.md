@@ -1,5 +1,9 @@
 # Mac CPU verification
 
+**Retired 2026-10-22.** The course now runs on the DGX Spark only, and Mac portability
+verification is no longer pursued. This packet is kept as a historical record; nothing in it
+is open work.
+
 This packet addresses parallel, still-unexecuted Mac portability verification.
 It is not a compulsory Mac-success gate for Spark or DXI-17: the
 [literal original-scope review](../../experiments/reports/2026-10-05-platform-scope-reading.md)

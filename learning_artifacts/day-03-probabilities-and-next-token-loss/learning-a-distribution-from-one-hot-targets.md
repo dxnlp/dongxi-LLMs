@@ -67,4 +67,4 @@ understanding or deployment calibration.
 The verified checkpoints and fixed 70/30 target stream supply evidence for
 `ANIM-NTP-001`: one-hot targets alternate, `p-q` gradients pull in competing
 directions, and the probability bars settle where expected gradient vanishes.
-Production remains assigned to the Mac Studio.
+Production needs explicit approval.

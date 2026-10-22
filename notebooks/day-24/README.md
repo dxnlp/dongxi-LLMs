@@ -15,6 +15,6 @@ Learning outcome: Predict the winner under the broken proxy, observe actual opti
 
 Acceptance: Distinguish measurement from cause; derive expected-reward gradient and state what the paired repair does and does not test.
 
-Machine: Mac or Spark CPU. Model-scale execution requires its own frozen config,
-resource guard and measured report. Animation production remains Mac-only and
+Machine: DGX Spark (these references run on CPU). Model-scale execution requires
+its own frozen config, resource guard and measured report. Animation production
 requires its own instruction.

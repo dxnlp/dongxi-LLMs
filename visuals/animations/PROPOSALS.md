@@ -1,5 +1,9 @@
 # Animation Proposal Inbox
 
+**Machine policy, 2026-10-22:** the DGX Spark is the course's single working machine. The
+Mac Studio / Spark split and Mac portability verification are retired; passages below that
+mention Mac evidence, Mac rendering or machine switches are historical, not open work.
+
 This file is the shared inbox for animation ideas suggested during learning and
 course development. Suggestions may come from Dongxi or from a contributing
 agent. A suggestion is not approval to produce media.

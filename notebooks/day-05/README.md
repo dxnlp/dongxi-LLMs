@@ -86,9 +86,7 @@ refresh primary sources when this frontier session becomes active.
   to a pre-run specification and post-run report.
 - Link completed notebooks from Chapter 5 and its worked solutions. Keep
   material readiness, reference execution, and learner completion separate.
-- Preserve learner modifications. CPU fixtures should remain portable to Mac
-  and Spark with the environment recorded; execution on one does not prove the
-  other environment has been tested.
+- Preserve learner modifications. Record the environment with each execution.
 
 ## Production order and animation reuse
 
@@ -100,4 +98,4 @@ server or persistent training job was started.
 Multi-head and residual examples now supply verified evidence for `CAND-ANIM-012` and
 `CAND-ANIM-013`. Check for additional mathematical animation opportunities when
 each derivation is developed; do not pre-authorize a film per notebook. All
-animation production remains on the Mac Studio after explicit approval.
+animation production requires explicit approval.

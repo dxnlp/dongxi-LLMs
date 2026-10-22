@@ -2,7 +2,7 @@
 
 These three sessions form a mechanism → failure → evidence route for
 [Chapter 2](../../book/chapters/02-text-tokens-and-embeddings.md).
-Run on CPU on Mac or Spark. No model download or dashboard server is required.
+Run on CPU on the DGX Spark (any kernel). No model download or dashboard server is required.
 Each reference is adjacent to its explanation; record a prediction first.
 
 1. [How English-trained byte BPE still encodes 数](01_byte_bpe_training_and_encoding.ipynb) — A tokenizer can represent a character it never saw without knowing that character's meaning.

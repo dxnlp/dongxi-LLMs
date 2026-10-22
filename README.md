@@ -148,14 +148,21 @@ CPU teaching environment; it does not replace the Spark GPU environment or
 download pretrained weights. [Appendix D](book/appendices/d-reproduction-and-environments.md)
 documents environment choices, focused notebook execution, and local verification.
 
-Small CPU experiments make the mechanisms inspectable. Model-scale training
-runs use a separately profiled GPU environment and explicit experiment budgets.
-**Mac Studio is the intended interactive-learning and media workspace; DGX
-Spark is the GPU lab.** Linux execution is recorded; Mac execution is not
-inferred from it. To continue across machines, use the
-[handoff workflow](docs/LEARNING_WORKFLOW.md): **Switch to Mac / Spark** before
-leaving, then **Continue on Mac / Spark** on the destination. Repository sync
-and saved progress carry the lesson; live kernels do not move with Git.
+**The NVIDIA DGX Spark is the course's single working machine** for learning,
+notebooks, experiments and content production. Each notebook declares its
+minimum runtime in the [course manifest](docs/course_manifest.json):
+
+| `execution` | Runs on |
+|---|---|
+| `cpu-offline` | any kernel, CPU or GPU; no network or model caches |
+| `local-model-cache` | any kernel, with locally cached Hugging Face files |
+| `spark-gpu` | the `Python (DGX Spark Native)` CUDA kernel |
+
+New notebooks are GPU first. The CPU teaching environment above still runs every
+`cpu-offline` notebook. Model-scale training runs use the profiled Spark GPU
+environment and explicit experiment budgets. Session start and handoff steps are in
+the [learning workflow](docs/LEARNING_WORKFLOW.md); repository sync and saved
+progress carry the lesson, and live kernels don't move with Git.
 
 ## Material, evidence, and project history
 

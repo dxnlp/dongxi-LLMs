@@ -16,13 +16,12 @@ the pedagogical order:
 Prerequisites: [Chapter 5 Days 5–6](../../book/chapters/05-building-a-modern-decoder.md)
 and the [Day 6 notebooks](../day-06/README.md). Both sessions use small CPU
 fixtures, Torch, and the Matplotlib dependency in `../requirements-visuals.txt`.
-Choose **Python (DGX Spark Native)** on Spark or a validated local equivalent;
-Mac execution is not claimed. Saved PNG previews are visible before execution.
+Choose **Python (DGX Spark Native)** on the Spark. Saved PNG previews are visible before execution.
 
 The architecture defense is an explanation backed by controlled evidence, not
 merely successful cell execution. A trained recurrence comparison requires a
 separate approved experiment with concrete data/seed/budget/measurement choices.
-Animations and public articles remain separately approved Mac Studio work.
+Animations and public articles remain separately approved work.
 
 See the [verification report](../../experiments/reports/2026-09-07-day7-architecture-defense.md)
 and [worked-solution guide](../../book/solutions/05-decoder-notebook-solutions.md).

@@ -79,7 +79,7 @@ Reuse the existing attention/embedding/CE gradient animations and
 CAND-ANIM-014/016/017 for normalization, cache positions, and accounting.
 CAND-ANIM-011 and X-LOOP-001 remain the recurrence mechanism/article reminders.
 The new audit can supply a future failure-diagnosis storyboard, but no extra
-animation is necessary before approval; all rendering remains on Mac Studio.
+animation is necessary before approval; all rendering needs explicit approval.
 
 Next: start guided Day 6 notebook 01 unless the learner explicitly chooses the
 Day 7 review first. This preparation request is not evidence of a completed day.

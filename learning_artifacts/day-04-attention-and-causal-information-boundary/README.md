@@ -156,4 +156,4 @@ weights transport value vectors into new contextual states; and backward credit
 splits into value/content and query-key/routing branches. The learner approved
 the concept and it is promoted into `ANIM-ATTN-001` with a complete task packet
 in `LEARNING_MEMORY.md`. Chapter and executable evidence are now complete;
-production belongs exclusively on the Mac Studio.
+production needs explicit approval.

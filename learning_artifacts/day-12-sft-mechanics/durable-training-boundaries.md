@@ -59,6 +59,6 @@ still while the current policy moves; resetting the reference visibly changes
 the ruler. A later RLVR inset shows post-collection cursor/RNG with a pending
 pool consumed once. Display exact scope labels throughout.
 
-Preferred production machine: Mac Studio, only after explicit approval. No
+Production only after explicit approval. No
 rendering, publication, actual Mac replay or new article is commissioned here.
 Source/CPU readiness and learner mastery remain separate.

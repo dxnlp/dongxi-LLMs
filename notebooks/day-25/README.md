@@ -51,8 +51,8 @@ Its [accounting follow-up](../../experiments/reports/2026-10-05-private-rng-veri
 includes the independent comparison generator:36 actual scalar draws in the
 whole microscope, not merely30 in the five initially returned buckets.
 
-Machine: Mac or Spark CPU. Model-scale execution requires its own frozen config,
-resource guard and measured report. Animation production remains Mac-only and
+Machine: DGX Spark (these references run on CPU). Model-scale execution requires
+its own frozen config, resource guard and measured report. Animation production
 requires its own instruction.
 
 ## Explain a measured inference phase

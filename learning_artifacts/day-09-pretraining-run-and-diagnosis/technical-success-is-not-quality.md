@@ -41,5 +41,5 @@ for discussion; the learner's defense remains unassessed and Day9 unchanged.
 Suggested public article: **“Training worked. Why does the model still fail?”**
 Use these bounded counterexamples, not a general assertion that loss is useless.
 Suggested animation: extend existing likelihood/recovery candidates with four
-separate evidence lanes. Production is unapproved and remains on Mac Studio;
+separate evidence lanes. Production is unapproved;
 no article, render or publication was created here.

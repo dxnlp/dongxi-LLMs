@@ -14,6 +14,6 @@ Learning outcome: Prepare a bounded technical defense and audit missing release 
 
 Acceptance: Defend target → choice → rationale → measured evidence → cost → failure → next experiment; every public numerical claim must link evidence.
 
-Machine: Mac or Spark CPU. Model-scale execution requires its own frozen config,
-resource guard and measured report. Animation production remains Mac-only and
+Machine: DGX Spark (these references run on CPU). Model-scale execution requires
+its own frozen config, resource guard and measured report. Animation production
 requires its own instruction.

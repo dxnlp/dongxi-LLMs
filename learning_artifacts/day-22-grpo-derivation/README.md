@@ -42,12 +42,12 @@ budgets are projections. No Qwen/CUDA result is inferred.
 
 ## Article and animation opportunities
 
-group-advantage bars → signed ratios → clipping plateau; production candidate, Mac only.
+group-advantage bars → signed ratios → clipping plateau; production candidate.
 
 Potential article: grpo: relative rewards, ratios and kl explained through the chapter's concrete
 failure and evidence. Source: roadmap/agent synthesis. Both are proposed content,
 not approved production; link the canonical derivation and report before wording
-or rendering. Mac handles any later animation production.
+or rendering. Any later animation production needs explicit approval.
 
 ## Next live-learning action
 

@@ -62,7 +62,7 @@ Animation opportunity check reuses CAND-ANIM-014 (normalization), 015 (MLP),
 018 (learning-rate scale), ANIM-CE-001 and ANIM-NTP-001 (position losses and
 shared updates), and ANIM-EMB-001 (end-to-end parameter paths). Add the batch
 aggregation sequence to their existing canonical material rather than launching
-a new production task. All rendering remains Mac Studio, approval-gated.
+a new production task. All rendering is approval-gated.
 
 ## Synthesis verification
 

@@ -59,4 +59,4 @@ backward sequence rather than opening a duplicate animation task.
 into heads with different projections. Show distinct causal weight rows and
 value mixtures, concatenate the output features, then apply W_O. Preserve the
 token axis throughout. Production waits for approval, the Chapter 5 treatment,
-and verified shape/output examples; rendering remains on the Mac Studio.
+and verified shape/output examples; rendering needs explicit approval.

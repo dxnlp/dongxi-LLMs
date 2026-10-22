@@ -14,6 +14,6 @@ Learning outcome: Audit checkpoint parent links, detect cycles/unknown parents a
 
 Acceptance: Replace synthetic label hashes with actual artifact hashes when evaluating real checkpoints; defend a controlled paired comparison and uncertainty.
 
-Machine: Mac or Spark CPU. Model-scale execution requires its own frozen config,
-resource guard and measured report. Animation production remains Mac-only and
+Machine: DGX Spark (these references run on CPU). Model-scale execution requires
+its own frozen config, resource guard and measured report. Animation production
 requires its own instruction.

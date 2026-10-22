@@ -76,7 +76,7 @@ execution alone. Native full/LoRA
 recovery, explicit FP32 merge/reload and raw-response evaluation retain separate
 independent review.
 The [independent original-text platform review](experiments/reports/2026-10-05-platform-scope-reading.md)
-keeps Mac unexecuted/unverified as parallel work, not an added mandatory success.
+recorded Mac execution as unverified; since 2026-10-22 the course runs on the Spark only and Mac verification is retired.
 The [actual full/LoRA400 comparison](experiments/reports/2026-10-05-native-sft400-comparison.md)
 is integrated into Chapter9; development and publication results remain distinct.
 The [acceptance review](docs/UPGRADE_ACCEPTANCE_REVIEW.md) identifies
@@ -103,8 +103,8 @@ remain historical byte-bound evidence, not retroactively updated results.
 
 The approved bounded profile, recovery and evaluation steps have executed.
 Future Spark work needs its own applicable question and declared branch gates;
-unrun later story schedule/checkpoint cells remain unrun. Mac reproduction remains parallel unfinished
-completion evidence, not a Spark execution prerequisite. Production safeguards do
+unrun later story schedule/checkpoint cells remain unrun. Mac reproduction was retired on
+2026-10-22 together with the Mac/Spark split. Production safeguards do
 not substitute for controlled quality comparisons. The learner remains on
 Day9. Routine agreed work continues without repetitive confirmation; publication,
 hosted workflow actions and animation rendering keep their separate authority.
@@ -201,9 +201,9 @@ reuse an adequate existing solution; resolved memory-hang monitoring is retired.
 ## Chapter design contract
 
 The interactive reader experience combines the canonical chapter, real-time
-visual interventions, and executable notebook companions. Learning normally
-occurs on Mac Studio; model-scale GPU evidence is produced on Spark. Keep
-machine operations outside conceptual chapters, in
+visual interventions, and executable notebook companions. Learning, notebooks
+and model-scale GPU evidence all happen on the DGX Spark. Keep machine
+operations outside conceptual chapters, in
 [the learning workflow](docs/LEARNING_WORKFLOW.md), and preserve live progress
 through the handoff ledger. Proposed interactive interfaces do not count as
 implemented book assets or completed learner exercises.
@@ -272,7 +272,7 @@ Day 3 contributes to:
 - refinements in Chapter 2 on categorical token IDs, BPE atoms, and the
   vocabulary-versus-sequence-length trade-off;
 - approved probability, cross-entropy, and next-token animation packets in
-  `LEARNING_MEMORY.md`, with production retained for the Mac Studio.
+  `LEARNING_MEMORY.md`; production requires an approved packet.
 
 ## Day 4 placement
 

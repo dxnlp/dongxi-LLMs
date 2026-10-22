@@ -401,12 +401,12 @@ candidate is needed: user-approved `CAND-ANIM-002` and task `ANIM-CE-001` alread
 cover target probability → NLL → one-hot cross-entropy identity → masked mean.
 `ANIM-NTP-001` already covers the now-complete analytical `p-q` derivation and
 its gradient-descent directions. `ANIM-LOGLOSS-001` covers the proper-scoring
-decomposition conceptually. All production remains on the Mac Studio after
+decomposition conceptually. All production needs approval after
 verification.
 
 The introduction of `PPL=exp(mean NLL)` triggered `CAND-ANIM-005`. It remains in
 `discuss`: after the derivation, the learner can decide whether it should extend
-`ANIM-CE-001` or become a separate Mac Studio short.
+`ANIM-CE-001` or become a separate short.
 
 ## Open edges
 

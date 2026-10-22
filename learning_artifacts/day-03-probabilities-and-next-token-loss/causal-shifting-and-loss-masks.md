@@ -563,7 +563,7 @@ embeddings, the shared table can additionally receive output-head gradients.
 
 This explicit masked-mean mathematics is already within approved task
 `ANIM-CE-001`; it strengthens that animation's aggregation act and does not create
-a duplicate proposal. Production remains on the Mac Studio.
+a duplicate proposal. Production needs explicit approval.
 
 ## Evidence state
 
@@ -629,8 +629,7 @@ This important tensor alignment automatically triggers animation review. Existin
 `CAND-ANIM-001` already preserves token identity while logits, next-token targets,
 and per-position losses align. It also covers the output-head bridge from hidden
 dimension $D$ to vocabulary dimension $V$, so no duplicate candidate is created. It remains
-`discuss` and all production remains on the Mac Studio after approval and
-verification.
+`discuss`, and all production needs approval and verification.
 
 ## Open edges
 

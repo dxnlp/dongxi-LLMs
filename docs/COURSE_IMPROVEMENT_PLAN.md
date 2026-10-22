@@ -1,5 +1,9 @@
 # Course Improvement Plan
 
+**Machine policy, 2026-10-22:** the DGX Spark is the course's single working machine. The
+Mac Studio / Spark split and Mac portability verification are retired; passages below that
+mention Mac evidence, Mac rendering or machine switches are historical, not open work.
+
 Current applicability rule,2026-10-05: verify that each proposed gap still
 exists, is relevant locally and is not already solved upstream before building.
 The [audit correction](REFERENCE_REPOSITORY_AUDIT.md) retires the historical DGX

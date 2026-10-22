@@ -47,7 +47,7 @@ release claim maps to supporting evidence/failure boundaries; no media/public re
 Potential article: technical defense and release readiness explained through the chapter's concrete
 failure and evidence. Source: roadmap/agent synthesis. Both are proposed content,
 not approved production; link the canonical derivation and report before wording
-or rendering. Mac handles any later animation production.
+or rendering. Any later animation production needs explicit approval.
 
 ## Next live-learning action
 

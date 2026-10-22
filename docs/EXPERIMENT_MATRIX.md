@@ -1,5 +1,9 @@
 # Experiment Pathways and Evidence Matrix
 
+**Machine policy, 2026-10-22:** the DGX Spark is the course's single working machine. The
+Mac Studio / Spark split and Mac portability verification are retired; passages below that
+mention Mac evidence, Mac rendering or machine switches are historical, not open work.
+
 CPU experiments inspect exact mechanisms and tiny models on authored fixtures.
 Spark protocols address pretrained compatibility and behavior under separately
 approved budgets. The completed TinyStories run remains actual GPU evidence,

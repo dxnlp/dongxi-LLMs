@@ -206,5 +206,5 @@ individual example improves. This clarification is introduced, not yet assessed.
 - Chapter 4 derivation and worked tensor-shape exercise.
 - Interactive notebook controls that detach routing or value paths.
 - `ANIM-ATTN-001`: use a continuous backward pass that visibly splits at $O=AV$
-  and reaches $W_V$ versus $W_Q,W_K$; production belongs on the Mac Studio after
-  Day 4 verification.
+  and reaches $W_V$ versus $W_Q,W_K$; production follows
+  Day 4 verification and approval.

@@ -9,7 +9,7 @@ resume work, synchronize before relying on local project state:
 
 1. Confirm the intended repository and branch with `git status --short --branch`.
 2. If the working tree is clean, run `git pull --ff-only` before reading trackers
-   or making changes; work may have been pushed from another machine.
+   or making changes; work may have been pushed from another session.
 3. If the tree is dirty, history has diverged, or a fast-forward pull fails, do
    not reset, stash, overwrite, or merge blindly. Preserve the local work, report
    the state, and reconcile it safely before continuing.
@@ -27,16 +27,14 @@ evidence and learner cells. Run bounded CPU references and label new model-scale
 protocols as unexecuted until their own evidence exists. Course readiness does
 not move the learner's Day9 position or authorize external publication.
 
-The learner's machine-switching phrases are standing course instructions:
-`Switch to Mac`, `Continue on Mac`, `Switch to Spark`, `Continue on Spark`.
-Follow `docs/LEARNING_WORKFLOW.md` and `docs/handoffs/CURRENT.md`. Departure
-means update the handoff and commit/push scoped course work before telling the
-learner to move. Arrival means verify the actual execution host, safely sync,
-reread the durable state, and continue. Never silently discard dirty changes,
-assume a Mac UI means local execution, or migrate/terminate running jobs.
-Remind the learner when the next workload belongs on the other machine; do not
-switch or launch expensive work without their instruction. A memory/planning
-request alone does not execute departure.
+Machine policy, 2026-10-22: the **DGX Spark is the single working machine** for
+live learning, notebooks, experiments, writing and animation production. The
+earlier Mac Studio / Spark split and its `Switch to …` / `Continue on …` phrases
+are retired; follow `docs/LEARNING_WORKFLOW.md` for session start and end. Mac
+portability evidence (including DXI-17's Mac portion) is no longer pursued.
+Dated records below that mention Mac work keep their historical wording but are
+not open tasks. Never silently discard dirty changes or migrate/terminate running
+jobs, and don't launch expensive work without the learner's instruction.
 The learner's latest requested lesson takes precedence over older "next action"
 entries. Unfinished earlier practice is a review backlog, not an automatic
 rewind. Current override (2026-09-13): discuss **Day 9 on Spark**, with the first
@@ -44,7 +42,7 @@ DongxiGPT objective of coherent short English stories. Treat current chapters as
 covered for planning at the learner's request, not as independently assessed
 mastery or completed training evidence. Continue using rich
 interactive visuals directly in the conversation. Notebooks are companions,
-not the required interface; do not force Mac setup or restart Day 6.
+not the required interface; do not restart Day 6.
 
 Before starting work:
 
@@ -52,12 +50,11 @@ Before starting work:
 2. Read `BOOK.md` for the reader-facing narrative architecture.
 3. Read the relevant section of `ROADMAP.md`.
 4. Read `PROGRESS.md`, especially the current position, durable decisions, latest daily log, and open questions.
-5. Read `LEARNING_MEMORY.md` for the learning-artifact index, public-content ideas, and cross-machine task packets.
+5. Read `LEARNING_MEMORY.md` for the learning-artifact index, public-content ideas, and portable task packets.
 6. Read the active day's index and relevant topics under `learning_artifacts/` for demonstrated understanding and unresolved conceptual edges.
 7. Inspect existing work before creating a competing artifact.
-8. For machine switches, read the current handoff and workflow; reconcile them
-   with the latest progress before resuming. Mac is the default live-learning
-   environment; Spark is the GPU execution environment.
+8. When resuming an unfinished task, read `docs/handoffs/CURRENT.md` and reconcile
+   it with the latest progress before continuing.
 
 ## Source of truth
 
@@ -116,7 +113,7 @@ an unavailable machine's execution.
 - `BOOK.md` defines the book structure and the narrative placement of course material.
 - `PROGRESS.md` defines the current state and exact next action.
 - `learning_artifacts/` defines the durable conceptual record organized by day and topic.
-- `LEARNING_MEMORY.md` defines the artifact index, public-content queue, and portable cross-machine task packets.
+- `LEARNING_MEMORY.md` defines the artifact index, public-content queue, and portable task packets.
 - Experiment specifications define intended runs.
 - `docs/course_manifest.json` defines chapter/day/notebook routing and optional
   extension dependencies; registration is not a readiness or mastery claim.
@@ -164,8 +161,9 @@ For each learning day:
    evidence state, and production dependency. Candidate capture does not
    authorize production: actively surface strong candidates to the learner, wait
    for explicit approval, then promote approved concepts to complete `ANIM-*`
-   task packets in `LEARNING_MEMORY.md`. All animation production remains on the
-   Mac Studio unless the learner explicitly changes that assignment.
+   task packets in `LEARNING_MEMORY.md`. Animation production also happens on the
+   Spark; Manim's system dependencies (Cairo/Pango, FFmpeg) must be installed there
+   before the first render.
 10. Create or update the book-facing material to which the day's learning belongs.
 11. Update `PROGRESS.md` with evidence and an exact next action.
 12. Update `LEARNING_MEMORY.md` when a new topic must be indexed or the session produces a reusable public-content idea or portable task.
@@ -208,7 +206,7 @@ separate architecture schematics from measured plots and distinguish baseline
 learned position embeddings from modern RoPE inside attention.
 Use `docs/NOTEBOOK_VISUALS.md` for reference previews, dependency handling,
 evidence boundaries, and visual verification. Static notebook plots do not
-authorize animation rendering; Mac Studio remains the animation production lane.
+authorize animation rendering, which still requires an approved `ANIM-*` packet.
 
 Do not mark a day complete merely because prose or code exists. The stated evidence of completion must be present.
 
@@ -251,7 +249,7 @@ Continuously check book-level coherence: chapter order, prerequisite flow,
 terminology, notation, repeated explanations, pacing, and whether each experiment
 advances the book's central argument.
 
-## Cross-session and cross-machine memory
+## Cross-session memory
 
 Do not rely on chat history as the only record of a valuable discussion or task.
 Preserve deep conceptual learning in the active topic under `learning_artifacts/`
@@ -260,11 +258,11 @@ demonstrated understanding, evidence level, important limitations, reuse
 opportunities, and remaining gaps. Keep `LEARNING_MEMORY.md` as the compact index
 and production queue rather than duplicating every topic there.
 
-Before work is handed to another session or machine, create or update a portable
-task packet containing a stable task ID, base commit, branch, learning objective,
-inputs, allowed files, expected outputs, precision requirements, acceptance
-checks, and return evidence. Git is the synchronization boundary: never assume
-that uncommitted files on one machine are visible on another.
+Before work is handed to another session, create or update a portable task packet
+containing a stable task ID, base commit, branch, learning objective, inputs,
+allowed files, expected outputs, precision requirements, acceptance checks, and
+return evidence. Git is the synchronization boundary: never assume uncommitted
+files are visible to another session or checkout.
 
 Public articles and animations are derived from the canonical book argument.
 Record promising ideas immediately, but delay final wording when their underlying

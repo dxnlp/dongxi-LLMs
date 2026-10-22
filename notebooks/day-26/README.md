@@ -46,6 +46,6 @@ mass conservation, lost token detail and gradient boundaries. All 24 fitted arms
 and negative held-outs remain in the [report](../../experiments/reports/2026-10-04-student-prefix-distillation.md).
 It is not a pretrained teacher, state-occupancy gradient or full SDPO reproduction.
 
-Machine: Mac or Spark CPU. Model-scale execution requires its own frozen config,
-resource guard and measured report. Animation production remains Mac-only and
+Machine: DGX Spark (these references run on CPU). Model-scale execution requires
+its own frozen config, resource guard and measured report. Animation production
 requires its own instruction.

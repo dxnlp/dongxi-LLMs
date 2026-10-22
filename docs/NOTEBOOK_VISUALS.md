@@ -26,8 +26,7 @@ not as optional decoration added after the lesson.
   DejaVu Sans where Arial is unavailable on Spark. Provide meaningful image alt
   text and adjacent interpretation so color is not the only explanation.
 - Prefer static figures for notebook mechanisms. Animation candidates remain
-  automatically recorded, but animation production stays on Mac Studio and
-  requires approval. A request for notebook plots is not a rendering commission.
+  automatically recorded, but animation production requires approval. A request for notebook plots is not a rendering commission.
 
 ## Reference previews versus live plots
 

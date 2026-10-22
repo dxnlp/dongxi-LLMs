@@ -1,5 +1,10 @@
 # Progress and Handoff Ledger
 
+**Machine policy, 2026-10-22:** at the learner's request the DGX Spark is the single working
+machine for learning, notebooks, experiments, writing and animation production. The Mac Studio /
+Spark split, its switch phrases and Mac verification are retired (`docs/LEARNING_WORKFLOW.md`).
+Older log entries that mention Mac work are historical.
+
 This file is the operational source of truth for resuming work. Update it at the end of every learning day and whenever responsibility passes to another person or agent.
 
 ## Current position

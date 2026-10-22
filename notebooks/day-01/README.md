@@ -2,7 +2,7 @@
 
 These four sessions form a mechanism → failure → evidence → handoff route for
 [Chapter 1](../../book/chapters/01-evidence-before-optimization.md).
-Run on CPU on Mac or Spark. No model download or dashboard server is required.
+Run on CPU on the DGX Spark (any kernel). No model download or dashboard server is required.
 Each reference is adjacent to its explanation; record a prediction first.
 
 1. [An experiment has an identity](01_experiment_identity.ipynb) — Two runs can have identical learning rates and different meanings.

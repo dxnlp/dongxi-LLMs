@@ -28,6 +28,6 @@ References follow each exercise; the [specification](../../experiments/specs/202
 and [measured report](../../experiments/reports/2026-10-04-reasoning-controls.md)
 keep CPU learnability separate from the unexecuted pretrained baseline.
 
-Machine: Mac or Spark CPU. Model-scale execution requires its own frozen config,
-resource guard and measured report. Animation production remains Mac-only and
+Machine: DGX Spark (these references run on CPU). Model-scale execution requires
+its own frozen config, resource guard and measured report. Animation production
 requires its own instruction.

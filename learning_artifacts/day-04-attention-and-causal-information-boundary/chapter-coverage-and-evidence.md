@@ -59,7 +59,7 @@ This is a conceptual review; renewed live notebook practice was not requested.
 - Forward report: `experiments/reports/2026-09-05-causal-attention-forward.md`.
 - Gradient/cache report: `experiments/reports/2026-09-05-attention-gradients-cache.md`.
 - `ANIM-ATTN-001` now has canonical chapter, gradients, mask/detach examples, and
-  numerical evidence. Production stays on the Mac Studio.
+  numerical evidence. Production needs explicit approval.
 - `CAND-ANIM-009` has a verified toy cache example; no serving benchmark is claimed.
 - `X-ATTN-KV-001` can draw on the canonical chapter and cache equivalence report.
 - Recurrent-depth material remains assigned to Chapter 5/Days 6–7.

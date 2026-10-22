@@ -133,10 +133,8 @@ optimizer treatment belongs to Chapter 6/Days 8–9. No rendering authorized.
 
 Math opportunity check expands CAND-ANIM-011/012/013 and captures 014–017 for
 normalization, MLP gates, RoPE, and grouped KV accounting. Existing embedding and
-attention packets remain canonical. All media production requires approval and
-stays on Mac Studio. The looped-transformer article reminder remains X-LOOP-001.
+attention packets remain canonical. All media production requires approval. The looped-transformer article reminder remains X-LOOP-001.
 
 CPU-only references require Torch, nbformat/nbclient for automated verification,
 and a working Jupyter kernel for interactive study. Spark's kernel is
-`dgx-spark-native`; Mac users should choose their local Python kernel. No Mac
-execution is claimed. No notebook server was launched for this production task.
+`dgx-spark-native`. No notebook server was launched for this production task.

@@ -24,8 +24,7 @@ it without modifying the shared Spark GPU environment. Kernel identity/device,
 not the host name, determine its evidence scope.
 
 Use an existing Python environment with PyTorch and Matplotlib, and a selected
-Jupyter kernel when working interactively. Spark reference execution does not
-prove Mac dependencies are configured. Verify fresh temporary copies with:
+Jupyter kernel when working interactively. Verify fresh temporary copies with:
 
 ```bash
 python scripts/verify_course_notebooks.py --days 18 --kernel dgx-spark-native --export-figures

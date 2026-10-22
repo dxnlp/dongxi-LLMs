@@ -2,7 +2,7 @@
 
 Companions to [Chapter 6: Pretraining as a Controlled System](../../book/chapters/06-pretraining-as-a-controlled-system.md).
 The complete Day 8 subject pathway is prepared; guided learning and the Day 9
-GPU run remain separate. Current learning destination is Spark, not Day 6 on Mac.
+GPU run remain separate.
 
 | Session | Question | Hands-on intervention |
 |---|---|---|
@@ -22,8 +22,7 @@ tokenizer (258 IDs). It reuses the Chapter 5 modern decoder, CPU only, with shor
 Use an existing Python environment with PyTorch, Jupyter/ipykernel, nbclient,
 nbformat and [the course plotting dependencies](../requirements-visuals.txt).
 Notebooks discover the repository root and use portable `python3` metadata;
-select the actual course kernel on your machine. Mac execution has not been
-verified by the Spark checks, and no Mac dependency installation is implied.
+select the course kernel on the Spark.
 
 Verification from the repository root on the current Spark:
 
