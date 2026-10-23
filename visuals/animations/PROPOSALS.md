@@ -1471,6 +1471,18 @@ production dependencies.
   2026-10-20 at the learner's request in
   `visuals/animations/projects/post-training-intro/`; visual review pending.
 
+### CAND-ANIM-032 — Instruction tuning: six article GIFs
+
+- Source: user (2026-10-22: X-POST-002 needs eye-catching GIFs) and agent storyboard.
+- Learning objective: see what SFT grades (answer + closing end-of-turn token), that
+  masked prompts are still read and trained, the one-position shift, token share, and
+  that lower loss didn't guarantee answers that stop.
+- Canonical mechanisms: masked token-mean NLL; `logits[:-1]` vs `labels[1:]`.
+- Evidence: real outputs and counts from the native SFT400 comparison; measured
+  gradient and shift values from Day 12 · 03; other values illustrative.
+- Status: approved by the learner on 2026-10-22 ("approve the GIF plan"); promoted to
+  `ANIM-POST-002`, rendered in `visuals/animations/projects/post-training-sft/`.
+
 ### Approved chapter GIF package — 2026-10-11
 
 - Source: user. After reviewing the fifteen-chapter plan, the learner requested

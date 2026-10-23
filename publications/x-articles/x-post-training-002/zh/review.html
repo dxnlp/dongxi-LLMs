@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>指令微调：同一个损失，不同任务</title><style>*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;background:#fff;color:#111827;font-family:Arial,"Helvetica Neue",sans-serif}
+body.zh{font-family:"PingFang SC","Songti SC",STSong,serif}
+main{max-width:860px;margin:36px auto 110px;padding:0 28px}
+nav{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#64748b;margin-bottom:18px}
+nav a{color:#2563eb;text-decoration:none;border:1px solid #cbd5e1;border-radius:6px;padding:5px 10px}
+header img{width:100%;height:auto;display:block;border-radius:10px}
+h1{font-size:42px;line-height:1.25;font-weight:700;margin:34px 0 30px}
+h2{font-size:29px;line-height:1.4;margin:58px 0 22px}
+h3{font-size:23px;line-height:1.4;margin:40px 0 16px}
+p,li{font-size:19px;line-height:1.85;overflow-wrap:anywhere}
+p{margin:0 0 20px} ul{padding-left:24px;margin:0 0 22px} li{margin-bottom:8px}
+body.zh p,body.zh li{font-size:19px;line-height:1.95}
+blockquote{margin:26px 0;padding:4px 0 4px 20px;border-left:4px solid #cbd5e1;color:#1f2937}
+blockquote p{margin:8px 0;font-size:20px}
+figure{margin:34px -10px}
+figure img{width:100%;height:auto;display:block;border:1px solid #e2e8f0;border-radius:10px}
+figcaption{font-size:15px;line-height:1.75;color:#64748b;padding:12px 8px}
+.note{font-size:14px;color:#64748b;border-top:1px solid #e2e8f0;margin-top:60px;padding-top:16px}
+@media(max-width:600px){main{padding:0 16px;margin-top:16px}h1{font-size:30px}h2{font-size:24px;margin-top:42px}
+h3{font-size:20px}p,li,body.zh p,body.zh li{font-size:17px}figure{margin:26px -6px}}</style></head><body class="zh"><main><nav><span>X-POST-002 · post-training series 2/5</span><a href="../review.html">English</a></nav><header><img src="../assets/cover-post-training-02.png" width="2000" height="800" alt="指令微调：同一个损失，不同任务"></header><h1>指令微调：同一个损失，不同任务</h1><article><h2>52,000 条示例，几百美元</h2>
+<p>2023 年 3 月，斯坦福的一个团队用 Meta 的 LLaMA 7B 训练出了能按指令回答问题的模型 Alpaca。LLaMA 7B 原本只做过预训练，只会预测下一个词。</p>
+<p>团队没有改动模型结构，也没有补充新的知识，只用了 52,000 条示例，每条由一个指令和一个回答组成。</p>
+<p>这些示例由 OpenAI 的 text-davinci-003 自动生成，花费不到 500 美元。训练在 8 块 GPU 上用了 3 个小时，花费不到 100 美元。团队做了一次小规模盲测，Alpaca 和 text-davinci-003 的回答被选中的次数几乎相同：90 比 89。</p>
+<figure><img src="../assets/01-alpaca-recipe.gif" loading="lazy" alt="斯坦福的 Alpaca（2023）：一个 AI 模型生成了 52,000 条指令与回答示例，LLaMA 7B 由此学会按指令作答。数字来自斯坦福团队的公开报告。"><figcaption>斯坦福的 Alpaca（2023）：一个 AI 模型生成了 52,000 条指令与回答示例，LLaMA 7B 由此学会按指令作答。数字来自斯坦福团队的公开报告。</figcaption></figure>
+<p>Alpaca 也会给出错误答案。问它坦桑尼亚的首都，它回答达累斯萨拉姆，正确答案是多多马。</p>
+<blockquote>
+<p>示例教会了模型如何回答，但没有教会它哪些事实是正确的。</p>
+</blockquote>
+<p>为什么少量示例就能明显改变模型的行为，却无法修正它的事实错误？本文从这个问题出发，介绍后训练的第一种技术：<strong>instruction tuning（指令微调）</strong>，也叫 <strong>supervised fine-tuning（SFT，监督微调）</strong>。这是后训练系列的第二篇。</p>
+<h2>同一个损失，不同任务</h2>
+<p>指令微调沿用预训练的训练目标：在每个位置预测下一个 token，用 <strong>cross-entropy loss（交叉熵损失）</strong> 衡量预测和正确 token 之间的差距，通过训练提高正确 token 的概率。</p>
+<p>区别在于数据和任务。预训练使用原始文本，任务是续写；指令微调使用成对的数据，每对包含一个指令和一个回答，任务是根据指令生成回答。</p>
+<blockquote>
+<p>损失函数相同，数据和任务不同：预训练学习续写文本，指令微调学习回答指令。</p>
+</blockquote>
+<p>它被称为监督微调，是因为每个输入都有一个指定的目标输出，这和数据由谁编写无关。预训练文本同样由人编写；Alpaca 的示例全部由模型生成，仍然属于监督数据。</p>
+<h2>指令微调学到了什么</h2>
+<p>基座模型在预训练中已经学到了大量知识，包括事实、语法、代码和各种文体，但它的默认行为是续写输入的文本。收到一个问题，它可能接着写出更多问题。</p>
+<p>指令微调改变的是模型的行为方式：</p>
+<ul>
+<li>针对请求给出回答，不再续写输入。</li>
+<li>按指令要求的格式输出，例如列表、单个词或译文。</li>
+<li>在多轮对话中区分用户和助手的发言。</li>
+<li>回答完成后停止生成。</li>
+<li>在示例包含拒绝的情况下，拒绝某些请求。</li>
+</ul>
+<p>LIMA 和 FLAN 两项研究说明了这种变化的特点。</p>
+<p><strong>LIMA（2023）</strong> 只用 1,000 条精选示例微调 65B 的 LLaMA，没有使用强化学习。在人工评测中，43% 的回答与 GPT-4 相当或更好。作者据此认为，模型的知识几乎全部来自预训练，少量指令数据主要决定回答的方式。</p>
+<figure><img src="../assets/02-lima.gif" loading="lazy" alt="LIMA（2023）：在 LLaMA 65B 上只用 1,000 条精选示例、不做强化学习，43% 的回答被评为与 GPT-4 相当或更好。论文公开结果。"><figcaption>LIMA（2023）：在 LLaMA 65B 上只用 1,000 条精选示例、不做强化学习，43% 的回答被评为与 GPT-4 相当或更好。论文公开结果。</figcaption></figure>
+<p><strong>FLAN（2021）</strong> 把 60 多个 NLP 任务改写成自然语言指令，用来微调一个 137B 的模型。在训练中没有出现过的任务上，它在 25 项测试中有 20 项超过了零样本的 175B GPT-3。</p>
+<figure><img src="../assets/03-flan.gif" loading="lazy" alt="FLAN（2021）：137B 模型在 60 多个改写成指令的任务上微调，在 25 项未训练过的任务中有 20 项超过零样本的 175B GPT-3。论文公开结果；哪几格为灰色仅为示意。"><figcaption>FLAN（2021）：137B 模型在 60 多个改写成指令的任务上微调，在 25 项未训练过的任务中有 20 项超过零样本的 175B GPT-3。论文公开结果；哪几格为灰色仅为示意。</figcaption></figure>
+<p>这说明指令微调学到的是遵循指令的通用能力，可以泛化到训练中没有出现过的任务。因此，指令微调是后训练的第一步：先让模型能够按指令作答，再由偏好对齐和强化学习提高回答质量。</p>
+<h2>训练流程</h2>
+<p>指令微调分五步：</p>
+<ol>
+<li><strong>收集</strong>：准备由指令和回答组成的数据对。</li>
+<li><strong>格式化</strong>：用模型的 <strong>chat template（对话模板）</strong> 把每对数据转换成对话格式的 token 序列。</li>
+<li><strong>掩码</strong>：用 <strong>loss mask（损失掩码）</strong> 标出需要计算损失的 token，只计算回答部分。</li>
+<li><strong>训练</strong>：使用下一个 token 预测损失，学习率较小，通常只训练几个 epoch。可以更新全部参数，即 <strong>full fine-tuning（全参数微调）</strong>；也可以冻结原有参数、只训练少量新增参数，即 <strong>LoRA</strong>，这是下一篇的主题。</li>
+<li><strong>评测</strong>：在训练中没有出现过的任务上评估效果。</li>
+</ol>
+<figure><img src="../assets/04-recipe.gif" loading="lazy" alt="指令微调的五个步骤：收集、格式化、掩码、训练、评测。"><figcaption>指令微调的五个步骤：收集、格式化、掩码、训练、评测。</figcaption></figure>
+<p>第 2、3 步涉及较多细节，下面分别说明。</p>
+<h2>一条示例的三种形态</h2>
+<p><strong>存储形态</strong>：一段对话，由若干条消息组成，每条消息标明角色（system、user、assistant）。</p>
+<p><strong>输入形态</strong>：对话模板把所有消息拼接成一个 token 序列，并插入特殊标记。在 Qwen 的模板中，每轮发言以 <code>&lt;|im_start|&gt;</code> 和角色名开头，以 <code>&lt;|im_end|&gt;</code> 结尾。</p>
+<p><strong>训练形态</strong>：损失掩码标出序列中参与计算损失的 token。模型读取整个序列，但只有被标出的 token 计入损失。</p>
+<figure><img src="../assets/05-three-forms.gif" loading="lazy" alt="一条示例的三种形态：对话、带模板标记的 token 序列、损失掩码。标记做了简化。"><figcaption>一条示例的三种形态：对话、带模板标记的 token 序列、损失掩码。标记做了简化。</figcaption></figure>
+<p>下图把三种形态放在一起对照：</p>
+<figure><img src="../assets/06-three-forms-summary.png" loading="lazy" alt="三种形态对照，使用 Qwen 模板的真实标记。"><figcaption>三种形态对照，使用 Qwen 模板的真实标记。</figcaption></figure>
+<h2>哪些 token 计算损失</h2>
+<p>判断标准只有一条：</p>
+<blockquote>
+<p>只对模型在实际使用时需要生成的 token 计算损失。</p>
+</blockquote>
+<p>据此逐项判断：</p>
+<ul>
+<li><strong>用户消息：不计算。</strong> 模型需要读取，但不需要生成。如果对它计算损失，模型会学习生成用户的提问。</li>
+<li><strong>助手开头标记 <code>&lt;|im_start|&gt;assistant</code>：不计算。</strong> 实际使用时，这个标记由应用程序写入提示。</li>
+<li><strong>回答：计算。</strong></li>
+<li><strong>结尾标记 <code>&lt;|im_end|&gt;</code>：计算。</strong> 模型通过它学习何时停止生成。缺少这一项，模型可能在回答后继续生成，甚至生成下一轮用户消息。</li>
+<li><strong><code>&lt;|im_end|&gt;</code> 之后的换行：不计算。</strong> 此时生成已经结束。</li>
+</ul>
+<figure><img src="../assets/07-what-gets-loss.gif" loading="lazy" alt="在多轮对话中，只有助手的回答及其结尾标记计算损失。"><figcaption>在多轮对话中，只有助手的回答及其结尾标记计算损失。</figcaption></figure>
+<p>写成公式，mₜ = 1 表示位置 t 计算损失，否则为 0：</p>
+<p>loss = − (1 / 计算损失的 token 数) × Σₜ mₜ · log p(位置 t 的正确下一个 token)</p>
+<p>不计算损失的位置贡献为零，平均值只在计算损失的位置上求得。</p>
+<h2>被掩码的 token 仍会被训练</h2>
+<p>损失掩码只决定哪些位置的预测计入损失，不影响 <strong>attention（注意力）</strong> 读取哪些 token。回答依赖于对提示的读取，因此回答的损失产生的梯度会通过注意力传回提示中的 token，并更新处理这些 token 的参数。</p>
+<figure><img src="../assets/08-masked-not-untouched.gif" loading="lazy" alt="提示不计算损失，但回答产生的梯度仍会通过注意力传回提示。示意图。"><figcaption>提示不计算损失，但回答产生的梯度仍会通过注意力传回提示。示意图。</figcaption></figure>
+<p>也就是说，被掩码的 token 不计算损失，但仍然参与训练。</p>
+<h2>错开一个位置</h2>
+<p>模型在位置 t 的输出是对位置 t + 1 的预测，因此计算损失时，预测要和后一个位置的 token 对齐。在 PyTorch 中写成：</p>
+<blockquote>
+<p>cross_entropy(logits[:-1], labels[1:], ignore_index=-100)</p>
+</blockquote>
+<p>其中 -100 表示不计算损失的位置。</p>
+<p>如果没有错开这一位，形状仍然匹配，代码可以运行，但每个预测都和当前位置的 token 对齐，模型学习的是复制当前 token。</p>
+<figure><img src="../assets/09-one-position-shift.gif" loading="lazy" alt="每个位置预测下一个 token。没有错开一位时，每个预测都和当前位置的 token 对齐，模型学会的是复制。示意图。"><figcaption>每个位置预测下一个 token。没有错开一位时，每个预测都和当前位置的 token 对齐，模型学会的是复制。示意图。</figcaption></figure>
+<p>训练前，建议把计算损失的 token 解码出来检查一遍：结果应当只包含各个回答及其 <code>&lt;|im_end|&gt;</code>。</p>
+<h2>数据从哪里来</h2>
+<p>指令数据主要有三个来源：</p>
+<ul>
+<li><strong>人工编写</strong>：由志愿者或标注员编写指令和回答，质量高，成本也高。</li>
+<li><strong>改写现有数据集</strong>：用简单模板把翻译、问答、情感分析等数据集转换成指令，例如：这位评论者喜欢这部电影吗？</li>
+<li><strong>模型生成</strong>：由语言模型生成指令和回答，通常再经过筛选或审核。这是目前最常用的来源。</li>
+</ul>
+<p>数据质量的影响很大。有研究在大型指令数据集中加入 500 条安全示例，模型产生有害回答的比例就明显下降。</p>
+<p>组合数据时还要注意长度。损失按计算损失的 token 求平均，回答越长，在损失中的占比越大：一条 500 个 token 的回答，权重约为一条 2 个 token 回答的 250 倍。因此，组合指令数据时应按 token 数量平衡，只看示例条数是不够的。</p>
+<figure><img src="../assets/10-token-share.gif" loading="lazy" alt="损失按计算损失的 token 求平均，因此 500 个 token 的回答权重是 2 个 token 回答的 250 倍。token 数为示意。"><figcaption>损失按计算损失的 token 求平均，因此 500 个 token 的回答权重是 2 个 token 回答的 250 倍。token 数为示意。</figcaption></figure>
+<h2>指令微调的能力与局限</h2>
+<p><strong>能做到的</strong>：以较低成本让模型学会按指令作答、遵循格式、区分对话角色、适时停止和拒绝某些请求，并能泛化到新任务。</p>
+<p><strong>做不到的</strong>：</p>
+<ul>
+<li><strong>可靠地补充知识。</strong> Alpaca 答错首都的例子说明，模型学到的是回答的形式，掌握的知识并没有增加。它还可能学会在没有把握的问题上同样给出肯定的回答。</li>
+<li><strong>超越训练数据。</strong> 模型模仿示例，也会模仿示例中的错误。</li>
+<li><strong>比较回答的优劣，或判断回答是否正确。</strong> 每条示例只提供一个参考回答，模型无法从中得知两个都合理的回答哪个更好，也无法得知一段很长的解题过程最终是否正确。</li>
+</ul>
+<p>最后一点由后续两种技术解决：<strong>preference alignment（偏好对齐）</strong> 从回答之间的比较中学习；<strong>RLVR（Reinforcement Learning with Verifiable Rewards，可验证奖励强化学习）</strong> 根据答案是否正确来学习。</p>
+<p>推理模型的训练也遵循这个顺序：先用写好的解题过程做指令微调，让模型学会逐步推理的格式，再用强化学习提高推理的正确率。</p>
+<h2>小结</h2>
+<ul>
+<li>指令微调使用和预训练相同的损失，在由指令和回答组成的数据对上继续训练。</li>
+<li>它被称为监督微调，是因为每个输入都有指定的目标输出，和数据由谁编写无关。</li>
+<li>它主要改变模型的行为方式，很少增加知识；少量数据即可见效，并能泛化到新任务。</li>
+<li>只对模型需要生成的 token 计算损失：回答及其结尾的 <code>&lt;|im_end|&gt;</code>。被掩码的 token 仍会参与训练。</li>
+<li>它只能模仿参考回答，无法比较优劣或检验正确性，这部分由后续的偏好对齐和强化学习完成。</li>
+</ul>
+<p>下一篇：LoRA 和 QLoRA，以及如何在一块 GPU 上微调大模型。</p>
+</article><p class="note">本地审阅页面，尚未上传或发布。GIF 01 为一个小实验的真实输出，其余动画为示意。</p></main></body></html>

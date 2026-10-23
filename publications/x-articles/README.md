@@ -33,12 +33,13 @@ a specific exception.
 Inline article figures may use another ratio when their mechanism or data needs
 it; the 5:2 rule applies specifically to the X Article cover.
 
-### Post-training series cover style (required for X-POST-001 to X-POST-004)
+### Post-training series cover style (required for every article in the series)
 
 Approved by the learner on 2026-10-20 for every article in the post-training
 series. Reference implementation:
 [`x-post-training-001/build_cover.py`](x-post-training-001/build_cover.py);
-copy it and change only the title, series number and art motif.
+keep its style and change the title and series number, but draw a new art motif that
+shows that article's technique. Reusing the previous cover's art was rejected (2026-10-22).
 
 - Deep ink background with a faint cool glow; smooth vector "engraved" ribbons
   (pycairo) with light stipple dust. Random-stipple art was rejected as rough.
@@ -48,3 +49,68 @@ copy it and change only the title, series number and art motif.
 - Gold `#FBBF24` letter-spaced capital labels: `POST-TRAINING SERIES · NN` at top
   left and `DONGXI LABS` at top right. No article ID on the cover.
 - One English cover is shared by the English and Chinese versions.
+
+## Post-training series conventions
+
+Learner-approved through X-POST-001 (2026-10-20/21). Later articles in the series
+follow these unless the learner changes them. Reference package:
+[`x-post-training-001/`](x-post-training-001/).
+
+**Series plan** (revised 2026-10-22: LoRA/QLoRA get their own article):
+`X-POST-001` why post-training · `X-POST-002` instruction tuning (SFT) ·
+`X-POST-003` LoRA and QLoRA · `X-POST-004` preference alignment · `X-POST-005` RLVR.
+Article 1 is beginner-level; later articles go deeper, each on one technique.
+
+**Text**
+
+- Two versions: English at the package root, an independently written natural
+  Chinese version in `zh/` (not a literal translation).
+- Chinese: never use 不是……而是…… or its variants (并非…而是, 不在于…而在于,
+  与其…不如); `build.py` scans for them.
+- Chinese terms: on first use write the English term with the Chinese in
+  parentheses, e.g. `pretraining（预训练）`, `supervised fine-tuning（SFT，监督微调）`;
+  afterwards Chinese alone is fine.
+- Open with a concrete, verified, eye-catching example (article 1: OpenAI's
+  GPT-3 vs InstructGPT moon-landing comparison), then the reader's question.
+- Quote blocks (`>`) only for a few key sentences, about 4–5 per article. Use quotation
+  marks (“” / "") as little as possible (learner, 2026-10-22). Bold terms on first
+  definition with a plain gloss.
+- Precise wording over figurative language: no empty metaphors (换了一份工作, 猜错了就扣分,
+  举一反三, "a new job") and few adverbs (笃定地, confidently). Say the technical thing plainly.
+- Stay big-picture (role, meaning, method, data, limits). Technical details such as the
+  chat template are welcome; detailed reports of our own experiments are not.
+- H2 headings only (X Articles handles H2 more reliably than H3). Short
+  sentences, plain words before notation. Beginner article 1 used a few analogies;
+  later articles prefer precise statements.
+- End with a short summary list and a pointer to the next article.
+- No links in the public body; every claim maps to `source-map.md`. State
+  evidence limits in prose or captions; never present illustrations as measurements.
+
+**Figures and animations**
+
+- **Animated GIFs are the default for every inline figure** (learner request,
+  2026-10-22): motion catches the reader's eye in the X feed. Even a comparison
+  or a measured result should move, e.g. a table that builds row by row or bars
+  that grow. A static image only when motion would add nothing, and then say why
+  in `visual-plan.md`.
+- Manim, Dongxi visual system (`visuals/animations/STYLE_GUIDE.md`): white canvas,
+  semantic colors, Arial labels at title 40 / labels 24–32, one compact amber badge
+  for caveats ("illustrative probabilities"), no equations on screen in beginner
+  articles. Source in `visuals/animations/projects/<topic>/` (`scenes.py`, `render.py`).
+- Final output: 1920×1080 30 fps MP4 (git-ignored) plus a 1280×720 20 fps looping GIF
+  (one global 256-color palette, no dithering, under 5 MB) written to the article's
+  `assets/`. Encode GIFs from a lossless render (Manim `-t` → qtrle `.mov`, composited
+  on white), never from the H.264 MP4: compression noise made one GIF 14.9 MB, the
+  lossless source 0.85 MB (`post-training-sft/render.py`). English labels; both language versions share the GIFs.
+- All figures are English only, GIFs and static images alike; the Chinese article uses
+  the same English figures (learner, 2026-10-22). Article 1's Chinese comparison table
+  predates this rule.
+- About 5–6 inline GIFs per article; each caption states what is illustrative.
+
+**Package and transfer**
+
+- Files: drafts with `[IMAGE NN]` placeholders, `image-upload-order.md` (cover listed
+  separately), `build.py` (HTML bodies, local `review.html`, hash metadata),
+  `build_cover.py`, `source-map.md`, `visual-plan.md`, `README.md`.
+- Review locally (`python3 -m http.server`) before any X work. X transfer is
+  draft-only, never Publish; method in `x-post-training-001/X_DRAFT_TRANSFER.md`.

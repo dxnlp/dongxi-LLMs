@@ -1,6 +1,6 @@
 # Why Does a Language Model Need Post-Training?
 
-`X-POST-001`, first article of the post-training series. Bilingual: English at
+`X-POST-001`, first article of the post-training series (five articles). Bilingual: English at
 the package root, an independently written Chinese version in `zh/`.
 
 **Read locally:** [`review.html`](review.html) (English) and
@@ -19,10 +19,11 @@ in depth:
 
 | ID | Topic | Status |
 |---|---|---|
-| `X-POST-001` | Why post-training (this package) | EN/ZH drafts, 5 GIFs, comparison figure and covers ready for review |
-| `X-POST-002` | Instruction tuning (SFT) | planned |
-| `X-POST-003` | Preference alignment (reward models, PPO, DPO) | planned |
-| `X-POST-004` | RLVR | planned |
+| `X-POST-001` | Why post-training (this package) | Chinese version transferred to an X draft and verified after reload (not published, see `X_DRAFT_TRANSFER.md`); English version ready, not transferred |
+| `X-POST-002` | Instruction tuning (SFT) | outline agreed 2026-10-22 |
+| `X-POST-003` | LoRA and QLoRA (split out of SFT, 2026-10-22) | planned |
+| `X-POST-004` | Preference alignment (reward models, PPO, DPO) | planned |
+| `X-POST-005` | RLVR | planned |
 
 ## Files
 
@@ -57,4 +58,4 @@ python3 ~/.codex/skills/x-article-drafter/scripts/build_x_article_body_plan.py p
 - Animation timelines validated by `render.py`; contact sheets and final frames inspected.
 
 The cover is procedural (no image-generation model was used, unlike earlier
-series covers); revised 2026-10-20 at the learner's request with color and series labels. No model runs, X upload, publication, commit or push so far.
+series covers); revised 2026-10-20 at the learner's request with color and series labels. No model runs or publication. Chinese X draft created 2026-10-20 (draft only).
