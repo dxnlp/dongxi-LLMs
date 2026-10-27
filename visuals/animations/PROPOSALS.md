@@ -1745,3 +1745,17 @@ production dependencies.
   [`../chapters/review-record.json`](../chapters/review-record.json) retain
   actual numerical, media, source-preservation and browser-review evidence.
   Original full-film scopes and learner Day 9 remain unchanged.
+
+### CAND-ANIM-039 — LoRA and QLoRA through patterns: ten article GIFs
+
+- Source: user (2026-10-23 request for X-POST-003, built around the learner's pattern
+  idea) and agent storyboard.
+- Learning objective: see a pattern as column × row, rank as a count of patterns, SVD
+  keeping the strongest, LoRA adding r patterns to frozen W, 4-bit block quantization and
+  NF4, and why low rank and quantization damage a matrix differently.
+- Canonical mechanisms: W + B·A with B: d×r, A: r×d; top-r SVD truncation; block absmax
+  scaling to 16 levels; NF4 quantile levels.
+- Evidence: QLoRA/LoRA published claims; memory bars are labeled byte-count estimates;
+  everything else illustrative.
+- Status: approved by the learner on 2026-10-23 (GIF plan and cover); promoted to
+  `ANIM-POST-003`, rendered in `visuals/animations/projects/post-training-lora/`.

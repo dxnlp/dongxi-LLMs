@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LoRA and QLoRA: Fine-Tuning a Large Model on One GPU</title><style>*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;background:#fff;color:#111827;font-family:Arial,"Helvetica Neue",sans-serif}
+body.zh{font-family:"PingFang SC","Songti SC",STSong,serif}
+main{max-width:860px;margin:36px auto 110px;padding:0 28px}
+nav{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#64748b;margin-bottom:18px}
+nav a{color:#2563eb;text-decoration:none;border:1px solid #cbd5e1;border-radius:6px;padding:5px 10px}
+header img{width:100%;height:auto;display:block;border-radius:10px}
+h1{font-size:42px;line-height:1.25;font-weight:700;margin:34px 0 30px}
+h2{font-size:29px;line-height:1.4;margin:58px 0 22px}
+h3{font-size:23px;line-height:1.4;margin:40px 0 16px}
+p,li{font-size:19px;line-height:1.85;overflow-wrap:anywhere}
+p{margin:0 0 20px} ul{padding-left:24px;margin:0 0 22px} li{margin-bottom:8px}
+body.zh p,body.zh li{font-size:19px;line-height:1.95}
+blockquote{margin:26px 0;padding:4px 0 4px 20px;border-left:4px solid #cbd5e1;color:#1f2937}
+blockquote p{margin:8px 0;font-size:20px}
+figure{margin:34px -10px}
+figure img{width:100%;height:auto;display:block;border:1px solid #e2e8f0;border-radius:10px}
+figcaption{font-size:15px;line-height:1.75;color:#64748b;padding:12px 8px}
+.note{font-size:14px;color:#64748b;border-top:1px solid #e2e8f0;margin-top:60px;padding-top:16px}
+@media(max-width:600px){main{padding:0 16px;margin-top:16px}h1{font-size:30px}h2{font-size:24px;margin-top:42px}
+h3{font-size:20px}p,li,body.zh p,body.zh li{font-size:17px}figure{margin:26px -6px}}</style></head><body class="en"><main><nav><span>X-POST-003 · post-training series 3/5</span><a href="zh/review.html">中文版</a></nav><header><img src="assets/cover-post-training-03.png" width="2000" height="800" alt="LoRA and QLoRA: Fine-Tuning a Large Model on One GPU"></header><h1>LoRA and QLoRA: Fine-Tuning a Large Model on One GPU</h1><article><h2>A 65B model on one 48 GB GPU</h2>
+<p>In 2023, a team at the University of Washington published QLoRA. They fine-tuned a 65-billion-parameter (65B) model on a single GPU with 48 GB of memory, and reported that the method preserved the task performance of 16-bit full fine-tuning. Their Guanaco model, trained this way for 24 hours on one GPU, reached 99.3% of ChatGPT's performance on the Vicuna benchmark.</p>
+<p>For comparison, full fine-tuning in the usual way needs roughly 16 bytes of GPU memory per parameter, about 1 TB for a 65B model, before counting activations. This is an order-of-magnitude estimate from byte counts.</p>
+<figure><img src="assets/01-one-gpu.gif" loading="lazy" alt="QLoRA (2023) fine-tuned a 65B model on one 48 GB GPU and preserved 16-bit fine-tuning performance; Guanaco reached 99.3% of ChatGPT on Vicuna after 24 hours. The full fine-tuning bar is a byte-count estimate."><figcaption>QLoRA (2023) fine-tuned a 65B model on one 48 GB GPU and preserved 16-bit fine-tuning performance; Guanaco reached 99.3% of ChatGPT on Vicuna after 24 hours. The full fine-tuning bar is a byte-count estimate.</figcaption></figure>
+<p>QLoRA combines two parts: <strong>LoRA</strong> reduces the number of parameters that are trained, and <strong>4-bit quantization</strong> reduces the number of bits each parameter takes. Three basic concepts explain both: rank, low-rank approximation and quantization. One idea connects them all: the <strong>pattern</strong> in a matrix.</p>
+<p>This is the third article in our post-training series. The previous one covered instruction tuning; this one is about making fine-tuning fit in memory.</p>
+<h2>The memory cost of full fine-tuning</h2>
+<p>Full fine-tuning updates every parameter of the model. During training, GPU memory holds the parameters, a gradient for each parameter, and two Adam optimizer states for each parameter. In 32-bit floats that is about 16 bytes per parameter: more than 100 GB for a 7B model and about 1 TB for a 65B model. Activations from the forward pass come on top.</p>
+<p>There are two ways to reduce this. Train fewer parameters, which is what LoRA does, or store each parameter in fewer bits, which is what quantization does.</p>
+<h2>A pattern: one column times one row</h2>
+<p>The central concept of this article is the pattern. A pattern is the matrix you get by multiplying a column vector by a row vector, also called a rank-1 matrix. Each entry is the product of one column entry and one row entry, so every row is the same row vector scaled by a different amount.</p>
+<p>Take a sales table. Three stores report sales over four days. Every store follows the same daily rhythm, [1, 2, 2, 1], and only the store size differs: 10, 20 and 30. The whole 3×4 table is the column [10, 20, 30] times the row [1, 2, 2, 1]. Its 12 numbers are determined by 3 + 4 = 7 numbers, and its rank is 1.</p>
+<p>Now add a promotion: days 3 and 4 get an extra [0, 0, 5, 5], with participation [1, 0, 2] across the three stores. The new table is the sum of two patterns. Its rows are no longer multiples of one row vector, and its rank is 2.</p>
+<figure><img src="assets/02-pattern.gif" loading="lazy" alt="A pattern is a column times a row. The sales table is one pattern (rank 1); adding a promotion pattern makes it rank 2."><figcaption>A pattern is a column times a row. The sales table is one pattern (rank 1); adding a promotion pattern makes it rank 2.</figcaption></figure>
+<blockquote>
+<p>A matrix is a sum of patterns, and its rank is the number of independent patterns in it.</p>
+</blockquote>
+<p>As a computation, a pattern u vᵀ applied to an input x first measures how much x points along direction v, then writes that amount along direction u. One pattern reads one input direction and writes one output direction; a rank-r matrix contains r such read-write pairs.</p>
+<h2>Approximation: keep the strongest patterns</h2>
+<p>Real matrices are made of many patterns of different strengths. <strong>Singular value decomposition (SVD)</strong> splits any matrix into a sum of patterns, ordered from strongest to weakest, with no overlap between them. Keeping only the strongest r patterns gives the smallest possible error among all rank-r matrices.</p>
+<p>Take a grayscale photo. With 1 pattern, you get a grid of horizontal and vertical bands. With 20, the face is recognizable. With 50, it is close to the original. A few strong patterns carry the overall structure, and many weak ones add detail.</p>
+<figure><img src="assets/03-strongest-patterns.gif" loading="lazy" alt="SVD orders a matrix&#x27;s patterns by strength. A photo rebuilt from its 1, 5, 20 and 50 strongest patterns."><figcaption>SVD orders a matrix&#x27;s patterns by strength. A photo rebuilt from its 1, 5, 20 and 50 strongest patterns.</figcaption></figure>
+<p>A <strong>low-rank approximation</strong> represents a large matrix with only r patterns, written as a tall, thin matrix times a short, wide one. A d×d matrix holds d² numbers; at rank r it needs only 2dr. With d = 4096 and r = 8, that is 65,536 numbers instead of about 16.8 million, roughly 0.4%.</p>
+<figure><img src="assets/04-low-rank.gif" loading="lazy" alt="A d×d matrix approximated as tall-thin × short-wide: 16.8 million numbers become 65,536 at d = 4096, r = 8."><figcaption>A d×d matrix approximated as tall-thin × short-wide: 16.8 million numbers become 65,536 at d = 4096, r = 8.</figcaption></figure>
+<h2>LoRA: add a few patterns to frozen weights</h2>
+<p><strong>LoRA (Low-Rank Adaptation)</strong> keeps the original weight W unchanged and frozen, and adds an update made of r patterns next to it:</p>
+<p>W′ = W + B·A, where B is a d×r matrix and A is an r×d matrix</p>
+<p>B·A is exactly a sum of r patterns: column i of B times row i of A. Training updates only A and B; W never changes.</p>
+<p>Why not apply a low-rank approximation to W itself? A pretrained weight matrix spreads its strength across hundreds of patterns, so keeping only a few loses most of the information. LoRA's premise is that adapting to a new task changes the weights mostly along a few patterns. The LoRA paper studies the low rank of these updates empirically and supports this premise.</p>
+<blockquote>
+<p>LoRA keeps every pattern of the original weights and learns a few new ones, added on top of the frozen weights.</p>
+</blockquote>
+<p>Training starts with B = 0 and A random. Then B·A = 0, and the model's output is exactly that of the original model. Because A is not zero, B receives a gradient in the first step, and training proceeds. Gradient descent searches for the r read-write pairs that lower the task loss.</p>
+<p>After training, B·A has the same shape as W, so it can be added into W with no extra cost at inference. Alternatively, different A and B can be kept for different tasks and swapped as needed. The LoRA paper reports that, on GPT-3 175B, it reduces trainable parameters by about 10,000 times and GPU memory needs by about 3 times compared with full fine-tuning with Adam.</p>
+<figure><img src="assets/05-lora.gif" loading="lazy" alt="LoRA freezes W and trains only B·A, a sum of r patterns, starting from B = 0. After training, B·A can be merged into W."><figcaption>LoRA freezes W and trains only B·A, a sum of r patterns, starting from B = 0. After training, B·A can be merged into W.</figcaption></figure>
+<p>LoRA has limits. The rank r bounds what the update can express: a change that needs more than r patterns can't be learned completely. And LoRA reduces only the training state; the original weights still sit in GPU memory at 16 bits. For a 65B model, the weights alone take about 130 GB.</p>
+<h2>Quantization: store each number in fewer bits</h2>
+<p>Quantization reduces the number of bits per number; the number of numbers stays the same.</p>
+<p><strong>Bits and values.</strong> A b-bit number can take 2ᵇ values. bf16 uses 16 bits and has 65,536 possible values; 4 bits give only 16. In 4-bit quantization, each weight is mapped to one of 16 preset levels, and only the level's index, 0 to 15, is stored.</p>
+<p><strong>Block-wise scaling.</strong> The 16 levels lie between −1 and 1, while real weights are small, often within about ±0.05. So the weights are split into blocks of 64, and each block stores one scale: the largest absolute weight in the block. To store a weight, divide it by the scale, find the nearest level and keep its index. To use it, multiply the level by the scale. With blocks, an unusually large weight affects only its own block.</p>
+<figure><img src="assets/06-quantize-block.gif" loading="lazy" alt="4-bit quantization of one block: divide by the block scale, snap to the nearest of 16 levels, store the 4-bit code."><figcaption>4-bit quantization of one block: divide by the block scale, snap to the nearest of 16 levels, store the 4-bit code.</figcaption></figure>
+<p><strong>NF4.</strong> QLoRA uses a 4-bit format called NF4 (4-bit NormalFloat). Trained weights are roughly bell-shaped, so NF4 places its 16 levels at quantiles of the normal distribution: dense near 0, sparse in the tails, with an exact 0. Most weights sit near 0, so their rounding error is smaller.</p>
+<figure><img src="assets/07-nf4-levels.gif" loading="lazy" alt="Bell-shaped weights: 16 evenly spaced levels vs NF4&#x27;s 16 levels at normal quantiles, dense near 0."><figcaption>Bell-shaped weights: 16 evenly spaced levels vs NF4&#x27;s 16 levels at normal quantiles, dense near 0.</figcaption></figure>
+<p><strong>Storage and compute.</strong> Each weight takes 4 bits, plus a share of the scale used by its block of 64. Quantizing the scales themselves to 8 bits, called <strong>double quantization</strong>, brings the average to about 4.13 bits per weight, roughly a quarter of bf16. At compute time, each block is converted back to bf16 just before its matrix multiplication and discarded afterward: storage is 4-bit, computation is still 16-bit.</p>
+<h2>Comparing low rank and quantization through patterns</h2>
+<p>Both low-rank approximation and quantization introduce error, but the error has different structure:</p>
+<ul>
+<li>Low-rank approximation removes the weaker patterns. The patterns it keeps are exact.</li>
+<li>Quantization keeps every pattern, changes each pattern's strength only slightly, and adds a small error spread across all directions, close to random noise.</li>
+</ul>
+<blockquote>
+<p>Low-rank approximation reduces the number of patterns in a matrix; quantization reduces the bits per number.</p>
+</blockquote>
+<p>This explains an apparent contradiction. Pretrained weights are hard to compress with low rank, because they contain many patterns and dropping the weak ones loses much information. They can still be quantized well, because all patterns are kept and only a little noise is added.</p>
+<figure><img src="assets/08-lowrank-vs-quant.gif" loading="lazy" alt="Low rank removes the weak patterns; quantization keeps every pattern and adds a small, spread-out error."><figcaption>Low rank removes the weak patterns; quantization keeps every pattern and adds a small, spread-out error.</figcaption></figure>
+<h2>QLoRA: low rank and quantization where each fits</h2>
+<p>QLoRA combines the two:</p>
+<ul>
+<li>The frozen original weights W are stored in 4-bit NF4 and never updated. They keep all their patterns at lower precision.</li>
+<li>LoRA's A and B are stored in 16 bits and trained, learning a few new patterns.</li>
+<li>In the forward pass, each block of W is converted to bf16, multiplied with the input, and the LoRA branch's output is added. In the backward pass, gradients flow through the converted W into A and B; W itself doesn't change.</li>
+<li><strong>Paged optimizers</strong> move optimizer state to CPU memory during memory spikes, so training doesn't run out of GPU memory.</li>
+</ul>
+<figure><img src="assets/09-qlora.gif" loading="lazy" alt="QLoRA: 4-bit frozen weights converted to bf16 just in time, plus a 16-bit LoRA branch; gradients reach only A and B."><figcaption>QLoRA: 4-bit frozen weights converted to bf16 just in time, plus a 16-bit LoRA branch; gradients reach only A and B.</figcaption></figure>
+<p>A rough byte-count estimate for a 7B model, counting weights, gradients and optimizer state but not activations: about 100 GB for full fine-tuning, about 15 GB for LoRA and about 5 GB for QLoRA.</p>
+<figure><img src="assets/10-memory-7b.gif" loading="lazy" alt="Approximate memory for a 7B model (weights, gradients, optimizer; no activations): full ~100 GB, LoRA ~15 GB, QLoRA ~5 GB. Estimates."><figcaption>Approximate memory for a 7B model (weights, gradients, optimizer; no activations): full ~100 GB, LoRA ~15 GB, QLoRA ~5 GB. Estimates.</figcaption></figure>
+<p>The costs of QLoRA: converting weights before every computation makes training slower than 16-bit LoRA; quantization adds a little error, so the quantized model starts slightly worse and LoRA must make up for it during training; and the trained A and B can't simply be added into 4-bit weights, so they are merged into a 16-bit copy or kept separate.</p>
+<h2>Summary</h2>
+<figure><img src="assets/11-pattern-lens.png" loading="lazy" alt="Summary: every concept in this article read through patterns."><figcaption>Summary: every concept in this article read through patterns.</figcaption></figure>
+<ul>
+<li>A pattern is a column times a row. A matrix is a sum of patterns, and its rank is the number of independent patterns.</li>
+<li>SVD finds a matrix's patterns by strength; keeping the strongest r gives the best low-rank approximation.</li>
+<li>LoRA freezes the original weights and trains only r new patterns, B·A, on the premise that adapting to a task needs only a few patterns.</li>
+<li>Quantization keeps every pattern and stores each number in fewer bits: block-wise scales, NF4 levels, and 16-bit computation.</li>
+<li>QLoRA stores the frozen weights in 4 bits and trains LoRA's patterns in 16 bits, so a single GPU can fine-tune a very large model.</li>
+</ul>
+<p>Next: preference alignment, and how a model learns from comparisons between answers.</p>
+</article><p class="note">Local review page. Not uploaded or published. Published results are from the LoRA and QLoRA papers; memory figures are estimates; other figures are illustrations.</p></main></body></html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>LoRA 与 QLoRA：用一块 GPU 微调大模型</title><style>*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;background:#fff;color:#111827;font-family:Arial,"Helvetica Neue",sans-serif}
+body.zh{font-family:"PingFang SC","Songti SC",STSong,serif}
+main{max-width:860px;margin:36px auto 110px;padding:0 28px}
+nav{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#64748b;margin-bottom:18px}
+nav a{color:#2563eb;text-decoration:none;border:1px solid #cbd5e1;border-radius:6px;padding:5px 10px}
+header img{width:100%;height:auto;display:block;border-radius:10px}
+h1{font-size:42px;line-height:1.25;font-weight:700;margin:34px 0 30px}
+h2{font-size:29px;line-height:1.4;margin:58px 0 22px}
+h3{font-size:23px;line-height:1.4;margin:40px 0 16px}
+p,li{font-size:19px;line-height:1.85;overflow-wrap:anywhere}
+p{margin:0 0 20px} ul{padding-left:24px;margin:0 0 22px} li{margin-bottom:8px}
+body.zh p,body.zh li{font-size:19px;line-height:1.95}
+blockquote{margin:26px 0;padding:4px 0 4px 20px;border-left:4px solid #cbd5e1;color:#1f2937}
+blockquote p{margin:8px 0;font-size:20px}
+figure{margin:34px -10px}
+figure img{width:100%;height:auto;display:block;border:1px solid #e2e8f0;border-radius:10px}
+figcaption{font-size:15px;line-height:1.75;color:#64748b;padding:12px 8px}
+.note{font-size:14px;color:#64748b;border-top:1px solid #e2e8f0;margin-top:60px;padding-top:16px}
+@media(max-width:600px){main{padding:0 16px;margin-top:16px}h1{font-size:30px}h2{font-size:24px;margin-top:42px}
+h3{font-size:20px}p,li,body.zh p,body.zh li{font-size:17px}figure{margin:26px -6px}}</style></head><body class="zh"><main><nav><span>X-POST-003 · post-training series 3/5</span><a href="../review.html">English</a></nav><header><img src="../assets/cover-post-training-03.png" width="2000" height="800" alt="LoRA 与 QLoRA：用一块 GPU 微调大模型"></header><h1>LoRA 与 QLoRA：用一块 GPU 微调大模型</h1><article><h2>一块 48GB 的 GPU，微调 650 亿参数的模型</h2>
+<p>2023 年，华盛顿大学的研究团队发表了 QLoRA。他们在一块 48GB 显存的 GPU 上微调了一个 650 亿参数（65B）的模型，并报告这种方法保持了 16 位全参数微调的任务表现。用这种方法训练的 Guanaco 模型，在一块 GPU 上训练了 24 小时，在 Vicuna 评测中达到了 ChatGPT 表现的 99.3%。</p>
+<p>作为对比，按常规方式做全参数微调，每个参数大约需要 16 字节显存，65B 模型约需 1 TB，还不包括激活值。这是按字节数推算的数量级估计。</p>
+<figure><img src="../assets/01-one-gpu.gif" loading="lazy" alt="QLoRA（2023）在一块 48GB GPU 上微调 65B 模型，并保持了 16 位微调的表现；Guanaco 训练 24 小时，在 Vicuna 评测中达到 ChatGPT 的 99.3%。全参数微调的柱子是按字节数估算的。"><figcaption>QLoRA（2023）在一块 48GB GPU 上微调 65B 模型，并保持了 16 位微调的表现；Guanaco 训练 24 小时，在 Vicuna 评测中达到 ChatGPT 的 99.3%。全参数微调的柱子是按字节数估算的。</figcaption></figure>
+<p>QLoRA 由两部分组成：<strong>LoRA</strong> 减少需要训练的参数数量，<strong>4 位量化</strong> 减少每个参数占用的位数。理解这两部分，需要三个基本概念：rank（秩）、low-rank approximation（低秩近似）和 quantization（量化）。它们可以用同一个概念串起来，即矩阵中的 <strong>pattern（模式）</strong>。</p>
+<p>这是后训练系列的第三篇。上一篇介绍了指令微调，本篇讨论如何降低微调的显存开销。</p>
+<h2>全参数微调的显存开销</h2>
+<p>全参数微调会更新模型的全部参数。训练时，显存中除了参数本身，还要存放每个参数的梯度，以及 Adam 优化器为每个参数维护的两组状态。以 32 位浮点数计算，每个参数约 16 字节：7B 模型约需 100 GB 以上，65B 模型约需 1 TB。前向计算产生的激活值还要另算。</p>
+<p>降低显存有两个方向：减少需要训练的参数数量，这是 LoRA 的做法；减少每个参数占用的位数，这是量化的做法。</p>
+<h2>模式（pattern）：一列乘一行</h2>
+<p>本文的核心概念是模式（pattern）。一个模式是一个列向量乘以一个行向量得到的矩阵，也称为秩为 1 的矩阵。矩阵中的每个元素等于对应的列元素和行元素的乘积，因此每一行都是同一个行向量按不同比例缩放的结果。</p>
+<p>举一个销售表的例子。三家门店连续四天的销售额，每家店每天的销售节奏相同，都是 [1, 2, 2, 1]，只是门店规模不同，分别为 10、20、30。整张 3×4 的表就是列向量 [10, 20, 30] 乘以行向量 [1, 2, 2, 1]：12 个数只由 3 + 4 = 7 个数决定，这张表的秩为 1。</p>
+<p>再加入一次促销：第 3、4 天额外增加 [0, 0, 5, 5]，三家店的参与程度分别为 [1, 0, 2]。新的销售表是两个模式相加，各行不再是同一个行向量的倍数，秩为 2。</p>
+<figure><img src="../assets/02-pattern.gif" loading="lazy" alt="模式是一列乘一行。销售表是一个模式（秩为 1）；加入促销这个模式后，秩变为 2。"><figcaption>模式是一列乘一行。销售表是一个模式（秩为 1）；加入促销这个模式后，秩变为 2。</figcaption></figure>
+<blockquote>
+<p>矩阵可以看作若干模式相加的结果，秩就是其中相互独立的模式的个数。</p>
+</blockquote>
+<p>从计算的角度看，模式 u vᵀ 作用在输入向量 x 上时，先计算 x 在方向 v 上的分量，再把这个数值写到方向 u 上。一个模式读取一个输入方向，写入一个输出方向；秩为 r 的矩阵包含 r 组这样的读写方向。</p>
+<h2>近似：保留最强的模式</h2>
+<p>真实的矩阵通常由许多模式组成，强弱不一。<strong>奇异值分解（SVD）</strong> 可以把任意矩阵分解成一组模式之和，并按强度从大到小排列，各个模式之间相互正交、没有重叠。只保留最强的 r 个模式，得到的就是所有秩为 r 的矩阵中误差最小的近似。</p>
+<p>以一张灰度照片为例：只保留 1 个模式，只能得到横竖交错的条纹；保留 20 个，已经能认出人脸；保留 50 个，和原图相当接近。少数强模式决定整体结构，大量弱模式只贡献细节。</p>
+<figure><img src="../assets/03-strongest-patterns.gif" loading="lazy" alt="SVD 按强度排列矩阵的模式。用最强的 1、5、20、50 个模式重建一张照片。"><figcaption>SVD 按强度排列矩阵的模式。用最强的 1、5、20、50 个模式重建一张照片。</figcaption></figure>
+<p><strong>低秩近似</strong> 就是只用 r 个模式表示一个大矩阵，写成一个细高矩阵乘以一个扁宽矩阵。一个 d×d 的矩阵需要 d² 个数；用秩 r 表示时，只需要 2dr 个数。d = 4096、r = 8 时，数的个数从约 1,680 万减少到 65,536，约为原来的 0.4%。</p>
+<figure><img src="../assets/04-low-rank.gif" loading="lazy" alt="把 d×d 矩阵近似为细高矩阵乘扁宽矩阵：d = 4096、r = 8 时，约 1,680 万个数减少到 65,536 个。"><figcaption>把 d×d 矩阵近似为细高矩阵乘扁宽矩阵：d = 4096、r = 8 时，约 1,680 万个数减少到 65,536 个。</figcaption></figure>
+<h2>LoRA：在冻结的权重上增加少量模式</h2>
+<p><strong>LoRA（Low-Rank Adaptation，低秩适配）</strong> 保留原有权重 W 不变，把它冻结，再在旁边加上一个由 r 个模式组成的更新：</p>
+<p>W′ = W + B·A，其中 B 是 d×r 的矩阵，A 是 r×d 的矩阵</p>
+<p>B·A 正好是 r 个模式之和：B 的第 i 列乘以 A 的第 i 行。训练时只更新 A 和 B，W 保持不变。</p>
+<p>为什么不直接对 W 做低秩近似？预训练得到的权重矩阵把强度分散在数百个模式上，只保留少数几个会丢失大部分信息。LoRA 的前提是：适配一个新任务时，权重的变化量主要集中在少数几个模式上。LoRA 论文对适配过程中权重更新的低秩性做了实证分析，支持了这一前提。</p>
+<blockquote>
+<p>LoRA 保留原有权重的全部模式，只学习少量新的模式，把它们加到冻结的权重上。</p>
+</blockquote>
+<p>训练从 B = 0、A 为随机值开始。此时 B·A = 0，模型的输出和原模型完全相同；由于 A 不为零，B 在第一步就能得到梯度，训练随即展开。训练过程通过梯度下降，寻找能够降低任务损失的 r 组读写方向。</p>
+<p>训练完成后，B·A 和 W 形状相同，可以直接加到 W 上，推理时没有额外开销；也可以为不同任务保存不同的 A、B，按需切换。LoRA 论文报告，在 GPT-3 175B 上，与用 Adam 做全参数微调相比，可训练参数减少到约万分之一，GPU 显存需求降为约三分之一。</p>
+<figure><img src="../assets/05-lora.gif" loading="lazy" alt="LoRA 冻结 W，只训练由 r 个模式组成的 B·A，训练从 B = 0 开始；训练完成后，B·A 可以合并进 W。"><figcaption>LoRA 冻结 W，只训练由 r 个模式组成的 B·A，训练从 B = 0 开始；训练完成后，B·A 可以合并进 W。</figcaption></figure>
+<p>LoRA 也有限制。秩 r 限制了更新的表达能力，需要超过 r 个模式才能表示的变化无法完整学到。另外，它减少的是需要训练的状态，原有权重仍以 16 位存放在显存中：65B 模型的权重本身就需要约 130 GB。</p>
+<h2>量化：用更少的位数存储每个数</h2>
+<p>量化减少的是每个数占用的位数，数的个数保持不变。</p>
+<p><strong>位数和取值。</strong> 一个 b 位的数有 2ᵇ 种取值。bf16 使用 16 位，有 65,536 种取值；4 位只有 16 种取值。4 位量化就是让每个权重从 16 个预设的级别中选择一个，只存储级别的编号 0 到 15。</p>
+<p><strong>分块缩放。</strong> 16 个级别分布在 −1 到 1 之间，而真实的权重通常很小，大约在 ±0.05 的范围内。因此把权重每 64 个分成一块，每块记录一个缩放因子，即块中绝对值最大的权重。存储时，先把权重除以缩放因子，再取最近的级别，只保存编号；使用时，用级别乘以缩放因子还原。分块之后，一个异常大的权重只影响它所在的那一块。</p>
+<figure><img src="../assets/06-quantize-block.gif" loading="lazy" alt="一块权重的 4 位量化：除以缩放因子，取最近的 16 个级别之一，存储 4 位编号。"><figcaption>一块权重的 4 位量化：除以缩放因子，取最近的 16 个级别之一，存储 4 位编号。</figcaption></figure>
+<p><strong>NF4。</strong> QLoRA 使用的 4 位格式称为 NF4（4-bit NormalFloat）。训练好的权重大致呈钟形分布，NF4 按正态分布的分位数放置 16 个级别：靠近 0 处密集，两端稀疏，并且包含精确的 0。大多数权重落在 0 附近，因此舍入误差更小。</p>
+<figure><img src="../assets/07-nf4-levels.gif" loading="lazy" alt="钟形分布的权重：均匀分布的 16 个级别与按正态分位数放置的 NF4 级别对比，后者在 0 附近更密。"><figcaption>钟形分布的权重：均匀分布的 16 个级别与按正态分位数放置的 NF4 级别对比，后者在 0 附近更密。</figcaption></figure>
+<p><strong>存储和计算。</strong> 每个权重占 4 位，再加上每 64 个权重共享的缩放因子。缩放因子本身再量化为 8 位，称为 <strong>double quantization（双重量化）</strong>，之后平均每个权重约占 4.13 位，约为 bf16 的四分之一。计算时，每一块权重在参与矩阵乘法之前临时还原成 bf16，用完即丢弃：存储使用 4 位，计算仍使用 16 位。</p>
+<h2>用模式比较低秩和量化</h2>
+<p>低秩近似和量化都会带来误差，但误差的结构不同：</p>
+<ul>
+<li>低秩近似删除较弱的模式，保留下来的模式完全准确。</li>
+<li>量化保留全部模式，每个模式的强度只有很小的变化，同时加入一层分散在所有方向上的细小误差，形态接近随机噪声。</li>
+</ul>
+<blockquote>
+<p>低秩近似减少矩阵中模式的个数，量化减少每个数的位数。</p>
+</blockquote>
+<p>这也解释了一个看似矛盾的现象：预训练权重很难做低秩压缩，因为它的模式很多，删去弱模式会损失大量信息；它却可以较好地量化，因为全部模式都被保留，只增加了少量噪声。</p>
+<figure><img src="../assets/08-lowrank-vs-quant.gif" loading="lazy" alt="低秩近似删去弱模式；量化保留全部模式，并加入分散的细小误差。"><figcaption>低秩近似删去弱模式；量化保留全部模式，并加入分散的细小误差。</figcaption></figure>
+<h2>QLoRA：低秩和量化各用在合适的位置</h2>
+<p>QLoRA 把两种方法结合起来：</p>
+<ul>
+<li>冻结的原有权重 W 用 4 位 NF4 存储，不参与更新。它保留了全部模式，只是精度降低。</li>
+<li>LoRA 的 A 和 B 用 16 位存储并参与训练，学习少量新的模式。</li>
+<li>前向计算时，W 的每一块临时还原为 bf16，和输入相乘，再加上 LoRA 分支的输出。反向传播时，梯度经过还原后的 W 传到 A 和 B，W 本身不更新。</li>
+<li><strong>paged optimizers（分页优化器）</strong> 在显存出现峰值时，把优化器状态临时移到 CPU 内存，避免显存不足。</li>
+</ul>
+<figure><img src="../assets/09-qlora.gif" loading="lazy" alt="QLoRA：4 位冻结权重在计算前临时还原为 bf16，再加上 16 位的 LoRA 分支；梯度只更新 A 和 B。"><figcaption>QLoRA：4 位冻结权重在计算前临时还原为 bf16，再加上 16 位的 LoRA 分支；梯度只更新 A 和 B。</figcaption></figure>
+<p>按字节数粗略估算一个 7B 模型，只计权重、梯度和优化器状态，不含激活值：全参数微调约 100 GB，LoRA 约 15 GB，QLoRA 约 5 GB。</p>
+<figure><img src="../assets/10-memory-7b.gif" loading="lazy" alt="7B 模型的显存估算（权重、梯度、优化器状态，不含激活值）：全参数微调约 100 GB，LoRA 约 15 GB，QLoRA 约 5 GB。"><figcaption>7B 模型的显存估算（权重、梯度、优化器状态，不含激活值）：全参数微调约 100 GB，LoRA 约 15 GB，QLoRA 约 5 GB。</figcaption></figure>
+<p>QLoRA 的代价：每次计算都要先还原权重，训练速度比 16 位的 LoRA 慢；量化带来少量误差，量化后的模型起点略差，需要由 LoRA 在训练中弥补；训练好的 A、B 不能直接加到 4 位权重上，需要合并到还原后的 16 位权重，或者单独保存。</p>
+<h2>小结</h2>
+<figure><img src="../assets/11-pattern-lens.png" loading="lazy" alt="小结：用模式解读本文的每个概念。"><figcaption>小结：用模式解读本文的每个概念。</figcaption></figure>
+<ul>
+<li>模式是一列乘一行得到的矩阵。矩阵是若干模式之和，秩是其中独立模式的个数。</li>
+<li>SVD 按强度找出矩阵的模式，保留最强的 r 个，得到误差最小的低秩近似。</li>
+<li>LoRA 冻结原有权重，只训练 r 个新增模式 B·A。依据是任务适配所需的变化集中在少数模式上。</li>
+<li>量化保留全部模式，用更少的位数存储每个数：分块缩放、NF4 级别，计算时还原为 16 位。</li>
+<li>QLoRA 用 4 位存储冻结的权重，用 16 位训练 LoRA 的模式，使一块 GPU 就能微调很大的模型。</li>
+</ul>
+<p>下一篇：偏好对齐，模型如何从回答之间的比较中学习。</p>
+</article><p class="note">本地审阅页面，尚未上传或发布。公开结果来自 LoRA 和 QLoRA 论文；显存数字为估算；其余配图为示意。</p></main></body></html>
