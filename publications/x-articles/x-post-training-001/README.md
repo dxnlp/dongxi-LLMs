@@ -22,8 +22,9 @@ in depth:
 | `X-POST-001` | Why post-training (this package) | Chinese version transferred to an X draft and verified after reload (not published, see `X_DRAFT_TRANSFER.md`); English version ready, not transferred |
 | `X-POST-002` | Instruction tuning (SFT) | outline agreed 2026-10-22 |
 | `X-POST-003` | LoRA and QLoRA (split out of SFT, 2026-10-22) | planned |
-| `X-POST-004` | Preference alignment (reward models, PPO, DPO) | planned |
-| `X-POST-005` | RLVR | planned |
+| `X-POST-004` | RL terms for LLMs (inserted 2026-10-27, before preference alignment) | planned |
+| `X-POST-005` | Preference alignment (reward models, PPO, DPO) | planned |
+| `X-POST-006` | RLVR | planned |
 
 ## Files
 

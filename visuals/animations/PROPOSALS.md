@@ -1483,6 +1483,242 @@ production dependencies.
 - Status: approved by the learner on 2026-10-22 ("approve the GIF plan"); promoted to
   `ANIM-POST-002`, rendered in `visuals/animations/projects/post-training-sft/`.
 
+### CAND-ANIM-033 — Bradley–Terry: why a score gap becomes a sigmoid
+
+- Source: user (2026-10-27, asked for animations to understand SLP3 §8.3.2's half-page
+  derivation) and agent storyboard.
+- Learning objective: see that the sigmoid isn't arbitrary. If each answer's strength is
+  `e^score`, then "A's share of the total strength" is exactly `σ(score_A − score_B)`.
+- Storyboard: (1) two answers on a score line, gap δ controlled by a slider; (2) each grows a
+  bar of height `e^score`, its *strength*; (3) the bars stack into one total, and A's share of it
+  is the win probability; (4) dividing both bars by B's strength leaves `e^δ` vs. 1, the
+  **odds**; (5) the probability traces the S-curve as δ sweeps; (6) shifting both scores
+  together moves the bars but not the share (gauge).
+- Canonical mechanisms: `P = e^{z_A} / (e^{z_A} + e^{z_B}) = e^δ/(1 + e^δ) = σ(δ)`; odds `= e^δ`;
+  `δ = log odds`. Chapter 10 §10.2; SLP3 §8.3.2.
+- Evidence: exact computed values (δ = 0, 1, 2, 3 → 0.5, 0.731, 0.881, 0.953); no measured data.
+- Relation: complements, not duplicates, the existing chapter loop `preference-margin.gif`
+  (gap → probability → gradient), which shows *what* the curve does but not *why* it's a sigmoid.
+- Status: wanted by the learner, deferred (2026-10-27): produce on the Mac Studio after the
+  preference-learning topic is finished. Not yet a production packet.
+
+### CAND-ANIM-034 — Four pairs through gap → probability → loss → gradient
+
+- Source: user (2026-10-27, while working through Day 15 · 04 Predict 5) and agent storyboard.
+- Proposed during: Day 15 · 04 Part B / Chapter 10 §10.2–10.3.
+- State: suggested
+- Learning objective: one pairwise loss, four quantities, read together. The learner sees that
+  probability, loss and gradient are all functions of the *gap alone*, and how each changes
+  as the gap grows.
+- Storyboard: (1) four pairs from Predict 5 on two score axes (chosen 0, 1, 2, 5; rejected
+  2, 1, 1, 1), each pair joined by its gap arrow (−2, 0, +1, +4); (2) the four gaps drop onto one
+  shared gap axis; (3) three stacked, linked panels: σ(gap), −log σ(gap), −(1 − σ(gap)). Each
+  pair is a dot that slides to its value on all three panels at once; (4) a "+10 to both scores"
+  button shifts both score axes, the arrows keep their length, and the dots don't move
+  (shift invariance); (5) closing frame: a table of the four rows.
+- Why motion is better than a static figure: the static figure 03 shows three separate curves.
+  Motion links one pair across all three, and shows the +10 shift leaving everything unchanged,
+  which a still can't show.
+- Moving objects and stable anchors: moving: score dots, gap arrows, linked dots. Anchors: the
+  gap = 0 line (P 0.5, loss log 2 = 0.693, gradient −0.5), and the curve shapes.
+- Canonical source material: Day 15 · 04 Predict 5 reference cell and figure 03; Chapter 10 §10.2;
+  SLP3 §8.3.2. Loss = BCE with target 1, with the gap as the logit (asserted in the notebook).
+- Evidence status: executable teaching example; exact values:
+  gap −2 → P 0.119, loss 2.127, grad −0.881; 0 → 0.500, 0.693, −0.500;
+  +1 → 0.731, 0.313, −0.269; +4 → 0.982, 0.018, −0.018.
+- Precision risks and required caveats: "gradient" means d loss / d r_chosen. d loss / d r_rejected
+  is the same size with the opposite sign. Shift invariance holds per prompt pair; it doesn't
+  make scores comparable across prompts.
+- Dependencies: complements `preference-margin.gif` (CAND-ANIM-024: one hard pair, one update)
+  and CAND-ANIM-033 (why the sigmoid). It doesn't repeat either.
+- Suggested destination: lab (Day 15 · 04 Part B), Chapter 10 §10.3, X article on reward models.
+- Next decision: learner review of the storyboard. Production on the Mac Studio, together with
+  CAND-ANIM-033.
+
+### CAND-ANIM-035 — The gradient goes where the model is still wrong
+
+- Source: user (2026-10-27, Day 15 · 04 Predict 5, "when the model already prefers the chosen
+  answer by a wide margin, how big is the gradient?") and agent storyboard.
+- Proposed during: Day 15 · 04 Part B → Part C.
+- State: suggested
+- Learning objective: see that `|∂loss/∂gap| = 1 − σ(gap)` makes training focus on wrong or
+  uncertain pairs, while correct, confident pairs fade out. This links Predict 5 to reward-model
+  training in Part C.
+- Storyboard: (1) a batch of N pairs as dots on the gap axis, each dot sized by its gradient
+  magnitude 1 − σ(gap); (2) gradient-descent steps on independent scores: dots move right, and
+  each moves less as it passes 0 and grows small; (3) a side counter shows total gradient and mean
+  loss falling; (4) one mislabelled pair (noisy label, D3) keeps a large gradient and is pulled
+  the wrong way, until it is balanced by being outnumbered.
+- Why motion is better than a static figure: the shrinking-step dynamic and the moving share of
+  gradient between pairs only appear over time.
+- Moving objects and stable anchors: moving: pair dots and their sizes. Anchors: gap = 0, the
+  gradient-magnitude curve 1 − σ(gap) drawn faintly underneath.
+- Canonical source material: Day 15 · 04 Predict 5 (gradient = −(1 − σ)); Part C's reward-model
+  training; D3 (noisy preferences).
+- Evidence status: conceptual, with constructed independent-score updates (exact arithmetic, not a
+  trained network). Must be labelled as such.
+- Precision risks and required caveats: in a real reward model, scores share parameters, so
+  pushing one pair moves others. The animation's independent-score dynamics are a simplification.
+  The noisy pair isn't "fixed": it keeps pulling, and only the batch average decides the outcome.
+  Don't imply the gradient ever reaches exactly 0.
+- Dependencies: CAND-ANIM-034 (same axes and colours).
+- Suggested destination: lab (Day 15 · 04 Part B/C), Chapter 10 §10.3.
+- Next decision: learner review. Optionally swap the constructed path for logged per-pair gaps
+  from the Part C training run.
+
+### CAND-ANIM-036 — PPO: four networks, one iteration (signature candidate)
+
+- Source: user (2026-10-27, Day 15 · 04 Part E: "this deserves a very well designed animation or
+  visual to illustrate the process of PPO, the different roles of the four networks, and how they
+  work") and agent storyboard.
+- Proposed during: Day 15 · 04 Part E / Chapter 12 (PPO) and Chapter 10 handoff.
+- State: suggested; flagged by the learner as high priority, a candidate for a signature-length
+  film rather than a short loop.
+- Learning objective: the learner can name each network, what it outputs, whether it is trained, what
+  it is trained on, and where its output enters the loss. They can trace one prompt through a full
+  PPO iteration.
+- The four networks (stable cast, one colour each, fixed screen positions):
+  | Network | Init | Output | Trained? | Role |
+  |---|---|---|---|---|
+  | policy π_θ | SFT chat model | next-token distribution | yes, clipped surrogate | writes the answer; the only model deployed |
+  | reference π_ref | frozen copy of SFT | log-probs | no | anchor for the per-token KL penalty |
+  | reward model r | trained in phase 1 (Part C) | one scalar per full answer | no | grades the finished answer |
+  | value model V_φ | copy of the reward model, scalar head | one scalar per prefix (every token) | yes, (V − return)² | predicts the expected return, giving the baseline for advantage |
+  Plus π_old: stored log-probs, *not* a network. Show it as a frozen table, to avoid a "fifth model"
+  confusion (D25).
+- Storyboard (one iteration, one prompt, then a batch):
+  1. **Cast:** four boxes, two locked (ref, rm), two with a "trainable" marker (policy, value);
+     input/output shapes shown (`[B, T, vocab]`, `[B, T]` log-probs, `[B]` score, `[B, T]` values).
+  2. **Rollout:** a prompt enters the policy; tokens appear one by one (temperature 1, D-fix). Their
+     log-probs are written into the π_old table.
+  3. **Scoring pass, all no-grad:** the same tokens flow into ref (log-probs), rm (one score, attached
+     at `<|im_end|>`), value (one number above every token).
+  4. **Reward vector:** per token, −β(log π_old − log π_ref) (small grey bars); the last token gets
+     +R (a tall bar). Show the β = 0.05 dial.
+  5. **Advantage via GAE:** δ_t = r_t + γV(s_{t+1}) − V(s_t) sweeps right to left; A_t accumulates
+     with (γλ)^k decay (γ = 1, λ = 0.95). Tokens colour green/red by sign of A_t.
+  6. **Two updates:** the policy loss −min(ρA, clip(ρ, 0.8, 1.2)A) (link to the existing
+     `ppo-clipping` loop for the clip shape) nudges token probabilities. The value loss (V − return)²
+     pulls V's numbers toward observed returns. ref and rm stay greyed (no gradient arrows into them).
+  7. **Repeat:** 2 epochs on this batch, then a fresh rollout. π_old refreshes, ref never does, V
+     tracks the new policy (D25).
+  8. **Contrast panel (optional):** GRPO removes V (advantage = group z-score); DPO removes
+     rollout, rm and V. Same layout, boxes fade out, linking D32–D34.
+- Why motion is better than a static figure: the core idea is *dataflow over time*. Which network runs
+  when, which tensors move where, which boxes receive gradients. A static diagram flattens rollout vs
+  scoring vs update into one picture, and that is where the learner's questions came from
+  (D22–D25: "what is the coach", "is V a snapshot").
+- Moving objects and stable anchors: moving: tokens, tensors, reward bars, advantage sweep, gradient
+  arrows. Anchors: four fixed boxes with constant colours and lock icons; a token timeline axis.
+- Canonical source material: Day 15 · 04 Part E (`rollout`, `token_logps`, `values_of`,
+  `score_rollout`, `ppo_rewards`, `gae`, `ppo_policy_loss`; 40 iters, BS 16, 2 epochs, β 0.05,
+  ε 0.2, γ 1, λ 0.95); D21–D25 garlic worked example (the GAE values reproduced in the notebook);
+  Chapter 12 §12.7; InstructGPT (Ouyang et al. 2022); SLP3 §8.4.
+- Evidence status: executable teaching example. Shapes and the one-prompt numbers can come from a
+  real NB04 rollout; the training curve from the reference run (KL 0.095 → 0.318; reward change
+  within ≈1 SE, so do not show a "reward goes up" curve as an effect).
+- Precision risks and required caveats: the value model is a separate network, not a snapshot
+  of the policy (D25); π_old is stored numbers; the reward model is frozen; the KL is per token and
+  enters the reward, not the loss (unlike GRPO's k3-in-loss); the advantage is per token, while the rm
+  score is per answer; value init from rm is a common choice, not a requirement. Don't imply PPO
+  improved the NB04 reward.
+- Dependencies: reuses `ppo-clipping` (Chapter 12) for the clip step; shares colours with
+  CAND-ANIM-034/035; benefits from CAND-ANIM-033 being done first (Mac Studio batch).
+- Suggested destination: lab (Day 15 · 04 Part E), Chapter 12 §12.7 signature figure, X article on
+  RLHF; a static poster version for the book.
+- Next decision: learner review of the storyboard and cast table. Then decide signature film vs.
+  chapter loop + poster. Produce on the Mac Studio.
+
+### CAND-ANIM-037 — KL to the reference: what it measures, how it's estimated, where it enters
+
+- Source: user (2026-10-27, Day 15 · 04 Part E: "we need to address KL understanding by fine
+  description and animation as well") and agent storyboard.
+- Proposed during: Day 15 · 04 Part E–F / Chapter 12.
+- State: suggested; learner priority, a companion to CAND-ANIM-036.
+- Learning objective: the learner can state (1) what KL(π‖π_ref) measures at one token position and
+  over a sequence, (2) why RLHF optimizes E[R] − β·KL, (3) how one sampled token gives a KL
+  estimate (k1, k3) and why k1 can be negative, (4) where PPO vs GRPO put it.
+- Storyboard:
+  1. **One position, two distributions:** bars of π_ref = [0.5, 0.3, 0.2] and π = [0.7, 0.2, 0.1]
+     over three tokens A/B/C; the log-ratio log π/π_ref above each bar (+0.336, −0.405, −0.693).
+  2. **KL = π-weighted average of log-ratios:** bars shrink to π-weighted contributions and sum to
+     0.0851. Morph π back to π_ref → KL → 0. Show the asymmetry (KL(π_ref‖π) ≠ KL(π‖π_ref)).
+  3. **Sequence KL = sum over positions:** a sampled answer's tokens, each with its own
+     position-level gap; the running sum is the per-answer KL.
+  4. **Estimation from samples:** draw tokens from π; each draw gives k1 = log π − log π_ref
+     (negative for B and C). The running mean converges to 0.0851. Then k3 = e^d − d − 1, with
+     d = log π_ref − log π (0.051, 0.095, 0.307, always ≥ 0), also converging to 0.0851 with less
+     spread.
+  5. **Off-policy failure:** sample at temperature 0.6 instead of 1. The k1 mean no longer estimates
+     KL and can go negative (the NB04 bug fixed by `temperature=1.0`).
+  6. **Where it enters:** PPO puts −β·k1 into each token's reward (grey bars of CAND-ANIM-036 step 4);
+     GRPO adds β·mean(k3) to the loss. β dial (0.05 PPO, 0.04 GRPO in NB04).
+  7. **Why it matters:** a slider increases the policy's push on reward. With β = 0, π collapses onto
+     a few high-reward tokens (reward-hacking lead-in, plan P2); with β > 0 it stays near π_ref. Closed form
+     shown: π* ∝ π_ref · exp(R/β) (which links to the DPO derivation).
+- Why motion is better than a static figure: the estimator's convergence, its sign noise, and the
+  temperature failure are processes; the β trade-off is easiest to read as a slider.
+- Moving objects and stable anchors: moving: the π bars, sample draws, running means, the β dial.
+  Anchors: the π_ref bars (never move, since ref is frozen), the true KL line at 0.0851, zero line.
+- Canonical source material: NB04 `ppo_rewards` (k1 per token, into the reward), `grpo_iteration`
+  (k3 in the loss), Predict 12/15 text; reference run logged KL 0.095 → 0.318 (PPO); Schulman,
+  "Approximating KL divergence" (k1/k2/k3); InstructGPT objective; DPO paper §4 (optimal policy).
+- Evidence status: exact computed teaching example (values above checked); NB04 measured KL trace.
+- Precision risks and required caveats: KL is measured *under π's samples* (on-policy); per-sample
+  k1 can be negative though the true KL is ≥ 0; k3 is unbiased for KL(π‖π_ref) only with on-policy
+  samples; PPO-RLHF KL is in the reward (so it also enters GAE), GRPO's is in the loss; the toy
+  three-token vocabulary stands in for 151,936 tokens; the "collapse at β = 0" panel is
+  illustrative, not a measured NB04 result.
+- Dependencies: CAND-ANIM-036 (shares colours and the reward-vector panel); plan P2 (reward
+  hacking); CAND-ANIM-033 for the exp/log intuition.
+- Suggested destination: lab (Day 15 · 04 Part E/F), Chapter 12 (KL-regularized objective), X article.
+- Next decision: learner review. Decide whether the β-collapse panel uses a constructed toy or a
+  small measured β = 0 run on the Spark.
+
+### CAND-ANIM-038 — RL terms for LLMs: article GIF set
+
+- Source: user (2026-10-27, after the D39 glossary: "we might need to create an article about it,
+  with a lot of animations and easy-to-understand examples").
+- Proposed during: Day 15 · 04 Part E; learning note glossary "RL terms in the LLM setting".
+- State: suggested; for X article `X-POST-004` RL terms for LLMs (slot approved 2026-10-27,
+  before `X-POST-005` preference alignment; see `publications/x-articles/README.md`).
+- Learning objective: a reader new to RL can map each term onto text generation, and follow one
+  answer from state/action through reward, return, value, advantage to the policy-gradient update.
+- One running example throughout: "Can dogs eat raw garlic?" → "No · , raw garlic is · toxic · . ·
+  <end>", R = −2.0, V = [0.5, 0.1, 0.0, −1.8, −1.9] (D24; reproduced exactly by NB04 `gae`).
+- GIF list (short loops, one idea each):
+  1. **State and action:** the text grows token by token. The highlighted prefix = state; the next-token
+     bar chart = policy; the sampled bar = action.
+  2. **Trajectory and sparse reward:** a full rollout; zeros under each token, R appears only at
+     `<end>`.
+  3. **Return:** with γ = 1, R copied back to every position; a γ slider (0.9) shows discounting.
+  4. **Value V(s):** from one prefix, fan out many sampled continuations, each with its R; their
+     average = V(s). Repeat at each position, which draws the V curve 0.5 → −1.9.
+  5. **Q vs V → advantage:** at "No, raw garlic is": the fan-out average (V = 0.0) vs continuations
+     starting with "toxic" (Q ≈ −1.8) vs "safe in small amounts" (illustrative Q = +1.0);
+     A = Q − V as signed bars.
+  6. **Baseline:** a prompt where every answer scores ≈ +3: raw R pushes all tokens up; R − V
+     leaves only the differences.
+  7. **TD error and GAE:** δ_t computed as V jumps; the λ slider from 0 (blame at "toxic") to 1
+     (blame spread evenly), the exact NB04 values.
+  8. **Policy gradient:** A_t · ∇log π: probability bars for the next token rise/fall in
+     proportion to A.
+  9. **On-policy, ratio, clipping:** π_old frozen vs π_θ moving; ρ readout; the clip window
+     (reuse `ppo-clipping`).
+  10. **KL and exploration:** reuse CAND-ANIM-037 panels; temperature 1 vs 0.6 sampling.
+- Why motion: each term is defined by a process (sampling, averaging over continuations,
+  propagating backward, updating probabilities). Order of operations is the content.
+- Evidence status: exact arithmetic for the garlic numbers; fan-out averages in GIF 4–5 are
+  illustrative unless replaced by real Qwen3 samples from NB04 (option: measure V by Monte Carlo on
+  the Spark).
+- Precision risks: V and Q are defined for the *current* policy; Q ≈ V(s_{t+1}) only because
+  intermediate rewards are 0 (KL ignored) and γ = 1; GRPO's "advantage" is a per-answer estimate;
+  avoid metaphors (learner rule): label every panel with the term and its formula.
+- Dependencies: CAND-ANIM-036 (PPO four networks), 037 (KL), `ppo-clipping`; shared colours.
+- Suggested destination: X article (RL terms for LLMs), Chapter 12 opener, lab Day 15 · 04 Part E.
+- Next decision: slot decided (X-POST-004, 2026-10-27). Next: storyboard review; produce on the
+  Mac Studio.
+
 ### Approved chapter GIF package — 2026-10-11
 
 - Source: user. After reviewing the fifteen-chapter plan, the learner requested

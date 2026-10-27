@@ -82,6 +82,10 @@ The current inventory is 83 notebooks. The seven [assignment companions](../note
 - [Day12 instruction tuning workbook](../notebooks/day-12/04_instruction_tuning_workbook.ipynb):
   hands-on companion to 03. Fourteen exercises asking for 1–4 key lines each, checked by the tested
   `dongxi_llms.sft_workbook` module (✅/❌ with hints), each followed by a reference solution.
+- [Day15 preference alignment end to end](../notebooks/day-15/04_preference_alignment_end_to_end.ipynb):
+  `spark-gpu`. Nineteen predictions on real Qwen3-0.6B and public HH-RLHF/UltraFeedback data:
+  pair formats and label noise, agent-trajectory masks, a trained reward model, PPO's four networks,
+  per-token rewards, GAE and clipping, GRPO group advantages, and DPO on the same pairs.
 - [Day25 ragged KV and exact recovery](../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb):
   seven cells/five figures; actual compact KV/positions/stops, tiny DPO/RLVR
   pending/completed resume and explicit typed-state identity migration.

@@ -5,6 +5,10 @@ Material prepared as part of the user's complete-course request on 2026-10-04.
 This record describes the syllabus and reference evidence. Learner predictions,
 explanations, and mastery have not yet been assessed in a live lesson.
 
+[Learning from preferences](learning-from-preferences.md) (opened 2026-10-27) is the
+learner's running record of this topic, from SLP3 §8.3 onward: key concepts, knowledge gaps and
+discussions.
+
 ## Deliberate learning arc
 
 1. Derive strength-normalized pair probability and stable soft-target likelihood.

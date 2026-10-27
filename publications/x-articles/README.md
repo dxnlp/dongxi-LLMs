@@ -56,10 +56,18 @@ Learner-approved through X-POST-001 (2026-10-20/21). Later articles in the serie
 follow these unless the learner changes them. Reference package:
 [`x-post-training-001/`](x-post-training-001/).
 
-**Series plan** (revised 2026-10-22: LoRA/QLoRA get their own article):
+**Series plan** (revised 2026-10-22: LoRA/QLoRA get their own article; revised 2026-10-27: RL
+terms article inserted before preference alignment):
 `X-POST-001` why post-training · `X-POST-002` instruction tuning (SFT) ·
-`X-POST-003` LoRA and QLoRA · `X-POST-004` preference alignment · `X-POST-005` RLVR.
+`X-POST-003` LoRA and QLoRA · `X-POST-004` RL terms for LLMs · `X-POST-005` preference
+alignment · `X-POST-006` RLVR.
 Article 1 is beginner-level; later articles go deeper, each on one technique.
+
+`X-POST-004` **RL terms for LLMs** (slot approved by the learner 2026-10-27: before preference
+alignment): state, action, reward, return, value, Q, advantage, baseline, TD/GAE, policy
+gradient, ratio/clipping, KL, exploration, with many GIFs on one running example. Source: learning
+note glossary (`learning_artifacts/day-15-preference-data-and-bradley-terry/learning-from-preferences.md`,
+D39); animation set `CAND-ANIM-038`. Content not yet drafted.
 
 **Text**
 
