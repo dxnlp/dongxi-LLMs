@@ -1718,6 +1718,30 @@ production dependencies.
 - Suggested destination: X article (RL terms for LLMs), Chapter 12 opener, lab Day 15 · 04 Part E.
 - Next decision: slot decided (X-POST-004, 2026-10-27). Next: storyboard review; produce on the
   Mac Studio.
+- Plan revision (2026-10-27, `publications/x-articles/x-post-training-004/visual-plan.md`): the
+  learner set the bar for this set to simple, easy to understand, eye-catching, visual > text, for
+  LLM readers with little RL background. The revised storyboard has 12 figures with one recurring
+  cast (token chips, next-token bars, judge stamp, value line, signed advantage arrows), with 05
+  (V, Q, A fan-out) as the style pilot.
+- Recorded conflict (2026-10-27): the running example above pairs "Can dogs eat raw garlic?" with
+  "No, raw garlic is toxic." and R = −2.0. That answer is correct for dogs, so the negative reward
+  contradicts it. D24's original prompt was "Is it safe to eat raw garlic?", about people. The plan
+  first proposed a capital-of-Australia example. The learner chose a funnier one instead: **Is OpenAI
+  open?**, with open 0.5 / closed 0.3 / partly 0.2, scores 2/5/9, V = 4.3 and A = −2.3 / +0.7 /
+  +4.7. The learning note is unchanged.
+- Production (2026-10-27/28, Mac Studio): the learner approved the style pilot (GIF 05) after three
+  revisions, then asked for the other eleven in the same style. All twelve are rendered to
+  `publications/x-articles/x-post-training-004/assets/`, with source in
+  `visuals/animations/projects/post-training-rl-terms/`.
+- Review (2026-10-28): the learner reviewed the figures one by one.
+  - 05: revised so that V, Q and A read from position: the state sits on the V line, and samples
+    of one branch score differently, so Q is an average.
+  - 06–12: redone on 05's frame with less text. The term map became the 05 picture with the core
+    terms placed on it.
+  - 13: the old five-card map, kept as a quick-reference sheet.
+  All thirteen figures are approved. Review log: `publications/x-articles/x-post-training-004/README.md`.
+- Use (2026-10-28/29): all thirteen GIFs went into the X-POST-004 Chinese article, which the
+  learner published.
 
 ### Approved chapter GIF package — 2026-10-11
 

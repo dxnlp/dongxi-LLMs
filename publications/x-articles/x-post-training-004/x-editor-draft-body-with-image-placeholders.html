@@ -1,0 +1,118 @@
+<h2>One score, thousands of tokens</h2>
+<p>In January 2025, DeepSeek reported DeepSeek-R1-Zero, a model trained with reinforcement learning (RL) directly on a base model, without supervised fine-tuning first. Its reward came from rules: one rule checks whether the final answer is correct, another checks that the reasoning is placed between think tags. Over thousands of RL steps, its pass@1 on the AIME 2024 math competition rose from 15.6% to 71.0%, and to 86.7% with majority voting. Its responses also grew longer during training: the model learned to spend more tokens on reasoning.</p>
+<p>[IMAGE 01]</p>
+<p>A rule-based check produces one number for a whole response, and the response can be thousands of tokens long. Training, however, changes the probability of each token. One question sits under all of RL for LLMs:</p>
+<blockquote>
+<p>A judge gives one score to a whole answer. Which tokens should become more likely, and which less?</p>
+</blockquote>
+<p>RL has its own vocabulary: policy, state, action, reward, return, value, advantage, baseline, TD error, GAE, clipping, KL. Each term is one piece of the answer to that question. This article goes through them in order on a single running example, so that the next two articles, on preference alignment and on RL with verifiable rewards, can use them without stopping to define them. It is the fourth article in our post-training series; the previous one covered LoRA and QLoRA.</p>
+<h2>The running example</h2>
+<p>The prompt is <em>Is OpenAI open?</em> The name says open. The accurate answer, as of this writing, is partly: OpenAI has released open-weight models, gpt-oss-120b and gpt-oss-20b under the Apache 2.0 license, while its flagship models are available only through its API and apps.</p>
+<p>Suppose the model has written <em>OpenAI is</em> and must choose the next token. Its favorite is the naive one:</p>
+<ul>
+<li><em>open</em>, probability 0.5, continued as <em>It's in the name.</em> The judge gives 2 out of 10 on average.</li>
+<li><em>closed</em>, probability 0.3, which misses the open-weight models. The judge gives 5 on average.</li>
+<li><em>partly</em>, probability 0.2, continued as <em>some open weights.</em> The judge gives 9 on average.</li>
+</ul>
+<p>All numbers in this article are illustrative. The arithmetic on them is exact.</p>
+<h2>The loop: agent, environment, reward</h2>
+<p>In RL, an <strong>agent</strong> acts, an <strong>environment</strong> responds, and a <strong>reward</strong> measures how well the agent did. For an LLM:</p>
+<ul>
+<li>The agent is the model. Its next-token distribution is the <strong>policy</strong>, written π_θ, where θ are the weights. Training changes θ and so changes the policy.</li>
+<li>The environment is everything outside the model: the prompts it receives and the judge that scores its answers.</li>
+<li>The <strong>judge</strong> is the part of the environment that scores a finished answer. It can be a reward model trained on human preference pairs (RLHF, the topic of the next article), a rule-based verifier like R1-Zero's (RLVR, the article after), unit tests that run generated code, or another LLM grading against a rubric. This article writes judge so that every term applies to all of them.</li>
+</ul>
+<p>The judge belongs to the environment because the model cannot change it. A reward model is frozen during RL, like the prompt set.</p>
+<p>One round of the loop: the environment gives a prompt, the model writes an answer, the judge returns a score, and the score updates the policy. The next round starts with the updated model.</p>
+<p>[IMAGE 02]</p>
+<h2>State, action, trajectory</h2>
+<p>Inside one answer, RL works token by token.</p>
+<ul>
+<li>The <strong>state</strong> is everything the model sees before it writes the next token: the prompt plus the tokens written so far. Here, <em>Is OpenAI open?</em> plus <em>OpenAI is</em>.</li>
+<li>An <strong>action</strong> is the next token. The policy gives every candidate a probability (open 0.5, closed 0.3, partly 0.2), and sampling picks one.</li>
+<li>The chosen token extends the state, and the process repeats until the answer ends. The full answer is a <strong>trajectory</strong>, also called a rollout or an episode.</li>
+</ul>
+<blockquote>
+<p>An LLM is a policy: the prompt plus the tokens so far is the state, and the next token is the action.</p>
+</blockquote>
+<p>[IMAGE 03]</p>
+<h2>Reward and return</h2>
+<p>Say the model sampled <em>open</em> and finished with <em>OpenAI is open. It's in the name.</em> The judge reads the whole answer and gives 2.</p>
+<p>The <strong>reward</strong> is the score attached to each step. In LLM RL, every token gets reward 0 except the last one, which gets the judge's score. This is a <strong>sparse</strong>, or delayed, reward. A prefix has no correct score: <em>OpenAI is</em> can still end well or badly. Scoring every step would need a process reward model trained on step-level labels. The DeepSeek-R1 report lists the problems its authors found with that approach: a step is hard to define in general reasoning, judging an intermediate step is hard to automate and hard to label by hand at scale, and a learned step judge invites reward hacking. A score for the finished answer is cheap, harder to game, and leaves the model free to find its own reasoning path. R1-Zero found longer reasoning on its own.</p>
+<p>The <strong>return</strong> G at a token is the sum of all rewards from that token to the end. RL in general multiplies later rewards by a discount factor γ below 1, which matters for tasks that run on for a long time. An LLM answer ends, and its score belongs to the whole answer, so LLM RL uses γ = 1, no discount. With γ below 1, an early token would receive less of the score even when it decides the answer, as <em>open</em> does here, and shorter answers would be favored.</p>
+<p>With γ = 1 and one reward at the end, the return at every position equals the final score: 2 for <em>OpenAI</em>, 2 for <em>is</em>, 2 for <em>open</em>, 2 for <em>name</em>.</p>
+<p>[IMAGE 04]</p>
+<p>The return alone therefore cannot tell which token was good or bad. Every token of this answer carries the same 2, and the rest of the vocabulary exists to split it.</p>
+<p>Sparse rewards have a second cost. A judge that checks only the outcome cannot see how the outcome was reached. <em>OpenAI is partly. It's in the name.</em> has the right verdict for the wrong reason, and a judge that reads only the verdict would give it full marks. Lucky guesses, correct numbers from flawed derivations and drift into unreadable text pass the same way. DeepSeek reported that R1-Zero's reasoning had poor readability and mixed languages; DeepSeek-R1 added a small amount of supervised cold-start data and a language-consistency reward. Training still tends toward sound reasoning, because each update follows the average over many samples and sound reasoning succeeds more often than luck. That is a statistical tendency, and readability is rewarded only if the reward asks for it.</p>
+<h2>Value, Q and advantage</h2>
+<p>Return to the state <em>OpenAI is</em>. Let the model continue from there many times and have the judge score every finished answer. The figure shows ten of them. Following the policy's probabilities, 5 start with <em>open</em>, 3 with <em>closed</em> and 2 with <em>partly</em>. Answers with the same first token still continue differently, so their scores vary:</p>
+<ul>
+<li>the 5 answers that start with <em>open</em> score 3, 1, 2, 1 and 3;</li>
+<li>the 3 answers that start with <em>closed</em> score 5, 4 and 6;</li>
+<li>the 2 answers that start with <em>partly</em> score 10 and 8.</li>
+</ul>
+<p>Three quantities follow from these ten scores. In the notation, s is the state, here <em>OpenAI is</em>, and a is the action, the next token: here <em>open</em>, <em>closed</em> or <em>partly</em>.</p>
+<ul>
+<li>The <strong>action value</strong> Q(s, a) is the average score when the model, in state s, writes token a first and then writes as usual. Group the answers by their first token and average each group: Q(open) = (3 + 1 + 2 + 1 + 3) / 5 = 2, Q(closed) = (5 + 4 + 6) / 3 = 5, Q(partly) = (10 + 8) / 2 = 9. The scores of 2, 5 and 9 in the running example are these averages.</li>
+<li>The <strong>value</strong> V(s) is the average score when the model, in state s, writes as it usually does, with no token fixed. Average all ten scores: (3 + 1 + 2 + 1 + 3 + 5 + 4 + 6 + 10 + 8) / 10 = 4.3. The same number is the probability-weighted average of the three Q values: V = 0.5 × 2 + 0.3 × 5 + 0.2 × 9 = 4.3.</li>
+<li>The <strong>advantage</strong> A(s, a) = Q(s, a) − V(s) is the average score after writing token a in state s, minus the average with no token fixed: how much better or worse writing a is than what the model usually does. For example, A(open) = Q(open) − V = 2 − 4.3 = −2.3: answers that start with <em>open</em> score 2.3 below the average. Likewise A(closed) = 5 − 4.3 = +0.7 and A(partly) = 9 − 4.3 = +4.7.</li>
+</ul>
+<p>[IMAGE 05]</p>
+<p>The figure puts the three in one picture. Ten sampled answers land at their own scores. The dots of one branch fall to their average, which is that branch's Q, and all ten averaged give V. The state sits at the height of V = 4.3, and the arrow from the V line to each Q is the advantage.</p>
+<p>The advantage is the number training acts on. Four of its properties matter.</p>
+<p><strong>It answers what a raw score cannot.</strong> The judge gave <em>open</em> a 2. Whether 2 is good depends on what the model usually scores at this point. The reward is an absolute score; the advantage compares it with the model's own expectation at this state.</p>
+<p><strong>Its sign is the direction, its size the amount.</strong> A above 0 means make this token more likely; A below 0 means make it less likely. A larger |A| means a larger change.</p>
+<p><strong>It is relative to the current model.</strong> <em>closed</em> gets +0.7 although it is a weaker answer than <em>partly</em>, because it beats the model's current average of 4.3. Once the model improves and its average passes 5, the same <em>closed</em> gets a negative advantage.</p>
+<p><strong>Its probability-weighted average is zero.</strong> 0.5 × (−2.3) + 0.3 × 0.7 + 0.2 × 4.7 = −1.15 + 0.21 + 0.94 = 0. An update cannot make every token more likely. It moves probability from below-average tokens to above-average ones.</p>
+<blockquote>
+<p>The advantage is how much better this token is than what the model usually writes here.</p>
+</blockquote>
+<p>Algorithms differ in how they obtain V. PPO trains a second network, the critic, to predict it. GRPO, the algorithm behind R1-Zero, samples a group of answers to the same prompt and uses their average score. The next article covers both.</p>
+<h2>Baseline</h2>
+<p>Training never sees Q directly. It sees one sampled answer and its score R, and estimates that answer's advantage as R minus a <strong>baseline</strong>, usually V. The five <em>open</em> answers in the figure scored 3, 1, 2, 1 and 3, so R − V gives −1.3, −3.3, −2.3, −3.3 and −1.3. Their average is −2.3, which is Q − V.</p>
+<p>The judge's scores here are all positive. Measured from 0, every sampled answer is pushed up, <em>open</em> included. It is pushed up less than the others, and the right direction appears only after many samples offset each other. Measured from V, each sample already points the right way: below-average answers go down and above-average answers go up.</p>
+<p>[IMAGE 06]</p>
+<p>As long as the baseline does not depend on which token was sampled, subtracting it leaves the average update unchanged; it changes only the noise. In a simulation of this example, the average update was the same with a baseline of 0 and with V, and its variance was about five times smaller with V.</p>
+<blockquote>
+<p>A baseline changes the noise of the update, not its direction.</p>
+</blockquote>
+<p>GRPO's group average and PPO's critic are both baselines in this sense.</p>
+<h2>Credit assignment: TD error and GAE</h2>
+<p>The advantage so far belongs to one decision, the token after <em>OpenAI is</em>. A real answer has many tokens, and each needs its own share of the score. Deciding which tokens earned it is <strong>credit assignment</strong>.</p>
+<p>Follow V along the sampled answer. Before <em>open</em>, V = 4.3. Once <em>open</em> is written, the expected score is 2, because answers that say <em>open</em> score about 2. After that nothing changes until the end.</p>
+<p>The <strong>TD error</strong> (temporal-difference error) measures this change at each token: δ = r + V(next state) − V(current state). It is 0 everywhere except at <em>open</em>, where it is 0 + 2 − 4.3 = −2.3. The token where the expected score dropped takes the blame. <em>It's in the name</em> takes none: by then the outcome was set.</p>
+<blockquote>
+<p>Credit goes to the token where the expected score changed.</p>
+</blockquote>
+<p>[IMAGE 07]</p>
+<p>This depends on an accurate V, and in practice V is a learned estimate. <strong>GAE</strong> (generalized advantage estimation) adds a dial, λ, between 0 and 1. With λ = 0, each token's advantage is its own TD error, and the blame stays on <em>open</em>. With λ = 1, each token's advantage is the final score minus V at that token, so <em>OpenAI</em>, <em>is</em> and <em>open</em> all get −2.3. That spreads blame onto tokens that did nothing wrong, since every answer starts with <em>OpenAI is</em>; over many samples this noise averages out. λ = 0 trusts V, λ = 1 trusts only the final score, and PPO commonly uses a value near 0.95.</p>
+<p>GRPO has no per-token V. It gives every token of an answer the same advantage, the answer's score compared with its group. In our answer, all ten tokens would get the same negative value, <em>It's in the name</em> included.</p>
+<h2>Policy gradient</h2>
+<p>With an advantage for every token, the update can be stated in one line: raise the log-probability of tokens with A above 0 and lower it for tokens with A below 0, in proportion to A. This is the <strong>policy gradient</strong>. At our state, it moves each next-token logit by an amount proportional to π × A.</p>
+<p>[IMAGE 08]</p>
+<p>Two exact update steps, with an illustrative step size, take the probabilities from 0.50 / 0.30 / 0.20 to 0.15 / 0.36 / 0.49, then to 0.04 / 0.11 / 0.86. V rises from 4.3 to 6.5 to 8.3. In the first step <em>closed</em> rises, since 5 beats 4.3. Once V passes 5, <em>closed</em> is below average and falls. The advantage is measured against the current model, so the bar keeps rising as the model improves.</p>
+<h2>Exploration</h2>
+<p>An update can use only the answers the model actually wrote. A model that always takes its most likely token, greedy decoding, writes <em>open</em> every time. It sees only scores near 2, its average is 2, the advantage of <em>open</em> is 0, and nothing changes. It never finds out that <em>partly</em> scores 9.</p>
+<p>Sampling at temperature 1 sometimes writes <em>closed</em> or <em>partly</em>. Those samples show that the other branches score higher, and they are what move the policy. This is <strong>exploration</strong>: the policy has to try less likely tokens, so RL training samples its answers.</p>
+<p>[IMAGE 09]</p>
+<h2>Small steps: ratio, clipping and KL</h2>
+<p>Two more mechanisms keep each update small.</p>
+<p><strong>Ratio and clipping.</strong> The policy gradient assumes the answers came from the current policy, which is called on-policy data. Sampling is expensive, so PPO-style training samples a batch with the current model, keeps a frozen copy π_old, and takes several update steps on that batch. After a few steps the model π has moved away from π_old. The <strong>importance ratio</strong> ρ = π / π_old measures how far, for each sampled token, and reweights its contribution. <strong>Clipping</strong> stops the update once ρ leaves the window from 1 − ε to 1 + ε. With ε = 0.2 and π_old(partly) = 0.2, the advantage of +4.7 can raise π(partly) to 0.24 on this batch and no further. Further progress needs fresh samples.</p>
+<p>[IMAGE 10]</p>
+<p><strong>KL penalty.</strong> A judge is reliable only near the kind of answers it was built on. Suppose the judge likes flattery: it gives <em>partly. Some open weights.</em> a 9 and <em>partly. What a brilliant question!</em> a 9.6. The reference model π_ref, the SFT model before RL, writes the flattering version 5% of the time. With nothing to stop it, RL would push the policy toward flattery. The <strong>KL penalty</strong> subtracts β × KL(π‖π_ref) from the reward, where KL measures how far the policy's distribution has moved from the reference. With β = 1, as the policy's share of flattery drifts from 5% to 90%, the judge's average rises only from 9.03 to 9.54, while the KL term reaches 2.38 and R − β × KL falls from 9.03 to 7.16. Drifting toward flattery lowers the objective, so the policy stays near the reference. Real systems compute KL token by token and use a much smaller β; β = 1 here makes the effect visible.</p>
+<p>[IMAGE 11]</p>
+<p>The flattering answer is a small case of <strong>reward hacking</strong>: the policy raises its score by exploiting the judge's preference instead of improving the answer. The KL penalty limits how far that can go.</p>
+<h2>Summary</h2>
+<p>The whole loop fits on one picture: the state, the policy's branches, the actions, the rewards, V, Q, the advantages, and the update that reshapes the branches.</p>
+<p>[IMAGE 12]</p>
+<p>[IMAGE 13]</p>
+<ul>
+<li>The LLM is the <strong>policy</strong>. The prompt plus the tokens so far is the <strong>state</strong>, the next token is the <strong>action</strong>, and the whole answer is a <strong>trajectory</strong>.</li>
+<li>The <strong>judge</strong> scores only the finished answer. The <strong>reward</strong> is sparse, and with γ = 1 the <strong>return</strong> at every token is that one score.</li>
+<li><strong>V</strong> is the average score from a state, <strong>Q</strong> the average after one specific token, and the <strong>advantage</strong> A = Q − V says whether that token beat the model's usual choice.</li>
+<li>A <strong>baseline</strong> such as V or a group average keeps the direction of the update and reduces its noise.</li>
+<li>The <strong>TD error</strong> and <strong>GAE</strong> assign credit to the tokens where the expected score changed.</li>
+<li>The <strong>policy gradient</strong> raises tokens with positive advantage and lowers tokens with negative advantage. <strong>Exploration</strong> supplies the samples it learns from.</li>
+<li>The <strong>ratio</strong> and <strong>clipping</strong> limit the updates on one batch, and the <strong>KL penalty</strong> keeps the policy near the reference, where the judge can be trusted.</li>
+</ul>
+<p>The next article covers preference alignment: how a reward model is trained from human preference pairs, and how PPO, GRPO and DPO use it. In this article's terms, PPO learns V with a critic, GRPO replaces V with a group average, and DPO skips the RL loop and learns from preference pairs directly.</p>

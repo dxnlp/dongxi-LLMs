@@ -67,7 +67,8 @@ Article 1 is beginner-level; later articles go deeper, each on one technique.
 alignment): state, action, reward, return, value, Q, advantage, baseline, TD/GAE, policy
 gradient, ratio/clipping, KL, exploration, with many GIFs on one running example. Source: learning
 note glossary (`learning_artifacts/day-15-preference-data-and-bradley-terry/learning-from-preferences.md`,
-D39); animation set `CAND-ANIM-038`. Content not yet drafted.
+D39); animation set `CAND-ANIM-038`. Thirteen GIFs approved 2026-10-28; Chinese version published by
+the learner (reported 2026-10-29); English not transferred (`x-post-training-004/`).
 
 **Text**
 
@@ -78,6 +79,12 @@ D39); animation set `CAND-ANIM-038`. Content not yet drafted.
 - Chinese terms: on first use write the English term with the Chinese in
   parentheses, e.g. `pretraining（预训练）`, `supervised fine-tuning（SFT，监督微调）`;
   afterwards Chinese alone is fine.
+- Core technical terms stay in English with no Chinese gloss (learner, 2026-10-28, X-POST-004):
+  policy, state, action, reward, return, value, advantage, baseline, TD error, GAE, clipping, KL,
+  and compounds built from them (policy gradient, action value, reward model, sparse reward,
+  importance ratio, reward hacking, KL penalty), plus trajectory, exploration, credit assignment,
+  agent, environment and judge. Other
+  terms keep the English (中文) first-use rule.
 - Open with a concrete, verified, eye-catching example (article 1: OpenAI's
   GPT-3 vs InstructGPT moon-landing comparison), then the reader's question.
 - Quote blocks (`>`) only for a few key sentences, about 4–5 per article. Use quotation
