@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>一颗 token 的诞生：从你的问题到模型的回答</title><style>*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;background:#fff;color:#111827;font-family:Arial,"Helvetica Neue",sans-serif}
+body.zh{font-family:"PingFang SC","Songti SC",STSong,serif}
+main{max-width:860px;margin:36px auto 110px;padding:0 28px}
+nav{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#64748b;margin-bottom:18px}
+nav a{color:#2563eb;text-decoration:none;border:1px solid #cbd5e1;border-radius:6px;padding:5px 10px}
+header img{width:100%;height:auto;display:block;border-radius:10px}
+h1{font-size:42px;line-height:1.25;font-weight:700;margin:34px 0 30px}
+h2{font-size:29px;line-height:1.4;margin:58px 0 22px}
+h3{font-size:23px;line-height:1.4;margin:40px 0 16px}
+p,li{font-size:19px;line-height:1.85;overflow-wrap:anywhere}
+p{margin:0 0 20px} ul{padding-left:24px;margin:0 0 22px} li{margin-bottom:8px}
+body.zh p,body.zh li{font-size:19px;line-height:1.95}
+blockquote{margin:26px 0;padding:4px 0 4px 20px;border-left:4px solid #cbd5e1;color:#1f2937}
+blockquote p{margin:8px 0;font-size:20px}
+figure{margin:34px -10px}
+figure img{width:100%;height:auto;display:block;border:1px solid #e2e8f0;border-radius:10px}
+figcaption{font-size:15px;line-height:1.75;color:#64748b;padding:12px 8px}
+.note{font-size:14px;color:#64748b;border-top:1px solid #e2e8f0;margin-top:60px;padding-top:16px}
+@media(max-width:600px){main{padding:0 16px;margin-top:16px}h1{font-size:30px}h2{font-size:24px;margin-top:42px}
+h3{font-size:20px}p,li,body.zh p,body.zh li{font-size:17px}figure{margin:26px -6px}}</style></head><body class="zh"><main><nav><span>X-TOKEN-001</span><a href="../review.html">English</a></nav><header><img src="../assets/cover-token-birth.png" width="2000" height="800" alt="一颗 token 的诞生：从你的问题到模型的回答"></header><h1>一颗 token 的诞生：从你的问题到模型的回答</h1><article><p>问聊天模型一句 <em>Is OpenAI open?</em>，回答会一段一段地出现：<em>Partly. Some weights are open.</em></p>
+<p>这句回答只有五个英文单词，模型却要为它重复运行同一套流程。以小型开源模型 Qwen3-0.6B 为例，这句回答一共 9 个片段：前 8 个是文字，最后 1 个表示回答结束。</p>
+<p>每写一个片段，模型都要完整运行一次，经过全部 5.96 亿个 weights（权重）。每次运行，它给词表里的 151,936 个条目各打一个分，最后只留下一个。写完这句回答，一共算了 1,367,424 个分数。</p>
+<p>这些片段叫 <strong>token</strong>。本文的标题在 Qwen3 的词表里就是 4 个 token：<code>一颗</code>、<code>␣token</code>、<code>␣的</code>、<code>诞生</code>（␣ 表示空格）。</p>
+<p>下面跟着一次真实的请求走一遍，从你按下回车，到回答出现在屏幕上。文中的 token 和编号都取自 Qwen3 的真实词表。今天的聊天模型都用同一个循环生成文字，差别在于模型大小、词表和包裹问题的模板。</p>
+<figure><img src="../assets/01-overview.gif" loading="lazy" alt="整个循环：prompt 只做一次 tokenize；每次运行给出 logits，挑出一个 token 接到序列末尾，它的文字加入回答。9 次运行写完回答，结束 token 让循环停止。"><figcaption>整个循环：prompt 只做一次 tokenize；每次运行给出 logits，挑出一个 token 接到序列末尾，它的文字加入回答。9 次运行写完回答，结束 token 让循环停止。</figcaption></figure>
+<blockquote>
+<p>语言模型并不直接写字。它每运行一次，只给下一个 token 打一轮分；外面一个简短的循环，把这些分数变成文字。</p>
+</blockquote>
+<h2>六个步骤</h2>
+<ol>
+<li><strong>chat template：</strong> 应用把你的问题套进一个固定格式。</li>
+<li><strong>tokenize：</strong> 套好格式的文字变成一串数字。</li>
+<li><strong>prefill：</strong> 模型一次读完这串数字，给回答的第一个 token 打分。</li>
+<li><strong>挑选：</strong> 从分数中选出一个 token。</li>
+<li><strong>decode：</strong> 选出的 token 送回模型，模型给下一个 token 打分。第 4、5 步反复进行，直到出现结束 token。</li>
+<li><strong>detokenize：</strong> 数字变回文字。</li>
+</ol>
+<p>第 1 到 3 步，每次请求只做一遍。第 4 到 6 步，回答里有几个 token 就做几遍。</p>
+<h2>第一步：给问题套上格式</h2>
+<p>你输入的问题，模型看不到原样。应用会先把它套进 <strong>chat template</strong>：模型在训练成助手时一直使用的固定文本格式。Qwen 的格式如下：</p>
+<pre><code>&lt;|im_start|&gt;user
+Is OpenAI open?&lt;|im_end|&gt;
+&lt;|im_start|&gt;assistant
+</code></pre>
+<p><code>&lt;|im_start|&gt;</code> 和 <code>&lt;|im_end|&gt;</code> 是 <strong>special token</strong>，也就是词表里的单个条目，用来标出一轮对话的开始和结束。</p>
+<p>最后一行开启助手的发言，然后停在这里。模型的回答从下一行开始写。关闭思考模式时，Qwen3 还会在这里插入一个空的思考块，图中略去。</p>
+<figure><img src="../assets/02-chat-template.gif" loading="lazy" alt="问题被套进 chat template（琥珀色部分）。回答从 assistant 下面的空行开始。"><figcaption>问题被套进 chat template（琥珀色部分）。回答从 assistant 下面的空行开始。</figcaption></figure>
+<blockquote>
+<p>模型读到的是套好格式的整段文本，你输入的问题只是其中一行。</p>
+</blockquote>
+<p>每个模型家族都有自己的模板。用错了模板，模型看到的是训练中从未见过的格式，回答质量就会下降。自己部署的模型效果不如官方演示，这是常见原因之一。</p>
+<h2>第二步：文字变成数字</h2>
+<p>模型只能对数字做计算，所以文字要先变成数字。这一步由 <strong>tokenizer</strong> 完成。</p>
+<p>tokenizer 依据的是 <strong>vocabulary（词表）</strong>：一张固定的文本片段清单，每个片段有一个行号，叫 <strong>token ID</strong>。Qwen3 的词表有 151,669 个条目。</p>
+<p>tokenizer 把套好格式的问题切成词表中已有的片段，再把每个片段换成它的编号。我们的问题变成了 13 个 token：</p>
+<pre><code>151644 872 198 3872 5264 15469 1787 30 151645 198 151644 77091 198
+</code></pre>
+<figure><img src="../assets/03-tokenize.gif" loading="lazy" alt="文字被切成词表里的条目，每个条目换成它的 token ID。token 和编号取自 Qwen3 的真实词表。"><figcaption>文字被切成词表里的条目，每个条目换成它的 token ID。token 和编号取自 Qwen3 的真实词表。</figcaption></figure>
+<blockquote>
+<p>从这一步开始，模型看到的只有编号，没有文字。</p>
+</blockquote>
+<p>切分的结果有几个特点：</p>
+<ul>
+<li>一个 token 可以是整个单词、单词的一部分、标点或特殊标记。<em>OpenAI</em> 是两个 token：<code>␣Open</code> 和 <code>AI</code>。</li>
+<li>单词前面的空格，归在这个单词的 token 里。<code>␣open</code>（1787）和 <code>open</code> 是两个不同的条目。</li>
+<li>常见的中文词往往是一个条目，比如 开放 是 100713 号 token。</li>
+<li>换行也是 token（198），模板里用了三次。</li>
+</ul>
+<p>词表在训练开始前就已确定。模型学习时它不变，回答问题时它也不变。</p>
+<h2>第三步：模型一次读完整个 prompt</h2>
+<p><strong>权重</strong>就是模型本身：5.96 亿个在训练中确定的数字，回答问题时保持不变。13 个编号要经过三个阶段。</p>
+<p><strong>embedding。</strong> 每个编号从一张表里取出对应的一行。这张表有 151,936 行，每行 1,024 个数字。tokenizer 用到其中 151,669 行，其余是不用的填充行。这一张表就有 1.556 亿个权重，占整个模型的 26%。</p>
+<p><strong>28 层。</strong> 13 个向量接着经过 28 层。在每一层里，每个位置都会查看它前面的位置（这叫 attention），再更新自己的向量。13 个位置是一起通过的，只需要一次运行。这个阶段叫 <strong>prefill</strong>。</p>
+<p><strong>LM head。</strong> 只有最后一个位置的向量继续往下走。LM head 把它和词表里的每个条目比较，给每个条目一个分数，一共 151,936 个，叫 <strong>logits</strong>。在 Qwen3-0.6B 里，LM head 直接复用 embedding 表。</p>
+<p>一路上，每一层都为每个位置存下两个向量：<strong>key</strong> 和 <strong>value</strong>，合起来叫 <strong>KV cache</strong>。后面的 token 还要用到它们。存下来以后，prompt 就不用再算第二遍。</p>
+<figure><img src="../assets/04-prefill.gif" loading="lazy" alt="每个编号从 embedding 表取出一行。13 个位置一起经过各层，把 key 和 value 留在 KV cache 里。只有最后一个位置进入 LM head，得到 151,936 个 logits。图中用 3 层代表 28 层。"><figcaption>每个编号从 embedding 表取出一行。13 个位置一起经过各层，把 key 和 value 留在 KV cache 里。只有最后一个位置进入 LM head，得到 151,936 个 logits。图中用 3 层代表 28 层。</figcaption></figure>
+<blockquote>
+<p>一次运行，给词表里的每个 token 各打一个分。分数最高的只是候选，还没有被选中。</p>
+</blockquote>
+<h2>第四步：151,936 个分数变成一个 token</h2>
+<p>logits 是原始分数。从它们得到一个 token，只需要几步算术，不涉及任何权重：</p>
+<ul>
+<li><strong>softmax</strong>：把 logits 变成概率，全部为正，加起来等于 1。</li>
+<li><strong>temperature</strong>：在 softmax 之前，先把 logits 除以它。小于 1，概率更集中在最高的 token 上；大于 1，概率分布更平。</li>
+<li><strong>top-p</strong>：保留概率加起来达到 p（这里是 0.9）的最小一组 token，其余丢掉。</li>
+<li><strong>greedy decoding</strong> 或 <strong>sampling</strong>：前者取概率最大的 token，后者按概率随机抽一个。</li>
+</ul>
+<p>在我们的示意中，top-p 之后剩下三个 token：<code>Part</code> 占 57%，<code>␣Open</code> 占 29%，<code>No</code> 占 14%。</p>
+<p>greedy decoding 每次都写 <code>Part</code>。sampling 多数时候写 <code>Part</code>，有时写 <code>␣Open</code>，偶尔写 <code>No</code>。</p>
+<figure><img src="../assets/05-pick-token.gif" loading="lazy" alt="softmax、temperature、top-p 0.9；greedy decoding 每次都选 Part，sampling 依次抽到 Part、Open、Part、No、Part。数字为示意值。"><figcaption>softmax、temperature、top-p 0.9；greedy decoding 每次都选 Part，sampling 依次抽到 Part、Open、Part、No、Part。数字为示意值。</figcaption></figure>
+<p>这些设置由应用或 API 调用决定，与模型的权重无关。</p>
+<blockquote>
+<p>同一组权重，可以每次给出同样的回答，也可以每次给出不同的回答，区别只在最后怎么挑。</p>
+</blockquote>
+<h2>第五步：循环</h2>
+<p>选出的 token 接到序列末尾，模型再运行一次。这个阶段叫 <strong>decode</strong>。</p>
+<p>decode 时，模型不会重读整个 prompt，只有最新的那个 token 经过 28 层。在每一层里，它读取 KV cache 中已有的 key 和 value，之前的每个位置各一组，再把自己的一组存进去。</p>
+<p>LM head 给下一个 token 打分，选出一个，再送回模型。如此反复。</p>
+<p>模型选出结束 token <code>&lt;|im_end|&gt;</code>，或者达到应用设定的长度上限，循环就停止。在我们的例子里，prefill 给出了 <code>Part</code>，接下来 8 次 decode 依次给出 <code>ly</code>、<code>.</code>、<code>␣Some</code>、<code>␣weights</code>、<code>␣are</code>、<code>␣open</code>、<code>.</code>，最后是 <code>&lt;|im_end|&gt;</code>。9 个 token，9 次运行。</p>
+<figure><img src="../assets/06-decode-loop.gif" loading="lazy" alt="每次只送入最新的 token。它在每一层读取 KV cache（绿色弧线），再存入自己的 key 和 value；选出的 token 作为下一次的输入送回。"><figcaption>每次只送入最新的 token。它在每一层读取 KV cache（绿色弧线），再存入自己的 key 和 value；选出的 token 作为下一次的输入送回。</figcaption></figure>
+<blockquote>
+<p>prefill 一次处理整个 prompt；decode 每次只处理一个 token，每一次都要把模型的权重重新读一遍。</p>
+</blockquote>
+<h2>第六步：数字变回文字</h2>
+<p>输出的编号沿着同一张词表反向查回去：</p>
+<ul>
+<li>每个编号换回它的文本片段；</li>
+<li>去掉结束 token；</li>
+<li>开头的空格留在各自的单词前；</li>
+<li>片段拼成完整的回答。</li>
+</ul>
+<p>应用在每个 token 到达时就做这一步，所以回答是一点一点出现的。</p>
+<p>有些字符，包括许多中文字，会跨越不止一个 token。应用会先暂存不完整的字节，等这个字完整了再显示。</p>
+<figure><img src="../assets/07-detokenize.gif" loading="lazy" alt="编号反向查词表；去掉结束 token，恢复空格，片段拼成回答。"><figcaption>编号反向查词表；去掉结束 token，恢复空格，片段拼成回答。</figcaption></figure>
+<blockquote>
+<p>同一张词表用了两次：进来时把文字换成编号，出去时把编号换回文字。</p>
+</blockquote>
+<h2>这个循环能解释什么</h2>
+<p>使用聊天模型时注意到的不少现象，都能从这个循环得到解释。</p>
+<p><strong>回答一点一点出现。</strong> 模型每运行一次产生一个 token，应用收到一个就显示一个。</p>
+<p><strong>同一个问题，回答每次不同。</strong> 聊天应用通常用 sampling。调低 temperature，或者改用 greedy decoding，回答会更稳定。</p>
+<p><strong>等待分两种。</strong> prompt 很长时，第一个字出来得慢，因为 prefill 要把它全部处理一遍。回答很长时，整体完成得慢，因为 decode 每个 token 都要单独运行一次。速度指标也分这两种：首个 token 的等待时间，和每秒生成的 token 数。</p>
+<p><strong>数字母很难。</strong> 问 <em>How many r are in strawberry?</em> 时，Qwen3 把 <code>␣strawberry</code> 当作一个 token，编号 72600。输入里没有一个字母，模型只能凭训练中学到的、关于 72600 号 token 的拼写知识来回答。如果前面没有空格，<code>strawberry</code> 会被切成三个 token：<code>str</code>、<code>aw</code>、<code>berry</code>。</p>
+<p><strong>额度和价格按 token 计算。</strong> 上下文长度、API 价格和速率限制，计量单位都是 token，字数或词数只能粗略换算。一句话占多少 token，取决于语言和词表。</p>
+<p><strong>聊天时模型不会学习。</strong> 权重始终不变。你的对话只存在于两个地方：应用每次发送的 token 序列，以及由它算出的 KV cache。</p>
+<blockquote>
+<p>回答里的每一个 token，都出自同一个循环：给整个词表打分，挑一个，接上，再来一遍。</p>
+</blockquote>
+<h2>小结</h2>
+<ul>
+<li>应用把问题套进 chat template，tokenizer 再用固定的词表把它变成 token ID。</li>
+<li>prefill 一次把整个 prompt 送进模型，填好 KV cache，并给出 logits：词表里每个条目一个分数。</li>
+<li>softmax、temperature、top-p，加上 greedy decoding 或 sampling，把 logits 变成一个 token。这一步不涉及权重。</li>
+<li>decode 把每个新 token 送回模型，每个 token 运行一次，直到出现结束 token。</li>
+<li>detokenize 把编号变回文字，到一个 token，显示一个。</li>
+</ul>
+</article><p class="note">本地审阅页面，尚未上传或发布。token、编号和模型规模取自 Qwen3-0.6B 的真实文件；回答是选定的，概率为示意值。</p></main></body></html>

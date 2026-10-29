@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>The Birth of a Token: What Happens Between Your Question and the Answer</title><style>*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;background:#fff;color:#111827;font-family:Arial,"Helvetica Neue",sans-serif}
+body.zh{font-family:"PingFang SC","Songti SC",STSong,serif}
+main{max-width:860px;margin:36px auto 110px;padding:0 28px}
+nav{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#64748b;margin-bottom:18px}
+nav a{color:#2563eb;text-decoration:none;border:1px solid #cbd5e1;border-radius:6px;padding:5px 10px}
+header img{width:100%;height:auto;display:block;border-radius:10px}
+h1{font-size:42px;line-height:1.25;font-weight:700;margin:34px 0 30px}
+h2{font-size:29px;line-height:1.4;margin:58px 0 22px}
+h3{font-size:23px;line-height:1.4;margin:40px 0 16px}
+p,li{font-size:19px;line-height:1.85;overflow-wrap:anywhere}
+p{margin:0 0 20px} ul{padding-left:24px;margin:0 0 22px} li{margin-bottom:8px}
+body.zh p,body.zh li{font-size:19px;line-height:1.95}
+blockquote{margin:26px 0;padding:4px 0 4px 20px;border-left:4px solid #cbd5e1;color:#1f2937}
+blockquote p{margin:8px 0;font-size:20px}
+figure{margin:34px -10px}
+figure img{width:100%;height:auto;display:block;border:1px solid #e2e8f0;border-radius:10px}
+figcaption{font-size:15px;line-height:1.75;color:#64748b;padding:12px 8px}
+.note{font-size:14px;color:#64748b;border-top:1px solid #e2e8f0;margin-top:60px;padding-top:16px}
+@media(max-width:600px){main{padding:0 16px;margin-top:16px}h1{font-size:30px}h2{font-size:24px;margin-top:42px}
+h3{font-size:20px}p,li,body.zh p,body.zh li{font-size:17px}figure{margin:26px -6px}}</style></head><body class="en"><main><nav><span>X-TOKEN-001</span><a href="zh/review.html">中文版</a></nav><header><img src="assets/cover-token-birth.png" width="2000" height="800" alt="The Birth of a Token: What Happens Between Your Question and the Answer"></header><h1>The Birth of a Token: What Happens Between Your Question and the Answer</h1><article><p>Ask a chat model <em>Is OpenAI open?</em> and the answer appears piece by piece: <em>Partly. Some weights are open.</em></p>
+<p>Behind those five words is a procedure that runs once for every piece. Take a small open model, Qwen3-0.6B. For it, this reply is 9 pieces: 8 for the text and 1 that ends the turn. To write it, the model made 9 complete passes through its 596 million weights. Each pass produced 151,936 scores, one for every entry in its vocabulary, and kept one. That is 1,367,424 scores for nine pieces.</p>
+<p>The pieces are called <strong>tokens</strong>. This article follows one request from the moment you press Enter to the moment the answer appears. It uses the real tokens and token IDs of Qwen3. Today's chat models all generate text with this same loop. They differ in size, vocabulary and the template that wraps your question.</p>
+<figure><img src="assets/01-overview.gif" loading="lazy" alt="The whole loop: the prompt is tokenized once; each forward pass gives logits, one token is picked and appended, and its text joins the reply. Nine passes write the reply; the end token stops it."><figcaption>The whole loop: the prompt is tokenized once; each forward pass gives logits, one token is picked and appended, and its text joins the reply. Nine passes write the reply; the end token stops it.</figcaption></figure>
+<blockquote>
+<p>A language model does not write text directly. Each pass computes scores for the next token, and a short loop around the model turns those scores into text.</p>
+</blockquote>
+<h2>Six steps</h2>
+<ol>
+<li><strong>Chat template:</strong> your question is wrapped in a fixed format the model was trained on.</li>
+<li><strong>Tokenize:</strong> the wrapped text becomes a list of numbers.</li>
+<li><strong>Prefill:</strong> the model reads all of those numbers in one pass and scores the first token of the answer.</li>
+<li><strong>Pick:</strong> the scores become one token.</li>
+<li><strong>Decode:</strong> that token is fed back in, and the model scores the next one. Steps 4 and 5 repeat until a stop token appears.</li>
+<li><strong>Detokenize:</strong> the numbers become text again.</li>
+</ol>
+<p>Steps 1 to 3 happen once per request. Steps 4 to 6 happen once per token of the answer.</p>
+<h2>Step 1: your question gets a wrapper</h2>
+<p>The model never sees your bare question. The app wraps it in a <strong>chat template</strong>: a fixed text format the model saw during its training as an assistant. For Qwen, the wrapped question is:</p>
+<pre><code>&lt;|im_start|&gt;user
+Is OpenAI open?&lt;|im_end|&gt;
+&lt;|im_start|&gt;assistant
+</code></pre>
+<p><code>&lt;|im_start|&gt;</code> and <code>&lt;|im_end|&gt;</code> are <strong>special tokens</strong>: single vocabulary entries that mark where a turn begins and ends. The last line opens the assistant's turn and stops. The answer continues from the empty line that follows. (Qwen3 also inserts an empty thinking block here when thinking is turned off; the figures leave it out.)</p>
+<figure><img src="assets/02-chat-template.gif" loading="lazy" alt="The question is wrapped in the chat template (amber). The answer starts on the empty line after assistant."><figcaption>The question is wrapped in the chat template (amber). The answer starts on the empty line after assistant.</figcaption></figure>
+<p>Each model family has its own template. A model given the wrong one sees text in a format it was never trained on, and its answers degrade. That is a common reason a self-hosted model behaves worse than its official demo.</p>
+<h2>Step 2: text becomes numbers</h2>
+<p>A model computes with numbers, so the text must become numbers first. The <strong>tokenizer</strong> does this with a <strong>vocabulary</strong>: a fixed list of text pieces, each with a row number called its <strong>token ID</strong>. Qwen3's vocabulary has 151,669 entries.</p>
+<p>The tokenizer cuts the wrapped question into pieces that are entries in that list, then replaces each piece with its ID. Our question becomes 13 tokens:</p>
+<pre><code>151644 872 198 3872 5264 15469 1787 30 151645 198 151644 77091 198
+</code></pre>
+<figure><img src="assets/03-tokenize.gif" loading="lazy" alt="The text is cut into vocabulary entries, and each becomes its token ID. Real Qwen3 tokens and IDs."><figcaption>The text is cut into vocabulary entries, and each becomes its token ID. Real Qwen3 tokens and IDs.</figcaption></figure>
+<p>A few things stand out:</p>
+<ul>
+<li>A token can be a whole word, part of a word, a punctuation mark or a special marker. <em>OpenAI</em> is two tokens, <code> Open</code> and <code>AI</code>.</li>
+<li>The space before a word belongs to that word's token. <code> open</code> (1787) and <code>open</code> are different entries.</li>
+<li>Common Chinese words are often one entry: 开放 is token 100713.</li>
+<li>The newline is a token too (198), and the template uses it three times.</li>
+</ul>
+<p>The vocabulary is fixed before training starts. It does not change while the model learns, and it does not change while the model answers.</p>
+<h2>Step 3: the model reads the whole prompt at once</h2>
+<p>The <strong>weights</strong> are the model: 596 million numbers set during training and fixed while the model answers. The 13 IDs pass through them in three stages.</p>
+<ol>
+<li><strong>Embedding.</strong> Each ID selects one row of a table with 151,936 rows of 1,024 numbers. The tokenizer uses 151,669 of those rows; the rest are unused padding. This table alone holds 155.6 million weights, 26% of the model.</li>
+<li><strong>Layers.</strong> The 13 vectors pass through 28 layers. In each layer, every position looks at the positions before it (this is called attention) and updates its own vector. All 13 positions go through together, in one pass. This phase is called <strong>prefill</strong>.</li>
+<li><strong>LM head.</strong> Only the vector at the last position goes on. The LM head compares it with every vocabulary entry and gives one score per entry: 151,936 scores, called <strong>logits</strong>. In Qwen3-0.6B, the LM head reuses the embedding table.</li>
+</ol>
+<p>Along the way, every layer stores two vectors for each position, its <strong>key</strong> and its <strong>value</strong>. Together they form the <strong>KV cache</strong>. Later tokens need them, and storing them means the prompt is never processed twice.</p>
+<figure><img src="assets/04-prefill.gif" loading="lazy" alt="Each ID selects a row of the embedding table. All 13 positions pass through the layers together and leave their keys and values in the KV cache. Only the last position reaches the LM head: 151,936 logits. Three layers stand for 28."><figcaption>Each ID selects a row of the embedding table. All 13 positions pass through the layers together and leave their keys and values in the KV cache. Only the last position reaches the LM head: 151,936 logits. Three layers stand for 28.</figcaption></figure>
+<blockquote>
+<p>One pass gives one score for every token in the vocabulary. The highest score is a candidate, nothing more.</p>
+</blockquote>
+<h2>Step 4: 151,936 scores become one token</h2>
+<p>Logits are raw scores. Turning them into one token takes a few lines of arithmetic, with no weights involved:</p>
+<ul>
+<li><strong>Softmax</strong> turns the logits into probabilities: all positive, summing to 1.</li>
+<li><strong>Temperature</strong> divides the logits before softmax. Below 1 it sharpens the distribution toward the top token; above 1 it flattens it.</li>
+<li><strong>Top-p</strong> keeps the smallest set of tokens whose probabilities add up to p (0.9 here) and drops the rest.</li>
+<li><strong>Greedy decoding</strong> then takes the most probable token. <strong>Sampling</strong> draws one at random, in proportion to its probability.</li>
+</ul>
+<p>In our illustration, three tokens survive top-p: <code>Part</code> at 57%, <code> Open</code> at 29% and <code>No</code> at 14%. Greedy decoding writes <code>Part</code> every time. Sampling writes <code>Part</code> most of the time, <code> Open</code> sometimes and <code>No</code> occasionally.</p>
+<figure><img src="assets/05-pick-token.gif" loading="lazy" alt="Softmax, temperature, top-p 0.9; greedy decoding always takes Part, sampling gives Part, Open, Part, No, Part. Illustrative numbers."><figcaption>Softmax, temperature, top-p 0.9; greedy decoding always takes Part, sampling gives Part, Open, Part, No, Part. Illustrative numbers.</figcaption></figure>
+<p>These settings belong to the app or the API call, not the model. The same weights give a fixed answer under greedy decoding and varied answers under sampling.</p>
+<h2>Step 5: the loop</h2>
+<p>The picked token is appended to the sequence, and the model runs again. This phase is called <strong>decode</strong>.</p>
+<p>Decode does not re-read the whole prompt. Only the newest token passes through the 28 layers. In each layer it reads the keys and values already in the KV cache, one per earlier position, and adds its own. The LM head scores the next token, one is picked, and it is fed back in.</p>
+<p>The loop stops when the model picks the end-of-turn token <code>&lt;|im_end|&gt;</code>, or when the app's length limit is reached. In our example, prefill produced <code>Part</code>, and eight decode passes produced <code>ly</code>, <code>.</code>, <code> Some</code>, <code> weights</code>, <code> are</code>, <code> open</code>, <code>.</code> and finally <code>&lt;|im_end|&gt;</code>. That makes nine passes for nine tokens.</p>
+<figure><img src="assets/06-decode-loop.gif" loading="lazy" alt="Each pass feeds only the newest token. It reads the cache in every layer (green arcs) and adds its own keys and values; the picked token drops back in as the next input."><figcaption>Each pass feeds only the newest token. It reads the cache in every layer (green arcs) and adds its own keys and values; the picked token drops back in as the next input.</figcaption></figure>
+<blockquote>
+<p>Prefill handles the whole prompt in one pass. Decode handles one token per pass, and every pass reads the model's weights again.</p>
+</blockquote>
+<h2>Step 6: numbers become text again</h2>
+<p>The output IDs go back through the same vocabulary, in reverse:</p>
+<ul>
+<li>each ID becomes its text piece;</li>
+<li>the stop token is dropped;</li>
+<li>leading spaces stay with their words;</li>
+<li>the pieces join into the reply.</li>
+</ul>
+<p>Apps do this as each token arrives, which is why the answer streams in. Some characters, including many Chinese characters, span more than one token. The app holds back the partial bytes until the character is complete.</p>
+<figure><img src="assets/07-detokenize.gif" loading="lazy" alt="The IDs are looked up in reverse; the end token is dropped, spaces return, and the pieces join into the reply."><figcaption>The IDs are looked up in reverse; the end token is dropped, spaces return, and the pieces join into the reply.</figcaption></figure>
+<h2>What this explains</h2>
+<p>This loop accounts for several things people notice when using chat models.</p>
+<ul>
+<li><strong>Answers stream in.</strong> The model produces one token per pass, and the app shows each one as it arrives.</li>
+<li><strong>The same question gives different answers.</strong> Chat apps usually sample. A lower temperature, or greedy decoding, makes answers more repeatable.</li>
+<li><strong>There are two kinds of waiting.</strong> A long prompt delays the first word, because prefill must process all of it. A long answer takes longer to finish, because decode needs one pass per token. Speed is reported the same way: time to first token, and tokens per second.</li>
+<li><strong>Counting letters is hard.</strong> In <em>How many r are in strawberry?</em>, Qwen3 sees <code> strawberry</code> as a single token, ID 72600. The letters are not in its input. The model can only answer from what it learned in training about the spelling of token 72600. Without the leading space, <code>strawberry</code> is three tokens: <code>str</code>, <code>aw</code> and <code>berry</code>.</li>
+<li><strong>Limits and prices are counted in tokens.</strong> Context windows, API prices and speed limits all count tokens, not words. The ratio of tokens to words depends on the language and the vocabulary.</li>
+<li><strong>The model does not learn while you chat.</strong> The weights stay fixed. Your conversation exists only as the token sequence the app sends with each message, and the KV cache built from it.</li>
+</ul>
+<blockquote>
+<p>Every token in every answer comes from the same loop: score the whole vocabulary, pick one, append it, repeat.</p>
+</blockquote>
+<h2>Summary</h2>
+<ul>
+<li>The app wraps your question in a chat template, and the tokenizer turns it into token IDs from a fixed vocabulary.</li>
+<li>Prefill runs the whole prompt through the model in one pass. It fills the KV cache and produces logits: one score for every vocabulary entry.</li>
+<li>Softmax, temperature, top-p and greedy decoding or sampling turn the logits into one token. No weights are involved in that step.</li>
+<li>Decode feeds each new token back in, one pass per token, until a stop token appears.</li>
+<li>Detokenizing turns the IDs back into text, as the tokens arrive.</li>
+</ul>
+</article><p class="note">Local review page. Not uploaded or published. Token strings, IDs and model sizes are real (Qwen3-0.6B); the reply is chosen, and the probabilities are illustrative.</p></main></body></html>

@@ -1783,3 +1783,31 @@ production dependencies.
   everything else illustrative.
 - Status: approved by the learner on 2026-10-23 (GIF plan and cover); promoted to
   `ANIM-POST-003`, rendered in `visuals/animations/projects/post-training-lora/`.
+
+### CAND-ANIM-040 — Inference from a prompt to text: seven GIFs
+
+- Source: user (2026-10-29, after the discussion of vocabulary, tokens, logits and weights:
+  "create animations to clearly illustrate the steps … visually strong, and less text load, we
+  add explanation as separate text"). Storyboard by the agent.
+- Learning objective: follow one chat request through inference:
+  - chat template;
+  - tokenize (vocabulary lookup);
+  - prefill with the KV cache;
+  - LM head logits;
+  - pick a token (softmax, temperature, top-p, greedy vs sampling);
+  - the decode loop, one token per pass;
+  - detokenize.
+- Canonical mechanisms: E[ids]; one logit vector of length V per pass, from the last position;
+  softmax(z / T); the top-p nucleus; the cache grows by one position per pass.
+- Evidence:
+  - real Qwen3 token strings and IDs (Qwen/Qwen3-0.6B tokenizer);
+  - the reply text is chosen, not generated;
+  - the ChatML core template leaves out Qwen3's empty think block;
+  - the logits are illustrative, with exact softmax, temperature and top-p on them.
+- Status: produced on the Mac Studio, 2026-10-29, in
+  `visuals/animations/projects/inference-prompt-to-text/`. The captions are in its `README.md`.
+  The learner rated the set "generally very good" and asked for a self-review. The agent fixed
+  the decode attention arcs, the detokenize visibility and several readability issues. Used in
+  the X article `X-TOKEN-001` (`publications/x-articles/x-token-001/`).
+- Relation: complements `prefill-decode-article` (a systems view of prefill and decode). This set
+  covers the full text-in, text-out path at the token level.

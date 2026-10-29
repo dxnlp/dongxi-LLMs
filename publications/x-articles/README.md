@@ -5,6 +5,10 @@ a specific exception.
 
 ## Article packages
 
+- [The Birth of a Token](x-token-001/review.html): standalone general-reader article (outside the
+  post-training series), English and [Chinese](x-token-001/zh/review.html) drafts, seven inference GIFs
+  (`CAND-ANIM-040`) and its own cover. Chinese version published on X by the learner (reported
+  2026-10-29); English not transferred.
 - [Prefill and Decode](x-prefill-decode-001/zh/review.html): independent Chinese
   mechanism-first draft, seven GIF animations with static fallbacks and a 5:2
   cover; reusable 1080p MP4s retained locally. Spark/Mac is a short supporting
