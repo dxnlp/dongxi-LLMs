@@ -104,6 +104,21 @@ class ManifestTests(unittest.TestCase):
         row['improvement'] = 'DXI-03'
         self.assertTrue(any('mismatch' in p for p in validate_manifest(self.document)))
 
+    def test_study_path_notebook_is_optional_and_anchored_to_its_day(self):
+        row = dict(path='notebooks/study-path/s1_fixture.ipynb', day=16,
+                   chapter=10, lane='optional', execution='spark-gpu',
+                   improvement=None, requires=[])
+        self.document['notebooks'].append(row)
+        self.assertEqual(validate_manifest(self.document), [])
+        row['chapter'] = 12
+        self.assertTrue(any('mismatch' in p for p in validate_manifest(self.document)))
+        row['chapter'] = 10
+        row['path'] = 'notebooks/study-path/s8_fixture.ipynb'
+        self.assertTrue(any('mismatch' in p for p in validate_manifest(self.document)))
+        row['path'] = 'notebooks/study-path/s1_fixture.ipynb'
+        row['lane'] = 'core'
+        self.assertTrue(any('mismatch' in p for p in validate_manifest(self.document)))
+
     def test_assignment_extension_inventory_is_checked(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

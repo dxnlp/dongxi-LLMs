@@ -110,10 +110,14 @@ def validate_manifest(document: Any, root: Path | None = None) -> list[str]:
                       and isinstance(row.get("improvement"), str)
                       and bool(re.fullmatch(r"CS336-0[1-7]", row["improvement"]))
                       and bool(re.fullmatch(r"notebooks/extensions/cs336/[^/]+\.ipynb", path)))
+        # The S1–S7 preference/RL study path (2026-10-29): optional Spark GPU labs,
+        # each anchored to the course day whose chapter it deepens.
+        study_path = (row.get("lane") == "optional" and row.get("improvement") is None
+                      and bool(re.fullmatch(r"notebooks/study-path/s[1-7]_[^/]+\.ipynb", path)))
         if (not _integer(day) or day not in day_chapters
                 or not _integer(row.get("chapter"))
                 or row.get("chapter") != day_chapters.get(day)
-                or not (matches_path or cs336_path)):
+                or not (matches_path or cs336_path or study_path)):
             problems.append(f"Notebook day/chapter/path mismatch: {path}")
         lane = row.get("lane")
         if lane not in ("core", "optional", "extension") or row.get("execution") not in EXECUTION_TYPES:
@@ -164,7 +168,7 @@ def validate_manifest(document: Any, root: Path | None = None) -> list[str]:
         elif not actual.is_file() or not actual.stat().st_size:
             problems.append(f"Missing/empty artifact: {path}")
     physical = {p.relative_to(root).as_posix() for pattern in
-                ("day-*/*.ipynb", "extensions/cs336/*.ipynb")
+                ("day-*/*.ipynb", "extensions/cs336/*.ipynb", "study-path/*.ipynb")
                 for p in (root / "notebooks").glob(pattern)}
     for path in sorted(physical - set(entries)):
         problems.append(f"Unregistered notebook: {path}")

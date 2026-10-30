@@ -11,6 +11,27 @@ score preferences) and §8.4 (preference-based alignment, DPO). Course:
 [Chapter 11](../../book/chapters/11-direct-preference-optimization.md) (DPO, Days 17–18).
 Previous topic: [learning instruction tuning](../day-11-instruction-data-engineering/learning-instruction-tuning.md).
 
+## ★ Study path (approved 2026-10-29, D40)
+
+Two axes: **feedback source** (human pairs · reward model · LLM judge · process RM · verifier) ×
+**optimizer** (PPO, GRPO and relatives; DPO as the RL-free loss).
+
+| Stage | Topic | Course | Status |
+|---|---|---|---|
+| S1 | Reward models: BT, training, bias audit, process labels | Day 15, Day 16; [S1 notebook](../../notebooks/study-path/s1_reward_models.ipynb) | **in progress** (Day 15 · 04) |
+| S2 | KL-regularized optimum → DPO | Day 17, Day 18; [S2 notebook](../../notebooks/study-path/s2_kl_optimum_and_dpo.ipynb) | — |
+| S3 | REINFORCE → baselines/RLOO → PPO → algorithm comparison | Days 19–21; [S3 notebook](../../notebooks/study-path/s3_policy_gradient_to_ppo.ipynb) | — |
+| S4 | GRPO | Day 22; [S4 notebook](../../notebooks/study-path/s4_grpo.ipynb) | — |
+| S5 | RLVR (GRPO + verifier) | Day 23; [S5 notebook](../../notebooks/study-path/s5_rlvr.ipynb) | — |
+| S6 | Combinations: RM-labelled iterative DPO, RM + verifier mix, SFT → DPO → RLVR | [S6 notebook](../../notebooks/study-path/s6_combinations.ipynb) (new) | — |
+| S7 | When optimization goes wrong: reward hacking, length/entropy | Day 24 (plan P2); [S7 notebook](../../notebooks/study-path/s7_failure_modes.ipynb) | — |
+
+Workbooks (built 2026-10-30 at the learner's request: "seven notebooks, one per stage, with good
+exercises and granular code blocks"): [study-path README](../../notebooks/study-path/README.md). Each
+runs toy first, then Qwen3-0.6B; 74 fill-in exercises with checks, 26 predictions. All trained models
+use fp32 master weights. While building them, a precision problem was found: AdamW on bf16 weights
+loses most small updates. It probably also affects Day 15 · 04's PPO/GRPO/DPO runs (open item).
+
 ## Plan: deeper dives
 
 Topics the learner flagged for further discussion or future course material.
@@ -23,6 +44,7 @@ Topics the learner flagged for further discussion or future course material.
 | P5 ★ | **Animation/visual: PPO's four networks in one iteration** | the learner, at NB04 Part E (2026-10-27): "deserves a very well designed animation or visual" | Day 15 · 04 Part E; Chapter 12 `ppo-clipping` loop; D21–D25 | proposed as `CAND-ANIM-036` (signature candidate): cast table, rollout → no-grad scoring → reward vector → GAE → two updates → repeat, plus a GRPO/DPO contrast; state *suggested*, **high priority**, produce on the Mac Studio |
 | P6 ★ | **KL to the reference: fine description + animation** | the learner, at NB04 Part E (2026-10-27): "we need to address KL understanding by fine description and animation as well" | NB04 `ppo_rewards` (k1 in reward), `grpo_iteration` (k3 in loss), Predict 12/15; D35 | description written (D35); animation proposed as `CAND-ANIM-037` (companion to 036); state *suggested*, produce on the Mac Studio |
 | P7 ★ | **Article: RL terms for LLMs** (many animations, easy examples) | the learner, after the D39 glossary (2026-10-27) | glossary section above; D21–D25, D35–D39; NB04 Part E code | X article `X-POST-004`, slot approved 2026-10-27: **before preference alignment** (now `X-POST-005`; RLVR → `X-POST-006`) + GIF set `CAND-ANIM-038` (10 loops on the garlic example); write and produce on the Mac Studio |
+| P8 ★ | **Deep-study path: feedback sources × optimizers** | the learner, 2026-10-29: "I want to do deep study in this area, which path should we go?" | D40; course Days 15–25 (Chapters 10–14) | proposed: S1 reward models (D15–16) → S2 KL optimum + DPO (D17–18) → S3 REINFORCE → baselines → PPO (D19–21) → S4 GRPO (D22) → S5 RLVR (D23) → S6 combinations (new: RM-labelled iterative DPO, mixed RM + verifier rewards, Tülu 3-style pipeline) → S7 failure modes (D24, plan P2); **approved by the learner 2026-10-29: "ok, follow this path"**. Current position: S1 (Day 15 · 04: Predict 5, Parts E–G, then Day 16) |
 | P2 | **Reward hacking** | flagged as "very interesting, worth exploring" after D3 (2026-10-27); candidate for discussion and new course material or an article | Chapter 10 §10.8–10.9 (shortcut experiment, optimization changes the population); Chapter 14 §14.1 "A real reward-hacking microscope", §14.5 length bias; notebook Day 24 · 01 `reward_hacking.ipynb`; Gao et al. 2022 overoptimization | planned: discuss after §8.3–8.4, then decide on material |
 
 ## Notebook built from these discussions
@@ -1274,4 +1296,36 @@ in the LLM setting", above Key concepts).
   which has the same expected gradient and much less variance.
 - How it's estimated in practice: Q isn't known, so δ_t = r_t + V(s_{t+1}) − V(s_t) stands in for
   it (one-step), or GAE mixes several steps. GRPO estimates it per answer as (R − group mean)/std.
+
+### D40 · ★ Learner framing: "DPO, PPO, GRPO are separate optimization algorithms; RM and RLVR are where the judge feedback comes from". And which deep-study path? (2026-10-29)
+
+*Framing: right, with one refinement.* Two axes (as in D32/D34):
+- **Feedback source:** human pairs (offline labels) · learned reward model (scalar) · LLM judge /
+  generative RM · process reward model · verifier (RLVR = "RL with a verifier as the feedback source").
+- **Optimizer:** PPO, GRPO (and relatives: REINFORCE, RLOO, DAPO). These are *RL* algorithms:
+  they need samples + a reward from some source.
+- **DPO is a different kind of optimizer.** It isn't an RL algorithm that takes a reward. It is a
+  supervised loss derived from the KL-regularized RL objective (π* ∝ π_ref·exp(R/β), D35) that
+  *removes* the RM and the sampling. Its feedback is the pair labels directly. So "DPO + RM" doesn't
+  mean "DPO optimizes RM scores". It means the RM (or a judge) *labels new pairs* sampled from the
+  policy, then DPO trains on them (iterative / online DPO; e.g. Self-Rewarding LMs, Yuan et al. 2024).
+
+> ★ **Study path approved by the learner (2026-10-29), marked important.** Follow S1 → S7 in
+> order; record progress against these stage IDs. Current position: S1.
+
+*Path (follows the course order, Days 15–25, with one added stage):*
+
+| Stage | Topic | Course | Why here |
+|---|---|---|---|
+| S1 | Reward models: BT, training, bias audit, process labels | D15 (done in part), D16 | every later stage uses a feedback source |
+| S2 | KL-regularized optimum → DPO | D17, D18 | DPO's derivation needs only the KL objective (D35), not PPO |
+| S3 | REINFORCE → baselines/RLOO → PPO (clip, KL, critic) → algorithm comparison | D19, D20, D21 | builds the policy gradient from scratch; the glossary (D39) applied |
+| S4 | GRPO: group advantages, token ratios, weighting/filtering | D22 | PPO minus the critic; needs S3 |
+| S5 | RLVR: verifier contracts, reasoning tasks | D23 | swap the feedback source: GRPO + verifier |
+| S6 | Combinations (new, not in the course yet) | — | RM-labelled iterative DPO; RM + verifier mixed rewards; SFT → DPO → RLVR (Tülu 3) |
+| S7 | When optimization goes wrong: reward hacking, length/entropy | D24 (plan P2) | needs all of the above |
+
+Change vs the learner's draft: DPO comes *before* PPO (not alongside), because its derivation is
+self-contained given the KL objective, and the course is built that way. RLVR is a feedback source,
+so it is studied *with* GRPO (S5), not after all the optimizers in the abstract.
 

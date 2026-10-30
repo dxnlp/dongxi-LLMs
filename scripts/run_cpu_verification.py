@@ -139,6 +139,7 @@ def main():
     lesson_paths = sorted([*(ROOT/'book').rglob('*.md'),
                            *(ROOT/'notebooks').glob('day-*/*.ipynb'),
                            *(ROOT/'notebooks').glob('extensions/cs336/*.ipynb'),
+                           *(ROOT/'notebooks').glob('study-path/*.ipynb'),
                            *(ROOT/'docs/runbooks').glob('*.md'),
                            ROOT/'scripts/book_prose_exemptions.json',
                            ROOT/'docs/COURSE_ASSIGNMENTS.md',

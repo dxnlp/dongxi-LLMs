@@ -52,7 +52,8 @@ def main():
     if len(list((root/'book/appendices').glob('*.md'))) != 4:
         problems.append('Expected4 appendices')
     notebooks = sorted([*(root/'notebooks').glob('day-*/*.ipynb'),
-                        *(root/'notebooks').glob('extensions/cs336/*.ipynb')])
+                        *(root/'notebooks').glob('extensions/cs336/*.ipynb'),
+                        *(root/'notebooks').glob('study-path/*.ipynb')])
     days = []
     for day in range(1,29):
         files = [p for p in notebooks if p.parent.name==f'day-{day:02d}']

@@ -86,6 +86,10 @@ The current inventory is 83 notebooks. The seven [assignment companions](../note
   `spark-gpu`. Nineteen predictions on real Qwen3-0.6B and public HH-RLHF/UltraFeedback data:
   pair formats and label noise, agent-trajectory masks, a trained reward model, PPO's four networks,
   per-token rewards, GAE and clipping, GRPO group advantages, and DPO on the same pairs.
+- [Study path S1–S7](../notebooks/study-path/README.md): `spark-gpu`, optional. Seven fill-in
+  workbooks for the preference/RL path (reward models → KL optimum and DPO → REINFORCE to PPO → GRPO →
+  RLVR → combinations → failure modes). Each mechanism runs first on a toy, then once on Qwen3-0.6B;
+  74 exercises checked by the tested `dongxi_llms.study_path` modules, plus 26 predictions.
 - [Day25 ragged KV and exact recovery](../notebooks/day-25/02_ragged_kv_cache_and_exact_recovery.ipynb):
   seven cells/five figures; actual compact KV/positions/stops, tiny DPO/RLVR
   pending/completed resume and explicit typed-state identity migration.
