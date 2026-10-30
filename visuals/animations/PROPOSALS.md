@@ -1811,3 +1811,246 @@ production dependencies.
   the X article `X-TOKEN-001` (`publications/x-articles/x-token-001/`).
 - Relation: complements `prefill-decode-article` (a systems view of prefill and decode). This set
   covers the full text-in, text-out path at the token level.
+
+### CAND-ANIM-041 — Bradley–Terry for beginners: one comparison, two scores, one probability
+
+- Source: user (2026-10-30, at S1 Part A: "we should produce a beginner friendly animation to
+  explain Bradley–Terry") and agent storyboard.
+- Proposed during: study-path S1 Part A (`notebooks/study-path/s1_reward_models.ipynb`) /
+  Chapter 10 §10.2.
+- State: suggested
+- Learning objective: a beginner with no calculus follows the whole idea on one pair. A person
+  says which of two answers is better; a model gives each answer a score; only the **gap**
+  between the two scores matters; the sigmoid turns the gap into the model's probability that the
+  person's choice wins; training pushes the preferred score up and the other down until that
+  probability is high.
+- Storyboard (one pair, then many):
+  1. One prompt and two short answers, A and B. A person picks A: the label `A ≻ B`.
+  2. A score appears above each answer: A = 1.0, B = 2.0. The model currently has them in the
+     wrong order.
+  3. The **gap** `Δ = score(A) − score(B) = −1` is drawn as an arrow between the two scores. Both
+     scores slide up by 10: the arrow, and everything after it, stays the same. Only the gap counts.
+  4. The gap drops onto an S-curve, the sigmoid. Gap −1 → 0.27: the model's probability that A
+     wins. Reference ticks: gap 0 → 0.50, gap +1 → 0.73, gap +2 → 0.88, gap +3 → 0.95.
+  5. The label says A won, so the loss is `−log 0.27 = 1.31`. A loss meter shows it; gap 0
+     would give 0.69, gap +3 would give 0.05.
+  6. One training step: score A moves up and score B moves down **by the same amount**, sized by
+     `1 − σ(Δ)` (0.73 at gap −1). The gap grows, the dot climbs the curve, the loss drops. Repeated
+     steps get smaller as the probability nears 1, and never stop completely.
+  7. Many pairs at once: each pair is a dot on the curve; pairs in the wrong order (left) send big
+     pushes, pairs already well separated (right) barely move. A few pairs whose labels disagree
+     stay near 0.5, which is label noise, not a model failure.
+- Canonical mechanisms: `P(A ≻ B) = σ(r_A − r_B)`; loss `−log σ(Δ)`; gradient magnitude
+  `1 − σ(Δ)` on both scores with opposite signs; shift invariance. Chapter 10 §10.2–10.5; SLP3
+  §8.3.2; S1 Exercises 1–2.
+- Evidence: exact computed values (σ(−1) = 0.269, −log σ(−1) = 1.313, 1 − σ(−1) = 0.731; gaps 0–3 as
+  above). Scores, answers and step size are illustrative; one amber badge ("illustrative scores").
+- Relation: the **entry point** of the Bradley–Terry set, for readers who have never seen a
+  sigmoid. It comes before CAND-ANIM-033 (why the sigmoid, derived from strengths `e^score`),
+  CAND-ANIM-034 (four pairs, gap → probability → loss → gradient) and CAND-ANIM-035 (the gradient
+  goes where the model is wrong), which assume this one. Possible use in X-POST-005 (reward
+  models).
+- Status: wanted by the learner (2026-10-30). Produce on the Mac Studio with 033–035, after the
+  preference-learning topic. Beginner rules: no equations on screen except `σ(gap)` labels, plain
+  words, white canvas, Dongxi visual system. Not yet a production packet.
+
+### CAND-ANIM-042 — Chat model vs reward model: same body, different head
+
+- Source: user (2026-10-30, at S1 Part A, after D42: "the header difference between a chat model and
+  a reward model deserves an explanation in the article and an animation") and agent storyboard.
+- Proposed during: study-path S1 Part A / Day 15 · 04 Part C / Chapter 10.
+- State: suggested
+- Learning objective: see that a reward model is the same pretrained transformer as the chat model
+  with only its last layer swapped, and what that changes: a chat model outputs a distribution over
+  the next token at every position and is used by sampling repeatedly; a reward model outputs one
+  number for the whole (prompt, answer) in a single forward pass and never generates.
+- Storyboard:
+  1. One stack of 28 transformer blocks (Qwen3-0.6B, hidden size 1024), drawn once; the text
+     "How do I boil an egg? → Put the egg in boiling water for 9 minutes.<|im_end|>" enters as tokens.
+  2. Chat model: the LM head `1024 → 151,936` sits on top. At the last position a wide bar chart of
+     next-token probabilities appears; one token is sampled, appended, and the loop runs again
+     (generation = many forward passes).
+  3. The swap: the LM head slides off and is greyed out ("discarded"); a narrow `1024 → 1` score
+     head (new, random weights) slides on. The 28 blocks don't change.
+  4. Reward model: the same text goes in once; the head is applied to every position, but only the
+     value at the last non-pad token (`<|im_end|>`) is kept: a single number, e.g. 1.8. No loop.
+  5. Two answers to the same prompt pass through the reward model one after the other: 1.8 and 0.6.
+     The "pick" is the comparison of the two numbers; the gap feeds Bradley–Terry (link to
+     CAND-ANIM-041).
+  6. Side-by-side summary: parameters ≈ 596 M in both; head output 151,936 numbers per position vs 1
+     number per sequence; used by sampling vs by one forward pass; trained with next-token
+     cross-entropy (SFT) vs the pairwise Bradley–Terry loss.
+- Canonical mechanisms: `AutoModelForCausalLM` vs `AutoModelForSequenceClassification(num_labels=1)`;
+  last-non-pad pooling; the score head is a regression output (no softmax, no classes). D28, D30, D42;
+  Day 15 · 04 Part C; S1 Part C.
+- Evidence: real Qwen3-0.6B shapes (1024, 151,936, 28 layers, 596.1 M parameters from the Day 15 · 04
+  run); probabilities and scores illustrative (amber badge).
+- Relation: complements CAND-ANIM-036 (PPO's four networks), where the reward and value models appear
+  as boxes; this one opens the box. Planned for `X-POST-005` (reward models).
+- Status: wanted by the learner (2026-10-30). Produce on the Mac Studio with the X-POST-005 GIF set.
+  Not yet a production packet.
+
+### CAND-ANIM-043 — Logits and softmax: next tokens vs compared answers
+
+- Source: user (2026-10-30, at S1 Part A, after D47: "the above is important, we need to explain this
+  well in article and animation") and agent storyboard. High priority.
+- Proposed during: study-path S1 Part A / Chapter 10 §10.2.
+- State: suggested
+- Learning objective: see that a reward model's Bradley–Terry probability is the same softmax a chat
+  model uses, applied to a different set of candidates, and what that changes: where the candidates come
+  from, whether the result is an absolute probability, and how the output is used.
+- Storyboard (two lanes, top and bottom, same visual language):
+  1. Top lane, chat model: "The capital of France is" → one forward pass → a long logit bar row
+     (Paris 2.0, Lyon 1.0, cat −1.0, then a fading tail labelled "151,933 more").
+  2. The softmax converts the row into probabilities that sum to 1 (0.705, 0.259, 0.035 among the three
+     shown); one token is sampled and appended (generation).
+  3. Bottom lane, reward model: the same prompt with answer A, then with answer B, each through its
+     own forward pass → one score each (2.0, 1.0). The two scores slide together into a two-bar row.
+  4. The same softmax box converts [2.0, 1.0] into [0.731, 0.269]; an equation label shows it equals
+     σ(2.0 − 1.0) = σ(1).
+  5. Shift both lanes by +10: top-lane probabilities and bottom-lane probabilities both stay put
+     (shift invariance in both). Then show the difference: top-lane values are real probabilities of
+     next tokens; a single bottom-lane score alone has no probability (only the pair does).
+  6. The loss, both lanes: −log of the probability of the correct option. Top: the true next token
+     ("Paris"). Bottom: the human's choice (A). Same formula, different options.
+  7. Use, both lanes: top lane samples from the softmax; bottom lane hands the **raw score** (2.0) to
+     RL as the reward. The softmax was only for training.
+  8. Optional tail: three ranked answers → Plackett–Luce as repeated softmax (one line, small).
+- Canonical mechanisms: `softmax(z)_i = e^{z_i} / Σ_j e^{z_j}`; `σ(a − b) = softmax([a, b])₀`; next-token
+  cross-entropy vs 2-way cross-entropy; shift invariance. D46, D47.
+- Evidence: exact computed values (0.705/0.259/0.035 for logits 2, 1, −1 over three tokens; 0.731/0.269
+  for scores 2, 1); logits, scores and answers illustrative (amber badge). Vocabulary size 151,936 is
+  Qwen3's real value.
+- Relation: companion to CAND-ANIM-042 (same body, different head: what the head outputs) and
+  CAND-ANIM-041 (beginner Bradley–Terry). 042 shows the layers; 043 shows what is done with the numbers.
+  Planned for `X-POST-005` (reward models), right after the head-swap section.
+- Status: wanted by the learner, marked important (2026-10-30). Produce on the Mac Studio with the
+  X-POST-005 GIF set. Not yet a production packet.
+
+
+### X-POST-005 support set: CAND-ANIM-044 to 051
+
+Proposed together on 2026-10-30 at the learner's request ("suggest more animations, so it can support
+the whole article"), to give every section of the reward-model article (`X-POST-005`,
+`publications/x-articles/x-post-training-005/plan.md`) at least one animation. With 033–035 and 041–043
+the set is larger than the series' 5–6 GIFs per article; the plan's **Animations** table marks a
+recommended core and the learner chooses. All: state *suggested*, produce on the Mac Studio, Dongxi
+visual system, English labels, one amber badge for anything illustrative. Not yet production packets.
+
+### CAND-ANIM-044 — One click becomes a training example (article opening)
+
+- Source: agent, at the learner's request (2026-10-30); article section 1.
+- Learning objective: the reader sees what a preference label physically is before any math: one
+  prompt, two answers, one click, stored as a `(prompt, chosen, rejected)` row, and thousands of such
+  rows are the reward model's whole training set.
+- Storyboard: (1) a prompt, "How deep should I plant garlic?", and two answers side by side; (2) a cursor
+  clicks answer A; (3) the screen folds into one table row `prompt | chosen = A | rejected = B`;
+  (4) the row drops into a growing table (counter: 1 → 10 → 1,000 → ~40,000 rows, the size of HH-RLHF
+  helpful-base train); (5) the table feeds a box labelled "reward model"; question mark on the output.
+- Evidence: illustrative answers; dataset size from the cached HH-RLHF files (state the exact count
+  from `Q.hh_pairs` when producing). Sources: Day 15 · 04 Part A; S1 Part C (`Q.to_pair`); D1.
+- Relation: hook GIF; ends on the question the article answers. Comes before 041.
+
+### CAND-ANIM-045 — Why comparisons, not grades
+
+- Source: agent, at the learner's request (2026-10-30); article section 2; D1–D3.
+- Learning objective: people's absolute grades for the same answer spread widely, while their choice
+  between two answers agrees more often; and agreement is never 100%, which caps any reward model.
+- Storyboard: (1) three labelers grade answer A on a 1–10 scale: 7, 4, 9 (dots scattered on a ruler);
+  (2) the same three see A next to B and all pick A (three arrows the same way); (3) a harder pair:
+  2 of 3 pick A; (4) many pairs: a bar "labelers agree with each other on X% of pairs" with a dashed
+  line labelled "best possible reward-model accuracy ≈ this".
+- Evidence: illustrative grades; the agreement figure must come from a cited source (InstructGPT or
+  Anthropic HH reports) via `source-map.md`, otherwise drawn without a number. Precision caveat:
+  comparisons are more consistent, not error-free.
+- Relation: sets up 046 (what label errors do).
+
+### CAND-ANIM-046 — Random noise vs systematic bias: what each does to the learned reward ★
+
+- Source: agent, at the learner's request (2026-10-30); learner marked D50 important; D54 metaphor.
+  Article section 2 or 6.
+- Learning objective: random label errors make the reward model less confident but keep the order;
+  systematic errors change what it rewards, and more data doesn't fix them.
+- Storyboard (two lanes): (1) a scoreboard, team A really wins 9 of 10; (2) top lane, a careless
+  scorekeeper flips 2 of 10 at random → scoreboard about 7–3, A still ahead; bottom lane, a scorekeeper
+  who gives every mistake to the taller team → the taller team gains; (3) switch to the reward model's
+  weights as an arrow in the (helpfulness, length) plane: true `w* = (2.0, 0.5)`; (4) top lane: the arrow
+  **shrinks** to (0.72, 0.18), same direction, ranking 99.9%; bottom lane: the arrow **rotates** toward
+  length (ratio 0.25 → 0.53), ranking ≈ 92%, even though only ≈ 8% of labels changed; (5) "more data"
+  button: top lane stays put in direction, bottom lane keeps the wrong direction.
+- Evidence: measured on the S1 Part B simulation (ε = 0.2, 4,000 pairs; exact values from the reference
+  run). Caveat badge: "simulated labels, linear reward model".
+- Relation: pairs with 047 (calibration) and 050 (length bias in a real model).
+
+### CAND-ANIM-047 — Calibration: does 70% mean 70%?
+
+- Source: agent, at the learner's request (2026-10-30); D53, D54. Article section 2 or 6.
+- Learning objective: a calibrated model's stated probability matches how often it happens; the
+  noisy-label reward model is under-confident against the truth while looking calibrated against the
+  labels it learned from.
+- Storyboard: (1) forecaster: 10 days marked "70% rain", 7 get rain drops → calibrated; replay with 9 →
+  "too timid"; with 5 → "too bold"; (2) the same check on reward-model predictions: bins along the x-axis,
+  dots build a reliability curve on a diagonal; (3) the noisy-label fit: against its own (noisy) labels
+  the dots hug the diagonal (ECE ≈ 0.04); switch to clean labels and the dots rise above it (says 0.7,
+  truth 0.9; ECE ≈ 0.15); (4) closing line: right order, wrong confidence.
+- Evidence: forecaster illustrative; reliability values measured in S1 Part B (figure 02, right panel).
+- Relation: follows 046.
+
+### CAND-ANIM-048 — Which position gives the score ★
+
+- Source: agent, at the learner's request (2026-10-30); learner marked D55 important. Article
+  section 4a.
+- Learning objective: the score head produces a number at every token, and only the last one is used,
+  because with causal attention only the last position has seen the whole prompt and answer.
+- Storyboard: (1) "Plant each clove two inches deep, pointy end up.<|im_end|>" as a token row; a small
+  number appears above every token (`w · h_t`); (2) a second row, identical except "six"; (3) highlight
+  the positions whose numbers differ: none before "six", all from "six" to the end (a colour wave
+  spreading right); (4) attention fans: each token connects only leftward; (5) the last number is
+  boxed and lifted out as "the score", the others fade; (6) optional: a padded batch, left and right
+  padding, the box still lands on `<|im_end|>`.
+- Evidence: the zero/non-zero pattern is exact (S1 Predict 2, asserted); the numbers come from an
+  untrained head, so show them without values or with an "untrained head" badge.
+- Relation: sits between 042 (head swap) and 043 (logits vs scores).
+
+### CAND-ANIM-049 — Training at scale: the same step, 596 million weights
+
+- Source: agent, at the learner's request (2026-10-30); D42, D52. Article section 5.
+- Learning objective: training a real reward model is the gradient descent of section 3b, scaled:
+  minibatches of pairs, backpropagation through all layers, AdamW, one pass over the data; accuracy
+  rises from chance to the 60s, not to 100%.
+- Storyboard: (1) the two-weight arrow from 034/035 takes one step; (2) zoom out: the weights become the
+  whole network (embeddings, 28 blocks, score head), counter "596 M"; (3) one step: a minibatch of 8
+  pairs → 16 forward passes → loss → a backward wave through all layers → every weight nudged (AdamW);
+  (4) a curve builds over the run: held-out pair accuracy 47.6% → 62.2%, with the label-agreement
+  ceiling from 045 as a dashed line above it.
+- Evidence: accuracies measured in Day 15 · 04 (verification run 2026-10-30: 47.6% → 62.2%); state the
+  run's data size and that one run has sampling error.
+- Relation: bridges 035 (gradient on independent scores) and the model diagrams of 042.
+
+### CAND-ANIM-050 — What else it rewards: length, and why that matters later
+
+- Source: agent, at the learner's request (2026-10-30); D15, plan P2. Article section 6.
+- Learning objective: a reward model learns whatever predicts the labels, including features other
+  than quality such as length; a policy optimized against the score will find and exploit them
+  (reward hacking, preview only).
+- Storyboard: (1) scatter of held-out pairs: x = length gap, y = score gap; a trend line (correlation
+  ≈ +0.25); (2) one probe: append a filler sentence to 100 answers → most scores drop (mean −0.41), so
+  this cheap trick fails; (3) a policy dot moves along "higher reward-model score"; two curves, the proxy
+  score and true quality, rise together, then the true-quality curve turns down while the proxy keeps
+  rising; label "over-optimization (illustrative shape)".
+- Evidence: (1) and (2) measured in Day 15 · 04 Part C (reference run); (3) illustrative shape after
+  Gao et al. 2022, to be cited in `source-map.md`. Badge on (3).
+- Relation: follows 046 (systematic bias is learned); points to the policy-optimization article.
+
+### CAND-ANIM-051 — One reward model, three uses (article close)
+
+- Source: agent, at the learner's request (2026-10-30); article section 8.
+- Learning objective: once trained and frozen, the reward model only scores; three common uses read
+  that score in different ways.
+- Storyboard: (1) the frozen reward model (lock icon); (2) **best-of-n**: a chat model writes 4 answers,
+  each gets a score, the highest is returned; (3) **labeler**: two new answers are scored, the higher
+  becomes `chosen`, a new preference row appears; (4) **RLHF grader**: the policy's answer gets a score,
+  which becomes the reward for an update arrow pointing to "next article".
+- Evidence: illustrative scores. Keep (4) to one frame: PPO/GRPO/DPO belong to the policy-optimization
+  article.
+- Relation: closing GIF; mirrors 044's opening table.

@@ -63,8 +63,9 @@ follow these unless the learner changes them. Reference package:
 **Series plan** (revised 2026-10-22: LoRA/QLoRA get their own article; revised 2026-10-27: RL
 terms article inserted before preference alignment):
 `X-POST-001` why post-training · `X-POST-002` instruction tuning (SFT) ·
-`X-POST-003` LoRA and QLoRA · `X-POST-004` RL terms for LLMs · `X-POST-005` preference
-alignment · `X-POST-006` RLVR.
+`X-POST-003` LoRA and QLoRA · `X-POST-004` RL terms for LLMs · `X-POST-005` reward models ·
+`X-POST-006` RLVR. (Revised 2026-10-30: `X-POST-005` is solely about reward models; PPO, GRPO and
+DPO need their own article, slot to be decided by the learner.)
 Article 1 is beginner-level; later articles go deeper, each on one technique.
 
 `X-POST-004` **RL terms for LLMs** (slot approved by the learner 2026-10-27: before preference
@@ -73,6 +74,16 @@ gradient, ratio/clipping, KL, exploration, with many GIFs on one running example
 note glossary (`learning_artifacts/day-15-preference-data-and-bradley-terry/learning-from-preferences.md`,
 D39); animation set `CAND-ANIM-038`. Thirteen GIFs approved 2026-10-28; Chinese version published by
 the learner (reported 2026-10-29); English not transferred (`x-post-training-004/`).
+
+`X-POST-005` **reward models** (planned; scope set by the learner 2026-10-30: solely reward models,
+plan in [`x-post-training-005/plan.md`](x-post-training-005/plan.md); **read the learning note
+`learning_artifacts/day-15-preference-data-and-bradley-terry/learning-from-preferences.md` before
+outlining or drafting**). Must include a section on the **chat model vs reward model head** (learner request, 2026-10-30, S1 Part A): same pretrained body, LM head `1024 → 151,936`
+replaced by a `1024 → 1` score head; one forward pass, one number read at the last token, no
+generation; the pick is a comparison of two scores. Animation `CAND-ANIM-042`; source: learning note
+D28, D30, D42. Must also include ★ a section on **chat-model logits vs reward-model scores** (learner, 2026-10-30:
+"important"; Bradley–Terry as a softmax over two answers), animation `CAND-ANIM-043`, source D47. ★ **Key point** (learner, 2026-10-30): every logit is `h · one head row`; the same body gives `h`, 151,936 rows give token logits → softmax → token ID → detokenizer, one row gives one logit = the score (source D48; see "Key points" in the plan).
+Beginner Bradley–Terry animation `CAND-ANIM-041` is also a candidate for this article. Full animation list (033–035, 041–051, with a recommended core of 7) in the plan's **Animations** table (2026-10-30).
 
 **Text**
 

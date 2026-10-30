@@ -18,7 +18,7 @@ Two axes: **feedback source** (human pairs · reward model · LLM judge · proce
 
 | Stage | Topic | Course | Status |
 |---|---|---|---|
-| S1 | Reward models: BT, training, bias audit, process labels | Day 15, Day 16; [S1 notebook](../../notebooks/study-path/s1_reward_models.ipynb) | **in progress** (Day 15 · 04) |
+| S1 | Reward models: BT, training, bias audit, process labels | Day 15, Day 16; [S1 notebook](../../notebooks/study-path/s1_reward_models.ipynb) | **in progress**: S1 notebook Part A (2026-10-30) |
 | S2 | KL-regularized optimum → DPO | Day 17, Day 18; [S2 notebook](../../notebooks/study-path/s2_kl_optimum_and_dpo.ipynb) | — |
 | S3 | REINFORCE → baselines/RLOO → PPO → algorithm comparison | Days 19–21; [S3 notebook](../../notebooks/study-path/s3_policy_gradient_to_ppo.ipynb) | — |
 | S4 | GRPO | Day 22; [S4 notebook](../../notebooks/study-path/s4_grpo.ipynb) | — |
@@ -30,7 +30,25 @@ Workbooks (built 2026-10-30 at the learner's request: "seven notebooks, one per 
 exercises and granular code blocks"): [study-path README](../../notebooks/study-path/README.md). Each
 runs toy first, then Qwen3-0.6B; 74 fill-in exercises with checks, 26 predictions. All trained models
 use fp32 master weights. While building them, a precision problem was found: AdamW on bf16 weights
-loses most small updates. It probably also affects Day 15 · 04's PPO/GRPO/DPO runs (open item).
+loses most small updates. It affected Day 15 · 04 too; **fixed 2026-10-30** (float32 master weights,
+bf16 autocast, new Part C cell showing the rounding). Re-run, bf16 → fp32: reward-model accuracy
+62.2% → 62.2% (unchanged); PPO KL, last 5 iterations, 0.32 → 7.9 nats; PPO eval reward
++0.03 ± 0.12 → +0.34 ± 0.11 (≈ 1.8 SE, suggestive); GRPO within noise (KL 0.03); DPO held-out implicit
+accuracy 57.3% → 62.7%, margin +0.07 → +0.43, with chosen up (+0.27) and rejected down (−0.16).
+
+### S1 notebook study log (started 2026-10-30)
+
+Questions raised while working through the S1 notebook go into **Discussions** with an `[S1 · Part X]`
+tag; requests for visuals go into the plan table.
+
+| Part | Status | Exercises / predictions | Discussions and requests |
+|---|---|---|---|
+| A · Bradley–Terry: the loss and its gradient | studied | — | beginner Bradley–Terry animation, plan P9 → `CAND-ANIM-041`; D41 (plain explanation), D42 (score head; backprop + AdamW); article section + animation, plan P10 → `CAND-ANIM-042`; D43 (the loss is always computable from a labeled pair), D44 (scores vs rubrics), D45 (why the output is a number before training), D46 (score range; logit), D47 ★ (chat logits vs reward scores; plan P11 ★ → `CAND-ANIM-043`), D48 ★ (the numbers through the network, step by step; key point of `X-POST-005`) |
+| B · linear reward model with a known truth | studied | — | D49 (what "Bradley–Terry is the true model here" means), D50 ★ (the reward model learns `w` from noisy labels: two layers of noise; random noise vs systematic bias), D51 ★ (is Bradley–Terry the only model used in practice? no: alternatives), D52 ★ (gradient descent recap and how it trains a reward model; key point 3 of `X-POST-005`), D53 (random flips and calibration, plainly, with counts), D54 (the same with metaphors, at the learner's request: scorekeeper, weather forecaster) |
+| C · from a sequence to one number | in progress | — | D55 ★ (Part C revisits D28, D30, D42, D47 ★, D48 ★; new: a score at every position, padding, causal attention, bf16 noise); animation set for the whole article, plan P12 → `CAND-ANIM-044`–`051` |
+| D · train a Qwen3 reward model | not started | — | — |
+| E · length audit | not started | — | — |
+| F · outcome and process labels | not started | — | — |
 
 ## Plan: deeper dives
 
@@ -45,6 +63,10 @@ Topics the learner flagged for further discussion or future course material.
 | P6 ★ | **KL to the reference: fine description + animation** | the learner, at NB04 Part E (2026-10-27): "we need to address KL understanding by fine description and animation as well" | NB04 `ppo_rewards` (k1 in reward), `grpo_iteration` (k3 in loss), Predict 12/15; D35 | description written (D35); animation proposed as `CAND-ANIM-037` (companion to 036); state *suggested*, produce on the Mac Studio |
 | P7 ★ | **Article: RL terms for LLMs** (many animations, easy examples) | the learner, after the D39 glossary (2026-10-27) | glossary section above; D21–D25, D35–D39; NB04 Part E code | X article `X-POST-004`, slot approved 2026-10-27: **before preference alignment** (now `X-POST-005`; RLVR → `X-POST-006`) + GIF set `CAND-ANIM-038` (10 loops on the garlic example); write and produce on the Mac Studio |
 | P8 ★ | **Deep-study path: feedback sources × optimizers** | the learner, 2026-10-29: "I want to do deep study in this area, which path should we go?" | D40; course Days 15–25 (Chapters 10–14) | proposed: S1 reward models (D15–16) → S2 KL optimum + DPO (D17–18) → S3 REINFORCE → baselines → PPO (D19–21) → S4 GRPO (D22) → S5 RLVR (D23) → S6 combinations (new: RM-labelled iterative DPO, mixed RM + verifier rewards, Tülu 3-style pipeline) → S7 failure modes (D24, plan P2); **approved by the learner 2026-10-29: "ok, follow this path"**. Current position: S1 (Day 15 · 04: Predict 5, Parts E–G, then Day 16) |
+| P9 | **Animation: Bradley–Terry for beginners** | the learner, at S1 Part A (2026-10-30): "we should produce a beginner friendly animation to explain Bradley–Terry" | S1 Part A (Exercises 1–2); Chapter 10 §10.2–10.5; D4–D7, D9 | proposed as `CAND-ANIM-041`: one pair, a person's label, two scores, the gap (shift doesn't matter), gap → σ → probability, loss, equal-and-opposite training pushes, then many pairs on the curve. Entry point before 033–035; state *suggested*, produce on the Mac Studio with them |
+| P10 | **Article section + animation: chat-model head vs reward-model head** | the learner, at S1 Part A after D42 (2026-10-30): "the header difference between a chat model and a reward model deserves an explanation in the article and an animation" | D28, D30, D42; Day 15 · 04 Part C; S1 Part C | required section of `X-POST-005`, which the learner set (2026-10-30) to be **solely about reward models** and to be written from this note (plan `publications/x-articles/x-post-training-005/plan.md`); animation `CAND-ANIM-042`: one 28-block body, LM head `1024 → 151,936` (sample, loop) swapped for a `1024 → 1` score head (one pass, last-token number), two answers → two scores → the pick; state *suggested*, produce on the Mac Studio |
+| P11 ★ | **Article section + animation: chat-model logits vs reward-model scores** | the learner, at S1 Part A after D47 (2026-10-30): "the above is important, we need to explain this well in article and animation" | D47 ★, D48 ★, D46, D41, D42 | required section of `X-POST-005` (reward models), right after the head-swap section; animation `CAND-ANIM-043`: one softmax over 151,936 tokens from one pass vs one softmax over 2 answers from two passes; same `−log softmax(correct option)` loss; raw score used as the reward. Companion to 042; state *suggested*, **high priority**, produce on the Mac Studio |
+| P12 | **Animation set covering the whole reward-model article** | the learner, at S1 Part C (2026-10-30): "suggest more animations, so it can support the whole article" | `X-POST-005` plan sections 1–8; D1–D3, D42, D50 ★, D52 ★, D53–D55 ★, P2 | proposed `CAND-ANIM-044` (opening: one click → one row), 045 (comparisons vs grades), 046 ★ (random noise vs systematic bias), 047 (calibration), 048 ★ (which position gives the score), 049 (training at scale), 050 (length and reward hacking preview), 051 (one reward model, three uses). With 033–035 and 041–043: 14 candidates; the plan marks a core of 7 (041, 035, 042, 048, 043, 046, 050) for the learner to choose; state *suggested*, produce on the Mac Studio |
 | P2 | **Reward hacking** | flagged as "very interesting, worth exploring" after D3 (2026-10-27); candidate for discussion and new course material or an article | Chapter 10 §10.8–10.9 (shortcut experiment, optimization changes the population); Chapter 14 §14.1 "A real reward-hacking microscope", §14.5 length bias; notebook Day 24 · 01 `reward_hacking.ipynb`; Gao et al. 2022 overoptimization | planned: discuss after §8.3–8.4, then decide on material |
 
 ## Notebook built from these discussions
@@ -135,6 +157,11 @@ assessed mastery.
 | ★ Head swap: `AutoModelForSequenceClassification` | loading Qwen3 with `num_labels=1` keeps the transformer body but **discards `lm_head`** (1024 → 151,936 token logits; load report `lm_head.weight UNEXPECTED`) and **adds `score`** (1024 → 1, random init; `score.weight MISSING`). Result: one float per conversation, no token output, no `generate()`, no instruction prompt | **marked important by the learner** (D30) |
 | ★ Choosing PPO / GRPO / DPO / RLVR | three separate axes: **data → scope** (any method can be general or domain-specific); **online vs offline → cost and learning from its own outputs** (PPO/GRPO generate + grade new answers; DPO doesn't); **reward source → verifiable or not** (RLVR = verifier; learned `rm` otherwise). GRPO is an update rule, used with `rm` or a verifier | **marked important by the learner**; learner synthesis refined (D33, D34) |
 | ★ KL penalty to the reference | KL(π‖π_ref) = Σ_y π(y)·log π(y)/π_ref(y) per position, summed over the answer; ≥ 0, = 0 only if identical, asymmetric. RLHF maximizes E[R] − β·KL so the policy stays where `rm` is reliable. Estimated from sampled tokens: k1 = log π − log π_ref (can be < 0 per sample), k3 = e^d − d − 1 (≥ 0). PPO: −β·k1 in each token's reward; GRPO: β·k3 in the loss | **marked important by the learner**; described (D35), animation planned (P6) |
+| ★ The numbers through the network: every logit is `h · one head row` | tokenize → embed → 28 layers → final hidden vector `h` (1024) → head. Chat model: 151,936 rows → 151,936 logits → softmax → pick one token ID → detokenize → repeat. Reward model: same body, **one** row `w` → one logit `w · h` = the score, used raw as the reward; softmax/σ over two answers' scores only inside the training loss | **marked important by the learner** (D48 ★); key point of `X-POST-005` |
+| ★ Noisy labels: random noise vs systematic bias | the reward model learns `w` only from (chosen, rejected) labels, which are noisy twice: each clean label is one Bradley–Terry draw (thousands of pairs pin down `w`), and judges corrupt some. **Random flips** cancel in the gradient: direction kept, scale shrinks → under-confident (S1 Part B, ε = 0.2: `w` ≈ (0.72, 0.18), ratio 0.25, ranking 99.9%). **Systematic bias** adds up in the gradient: direction changes → the bias is rewarded (length judge, ε = 0.2, ≈ 8% labels changed: ratio 0.25 → 0.53, ranking ≈ 92%); more data doesn't fix it | **marked important by the learner** (D50 ★; also D3) |
+| ★ Reward-model families beyond Bradley–Terry | BT (`−log σ(r_c − r_r)`) is the common *assumption* on real data, not a known truth. Alternatives: BT + margin (Llama 2), BT with ties, Plackett–Luce (rankings; = BT at K = 2), pointwise regression on ratings (HelpSteer2), multi-objective heads (ArmoRM), general pairwise preference P(A > B) from both answers (PairRM, NLHF; can fit A > B > C > A), generative judges (keep the LM head), process reward models (per step), verifiers (no learned model). DPO assumes BT too | **marked important by the learner** (D51 ★); rows from memory, verify before publishing |
+| ★ Which position gives the score | the score head runs at every position (`w · h_t`, `[B, T]`); the reward is the value at the last real token `<|im_end|>`, the rest discarded. Last, because causal attention makes `h_t` depend only on tokens 1…t: a one-word change alters outputs only from that word on (S1 Predict 2). Find it under padding with `(arange(T) · non_pad).argmax` (left and right padding; `sum − 1` fails for left). bf16 moves a score by ≈ 0.008 | **marked important by the learner** (D55 ★, D28); `X-POST-005` section 4a |
+| ★ Chat logits vs reward-model scores | Bradley–Terry is a softmax over the 2 compared answers, `σ(a − b) = softmax([a, b])₀`; chat logits are a softmax over the whole vocabulary from one pass, reward scores come from separate passes, have no absolute meaning, and the raw score is the reward; both train with `−log softmax(correct option)` | discussed (D47 ★) |
 | Credit assignment | RL term: deciding how much each action (token) contributed to a single outcome (R). The quantity is the advantage A_t; the update is ∝ A_t·∇log π(a_t\|s_t). Options: uniform per answer (REINFORCE/GRPO), learned value + GAE (PPO), per-step graders (process reward models); SFT has no credit problem (every token has a target) | introduced (D37–D38); term new to the learner |
 
 ## Knowledge gaps
@@ -1328,4 +1355,389 @@ in the LLM setting", above Key concepts).
 Change vs the learner's draft: DPO comes *before* PPO (not alongside), because its derivation is
 self-contained given the KL objective, and the course is built that way. RLVR is a feedback source,
 so it is studied *with* GRPO (S5), not after all the optimizers in the abstract.
+
+
+### D41 · [S1 · Part A] "Explain Bradley–Terry in plain language with easy examples" (2026-10-30)
+
+**Learner's request:** at S1 Part A, a plain-language explanation of Bradley–Terry with easy examples
+(after asking for the beginner animation, plan P9 / `CAND-ANIM-041`). D4–D7 covered the first pass;
+this one adds learning scores back from votes, a three-answer example and the model's assumptions.
+
+**Explanation given:**
+- **Input and output.** Input: only comparisons ("A preferred over B"). Output: one score per item,
+  chosen so that the **score gap** predicts how often one item is preferred:
+  `P(A ≻ B) = σ(s_A − s_B) = 1 / (1 + e^{−(s_A − s_B)})`.
+  Gap −2 → 0.12 · −1 → 0.27 · 0 → 0.50 · +1 → 0.73 · +2 → 0.88 · +3 → 0.95. Never exactly 0 or 1.
+- **Example 1, scores → probabilities.** Prompt "How do I boil an egg?": A (clear steps and times)
+  score 2, B (correct but vague) 1, C (wrong) −1. Then P(A ≻ B) = σ(1) = 0.73, P(B ≻ C) = σ(2) = 0.88,
+  P(A ≻ C) = σ(3) = 0.95. Three scores give all three pairwise probabilities, consistently.
+- **Example 2, votes → scores (what training does).** 10 annotators compare A and B; 7 pick A.
+  The loss over the votes is `−7 log σ(Δ) − 3 log σ(−Δ)`; its derivative `−7(1 − σ(Δ)) + 3σ(Δ)` is 0 at
+  σ(Δ) = 0.7, so the fitted gap is `Δ = log(7/3) = 0.85`. The 7 votes push the gap up, the 3 push it
+  down, and they balance where the predicted probability equals the observed win rate. If all 10 pick
+  A, nothing balances and the gap keeps growing: maximum likelihood is overconfident on unanimous,
+  small data.
+- **A real use of the same model: chess Elo.** Elo predicts the expected score with base 10 and
+  scale 400: a 200-point gap → `1 / (1 + 10^{−200/400}) = 0.76`.
+- **In a reward model.** The item is (prompt, answer); its score is `r(x, y)`, the reward model's
+  output. Each pair contributes `−log σ(r_chosen − r_rejected)`: gap −1 → loss 1.31 and a push of
+  size 0.73 on each score; gap +3 → loss 0.05, push 0.05. A step raises the chosen score and lowers
+  the rejected one by equal amounts.
+- **Only the gap carries information.** Adding 10 to every score changes nothing, so a score has no
+  absolute meaning; compare scores of answers to the same prompt.
+- **Assumptions (limits).** (1) All items lie on one line: preferences A ≻ B, B ≻ C, C ≻ A (a cycle)
+  can't be represented, and the fit puts the three near equal scores. (2) No ties: datasets drop them
+  or need an extended model. (3) One standard for everyone: annotator disagreement appears as
+  probabilities near 0.5, not as separate groups (D3).
+
+### D42 · [S1 · Part A] "To pick rather than generate, we replace the head with a classification head? And which algorithm optimizes the loss?" (2026-10-30)
+
+**Learner's synthesis:** training a reward model always needs labeled data, so we know when it ranks a
+pair right or wrong; because the reward model is a neural network (an LLM of the same family), its
+picking has to be turned into a loss that can be optimized. Correct, with one refinement: the labels
+are **relative** (which of two answers is better), not absolute grades.
+
+**Q1 · Replace the head?** Yes, for the standard scalar reward model:
+- The LM head (`1024 → 151,936` logits, one per vocabulary token) is discarded and a new, randomly
+  initialized linear layer `1024 → 1` is added (`AutoModelForSequenceClassification(num_labels=1)`;
+  the name says "classification", but with one output it is a **score head**: one unbounded real
+  number, no classes, no softmax). D30.
+- The model doesn't generate and doesn't pick. One forward pass reads (prompt, answer), and the head
+  is read at the last non-pad token: one score per answer (D28). The **pick** is the comparison of two
+  separately computed scores, `r(x, y_A) > r(x, y_B)`.
+- Other designs keep the LM head: an LLM judge or generative reward model reads the probability of a
+  verdict token ("A" vs "B") or writes a verdict; DPO's implicit reward uses the policy's own
+  log-probabilities. The scalar head is the standard for RLHF reward models.
+
+**Q2 · Which algorithm optimizes it?** Ordinary supervised training: **backpropagation + AdamW**, the
+same optimizer as pretraining and SFT. No RL is involved.
+1. Forward the chosen and the rejected answer through the same network (shared weights) → `r_c`, `r_r`.
+2. Loss `ℓ = −log σ(r_c − r_r)`, averaged over the batch (8 pairs in S1 / Day 15 · 04).
+3. `loss.backward()`: autograd starts from `∂ℓ/∂r_c = −(1 − σ(Δ))`, `∂ℓ/∂r_r = +(1 − σ(Δ))` (S1
+   Exercise 2) and applies the chain rule through the head and every transformer layer.
+4. Clip the gradient norm to 1.0, then `opt.step()`: AdamW keeps, per weight, a running mean of the
+   gradient `m` and of its square `v`, and updates `w ← w − lr · m̂ / (√v̂ + ε) − lr · λ · w`. Each weight
+   moves by roughly `lr` per step (1e-5 here), whatever the gradient's raw size. That is why bf16
+   weights lost the updates (spacing 1.2e-4 near 0.02) and the trained models now keep fp32 weights.
+5. One pass over the data (one epoch, as in InstructGPT); more epochs overfit the noisy labels.
+
+**Two levels of "algorithm".** The **loss** defines what is wanted (Bradley–Terry here; later the PPO,
+GRPO or DPO loss). The **optimizer** (AdamW, via backprop) changes the weights to lower it. PPO and GRPO
+are needed for the policy because a sampled answer's reward can't be differentiated through the
+sampling; their losses are still minimized with AdamW. The reward model needs no RL at all, because its
+loss is a differentiable function of its own outputs on fixed data.
+
+### D43 · [S1 · Part A] "Because we know the chosen and the rejected answer, we can always calculate the loss, right?" (2026-10-30)
+
+**Learner's synthesis:** for one comparison, knowing which answer is chosen and which is rejected
+means the Bradley–Terry loss can always be computed. **Correct.** `ℓ = −log σ(r_chosen − r_rejected)`
+needs only the two scores and the label, and is finite and positive for any finite scores.
+
+**Refinements given:**
+- **Computed whether the ranking is right or wrong, and continuous.** Gap −3 → 3.05 · −1 → 1.31 · 0 →
+  0.69 · +1 → 0.31 · +3 → 0.05. A correctly ranked pair still has loss > 0 and still pushes the gap
+  wider. Accuracy (0/1) has zero gradient almost everywhere, which is why training uses this loss.
+- **The model doesn't pick.** It scores each answer separately; the label states the correct order;
+  the loss measures how well the two scores agree with it (D42).
+- **Computable is not the same as correct.** A mislabeled pair (D3) gives a valid loss that pushes the
+  wrong way; averaging over many pairs lets correct labels dominate, and noise caps accuracy.
+- **Ties** have no chosen answer: drop them, or use a soft target 0.5,
+  `−½ log σ(Δ) − ½ log σ(−Δ)`, minimized at Δ = 0. **Stability:** compute with `F.logsigmoid`
+  (S1 Exercise 1, gap −200).
+
+### D44 · [S1 · Part A] "Are the scores based on a rubric?" (2026-10-30)
+
+**Answer given:** not in a Bradley–Terry reward model. Its score is learned; a rubric can shape it only
+indirectly, through the labels.
+- **No rubric in the model.** The input is (prompt, answer) only, with no instructions (D30); the only
+  signal is "A ≻ B". The score means "predicted to win comparisons": the number that makes σ(gap)
+  match the observed preferences. It has no named components and no absolute zero (shift invariance).
+- **A rubric enters through the labelers.** Written guidelines shape annotators' choices, and the model
+  learns from the choices. HH-RLHF (S1's data) gave crowdworkers a short "pick the more helpful
+  response" instruction and left the judgment largely to them (Bai et al. 2022).
+- **So it learns whatever predicted the labels, intended or not:** in the Day 15 · 04 fp32 run the score
+  gap correlated with the length gap at +0.25, though no rubric asked for length (S1 Part E audits this).
+
+**Where explicit rubrics are used:** annotator guidelines (→ pairwise labels → BT reward model); an LLM
+judge with a rubric in its prompt (UltraFeedback: GPT-4 rated 1–5 on instruction-following,
+truthfulness, honesty, helpfulness, then pairs were built from the ratings); Constitutional AI (written
+principles applied by an AI labeler, then a BT reward model); per-attribute reward models (one rating
+per criterion, e.g. HelpSteer); rubric/checklist rewards (per-prompt checks graded by an LLM judge,
+weighted sum); verifiers in RLVR (the rubric written as code, S5).
+
+**Trade-off:** BT learns from cheap comparisons and can capture unwritten preferences, but its score
+can't be decomposed into reasons; a rubric is transparent but covers only what was written, and a
+rubric-following judge adds its own biases (position, length).
+
+### D45 · [S1 · Part A] "How does the reward model know to output a score before training, without an instruction?" (2026-10-30)
+
+**Answer given:** it doesn't know anything; the architecture guarantees the output is one number.
+- **Architecture, not instruction.** The score head is one linear layer, `score = w · h = Σᵢ wᵢ hᵢ`
+  over the 1024-dim hidden state `h` at the last token. Any input text gives some `h`, so the output
+  is always exactly one number; it can't emit tokens. A chat model needs a prompt because its output
+  is chosen from 151,936 tokens; the reward model's output format is fixed by the layer.
+- **Untrained = meaningless.** `w` starts small and random, so the score is an arbitrary mix of
+  features: held-out accuracy 47.6% before training in Day 15 · 04 (chance). S1 Part D measures
+  untrained vs trained scores (`sc0` vs `sc1`).
+- **Training gives it meaning.** Bradley–Terry gradients change `w` (and the body) until chosen answers
+  score higher: 62% after 3,000 pairs.
+- **The pretrained body supplies the features.** Its 28 layers already encode topic, fluency, whether
+  the question is addressed, tone and length in `h`; training mainly learns which combination predicts
+  the labels. That is why a few thousand pairs suffice, and why a random body wouldn't work.
+
+### D46 · [S1 · Part A] "Is there a range of the score? Is it a logit?" (2026-10-30)
+
+**Range: none built in.** The score is the raw output `w · h` of the linear head, with no sigmoid,
+softmax or clipping after it, so it is any real number. In practice it stays within a few units
+because only gaps matter (Day 15 · 04 fp32 run: held-out gap std 1.67).
+- **Shift is free:** +10 to every score changes no gap or probability; the zero point is meaningless.
+- **Scale is learned:** ×2 doubles every gap and makes every prediction more confident, so training
+  fixes the scale where σ(gap) best matches label consistency (noisy labels → small gaps; unanimous
+  labels → growing gaps, D41). S1 Exercise 1 shows both rows.
+
+**Logit?** In the loose ML sense (raw pre-activation output; Hugging Face's field is `.logits`), yes. In
+the strict sense (log-odds), the **gap** is a logit: `σ(gap) = P(chosen wins)`, so `gap = log(P/(1 − P))`;
+gap 0.85 → odds e^0.85 = 2.33 → 70 : 30. A single score is a **log-strength** (original BT form
+`P = e^a / (e^a + e^b)`), not a log-odds, because its zero point is arbitrary.
+
+**Why the scale matters later:** PPO optimizes `R − β·KL`, so β converts nats into reward units; a
+reward model with scores twice as large halves β's effect. Hence normalization: InstructGPT shifted the
+reward model so labeler demonstrations average 0 before RL; others whiten per batch or use group
+z-scores (GRPO). S2–S3.
+
+### D47 · ★ [S1 · Part A] "Chat LLMs also have logits, turned into probabilities by softmax. What's the difference?" (2026-10-30)
+
+> ★ **Marked important by the learner (2026-10-30):** "we need to explain this well in article and
+> animation" (plan P11 ★, `X-POST-005` section, `CAND-ANIM-043`).
+
+**Key point:** Bradley–Terry *is* a softmax over two answers: `σ(a − b) = eᵃ / (eᵃ + eᵇ) = softmax([a, b])₀`.
+A reward-model score plays the role of a logit; what differs is the set of candidates and the use.
+
+**Example.** Chat model after "The capital of France is": logits Paris 2.0, Lyon 1.0, cat −1.0 →
+softmax 0.705 / 0.259 / 0.035 (over these three). Reward model: score(A) = 2.0, score(B) = 1.0 from two
+separate passes → softmax([2, 1]) = [0.731, 0.269] = σ(1).
+
+| | Chat-model logits | Reward-model scores |
+|---|---|---|
+| per pass | 151,936 per position | 1 per sequence |
+| competitors | same output vector | separate forward passes |
+| softmax over | whole vocabulary (complete set) | only the compared answers (2); all possible answers is impossible |
+| absolute meaning | real probabilities, sum to 1 | none for one score; only gaps |
+| loss | cross-entropy, target = actual next token | 2-way cross-entropy, target = chosen answer |
+| shift invariance | per position | per prompt |
+| scale | temperature | learned (D46) |
+| use | softmax → sample → generate | raw score is the reward; σ only in the loss |
+
+**Generalization:** K ranked answers → Plackett–Luce (softmax over K, then K − 1, …); InstructGPT ranked
+4–9 answers and trained on all pairs within each ranking. **Link to S2:** DPO's implicit reward is built
+from the chat model's own log-softmax, `β[log π(y|x) − log π_ref(y|x)]`, so no separate reward model.
+
+### D48 · ★ [S1 · Part A] "Explain again, plainly: how are logits transformed in the network? logits → probabilities → detokenizer? logits → score?" (2026-10-30)
+
+> ★ **Marked important by the learner (2026-10-30):** "the above is important, mark it in note and
+> should be a key point in the article for reward model." A **key point of `X-POST-005`** (plan,
+> "Key points" and section 4b) and of animations `CAND-ANIM-042/043`.
+
+**Learner's view:** the key understanding is how the numbers flow through the network. Corrections:
+chat model: logits → probabilities → **pick one token ID** → the detokenizer turns that ID into text (it
+never sees probabilities). Reward model: there is **one** logit, and it *is* the score; nothing follows it
+at use time.
+
+**Chat model, step by step** (real Qwen3 IDs; toy 4-dim vectors instead of 1024):
+1. Tokenize "The capital of France is" → `[785, 6722, 315, 9625, 374]`.
+2. Embed: each ID → 1024 numbers. 3. 28 layers → `h` (1024 numbers) at the last position.
+4. LM head: 151,936 rows × 1024; `logit_k = row_k · h`. Toy `h = [0.5, −1.0, 2.0, 0.0]`: Paris (12095) row
+   `[2, 0, 0.5, 1]` → 2.0; Lyon (55201) `[0, −0.5, 0.25, 3]` → 1.0; cat (8251) `[0, 1, 0, 2]` → −1.0.
+5. Softmax → 0.705 / 0.259 / 0.035. 6. Pick an ID (greedy or sampled) → 12095.
+7. Detokenize → " Paris". 8. Append and repeat: one forward pass per generated token.
+
+**Reward model:** steps 1–3 identical on prompt + answer + `<|im_end|>`, `h` read at `<|im_end|>`; the score
+head is **one row** `w`: `score = w · h`. Toy `w = [1, −0.5, 0.5, 2]`: answer A (`h_A = [0.5, −1, 2, 0]`) →
+2.0; answer B (`h_B = [1, 0, 0, 0]`) → 1.0. At use time, 2.0 goes straight to RL as the reward: no
+softmax, no ID, no detokenizer. Only in training: σ(2.0 − 1.0) = 0.731, loss −log 0.731 = 0.31.
+
+**Key point:** every logit is one dot product of the final hidden vector `h` with one row of the head.
+Many rows (one per token) → logits rank next tokens; one row → one logit ranks whole answers. Everything
+before the head is the same. (Tokenizer: 151,669 tokens; the head has 151,936 rows, the rest padding.)
+Belongs with D47 ★ in `X-POST-005` (key point; section 4b) and `CAND-ANIM-042/043`.
+
+### D49 · [S1 · Part B] "Bradley–Terry is the true model here: why call it the true model? What does true model mean?" (2026-10-30)
+
+**Two meanings of "model".** In "reward model" it is a neural network. In "Bradley–Terry is the true
+model" it is a **probability model of how the labels are produced**: a rule that says, for a pair (A, B),
+with what probability the label is "A wins". The **true model** is the rule that actually produced the
+data (statisticians call it the data-generating process).
+
+**Why "true" in Part B.** The labels are simulated, and the simulator's code *is* Bradley–Terry: it
+computes `r*(f) = w*·f` with `w* = (2.0, 0.5)` and draws "A wins" with probability `σ(r*_A − r*_B)`.
+Example: `f_A = (1, 0)`, `f_B = (0, 1)` → `r*_A = 2.0`, `r*_B = 0.5`, gap 1.5, `σ(1.5) = 0.82`; the simulator
+says "A wins" on 82 of 100 draws, "B wins" on 18. Fitting Bradley–Terry to these labels uses the same
+formula that made them, so the fitted model's form matches the truth (**well-specified**), and a linear
+`r_w(f) = w·f` can equal `r*` exactly.
+
+**What that buys.** (1) The fit can be checked: fitted `w` ≈ `(2.0, 0.5)` on 4,000 clean pairs.
+(2) Calibration: predicted probabilities match label frequencies (ECE < 0.01). (3) Even at `w*` the loss
+is above 0: the labels are random draws (18% of the example pairs say B), so no `w` predicts every label.
+
+**Real human data.** Nobody computes `σ(gap)` before clicking. Bradley–Terry is an *assumption* there,
+and it fails in known ways: annotators disagree, preferences can be intransitive (A > B, B > C, C > A,
+which no set of scores can produce), ties, and the probability can depend on more than one score
+difference. Training then finds the **best Bradley–Terry fit** to the labels, not "the truth", and
+there is no `w*` to compare with. Part B uses a simulation for exactly this reason: on real data,
+recovery cannot be checked.
+
+### D50 · ★ [S1 · Part B] "So the reward model learns w from noisy labels?" (2026-10-30)
+
+> ★ **Marked important by the learner (2026-10-30).** Random label noise lowers the reward model's
+> confidence (smaller `w`, same direction, ranking intact); systematic bias changes what is rewarded
+> (direction of `w` shifts toward the bias), and more data does not remove it.
+
+**Yes.** Training sees only `(f_chosen, f_rejected)` per pair, never `w*` or the true gap, and minimizes
+`−log σ(w · (f_c − f_r))` by gradient descent. The labels are noisy at two levels:
+
+1. **Even clean labels are random.** Each is one draw of the Bradley–Terry coin (gap 1.5 → A wins 82%,
+   B 18%). One label says little; 4,000 labels on different pairs pin down one shared `w`
+   (fit ≈ (2.0, 0.5), ECE < 0.01). Loss starts at log 2 = 0.693 and stays above 0.
+2. **Corrupted labels (ε = fraction of pairs a bad judge affects):**
+   - **Random flips** (ε = 0.2): fitted `w` ≈ (0.72, 0.18). Ratio stays 0.25, ranking agreement with
+     `r*` 99.9%: the flips point in no consistent direction and cancel in the gradient. The scale shrinks
+     (labels never exceed 1 − ε = 0.8), so the model is **under-confident** against clean labels
+     (ECE ≈ 0.15; ≈ 0.04 against the noisy labels it trained on).
+   - **Length-biased judge** (ε = 0.2, only ≈ 8% of labels changed): ratio 0.25 → ≈ 0.53, ranking
+     agreement ≈ 92%. The bias points in one direction every time, so it adds up in the gradient and is
+     learned as part of the reward; more data does not remove it.
+
+Rule (D3): random noise lowers confidence; systematic bias changes what is rewarded. A real reward model
+is the same procedure with `w` = all network weights and human labels as the noisy judge.
+
+### D51 · ★ [S1 · Part B] "Is Bradley–Terry the only true model for reward models in the LLM context, in practice?" (2026-10-30)
+
+> ★ **Marked important by the learner (2026-10-30).** Bradley–Terry is the most common *assumed* model,
+> not the true one and not the only one. The table below was written from memory: verify each row
+> against its paper before it goes into an article or `source-map.md`.
+
+**Correction of the wording.** On real data no one knows the true model (D49). Bradley–Terry is the most
+common **assumed** model: InstructGPT, Llama 2 and Anthropic's reward models all train with
+`−log σ(r_c − r_r)` or a close variant. It is not the only one. Models used in practice:
+
+| Model | Label it needs | Training target | Used in / example |
+|---|---|---|---|
+| Bradley–Terry | pair, A or B | `−log σ(r_c − r_r)` | InstructGPT (rankings of K = 4–9 answers, trained as all K·(K−1)/2 pairs), most RLHF reward models |
+| BT with a margin | pair + strength ("much better" / "slightly better") | `−log σ(r_c − r_r − m)`, larger `m` for stronger preference | Llama 2 |
+| BT with ties | pair, A / B / tie | adds a tie probability (Rao–Kupper, Davidson) | some preference datasets with a tie option |
+| Plackett–Luce | full ranking of K answers | product of softmaxes: first place over all K, second over the rest, … | ranking data; reduces to BT at K = 2 |
+| Pointwise regression | absolute rating per answer (e.g. 0–4 per attribute) | mean squared error to the rating | HelpSteer2 / NVIDIA Nemotron reward models; HelpSteer2-Preference compared and combined BT and regression |
+| Multi-objective | several ratings per answer | one head per attribute, combined by learned weights | ArmoRM |
+| General pairwise preference | pair | predict P(A > B) directly from both answers in one input, no single score per answer | PairRM; Nash learning from human feedback; can represent A > B > C > A, which BT cannot |
+| Generative judge / verifier | pair or rating, often with written reasoning | the LM's probability of a token such as "Yes" or "A" | LLM-as-judge, GenRM; keeps the LM head |
+| Per-step classification | label per reasoning step | binary cross-entropy per step | process reward models (PRM800K) |
+| No learned model | checkable answer | rule or program output | RLVR verifiers (S5) |
+
+DPO also assumes Bradley–Terry inside its derivation (S2); IPO was proposed partly because that
+assumption makes DPO over-fit when preferences are deterministic.
+
+### D52 · ★ [S1 · Part B] "Briefly remind me of gradient descent and its connection to training a reward model" (2026-10-30)
+
+> ★ **Marked important by the learner (2026-10-30):** in the article, right after the Bradley–Terry
+> loss, use gradient descent to minimize it. **Key point 3 of `X-POST-005`** (plan section 3b; section 5
+> scales it to the full network).
+
+**Gradient descent:** to make a loss `L(w)` smaller, repeat `w ← w − lr · ∇L(w)`. The gradient `∇L` says,
+for each weight, how much the loss rises if that weight rises a little; stepping against it lowers the
+loss. `lr` (learning rate) sets the step size.
+
+**For a reward model** the loss is Bradley–Terry's, averaged over labeled pairs. Linear case (Part B,
+Exercise 3), with `Δf = f_chosen − f_rejected`:
+`L = −log σ(w · Δf)`, `∇L = −(1 − σ(w · Δf)) · Δf`.
+
+**Example:** `w = (0, 0)`, `Δf = (1, −1)`, `lr = 1`.
+- Step 1: `w · Δf = 0`, σ = 0.5, loss 0.693, gradient `−0.5 · (1, −1) = (−0.5, 0.5)` → `w = (0.5, −0.5)`.
+- Step 2: `w · Δf = 1.0`, σ = 0.731, loss 0.313, gradient factor 0.269 (smaller push: this pair is
+  already mostly right).
+Each step raises the chosen answer's score relative to the rejected one; the push `1 − σ` shrinks as
+the model gets the pair right (Part A).
+
+**From Part B to a real reward model:** same loss, same rule, three changes. `w` becomes all the
+network's weights (≈ 600M for Qwen3-0.6B); backpropagation computes `∇L` through the 28 layers and the
+score head; each step uses a minibatch of pairs (stochastic gradient descent), and AdamW replaces the
+plain update (per-weight step sizes from running gradient averages, plus weight decay). Still
+supervised learning, no RL (D42).
+
+### D53 · [S1 · Part B] "Explain random flips and calibration in easy language with examples: what and why" (2026-10-30)
+
+**Random flip:** on a fraction ε of pairs, the label is reversed, whatever the two answers contain
+(misclicks, inattention). Why simulate it: it is the simplest kind of label error, and we can compare the
+fit with the known truth.
+
+**Counts, one pair, 100 judges, true gap 2.2 (σ = 0.9).** Clean: 90 say A, 10 say B. With ε = 0.2: of the
+90 A votes 18 flip to B, of the 10 B votes 2 flip to A → 72 + 2 = **74 say A**
+(`ε + (1 − 2ε)·σ = 0.2 + 0.6·0.9 = 0.74`). However large the gap, at most 80 say A (ceiling) and at least
+20 (floor). A still wins more often than B (74 > 50), so the order is kept; the margin shrinks from
+90/10 to 74/26. Flips hit every pair the same way and favour no feature, so training keeps the
+direction of `w` (ranking 99.9%) and shrinks its size (`w` ≈ (0.72, 0.18)).
+
+**Calibration:** a model is calibrated when its stated probabilities match how often things happen.
+Check: take the 100 pairs where the model said "A wins with 0.7" and count A wins. 70 → calibrated;
+90 → under-confident (it said 0.7, reality is 0.9); 50 → over-confident. ECE averages the size of
+these gaps over all prediction groups, weighted by how many pairs each group has.
+
+**The flipped-label model, checked two ways.** Against the noisy labels it trained on: it says ≈ 0.7 and
+noisy A wins ≈ 0.7 → nearly calibrated (ECE ≈ 0.04; not 0, because σ has no floor and ceiling).
+Against clean preferences: it says 0.7, clean A wins 0.9 → under-confident (ECE ≈ 0.15).
+
+**Why it matters.** Ranking is correct, so picking the better answer still works. The probabilities and
+score gaps are too small, which matters when the score is read as a confidence (filtering pairs,
+comparing reward models) and in RL, where the size of reward differences is weighed against the KL
+penalty β. Calibration measures whether the numbers mean what they say, separately from whether the
+order is right.
+
+### D54 · [S1 · Part B] "Still don't fully understand. Use metaphors and even easier examples" (2026-10-30)
+
+The learner asked for metaphors here (an exception to the default plain technical style).
+
+**Random flips = a scorekeeper who sometimes presses the wrong button.** Team A truly beats team B in
+9 of 10 games. The scorekeeper records the wrong winner in 2 of every 10 games, for either team, at
+random. Of A's 9 wins about 1.8 get recorded for B; of B's 1 win about 0.2 gets recorded for A.
+Scoreboard: A ≈ 7, B ≈ 3. A is still ahead (order kept), but the lead looks smaller than it is.
+Mapping: games = comparisons of two answers; scorekeeper = the labelers; scoreboard = the training labels.
+
+**Contrast, systematic bias = a scorekeeper who always gives the mistakes to the taller team.** If B is
+taller, B gains every mistaken point; with enough mistakes B can look like the better team. The order
+itself can change. (Part B's length-biased judge: the "taller team" is the longer answer.)
+
+**What the reward model learns.** It only sees the scoreboard and learns to predict it: "A wins 70% of
+the time". To say 70% instead of 90% it needs a smaller score gap, so `w` shrinks
+((2.0, 0.5) → (0.72, 0.18)) while still pointing the same way.
+
+**Calibration = a weather forecaster who is right about how often.** Collect every day she said "70%
+chance of rain". If it rained on 7 of 10 such days, she is calibrated. If it rained on 9 of 10, she is
+too timid (under-confident). If 5 of 10, she is too bold (over-confident).
+
+**Our reward model is the timid forecaster.** It learned from the faulty scoreboard, so it says "A
+better, 70%". Checked against the scoreboard it learned from: A wins about 7 of 10 → it looks right.
+Checked against the real games: A wins 9 of 10 → it is too timid. It still picks the right winner;
+it is only too unsure. Why care: when the RL step or a person reads the score as "how much better",
+the reward model understates real differences.
+
+### D55 · ★ [S1 · Part C] "Part C mainly reflects our discussion of chat LLMs vs reward models, and the logits" (2026-10-30)
+
+> ★ **Marked important by the learner (2026-10-30).** In `X-POST-005` as section 4a, "Which position
+> gives the score".
+
+**Mostly right.** The load report (`lm_head.weight` 151,936 × 1024 UNEXPECTED, dropped; `score.weight`
+1 × 1024 MISSING, random) is the head swap of D30/D42, and `score = w · h` is the "one head row" of
+D47 ★/D48 ★. **Four things Part C adds:**
+
+1. **The score head runs at every position.** `w · h_t` gives a `[B, T]` tensor: one number per token, like
+   the chat model gives 151,936 logits per token. The reward is **one** of these, at the last real token
+   (`<|im_end|>`); the rest are discarded (D28). D48's "h at `<|im_end|>`" is that selection.
+2. **Finding that position under padding (Exercise 6).** Batches pad short rows with `<|endoftext|>`
+   (151643). `(arange(T) · non_pad).argmax` gives the rightmost real token for right and left padding;
+   `non_pad.sum − 1` works only for right padding.
+3. **Why the last position (Predict 2).** Causal attention: `h_t` depends only on tokens 1…t. Two answers
+   differing in one middle word have identical outputs before that word and different outputs from it to
+   the end. Only the last position has seen the whole prompt and answer; position 0 would give the same
+   number for every answer.
+4. **bf16 rounding noise.** Right vs left padding: equal within 1e-5 in float32, ≈ 0.008 apart under bf16
+   autocast, a floor on how precisely one score can be read.
 

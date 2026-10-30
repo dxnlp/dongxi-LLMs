@@ -23,7 +23,8 @@ in depth:
 | `X-POST-002` | Instruction tuning (SFT) | outline agreed 2026-10-22 |
 | `X-POST-003` | LoRA and QLoRA (split out of SFT, 2026-10-22) | planned |
 | `X-POST-004` | RL terms for LLMs (inserted 2026-10-27, before preference alignment) | planned |
-| `X-POST-005` | Preference alignment (reward models, PPO, DPO) | planned |
+| `X-POST-005` | Reward models (solely; revised 2026-10-30, plan in `../x-post-training-005/plan.md`) | planned |
+| — | Policy optimization: PPO, GRPO, DPO (split out of `X-POST-005` 2026-10-30; slot to be decided) | not scheduled |
 | `X-POST-006` | RLVR | planned |
 
 ## Files
