@@ -1,0 +1,46 @@
+{
+  "events": [
+    {
+      "name": "frozen",
+      "seconds": 1.0
+    },
+    {
+      "name": "best_of_n",
+      "seconds": 3.2,
+      "scores": [
+        0.4,
+        2.0,
+        1.1,
+        -0.3
+      ],
+      "kept": 2
+    },
+    {
+      "name": "labeling",
+      "seconds": 5.1,
+      "chosen": "X",
+      "rejected": "Y"
+    },
+    {
+      "name": "complete",
+      "seconds": 7.6,
+      "uses": [
+        "best-of-n",
+        "labeling",
+        "RLHF"
+      ],
+      "best_of_n": [
+        0.4,
+        2.0,
+        1.1,
+        -0.3
+      ],
+      "rlhf_reward": 2.0
+    }
+  ],
+  "checks": {
+    "inside_canvas": true,
+    "brand_corner_free": true
+  },
+  "duration_seconds": 11.45
+}

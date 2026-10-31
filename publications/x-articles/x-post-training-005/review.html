@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Reward Models: How a Choice Between Two Answers Becomes a Score</title><style>*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;background:#fff;color:#111827;font-family:Arial,"Helvetica Neue",sans-serif}
+body.zh{font-family:"PingFang SC","Songti SC",STSong,serif}
+main{max-width:860px;margin:36px auto 110px;padding:0 28px}
+nav{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#64748b;margin-bottom:18px}
+nav a{color:#2563eb;text-decoration:none;border:1px solid #cbd5e1;border-radius:6px;padding:5px 10px}
+header img{width:100%;height:auto;display:block;border-radius:10px}
+h1{font-size:42px;line-height:1.25;font-weight:700;margin:34px 0 30px}
+h2{font-size:29px;line-height:1.4;margin:58px 0 22px}
+h3{font-size:23px;line-height:1.4;margin:40px 0 16px}
+p,li{font-size:19px;line-height:1.85;overflow-wrap:anywhere}
+p{margin:0 0 20px} ul{padding-left:24px;margin:0 0 22px} li{margin-bottom:8px}
+body.zh p,body.zh li{font-size:19px;line-height:1.95}
+blockquote{margin:26px 0;padding:4px 0 4px 20px;border-left:4px solid #cbd5e1;color:#1f2937}
+blockquote p{margin:8px 0;font-size:20px}
+figure{margin:34px -10px}
+figure img{width:100%;height:auto;display:block;border:1px solid #e2e8f0;border-radius:10px}
+figcaption{font-size:15px;line-height:1.75;color:#64748b;padding:12px 8px}
+.note{font-size:14px;color:#64748b;border-top:1px solid #e2e8f0;margin-top:60px;padding-top:16px}
+@media(max-width:600px){main{padding:0 16px;margin-top:16px}h1{font-size:30px}h2{font-size:24px;margin-top:42px}
+h3{font-size:20px}p,li,body.zh p,body.zh li{font-size:17px}figure{margin:26px -6px}}</style></head><body class="en"><main><nav><span>X-POST-005 · post-training series 5/6</span><a href="zh/review.html">中文版</a></nav><header><img src="assets/cover-post-training-05.png" width="2000" height="800" alt="Reward Models: How a Choice Between Two Answers Becomes a Score"></header><h1>Reward Models: How a Choice Between Two Answers Becomes a Score</h1><article><h2>One choice, one row</h2>
+<p>In the previous article, a judge read finished answers to <em>Is OpenAI open?</em> and gave each one a score. <em>OpenAI is open. It's in the name.</em> got 2. Answers that began with <em>partly</em> got 8 or 10. Reinforcement learning (RL) then used those scores to change the model. The figure recalls that scene: ten sampled answers land at the judge's scores; the answers that start with <em>open</em> score low, and the two <em>partly</em> answers score 10 and 8.</p>
+<figure><img src="assets/00-previous-scores.gif" loading="lazy" alt="From the previous article: the judge&#x27;s scores for ten sampled answers to Is OpenAI open?; answers that start with open score low, the two partly answers score 10 and 8. Illustrative numbers."><figcaption>From the previous article: the judge&#x27;s scores for ten sampled answers to Is OpenAI open?; answers that start with open score low, the two partly answers score 10 and 8. Illustrative numbers.</figcaption></figure>
+<p>One question was left open: where does such a score come from?</p>
+<p>In RL from human feedback (RLHF), the judge is a <strong>reward model</strong>: a neural network that reads a prompt and an answer and returns one number. Nobody writes these numbers by hand. People supply choices. An annotator sees the prompt and two answers:</p>
+<ul>
+<li>A: <em>Partly. Some weights are open.</em></li>
+<li>B: <em>Yes. OpenAI is open. It's in the name.</em></li>
+</ul>
+<p>As of this writing, A is the accurate one: OpenAI has released open-weight models, gpt-oss-120b and gpt-oss-20b, under the Apache 2.0 license, while its flagship models are available only through its API and apps. The annotator picks A. The choice is stored as one row of data: the prompt, the chosen answer and the rejected answer. Thousands of such rows, over thousands of prompts, are the training set of a reward model.</p>
+<figure><img src="assets/01-one-click.gif" loading="lazy" alt="A person picks A over B. The choice becomes one row: prompt, chosen, rejected. Rows stack into the training set of a reward model."><figcaption>A person picks A over B. The choice becomes one row: prompt, chosen, rejected. Rows stack into the training set of a reward model.</figcaption></figure>
+<p>This article follows that row from the click to the number:</p>
+<ul>
+<li>how a choice becomes a loss;</li>
+<li>how the loss changes the network;</li>
+<li>what the network looks like;</li>
+<li>what it learns along the way.</li>
+</ul>
+<p>It is the fifth article in our post-training series.</p>
+<blockquote>
+<p>A reward model never sees a score from a person. It sees which of two answers was chosen, and it has to find scores that explain those choices.</p>
+</blockquote>
+<h2>Compare, do not grade</h2>
+<p>A grade, such as 7 out of 10, needs a scale that every annotator applies the same way, and people do not share one: one annotator's 7 is another's 5. A choice between two answers needs no scale. It also asks less of the annotator. A preference judgment requires no knowledge of how to write the answer, only an opinion about the result. Someone who could not explain OpenAI's licenses can still see that A is more accurate than B.</p>
+<p>Preference data takes several forms:</p>
+<ul>
+<li>pick the better of two answers;</li>
+<li>pick the best of N;</li>
+<li>rank N answers.</li>
+</ul>
+<p>A ranking of N answers yields N(N − 1)/2 pairs. InstructGPT's annotators ranked 4 to 9 answers per prompt. The labels come from trained annotators, from votes on sites such as Reddit and StackExchange, or from a strong LLM asked to compare: UltraFeedback used GPT-4.</p>
+<p>Choices are still noisy. Annotators disagree on close pairs, misclick and tire. InstructGPT's labelers agreed with each other on about 73% of comparisons. That agreement caps what a reward model can reach: if people agree on about three pairs in four, no model can predict held-out choices much more often than that.</p>
+<h2>Bradley–Terry: a score gap becomes a probability</h2>
+<p>The data says A was chosen over B. Training needs numbers. The <strong>Bradley–Terry model</strong>, from 1952, connects the two. Give every answer a score, and let the probability that A is preferred depend only on the gap between the two scores:</p>
+<p>P(A preferred to B) = σ(s_A − s_B) = 1 / (1 + e^−(s_A − s_B))</p>
+<p>σ is the sigmoid. It turns any gap into a probability between 0 and 1:</p>
+<ul>
+<li>gap −2 → 0.12</li>
+<li>gap 0 → 0.50</li>
+<li>gap 1 → 0.73</li>
+<li>gap 3 → 0.95</li>
+</ul>
+<p>Three properties follow.</p>
+<ul>
+<li><strong>Only the gap matters.</strong> Scores of 2 and 1 give the same 0.73 as 102 and 101. A single score means nothing on its own. It means something only next to the score of another answer to the same prompt.</li>
+<li><strong>The probability is never exactly 0 or 1.</strong> Even a much better answer is sometimes passed over, as happens with real annotators.</li>
+<li><strong>Scores can be read back from choices.</strong> Suppose 10 people compare A and B, and 7 pick A. The gap that best explains 7 out of 10 is the one with σ(gap) = 0.7, which is log(7/3) ≈ 0.85. Chess ratings use the same idea: Elo turns a rating gap into an expected score with the same S-shaped curve.</li>
+</ul>
+<figure><img src="assets/02-bradley-terry.gif" loading="lazy" alt="Two scores; only the gap matters (+10 to both changes nothing). The sigmoid turns gap −1 into 0.27; loss 1.31. Each step raises A and lowers B by 1 − σ(gap): gap −1 → +2, loss 1.31 → 0.13."><figcaption>Two scores; only the gap matters (+10 to both changes nothing). The sigmoid turns gap −1 into 0.27; loss 1.31. Each step raises A and lowers B by 1 − σ(gap): gap −1 → +2, loss 1.31 → 0.13.</figcaption></figure>
+<p>A reward model is a network r(x, y) that gives the score of answer y to prompt x. Training asks one question: what probability does the model give to the choice the annotator made? With A chosen, that probability is σ(r_A − r_B), and the loss is its negative logarithm:</p>
+<p>L = −log σ(r(x, chosen) − r(x, rejected))</p>
+<p>This is cross-entropy, the loss that trains next-token prediction. There it is −log of the probability given to the actual next token; here it is −log of the probability given to the actual choice. A gap of −1 gives a loss of 1.31, a gap of 0 gives 0.69, 1 gives 0.31, and 3 gives 0.05. The loss can be computed for every labeled pair, whether the model currently ranks it right or wrong.</p>
+<p>The model makes three assumptions:</p>
+<ul>
+<li>All answers sit on one scale, so preferences that run in a circle (A over B, B over C, C over A) cannot be represented.</li>
+<li>There are no ties.</li>
+<li>All annotators share one standard.</li>
+</ul>
+<h2>Lowering the loss: gradient descent</h2>
+<p>The loss says how wrong the model is. <strong>Gradient descent</strong> makes it smaller. For each weight, the gradient says how much the loss would rise if that weight rose a little. Moving every weight a small step against its gradient lowers the loss:</p>
+<p>w ← w − lr · ∇L</p>
+<p>The learning rate lr sets the step size.</p>
+<p>Take the smallest reward model that still shows the mechanism: a scorer with two weights that reads two features of an answer.</p>
+<ul>
+<li>Feature 1 is 1 when the answer states the facts.</li>
+<li>Feature 2 is 1 when it argues from the name.</li>
+</ul>
+<p>So A has features (1, 0) and B has (0, 1). The score is w · f, the weights times the features, summed. For the Bradley–Terry loss the gradient is</p>
+<p>∇L = −(1 − σ(gap)) · (f_A − f_B)</p>
+<p>The factor 1 − σ(gap) is the size of the push. Start from w = (0, 0) with lr = 1:</p>
+<ul>
+<li><strong>Step 1.</strong> Both scores are 0, the gap is 0, σ = 0.5 and the loss is 0.693. The push is 0.5 and f_A − f_B = (1, −1), so w becomes (0.5, −0.5). Stating the facts now adds to the score, and arguing from the name subtracts.</li>
+<li><strong>Step 2.</strong> A scores 0.5 and B scores −0.5. The gap is 1.0, σ = 0.731 and the loss is 0.313. The push is 0.269, smaller, because the pair is already mostly right.</li>
+</ul>
+<figure><img src="assets/03-gradient-push.gif" loading="lazy" alt="Twelve pairs on the gap axis. The push 1 − σ(gap) is large on pairs in the wrong order and fades on pairs ranked right. A vs B: gap 0 → 1.0, loss 0.693 → 0.313, push 0.5 → 0.269."><figcaption>Twelve pairs on the gap axis. The push 1 − σ(gap) is large on pairs in the wrong order and fades on pairs ranked right. A vs B: gap 0 → 1.0, loss 0.693 → 0.313, push 0.5 → 0.269.</figcaption></figure>
+<p>Each step raises the chosen answer's score and lowers the rejected answer's score by the same amount. Across many pairs, most of the training effort goes to the pairs the model still gets wrong.</p>
+<blockquote>
+<p>The push 1 − σ(gap) is large when the model ranks a pair wrong, and small once it ranks the pair right with a clear margin.</p>
+</blockquote>
+<p>A real reward model has hundreds of millions of weights instead of two, and the rule is the same. The next sections show what those weights are.</p>
+<h2>Same body, one head row</h2>
+<p>A reward model starts from an existing LLM, usually a checkpoint of the chat model it will judge, before or after instruction tuning. It keeps the body, the embedding table and the transformer layers, and replaces the last layer.</p>
+<p>Take Qwen3-0.6B, a small open model. Both models share the same body: it turns each token into a vector of 1,024 numbers and passes the vectors through 28 layers. Only the last layer differs.</p>
+<p>Follow the numbers through. Four numbers stand in for 1,024, and the vectors are illustrative. The text is tokenized into IDs, each ID selects one vector, and the vectors pass through the layers. The output at the last position is the final hidden vector h. Here, for the prompt, h = (0.5, −1, 2, 0).</p>
+<p><strong>Chat model: the LM head.</strong> The chat model ends in the <strong>LM head</strong>, a table of 151,936 rows, one per vocabulary entry, each a row of 1,024 numbers. Each row is multiplied with h, number by number, and the products are summed: a dot product. The row for <code>Part</code> gives 2.0, the row for <code>Yes</code> gives 1.0, the row for <code>No</code> gives −1.0, and so on for all 151,936 rows. These numbers are the <strong>logits</strong>. Softmax turns them into probabilities, one token ID is picked, the detokenizer turns that ID into text, and the loop runs again for the next token.</p>
+<figure><img src="assets/04-chat-head.gif" loading="lazy" alt="h sits above the LM head, column over column; each logit is h · one row: Part 2.0, Yes 1.0, No −1.0, one of 151,936 rows each. Softmax, pick a token, and the loop runs again."><figcaption>h sits above the LM head, column over column; each logit is h · one row: Part 2.0, Yes 1.0, No −1.0, one of 151,936 rows each. Softmax, pick a token, and the loop runs again.</figcaption></figure>
+<p><strong>Reward model: the score head.</strong> The reward model removes the LM head and adds a <strong>score head</strong>: one row of 1,024 numbers, initialized at random. The text is now the prompt plus answer A, and suppose its h is the same (0.5, −1, 2, 0). Multiplied with the single row w = (1, −0.5, 0.5, 2), it gives 0.5 + 0.5 + 1 + 0 = 2.0. That number is A's score. Answer B goes through on its own pass, ends at h = (1, 0, 0, 0), and scores 1.0.</p>
+<figure><img src="assets/05-score-head.gif" loading="lazy" alt="Same body, one row in the head: h · that row is the score, 2.0 for A. Answer B takes its own pass and scores 1.0. A &gt; B."><figcaption>Same body, one row in the head: h · that row is the score, 2.0 for A. Answer B takes its own pass and scores 1.0. A &gt; B.</figcaption></figure>
+<blockquote>
+<p>Every logit is one dot product: the final hidden vector times one row of the head. The chat model's head has 151,936 rows. The reward model's head has one, and its one logit is the score.</p>
+</blockquote>
+<p>Nothing comes after the score. It goes to RL as the reward, unchanged, with no softmax, no token and no detokenizer. The reward model cannot write text, because it has no vocabulary to choose from. It needs no instruction such as <em>rate this answer</em>, because the output layer defines its task. Even before training, it outputs a number for any text, because one row always produces one number. That number means nothing until training sets the weights.</p>
+<h2>Which position gives the score</h2>
+<p>The score head runs at every position, as the LM head gives 151,936 logits at every position. A conversation of 40 tokens gives 40 numbers. The reward is the number at the last real token, the end-of-turn token <code>&lt;|im_end|&gt;</code> that closes the answer. The other numbers are discarded.</p>
+<p>The last position is used because attention in an LLM is causal: the vector at position t is computed from tokens 1 to t only. Compare two answers that differ in one word:</p>
+<ul>
+<li><em>Partly. Some weights are open.</em></li>
+<li><em>Partly. All weights are open.</em></li>
+</ul>
+<p>In Qwen3's tokenizer both answers are 8 tokens, and they differ only at <code> Some</code> and <code> All</code>. Before that token, the two runs produce identical vectors and identical numbers. From that token to the end, they differ. Only the last position has read the whole prompt and the whole answer, so only it can score the answer as a whole. The first position would give every answer the same number.</p>
+<figure><img src="assets/06-last-token.gif" loading="lazy" alt="The score head gives a number at every token. Changing Some to All leaves earlier numbers the same and changes every later one. The last token has read the whole answer: its number is the score."><figcaption>The score head gives a number at every token. Changing Some to All leaves earlier numbers the same and changes every later one. The last token has read the whole answer: its number is the score.</figcaption></figure>
+<p>Training runs answers in batches, and shorter rows are filled with padding tokens to a common length. The code must read the score at the last real token, never at the padding.</p>
+<h2>Logits and softmax: chat model vs reward model</h2>
+<p>Chat models also produce logits and turn them into probabilities with softmax. The two kinds of logit are related, because Bradley–Terry is itself a softmax over two items:</p>
+<p>σ(a − b) = e^a / (e^a + e^b)</p>
+<p>The left side is the sigmoid of the gap. The right side is the softmax of two scores, read at the first one. Here are the two models with the numbers from above.</p>
+<p><strong>Chat model: a softmax over the vocabulary.</strong> For the first token of the answer, the logits <code>Part</code> 2.0, <code>Yes</code> 1.0 and <code>No</code> −1.0 give 0.705, 0.259 and 0.035 under a softmax over these three. In the real model the softmax runs over all 151,936 entries and gives real probabilities of the next token, summing to 1. The model samples from them to write text. In training, the loss is −log of the probability given to the actual next token.</p>
+<figure><img src="assets/07-chat-softmax.gif" loading="lazy" alt="One pass gives logits for every vocabulary entry; softmax turns each column into a probability (0.705 / 0.259 / 0.035, sum 1); one token is sampled. Training: −log p(next token)."><figcaption>One pass gives logits for every vocabulary entry; softmax turns each column into a probability (0.705 / 0.259 / 0.035, sum 1); one token is sampled. Training: −log p(next token).</figcaption></figure>
+<p><strong>Reward model: a softmax over two answers.</strong> A and B each take a pass and get one score: 2.0 and 1.0. A softmax over the two gives 0.731 and 0.269, which is σ(1). This softmax exists only inside the training loss: −log of the probability given to the chosen answer, A. In use there is no softmax: the raw score 2.0 is the reward.</p>
+<figure><img src="assets/08-pair-softmax.gif" loading="lazy" alt="One pass per answer, one score each. Softmax over the two answers gives 0.731 / 0.269 = σ(1), used only in the loss −log p(A). In use, the raw score goes out as the reward."><figcaption>One pass per answer, one score each. Softmax over the two answers gives 0.731 / 0.269 = σ(1), used only in the loss −log p(A). In use, the raw score goes out as the reward.</figcaption></figure>
+<p>Side by side, the two models differ in what competes, and when the softmax runs:</p>
+<ul>
+<li><strong>Candidates.</strong> The chat model's 151,936 logits come from one pass and compete inside one vector. The reward model's scores come from separate passes, one per answer, and compete only when they are compared.</li>
+<li><strong>Meaning.</strong> The chat model's softmax gives real probabilities over the next token. One reward score alone means nothing: only gaps between answers to the same prompt do.</li>
+<li><strong>Use.</strong> The chat model samples from its softmax to write text. The reward model's softmax is for training only; in use, the raw score is the output.</li>
+<li><strong>Loss.</strong> Both train with −log softmax(correct option). For the chat model the correct option is the actual next token; for the reward model it is the answer the annotator chose.</li>
+</ul>
+<blockquote>
+<p>A reward model is trained with the same cross-entropy loss as a chat model, over two answers instead of 151,936 tokens.</p>
+</blockquote>
+<p>For rankings of more than two answers, the Plackett–Luce model extends the same idea. A softmax over all K answers gives first place, a softmax over the remaining answers gives second place, and so on.</p>
+<h2>Training the whole network</h2>
+<p>Training the real network applies the two-weight rule to all the weights: about 596 million for Qwen3-0.6B, the body and the new head together.</p>
+<ul>
+<li>Each step takes a small batch of rows. The chosen and the rejected answer of each row pass through the same network, which gives two scores per row.</li>
+<li>The loss is the Bradley–Terry loss, averaged over the batch.</li>
+<li>Backpropagation computes the gradient for every weight, through the head and back through all 28 layers.</li>
+<li>An optimizer, usually AdamW, updates the weights.</li>
+</ul>
+<p>This is ordinary supervised learning, the same machinery as pretraining and instruction tuning: fixed data and a loss that can be differentiated. No reinforcement learning is involved. RL enters later, when the chat model is trained against the reward model.</p>
+<p>InstructGPT trained its reward model for a single epoch, because further passes over the same comparisons overfit. Accuracy on held-out pairs stays well below 100%, since annotator disagreement sets the ceiling. InstructGPT's reward model predicted the choices of labelers it had not trained on about 70% of the time. Llama 2's two reward models reached 63% and 65% on their own test sets, and 81% and 94% on the pairs annotators had marked as clearly different.</p>
+<p>After training, the reward model is frozen. From then on it only scores.</p>
+<h2>What it learns besides quality</h2>
+<p>A reward model learns whatever predicts the choices in its data. Most of that is intended: accurate, relevant, clear answers win. Some of it is not. Label errors come in two kinds, with different effects.</p>
+<p><strong>Random noise.</strong> Annotators misclick, or decide close pairs by chance. These errors favour no feature. Sometimes the better answer loses, sometimes the worse one wins. Over many pairs they cancel in the gradient. The model keeps the right order and its score gaps shrink: it becomes less confident than the true preferences justify.</p>
+<p><strong>Systematic bias.</strong> Suppose some annotators prefer the confident <em>Yes. OpenAI is open.</em> over the careful <em>Partly.</em> Or they prefer longer answers, or answers that agree with the user. These errors point the same way every time. They add up in the gradient, and the bias becomes part of the reward. More data of the same kind does not remove it.</p>
+<figure><img src="assets/09-noise-vs-bias.gif" loading="lazy" alt="Two learned weights, on accurate and on long. Random flips point both ways: both shrink, same ratio. Flips that always favour the longer answer add up: the weight on length grows. More data of the same kind changes neither."><figcaption>Two learned weights, on accurate and on long. Random flips point both ways: both shrink, same ratio. Flips that always favour the longer answer add up: the weight on length grows. More data of the same kind changes neither.</figcaption></figure>
+<p>Both kinds appear in practice. In a study of RLHF in several settings, most of the reward the chat model gained in two of them came from writing longer answers. In another study, humans and reward models sometimes preferred a convincingly written answer that agreed with the user's mistaken belief to a correct one.</p>
+<p>A reward model is therefore a proxy for what people want, learned from what they chose. The proxy matters most when something is optimized against it. A chat model trained to raise the score finds the places where score and quality diverge, such as longer or more flattering answers. This is <strong>reward hacking</strong>, which the previous article met as the flattering answer. Gao et al. measured it, with a larger reward model standing in for human judgment: as a policy is optimized harder against a smaller reward model, that model's score keeps rising, while the larger model's score rises, peaks and falls.</p>
+<figure><img src="assets/10-proxy.gif" loading="lazy" alt="A longer answer with no new content scores higher. Optimized against, the reward model score keeps rising while true quality rises, peaks and falls: reward hacking. Illustrative shape after Gao et al. (2022)."><figcaption>A longer answer with no new content scores higher. Optimized against, the reward model score keeps rising while true quality rises, peaks and falls: reward hacking. Illustrative shape after Gao et al. (2022).</figcaption></figure>
+<blockquote>
+<p>A reward model learns what the annotators chose, habits included. Optimizing hard against it finds its errors.</p>
+</blockquote>
+<h2>Where it is used</h2>
+<p>A trained reward model scores any prompt and answer, including answers no annotator has seen. It has three common uses:</p>
+<ul>
+<li><strong>RLHF.</strong> The chat model writes answers, the frozen reward model scores them, and RL raises the probability of high-scoring answers. A KL penalty keeps the chat model near its starting point, where the reward model is reliable. This is the judge of the previous article.</li>
+<li><strong>Labeling.</strong> The reward model compares new answers and produces new preference pairs, without new annotation.</li>
+<li><strong>Best-of-n.</strong> Sample several answers and keep the highest-scoring one. The same ranking can select data for instruction tuning.</li>
+</ul>
+<figure><img src="assets/11-three-uses.gif" loading="lazy" alt="Frozen, it only scores: best-of-n keeps the top answer; labeling turns two scored answers into a new row; in RLHF the score is the reward that updates the policy."><figcaption>Frozen, it only scores: best-of-n keeps the top answer; labeling turns two scored answers into a new row; in RLHF the score is the reward that updates the policy.</figcaption></figure>
+<p>A later article in this series covers the other side: how the chat model is trained against the reward model with PPO and GRPO, and how DPO learns from the same preference pairs without training a separate reward model.</p>
+<h2>Summary</h2>
+<ul>
+<li>A reward model learns from choices: rows of a prompt, a chosen answer and a rejected answer. Nobody writes scores.</li>
+<li>Bradley–Terry turns a score gap into a probability, σ(r_chosen − r_rejected). Only gaps carry meaning, and the loss −log σ(gap) is cross-entropy on the annotator's choice.</li>
+<li>Gradient descent lowers that loss, w ← w − lr · ∇L. The push 1 − σ(gap) raises the chosen score and lowers the rejected one, most on pairs still ranked wrong.</li>
+<li>Every logit is the final hidden vector times one row of the head. The chat model has 151,936 rows; the reward model has one, and its one logit is the score.</li>
+<li>The score is read at the last real token, the only position that has read the whole answer.</li>
+<li>Bradley–Terry is a softmax over the two compared answers. Chat model and reward model train with the same loss, −log softmax(correct option).</li>
+<li>Training is supervised: backpropagation and AdamW on all the weights, with no RL.</li>
+<li>Random label noise lowers confidence. Systematic bias becomes part of the reward. The reward model is a proxy, and optimizing hard against it exposes its errors.</li>
+</ul>
+</article><p class="note">Local review page. Not uploaded or published. Paper figures are published results; all other numbers are illustrative, with exact arithmetic.</p></main></body></html>

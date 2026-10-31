@@ -5,6 +5,9 @@ a specific exception.
 
 ## Article packages
 
+- [Reward Models](x-post-training-005/plan.md): post-training series 5/6, English and Chinese drafts,
+  cover, source map; eleven GIFs with the DONGXI LABS mark. Chinese version published on X by the
+  learner (reported 2026-10-31); English not transferred.
 - [The Birth of a Token](x-token-001/review.html): standalone general-reader article (outside the
   post-training series), English and [Chinese](x-token-001/zh/review.html) drafts, seven inference GIFs
   (`CAND-ANIM-040`) and its own cover. Chinese version published on X by the learner (reported
@@ -75,7 +78,7 @@ note glossary (`learning_artifacts/day-15-preference-data-and-bradley-terry/lear
 D39); animation set `CAND-ANIM-038`. Thirteen GIFs approved 2026-10-28; Chinese version published by
 the learner (reported 2026-10-29); English not transferred (`x-post-training-004/`).
 
-`X-POST-005` **reward models** (planned; scope set by the learner 2026-10-30: solely reward models,
+`X-POST-005` **reward models** (Chinese version published by the learner, reported 2026-10-31; scope set by the learner 2026-10-30: solely reward models,
 plan in [`x-post-training-005/plan.md`](x-post-training-005/plan.md); **read the learning note
 `learning_artifacts/day-15-preference-data-and-bradley-terry/learning-from-preferences.md` before
 outlining or drafting**). Must include a section on the **chat model vs reward model head** (learner request, 2026-10-30, S1 Part A): same pretrained body, LM head `1024 → 151,936`

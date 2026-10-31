@@ -41,6 +41,15 @@ labels, and necessary accuracy caveats only. Keep toolchain credits, internal
 `ANIM-*` IDs, and production/review-status labels in README files and manifests.
 This preserves the user's 2026-09-04 presentation preference.
 
+**Brand mark (required, learner 2026-10-30: "we should protect our IP").** Every published GIF and
+MP4 carries the letter-spaced wordmark `D O N G X I  L A B S` at the bottom-right corner. It is the
+one exception to the rule above. `brand.py` stamps it at encode time:
+- GIFs: `gif_filter` with the mark as the second ffmpeg input;
+- MP4s: `brand_mp4`.
+The mark is Avenir Next Demi, slate `#64748B` at 90%, 1.35% of the video width (17 px at 1280), with a
+margin of 1.6% of the width. Keep the bottom-right corner free of mechanism content. Check the mark on
+the contact sheet before review. Previews may skip it; final renders may not.
+
 - English: Arial, normal weight, natural kerning.
 - For new/refined Manim labels, use `label(..., layout_scale=16)`: shape the
   whole string at a larger internal size and uniformly scale its vector outlines

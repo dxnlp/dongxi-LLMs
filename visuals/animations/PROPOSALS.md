@@ -1937,6 +1937,23 @@ the set is larger than the series' 5–6 GIFs per article; the plan's **Animatio
 recommended core and the learner chooses. All: state *suggested*, produce on the Mac Studio, Dongxi
 visual system, English labels, one amber badge for anything illustrative. Not yet production packets.
 
+**Running example set by the learner (2026-10-30):** the article uses X-POST-004's *Is OpenAI open?*
+throughout. Before producing any GIF for X-POST-005, recast its storyboard to the plan's
+**Running example** table, replacing the garlic, egg and Paris examples. The table gives the
+chosen and rejected answers, the one-token pair (` Some` / ` All`), the chat-side logits for
+`Part` / `Yes` / `No`, and the toy vectors. The article introduces reward models to general LLM
+readers and reports none of our own runs, so the GIFs show no notebook numbers. That rules out
+049's 47.6% → 62.2%, 050's +0.25, and 046's fitted `w` values. Their mechanisms stay, drawn as
+labelled illustrations. Every final GIF and MP4 carries the DONGXI LABS mark via `brand.py`
+(`STYLE_GUIDE.md`, learner 2026-10-30).
+
+**Produced 2026-10-30** (learner: "use the 9 GIFs", "start producing the 9 GIFs"): 044, 041, 035, 042, 048,
+043, 046, 050 and 051 were recast to *Is OpenAI open?* and rendered as one set in
+`visuals/animations/projects/post-training-reward-models/`; captions and evidence are in its README.
+After the learner's review, 042 and 043 were each split into a chat-model clip and a reward-model clip (eleven GIFs,
+01–11), and every connector became horizontal, vertical or a right-angled elbow. State: produced, agent-reviewed,
+awaiting learner review. 033, 034, 045, 047 and 049 stay *suggested*.
+
 ### CAND-ANIM-044 — One click becomes a training example (article opening)
 
 - Source: agent, at the learner's request (2026-10-30); article section 1.

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Reward model：人的选择怎样变成一个分数</title><style>*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;background:#fff;color:#111827;font-family:Arial,"Helvetica Neue",sans-serif}
+body.zh{font-family:"PingFang SC","Songti SC",STSong,serif}
+main{max-width:860px;margin:36px auto 110px;padding:0 28px}
+nav{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#64748b;margin-bottom:18px}
+nav a{color:#2563eb;text-decoration:none;border:1px solid #cbd5e1;border-radius:6px;padding:5px 10px}
+header img{width:100%;height:auto;display:block;border-radius:10px}
+h1{font-size:42px;line-height:1.25;font-weight:700;margin:34px 0 30px}
+h2{font-size:29px;line-height:1.4;margin:58px 0 22px}
+h3{font-size:23px;line-height:1.4;margin:40px 0 16px}
+p,li{font-size:19px;line-height:1.85;overflow-wrap:anywhere}
+p{margin:0 0 20px} ul{padding-left:24px;margin:0 0 22px} li{margin-bottom:8px}
+body.zh p,body.zh li{font-size:19px;line-height:1.95}
+blockquote{margin:26px 0;padding:4px 0 4px 20px;border-left:4px solid #cbd5e1;color:#1f2937}
+blockquote p{margin:8px 0;font-size:20px}
+figure{margin:34px -10px}
+figure img{width:100%;height:auto;display:block;border:1px solid #e2e8f0;border-radius:10px}
+figcaption{font-size:15px;line-height:1.75;color:#64748b;padding:12px 8px}
+.note{font-size:14px;color:#64748b;border-top:1px solid #e2e8f0;margin-top:60px;padding-top:16px}
+@media(max-width:600px){main{padding:0 16px;margin-top:16px}h1{font-size:30px}h2{font-size:24px;margin-top:42px}
+h3{font-size:20px}p,li,body.zh p,body.zh li{font-size:17px}figure{margin:26px -6px}}</style></head><body class="zh"><main><nav><span>X-POST-005 · post-training series 5/6</span><a href="../review.html">English</a></nav><header><img src="../assets/cover-post-training-05.png" width="2000" height="800" alt="Reward model：人的选择怎样变成一个分数"></header><h1>Reward model：人的选择怎样变成一个分数</h1><article><h2>一次选择，一行数据</h2>
+<p>上一篇里，judge 读完 <em>Is OpenAI open?</em>（OpenAI 开放吗？）的各个回答，给每个回答打了分。<em>OpenAI is open. It's in the name.</em>（OpenAI 是开放的，名字里就写着）得 2 分，以 <em>partly</em>（部分）开头的回答得 8 分或 10 分。RL 再用这些分数调整模型。下图回顾了这一幕：十个回答落在各自的分数上，以 <em>open</em> 开头的回答分数都低，两个以 <em>partly</em> 开头的回答得了 10 分和 8 分。</p>
+<figure><img src="../assets/00-previous-scores.gif" loading="lazy" alt="回顾上一篇：judge 给 Is OpenAI open? 的十个回答打分，以 open 开头的回答分数低，两个 partly 回答得 10 分和 8 分。示意值。"><figcaption>回顾上一篇：judge 给 Is OpenAI open? 的十个回答打分，以 open 开头的回答分数低，两个 partly 回答得 10 分和 8 分。示意值。</figcaption></figure>
+<p>上一篇留下了一个问题：这些分数从哪里来？</p>
+<p>在 RLHF（基于人类反馈的强化学习）里，judge 是一个 <strong>reward model</strong>，也就是一个神经网络：读入一个问题和一个回答，输出一个数。这个数没有人手写，人提供的只是选择。标注者看到问题和两个回答：</p>
+<ul>
+<li>A：<em>Partly. Some weights are open.</em>（部分开放，一部分权重是公开的。）</li>
+<li>B：<em>Yes. OpenAI is open. It's in the name.</em>（是的，OpenAI 是开放的，名字里就写着。）</li>
+</ul>
+<p>截至本文写作时，A 是准确的：OpenAI 以 Apache 2.0 许可发布了开放权重的模型 gpt-oss-120b 和 gpt-oss-20b，它的旗舰模型则只能通过 API 和自家应用使用。标注者选了 A。</p>
+<p>这次选择存成一行数据：问题、被选中的回答（chosen）、被淘汰的回答（rejected）。成千上万个问题、成千上万行这样的数据，就组成了 reward model 的训练集。</p>
+<figure><img src="../assets/01-one-click.gif" loading="lazy" alt="一次点击 A 或 B，变成一行数据：问题、chosen 回答、rejected 回答。很多行叠成训练集。"><figcaption>一次点击 A 或 B，变成一行数据：问题、chosen 回答、rejected 回答。很多行叠成训练集。</figcaption></figure>
+<p>本文从这一行数据出发，一步步讲到最后的分数：</p>
+<ul>
+<li>选择怎样变成损失；</li>
+<li>损失怎样改变网络；</li>
+<li>网络长什么样；</li>
+<li>它在训练中还学到了什么。</li>
+</ul>
+<p>这是后训练系列的第五篇。</p>
+<blockquote>
+<p>reward model 从没见过人给的分数。它只知道两个回答里哪个被选中，要自己找出能解释这些选择的分数。</p>
+</blockquote>
+<h2>只比较，不打分</h2>
+<p>打分（比如满分 10 分给 7 分）要求每个标注者用同一套标准，而每个人的标准不一样：这个人的 7 分，可能是那个人的 5 分。两个回答二选一，就不需要统一的分数标准。</p>
+<p>二选一对标注者的要求也更低。判断哪个回答更好，只需要对结果有看法，不需要自己写得出好回答。说不清 OpenAI 各个模型许可的人，也看得出 A 比 B 准确。</p>
+<p>偏好数据有几种形式：</p>
+<ul>
+<li>两个回答选一个；</li>
+<li>N 个回答选最好的一个；</li>
+<li>给 N 个回答排序。</li>
+</ul>
+<p>一组 N 个回答的排序，可以拆成 N(N − 1)/2 对。InstructGPT 的标注者每个问题排 4 到 9 个回答。标签可以来自受过训练的标注者，可以来自 Reddit、StackExchange 上的投票，也可以让一个强大的 LLM 来比较：UltraFeedback 用的是 GPT-4。</p>
+<p>选择也有噪声：遇到难分高下的两个回答，标注者会意见不一；他们也会点错，也会疲劳。InstructGPT 的标注者之间，大约 73% 的比较结果一致。这个一致率就是 reward model 的上限：人与人之间大约四对里只有三对意见一致，模型预测新的选择，准确率也很难超过这个水平。</p>
+<h2>Bradley–Terry：分差变成概率</h2>
+<p>数据里只记录了一件事：A 胜过 B。训练却需要数字。1952 年提出的 <strong>Bradley–Terry 模型</strong>把两者连了起来：给每个回答一个分数，A 被选中的概率只取决于两个分数之差。</p>
+<p>P(A 胜过 B) = σ(s_A − s_B) = 1 / (1 + e^−(s_A − s_B))</p>
+<p>σ 是 sigmoid 函数，把任何分差变成 0 到 1 之间的概率：</p>
+<ul>
+<li>分差 −2 → 0.12</li>
+<li>分差 0 → 0.50</li>
+<li>分差 1 → 0.73</li>
+<li>分差 3 → 0.95</li>
+</ul>
+<p>由此可以得出三点。</p>
+<p><strong>只有分差有意义。</strong> 2 分对 1 分，和 102 分对 101 分，给出的概率都是 0.73。单独一个分数说明不了什么，要和同一问题下另一个回答的分数放在一起才有意义。</p>
+<p><strong>概率永远到不了 0 或 1。</strong> 再好的回答也会偶尔落选，这和真实的标注情况一致。</p>
+<p><strong>分数可以从选择中反推出来。</strong> 假设 10 个人比较 A 和 B，7 个人选了 A。最能解释这个结果的分差满足 σ(分差) = 0.7，即分差 = log(7/3) ≈ 0.85。国际象棋的 Elo 等级分用的是同一个思路：用同样的 S 形曲线，把等级分之差换算成预期胜率。</p>
+<figure><img src="../assets/02-bradley-terry.gif" loading="lazy" alt="两个分数、分差、sigmoid、A 被选中的概率和损失。两个分数同时平移，结果不变。"><figcaption>两个分数、分差、sigmoid、A 被选中的概率和损失。两个分数同时平移，结果不变。</figcaption></figure>
+<p>reward model 是一个网络 r(x, y)，给出问题 x 下回答 y 的分数。训练要回答的问题是：对于标注者实际做出的选择，模型给了多大的概率？A 被选中时，这个概率是 σ(r_A − r_B)，损失就是它的负对数：</p>
+<p>L = −log σ(r(x, chosen) − r(x, rejected))</p>
+<p>这就是训练 next-token 预测用的 cross-entropy loss（交叉熵损失）。在 next-token 预测里，它是模型给实际下一个 token 的概率取负对数；在这里，是模型给实际选择的概率取负对数。分差 −1 时损失为 1.31，分差 0 时为 0.69，分差 1 时为 0.31，分差 3 时为 0.05。每一对有标签的数据都能算出损失，不管模型眼下把这一对排对了还是排错了。</p>
+<p>这个模型有三个假设：</p>
+<ul>
+<li>所有回答排在同一条分数轴上，所以 A 胜 B、B 胜 C、C 又胜 A 这样的循环偏好无法表示；</li>
+<li>没有平局；</li>
+<li>所有标注者用同一个标准。</li>
+</ul>
+<h2>把损失降下来：gradient descent</h2>
+<p>损失衡量模型错了多少，<strong>gradient descent（梯度下降）</strong> 让损失变小。对每个权重，梯度表示这个权重增大一点时损失会增加多少。把每个权重都朝梯度的反方向挪一小步，损失就下降：</p>
+<p>w ← w − lr · ∇L</p>
+<p>lr 是学习率，决定每一步的大小。</p>
+<p>用一个最小的 reward model 来看这个过程：一个只有两个权重的打分器，它只看回答的两个特征。</p>
+<ul>
+<li>特征 1：回答陈述了事实，取 1。</li>
+<li>特征 2：回答拿名字当理由，取 1。</li>
+</ul>
+<p>于是 A 的特征是 (1, 0)，B 是 (0, 1)。分数 = w · f，即权重与特征逐项相乘再相加。对 Bradley–Terry 损失，梯度是：</p>
+<p>∇L = −(1 − σ(分差)) · (f_A − f_B)</p>
+<p>1 − σ(分差) 决定推力的大小。从 w = (0, 0)、lr = 1 开始：</p>
+<p><strong>第 1 步。</strong> 两个回答都得 0 分，分差 0，σ = 0.5，损失 0.693。推力 0.5，f_A − f_B = (1, −1)，w 变成 (0.5, −0.5)。陈述事实开始加分，拿名字当理由开始减分。</p>
+<p><strong>第 2 步。</strong> A 得 0.5 分，B 得 −0.5 分，分差 1.0，σ = 0.731，损失 0.313。推力降到 0.269，因为这一对已经基本排对了。</p>
+<figure><img src="../assets/03-gradient-push.gif" loading="lazy" alt="gradient descent 的每一步：一对排错时推力 1 − σ(分差) 很大，排对后逐渐变小。"><figcaption>gradient descent 的每一步：一对排错时推力 1 − σ(分差) 很大，排对后逐渐变小。</figcaption></figure>
+<p>每一步都把被选中回答的分数抬高，把被淘汰回答的分数压低，幅度相同。在大量数据上，梯度主要来自模型还排错的那些对。</p>
+<blockquote>
+<p>推力 1 − σ(分差)：模型把一对排错时很大，排对并拉开差距后就变小。</p>
+</blockquote>
+<p>真实的 reward model 有几亿个权重，更新规则相同。下面几节讲这些权重是什么。</p>
+<h2>同一个主体，只有一行的输出层</h2>
+<p>reward model 从一个现成的 LLM 出发，通常就是它将来要评判的那个 chat model 的某个 checkpoint（指令微调前或后）。它保留模型的主体，也就是 embedding 表和各层 transformer，只换掉最后一层。</p>
+<p>以小型开源模型 Qwen3-0.6B 为例。两个模型共用同一个主体：把每个 token 变成 1,024 个数的向量，再经过 28 层。区别只在最后一层。</p>
+<p>下面跟着数字走一遍，用 4 个数代替 1,024 个数，向量都是示意值。文本先切成 token ID，每个 ID 取出一个向量，向量依次经过各层。最后一个位置的输出是最终隐藏向量 h。对这个问题，假设 h = (0.5, −1, 2, 0)。</p>
+<p><strong>chat model：LM head。</strong> chat model 的最后一层是 <strong>LM head</strong>，一张 151,936 行的表，词表里每个条目一行，每行 1,024 个数。每一行都和 h 逐项相乘再相加，即点积：<code>Part</code> 那一行得 2.0，<code>Yes</code> 得 1.0，<code>No</code> 得 −1.0，151,936 行各得一个数。这些数就是 <strong>logits</strong>。softmax 把它们变成概率，选出一个 token ID，detokenizer 把 ID 变回文字，然后进入下一轮，生成下一个 token。</p>
+<figure><img src="../assets/04-chat-head.gif" loading="lazy" alt="chat model：h 与 LM head 逐列对齐，每个 logit 是 h 乘以一行；softmax 选出 token，进入下一轮循环。"><figcaption>chat model：h 与 LM head 逐列对齐，每个 logit 是 h 乘以一行；softmax 选出 token，进入下一轮循环。</figcaption></figure>
+<p><strong>reward model：score head。</strong> reward model 去掉 LM head，换上一个 <strong>score head</strong>（打分层）：只有一行 1,024 个数，随机初始化。这时输入是问题加回答 A，假设它的 h 同样是 (0.5, −1, 2, 0)。h 和唯一的一行 w = (1, −0.5, 0.5, 2) 做点积：0.5 + 0.5 + 1 + 0 = 2.0，这个数就是 A 的分数。回答 B 单独跑一遍，最后得到 h = (1, 0, 0, 0)，分数 1.0。</p>
+<figure><img src="../assets/05-score-head.gif" loading="lazy" alt="reward model：同一个主体，输出层只有一行，h 乘以这一行就是分数。A 得 2.0，B 单独跑一遍得 1.0。"><figcaption>reward model：同一个主体，输出层只有一行，h 乘以这一行就是分数。A 得 2.0，B 单独跑一遍得 1.0。</figcaption></figure>
+<blockquote>
+<p>每个 logit 都是一次点积：最终隐藏向量乘以输出层的一行。chat model 的输出层有 151,936 行；reward model 的只有一行，这唯一的 logit 就是分数。</p>
+</blockquote>
+<p>分数之后再没有别的步骤。它原样交给 RL 作为 reward：没有 softmax，没有 token，也没有 detokenizer。reward model 写不出文字，因为它没有词表可选；也不需要 <em>请给这个回答打分</em> 之类的指令，输出层本身就规定了它的任务。即使还没训练，它对任何文本也会输出一个数，因为一行权重总会算出一个数；在训练确定权重之前，这个数没有意义。</p>
+<h2>分数取自哪个位置</h2>
+<p>score head 会作用在每一个位置上，就像 LM head 在每个位置都给出 151,936 个 logits。一段 40 个 token 的对话，会得到 40 个数。reward 取最后一个真实 token 上的那个数，也就是结束回答的 <code>&lt;|im_end|&gt;</code>，其余的数都丢掉。</p>
+<p>取最后一个位置，原因是 LLM 的 attention 是因果的：第 t 个位置的向量，只由第 1 到第 t 个 token 算出。比较两个只差一个词的回答：</p>
+<ul>
+<li><em>Partly. Some weights are open.</em></li>
+<li><em>Partly. All weights are open.</em></li>
+</ul>
+<p>在 Qwen3 的 tokenizer 里，两个回答都是 8 个 token，只在 <code> Some</code> 和 <code> All</code> 处不同。在这个 token 之前，两次运行的向量和数完全相同；从这个 token 开始直到结尾，都不相同。只有最后一个位置读完了整个问题和整个回答，只有它能给整个回答打分。如果取第一个位置，所有回答的分数都会一样。</p>
+<figure><img src="../assets/06-last-token.gif" loading="lazy" alt="每个 token 上都有一个数。Some 换成 All，只改变后面的位置；分数取最后一个真实 token。"><figcaption>每个 token 上都有一个数。Some 换成 All，只改变后面的位置；分数取最后一个真实 token。</figcaption></figure>
+<p>训练时回答成批处理，较短的行用填充 token 补到同样长度。代码必须读最后一个真实 token 上的分数，不能读到填充位置上。</p>
+<h2>logits 和 softmax：chat model 与 reward model</h2>
+<p>chat model 也输出 logits，也用 softmax 把它们变成概率。两种 logits 之间的联系在于：Bradley–Terry 本身就是两个选项上的 softmax。</p>
+<p>σ(a − b) = e^a / (e^a + e^b)</p>
+<p>左边是分差的 sigmoid，右边是对两个分数做 softmax 后，第一个分数对应的那一项。下面用前面的数字分别看两个模型。</p>
+<p><strong>chat model：覆盖整个词表的 softmax。</strong> 回答的第一个 token，logits 是 <code>Part</code> 2.0、<code>Yes</code> 1.0、<code>No</code> −1.0，在这三个上做 softmax，得到 0.705、0.259、0.035。真实模型里，softmax 要覆盖全部 151,936 个条目，得到下一个 token 的真实概率，总和为 1。模型从中采样，写出文字。训练时，损失是模型给实际下一个 token 的概率取负对数。</p>
+<figure><img src="../assets/07-chat-softmax.gif" loading="lazy" alt="chat model 的 softmax 覆盖整个词表，概率总和为 1，从中采样下一个 token。"><figcaption>chat model 的 softmax 覆盖整个词表，概率总和为 1，从中采样下一个 token。</figcaption></figure>
+<p><strong>reward model：两个回答之间的 softmax。</strong> A 和 B 各跑一遍，各得一个分数：2.0 和 1.0。两个分数做 softmax，得到 0.731 和 0.269，正是 σ(1)。这个 softmax 只出现在训练的损失里：损失是模型给标注者选中的回答 A 的概率取负对数。使用时没有 softmax，原始分数 2.0 就是 reward。</p>
+<figure><img src="../assets/08-pair-softmax.gif" loading="lazy" alt="reward model 的 softmax 只覆盖两个回答，等于 σ(1)，只用于训练损失；使用时原始分数就是 reward。"><figcaption>reward model 的 softmax 只覆盖两个回答，等于 σ(1)，只用于训练损失；使用时原始分数就是 reward。</figcaption></figure>
+<p>对照下来，两者的区别在于：哪些候选放在一起比较，以及 softmax 在什么时候计算。</p>
+<ul>
+<li><strong>候选。</strong> chat model 的 151,936 个 logits 来自同一次运行，在同一个向量里竞争。reward model 的分数来自各自独立的运行，每个回答一次，只在比较时才放到一起。</li>
+<li><strong>含义。</strong> chat model 的 softmax 给出下一个 token 的真实概率。reward model 的单个分数没有意义，只有同一问题下不同回答之间的分差有意义。</li>
+<li><strong>用途。</strong> chat model 从 softmax 中采样来写文字。reward model 的 softmax 只用于训练；使用时，输出的就是原始分数。</li>
+<li><strong>损失。</strong> 两者都用 −log softmax(正确选项) 训练。对 chat model，正确选项是实际的下一个 token；对 reward model，是标注者选中的回答。</li>
+</ul>
+<blockquote>
+<p>训练 reward model 和训练 chat model 用的是同一个 cross-entropy loss，只是候选从 151,936 个 token 变成了两个回答。</p>
+</blockquote>
+<p>如果要给两个以上的回答排序，可以用 Plackett–Luce 模型把同一思路推广：先在全部 K 个回答上做 softmax 决定第一名，再在剩下的回答上做 softmax 决定第二名，依此类推。</p>
+<h2>训练整个网络</h2>
+<p>训练真实的网络，就是把两个权重时的规则用到所有权重上。Qwen3-0.6B 大约有 5.96 亿个权重，主体和新的输出层一起训练。</p>
+<ul>
+<li>每一步取一小批数据。每一行的 chosen 和 rejected 回答都经过同一个网络，得到两个分数。</li>
+<li>损失是这批数据上 Bradley–Terry 损失的平均值。</li>
+<li>反向传播算出每个权重的梯度，从输出层一直回到全部 28 层。</li>
+<li>优化器（通常是 AdamW）更新权重。</li>
+</ul>
+<p>这是普通的监督学习，和预训练、指令微调用的是同一套机制：数据固定，损失可以求导。整个过程不涉及强化学习。RL 要到后面才出现，那时训练的是 chat model，reward model 负责打分。</p>
+<p>InstructGPT 只训练了 reward model 一个 epoch，因为在同样的比较数据上多过几遍就会过拟合。模型在新数据上的准确率远低于 100%，标注者之间的分歧决定了上限。对没有参与训练数据标注的标注者，InstructGPT 的 reward model 预测他们选择的准确率约为 70%。Llama 2 的两个 reward model 在各自测试集上分别达到 63% 和 65%；在标注者标为明显更好的那些对上，分别达到 81% 和 94%。</p>
+<p>训练完成后，reward model 被冻结，此后只负责打分。</p>
+<h2>它在质量之外还学到了什么</h2>
+<p>reward model 学的是数据里一切能预测选择的东西。大部分符合本意：准确、切题、清楚的回答胜出。也有一部分不符合本意。标签错误分两种，影响不同。</p>
+<p><strong>随机噪声。</strong> 标注者点错，或者在难分高下的对上随手一选。这类错误不偏向任何特征：有时好的回答落选，有时差的回答胜出。在大量数据上，它们在梯度里相互抵消。模型仍然排对顺序，只是分差变小：它给出的把握程度，低于真实偏好应有的程度。</p>
+<p><strong>系统性偏差。</strong> 假设一部分标注者偏爱自信的 <em>Yes. OpenAI is open.</em>，而不选谨慎的 <em>Partly.</em>；或者偏爱更长的回答，或者偏爱附和用户的回答。这类错误每次都朝同一个方向，在梯度里不断累积，偏差就成了 reward 的一部分。同类数据再多，也消除不了它。</p>
+<figure><img src="../assets/09-noise-vs-bias.gif" loading="lazy" alt="两个学到的权重：准确和长度。随机噪声让两者同比缩小；偏向长回答的系统性偏差让长度权重变大。示意图。"><figcaption>两个学到的权重：准确和长度。随机噪声让两者同比缩小；偏向长回答的系统性偏差让长度权重变大。示意图。</figcaption></figure>
+<p>两种情况在实践中都出现过。一项研究考察了几种设置下的 RLHF，其中两种设置里，chat model 获得的 reward 大部分来自把回答写得更长。另一项研究发现，人和 reward model 有时会更偏爱附和用户错误看法、写得很有说服力的回答，而不选正确的回答。</p>
+<p>所以 reward model 只是人们真正想要的东西的一个代理（proxy），是从人们的选择中学来的。一旦有模型针对它做优化，代理的缺陷就会暴露出来。为了提高分数而训练的 chat model，会找到分数和质量不一致的地方，比如更长、更讨好的回答。这就是 <strong>reward hacking</strong>，上一篇里那个讨好的回答就是一例。Gao 等人做过测量，用一个更大的 reward model 代表人的判断：针对一个较小的 reward model 优化的程度越高，较小模型的分数持续上升，较大模型的分数却先升后降。</p>
+<figure><img src="../assets/10-proxy.gif" loading="lazy" alt="更长但没有新内容的回答得分更高；针对代理优化，分数持续上升，真实质量先升后降。示意图。"><figcaption>更长但没有新内容的回答得分更高；针对代理优化，分数持续上升，真实质量先升后降。示意图。</figcaption></figure>
+<blockquote>
+<p>reward model 学到的是标注者的选择，连同他们的习惯。针对它过度优化，就会找到它的错误。</p>
+</blockquote>
+<h2>它用在哪里</h2>
+<p>训练好的 reward model 能给任意问题和回答打分，包括标注者从没见过的回答。常见用途有三种：</p>
+<ul>
+<li><strong>RLHF。</strong> chat model 写回答，冻结的 reward model 打分，RL 提高高分回答的概率。KL penalty 让 chat model 留在起点附近，那里 reward model 的分数可靠。这就是上一篇里的 judge。</li>
+<li><strong>标注。</strong> reward model 比较新的回答，生成新的偏好数据，不再需要人工标注。</li>
+<li><strong>best-of-n。</strong> 采样几个回答，留下分数最高的一个。同样的排序也可以用来为指令微调挑选数据。</li>
+</ul>
+<figure><img src="../assets/11-three-uses.gif" loading="lazy" alt="一个冻结的 reward model，三种用途：best-of-n、给新数据标注、RLHF 中的 reward。"><figcaption>一个冻结的 reward model，三种用途：best-of-n、给新数据标注、RLHF 中的 reward。</figcaption></figure>
+<p>本系列后面的文章会讲另一半：chat model 怎样用 PPO 和 GRPO 针对 reward model 训练，以及 DPO 怎样直接从同样的偏好数据学习，省掉单独训练的 reward model。</p>
+<h2>小结</h2>
+<ul>
+<li>reward model 从选择中学习：每行数据是一个问题、一个 chosen 回答和一个 rejected 回答。没有人写分数。</li>
+<li>Bradley–Terry 把分差变成概率，σ(r_chosen − r_rejected)。只有分差有意义；损失 −log σ(分差) 就是针对标注者选择的 cross-entropy。</li>
+<li>gradient descent 降低这个损失，w ← w − lr · ∇L。推力 1 − σ(分差) 抬高 chosen 的分数、压低 rejected 的分数，对还排错的对推得最多。</li>
+<li>每个 logit 都是最终隐藏向量乘以输出层的一行。chat model 有 151,936 行；reward model 只有一行，它唯一的 logit 就是分数。</li>
+<li>分数取自最后一个真实 token，只有这个位置读完了整个回答。</li>
+<li>Bradley–Terry 是两个候选回答上的 softmax。chat model 和 reward model 用同一个损失训练：−log softmax(正确选项)。</li>
+<li>训练是监督学习：反向传播加 AdamW，更新全部权重，不涉及 RL。</li>
+<li>随机的标签噪声降低模型的把握程度，系统性偏差变成 reward 的一部分。reward model 是代理，针对它过度优化，就会暴露它的错误。</li>
+</ul>
+</article><p class="note">本地审阅页面，尚未上传或发布。论文数字为公开结果；其余数字均为示意值，计算精确。</p></main></body></html>
