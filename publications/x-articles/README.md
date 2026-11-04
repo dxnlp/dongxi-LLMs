@@ -67,7 +67,7 @@ follow these unless the learner changes them. Reference package:
 terms article inserted before preference alignment):
 `X-POST-001` why post-training · `X-POST-002` instruction tuning (SFT) ·
 `X-POST-003` LoRA and QLoRA · `X-POST-004` RL terms for LLMs · `X-POST-005` reward models ·
-`X-POST-006` RLVR. (Revised 2026-10-30: `X-POST-005` is solely about reward models; PPO, GRPO and
+`X-POST-006` RLVR. (Revised 2026-11-03: a plan for the KL-regularized objective and DPO, started from study-path S2, is in [`x-post-training-kl-dpo/plan.md`](x-post-training-kl-dpo/plan.md); number and slot for the learner to decide; revised 2026-11-04: a separate article on KL itself, **first** (learner decided 2026-11-04), then the KL/DPO article, is planned in [`x-post-training-kl/plan.md`](x-post-training-kl/plan.md). Revised 2026-10-30: `X-POST-005` is solely about reward models; PPO, GRPO and
 DPO need their own article, slot to be decided by the learner.)
 Article 1 is beginner-level; later articles go deeper, each on one technique.
 

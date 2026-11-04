@@ -18,13 +18,13 @@ Two axes: **feedback source** (human pairs · reward model · LLM judge · proce
 
 | Stage | Topic | Course | Status |
 |---|---|---|---|
-| S1 | Reward models: BT, training, bias audit, process labels | Day 15, Day 16; [S1 notebook](../../notebooks/study-path/s1_reward_models.ipynb) | **in progress**: S1 notebook Part A (2026-10-30) |
-| S2 | KL-regularized optimum → DPO | Day 17, Day 18; [S2 notebook](../../notebooks/study-path/s2_kl_optimum_and_dpo.ipynb) | — |
-| S3 | REINFORCE → baselines/RLOO → PPO → algorithm comparison | Days 19–21; [S3 notebook](../../notebooks/study-path/s3_policy_gradient_to_ppo.ipynb) | — |
-| S4 | GRPO | Day 22; [S4 notebook](../../notebooks/study-path/s4_grpo.ipynb) | — |
-| S5 | RLVR (GRPO + verifier) | Day 23; [S5 notebook](../../notebooks/study-path/s5_rlvr.ipynb) | — |
-| S6 | Combinations: RM-labelled iterative DPO, RM + verifier mix, SFT → DPO → RLVR | [S6 notebook](../../notebooks/study-path/s6_combinations.ipynb) (new) | — |
-| S7 | When optimization goes wrong: reward hacking, length/entropy | Day 24 (plan P2); [S7 notebook](../../notebooks/study-path/s7_failure_modes.ipynb) | — |
+| S1 | Reward models: BT, training, bias audit, process labels | Day 15, Day 16; [S1 notebook](../../notebooks/study-path/s1_reward_models.ipynb) | studied Parts A–C (2026-10-30); D–F not yet discussed |
+| S2 | KL-regularized optimum → DPO | Day 17, Day 18; [S2 notebook](../../notebooks/study-path/s2_kl_optimum_and_dpo.ipynb) | **in progress**: S2 notebook (2026-11-03) ([S2 note](../day-18-dpo-experiment/study-path-s2-kl-optimum-and-dpo.md)) |
+| S3 | REINFORCE → baselines/RLOO → PPO → algorithm comparison | Days 19–21; [S3 notebook](../../notebooks/study-path/s3_policy_gradient_to_ppo.ipynb) | not started; [S3 note](../day-21-policy-gradient-synthesis/study-path-s3-policy-gradient-to-ppo.md) |
+| S4 | GRPO | Day 22; [S4 notebook](../../notebooks/study-path/s4_grpo.ipynb) | not started; [S4 note](../day-22-grpo-derivation/study-path-s4-grpo.md) |
+| S5 | RLVR (GRPO + verifier) | Day 23; [S5 notebook](../../notebooks/study-path/s5_rlvr.ipynb) | not started; [S5 note](../day-23-grpo-rlvr/study-path-s5-rlvr.md) |
+| S6 | Combinations: RM-labelled iterative DPO, RM + verifier mix, SFT → DPO → RLVR | [S6 notebook](../../notebooks/study-path/s6_combinations.ipynb) (new) | not started; [S6 note](../day-23-grpo-rlvr/study-path-s6-combinations.md) |
+| S7 | When optimization goes wrong: reward hacking, length/entropy | Day 24 (plan P2); [S7 notebook](../../notebooks/study-path/s7_failure_modes.ipynb) | not started; [S7 note](../day-24-reward-hacking-and-instability/study-path-s7-failure-modes.md) |
 
 Workbooks (built 2026-10-30 at the learner's request: "seven notebooks, one per stage, with good
 exercises and granular code blocks"): [study-path README](../../notebooks/study-path/README.md). Each
@@ -50,6 +50,14 @@ tag; requests for visuals go into the plan table.
 | E · length audit | not started | — | — |
 | F · outcome and process labels | not started | — | — |
 
+On 2026-11-03 the learner moved on to S2; S1 Parts D–F have no recorded discussion yet and can be
+revisited later.
+
+**From S2 on, each study-path notebook has its own learning note** (learner, 2026-11-03): [S2](../day-18-dpo-experiment/study-path-s2-kl-optimum-and-dpo.md) · [S3](../day-21-policy-gradient-synthesis/study-path-s3-policy-gradient-to-ppo.md) · [S4](../day-22-grpo-derivation/study-path-s4-grpo.md) · [S5](../day-23-grpo-rlvr/study-path-s5-rlvr.md) · [S6](../day-23-grpo-rlvr/study-path-s6-combinations.md) · [S7](../day-24-reward-hacking-and-instability/study-path-s7-failure-modes.md).
+Discussion numbers continue there (D56 is in the S2 note). This note keeps the Key concepts, the RL
+glossary, the plan table and the S1 log.
+
+
 ## Plan: deeper dives
 
 Topics the learner flagged for further discussion or future course material.
@@ -67,6 +75,9 @@ Topics the learner flagged for further discussion or future course material.
 | P10 | **Article section + animation: chat-model head vs reward-model head** | the learner, at S1 Part A after D42 (2026-10-30): "the header difference between a chat model and a reward model deserves an explanation in the article and an animation" | D28, D30, D42; Day 15 · 04 Part C; S1 Part C | required section of `X-POST-005`, which the learner set (2026-10-30) to be **solely about reward models** and to be written from this note (plan `publications/x-articles/x-post-training-005/plan.md`); animation `CAND-ANIM-042`: one 28-block body, LM head `1024 → 151,936` (sample, loop) swapped for a `1024 → 1` score head (one pass, last-token number), two answers → two scores → the pick; state *suggested*, produce on the Mac Studio |
 | P11 ★ | **Article section + animation: chat-model logits vs reward-model scores** | the learner, at S1 Part A after D47 (2026-10-30): "the above is important, we need to explain this well in article and animation" | D47 ★, D48 ★, D46, D41, D42 | required section of `X-POST-005` (reward models), right after the head-swap section; animation `CAND-ANIM-043`: one softmax over 151,936 tokens from one pass vs one softmax over 2 answers from two passes; same `−log softmax(correct option)` loss; raw score used as the reward. Companion to 042; state *suggested*, **high priority**, produce on the Mac Studio |
 | P12 | **Animation set covering the whole reward-model article** | the learner, at S1 Part C (2026-10-30): "suggest more animations, so it can support the whole article" | `X-POST-005` plan sections 1–8; D1–D3, D42, D50 ★, D52 ★, D53–D55 ★, P2 | proposed `CAND-ANIM-044` (opening: one click → one row), 045 (comparisons vs grades), 046 ★ (random noise vs systematic bias), 047 (calibration), 048 ★ (which position gives the score), 049 (training at scale), 050 (length and reward hacking preview), 051 (one reward model, three uses). With 033–035 and 041–043: 14 candidates; the plan marks a core of 7 (041, 035, 042, 048, 043, 046, 050) for the learner to choose; state *suggested*, produce on the Mac Studio |
+| P13 ★ | **Animations + article: why the KL cost to a frozen reference, and why/how KL works** | the learner, at S2 (2026-11-03): "we need good animation candidates in notes and article plan for (S2) …" | S2 note D56 ★, D57 ★; D35 | proposed `CAND-ANIM-052` ★ (reward alone vs reward − β·KL), 053 (β dial, re-weighting), 054 ★ (why KL: same move, different price), 055 (direction), 056 (why frozen); reuses 037. Article plan `publications/x-articles/x-post-training-kl-dpo/plan.md`, slot to be decided by the learner; ★ running example and key point 5 = the egg-question story of S2 Parts A–C (S2 note D67 ★, 2026-11-03); state *suggested*, produce on the Mac Studio |
+| P14 ★ | **Animation: the RLHF workflow with its three components** | the learner, at S2 after D61–D62 (2026-11-03): "propose a workflow animation, indicate the 3 components" | S2 note D61, D62 ★ | proposed as `CAND-ANIM-057` ★: reward (frozen reward model) and KL (frozen reference) feed the update, gold signal only evaluates checkpoints; over-optimization frame; for the KL/DPO article plan; state *suggested*, produce on the Mac Studio |
+| P15 | **Animations + a separate article on KL itself** | the learner, at the S2 re-study of Part A (2026-11-04): "I think we need a lot of animations to explain KL itself, and maybe we need a separate X article about KL itself" | S2 note D68 ★, D69, D70 ★, D71, D72 ★, D57 ★, D59, D79; D35 | proposed `CAND-ANIM-058` ★ (formula term by term), 059 (why a log), 060 ★ (never negative: lost = gained), 061 (ruler, not steering wheel), 062 (other measures go negative), 063 (KL from samples), 064 (reading KL in a run); reuses 054 ★, 055, 037; one running example (egg question, D67 ★). Article plan `publications/x-articles/x-post-training-kl/plan.md`; **comes first, before the KL/DPO article** (learner, 2026-11-04); the plan lists every learning-note entry and animation behind it; it also previews S2 Part C (implicit reward) and the DPO loss (S2 note D84); number to be assigned; state *suggested*, produce on the Mac Studio |
 | P2 | **Reward hacking** | flagged as "very interesting, worth exploring" after D3 (2026-10-27); candidate for discussion and new course material or an article | Chapter 10 §10.8–10.9 (shortcut experiment, optimization changes the population); Chapter 14 §14.1 "A real reward-hacking microscope", §14.5 length bias; notebook Day 24 · 01 `reward_hacking.ipynb`; Gao et al. 2022 overoptimization | planned: discuss after §8.3–8.4, then decide on material |
 
 ## Notebook built from these discussions
@@ -1740,4 +1751,3 @@ D47 ★/D48 ★. **Four things Part C adds:**
    number for every answer.
 4. **bf16 rounding noise.** Right vs left padding: equal within 1e-5 in float32, ≈ 0.008 apart under bf16
    autocast, a floor on how precisely one score can be read.
-

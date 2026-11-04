@@ -91,3 +91,8 @@ Open the first session and ask the learner to defend the prediction in words,
 then reveal the adjacent reference answer and inspect the plot together. Keep
 machine progress and study status in the central trackers; do not automatically
 launch a long experiment or public publishing operation.
+
+## Study-path learning notes
+
+- Study-path S5 learning note: [study-path-s5-rlvr.md](study-path-s5-rlvr.md)
+- Study-path S6 learning note: [study-path-s6-combinations.md](study-path-s6-combinations.md)

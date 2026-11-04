@@ -55,3 +55,7 @@ Open the first session and ask the learner to defend the prediction in words,
 then reveal the adjacent reference answer and inspect the plot together. Keep
 machine progress and study status in the central trackers; do not automatically
 launch a long experiment or public publishing operation.
+
+## Study-path learning notes
+
+- Study-path S7 learning note: [study-path-s7-failure-modes.md](study-path-s7-failure-modes.md)

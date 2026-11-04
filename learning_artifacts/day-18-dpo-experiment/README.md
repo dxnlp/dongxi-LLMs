@@ -93,3 +93,7 @@ unsupported conclusion. Record their initial model, refined explanation,
 prediction, perturbation result, and unresolved edge in this topic directory.
 The completed reference answer supplies a study aid; it is not the learner's
 answer.
+
+## Study-path learning notes
+
+- Study-path S2 learning note: [study-path-s2-kl-optimum-and-dpo.md](study-path-s2-kl-optimum-and-dpo.md)

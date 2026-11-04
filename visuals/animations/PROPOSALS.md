@@ -2071,3 +2071,202 @@ awaiting learner review. 033, 034, 045, 047 and 049 stay *suggested*.
 - Evidence: illustrative scores. Keep (4) to one frame: PPO/GRPO/DPO belong to the policy-optimization
   article.
 - Relation: closing GIF; mirrors 044's opening table.
+
+### S2 set: why the KL cost, and why KL (CAND-ANIM-052 to 056)
+
+Proposed 2026-11-03 at the learner's request, at study-path S2 (intro, before Part A): "we need good
+animation candidates … to explain why RLHF maximizes reward while charging a cost for moving away from
+a frozen reference model, and why and how KL works". Sources: S2 learning note D56 ★, D57 ★
+(`learning_artifacts/day-18-dpo-experiment/study-path-s2-kl-optimum-and-dpo.md`); S2 Parts A–B. Planned
+article: `publications/x-articles/x-post-training-kl-dpo/plan.md` (slot to be decided). All: state
+*suggested*, produce on the Mac Studio, Dongxi visual system, one amber badge on illustrative values.
+**Reuse, don't duplicate:** how KL is estimated from one sampled token (k1, k3) and where PPO/GRPO put
+it is `CAND-ANIM-037`.
+
+### CAND-ANIM-052 — Reward alone vs reward minus KL ★
+
+- Learning objective: maximizing a learned reward alone drives the policy onto whatever the reward
+  model overrates; the KL cost keeps it among the answers the reference already writes, where the reward
+  model was trained.
+- Storyboard (one prompt, three answers; two lanes with the same start):
+  1. Bars of the reference π_ref: A good 0.7, B fine 0.299, C an exploit 0.001 (a sliver). Under each,
+     its reward-model score: A 2, B 1, C 4, with C's score marked "overrated: the reward model never saw
+     answers like C".
+  2. Top lane, reward only: probability flows step by step to the highest score; C's bar grows to 1,
+     A and B vanish. Counter: E[R] 1.70 → 4.00.
+  3. Bottom lane, reward − β·KL (β = 1): probability flows toward A; C stays a sliver (0.009). Final
+     bars 0.86 / 0.14 / 0.01; E[R] 1.88; a KL meter reads 0.09.
+  4. Reveal: the true quality of C is low (badge), so the top lane optimized the reward model's
+     mistake; the bottom lane improved on the reference without leaving it.
+- Evidence: exact optimum values for the authored toy (D56); the "overrated" label is illustrative.
+
+### CAND-ANIM-053 — The optimum is a re-weighting of the reference: the β dial
+
+- Learning objective: the solution of `max E[R] − β·KL` is `π* ∝ π_ref · e^{R/β}`; β moves it smoothly from
+  "keep the reference" to "take the argmax of the reward".
+- Storyboard: (1) π_ref bars; (2) each bar multiplied by its weight `e^{R/β}` (a vertical stretch);
+  (3) renormalize so the bars sum to 1; (4) a β dial sweeps 4 → 1 → 0.25 → 0: bars
+  (0.75, 0.25, 0.00) → (0.86, 0.14, 0.01) → (0.19, 0.00, 0.81) → (0, 0, 1), with E[R] and KL readouts
+  (1.75 / 0.01, 1.88 / 0.09, 3.62 / 5.16, 4.00 / 6.91); (5) an answer with π_ref = 0 stays at 0 for every
+  finite β.
+- Evidence: exact (S2 Part B computes the same optimum). Companion to 052.
+- Update (2026-11-03, learner marked the plain-language math glossary important, S2 note D65 ★): label
+  the three steps on screen as **multiply** (0.7·7.389 = 5.172, 0.299·2.718 = 0.813, 0.001·54.6 = 0.055),
+  **add** (Z = 6.040, "partition function = the total to divide by") and **divide** (0.856, 0.135, 0.009),
+  before the β dial.
+
+### CAND-ANIM-054 — Why KL: the same move, a different price ★
+
+- Learning objective: KL is chosen because (a) it compares output distributions, (b) it is an average of
+  log-ratios that can be estimated from sampled answers, and (c) it charges most for moving toward answers
+  the reference almost never writes.
+- Storyboard: (1) π_ref bars 0.7 / 0.299 / 0.001; (2) policy X moves 0.1 from A to B, policy Y moves 0.1
+  from A to C; (3) a total-variation meter reads 0.10 for both; (4) the KL meter: X 0.023, Y 0.374
+  (16× more); (5) zoom on the per-answer term: the curve `log(π/π_ref)` against π_ref, rising without
+  limit as π_ref → 0; C sits far up the curve; (6) "estimated from samples": draw answers from π, for each
+  write `log π − log π_ref`, a running average converges to the KL (hand-off to 037 for per-token k1/k3).
+- Evidence: exact values (D57); sampling frames use a seeded draw, labelled as such.
+
+### CAND-ANIM-055 — Which direction: KL(π‖π_ref) vs KL(π_ref‖π)
+
+- Learning objective: the direction decides what is expensive. KL(π‖π_ref) (the one RLHF uses) lets the
+  policy drop answers cheaply and charges for adding rare ones; KL(π_ref‖π) forbids dropping any answer
+  the reference gives.
+- Storyboard: (1) policy Z keeps only A, π = (1, 0, 0): KL(π‖π_ref) = 0.357, KL(π_ref‖π) = ∞ (the meter
+  overflows); (2) policy Y adds 0.1 on the rare C: KL(π‖π_ref) = 0.374, KL(π_ref‖π) = 0.103; (3) summary
+  frame: RLHF wants to drop bad answers and not invent unsupported ones, which is what KL(π‖π_ref) prices;
+  (4) optional tail: a two-peaked reference fitted by a one-peaked policy, KL(π‖π_ref) picks one peak,
+  KL(π_ref‖π) spreads over both (mode-seeking vs mass-covering).
+- Evidence: exact toy values; the two-peak tail is illustrative. S2 Part A asks this question.
+
+### CAND-ANIM-056 — Why the reference is frozen
+
+- Learning objective: the KL must be measured to a fixed model; measured to the previous step's policy,
+  each step looks small while the total drift is large.
+- Storyboard: two answers, π(A) starts at 0.5; each step raises A's logit by 0.3. (1) Moving anchor:
+  per-step KL 0.011 → 0.007 → 0.002 → 0.0001 (always small), while π(A) goes 0.5 → 0.82 → 0.95 → 0.998
+  over 20 steps; (2) frozen anchor: the KL to the starting model grows 0.011 → 0.218 → 0.502 → 0.676, so
+  the penalty sees the full drift; (3) closing note: PPO's clipping is a per-step limit relative to the
+  previous policy and does not replace the frozen-reference KL.
+- Evidence: exact for the two-answer example.
+
+### CAND-ANIM-057 — The RLHF workflow: two training signals, one gold check ★
+
+- Source: user (2026-11-03, at S2 after D61–D62: "the above is important, mark it in note, propose a
+  workflow animation, indicate the 3 components") and agent storyboard. S2 note D61, D62 ★.
+- State: suggested; learner priority.
+- Learning objective: the reader can name the three signals of an RLHF run and where each one acts:
+  **(1) reward** from the frozen reward model (or a verifier) and **(2) KL** to the frozen reference both
+  enter the update; **(3) the gold signal** (held-out human comparisons, verifier on held-out problems,
+  independent reward model, benchmarks, reading samples) only evaluates checkpoints and is never
+  optimized.
+- Storyboard (three colour-coded components, fixed positions; training loop on the left, evaluation
+  lane on the right, separated by a dashed wall labelled "no gradients cross"):
+  1. Cast: policy π (trainable, blue), frozen reference π_ref (grey, lock), frozen reward model (violet,
+     lock), and on the right an evaluation panel (green) with icons for humans, verifier, independent
+     reward model, benchmarks.
+  2. One prompt enters; π samples an answer.
+  3. **Component 1, reward:** the answer goes to the reward model → one score R = 1.6 (violet tag).
+  4. **Component 2, KL:** the same tokens go to π and π_ref → per-token log-ratios → summed KL = 0.4
+     (grey tag); multiplied by β = 0.1 → cost 0.04.
+  5. Objective box: R − β·KL = 1.56 → gradient arrow updates π only (π_ref and reward model stay locked).
+  6. Loop runs several times; a training chart grows: reward rises, KL rises.
+  7. **Component 3, gold:** every N steps a checkpoint copy of π moves across the wall to the evaluation
+     panel; held-out prompts → win rate vs the reference (e.g. 59% ± 3.5%) or pass rate. Its chart grows
+     separately. Nothing flows back except a human decision: "keep / choose β / stop".
+  8. Over-optimization frame: training reward keeps rising while the gold chart peaks and turns down; a
+     marker at the peak, "pick this checkpoint". Badge: "illustrative numbers".
+  9. Variant strip (one line each): RLVR = the verifier is component 1, gold = held-out problems;
+     some reasoning-RL recipes shrink or drop component 2 (β → 0); labs publish the setup, not current β
+     values.
+- Evidence: illustrative values; the published setups behind the variants are listed in S2 note D62
+  (from memory, to verify before production).
+- Relation: hub of the S2 set; 052 (why the KL cost) and 054 (why KL) zoom into component 2; X-POST-005
+  covers component 1; 036 (PPO's four networks) is the PPO-specific version of the training loop.
+- Suggested destination: the KL/DPO article plan (`publications/x-articles/x-post-training-kl-dpo/plan.md`),
+  S2 intro, Chapter 12.
+
+### KL-itself set: what KL is and how to read it (CAND-ANIM-058 to 064)
+
+Proposed 2026-11-04 at the learner's request, during the S2 re-study of Part A: "I think we need a lot of
+animations to explain KL itself, and maybe we need a separate X article about KL itself." Sources: S2
+learning note D68 ★ (the formula), D69, D70 ★ (why KL ≥ 0, KL has no direction), D71 (measure vs brake),
+D72 ★ (distance-like), D59, D79 (reading KL in a run), D57 ★, D35. Planned article:
+`publications/x-articles/x-post-training-kl/plan.md` (comes first, before the KL/DPO article; learner, 2026-11-04). **One running example for
+the whole set:** the egg question of D67 ★ ("How long should I boil an egg?", five answers, π_ref
+0.40 / 0.25 / 0.15 / 0.12 / 0.08). All: state *suggested*, produce on the Mac Studio, Dongxi visual
+system, values exact unless badged. Existing candidates that belong to this article: `054` ★ (same move,
+different price), `055` (direction), `037` (per-token estimation).
+
+### CAND-ANIM-058 — The KL formula, built term by term ★
+
+- Learning objective: the reader can compute `KL(π‖π_ref) = Σ π·log(π/π_ref)` by hand and say what each
+  symbol does.
+- Storyboard: (1) five answer cards with π_ref bars; (2) the small move: 0.10 flows from "until it's done"
+  (0.40 → 0.30) to the best answer (0.12 → 0.22); (3) a column per answer fills in: ratio
+  (0.75, 1, 1, 1.833, 1) → log (−0.288, 0, 0, +0.606, 0) → × new probability (−0.086, 0, 0, +0.133, 0);
+  unchanged answers grey out at 0; (4) the terms slide into a sum: **KL = 0.047**; (5) the formula
+  assembles symbol by symbol above the columns, each symbol lighting up its column.
+- Evidence: exact (D68 ★).
+
+### CAND-ANIM-059 — Why a log of the ratio
+
+- Learning objective: `log(π/π_ref)` turns "how many times more likely" into a signed amount: 0 for no
+  change, positive up, negative down, and halving and doubling get equal size.
+- Storyboard: (1) a ratio dial from 0.1 to 10 with the log curve under it; (2) markers: 0.75 → −0.288,
+  1 → 0, 1.833 → +0.606; (3) ×2 and ×½ land at +0.693 and −0.693; (4) as the ratio approaches 0 the log
+  drops without limit (link to 055's "dropping" and the extreme drop of 060).
+- Evidence: exact.
+
+### CAND-ANIM-060 — Why KL is never negative: lost = gained ★
+
+- Learning objective: probabilities add to 1, so what one answer loses another gains; each term is at
+  least that answer's gain; so the sum is ≥ 0 and 0 only for no change.
+- Storyboard: (1) the small move as two bar pairs per moved answer: **gain** (−0.10, +0.10) and **term**
+  (−0.086, +0.133); the term bars are shorter on the negative side and longer on the positive side;
+  (2) gains add to 0 (balance scale level); terms add to +0.047 (scale tips positive); (3) **extreme drop**:
+  vague 0.40 → 0.01, its log-ratio −3.689 shown big, then multiplied by 0.01 → term −0.037; best's term
+  +0.738; KL 0.701; (4) **spread**: vague −0.30, three answers +0.10 each → KL 0.240; (5) end card: each
+  term ≥ π − π_ref.
+- Evidence: exact (D69, D70 ★).
+
+### CAND-ANIM-061 — KL is a ruler, not a steering wheel
+
+- Learning objective: KL charges for any change, good or bad; the reward chooses the direction; inside
+  the objective, β·KL sets how far the model moves.
+- Storyboard: (1) two moves of 0.10 from the same start: toward the best answer (KL 0.047) and away
+  from it (KL 0.076); both meters positive; (2) add the reward: J 0.638 vs 0.209 ("away" loses on both);
+  (3) the β knob: the best answer's probability under π\* 1.00 (β → 0), 0.71, 0.40, 0.24, 0.16, 0.12
+  (β → ∞); caption "reward steers, KL brakes".
+- Evidence: exact (D70 ★, D71).
+
+### CAND-ANIM-062 — Why this exact formula: other "change" measures go negative
+
+- Learning objective: KL behaves like a distance (0 for the same model, positive otherwise) because it
+  weights by the new model; plausible alternatives do not.
+- Storyboard: three meters side by side on two moves: unweighted Σ log(π/π_ref) (0.318, **−1.569**),
+  π_ref-weighted (**−0.042**, **−0.126**), KL (0.047, 0.076); the negative readings flash red. Tail: KL is
+  not symmetric, KL(π‖π_ref) 0.047 vs KL(π_ref‖π) 0.042 for the same move (hand-off to 055).
+- Evidence: exact (D72 ★).
+
+### CAND-ANIM-063 — KL from samples: no table needed
+
+- Learning objective: KL is an average over the new model's own answers, so it can be estimated by
+  sampling; one sample can be negative, the average converges to the exact value.
+- Storyboard: (1) the new model answers repeatedly; each answer drops a chip with its log-ratio
+  (best +0.606, vague −0.288, others 0); (2) a running average: 10 samples 0.096, 100 → 0.055,
+  10,000 → 0.049, line at the exact 0.047; (3) a single negative chip highlighted: "one sample can be
+  negative, the average cannot"; (4) hand-off to 037: for an LLM the reply's log-ratio is a sum over
+  tokens.
+- Evidence: seeded draw (badge "one random run"); the exact value is exact. Supersedes frame 6 of 054.
+
+### CAND-ANIM-064 — Reading KL in a training run
+
+- Learning objective: there is no "optimal" KL value; KL grows as training moves the model, and is read
+  next to the reward model's score and an independent gold signal.
+- Storyboard: (1) three charts against training progress: KL 0 → 3.61, reward-model score 0.51 → 2.67
+  (always rising), gold 0.49 → peak 1.10 at KL 0.74 → −0.76; (2) bars underneath: the confident "20
+  minutes, experts agree" answer grows from 0.005 to 0.69; (3) marker at the gold peak: "keep this
+  checkpoint"; (4) checklist: fast KL rise, length blow-up, repetition, benchmark drops.
+- Evidence: exact for the authored toy (D79; each point is π\* at a smaller β, standing in for longer
+  training; badge "toy"). Relation: 057's over-optimization frame shows the same pattern in the workflow.

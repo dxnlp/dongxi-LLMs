@@ -56,3 +56,7 @@ unsupported conclusion. Record their initial model, refined explanation,
 prediction, perturbation result, and unresolved edge in this topic directory.
 The completed reference answer supplies a study aid; it is not the learner's
 answer.
+
+## Study-path learning notes
+
+- Study-path S3 learning note: [study-path-s3-policy-gradient-to-ppo.md](study-path-s3-policy-gradient-to-ppo.md)
