@@ -5,6 +5,10 @@ a specific exception.
 
 ## Article packages
 
+- [KL Divergence](x-post-training-kl/review.html): post-training series, written for readers with limited
+  math, English and [Chinese](x-post-training-kl/zh/review.html) drafts and source map; twelve GIFs with the
+  DONGXI LABS mark; series cover. Chinese version in X draft 2118081140015656961 and English
+  version in X draft 2118088509898596353, neither published.
 - [Reward Models](x-post-training-005/plan.md): post-training series 5/6, English and Chinese drafts,
   cover, source map; eleven GIFs with the DONGXI LABS mark. Chinese version published on X by the
   learner (reported 2026-10-31); English not transferred.
@@ -103,6 +107,9 @@ Beginner Bradley–Terry animation `CAND-ANIM-041` is also a candidate for this 
   importance ratio, reward hacking, KL penalty), plus trajectory, exploration, credit assignment,
   agent, environment and judge. Other
   terms keep the English (中文) first-use rule.
+- Write chat model or LLM directly in the Chinese version, never 聊天模型 (learner, 2026-11-04).
+- Example prompts and answers quoted in English stay in English in the Chinese version, with no Chinese
+  translation in parentheses (learner, 2026-11-04, KL article); a short role label such as （最好的回答） is fine.
 - Open with a concrete, verified, eye-catching example (article 1: OpenAI's
   GPT-3 vs InstructGPT moon-landing comparison), then the reader's question.
 - Quote blocks (`>`) only for a few key sentences, about 4–5 per article. Use quotation

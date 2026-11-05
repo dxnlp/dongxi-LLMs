@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>KL：用一个数衡量模型变了多少</title><style>*{box-sizing:border-box}html{color-scheme:light}
+body{margin:0;background:#fff;color:#111827;font-family:Arial,"Helvetica Neue",sans-serif}
+body.zh{font-family:"PingFang SC","Songti SC",STSong,serif}
+main{max-width:860px;margin:36px auto 110px;padding:0 28px}
+nav{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:#64748b;margin-bottom:18px}
+nav a{color:#2563eb;text-decoration:none;border:1px solid #cbd5e1;border-radius:6px;padding:5px 10px}
+header img{width:100%;height:auto;display:block;border-radius:10px}
+h1{font-size:42px;line-height:1.25;font-weight:700;margin:34px 0 30px}
+h2{font-size:29px;line-height:1.4;margin:58px 0 22px}
+h3{font-size:23px;line-height:1.4;margin:40px 0 16px}
+p,li{font-size:19px;line-height:1.85;overflow-wrap:anywhere}
+p{margin:0 0 20px} ul{padding-left:24px;margin:0 0 22px} li{margin-bottom:8px}
+body.zh p,body.zh li{font-size:19px;line-height:1.95}
+blockquote{margin:26px 0;padding:4px 0 4px 20px;border-left:4px solid #cbd5e1;color:#1f2937}
+blockquote p{margin:8px 0;font-size:20px}
+figure{margin:34px -10px}
+figure img{width:100%;height:auto;display:block;border:1px solid #e2e8f0;border-radius:10px}
+.pending{display:flex;align-items:center;justify-content:center;aspect-ratio:16/9;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;color:#64748b;font:15px Arial,sans-serif}
+figcaption{font-size:15px;line-height:1.75;color:#64748b;padding:12px 8px}
+.note{font-size:14px;color:#64748b;border-top:1px solid #e2e8f0;margin-top:60px;padding-top:16px}
+@media(max-width:600px){main{padding:0 16px;margin-top:16px}h1{font-size:30px}h2{font-size:24px;margin-top:42px}
+h3{font-size:20px}p,li,body.zh p,body.zh li{font-size:17px}figure{margin:26px -6px}}</style></head><body class="zh"><main><nav><span>KL article · post-training series</span><a href="../review.html">English</a></nav><header><img src="../assets/cover-post-training-kl.png" width="2000" height="800" alt="KL：用一个数衡量模型变了多少"></header><h1>KL：用一个数衡量模型变了多少</h1><article><h2>一个问题，五种回答</h2>
+<p>向 LLM 问一百次 <em>How long should I boil an egg?</em>，你得到的回答不会一百次都一样，因为 LLM 的每个词都是采样出来的。假设各种回答出现的比例是这样的：</p>
+<ul>
+<li><em>Boil it until it's done.</em>（含糊的回答）：40%</li>
+<li><em>About 10 minutes.</em>：25%</li>
+<li>一长段关于鸡蛋的话，最后才说到 10 分钟：15%</li>
+<li><em>Soft-boiled 6–7 minutes, hard-boiled 10–12; then cold water so it peels easily.</em>（最好的回答）：12%</li>
+<li><em>2 minutes gives a hard-boiled egg.</em>（错误的回答）：8%</li>
+</ul>
+<p>这些比例加起来是 100%。这样一组比例叫 probability distribution（概率分布），它描述了模型的习惯。我们把这个起点模型叫作 reference（参考模型）。</p>
+<p>现在把模型训练一小会儿。含糊的回答从 40% 降到 30%，最好的回答从 12% 升到 22%，另外三个回答不变。</p>
+<figure><img src="../assets/01-two-splits.gif" loading="lazy" alt="参考模型的五个比例；0.10 从含糊的回答移到最好的回答。示意值。"><figcaption>参考模型的五个比例；0.10 从含糊的回答移到最好的回答。示意值。</figcaption></figure>
+<p>模型变了多少？我们想要一个数：什么都没变时是 0，变得越多，数越大。最常用的度量是 <strong>KL divergence</strong>，简称 <strong>KL</strong>，由 Solomon Kullback 和 Richard Leibler 在 1951 年提出，名字取自两人的姓。</p>
+<p>后训练离不开 KL，原因在前两篇里已经出现过：reward model 只有在它训练时见过的那类回答附近才可靠，所以 RL 训练时，模型偏离参考模型要付出代价。这个代价就是 KL。</p>
+<p>本文把这个数拆开来讲，读者只需要会乘法。KL 的计算分三步：比值、log、平均，每一步占一节。接着讲这个数的含义、它为什么不会是负数、它做不到什么、在真实模型上怎样估计，以及训练时怎样读它。这是后训练系列的第六篇。鸡蛋例子里的概率和 reward 都是示意值，基于它们的计算是精确的。</p>
+<h2>第一步：比值</h2>
+<p>对每个回答，用新的比例除以旧的比例。</p>
+<ul>
+<li>含糊的回答：0.30 / 0.40 = 0.75</li>
+<li>最好的回答：0.22 / 0.12 = 1.83</li>
+<li>另外三个回答：1</li>
+</ul>
+<p>这个 ratio（比值）表示回答出现的可能性变成了原来的几倍。大于 1 表示上升，小于 1 表示下降，等于 1 表示没变。</p>
+<p>为什么用除法，不用减法？减法算出来两个回答都是 0.10，看上去变化一样大，实际差得很远：含糊的回答少了四分之一，最好的回答几乎翻了一倍。比值能看出这个区别。</p>
+<h2>第二步：取 log</h2>
+<p>比值有个缺点。翻倍是 2，减半是 0.5。这两个变化大小相等、方向相反，可是 2 比 1 高出 1，0.5 只比 1 低 0.5。而且没变化对应的数是 1，我们更希望它是 0。</p>
+<p>我们想要这样一种表示：没变化是 0，上升是正数，下降是负数，翻倍和减半的大小相同。log（对数）正好做到这几点。它就是计算器上的 ln 键（自然对数），不用手算。看几个值：</p>
+<ul>
+<li>log(0.1) = −2.303</li>
+<li>log(0.5) = −0.693</li>
+<li>log(0.75) = −0.288</li>
+<li>log(1) = 0</li>
+<li>log(1.83) = +0.606</li>
+<li>log(2) = +0.693</li>
+<li>log(10) = +2.303</li>
+</ul>
+<p>翻倍是 +0.693，减半是 −0.693。变成 10 倍和变成十分之一，大小也相同。</p>
+<p>log 还有两个性质，本文后面都会用到。</p>
+<p><strong>它把乘法变成加法。</strong> 翻倍两次等于乘以 4，而 log(4) = 1.386，正好是 0.693 + 0.693。</p>
+<p><strong>比值靠近 0 时，它不断下降，没有下限。</strong> log(0.1) 约为 −2.3，log(0.01) 约为 −4.6，log(0) 没有定义。</p>
+<figure><img src="../assets/02-why-log.gif" loading="lazy" alt="比值和 log 曲线：1 对应 0，翻倍和减半落在 +0.693 和 −0.693，靠近 0 时曲线不断下降。"><figcaption>比值和 log 曲线：1 对应 0，翻倍和减半落在 +0.693 和 −0.693，靠近 0 时曲线不断下降。</figcaption></figure>
+<p>比值取 log 之后的数叫 <strong>log ratio</strong>。在这次变化里，含糊的回答是 −0.288，最好的回答是 +0.606，没变的三个回答是 0。</p>
+<h2>第三步：按新模型的回答频率求平均</h2>
+<p>现在每个回答有一个数，我们要把它们合成一个数。办法是求平均：新模型说得多的回答，权重就大。这叫 weighted average（加权平均）。新模型有 30% 的时候说含糊的回答，22% 的时候说最好的回答：</p>
+<ul>
+<li>含糊的回答：0.30 × (−0.288) = −0.086</li>
+<li>最好的回答：0.22 × (+0.606) = +0.133</li>
+<li>另外三个回答：0</li>
+</ul>
+<p>加起来：−0.086 + 0.133 = <strong>0.047</strong>。这就是新模型相对参考模型的 KL。单位叫 nat（奈特），来自自然对数。</p>
+<blockquote>
+<p>KL 是 log ratio 在新模型回答上的平均：看每个回答的可能性变成了几倍，取 log，再按新模型说它的频率求平均。</p>
+</blockquote>
+<p>权重为什么用新模型的比例？因为我们关心的是新模型现在的行为。它常说的回答应该多算，它很少说的回答应该少算。后面几节会看到，这个选择影响很大。</p>
+<p>论文里的写法是：</p>
+<p>KL(π ‖ π_ref) = Σ π(y) · log( π(y) / π_ref(y) )</p>
+<p>公式里的每一部分，刚才都做过了：</p>
+<ul>
+<li><strong>y</strong>：一个完整的回答。</li>
+<li><strong>π(y)</strong>：新模型给这个回答的比例。π 读作 pi，就是本系列说的 policy，也就是正在训练的模型。</li>
+<li><strong>π_ref(y)</strong>：参考模型给这个回答的比例。</li>
+<li><strong>π(y) / π_ref(y)</strong>：第一步。</li>
+<li><strong>log</strong>：第二步。</li>
+<li>写在 log 前面的 <strong>π(y)</strong>：第三步的权重。</li>
+<li><strong>Σ</strong>：对所有回答加总。</li>
+</ul>
+<figure><img src="../assets/03-kl-term-by-term.gif" loading="lazy" alt="比值、log、按新模型的比例加权、相加：−0.086 + 0.133 = 0.047。公式在表格上方逐步点亮。"><figcaption>比值、log、按新模型的比例加权、相加：−0.086 + 0.133 = 0.047。公式在表格上方逐步点亮。</figcaption></figure>
+<h2>这个数是什么意思</h2>
+<p>log ratio 有一个具体的含义。有人给你看一条回答，让你猜它出自哪个模型。如果这条是最好的回答，比值是 1.83：新模型写出它的频率是参考模型的 1.83 倍，这条回答就是它出自新模型的证据。如果是含糊的回答，比值是 0.75，它就是出自参考模型的证据。log ratio 就是这份证据的大小。</p>
+<p>看多条回答时，比值要相乘，换成 log 就是相加，所以证据可以累加。于是 KL 可以这样理解：如果回答确实来自新模型，平均每条回答能提供多少证据。这也是它最初的含义：Kullback 和 Leibler 把这个量描述为，每次观察为区分两个假设平均提供的信息。</p>
+<p>这样一来，KL 的大小就有了具体含义：</p>
+<ul>
+<li><strong>KL 0。</strong> 两个模型完全相同，看再多回答也分不出来。</li>
+<li><strong>KL 0.047。</strong> 也就是这次的小变化。每条回答提供的证据很少：要达到 20 比 1 的把握，需要 log(20) = 3.0 的证据，平均要看大约 64 条回答。</li>
+<li><strong>KL 2.12。</strong> 一个永远给出最好回答的模型。求和只剩一项：1 × log(1 / 0.12)。只看一条回答，就有 8.33 比 1 的把握。</li>
+</ul>
+<figure><img src="../assets/04-evidence.gif" loading="lazy" alt="每条回答把自己的 log ratio 累加到证据上。KL 0.047 时，平均约 64 条回答达到 3.0，也就是 20 比 1。一次模拟。"><figcaption>每条回答把自己的 log ratio 累加到证据上。KL 0.047 时，平均约 64 条回答达到 3.0，也就是 20 比 1。一次模拟。</figcaption></figure>
+<h2>KL 为什么不会是负数</h2>
+<p>单个 log ratio 可以是负数，比如含糊的回答，KL 却不会。什么都没变时 KL 是 0，其余情况都是正数。原因有两点。</p>
+<p><strong>一个回答减少的，就是另一个回答增加的。</strong> 比例加起来前后都是 1，所以含糊的回答减少的 0.10，就是最好的回答增加的 0.10。每个回答的变化量（新比例减旧比例）加起来是 0。</p>
+<p><strong>KL 的每一项都不小于这个回答的变化量。</strong></p>
+<ul>
+<li>含糊的回答：变化量 −0.10，这一项是 −0.086，减掉的比它失去的少。</li>
+<li>最好的回答：变化量 +0.10，这一项是 +0.133，加上的比它得到的多。</li>
+</ul>
+<p>变化量加起来是 0，每一项又都不小于对应的变化量，所以这些项加起来不会小于 0。这条规律来自 log 的形状：log 曲线始终在直线 x − 1 的下方，只在 x = 1 处碰到它。</p>
+<p>如果某个回答大幅下降呢？让含糊的回答从 0.40 降到 0.01，最好的回答升到 0.51。含糊回答的 log ratio 是 −3.689，是个很大的负数。可是它的权重是新比例 0.01，这一项只有 −0.037。模型几乎不说的回答，权重也几乎为零。最好的回答这一项是 +0.738，KL 是 0.701。</p>
+<figure><img src="../assets/05-never-negative.gif" loading="lazy" alt="变化量加起来是 0，每一项都不小于变化量，所以总和不小于 0。降到 0.01 时 log ratio 是 −3.689，这一项只有 −0.037。"><figcaption>变化量加起来是 0，每一项都不小于变化量，所以总和不小于 0。降到 0.01 时 log ratio 是 −3.689，这一项只有 −0.037。</figcaption></figure>
+<blockquote>
+<p>没有变化时，两个模型的距离已经是最小值。所以 KL 从 0 开始，只会增大。</p>
+</blockquote>
+<p>这个性质依赖公式的准确写法。看一个远离最好回答的变化：最好的回答从 12% 降到 2%，含糊的回答升到 50%。换两种看上去合理的算法，结果都不对：</p>
+<ul>
+<li>把 log ratio 直接相加，不加权重：−1.569。</li>
+<li>权重换成参考模型的比例：−0.126。这种算法只要有变化，结果就是负数。</li>
+<li>KL，用新模型的比例加权：+0.076。</li>
+</ul>
+<p>模型变了，距离却是负数，这没有意义。只有 KL 给出了可用的读数。</p>
+<h2>KL 只量距离，不管方向</h2>
+<p>刚才那次变化让模型变差了，KL 仍然是正数。KL 从来不读回答的内容，不知道哪个回答好。朝最好的回答移动 0.10，代价是 0.047；背离它移动 0.10，代价是 0.076。两种移动都要付出代价。</p>
+<p>方向来自 reward。假设五个回答的 reward 依次是 0、1、0.5、2、−1。模型的平均 reward 是每个回答的比例乘以它的 reward，再加起来。朝最好回答的那次小变化得到 0.30 × 0 + 0.25 × 1 + 0.15 × 0.5 + 0.22 × 2 + 0.08 × (−1) = 0.685。</p>
+<p>RL 训练给模型打的总分，是平均 reward 减去 KL 的价格：</p>
+<p>总分 = 平均 reward − β × KL</p>
+<p><strong>β</strong>（beta）是一个单位 KL 的价格，由训练的人决定。取 β = 1：</p>
+<ul>
+<li>保持参考模型：0.485 − 0 = 0.485</li>
+<li>朝最好的回答移动：0.685 − 0.047 = 0.638</li>
+<li>背离最好的回答移动：0.285 − 0.076 = 0.209</li>
+<li>永远给最好的回答：2.000 − 2.120 = −0.120</li>
+</ul>
+<p>最后一行的 reward 最高，总分却很低。训练会停在 reward 和代价之间的折中点，β 决定折中点的位置。随着价格升高，折中点上最好回答的比例依次是：不收费时 1.00，β = 0.5 时 0.71，β = 1 时 0.40，β = 2 时 0.24，β = 5 时 0.16，价格极高时回到 0.12。折中点怎样计算，留到下一篇。</p>
+<figure><img src="../assets/06-no-direction.gif" loading="lazy" alt="朝最好的回答和背离它都有 KL 代价（0.047 和 0.076）。reward 区分两者（0.638 和 0.209），β 决定最好回答的比例能升多高。"><figcaption>朝最好的回答和背离它都有 KL 代价（0.047 和 0.076）。reward 区分两者（0.638 和 0.209），β 决定最好回答的比例能升多高。</figcaption></figure>
+<blockquote>
+<p>reward 决定移动的方向，β × KL 限制移动的距离。</p>
+</blockquote>
+<h2>同样的移动，不同的价格</h2>
+<p>再加第六个回答：<em>Boil it 20 minutes, always, for food safety. Experts agree.</em> 它是错的，语气却很肯定。参考模型几乎不写它，只有 0.5%；为了让比例加起来仍是 100%，2 分钟那个回答调整为 7.5%。假设 reward model 很少见到这类回答，给了它过高的分数。</p>
+<p>比较两次变化，都从含糊的回答拿走 0.10：</p>
+<ul>
+<li>给 <em>About 10 minutes</em>：25% 变成 35%，比值 1.4，KL 0.031。</li>
+<li>给这个语气肯定的错误回答：0.5% 变成 10.5%，比值 21，KL 0.233。</li>
+</ul>
+<p>只看挪动了多少比例，两次完全一样，都是 0.10。KL 对第二次的收费约是第一次的 7.4 倍，因为进入公式的是比值。</p>
+<p>这正是训练需要的。参考模型几乎不写的回答，reward model 也很少见到，它的分数在那里最不可靠。KL 恰好在 reward 信号最弱的地方收费最高。</p>
+<figure><img src="../assets/07-rare-moves.gif" loading="lazy" alt="同样挪动 0.10，分别给常见回答和罕见回答：挪动量都是 0.10，KL 是 0.031 和 0.233。"><figcaption>同样挪动 0.10，分别给常见回答和罕见回答：挪动量都是 0.10，KL 是 0.031 和 0.233。</figcaption></figure>
+<h2>哪个模型放在上面</h2>
+<p>把公式里的两个模型对调，权重改用参考模型的比例，就得到 KL(π_ref ‖ π)。这次小变化算出来是 0.042，原来的方向是 0.047。KL 不对称，所以它叫 divergence（散度），不叫距离。</p>
+<p>顺序决定了哪种变化代价高。看两种情况。</p>
+<p><strong>丢掉一个回答。</strong> 新模型不再说 2 分钟那个错误回答，它的 0.08 给了最好的回答。比例变成 0，这一项就是 0，KL 只有 0.102。对调之后，参考模型仍有 8% 的时候说这个回答，新模型一次也不说，比值是无穷大，KL 也是无穷大。</p>
+<p><strong>新增一个回答。</strong> 新模型给出参考模型从来不说的回答。按 RLHF 的顺序，比值是无穷大，KL 也是无穷大。对调之后则没有问题。</p>
+<p>RLHF 用 KL(π ‖ π_ref)，原因就在这里：模型可以放心丢掉坏回答，而参考模型几乎不写的回答代价很高。真实模型的 softmax 给每个 token 的概率都大于 0，碰不到精确的 0；比例很小时，代价已经很高。</p>
+<p>对调后的顺序出现在 pretraining（预训练）里。它用的损失 cross-entropy（交叉熵）等于数据的 entropy（熵）加上 KL(数据 ‖ 模型)。数据的 entropy 和模型无关，所以降低损失就是降低这个 KL，这时放在上面的是数据。因此模型必须给数据里出现的内容都留一点概率。</p>
+<figure><img src="../assets/08-which-way.gif" loading="lazy" alt="KL 的两种顺序：小变化是 0.047 和 0.042；丢掉一个回答，一个方向是 0.102，另一个方向是无穷大；新增回答则相反。"><figcaption>KL 的两种顺序：小变化是 0.047 和 0.042；丢掉一个回答，一个方向是 0.102，另一个方向是无穷大；新增回答则相反。</figcaption></figure>
+<h2>真实模型：样本和 token</h2>
+<p>五个回答可以列成清单。真实模型可能写出的回答多到列不完，没法逐项求和。有两件事让 KL 仍然可用。</p>
+<p><strong>样本。</strong> KL 是新模型所有回答上的平均，而平均可以用样本估计。让新模型写一批回答，算出每条的 log ratio，再求平均。在鸡蛋例子上模拟一次：10 条回答得到 0.096，100 条得到 0.061，10,000 条得到 0.048，精确值是 0.047。单条回答的 log ratio 可以是负数，平均值最后落在正的精确值附近。样本必须来自新模型本身：调低 temperature 或者加上 top-p，平均值估计的就不再是这个 KL。</p>
+<figure><img src="../assets/09-from-samples.gif" loading="lazy" alt="新模型写出回答，每条有一个 log ratio，累计平均值落在 0.047 附近。一次模拟。"><figcaption>新模型写出回答，每条有一个 log ratio，累计平均值落在 0.047 附近。一次模拟。</figcaption></figure>
+<p><strong>token。</strong> 一条回答的概率，是它每个 token 的概率连乘，每个 token 的概率都以前面的 token 为条件。log 把连乘变成求和，所以一条回答的 log ratio，就是它每个 token 的 log ratio 之和。看一条三个 token 的回答，概率是示意值。参考模型给这三个 token 0.40、0.50、0.80，整条回答的概率是 0.16。新模型给 0.50、0.50、0.96，整条回答的概率是 0.24。整条的 log ratio 是 log(1.5) = 0.405，三个 token 的 log ratio 是 0.223、0、0.182，加起来也是 0.405。</p>
+<p>所以 KL 可以逐个 token 计算，只需要让冻结的参考模型多做一次前向计算。两种公开方法把它放在不同的位置：</p>
+<ul>
+<li><strong>InstructGPT 的 PPO</strong> 在每个 token 上从 reward 里减去 β × log ratio，β = 0.02。</li>
+<li><strong>DeepSeekMath 的 GRPO</strong> 把 KL 直接加进损失，β = 0.04。它对每个 token 的估计是 x − log x − 1，其中 x = π_ref / π。这个式子同样来自前面那条直线，对任何 token 都不会是负数。</li>
+</ul>
+<figure><img src="../assets/10-tokens.gif" loading="lazy" alt="一条回答的 log ratio 拆到每个 token：0.223 + 0 + 0.182 = 0.405，以及 PPO 和 GRPO 各把它放在哪里。token 概率是示意值。"><figcaption>一条回答的 log ratio 拆到每个 token：0.223 + 0 + 0.182 = 0.405，以及 PPO 和 GRPO 各把它放在哪里。token 概率是示意值。</figcaption></figure>
+<h2>训练时怎样读 KL</h2>
+<p>训练日志里的 KL 是一条曲线。几项检查能帮你读懂它。</p>
+<ul>
+<li><strong>第 0 步必须是 0。</strong> 这时模型和参考模型的权重相同，读数非 0 就说明有 bug。</li>
+<li><strong>批次平均明显为负，说明有 bug。</strong> 单个 token 可以是负数。平均值一直低于 0，通常说明采样时的设置和计算概率时的设置不一致，或者 mask 把 prompt、填充 token 算了进去。</li>
+<li><strong>看清单位。</strong> 按 token 算的 KL 和按回答算的 KL 相差一个回答长度。只有单位相同、prompt 相同的运行才能比较。</li>
+</ul>
+<p>KL 没有所谓的好数值。它说的是模型移动了多少，这次移动值不值，要靠一个训练从未见过的信号来判断：留出数据上的人工比较、benchmark，或者可检验任务上的 verifier。这个独立的信号叫 <strong>gold signal</strong>。</p>
+<p>回到六个回答的例子。假设 reward model 给那个语气肯定的错误回答 3 分，它的真实价值，也就是 gold signal，是 −2；另外五个回答的 reward 就是它们的 gold 值。把每次调小 β 看作训练得更久：</p>
+<ul>
+<li>起点：KL 0，reward 0.51，gold 0.48。</li>
+<li>KL 0.81：reward 1.57，gold 1.10，这是峰值。</li>
+<li>KL 3.61：reward 2.67，gold −0.76，错误回答已经占了 69%。</li>
+</ul>
+<figure><img src="../assets/11-reading-a-run.gif" loading="lazy" alt="KL 增大时，reward 一路上升，gold 在 KL 0.81 处到顶（1.10）后下降。玩具例子，每个点是更小 β 下的折中点。"><figcaption>KL 增大时，reward 一路上升，gold 在 KL 0.81 处到顶（1.10）后下降。玩具例子，每个点是更小 β 下的折中点。</figcaption></figure>
+<p>reward 一路上升，gold signal 先升、到顶、再降。Gao、Schulman 和 Hilton 在 2022 年用真实的 reward model 报告过这个规律。同一篇论文也提醒，只看 KL 无法判断过度优化到了什么程度。所以 KL 要和 reward、gold signal 放在一起读，留下的 checkpoint 是 gold 到顶的那个。</p>
+<blockquote>
+<p>KL 告诉你模型移动了多少。移动得对不对，要问一个它训练时从未见过的信号。</p>
+</blockquote>
+<h2>log ratio 也是一种 reward</h2>
+<p>最后还有一点，它引出下一篇。log ratio 说的是模型把每个回答抬高或压低了多少。一个模型抬高某个回答，表现得就像它看重这个回答。在鸡蛋例子上，这一点完全成立。</p>
+<p>取 β = 1 的折中点，也就是最好的回答升到 40% 的那个。它的比例是 17.8%、30.3%、11.0%、39.5%、1.3%，相对参考模型的 log ratio 是 −0.808、0.192、−0.308、1.192、−1.808。再看 reward：0、1、0.5、2、−1。每个 log ratio 都等于 reward 减去同一个数 0.808。</p>
+<p>也就是说，模型的变化里包含了 reward，只差一个公共的常数。比较可以消掉这个常数。上一篇的 Bradley–Terry 只用两个分数的差。最好的回答对 <em>About 10 minutes</em>：用 reward 算，2 − 1 = 1；用 log ratio 算，1.192 − 0.192 = 1。两者给出同样的概率 σ(1) = 0.731。</p>
+<p>这一点很重要：这个常数要对所有可能的回答求和，真实模型算不出来，而比较时用不到它。</p>
+<p>这就是 <strong>DPO</strong>（direct preference optimization，直接偏好优化）的想法。它省掉单独的 reward model：对人选出的每一对回答，用 β × log ratio 当分数，代入同样的 Bradley–Terry 损失。在这一对回答上，起点模型的 log ratio 都是 0，分差是 0，损失是 0.693；折中点的分差是 1，损失是 0.313。</p>
+<figure><img src="../assets/12-implicit-reward.gif" loading="lazy" alt="在折中点，每个 log ratio 都等于 reward 减 0.808。比较时这个常数消掉，两种算法都得到 0.731。"><figcaption>在折中点，每个 log ratio 都等于 reward 减 0.808。比较时这个常数消掉，两种算法都得到 0.731。</figcaption></figure>
+<blockquote>
+<p>KL 里的 log ratio 衡量一个回答移动了多少，也可以当作这个回答的 reward。</p>
+</blockquote>
+<h2>小结</h2>
+<ul>
+<li>模型的习惯是回答上的一个概率分布，KL 用一个数比较两个这样的分布。</li>
+<li>KL 分三步算：比例相除，取 log，按新模型的回答求平均。</li>
+<li>算出来的数，是平均每条回答提供的、指向新模型的证据。</li>
+<li>KL 不会是负数，只有什么都没变时才是 0。一个回答减少的就是另一个回答增加的，而每一项都不小于这个回答的变化量。</li>
+<li>KL 自己没有方向。reward 决定移动的方向，β × KL 限制移动的距离。</li>
+<li>KL 对抬高参考模型很少写的回答收费最高，那里正是 reward model 最不可靠的地方。</li>
+<li>KL 不对称。RLHF 的顺序允许模型丢掉回答，新增回答则代价很高。</li>
+<li>在真实模型上，KL 用采样的回答估计，可以逐个 token 计算。</li>
+<li>KL 没有所谓的好数值，要和 reward、gold signal 一起读。</li>
+<li>log ratio 也是一种 reward，由此通向 DPO。</li>
+</ul>
+<p>下一篇讲 KL 的用法：RLHF 为什么要为移动收费，折中点怎样计算，DPO 又怎样由它推导出来。</p>
+</article><p class="note">本地审阅页面，尚未上传或发布。论文数字为公开结果；其余数字均为示意值，计算精确。</p></main></body></html>

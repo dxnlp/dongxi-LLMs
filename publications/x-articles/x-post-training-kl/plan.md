@@ -4,8 +4,25 @@ Status: **started 2026-11-04** at the learner's request during the S2 re-study o
 need a lot of animations to explain KL itself, and maybe we need a separate X article about KL itself."
 **Order decided by the learner (2026-11-04): this KL article comes first**, before the KL/DPO article
 ([`../x-post-training-kl-dpo/plan.md`](../x-post-training-kl-dpo/plan.md)), which then uses KL as a known
-ruler and covers the objective, the optimum and DPO. Article number still to be assigned. No drafting or
-rendering yet.
+ruler and covers the objective, the optimum and DPO. Article number still to be assigned.
+
+**Revised 2026-11-04 for the audience** (learner: "the audience might have limited math knowledge … the
+article should explain KL in detail and in a easy to understand way"). English and Chinese drafts written;
+twelve GIFs rendered on the learner's request (2026-11-04); title approved and cover built the same day. The sections below **Outline** and **Animations** are the current
+version and replace the earlier nine-section outline.
+
+## Audience and how the draft serves it
+
+- The reader knows multiplication and percentages, and nothing else is assumed: no logarithms, no Σ, no
+  probability notation.
+- Ratio, log and weighted average each get a section, before the formula appears.
+- The formula comes once, after the reader has done every step by hand, with each symbol mapped to a step.
+- One running example throughout: the egg question. The three-answer toy of D57 is replaced by a sixth
+  egg answer (from D79), so a reader follows one set of answers.
+- New meaning section (not in the notes): KL as average evidence per reply for telling the two models
+  apart, the original 1951 reading. It gives the number a size: 0.047 ≈ 64 replies to 20-to-1 odds.
+- Calculus, Lagrange multipliers and the derivation of the optimum stay out; the optimum's values appear
+  without derivation, and the next article derives them.
 
 ## Where to find everything (read before outlining or drafting)
 
@@ -119,32 +136,60 @@ Prompt: *"How long should I boil an egg?"*
    this score: loss −log σ(r̂_chosen − r̂_rejected), 0.693 at the start, 0.313 at π\*. Kept short: one
    picture of the idea, the full derivation is in the KL/DPO article. (D82, D83 ★)
 
-## Outline (draft)
+## Outline (current; 13 sections, as drafted)
 
-| § | Section | Key point | Learning notes | Animations |
+| § | Section | Key point | Learning notes | GIF |
 |---|---|---|---|---|
-| 1 | **Opening.** A chatbot after training answers the egg question differently. How much did it change? One number. | — | D67 ★ | — |
-| 2 | **The ruler, term by term** | 1 | D68 ★ | `058` ★, `059` |
-| 3 | **Never negative** | 2 | D68 ★, D69, D70 ★ | `060` ★ |
-| 4 | **A ruler, not a steering wheel** | 3 | D70 ★, D71 | `061` |
-| 5 | **Why this formula**: other measures fail; same move, different price | 4, 5 | D72 ★, D57 ★ | `062`, `054` ★ |
-| 6 | **Direction and zeros** | 4 | D57 ★, D68 ★, D35 ★ | `055` |
-| 7 | **From a table to samples and tokens** | 5 | D68 ★, D72 ★, D35 ★ | `063`, `037` |
-| 8 | **Reading KL in a real run** | 6 | D59, D60, D61, D79 | `064` |
-| 9 | **The log-ratio is also a reward** (preview of S2 Parts C–D): implicit reward, Z cancels, DPO's loss in one line | 7 | D82, D83 ★, D84 | none yet (candidate to be proposed if the learner wants one) |
-| 10 | **Summary**; next article: KL inside the RLHF objective, the optimum and DPO in full | — | D56 ★ (preview) | — |
+| 1 | **One question, five answers** | — | D67 ★ | 01 |
+| 2 | **Step 1: the ratio** (why divide, not subtract) | 1 | D68 ★ | — |
+| 3 | **Step 2: the log** (values, multiplication → addition, falls near 0) | 1 | D68 ★ | 02 |
+| 4 | **Step 3: the average over the new model's replies**, then the formula | 1 | D68 ★ | 03 |
+| 5 | **What the number means**: average evidence per reply | 1 | new (Kullback & Leibler 1951) | 04 |
+| 6 | **Why KL is never negative**, and why the exact form matters | 2, 4 | D68 ★, D69, D70 ★, D72 ★ | 05 |
+| 7 | **KL measures distance and ignores direction** (reward, β, score) | 3 | D70 ★, D71 | 06 |
+| 8 | **The same move, a different price** (sixth answer) | 5 | D57 ★, D79 | 07 |
+| 9 | **Which model goes on top** (not symmetric; dropping, inventing; pretraining) | 4 | D57 ★, D68 ★, Day 3 note | 08 |
+| 10 | **Real models: samples and tokens** (PPO, GRPO) | 5 | D68 ★, D72 ★, D35 ★ | 09, 10 |
+| 11 | **How to read KL during training** | 6 | D59, D60, D61, D79 | 11 |
+| 12 | **The log-ratio is also a reward** (implicit reward, DPO in one paragraph) | 7 | D82, D83 ★, D84 | 12 |
+| 13 | **Summary**; next: the KL/DPO article | — | — | — |
 
-Optional sidebar (§2 or §10): you have met KL before; the pretraining loss is cross-entropy = entropy +
-KL (Day 3 note, Chapter 3).
+Number corrections made while drafting (`check_numbers.py`; `source-map.md` has the details): the toy's gold
+peak is at KL 0.81, not 0.74; the reference's gold is 0.48, not 0.49; sampled KL
+uses one new seeded draw, 0.096 / 0.061 / 0.048. D79 and the storyboards keep their older values until
+production.
 
-## Animations (core set)
+## Animations (12 GIFs, rendered 2026-11-04)
 
-Core: `058` ★, `060` ★, `061`, `054` ★, `063`, `037`, `064` (7). Optional: `059`, `062`, `055`.
-Possible merges: 058 + 059, 062 + 055.
+| GIF | Candidate | Shows |
+|---|---|---|
+| 01 two-splits | `058` ★, first half | the five shares and the 0.10 move |
+| 02 why-log | `059` (now core) | ratio dial, log curve, doubling and halving |
+| 03 kl-term-by-term | `058` ★, second half | columns → 0.047, formula assembles (see decision 2) |
+| 04 evidence | `065` (new) | replies add evidence; 64 replies to 20-to-1 |
+| 05 never-negative | `060` ★ | gains and terms; drop to 0.01 |
+| 06 no-direction | `061` | 0.047 and 0.076; scores; β |
+| 07 rare-moves | `054` ★, egg version | 0.031 vs 0.233 |
+| 08 which-way | `055`, with `062`'s symmetry tail | 0.047 vs 0.042; dropping and inventing |
+| 09 from-samples | `063` | running average; negative sample |
+| 10 tokens | `037`, reduced | product → sum; where PPO and GRPO put it |
+| 11 reading-a-run | `064` | reward, gold and KL, updated numbers |
+| 12 implicit-reward | `066` (new) | log-ratio = reward − 0.808; 0.731 both ways |
+
+`062`'s other measures are covered in prose. Rendered from `visuals/animations/projects/post-training-kl/`.
+
+## Open decisions for the learner
+
+1. **Title.** Approved 2026-11-04: *KL Divergence: One Number for How Far a Model Has Moved* / *KL：用一个数衡量模型变了多少*.
+2. **Equation on screen.** Draft shows the formula assembling in GIF 03, an exception to the "no equations on
+   screen" rule, because the article is about this formula.
+3. **Series number.** Draft says the sixth article; RLVR's ID `X-POST-006` would shift.
+4. **Section 5** (evidence reading) is new material beyond the notes.
+5. **Cover motif.** Built 2026-11-04: the reference as an engraved blue distribution, the new model as a
+   violet outline, and the part where the new model is higher lit in green.
 
 ## Conventions
 
-Follow `../README.md` (post-training series conventions). Equations: the series' beginner rule is "no
-equations on screen"; this article is about one formula, so the learner decides whether 058 shows it.
+Follow `../README.md` (post-training series conventions).
 Claims marked "from memory" in the learning notes (D35's estimator details, D59, D79's practice list)
 must be checked against primary sources and recorded in `source-map.md`.

@@ -2270,3 +2270,40 @@ different price), `055` (direction), `037` (per-token estimation).
   checkpoint"; (4) checklist: fast KL rise, length blow-up, repetition, benchmark drops.
 - Evidence: exact for the authored toy (D79; each point is π\* at a smaller β, standing in for longer
   training; badge "toy"). Relation: 057's over-optimization frame shows the same pattern in the workflow.
+
+### CAND-ANIM-065 — KL as average evidence: telling two models apart
+
+Proposed 2026-11-04 for the KL article, source `agent` (section 5 of the draft,
+`publications/x-articles/x-post-training-kl/`). State *suggested*.
+
+- Learning objective: a reply's log-ratio is evidence for the new model or the reference; evidence adds
+  up on the log scale; KL is the average evidence per reply, which gives a KL value a size.
+- Storyboard: (1) the new model's replies arrive one at a time, each a chip with its log-ratio
+  (best +0.606, vague −0.288, others 0); (2) an evidence meter adds them, moving up and down, drifting up by
+  0.047 per reply on average; (3) a line at 3.0, labelled 20-to-1 odds, reached after about 64 replies on
+  average; (4) side by side, the always-best model: one reply adds 2.12, odds 8.33 to 1.
+- Evidence: exact expected values; the path of chips is one seeded draw (badge). Relation: `063` shows the
+  average, this shows the running sum.
+
+### CAND-ANIM-066 — The log-ratio is also a reward
+
+Proposed 2026-11-04 for the KL article, source `agent` (D82, D83 ★; the plan left this slot open). State
+*suggested*.
+
+- Learning objective: at the best compromise every log-ratio equals the reward minus one constant, and a
+  comparison cancels the constant, so a model's change can serve as its reward.
+- Storyboard: (1) log-ratio bars (−0.808, 0.192, −0.308, 1.192, −1.808) next to reward bars (0, 1, 0.5, 2,
+  −1); (2) lift the first set by 0.808: they match; (3) a pair, best against about 10 minutes: gap 1 from
+  either set, σ(1) = 0.731; (4) DPO in one frame: loss 0.693 at the start, 0.313 at the best compromise.
+- Evidence: exact on the authored toy.
+
+### KL article updates to existing candidates (2026-11-04)
+
+The drafted article uses one example, so when these are produced: `054` ★ moves to the egg question with the
+sixth answer (0.10 from the vague answer to *About 10 minutes*, KL 0.031, or to the confident wrong answer,
+KL 0.233; share moved 0.10 both; ratios 1.4 and 21). `059` is core. `063` uses the seeded draw in
+`check_numbers.py` (0.096, 0.061, 0.048). `064` uses gold 0.48 at the start, peak 1.10 at KL 0.81, end −0.76.
+`037` is used in a reduced form: a three-token reply (0.223 + 0 + 0.182 = 0.405) and where PPO and GRPO put
+the KL.
+
+Produced 2026-11-04 at the learner's request ("start producing the 12 GIFs"): `058` (two clips), `059`, `065`, `060`, `061`, `054`, `055`, `063`, `037` (reduced), `064`, `066`, in `visuals/animations/projects/post-training-kl/`. `037` stays open in its full form (k1 / k3).
