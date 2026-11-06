@@ -13,7 +13,8 @@ working through **S2** are recorded here as they happen, tagged `[S2 · Part X]`
 continue one sequence across all notes** (D1–D55 in the main note, D56 onward in the stage notes): the
 next number is one more than the highest in any of them, so a D-number points to exactly one place.
 Animation and article requests also go into the main note's plan table and
-`visuals/animations/PROPOSALS.md`. ★ = marked important by the learner.
+`visuals/animations/PROPOSALS.md`. **DPO discussions (Parts C–G) are also indexed in the KL/DPO article plan**
+([`x-post-training-kl-dpo/plan.md`](../../publications/x-articles/x-post-training-kl-dpo/plan.md), "DPO discussions"; learner, 2026-11-05, D86). ★ = marked important by the learner.
 
 ## Key concepts
 
@@ -29,6 +30,8 @@ Animation and article requests also go into the main note's plan table and
 | ★ KL as "how far from the reference" | Learner's intuition (confirmed): the new model is either the same as the reference (KL = 0) or different (KL > 0); nothing is closer than identical, so no negative values. KL earns this through its weighting by the new model: other change measures go negative (egg question, moving 0.10 away from the best answer: unweighted Σ log(π/π_ref) = −1.569; π_ref-weighted −0.126; KL 0.076). Distance-like, not a true distance: not symmetric (0.047 vs 0.042); exact KL ≥ 0, a one-sample estimate can be negative | **marked important by the learner** (D72 ★) |
 | ★ From "no move helps" to π\* = π_ref·e^{R/β}/Z, and what Z is | **Net value** of an answer = R(y) − β·log(π(y)/π_ref(y)): how much J rises if it gets a little more probability (reward gained minus the KL price it already pays). Small move: (0.288, 1, 0.5, 1.394, −1); moving 0.01 vague → best gains ≈ 0.01 × (1.394 − 0.288) = 0.011. **At the top no move helps ⇔ all net values equal** (= c). Solve: log(π/π_ref) = (R − c)/β → π = π_ref·e^{R/β}·(one shared number). **Z = sum of the weights** π_ref·e^{R/β} (0.40 + 0.68 + 0.247 + 0.887 + 0.029 = 2.243); the shared number is 1/Z so probabilities add to 1 (counts → percentages); c = β·log Z = 0.808. Check 0.12 × e² / 2.243 = 0.395 | **marked important by the learner** (D75, D76 ★) |
 | ★ The DPO loss and its gradient | Score answers with the implicit reward r̂ = β·(log π_θ − log π_ref) (Part C; for an LLM a sum of token log-probs). Pair (chosen y_w, rejected y_l): margin m = r̂(y_w) − r̂(y_l); loss −log σ(m), the Bradley–Terry loss of S1 with the chat model as scorer. Egg pair (best over "about 10 minutes"): 0.693 at the start (m = 0), 0.313 at π\* (m = 1). Notebook pairs (β = 0.5): m = +1.0, −1.5, +0.25 → loss 0.313, 1.701, 0.576; only changes vs the reference count. Gradient raises chosen, lowers rejected, weight σ(−m): 0.953 (m = −3), 0.5, 0.269, 0.047 (m = 3). Caveats: no finite minimum; β scales the gradient; shared weights → the chosen log-prob can fall too; reference detached | **marked important by the learner** (D83 ★) |
+| ★ Implicit reward → DPO: the link that opens the KL/DPO article | DPO's score for an answer is the model's own change from the reference, r̂ = β·(log π_θ − log π_ref) (implicit reward, Part C). DPO = the S1 Bradley–Terry reward-model loss with r̂ as the score: m = r̂(chosen) − r̂(rejected), loss −log σ(m). Egg: start m = 0, loss 0.693; at π\* r̂ = R − 0.808, m = 1, loss 0.313, P = 0.731 as with the true rewards. The article states this first, then explains why (objective → π\* → invert → Z cancels → pairs). (D87 ★, D82, D83 ★) | discussed |
+| ★ The D → G story: rule, ideal test, adaptor, real test | **D** the rule: r̂ = β·log(π_θ/π_ref), loss −log σ(m), push σ(−m) (egg 0.693 → 0.313). **E** the ideal test: tabular policy, pairs from Bradley–Terry on the true R, DPO sees only who won → π_DPO → π\* (1,000 pairs: TV 0.05, π_ref 0.33; ≈ 1/√N); few pairs: one-sided pair types overshoot; β sets the distance (KL 0.02 at β = 4 to 2.12 at β = 0.1), not the margin (1.065). **F** the adaptor: log π(reply) = sum of answer-token log-probs incl. `<\|im_end\|>`, shifted by one; tens of nats, mostly length. **G** the real test (Qwen3-0.6B, 512 HH pairs, β = 0.1): held-out 50% → 67.2% ± 2.9%, training 97.3%; chosen and rejected both rose, then split (+0.20 / −0.20); larger lr: both fell (likelihood displacement); KL measured from samples 1.61 vs 0.82 at β = 0.5. Each part answers the question the previous one leaves open. (D98 ★) | discussed |
 
 ## Animations and article
 
@@ -106,8 +109,8 @@ impractical; DPO works because Z cancels when two answers to the same prompt are
 | A · KL divergence | What does KL(π‖π_ref) measure, and why does its direction matter? | in progress | — | D56 ★ (intro: why charge a cost for moving away from the frozen reference), D57 ★ (why KL and not another distance); animations + article plan, main-note plan P13 → `CAND-ANIM-052`–`056`; D58 (why S2 pairs KL with DPO, before PPO/GRPO), D59 (how to read KL values: sign, size, no single optimum), D60 (what "true quality" / gold reward is, and how it is measured), D61 (three signals: reward model and KL train, gold only evaluates), D62 ★ (what frontier labs have published about this setup); workflow animation `CAND-ANIM-057` ★ (plan P14); D63 (DPO does not define true quality either), D64 ("optimum" in plain words, with the objective computed for six policies), D65 ★ (plain-language glossary of every symbol in the KL-regularized objective; three-step construction of π\*); D66 (Parts A–C as one story); D67 ★ (Parts A–C with an everyday example, "How long should I boil an egg?", and the math; key point 5 of the KL/DPO article plan); re-study of A–C begins (2026-11-04): D68 ★ (the KL formula symbol by symbol); D69 (why KL ≥ 0: corrected explanation, each term ≥ the probability gained); D70 ★ (lost = gained so the negative side cannot win; KL measures any change, direction comes from the reward); D71 (KL alone measures; in the objective, reward sets the direction and β·KL the distance); D72 ★ (learner: KL ≥ 0 because the new model is either the same or different, confirmed; other change measures can go negative); D80 (request: KL animations 058–064 and a separate KL article); D81 (KL article first; its plan indexes every note entry and animation) |
 | B · The optimum | Which policy maximizes E[R] − β·KL, and what does β do to it? | in progress (re-study 2026-11-04) | — | D73 (the Part B formulas in detail: objective, equal net value → π\*, softmax form, J = β log Z − β·KL(π‖π\*), reward shift, β limits); D74 (what the star in π\* means; learner lost in D73, re-explain one piece at a time); D75 (piece 1: J; "net value" = J gained by a tiny extra probability; equal = no move helps); D76 ★ (piece 2: from "no move helps" to π\* = π_ref·e^{R/β}/Z; what Z is); D77 (one prompt solved on paper = the target; training moves shared weights toward it for all prompts); D78 (many prompts: total J = fixed − β·average KL to each prompt's π\*; trained jointly through shared weights); D79 (when training is done: keep the checkpoint where gold peaks; proxy keeps rising; warning signs) |
 | C · Inverting the optimum | How does a policy define a reward, and why does the partition function drop out? | in progress (re-study 2026-11-04) | — | D82 (Part C in three steps: invert π\*, implicit reward, Z cancels in Bradley–Terry; why it leads to DPO) |
-| D · The DPO loss | What does the loss push, and how hard for each pair? | in progress (re-study 2026-11-04) | — | D83 ★ (Part D in four steps: implicit-reward margin, loss −log σ(m), notebook's three pairs, gradient weight σ(−m); caveats); D84 (C and part of D previewed in the KL article) |
-| E · Tabular DPO | Does DPO on sampled pairs recover π*? What do the number of pairs and β change? | not started | — | — |
+| D · The DPO loss | What does the loss push, and how hard for each pair? | in progress (re-study 2026-11-04) | — | D83 ★ (Part D in four steps: implicit-reward margin, loss −log σ(m), notebook's three pairs, gradient weight σ(−m); caveats); D84 (C and part of D previewed in the KL article); D85 (orientation to Parts D–G; Exercise 5's `[B, 2]` inputs on the egg pair; why `F.logsigmoid`); D86 (DPO discussions also indexed in the KL/DPO article plan); D87 ★ (the KL/DPO article opens by connecting the implicit reward to DPO, then explains why); D88 (DPO is derived from the KL-regularized objective plus Bradley–Terry; which loss piece comes from where; no KL computed in training); D89 (the DPO paper itself derives DPO from the RLHF objective, Eq. 3 → 7; quotes checked); D90 (the paper's subtitle "Your Language Model is Secretly a Reward Model" opens the KL/DPO article); D91 (gradient, one piece at a time: piece 1, what a gradient is, slope of L(m) = −σ(−m), descent steps); D92 (piece 2: chain rule to the two log-probs, ∓β·σ(−m); egg step 0.22 → 0.313, 0.25 → 0.176); D93 (β is in the gradient, learning rate only in the step; same first step at equal lr·β, then larger β stops sooner; Adam removes β's speed effect); D94 (derivative = one number, gradient = list of partial derivatives, one per input); D95 (β and lr are hyperparameters; parameters = weights; β is part of the objective, lr of the optimizer; DPO paper and notebook values); D96 (piece 3: softmax; only the pair's two logits get a gradient; one step 0.12 → 0.202, 0.25 → 0.155, others including the wrong answer rise slightly; one pair ≠ π\*) |
+| E · Tabular DPO | Does DPO on sampled pairs recover π*? What do the number of pairs and β change? | in progress (2026-11-05) | — | D97 (what "tabular" means: one free logit per answer; the toy is the egg question; why test DPO on a table; the pair data; Exercise 7); D98 ★ (the D → G story: rule, ideal test, adaptor, real test); D99 (DPO article for beginners: audience, index, animation set 067–078) |
 | F · Sequence log-probs (Qwen3) | Which tokens make up log π(y \| x) for a real answer? | not started | — | — |
 | G · DPO on Qwen3 | After a few hundred real pairs: held-out accuracy, chosen vs rejected likelihood, KL to the reference | not started | — | — |
 
@@ -791,3 +794,330 @@ is the implicit reward (Part C, D82; egg: r̂ = R − 0.808, Z cancels in compar
 DPO trains on it directly (a small part of D, D83 ★: margin, −log σ(m), 0.693 → 0.313). The full
 derivation and the gradient stay in the KL/DPO article. D82 and D83 ★ added to the plan's "Where to
 find everything" table.
+
+### D85 · [S2 · Parts D–G] "Now I am looking at the DPO part of the notebook" (2026-11-05)
+
+Orientation to the notebook's DPO parts: **D** the loss and its gradient (Exercises 5–6), **E** tabular
+DPO on sampled pairs, does it reach π\* (Exercise 7, Predict 2–3), **F** a whole answer's log-probability
+on Qwen3 from its tokens (Exercise 8), **G** DPO on Qwen3-0.6B with real pairs (Exercises 9–11,
+Predict 4). Part D's ideas were covered in D83 ★.
+
+**Exercise 5's inputs on the egg pair** (no solution code given). The function takes two `[B, 2]` tables,
+one row per pair, column 0 chosen and column 1 rejected: the trained policy's log-probs and the frozen
+reference's. Egg pair (B = 1, β = 1; chosen = best answer, rejected = "about 10 minutes"; policy = the
+Part A small move): `policy_logps` = (log 0.22, log 0.25) = (−1.514, −1.386); `ref_logps` = (log 0.12,
+log 0.25) = (−2.120, −1.386); implicit reward β·(policy − ref) = (0.606, 0); margin 0.606; loss
+−log σ(0.606) = 0.435 (0.693 at the start, where the policy equals the reference); then the mean over
+the B rows. **Why `F.logsigmoid`:** at m = −200, σ(m) rounds to 0 in float32 and log 0 = −∞;
+`logsigmoid` returns ≈ −200 directly. The notebook's check tests that case.
+
+### D86 · [S2 · Parts D–G] "Make sure the note and article plan are and will record our discussions on DPO" (2026-11-05)
+
+Recording rule confirmed: every DPO discussion (S2 Parts D–G) is recorded here as it happens, tagged
+`[S2 · Part X]`, **and** gets a row in the "DPO discussions" index of the KL/DPO article plan
+([`publications/x-articles/x-post-training-kl-dpo/plan.md`](../../publications/x-articles/x-post-training-kl-dpo/plan.md)),
+which lists D63, D82, D83 ★, D84, D85 and D86 so far. Items the learner marks important also become key
+points there.
+
+### D87 · ★ [S2 · Parts C–D] "I think it is important to connect the implicit reward to DPO at the beginning of the article" (2026-11-05)
+
+> ★ **Marked important by the learner** (2026-11-05: "I think it is important to connect the implicit
+> reward to dpo at the beginning of the article"). Applies to the KL/DPO article: key point 0 ★ and §1.
+
+Article decision for the KL/DPO article: **open with the link, then explain why it holds.** The KL
+article ends on "the log-ratio is also a reward" (its §9); the KL/DPO article picks up there.
+
+- **Opening claim:** a language model trained with DPO is scored by its own change from the reference,
+  r̂(y) = β·(log π_θ(y) − log π_ref(y)) (the implicit reward, Part C, D82). DPO is the Bradley–Terry loss
+  of a reward model (S1) with r̂ as the score: margin m = r̂(chosen) − r̂(rejected), loss −log σ(m)
+  (Part D, D83 ★). No separate reward model, no sampling, no RL loop. The DPO paper's title says the same
+  thing: "Your Language Model is Secretly a Reward Model" (Rafailov et al., 2023; verify wording before
+  use).
+- **Opening numbers (egg question, β = 1):** at the start r̂ = 0 for every answer, the pair best vs
+  "about 10 minutes" has m = 0 and loss 0.693; at π\* r̂ = R − 0.808 = (−0.808, 0.192, −0.308, 1.192,
+  −1.808), m = 1, loss 0.313, and P(best wins) = σ(1) = 0.731, exactly what the true rewards give.
+- **Then the "why" in order:** the objective E[R] − β·KL (Part B) → its optimum π\* = π_ref·e^{R/β}/Z →
+  invert it, the reward hides in the log-ratio up to β log Z (Part C) → Z cancels in a pair → so train
+  on pairs directly (Part D) → what the loss pushes (gradient weight σ(−m)) → does it reach π\* (Part E)
+  → real model (Parts F–G).
+
+Recorded in the KL/DPO article plan (key point 0 ★, outline §1, DPO discussions table) and main-note
+plan row P13.
+
+### D88 · [S2 · Parts B–D] "What is the relationship between KL and DPO? Is DPO derived from KL, or an independently invented algorithm?" (2026-11-05)
+
+**Derived**, not independent, but from the **KL-regularized objective** E[R] − β·KL(π‖π_ref), not from
+KL alone, and with a second ingredient, the **Bradley–Terry** preference model. Chain (Parts B → C → D):
+objective → closed-form optimum π\* = π_ref·e^{R/β}/Z → invert: R = β·log(π\*/π_ref) + β·log Z → in a
+Bradley–Terry pair, β·log Z cancels → replace π\* by the trainable π_θ and maximize the likelihood of the
+recorded winners = the DPO loss. DPO solves the same problem as KL-regularized RLHF (same β, same frozen
+reference), assuming preferences follow Bradley–Terry and the policy can represent π\*.
+
+**Where each piece of the DPO loss comes from.** β → the KL coefficient; π_ref → the KL's reference;
+log(π_θ/π_ref) → the KL's per-answer term; pairs and σ → Bradley–Terry (S1); no Z → the pair difference.
+
+**Why the KL is needed for the derivation (egg, β → 0, i.e. no KL):** the optimum puts all probability
+on the best answer and 0 on the other four; log(0/π_ref) = −∞, so the reward cannot be read back and
+there is nothing to invert. The KL makes the optimum a re-weighting that keeps every answer (β = 1:
+0.178, 0.303, 0.110, 0.395, 0.013), so the log-ratio holds the reward (R − 0.808).
+
+**In training, no KL is computed.** The KL enters only through β and π_ref in the loss; it is never
+measured or added as a penalty. With finite data the loss has no finite minimum (D83 ★), so the actual
+distance from the reference is not guaranteed small; measure it separately (notebook Exercise 11).
+
+**History (from memory, verify before article use):** the KL-regularized objective is from earlier RLHF
+work (Ziegler et al. 2019; InstructGPT 2022); its closed-form optimum was known before DPO in RL and
+control (corrected in D89 from the paper: the DPO paper cites Peters & Schaal 2007, Peng et al. 2019,
+Korbak et al. 2022, Go et al. 2023); DPO (Rafailov et al. 2023) added the inversion and the Bradley–Terry step. Swapping
+KL for another divergence gives other DPO variants (e.g. f-DPO, Wang et al. 2023, "Beyond Reverse KL").
+
+### D89 · [S2 · Parts B–D] "I mean in the original paper where DPO was first published, is it derived from RLHF?" (2026-11-05)
+
+**Yes.** Checked in the paper itself (arXiv 2305.18290v3, read 2026-11-05): Rafailov, Sharma, Mitchell,
+Ermon, Manning, Finn (Stanford), "Direct Preference Optimization: Your Language Model is Secretly a
+Reward Model" (2023; published at NeurIPS 2023, not stated on the arXiv page, verify before article use).
+
+- **§3 Preliminaries** reviews the RLHF pipeline: "1) supervised fine-tuning (SFT); 2) preference
+  sampling and reward learning and 3) RL optimization." The RL step maximizes reward minus β·KL to πref
+  (Eq. 3), "typically optimized with reinforcement learning".
+- **§4 derivation:** "We start with the same RL objective as prior work" (Eq. 3) → its optimal solution
+  π_ref·exp(r/β)/Z (Eq. 4), described as "straightforward to show" and cited to prior work (Peters &
+  Schaal 2007; Peng et al. 2019; Korbak et al. 2022; Go et al. 2023), so the closed form is not new in
+  DPO → rearranged to "express the reward function in terms of its corresponding optimal policy" (Eq. 5)
+  → under Bradley–Terry "the partition function cancels" (Eq. 6) → the loss (Eq. 7), −log σ of β times
+  the difference of log-ratios.
+- **Claims:** abstract, "solve the standard RLHF problem with only a simple classification loss";
+  introduction, DPO "implicitly optimizes the same objective as existing RLHF algorithms".
+
+This is the same chain as notebook Parts B → C → D (D88). DPO's contribution is the reparameterization
+(Eq. 5–7): a loss that needs no reward model and no RL loop.
+
+### D90 · [S2 · Parts C–D] "'Your Language Model is Secretly a Reward Model': this is a great text, we should use it in our article" (2026-11-05)
+
+Added to the KL/DPO article plan: the DPO paper's subtitle (Rafailov et al. 2023, checked in D89) is the
+article's opening line, set as a quote block and attributed to the paper, and the hook for key point 0 ★
+(D87 ★): "secretly" = the log-ratio β·log(π_θ/π_ref) already scores every answer, with no reward head and
+no separate reward model. Title candidates recorded in the plan for the learner to choose; none
+decided. Contrast for the article: X-POST-005's reward model is a separate network with a `1024 → 1`
+score head; the DPO "reward model" is the chat model itself, read through its change from the reference.
+
+### D91 · [S2 · Part D] "Now I understand the logic of the DPO loss. I want to go over the gradient fully, in detail, plain language and easy examples" (2026-11-05)
+
+Learner states the DPO loss logic is understood. Gradient explained **one piece at a time** (D75 rule).
+Plan of pieces: (1) what a gradient is, on the loss as a function of the margin; (2) chain rule from the
+margin to the two log-probabilities (+β, −β); (3) from a log-probability to the model's logits (softmax:
+raising one answer takes probability from all the others); (4) shared weights in a real LLM, why the
+chosen answer's probability can fall; (5) batch average, β and Adam. Numbers checked in Python.
+
+**Piece 1: what a gradient is.** The derivative of the loss with respect to one number = how much the
+loss changes per unit when that number is nudged a little; sign = direction, size = strength. A
+gradient = the list of these derivatives, one per input number. DPO loss as a function of the margin,
+L(m) = −log σ(m), nudged by +0.01:
+
+| m | loss | loss at m + 0.01 | change ÷ 0.01 | formula −σ(−m) |
+|---|---|---|---|---|
+| −3 (wrong order) | 3.049 | 3.039 | −0.952 | −0.953 |
+| 0 (start) | 0.693 | 0.688 | −0.499 | −0.500 |
+| 0.606 (egg small move) | 0.435 | 0.432 | −0.352 | −0.353 |
+| 1 (egg π\*) | 0.313 | 0.311 | −0.268 | −0.269 |
+| 3 (clearly right) | 0.049 | 0.048 | −0.047 | −0.047 |
+
+Always negative: raising the margin always lowers the loss. Size σ(−m) shrinks as the margin grows.
+**Gradient descent:** new value = old − learning rate × gradient; with learning rate 1 from m = 0:
+m 0 → 0.5 → 0.878 → 1.171 → 1.408, loss 0.693 → 0.474 → 0.348 → 0.270 → 0.219, gradient −0.5 → −0.378
+→ −0.294 → −0.237 → −0.197: steps get smaller as the pair becomes right, and never stop exactly (no
+finite minimum, D83 ★).
+
+### D92 · [S2 · Part D] "Next" (gradient piece 2: from the margin to the two log-probabilities) (2026-11-05)
+
+**Chain rule:** the loss depends on m, and m depends on the log-probs a = log π_θ(y_w), b = log π_θ(y_l):
+m = β·[(a − a_ref) − (b − b_ref)]. Nudging a by 0.01 raises m by β·0.01; nudging b by 0.01 lowers m by
+β·0.01. So ∂m/∂a = +β, ∂m/∂b = −β, and the derivative of the loss = (derivative w.r.t. m) × (derivative
+of m): ∂L/∂a = −σ(−m)·β, ∂L/∂b = +σ(−m)·β (notebook Exercise 6, ÷ B for a batch mean). The reference
+log-probs a_ref, b_ref get no derivative: the reference is frozen (detached).
+
+**Egg pair, small move, β = 1** (a = log 0.22 = −1.514, b = log 0.25 = −1.386; m = 0.606, loss 0.435):
+nudge a by +0.01 → m 0.616, loss 0.4318, slope −0.352; nudge b by +0.01 → m 0.596, loss 0.4389, slope
++0.354; formula ∓0.353. Equal size, opposite sign. One step with learning rate 1: a −1.514 → −1.161
+(0.22 → 0.313), b −1.386 → −1.739 (0.25 → 0.176), m 0.606 → 1.312, loss 0.435 → 0.238.
+
+**β enters twice** (same probabilities): β = 0.5 → m 0.303, push 0.212; β = 1 → m 0.606, push 0.353;
+β = 2 → m 1.212, push 0.459. β multiplies the push but also enlarges m, which shrinks σ(−m).
+
+Open point for piece 3: the step treated 0.22 and 0.25 as free numbers; in a real model they are tied
+(probabilities add to 1), so where the probability comes from is decided one level down.
+
+### D93 · [S2 · Part D] "So here, β and learning rate together affect the gradient?" (2026-11-05)
+
+**Partly.** The **gradient** depends on β (and on m): ∓β·σ(−m). The **learning rate** is not in the
+gradient; it is applied after: step = learning rate × gradient = lr·β·σ(−m). So the **step** depends on
+both, and with plain gradient descent they multiply: on the first step from the reference (m = 0),
+β = 1, lr = 1 and β = 2, lr = 0.5 give the same step (0.5).
+
+**They are not interchangeable after that**, because β also sets the scale of the margin, m = β·(change
+in chosen log-ratio − change in rejected log-ratio), and the push σ(−m) fades once m reaches about 3.
+Egg pair from the reference, plain gradient descent, d = how far the chosen log-prob has moved up (the
+rejected one moves down by the same d), lr·β = 1 in all three rows (checked in Python):
+
+| β | lr | d after 1 step | 2 | 10 | 100 |
+|---|---|---|---|---|---|
+| 0.5 | 2 | 0.5 | 0.878 | 2.263 | 4.589 |
+| 1 | 1 | 0.5 | 0.769 | 1.512 | 2.651 |
+| 2 | 0.5 | 0.5 | 0.619 | 0.953 | 1.503 |
+
+Same first step, then larger β stops sooner (push fades when 2βd ≈ 3, d ≈ 1.5/β), so the model stays
+closer to the reference. **Learning rate = speed; β = how far the pair has to move before it counts as
+won**, i.e. the KL coefficient's job (D71, D88).
+
+**With Adam** (what is used in practice): Adam divides each gradient by a running estimate of its own
+size, so the first step is about lr whatever β is; β's speed effect largely cancels (notebook Exercise 6
+explanation), and β mainly keeps its second role, where the push fades.
+
+### D94 · [S2 · Part D] "So derivative is gradient?" (2026-11-05)
+
+**Almost.** A **derivative** is one number: how the loss reacts to nudging one input. A **gradient** is
+the list of derivatives, one per input; each is a **partial derivative** (nudge that input, hold the
+others fixed). With one input they are the same thing. Egg pair (small move, β = 1):
+
+- loss as a function of m only: derivative = gradient = −σ(−0.606) = −0.353 (one number);
+- loss as a function of (a, b), the two log-probs: gradient = (∂L/∂a, ∂L/∂b) = (−0.353, +0.353) (two
+  numbers);
+- loss of Qwen3-0.6B as a function of its weights: gradient = about 0.6 billion numbers, one per weight
+  (pieces 3–4 show how the (a, b) gradient reaches them).
+
+The gradient points in the direction that raises the loss fastest; gradient descent steps the opposite
+way. In practice "the gradient" is used loosely for any of these.
+
+### D95 · [S2 · Part D] "So here, learning rate and β are hyperparameters" (2026-11-05)
+
+**Yes.** A **hyperparameter** is a number you choose before training; gradient descent never changes it.
+A **parameter** (a weight) is what the gradient changes. In DPO: parameters = the policy's weights
+(Qwen3-0.6B: about 0.6 billion); the reference's weights are frozen, neither trained nor chosen per run.
+
+DPO hyperparameters: β; learning rate (and its warmup schedule); batch size B; number of steps or
+epochs; optimizer and its settings; gradient clipping; maximum sequence length. Their jobs differ (D93):
+learning rate, optimizer and batch size control **how training moves**; β is part of the **objective**,
+it decides what counts as done (how far from the reference), so changing β changes the target π\*
+(D71), changing the learning rate does not.
+
+**Values used (checked):**
+
+| Setting | β | Learning rate | Batch | Optimizer | Other |
+|---|---|---|---|---|---|
+| DPO paper, Appendix B (arXiv 2305.18290v3) | 0.1 default; 0.5 for TL;DR summarization | 1e-6, linear warmup from 0 over 150 steps | 64 | RMSprop | |
+| S2 notebook Part G | 0.1 | 1e-6 | 8 | AdamW | gradient clipping 1.0; 512 pairs × 2 epochs = 128 updates |
+| S2 notebook Parts D–E (toy) | 0.5 or 1 | | | | small examples |
+
+Paper quote: "Unless noted otherwise, we use a β=0.1, batch size of 64 and the RMSprop optimizer with a
+learning rate of 1e-6 by default."
+
+### D96 · [S2 · Part D] "Next" (gradient piece 3: from log-probabilities to logits, where the probability comes from) (2026-11-05)
+
+Tabular policy (as in Part E): one **logit** (raw score) θ per answer, π = softmax(θ): exponentiate,
+divide by the sum, so the probabilities add to 1. Start at the reference: θ = log π_ref, egg (0.40,
+0.25, 0.15, 0.12, 0.08). Pair: best (chosen) over "about 10 minutes" (rejected), β = 1, m = 0.
+
+1. **How a log-prob reacts to a logit:** ∂log π(i)/∂θ_j = 1 − π(j) for the same answer, −π(j) for every
+   other answer. Nudge θ_best by 0.01: log π(best) +0.0088 (0.01 × 0.88); every other log π −0.0012
+   (0.01 × 0.12). Raising one answer takes probability from all the others in proportion to their share.
+2. **Chain to the DPO loss:** ∂L/∂θ_j = (−β·σ(−m))·∂log π(chosen)/∂θ_j + (+β·σ(−m))·∂log π(rejected)/∂θ_j.
+   The "−π(j)" parts appear with equal and opposite weights and cancel, so only the two logits in the
+   pair get a gradient: (0, +0.5, 0, −0.5, 0) (checked numerically).
+3. **One step, learning rate 1:** θ_best +0.5, θ_10min −0.5. Probabilities (vague, 10 min, long, best,
+   wrong): (0.40, 0.25, 0.15, 0.12, 0.08) → (0.408, 0.155, 0.153, 0.202, 0.082); changes +0.008, −0.095,
+   +0.003, +0.082, +0.002. The rejected answer lost more (0.095) than the chosen gained (0.082); the rest
+   is spread over the three answers outside the pair, **including the wrong "2 minutes" answer**
+   (0.080 → 0.082). Log-ratio changes: best +0.521, 10 min −0.479, the other three +0.021 each.
+4. **Lesson:** DPO only pushes answers that appear in pairs; other answers move only through the
+   normalization. After this step m = 1.0 and loss 0.313, the same margin as π\*, but the distribution is
+   not π\* (π\* best 0.395, 10 min 0.303, wrong 0.013): one pair does not pin down π\*; many pairs
+   covering all answers do (Part E). In a real LLM the logits are not free per answer: they are computed
+   from shared weights (piece 4).
+
+### D97 · [S2 · Part E] "OK, I am at E now. What does tabular DPO mean?" (2026-11-05)
+
+Gradient piece 4 (shared weights in a real LLM) postponed to Parts F–G, where it applies.
+
+**Tabular** = the policy is a **table**: one free logit θ per answer, π = softmax(θ), no neural network.
+(RL term: "tabular methods" keep one table entry per state or action, as opposed to function
+approximation by a network.) The notebook's toy **is the egg question**: `TOY_REF` = (0.40, 0.25, 0.15,
+0.12, 0.08), `TOY_REWARD` = (0, 1, 0.5, 2, −1), β = 1; θ starts at log π_ref = (−0.916, −1.386, −1.897,
+−2.120, −2.526). Gradient piece 3 (D96) was already tabular DPO with one pair.
+
+**Why test DPO on a table:** each answer's probability can be set independently (only the sum is
+fixed), so the policy can represent any distribution, the assumption under which the DPO minimizer is
+π\* (D88, D89). If DPO fails here, it fails everywhere; if it works, Part G asks what changes with shared
+weights. **Contrast, Part G (Qwen3):** answers cannot be listed, their probabilities come from shared
+weights, and a step for one pair moves every answer.
+
+**The data:** N pairs; each pair is two different answers drawn uniformly (10 possible combinations of 5
+answers), winner by Bradley–Terry on the true reward, P(i wins) = σ(R(i) − R(j)): best vs "10 minutes"
+σ(1) = 0.731; best vs wrong σ(3) = 0.953; vague vs long σ(−0.5) = 0.378. Stored as index vectors
+W[n] (winner), L[n] (loser). DPO never sees R, Z or a sample from the policy, only W and L.
+
+**Exercise 7:** log π_θ = log_softmax(θ); pick the winner's and loser's entries from it and from
+log π_ref to form the `[N, 2]` tables, then reuse the Exercise 5 loss. Notebook result: 1,000 pairs,
+Adam lr 0.1, 1,500 full-batch steps → π_DPO within about 0.05 (total variation) of π\*, from 0.33 at
+π_ref. Also: the loss is the same without log_softmax, because log π(w) − log π(l) = θ_w − θ_l; the
+normalizer cancels like Z in Part C.
+
+### D98 · ★ [S2 · Parts D–G] "What is the coherent story from Part D to G?" (2026-11-05)
+
+> ★ **Marked important by the learner** (2026-11-06: "the above is important, mark it in note and in
+> article plan"). In the KL/DPO article plan: key point 6 ★ and outline §8–§12 (renumbered 2026-11-06, D99).
+
+One thread: Parts A–C promise that training on preference pairs with the right loss lands on π\*,
+without a reward model. D–G turn the promise into a training rule and test it, from an ideal table to a
+real LLM. Each part answers the question the previous one leaves open. Numbers from the notebook's
+reference run (summary table and explanations).
+
+1. **D, the rule.** Score each answer by its change from the reference, r̂ = β·log(π_θ/π_ref); per pair
+   margin m = r̂(chosen) − r̂(rejected), loss −log σ(m); gradient raises chosen, lowers rejected, with
+   weight σ(−m) (wrong-order pairs pushed hard, won pairs barely). Egg pair: 0.693 → 0.313.
+   *Open question:* does following this rule actually reach π\*?
+2. **E, the ideal test.** Tabular policy (one logit per egg answer, can represent anything), pairs
+   sampled from Bradley–Terry on the true R; DPO sees only winner/loser. Result: π_DPO → π\*; with
+   1,000 pairs total variation 0.05 (π_ref: 0.33); distance shrinks like 1/√N (0.38 at N = 10, 0.012 at
+   N = 10,000). Two warnings: with few pairs, a pair type seen only one way has its margin pushed
+   without limit (the loss has no finite minimum) and the policy piles onto few answers; β does not
+   change the fitted margin (1.065 in reward units) but sets how far the log-probs move to make it
+   (KL 0.02 at β = 4 to 2.12 at β = 0.1). *Open question:* a real model has no list of answers; what is
+   log π(y) for a reply?
+3. **F, the adaptor.** A reply is a sequence of tokens: log π(y|x) = sum of the reply's token
+   log-probs, answer tokens plus `<|im_end|>`, never prompt tokens, read from the logits one position
+   earlier. Values are tens of nats (≈ −40 for 40 tokens), mostly set by length, which is why DPO uses
+   log-ratios to the reference, not raw log-probs. *Open question:* does the rule still work when every
+   answer shares the same weights?
+4. **G, the real test.** Qwen3-0.6B, 512 HH-RLHF pairs, β = 0.1, AdamW lr 1e-6, 128 updates. Starts
+   exactly at loss log 2 and accuracy 50% (policy = reference). Held-out implicit-reward accuracy 67.2%
+   ± 2.9%, training 97.3% (memorizing, as E warned for finite data). Chosen and rejected both rose in
+   epoch 1, then split (+0.20 / −0.20) in epoch 2; with a 5× larger learning rate both fell
+   (likelihood displacement, the shared-weight effect, gradient piece 4). The KL is never in the loss,
+   so it is measured from the policy's own samples: 1.61 ± 0.18 nats per answer; β = 0.5 gives the same
+   accuracy and half the KL (0.82), as E predicted.
+
+**One-line version:** D writes the rule, E proves it reaches π\* when everything is ideal, F connects
+it to real text, G shows what survives on a real model (it learns, it overfits small data, chosen and
+rejected can both fall, and the distance from the reference has to be measured separately).
+
+### D99 · [S2 · all] "Similar to the KL article, the DPO article's audience is LLM beginners or readers without strong math; we need simple yet well-explained animations, examples and language. Put that in the article plan, and make sure the plan can find the learning notes and animation plan" (2026-11-06)
+
+Done in the KL/DPO article plan
+([`publications/x-articles/x-post-training-kl-dpo/plan.md`](../../publications/x-articles/x-post-training-kl-dpo/plan.md)):
+
+- **Audience section**, the KL article's rules applied to DPO: words → numbers → symbol; one running
+  example, the egg question (the three-answer exploit toy replaced by the KL article's sixth egg answer);
+  KL recapped in one paragraph; no calculus: the optimum by "no move helps" (D75, D76 ★), gradients by the
+  nudge test (D91, D94); σ introduced as Bradley–Terry from X-POST-005; plain-language boxes for
+  gradient, learning rate, hyperparameter (D94, D95).
+- **Where to find everything**: tables of the learning-note entries (D56–D79 for the objective and optimum;
+  D63, D82–D99 in the DPO discussions table), the Key concepts rows, main-note entries and plan rows, the
+  animation candidates with their PROPOSALS sections, and other sources (notebook, DPO paper, Chapter 11).
+- **New animation set** in `visuals/animations/PROPOSALS.md`, "DPO set" `CAND-ANIM-067`–`078` (one idea
+  per GIF, egg cards as in the KL GIFs): 067 ★ secretly a reward model; 068 one score per model; 069 ★ no
+  move helps; 070 the loss on one pair; 071 ★ the push σ(−m); 072 learning rate vs β; 073 ★ where the
+  probability comes from; 074 ★ the ideal test; 075 too few pairs; 076 β sets distance; 077 answers to
+  tokens; 078 ★ what to watch on a real model. Reuse: KL GIF 12 (066), KL GIF 10, X-POST-005 GIFs 02/03/08.
+  (★ here = recommended core, not a learner mark.)
+- **Outline rewritten** as 13 sections with key point, notes and animation per section; recommended core
+  of nine GIFs (eight new, one reused). Main-note plan row P16.

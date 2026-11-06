@@ -2307,3 +2307,146 @@ KL 0.233; share moved 0.10 both; ratios 1.4 and 21). `059` is core. `063` uses t
 the KL.
 
 Produced 2026-11-04 at the learner's request ("start producing the 12 GIFs"): `058` (two clips), `059`, `065`, `060`, `061`, `054`, `055`, `063`, `037` (reduced), `064`, `066`, in `visuals/animations/projects/post-training-kl/`. `037` stays open in its full form (k1 / k3).
+
+### DPO set: DPO for readers with limited math (CAND-ANIM-067 to 078)
+
+Proposed 2026-11-06 at the learner's request: "similar as the KL article, the audience of this DPO article
+is for LLM beginners or to whom not having a strong math knowledge, we need simple yet well explained
+animations and examples and language (as the KL article) for the DPO article" (S2 note D99). Planned
+article: `publications/x-articles/x-post-training-kl-dpo/plan.md` (after the KL article). Sources: S2 note
+D73–D79 (objective and optimum), D82–D98 (implicit reward, DPO loss, gradient, Parts D–G), D87 ★, D98 ★.
+**One running example for the whole set:** the egg question (D67 ★; π_ref 0.40 / 0.25 / 0.15 / 0.12 /
+0.08, R 0 / 1 / 0.5 / 2 / −1, β = 1), the same five answer cards and colors as the KL article's GIFs.
+**Beginner rules:** one idea per GIF; numbers the reader can check by hand; words before symbols (the
+symbol may appear after the idea is shown, as in KL GIF 03); "nudge test" instead of calculus for
+gradients; illustrative values badged. All: state *suggested*, produce on the Mac Studio, Dongxi visual
+system. **Reuse, don't duplicate:** KL article GIF 12 (`066`, implicit reward) and GIF 10 (tokens);
+X-POST-005 GIF 02 (Bradley–Terry), 03 (gradient push on a reward model), 08 (pair softmax); `052`, `053`,
+`056`, `057` from the S2 set.
+
+### CAND-ANIM-067 — Your language model is secretly a reward model ★
+
+- Learning objective: DPO needs no separate reward model; the chat model's own change from the reference
+  scores every answer.
+- Storyboard: (1) left, X-POST-005's reward model: a separate network with a score head, one number per
+  answer; (2) right, two copies of the chat model, "trained" and "reference (frozen)"; the same egg answer
+  goes into both, each gives a probability; (3) the ratio → its log → × β = the answer's score (small
+  move, best answer: 0.22 / 0.12 → log 0.606 → score 0.606); (4) all five answers get scores the same
+  way (−0.288, 0, 0, 0.606, 0); (5) caption: the DPO paper's subtitle, "Your Language Model is Secretly a
+  Reward Model".
+- Evidence: exact on the authored toy; quote checked in arXiv 2305.18290 (D89, D90). Source D87 ★, D90.
+
+### CAND-ANIM-068 — One score for each model: reward minus distance
+
+- Learning objective: the objective J = average reward − β × KL gives every candidate model one score; the
+  best model is the one with the highest score.
+- Storyboard: four candidate models as bar sets (reference; small move; always the best answer; π\*);
+  under each, a stacked readout "average reward − distance": 0.485 − 0 = 0.485; 0.685 − 0.047 = 0.638;
+  2 − 2.12 = −0.12; π\* 0.808 (highest, crown). β slider at the end: the small move scores 0.685 / 0.638 /
+  0.591 at β = 0 / 1 / 2.
+- Evidence: exact (D73, D75). Pairs with `052`.
+
+### CAND-ANIM-069 — "No move helps": how the best model is found ★
+
+- Learning objective: at the best model, giving any answer a little more probability gains nothing, so
+  every answer's "net value" (reward − β × its log-ratio) is equal; this condition fixes π\*.
+- Storyboard: (1) small move: five net-value bars (0.288, 1, 0.5, 1.394, −1), unequal; (2) a 0.01 chip
+  moves from a low bar to a high bar: score +0.011, so this model can still improve; (3) probability flows
+  until all bars level at 0.808; the same chip move now changes the score by −0.0004 either way; (4) the
+  resulting shares (0.178, 0.303, 0.110, 0.395, 0.013); hand-off to `053`'s multiply / add (Z = 2.243) /
+  divide.
+- Evidence: exact (D75, D76 ★). Replaces the Lagrange-multiplier derivation for this audience.
+
+### CAND-ANIM-070 — The DPO loss on one pair
+
+- Learning objective: DPO turns the score gap of a chosen and a rejected answer into a loss: large when
+  the gap is wrong, small when it is right, never exactly 0.
+- Storyboard: (1) pair card: best (chosen) vs "about 10 minutes" (rejected); (2) gap m = chosen score −
+  rejected score; a dial sweeps m from −3 to +3 and the loss curve −log σ(m) draws itself (3.05 at −3,
+  0.693 at 0, 0.049 at 3); (3) three marked points for the egg: start 0.693, small move 0.435, π\* 0.313;
+  (4) σ(m) shown as "chance the model's scores pick the chosen answer" (0.5, 0.647, 0.731), the
+  Bradley–Terry link from X-POST-005.
+- Evidence: exact (D83 ★, D85).
+
+### CAND-ANIM-071 — The push: wrong pairs hard, won pairs barely ★
+
+- Learning objective: a gradient is "how the loss reacts to a small nudge"; for DPO it pushes the chosen
+  answer up and the rejected one down, with strength σ(−m).
+- Storyboard: (1) nudge test: m 0 → 0.01, loss 0.693 → 0.688, "slope −0.5"; (2) three pairs side by side,
+  arrows sized by the push: m = −3 → 0.953, m = 0 → 0.5, m = 3 → 0.047; (3) one pair trained step by step:
+  m 0 → 0.5 → 0.878 → 1.171 → 1.408, loss 0.693 → 0.474 → 0.348 → 0.270 → 0.219, the arrow shrinking each
+  step and never reaching zero.
+- Evidence: exact (D91, D92). Relation: X-POST-005 GIF 03 is the same push on a reward model's score;
+  show it as "the same loss, now on the chat model".
+
+### CAND-ANIM-072 — Learning rate is speed, β is how far
+
+- Learning objective: two settings the user chooses (hyperparameters) do different jobs.
+- Storyboard: three runs on the egg pair, same first step (learning rate × β = 1): β 0.5 / 1 / 2; a
+  "distance moved" counter after 1, 10, 100 steps (0.5, 0.5, 0.5 → 2.263, 1.512, 0.953 → 4.589, 2.651,
+  1.503); the large-β run stops first. Closing card: with Adam the speed part of β mostly cancels; β still
+  decides how far.
+- Evidence: exact plain gradient descent on the authored toy (D93, D95). Optional.
+
+### CAND-ANIM-073 — Where the probability comes from ★
+
+- Learning objective: DPO pushes only the two answers in a pair; every other answer moves only because
+  shares must add to 1, so an answer that never appears as rejected is never pushed down.
+- Storyboard: (1) five egg bars at the reference; pair card best vs "10 minutes"; (2) only those two
+  bars get arrows (+, −); (3) one step: best 0.12 → 0.202, 10 min 0.25 → 0.155; (4) the other three bars
+  tick up slightly (0.40 → 0.408, 0.15 → 0.153, wrong 0.080 → 0.082), the wrong answer highlighted:
+  "never in a pair, never pushed down"; (5) margin readout 1.0, the same as π\*'s, but the bars are not π\*
+  (ghost bars of π\* behind).
+- Evidence: exact (D96).
+
+### CAND-ANIM-074 — The ideal test: DPO finds the best model from "who won" alone ★
+
+- Learning objective: on a table policy, DPO trained only on winner/loser records reaches π\*, without
+  ever seeing the reward.
+- Storyboard: (1) pair cards stream in ("best ≻ 10 min", "long ≻ vague", …), drawn by Bradley–Terry on
+  the hidden reward (badge: rewards hidden from DPO); (2) bars move from the reference toward π\*'s ghost
+  bars; a distance meter (total variation) falls from 0.33 to 0.05 at 1,000 pairs; (3) a pair-count dial
+  10 → 10,000: distance 0.38 → 0.012, "about 1/√N".
+- Evidence: notebook Part E reference run (one seed; badge). Source D97, D98 ★.
+
+### CAND-ANIM-075 — Too few pairs: the push never stops
+
+- Learning objective: with few pairs, a pair type seen only one way has its gap pushed without limit,
+  and the model piles onto a few answers; one reason real runs stop after one or two epochs.
+- Storyboard: (1) a tiny dataset of ten cards; one pair type appears once, always the same winner;
+  (2) its gap grows step after step, the loss creeping toward 0 but never there; (3) the bars pile onto
+  a few answers, compared with π\*'s ghost bars; (4) with 1,000 pairs both outcomes appear and the gap
+  settles.
+- Evidence: notebook Part E Predict 2 (qualitative; badge on exact bar heights). Source D98 ★. Optional.
+
+### CAND-ANIM-076 — β sets the distance, not the gap
+
+- Learning objective: on the same data, DPO ends at the same gap for every β (in reward units), but a
+  smaller β moves the model further from the reference to get it.
+- Storyboard: β slider 4 → 0.1; a fixed readout "gap 1.065"; a KL meter rising 0.02 → 2.12; the bars
+  moving further from the reference as β falls.
+- Evidence: notebook Part E Predict 3 (3,000 pairs). Source D98 ★. Optional; can merge into `072`.
+
+### CAND-ANIM-077 — From answers to tokens
+
+- Learning objective: a real reply's probability is built from its tokens; DPO adds the log-probabilities
+  of the answer tokens and the end-of-turn token, never the prompt.
+- Storyboard: (1) a chat: prompt tokens greyed out ("context, not counted"), answer tokens lit, the
+  end-of-turn token lit ("stopping is part of the answer"); (2) each lit token shows its log-probability
+  and they add up (a 40-token answer near −40); (3) a longer answer gets a more negative total just for
+  being longer; (4) so DPO compares each answer with its own reference value, not two raw totals.
+- Evidence: illustrative token values (badge); rule exact (notebook Part F). Reuses KL GIF 10's "product
+  → sum" step. Source D98 ★.
+
+### CAND-ANIM-078 — What to watch when DPO trains a real model ★
+
+- Learning objective: on a real model, a rising score is not the whole story: watch held-out vs training
+  accuracy, the chosen and rejected likelihoods, and the distance from the reference, measured
+  separately.
+- Storyboard: four small panels that fill over training steps: (1) accuracy, training → 97% and held-out
+  → 67%, both starting at exactly 50%; (2) chosen and rejected curves rising together, then splitting;
+  (3) a second run with a larger learning rate: both curves fall, probability leaking to answers outside
+  any pair (likelihood displacement); (4) a KL meter estimated from the model's own replies, 1.61 at
+  β = 0.1 vs 0.82 at β = 0.5.
+- Evidence: notebook Part G reference run, one seed per setting (badge: "one run, illustrative"); no
+  detailed experiment report in the public body (series convention). Source D98 ★.
