@@ -1,0 +1,301 @@
+<h2>一个能给自己的回答打分的模型</h2>
+<blockquote>
+<p>Your Language Model is Secretly a Reward Model</p>
+</blockquote>
+<p>这句话是 2023 年一篇论文的副标题，作者是斯坦福的 Rafael Rafailov 等人。论文提出了 <strong>DPO</strong>（direct preference optimization，直接偏好优化），副标题就是它的核心想法。</p>
+<p>reward model 那篇讲的是一个单独的网络：LLM 的主体加一个打分头，每个回答得到一个数。</p>
+<p>RLHF（基于人类反馈的强化学习）还要走第二阶段：chat model 写回答，reward model 打分，RL 再修改 chat model。</p>
+<p>DPO 不需要这个外部的 reward model：LLM 本身就是 reward model。它相对起点把一个回答的概率调高或调低了多少，这个量就是该回答的分数。</p>
+<p>[IMAGE 01]</p>
+<p>具体做法是：留一份起点模型的冻结副本，叫 <strong>reference</strong>（参考模型），然后这样给每个回答打分：</p>
+<p>score = β × log(new share / reference share)</p>
+<p>这个分数叫 <strong>implicit reward</strong>（隐式 reward）。它只需要两个概率，不需要打分头，也不需要第二个网络。</p>
+<p>然后拿人比较过的两个回答，套用 reward model 的 Bradley–Terry loss。</p>
+<p>[IMAGE 02]</p>
+<p>看 KL 那篇的鸡蛋问题。问 <em>How long should I boil an egg?</em>，参考模型的五种回答比例如下：</p>
+<ul>
+<li><em>Boil it until it's done.</em>（含糊的回答）：40%</li>
+<li><em>About 10 minutes.</em>：25%</li>
+<li>一长段话，最后才说到 10 分钟：15%</li>
+<li><em>Soft-boiled 6–7 minutes, hard-boiled 10–12; then cold water so it peels easily.</em>（最好的回答）：12%</li>
+<li><em>2 minutes gives a hard-boiled egg.</em>（错误的回答）：8%</li>
+</ul>
+<p>标注者比较两个回答，选了最好的回答，没选 <em>About 10 minutes</em>。这条记录叫一个 pair（配对）。被选中的是 chosen 回答，没选中的是 rejected 回答。</p>
+<p>取 β = 1，看这个配对在三个模型上的结果：</p>
+<ul>
+<li><strong>起点</strong>：模型是参考模型的副本。两个分数都是 0，分差 0，chosen 回答胜出的概率 0.5，loss 0.693。</li>
+<li><strong>小幅移动</strong>：最好的回答升到 22%，分数是 log(0.22 / 0.12) = 0.606，另一个回答仍是 0。分差 0.606，概率 0.647，loss 0.435。</li>
+<li><strong>最优模型</strong>（KL 那篇的最佳折中）：两个回答分别占 39.5% 和 30.3%，分数是 1.192 和 0.192。分差 1，概率 0.731，loss 0.313。</li>
+</ul>
+<p>训练就是在大量配对上降低这个 loss。不需要采样回答，不需要训练 reward model，也没有 RL 循环。</p>
+<p>[IMAGE 03]</p>
+<p>这里有两个问题：log ratio 为什么能当 reward？为什么降低这个 loss，得到的正是 RL 要找的模型？</p>
+<p>本文前半部分回答这两个问题，读过 KL 那篇就够了。后半部分讲 DPO loss 怎样改变模型、能否到达最优模型，以及在真实的 LLM 上要注意什么。</p>
+<p>这是后训练系列的第七篇。鸡蛋例子里的概率和 reward 都是示意值，基于它们的计算是精确的。</p>
+<h2>Objective：每个模型一个分数</h2>
+<p>先回顾 KL。对每个回答，新比例除以参考比例，再取 log，得到 <strong>log ratio</strong>。按新模型的回答比例取平均，就是 KL。</p>
+<p>什么都没变时 KL 是 0，变得越多越大。小幅移动的 KL 是 0.047。</p>
+<p>RLHF 给每个候选模型打一个总分，这个总分叫 <strong>objective</strong>：</p>
+<p>objective = average reward − β × KL</p>
+<p>平均 reward 是每个回答的比例乘以它的 reward，再相加。五个回答的 reward 设为 0、1、0.5、2、−1。</p>
+<p><strong>β</strong> 是 KL penalty 的系数，表示一单位 KL 扣多少分，由训练者选定。取 β = 1：</p>
+<ul>
+<li>保持参考模型：0.485 − 0 = 0.485</li>
+<li>小幅移动：0.685 − 0.047 = 0.638</li>
+<li>永远给最好的回答：2.000 − 2.120 = −0.120</li>
+<li>最优模型：1.136 − 0.328 = 0.808</li>
+</ul>
+<p>最后一行最高，原因后面会讲。写成符号是 J = E[R] − β · KL(π ‖ π_ref)。π 是正在训练的模型，也就是 policy。E[R] 是它的平均 reward。</p>
+<p>RLHF 训练有三个信号，分工不同：</p>
+<ul>
+<li><strong>reward</strong> 来自冻结的 reward model，进入参数更新，决定往哪个方向走。</li>
+<li><strong>KL</strong> 相对冻结的参考模型计算，进入参数更新，限制模型偏离多远。</li>
+<li><strong>gold</strong> 是训练从未见过的信号：留出的人工比较、benchmark、人工阅读样本。它只用来评判 checkpoint。</li>
+</ul>
+<p>DPO 改动前两个：存好的配对取代 reward model，β 和参考模型直接写进 loss。gold 仍在训练之外。</p>
+<p>[IMAGE 04]</p>
+<h2>为什么要有 KL penalty</h2>
+<p>再看 KL 那篇的第六个回答：<em>Boil it 20 minutes, always, for food safety. Experts agree.</em></p>
+<p>参考模型写出它的比例是 0.5%，2 分钟那个回答降到 7.5%，总和保持 100%。</p>
+<p>reward model 很少见到这类回答，给了它 3 分，是所有回答里最高的。它的真实价值，也就是 gold，是 −2。</p>
+<p>如果没有 KL penalty，最优模型把 100% 的比例都放在这个回答上。reward 是 3，gold 是 −2。参考模型的 gold 是 0.48。</p>
+<p>加上 KL penalty，取 β = 1。这个回答只占 4.3%，真正最好的回答占 37.9%。reward 是 1.22，gold 是 1.00。</p>
+<p>reward 下降了，gold 上升了。</p>
+<p>[IMAGE 05]</p>
+<p>DPO 论文指出了 KL penalty 的作用：让模型留在 reward model 准确的那些回答附近，保留回答的多样性，防止模型塌缩到单个高分回答。</p>
+<p>此外，参考模型的很多能力 reward model 并不度量。留在参考模型附近，这些能力才能保住。</p>
+<blockquote>
+<p>有了 KL penalty，训练就变成了给参考模型已有的回答重新分配权重。</p>
+</blockquote>
+<h2>为什么参考模型要冻结</h2>
+<p>KL penalty 需要一个固定的起点。</p>
+<p>假设每一步只和上一步的模型比较。还是六个回答，分十步朝 reward 偏好的方向移动，每步幅度相同。</p>
+<p>相对上一步，每一步的 KL 最多 0.059。相对起点，十步之后的 KL 是 3.61，那个错误回答占到 69%。这正是 KL 那篇结尾过度优化的模型。</p>
+<p>用冻结的参考模型，这 3.61 会全部计入 KL penalty。</p>
+<p>所以参考模型是起点模型的副本，通常来自 supervised fine-tuning（SFT，监督微调）。它不接收梯度，训练中始终不变，只需多跑一次前向计算。</p>
+<h2>最优模型：怎么移动都没有好处</h2>
+<p>回到五个回答。哪个模型总分最高？</p>
+<p>有一个检验方法：把一小份比例从一个回答移到另一个回答。如果总分上升，这个模型就还能改进。</p>
+<p>检验要用到每个回答的 <strong>net value</strong>（净值），它衡量给这个回答多一点比例的收益：</p>
+<p>net value = reward − β × log ratio</p>
+<p>reward 是收益，log ratio 是扣分。一个回答被抬得越高，再抬扣得越多。</p>
+<p>小幅移动的 net value 是 0.288、1、0.5、1.394、−1。</p>
+<p>从含糊的回答（0.288）移 0.01 给最好的回答（1.394），总分从 0.638 涨到 0.649。所以小幅移动还可以改进。</p>
+<p>继续把比例从 net value 低的回答移向高的回答，差距不断缩小，直到五个回答都等于 0.808。这时再移动，总分只降不升。</p>
+<blockquote>
+<p>在最优模型上，给任何回答多一点比例都没有收益。</p>
+</blockquote>
+<p>所有 net value 相等，记作 c，就能解出最优模型：</p>
+<p>log ratio = (reward − c) / β</p>
+<p>log 的逆运算是 e（约 2.718）的乘方，去掉 log 得到：</p>
+<p>new share = reference share × e^(reward / β) × one shared number</p>
+<p>公共的数让所有比例加起来等于 1。具体计算分三步（β = 1）：</p>
+<ul>
+<li><strong>乘</strong>：每个参考比例乘以 e^reward，得到 0.400、0.680、0.247、0.887、0.029。</li>
+<li><strong>加</strong>：这五个数加起来是 2.243，记作 <strong>Z</strong>。</li>
+<li><strong>除</strong>：每个数除以 Z，得到 0.178、0.303、0.110、0.395、0.013。</li>
+</ul>
+<p><strong>Z 是什么？</strong> 乘完之后，五个数的总和是 2.243，还不能当比例用。比例的总和必须是 1，所以每个数都要除以这个总和。Z 就是这个总和，论文里叫 partition function（配分函数）。</p>
+<p>最好的回答从 12% 升到 39.5%，错误的回答从 8% 降到 1.3%。写成符号，星号表示最优模型：</p>
+<p>π*(y) = π_ref(y) · e^(R(y) / β) / Z</p>
+<p>每个回答都保留了一些比例，只是按 reward 重新加权。β 越小，加权越强。</p>
+<p>[IMAGE 06]</p>
+<p>有两点后面会用到。</p>
+<p>第一，这是单个问题的解。真实的 LLM 用一组权重服务所有问题，π* 是训练逼近的目标。</p>
+<p>第二，Z 要把所有可能的回答都加一遍。五个回答很简单。真实的 LLM 有无数种可能的回答，Z 算不出来。</p>
+<h2>从模型反推 reward</h2>
+<p>现在反过来算。假设手上只有参考模型和最优模型，不知道 reward。</p>
+<p>每个回答的比例相除，再取 log，得到 −0.808、0.192、−0.308、1.192、−1.808。</p>
+<p>reward 是 0、1、0.5、2、−1。每个 log ratio 都等于 reward 减 0.808。</p>
+<p>为什么？把最优模型的公式两边除以参考比例，取 log，再乘以 β：</p>
+<p>β × log ratio = reward − β × log Z</p>
+<p>左边是开头的 implicit reward。右边是真实 reward 减一个常数。这个常数对所有回答都相同，这里是 0.808。</p>
+<p>常数里有 Z，真实的 LLM 算不出来。但比较两个回答时，用不着它。</p>
+<p>把这个常数记作 c。两个回答减去的是同一个 c，取差时正好抵消：</p>
+<p>(reward A − c) − (reward B − c) = reward A − reward B</p>
+<p>c 是多少，对差没有影响。Bradley–Terry 只看两个分数的差，所以 Z 不影响结果。</p>
+<p>看鸡蛋的例子，最好的回答和 <em>About 10 minutes</em> 比较：</p>
+<ul>
+<li>用 reward：2 − 1 = 1</li>
+<li>用 log ratio：1.192 − 0.192 = 1</li>
+</ul>
+<p>两个分数都减了 0.808，差不变，都得到 σ(1) = 0.731。</p>
+<p>[IMAGE 07]</p>
+<p>所以，最优模型和真实 reward 对人的选择给出相同的预测。</p>
+<p>方法也就有了：去掉 reward，用 β × log ratio 作分数，让模型直接拟合人的选择。</p>
+<p>DPO 论文正是这样推导的。它写道：&quot;We start with the same RL objective as prior work.&quot; 这个 objective 就是第二节的总分。</p>
+<p>π* 的公式前人已经给出。DPO 的贡献是把公式变形，用 policy 表示 reward，再利用 Z 在比较中抵消，写出 loss。</p>
+<p>用论文的话说，这样可以 &quot;solve the standard RLHF problem with only a simple classification loss&quot;。</p>
+<p>DPO loss 的每一部分都有来源：</p>
+<ul>
+<li><strong>β</strong> 是 KL penalty 的系数。</li>
+<li><strong>参考模型</strong> 是 KL 的基准。</li>
+<li><strong>log ratio</strong> 是 KL 里面的那一项。</li>
+<li><strong>配对和 σ</strong> 来自 Bradley–Terry。</li>
+<li><strong>Z 的消失</strong> 来自取差。</li>
+</ul>
+<p>所以，DPO 训练时不计算 KL，却离不开 KL penalty。没有 penalty，最优模型里四个回答的比例都是 0，log(0) 不存在，reward 也就反推不出来。</p>
+<p>这个结论还依赖两个假设：</p>
+<ul>
+<li>人的选择符合某个 reward 下的 Bradley–Terry 模型。</li>
+<li>LLM 足够灵活，能够表示 π*。</li>
+</ul>
+<blockquote>
+<p>用偏好数据训练出的 policy 自带 reward，只差一个比较时看不到的常数。</p>
+</blockquote>
+<h2>一个配对上的 DPO loss</h2>
+<p>DPO 的一条训练样本就是一行数据，和 reward model 用的一样：问题、chosen 回答、rejected 回答。</p>
+<p>每一行的计算步骤：</p>
+<ol>
+<li>给 chosen 回答打分：β × 它的 log ratio。</li>
+<li>用同样的方法给 rejected 回答打分。</li>
+<li>取分差，chosen 减 rejected，记作 m。</li>
+<li>把分差变成 chosen 回答胜出的概率：σ(m)。</li>
+<li>loss 是 −log σ(m)。</li>
+</ol>
+<p>σ 是 reward model 那篇讲过的 sigmoid。分差 0 对应 0.5，分差很大时接近 1，分差是很大的负数时接近 0。</p>
+<p>−log 让概率低的结果 loss 高：</p>
+<ul>
+<li>分差 −3，分数顺序反了：loss 3.049</li>
+<li>分差 0，模型还没有偏好：loss 0.693</li>
+<li>分差 0.606：loss 0.435</li>
+<li>分差 1：loss 0.313</li>
+<li>分差 3，明显正确：loss 0.049</li>
+</ul>
+<p>loss 永远到不了 0，这一点后面会用到。一个 batch 就对各行取平均。</p>
+<p>论文里的写法是：</p>
+<p>L = −log σ( β · log[π(y_w) / π_ref(y_w)] − β · log[π(y_l) / π_ref(y_l)] )</p>
+<p>y_w 是 chosen 回答（w 代表 winner），y_l 是 rejected 回答。</p>
+<p>这就是 reward model 那篇的 loss，只改了一处：分数来自 policy 和参考模型。</p>
+<p>这里只看变化。小幅移动给 chosen 回答 22%，给 rejected 回答 25%，分差仍然是正的，因为它相对参考模型抬高了 chosen 回答。</p>
+<p>[IMAGE 08]</p>
+<h2>更新力度</h2>
+<p>这个 loss 怎样改变模型？用 nudge test（微调检验）：把一个数改动一点点，看 loss 怎么变。</p>
+<p>从分差 0 开始，loss 是 0.6931。分差加 0.01，loss 变成 0.6882，斜率约为 −0.5。精确的斜率是：</p>
+<ul>
+<li>分差 −3：斜率 −0.953</li>
+<li>分差 0：斜率 −0.500</li>
+<li>分差 1：斜率 −0.269</li>
+<li>分差 3：斜率 −0.047</li>
+</ul>
+<p>斜率的大小是 σ(−m)，这就是<strong>更新力度</strong>。顺序反了的配对更新力度大，已经赢下的配对更新力度小。</p>
+<p>论文指出这个权重很重要：去掉它的简单版本可能让 LLM 退化。</p>
+<p><strong>Gradient（梯度）。</strong> 一个输入的斜率是导数。Gradient 是一张斜率清单，每个输入一个数。真实模型每个权重一个数，6 亿参数的模型大约有 6 亿个。</p>
+<p><strong>Learning rate（学习率）。</strong> 每个数朝降低 loss 的方向改变，改变量是 learning rate 乘以斜率。用 learning rate 1 训练这个配对：</p>
+<ul>
+<li>分差 0，loss 0.693，力度 0.500</li>
+<li>分差 0.500，loss 0.474，力度 0.378</li>
+<li>分差 0.878，loss 0.348，力度 0.294</li>
+<li>分差 1.171，loss 0.270，力度 0.237</li>
+<li>分差 1.408，loss 0.219，力度 0.197</li>
+</ul>
+<p>分差越大，更新越小，但永远不会完全停下。</p>
+<p>分差由两个 log 概率构成，所以更新同时作用在两者上：chosen 回答的 log 概率升高，rejected 回答的 log 概率降低，幅度相等，都要乘以 β。</p>
+<p>参考模型是冻结的，不接收任何更新。</p>
+<p>[IMAGE 09]</p>
+<p><strong>Hyperparameter（超参数）。</strong> β 和 learning rate 都是 hyperparameter：由人选定，训练不会改变。两者分工不同。</p>
+<p>用普通梯度下降把这个配对训练三次，learning rate 分别取 2、1、0.5，让第一步的大小相同。下面的数字是 chosen 回答的 log 概率升高了多少：</p>
+<ul>
+<li>β = 0.5：1 步 0.50，10 步 2.26，100 步 4.59</li>
+<li>β = 1：0.50、1.51、2.65</li>
+<li>β = 2：0.50、0.95、1.50</li>
+</ul>
+<p>β 越大，配对移动得越少就能赢下来，更新力度也衰减得越早。</p>
+<p>所以 learning rate 决定速度，β 决定要移动多远。</p>
+<p>Adam 这类优化器会缩放每个梯度，β 对速度的影响基本消失，对距离的影响仍然保留。</p>
+<p>DPO 论文的默认设置是 β = 0.1、learning rate 1e-6、batch 64。</p>
+<h2>概率从哪里来</h2>
+<p>比例的总和必须是 1。一个回答升高，比例总要从别处来。</p>
+<p>用最简单的模型来看：一张表，每个回答一个原始数值，也就是 <strong>logit</strong>。softmax 把五个 logit 变成比例。这叫表格模型，它从参考模型开始。</p>
+<p>learning rate 取 1，chosen 回答的 logit 加 0.5，rejected 回答的 logit 减 0.5，另外三个 logit 不更新。走一步之后：</p>
+<ul>
+<li>含糊的回答：40% 到 40.8%</li>
+<li><em>About 10 minutes</em>（rejected）：25% 到 15.5%</li>
+<li>一长段话：15% 到 15.3%</li>
+<li>最好的回答（chosen）：12% 到 20.2%</li>
+<li>错误的回答：8% 到 8.2%</li>
+</ul>
+<p>rejected 回答少了 9.5 个百分点，chosen 回答多了 8.2 个百分点。剩下的分给了配对之外的三个回答，因为 softmax 会重新缩放所有比例。</p>
+<p>错误的回答上升了。没有配对提到它，所以没有更新把它压下去。</p>
+<p>[IMAGE 10]</p>
+<p>现在这两个回答的分差是 1，和最优模型相同。比例却差得很远：<em>About 10 minutes</em> 是 15.5%，目标是 30.3%；错误的回答是 8.2%，目标是 1.3%。</p>
+<p>一个配对只能确定它自己的分差。要到达目标，配对必须覆盖所有回答。</p>
+<p>覆盖之后，DPO 能到达 π* 吗？</p>
+<h2>理想测试</h2>
+<p>在目标已知的情况下做测试。用表格模型，它能表示任何比例。</p>
+<p>再模拟标注者：每行随机挑五个回答中的两个，按真实 reward 用 Bradley–Terry 抽出赢家。训练代码只看到谁赢了，看不到 reward、Z 和 π*。</p>
+<p>用 1,000 个配对，一次模拟运行的结果是：</p>
+<ul>
+<li>运行结果：18.9%、32.5%、12.8%、34.3%、1.4%</li>
+<li>目标：17.8%、30.3%、11.0%、39.5%、1.3%</li>
+</ul>
+<p>两组比例的距离，就是把一组变成另一组要移动多少比例。参考模型距离目标 0.33，这次运行距离目标 0.05。</p>
+<p>配对越多，距离越近。八个模拟数据集的平均距离是：</p>
+<ul>
+<li>10 个配对：0.38</li>
+<li>100 个配对：0.15</li>
+<li>1,000 个配对：0.04</li>
+<li>10,000 个配对：0.01</li>
+</ul>
+<p>数据每增加十倍，距离大约缩小到三分之一。这是从样本估计平均值的常见速度。</p>
+<p>[IMAGE 11]</p>
+<p>这个测试还给出两条警告。</p>
+<p><strong>配对太少。</strong> 只有 10 个配对时，某两个回答常常只比较过一次，只有一个赢家。数据显示这个回答总是赢，而 loss 到不了 0，所以训练会一直扩大这个分差。</p>
+<p>在一次这样的运行里，含糊的回答和错误的回答都降到了 0%，比例集中到另外三个回答上。真实训练也只过很少几遍数据：Tülu 2 的 DPO 模型只过了三遍。</p>
+<p><strong>β 决定距离。</strong> 在理想数据上，以 reward 为单位的分差与 β 无关。最好的回答和 <em>About 10 minutes</em> 的分差是 1。表达这个偏好所需的 log ratio 差是 1 / β：</p>
+<ul>
+<li>β = 4：log ratio 差 0.25，KL 0.02</li>
+<li>β = 1：log ratio 差 1，KL 0.33</li>
+<li>β = 0.1：log ratio 差 10，KL 2.12</li>
+</ul>
+<p>β 越小，模型为了表达同一个偏好移动得越远。这个 β 就是 objective 里的 β。</p>
+<h2>从回答到 token</h2>
+<p>真实的 LLM 没有回答清单。一条回复的 log 概率是什么？</p>
+<p>KL 那篇讲过，回复的概率是各 token 概率的乘积，所以它的 log 概率是各 token log 概率的和。</p>
+<p>DPO 计入回答的 token 和 end-of-turn token（轮次结束标记），因为何时停下也是回答的一部分。问题的 token 只是上下文，不计入。</p>
+<p>这些总和主要反映长度。按每个 token 约 −1 的示意值，40 个 token 的回复总和接近 −40，60 个 token 的接近 −60。直接比较的话，短回答总是占优。</p>
+<p>所以 DPO 看的是相对参考模型的变化。每个回答只和自己的参考值比较，长度的影响大部分被减掉了。</p>
+<p>一行训练数据要做四次前向计算：chosen 和 rejected 各过一遍模型，再各过一遍参考模型。后两次不算梯度。</p>
+<p>Tülu 3 用的一个变体更进一步：把每个回答的 log ratio 除以 token 数，减轻剩余的长度偏差。</p>
+<p>[IMAGE 12]</p>
+<h2>在真实模型上看什么</h2>
+<p>真实的 LLM 里，所有回答共用一组权重。针对一个配对走一步，其他回答也会变。表格模型看不出这一点。</p>
+<p>有五件事需要关注。</p>
+<p><strong>第一步。</strong> 模型开始时是参考模型的副本，所有分差都是 0。所以 loss 必须从 log 2 = 0.693 开始，配对准确率必须从 50% 开始。否则就是 bug。</p>
+<p><strong>训练集和留出集。</strong> 训练集的配对准确率比从未见过的配对上升得快。两条曲线的差距说明模型在记忆训练数据，也就是配对太少的问题。</p>
+<p><strong>两个概率分开看。</strong> loss 只看分差，而分差有三种扩大方式：</p>
+<ul>
+<li>chosen 升，rejected 降</li>
+<li>两者都升</li>
+<li>两者都降</li>
+</ul>
+<p>看一个人为构造的例子。最好的回答从 12% 降到 6%，<em>About 10 minutes</em> 从 25% 降到 2.5%，其余比例分给另外三个回答，错误的回答从 8% 升到 11.6%。</p>
+<p>分差是 1.609，loss 是 0.182，比最优模型的 0.313 还低。而 chosen 回答的概率减半了。</p>
+<p>真实训练中确实会发生这种情况，它叫 <strong>likelihood displacement</strong>（似然位移）。</p>
+<p>Razin 等人在 2024 年指出它可能造成危害。训练模型在 <em>No</em> 和 <em>Never</em> 之间选 <em>No</em>，可能大幅提高 <em>Yes</em> 的概率。在一个安全实验里，Llama-3-8B-Instruct 的拒绝率从 74.4% 降到 33.4%。</p>
+<p>他们发现，根源是两个回答在模型看来很相似的配对。</p>
+<p>DPO 对 learning rate 也很敏感：Tülu 2 报告说，稳定训练需要 5e-7。</p>
+<p><strong>KL。</strong> KL 决定了这个 loss 的形式，但训练既不直接计算它，也不直接限制它。要用 KL 那篇的方法去测：让模型写回复，对 log ratio 取平均。</p>
+<p><strong>Gold。</strong> 配对准确率也算不上 gold。它只说明模型给两个固定回答的排序和标注者一致。</p>
+<p>用户看到的是模型生成的回复。所以真正的检查是在留出问题上生成回复，再评判这些回复。</p>
+<p>DPO 论文用 GPT-4 评判生成的回复，并把过度优化在 DPO 中如何表现留作开放问题。</p>
+<p>[IMAGE 13]</p>
+<blockquote>
+<p>分差变大，只说明 chosen 回答比 rejected 回答领先更多。模型现在写什么，要另外检查。</p>
+</blockquote>
+<p>DPO 也有局限：它只能从给定的配对里学习，训练中无法自己尝试新回答并得到反馈。</p>
+<p>它的优势是简单。Tülu 2 在 700 亿参数的模型上跑通了它，Tülu 3 的训练流程把它放在 SFT 和 RLVR 之间。</p>
+<h2>小结</h2>
+<ul>
+<li>DPO 用模型相对冻结参考模型的变化给回答打分：β × log ratio，即 implicit reward。</li>
+<li>它把 reward model 的 Bradley–Terry loss 用在这个分数上，在存好的配对上训练。不需要单独的 reward model、采样或 RL 循环。</li>
+<li>RLHF 的 objective 是平均 reward 减 β × KL。KL penalty 让模型留在 reward 可信的回答附近。</li>
+<li>参考模型是冻结的，小步累积起来的距离也会全部计入 KL penalty。</li>
+<li>在最优模型上，任何小幅移动都没有好处。由此解出最优模型：乘 e^(reward / β)，相加得到 Z，再相除。</li>
+<li>反过来，β × log ratio 等于 reward 减一个常数。比较时常数抵消，所以不需要 Z。</li>
+<li>每个配对的更新力度是 σ(−m)：顺序反了时大，赢下之后小。</li>
+<li>只有配对里的回答会被直接更新。要到达最优模型，配对必须覆盖所有回答。</li>
+<li>在理想测试中，DPO 只靠谁赢了的记录就能接近最优模型。配对太少时结果会偏离目标，β 决定移动多远。</li>
+<li>在真实模型上，要看留出集、chosen 和 rejected 各自的概率、从样本测出的 KL，以及生成回复上的 gold。</li>
+</ul>
+<p>系列接下来讲训练时采样回答的方法：PPO 和 GRPO，reward 来自 reward model 或 verifier。</p>

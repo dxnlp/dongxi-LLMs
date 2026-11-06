@@ -2324,6 +2324,27 @@ system. **Reuse, don't duplicate:** KL article GIF 12 (`066`, implicit reward) a
 X-POST-005 GIF 02 (Bradley–Terry), 03 (gradient push on a reward model), 08 (pair softmax); `052`, `053`,
 `056`, `057` from the S2 set.
 
+**Production note (2026-11-06).** At the learner's request ("start producing the GIFs"), ten clips were rendered on
+the Mac Studio in `visuals/animations/projects/post-training-dpo/`: `067`, `057`, `052`, `069` + `053` (one clip),
+`070`, `071`, `073`, `074`, `077`, `078`; `066` is reused from the KL set. State: produced, agent-reviewed, awaiting
+the learner's review. `052`, `053` and `057` were told on the egg question; `074` shows records first and then the
+simulated run's shares at 16 training steps; `078` uses invented curves with none of the storyboard's notebook
+numbers. `068`, `072`, `075` and `076` were not produced. Differences are listed in the project README.
+
+### CAND-ANIM-079 — The shortcut: the change is the score
+
+- Source: user (2026-11-06, on the DPO article's paragraph about the 捷径: "we need a gif to inlusrate this 捷径").
+- State: produced 2026-11-06 in `visuals/animations/projects/post-training-dpo/` as two clips at the learner's request
+  ("两条路和变化是分数，直接变成两个gif 更加易读"): `00a-two-routes` and `00b-change-is-the-score`; agent-reviewed,
+  awaiting the learner's review.
+- Learning objective: DPO can skip the reward model because the model's change from the frozen reference is
+  itself a score for each answer.
+- Storyboard: (1) RLHF lane: human pairs → reward model → RL on samples → chat model; (2) DPO lane: one arrow from
+  human pairs to the chat model; (3) shares beside the dashed reference, score bars beside them, all 0 at the start;
+  (4) the shares move to the small move and the scores follow live (−0.288, 0, 0, +0.606, 0); (5) on to the best
+  compromise (−0.808, 0.192, −0.308, 1.192, −1.808).
+- Evidence: exact on the authored toy (D82, D87 ★).
+
 ### CAND-ANIM-067 — Your language model is secretly a reward model ★
 
 - Learning objective: DPO needs no separate reward model; the chat model's own change from the reference

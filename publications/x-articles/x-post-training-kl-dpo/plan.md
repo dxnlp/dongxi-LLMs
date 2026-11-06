@@ -4,7 +4,30 @@ Status: **started 2026-11-03 from study-path S2**, at the learner's request for 
 "why RLHF maximizes reward while charging a cost for moving away from a frozen reference model, and
 why and how KL works". Article number and slot are **for the learner to decide**: this may become the
 series' policy-optimization article (PPO, GRPO, DPO; see `../README.md`) or its first half. The outline
-grows as the learner works through S2. No drafting or rendering yet.
+grows as the learner works through S2.
+
+**Drafted 2026-11-06** (learner: "start work on the DPO article"): English and Chinese drafts, `check_numbers.py`,
+`source-map.md`, captions and `build.py`, with paper facts checked in the primary PDFs. Working title only. No
+GIFs rendered yet (image 05 reuses KL GIF 12), no cover, nothing committed or on X. Decisions made while drafting,
+for the learner to review: eleven figures (the core plus `070` and `077`, since KL GIF 10 ends on PPO and GRPO);
+§12 uses the shape of the notebook's Qwen3 run and none of its numbers; `CAND-ANIM-078` should do the same;
+§12's real-model section was written before the learner studied Parts F–G and gradient piece 4.
+
+**GIFs rendered 2026-11-06** (learner: "start producing the GIFs"): ten clips in
+`visuals/animations/projects/post-training-dpo/`, copied to `assets/`, with KL GIF 12 reused as image 05. The
+learner did not answer the figure-set and `078` questions, so the recommended options were used.
+
+**Cover built 2026-11-06** (learner: "build the cover"): title DPO (first built as Direct Preference Optimization, changed at the learner's request); motif: a frozen
+reference line, with the chosen answer rising and the rejected answer falling away from it along a sigmoid. It
+says 07, which depends on the series number.
+
+**Shortcut GIF added 2026-11-06** (learner: "we need a gif to inlusrate this 捷径"): `CAND-ANIM-079`, split at the learner's
+request into two GIFs for readability (image 1 after the shortcut paragraph, image 2 after the implicit reward
+paragraph). Thirteen figures in all.
+
+**Badge removed 2026-11-06** (learner: "去掉 illustrative numbers 所有 gif"): eight clips re-rendered, including
+KL GIF 12 as this set's clip 05; the KL package is unchanged. Later the same day ("toy example 之类的gif里面的标签一概
+不要，只保留 DONGXILABS") the last three badges went too.
 
 **Split decided (learner, 2026-11-04): the KL article comes first**:
 [`../x-post-training-kl/plan.md`](../x-post-training-kl/plan.md). KL-itself material (key point 2;

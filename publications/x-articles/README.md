@@ -5,6 +5,9 @@ a specific exception.
 
 ## Article packages
 
+- [DPO](x-post-training-kl-dpo/review.html): post-training series, written for LLM beginners after the KL article,
+  English and [Chinese](x-post-training-kl-dpo/zh/review.html) drafts and source map; thirteen GIFs with the DONGXI LABS
+  mark; series cover. Chinese version in X draft 2118652439049986048, not published; English not transferred.
 - [KL Divergence](x-post-training-kl/review.html): post-training series, written for readers with limited
   math, English and [Chinese](x-post-training-kl/zh/review.html) drafts and source map; twelve GIFs with the
   DONGXI LABS mark; series cover. Chinese version in X draft 2118081140015656961 and English
@@ -107,6 +110,7 @@ Beginner Bradley–Terry animation `CAND-ANIM-041` is also a candidate for this 
   importance ratio, reward hacking, KL penalty), plus trajectory, exploration, credit assignment,
   agent, environment and judge. Other
   terms keep the English (中文) first-use rule.
+- Write every formula in English in the Chinese version, e.g. score = average reward − β × KL (learner, 2026-11-06).
 - Write chat model or LLM directly in the Chinese version, never 聊天模型 (learner, 2026-11-04).
 - Example prompts and answers quoted in English stay in English in the Chinese version, with no Chinese
   translation in parentheses (learner, 2026-11-04, KL article); a short role label such as （最好的回答） is fine.
@@ -134,9 +138,9 @@ Beginner Bradley–Terry animation `CAND-ANIM-041` is also a candidate for this 
   that grow. A static image only when motion would add nothing, and then say why
   in `visual-plan.md`.
 - Manim, Dongxi visual system (`visuals/animations/STYLE_GUIDE.md`): white canvas,
-  semantic colors, Arial labels at title 40 / labels 24–32, one compact amber badge
-  for caveats ("illustrative probabilities"), no equations on screen in beginner
-  articles. Source in `visuals/animations/projects/<topic>/` (`scenes.py`, `render.py`).
+  semantic colors, Arial labels at title 40 / labels 24–32, no equations on screen in beginner
+  articles. No badges inside GIFs; DONGXI LABS is the only mark (learner, 2026-11-06). The article text and captions state
+  what is illustrative, simulated or invented. Earlier packages keep theirs. Source in `visuals/animations/projects/<topic>/` (`scenes.py`, `render.py`).
 - Final output: 1920×1080 30 fps MP4 (git-ignored) plus a 1280×720 20 fps looping GIF
   (one global 256-color palette, no dithering, under 5 MB) written to the article's
   `assets/`. Encode GIFs from a lossless render (Manim `-t` → qtrle `.mov`, composited
